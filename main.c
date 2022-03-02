@@ -16,6 +16,7 @@
 #include "player.h"
 #include "colors.h"
 #include "video.h"
+#include "ui.h"
 ALLEGRO_BITMAP* SCREEN;
 
 
@@ -141,13 +142,16 @@ void Update(float dt)
     {
 
         currGameObjRunning = &objects[i];
+        currGameObjRunning->attackTimer -= dt;
+        if (currGameObjRunning->attackTimer < 0)
+            currGameObjRunning->attackTimer = 0;
         int w = al_get_bitmap_width(sprites[currGameObjRunning->spriteIndex].sprite);
         int h = al_get_bitmap_height(sprites[currGameObjRunning->spriteIndex].sprite);
 
         Rect r = (Rect){currGameObjRunning->x,currGameObjRunning->y,w,h};
 
         bool shouldMove = true;
-        bool shouldAttack = true;
+        bool shouldAttack = false;
         if (currGameObjRunning->targObj)
         {
             if (currGameObjRunning->properties & OBJ_ACTIVE)
@@ -174,9 +178,10 @@ void Update(float dt)
             }
             if (shouldAttack)
             {
-                if (attacktimer <= 0)
+                if (currGameObjRunning->attackTimer <= 0)
                 {
                     Attack(currGameObjRunning);
+                    currGameObjRunning->attackTimer = currGameObjRunning->attackSpeed;
                 }
             }
 
@@ -219,6 +224,8 @@ void Render()
     }
     if (players[0].selecting)
         DrawMouseSelectBox(GetMouseClamped());
+    
+    DrawUI();
 }
 int main(int argc, char* args[])
 {
@@ -229,6 +236,7 @@ int main(int argc, char* args[])
     al_install_mouse();
     al_install_keyboard();
     init_lua();
+  //  init_sprites(); 
 
     init();
 
@@ -244,7 +252,7 @@ int main(int argc, char* args[])
     ALLEGRO_BITMAP* backbuffer = al_get_backbuffer(display);
 
     ALLEGRO_FONT* font = al_load_ttf_font("Assets/Fonts/Roboto-Medium.ttf", 64, ALLEGRO_TTF_MONOCHROME);
-
+    ui.panel_sprite_index = LoadSprite("Assets/UI/ui.png",false);
     //int* s = LoadSprite("Encounters/01/map.png");
 
     //GameObject boss;

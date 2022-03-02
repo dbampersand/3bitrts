@@ -60,9 +60,10 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
 {
     if (!sprites)
     {
-        sprites = calloc(1,sizeof(Sprite));
-        numSprites=0;
-        maxSprites=1;
+        sprites = calloc(2,sizeof(Sprite));
+        sprites[0].path = "";
+        numSprites=1;
+        maxSprites=2;
     }
     for (int i = 0; i < numSprites; i++)
     {

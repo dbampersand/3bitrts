@@ -43,12 +43,22 @@ GameObject* AddGameobject(GameObject* prefab)
     found->properties |= OBJ_ACTIVE;
     found->health = 100;
     found->maxHP = 100;
+    found->baseDamage = 5;
+    found->range = 1;
+    found->attackSpeed = 1;
+    found->mana = 50;
+    found->maxMana = 100;
 
+    
     numObjects++;
 
 
 
     return found;
+}
+void NewObj(GameObject* g)
+{
+
 }
 
 bool CheckFuncExists(const char* funcName, char* lua_buffer)
@@ -94,14 +104,28 @@ bool CheckFuncExists(const char* funcName, char* lua_buffer)
 }
 void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g) 
 {
-    memset(g,0,sizeof(GameObject));
+    char* cpy;
+    if (g)
+    {
+        if (g->lua_buffer)
+        {
 
-    
-    char* cpy = calloc(strlen(filename)+1,sizeof(char));
-    strcpy(cpy,filename);
-    LoadLuaFile(filename,g);
+        }
+        else
+        {
+            memset(g,0,sizeof(GameObject));    
+            cpy = calloc(strlen(filename)+1,sizeof(char));
+            strcpy(cpy,filename);
+            LoadLuaFile(filename,g);
 
-     if (luaL_loadfile(l, filename) || lua_pcall(l, 0, 0, 0))
+        }
+    }
+    else
+    {
+        
+    }
+
+     if (luaL_loadbuffer(l, g->lua_buffer,strlen(g->lua_buffer),NULL) || lua_pcall(l, 0, 0, 0))
      {
          printf("Can't load lua file %s",lua_tostring(l,-1));
      }
@@ -143,10 +167,10 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
         {
             lua_getglobal(l, "OnAttack");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
-            g->luafunc_attack = funcIndex;
+            g->luafunc_onattack = funcIndex;
         }
         else
-            g->luafunc_attack = -1;
+            g->luafunc_onattack = -1;
 
 
         char* strSplit;
@@ -470,7 +494,7 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
 
     al_draw_rectangle(r.x,r.y,r.x+r.w,r.y+r.h,col,1);
 
-    float percent = g->health / g->maxHP;
+    float percent = g->health / (float)g->maxHP;
     int numPixels = percent * r.w;
     al_draw_filled_rectangle(r.x,r.y,r.x+numPixels,r.y+r.h,col);
     
@@ -505,5 +529,6 @@ void Attack(GameObject* g)
         {
             CallLuaFunc(g->luafunc_onattack);
         }
+        g->targObj->health -= g->baseDamage;
     }
 }

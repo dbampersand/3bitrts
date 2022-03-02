@@ -19,10 +19,11 @@ typedef struct GameObject
     float x; float  y;
     //void (*update)(struct GameObject* self);
     char properties;
-    char health;
-    char maxHP;
-    char mana;
-    Ability* abilities;
+    float health;
+    float maxHP;
+    float mana;
+    float maxMana;
+    Ability abilities[4];
     unsigned int spriteIndex;
     unsigned int selectedSpriteIndex;
 
@@ -44,10 +45,12 @@ typedef struct GameObject
 
     unsigned char speed;
 
-    float attackspeed;
-    float attacktimer;
+    float attackSpeed;
+    float attackTimer;
 
     float range;
+
+    float baseDamage;
 
 } GameObject;
 
@@ -85,5 +88,8 @@ void DrawGameObj(GameObject* g);
 
 
 void SetAttackingObj(GameObject* g, GameObject* target);
+void Attack(GameObject* g);
+void NewObj(GameObject* g);
+
 //void LoadFolderPrefabs(const char* dirPath);
 //void LoadPrefabs(const char* dirPath);

@@ -76,6 +76,11 @@ int L_CreateObject(lua_State* l)
         g->speed = 5;
         g->health = 100;
         g->maxHP = 100;
+        g->range = 1;
+        g->baseDamage = 5;
+        g->attackSpeed = 1;
+        g->mana = 50;
+        g->maxMana = 100;
         SetOwnedBy(g, PLAYER);
 
     }
@@ -89,6 +94,13 @@ int L_CreateObject(lua_State* l)
         g->speed = 5;
         g->health = 100;
         g->maxHP = 100;
+        g->range = 1;
+        g->baseDamage = 5;
+        g->attackSpeed = 1;
+        g->mana = 50;
+        g->maxMana = 100;
+
+
         SetOwnedBy(g, PLAYER);
     }
 
@@ -112,6 +124,23 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,1);
     lua_setglobal(l,"ENEMY");
 }
+int L_AddAbility(lua_State* l)
+{
+    const char* path = lua_tostring(l,1);
+    int index = lua_tonumber(l,2);
+    if (index < 0) index = 0; 
+    if (index > 3) index = 3;
+
+    Ability* prefab = AddAbility(path); 
+    currGameObjRunning->abilities[index] = CloneAbilityPrefab(prefab,l);
+    return 1;
+}
+int L_AbilitySetPortrait(lua_State* l)
+{
+    currAbilityRunning->spriteIndex_Portrait = LoadSprite(lua_tostring(l,-1),true);
+    return 1;   
+}
+
 void SetLuaFuncs()
 {
     SetGlobals(luaState);
@@ -127,6 +156,12 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetMapSprite);
     lua_setglobal(luaState, "SetMapSprite");
+
+    lua_pushcfunction(luaState, L_AddAbility);
+    lua_setglobal(luaState, "AddAbility");
+
+    lua_pushcfunction(luaState, L_AbilitySetPortrait);
+    lua_setglobal(luaState, "AbilitySetPortrait");
 
 
 }
