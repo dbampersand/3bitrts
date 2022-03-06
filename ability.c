@@ -63,6 +63,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
      }
     else
      {
+        a->cooldown = 1;
         int funcIndex;
         if (CheckFuncExists("setup",a->luabuffer))
         {
@@ -80,8 +81,6 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         {
             lua_getglobal(l, "casted");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
-            lua_rawgeti(l,LUA_REGISTRYINDEX,funcIndex);
-            lua_pcall(l,0,0,0);
             a->luafunc_casted = funcIndex;
         }
         else
@@ -89,6 +88,14 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
 
 
      }
+}
+void CastAbility(Ability* a)
+{
+    if (a->cdTimer <= 0)
+    {
+        CallLuaFunc(a->luafunc_casted);
+        a->cdTimer = a->cooldown;
+    }
 }
 
 //void CopyAbility(Ability* prefab)

@@ -122,7 +122,7 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
     }
     else
     {
-        
+
     }
 
      if (luaL_loadbuffer(l, g->lua_buffer,strlen(g->lua_buffer),NULL) || lua_pcall(l, 0, 0, 0))
@@ -323,6 +323,10 @@ bool IsOwnedByPlayer(GameObject* g)
 {
     return (g->properties & OBJ_OWNED_BY) == 0;
 }
+int GetPlayerOwnedBy(GameObject* g)
+{
+    return (g->properties & OBJ_OWNED_BY) > 0 ? 1 : 0;
+}
 void SetOwnedBy(GameObject* g, bool i)
 {
     if (i == false)
@@ -521,7 +525,7 @@ void SetAttackingObj(GameObject* g, GameObject* target)
 {
     g->targObj = target;
 }
-void Attack(GameObject* g)
+void AttackTarget(GameObject* g)
 {
     if (g->targObj)
     {
@@ -531,4 +535,23 @@ void Attack(GameObject* g)
         }
         g->targObj->health -= g->baseDamage;
     }
+}
+Rect GetObjRect(GameObject* g)
+{
+    if (g->spriteIndex <= 0) return (Rect){g->x,g->y,0,0};
+    Rect r = (Rect){g->x,g->y,al_get_bitmap_width(sprites[g->spriteIndex].sprite),al_get_bitmap_height(sprites[g->spriteIndex].sprite)};
+    return r;
+}
+void Damage(GameObject* g, float value)
+{
+    g->health -= value;
+}
+void Heal(GameObject* g, float value)
+{
+    g->health += value;
+}
+
+void ModifyMaxHP(GameObject* g, float value)
+{
+    g->maxHP += value;
 }

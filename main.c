@@ -17,8 +17,9 @@
 #include "colors.h"
 #include "video.h"
 #include "ui.h"
+#include "attack.h"
 ALLEGRO_BITMAP* SCREEN;
-
+ALLEGRO_DISPLAY* display;
 
 
 int _TARGET_FPS = 60;
@@ -138,6 +139,7 @@ void Update(float dt)
     ALLEGRO_MOUSE_STATE mouseState = GetMouseClamped();
 
     CheckSelected(mouseState,mouseStateLastFrame);
+    UpdateAttacks(dt);
     for (int i = 0; i < numObjects; i++)
     {
 
@@ -145,6 +147,14 @@ void Update(float dt)
         currGameObjRunning->attackTimer -= dt;
         if (currGameObjRunning->attackTimer < 0)
             currGameObjRunning->attackTimer = 0;
+        for (int i = 0; i < 4; i++)
+        {
+            currGameObjRunning->abilities[i].cdTimer -= dt;
+            if (currGameObjRunning->abilities[i].cdTimer < 0)
+                currGameObjRunning->abilities[i].cdTimer = 0;
+
+        }
+
         int w = al_get_bitmap_width(sprites[currGameObjRunning->spriteIndex].sprite);
         int h = al_get_bitmap_height(sprites[currGameObjRunning->spriteIndex].sprite);
 
@@ -152,6 +162,8 @@ void Update(float dt)
 
         bool shouldMove = true;
         bool shouldAttack = false;
+        ProcessEffects(currGameObjRunning,dt);
+
         if (currGameObjRunning->targObj)
         {
             if (currGameObjRunning->properties & OBJ_ACTIVE)
@@ -169,7 +181,6 @@ void Update(float dt)
                 {
                     shouldMove = false;
                     shouldAttack = true;
-
                 }
             }   
             else
@@ -180,7 +191,7 @@ void Update(float dt)
             {
                 if (currGameObjRunning->attackTimer <= 0)
                 {
-                    Attack(currGameObjRunning);
+                    AttackTarget(currGameObjRunning);
                     currGameObjRunning->attackTimer = currGameObjRunning->attackSpeed;
                 }
             }
@@ -192,6 +203,51 @@ void Update(float dt)
         lua_rawgeti(luaState,LUA_REGISTRYINDEX,objects[i].luafunc_update);
         lua_pcall(luaState,0,0,0);
     }
+    if (!al_key_down(&keyState,ALLEGRO_KEY_Q) && al_key_down(&keyStateLastFrame,ALLEGRO_KEY_Q))
+    {
+        if (players[0].selection[0])
+        {
+            players[0].abilityHeld = NULL;
+            currGameObjRunning = players[0].selection[0];
+            currAbilityRunning = &players[0].selection[0]->abilities[0];
+            if (currAbilityRunning->castType == ABILITY_INSTANT)
+            {
+                CastAbility(currAbilityRunning);
+            }
+            else
+            {
+                players[0].abilityHeld = currAbilityRunning;
+            }
+
+        }
+    }
+    if (!al_key_down(&keyState,ALLEGRO_KEY_ESCAPE) && al_key_down(&keyStateLastFrame,ALLEGRO_KEY_ESCAPE))
+    {
+        players[0].abilityHeld = NULL;
+    }
+    if (mouseState.buttons & 1) 
+    {
+        currGameObjRunning = players[0].selection[0];
+        currAbilityRunning = &players[0].selection[0]->abilities[0];
+
+        if (players[0].abilityHeld)
+        {
+            CastAbility(players[0].abilityHeld);
+        }
+        currAbilityRunning = NULL;
+        players[0].abilityHeld = NULL;
+    }
+    if (players[0].abilityHeld)
+    {
+        al_set_system_mouse_cursor(display, ALLEGRO_SYSTEM_MOUSE_CURSOR_EDIT);
+    }
+    else
+    {
+        al_set_system_mouse_cursor(display, ALLEGRO_SYSTEM_MOUSE_CURSOR_ARROW);
+
+    }
+
+
     mouseStateLastFrame = mouseState;
     keyStateLastFrame = keyState;
 
@@ -213,8 +269,11 @@ void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState)
     r.h = _MAX(endSelection.y,players[0].selectionStart.y) - _MIN(endSelection.y,players[0].selectionStart.y);
     al_draw_filled_rectangle(r.x, r.y, r.x+r.w, r.y+r.h, al_premul_rgba(255, 255, 255,128));
 }
-void Render()
+void Render(float dt)
 {
+    ALLEGRO_KEYBOARD_STATE keyState;
+    al_get_keyboard_state(&keyState);
+
     al_set_target_bitmap(SCREEN);
     DrawSprite(&sprites[currMap->spriteIndex],0,0,GROUND,false);
 
@@ -224,8 +283,8 @@ void Render()
     }
     if (players[0].selecting)
         DrawMouseSelectBox(GetMouseClamped());
-    
-    DrawUI();
+    DrawAttacks(dt);
+    DrawUI(&keyState, &keyStateLastFrame);
 }
 int main(int argc, char* args[])
 {
@@ -236,6 +295,7 @@ int main(int argc, char* args[])
     al_install_mouse();
     al_install_keyboard();
     init_lua();
+    InitAttacks();
   //  init_sprites(); 
 
     init();
@@ -248,7 +308,7 @@ int main(int argc, char* args[])
 
     SCREEN = al_create_bitmap(256,256);
 
-    ALLEGRO_DISPLAY* display = al_create_display(256*_RENDERSIZE,256*_RENDERSIZE);
+    display = al_create_display(256*_RENDERSIZE,256*_RENDERSIZE);
     ALLEGRO_BITMAP* backbuffer = al_get_backbuffer(display);
 
     ALLEGRO_FONT* font = al_load_ttf_font("Assets/Fonts/Roboto-Medium.ttf", 64, ALLEGRO_TTF_MONOCHROME);
@@ -300,7 +360,7 @@ int main(int argc, char* args[])
             al_clear_to_color(al_map_rgb(40,32,36));
 
             Update(1/(float)_TARGET_FPS);
-            Render();
+            Render(1/(float)_TARGET_FPS);
             al_set_target_bitmap(backbuffer);
             al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE,0,0,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
 

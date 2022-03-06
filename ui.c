@@ -31,12 +31,25 @@ void DrawManaUIElement(GameObject* selected)
 
 
 }
-void DrawAbilityPortraits(GameObject* selected, int index, int startX, int startY)
+void DrawAbilityPortraits(GameObject* selected, int index, int startX, int startY, bool keydown)
 {
+    if (selected->abilities[index].spriteIndex_Portrait <= 0) 
+        return;
     Sprite* s = &sprites[selected->abilities[index].spriteIndex_Portrait];
-    DrawSprite(s,startX,startY,FRIENDLY,false);
+    //DrawSprite(s,startX,startY,FRIENDLY,keydown);
+    Ability* a = &selected->abilities[index];
+    float percent;
+    if (a->cooldown == 0) 
+        percent = 1.0f;
+    else
+    {
+        percent = 1 - (a->cdTimer / a->cooldown);
+    }
+    int h = al_get_bitmap_height(s->sprite) * percent;
+    int w = al_get_bitmap_width(s->sprite);
+    DrawSpriteRegion(s,0,0,w,h,startX,startY,FRIENDLY,keydown);
 }
-void DrawUI()
+void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
     al_draw_filled_rectangle(0, 217, _SCREEN_SIZE, _SCREEN_SIZE, BG);
     
@@ -48,10 +61,10 @@ void DrawUI()
     {
         DrawHealthUIElement(selected);
         DrawManaUIElement(selected);
-        DrawAbilityPortraits(selected,0,33,220);
-        DrawAbilityPortraits(selected,1,65,220);
-        DrawAbilityPortraits(selected,2,97,220);
-        DrawAbilityPortraits(selected,3,129,220);
+        DrawAbilityPortraits(selected,0,33,220,al_key_down(keyState,ALLEGRO_KEY_Q));
+        DrawAbilityPortraits(selected,1,65,220,al_key_down(keyState,ALLEGRO_KEY_W));
+        DrawAbilityPortraits(selected,2,97,220,al_key_down(keyState,ALLEGRO_KEY_E));
+        DrawAbilityPortraits(selected,3,129,220,al_key_down(keyState,ALLEGRO_KEY_R));
 
     }
 }

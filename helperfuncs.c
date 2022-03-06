@@ -1,9 +1,48 @@
 #include "helperfuncs.h"
 #include "sprite.h"
+#include <math.h>
+#include "rect.h"
+float clamp(float f, float min, float max)
+{
+    return f < min ? min : f > max ? max : f;
+}
+bool CircleInRect(float cx, float cy, float rad, Rect r)
+{
+   float closestX = clamp(cx,r.x,r.x+r.w);
+   float closestY = clamp(cy,r.y,r.y+r.h);
+
+   float dx = closestX - cx;
+   float dy = closestY - cy;
+
+   return (dx * dx + dy * dy) <= rad * rad;
+}
 
 int GetIndex(int h, int x, int y)
 {
     return (h*x)+y;
+}
+void MoveTo(float* x, float* y, float toX, float toY, float speed, float delta)
+{
+    #define DIST_DELTA 1
+
+        float moveX = toX - *x;
+        float moveY = toY - *y;
+
+        float dist = sqrt(moveX*moveX+moveY*moveY);
+
+        if (dist <= DIST_DELTA)
+        {
+            *x = toX;
+            *y = toY;
+            return;
+        }
+        float dX = (moveX / dist * speed) * delta;
+        float dY = (moveY / dist * speed) * delta;
+
+        *x += dX;
+        *y += dY;
+
+
 }
 
 ALLEGRO_MOUSE_STATE GetMouseClamped()

@@ -4,7 +4,8 @@
 #include "sprite.h"
 #include "ability.h"
 #include <allegro5/allegro.h>
-
+#include "effect.h"
+#include "rect.h"
 typedef enum GAMEOBJ_PROPERTIES
 {
     OBJ_SELECTED = 1,
@@ -13,7 +14,7 @@ typedef enum GAMEOBJ_PROPERTIES
     //OBJ_ATTACKING_TARGET = 8
 } GAMEOBJ_PROPERTIES;
 typedef struct lua_State lua_State;
-
+#define MAX_EFFECTS 6
 typedef struct GameObject
 {
     float x; float  y;
@@ -41,7 +42,6 @@ typedef struct GameObject
     unsigned char ytarg;
     GameObject* targObj;
 
-    char ownedby;
 
     unsigned char speed;
 
@@ -51,6 +51,9 @@ typedef struct GameObject
     float range;
 
     float baseDamage;
+    float armor;
+     
+    Effect effects[MAX_EFFECTS];
 
 } GameObject;
 
@@ -88,8 +91,17 @@ void DrawGameObj(GameObject* g);
 
 
 void SetAttackingObj(GameObject* g, GameObject* target);
-void Attack(GameObject* g);
+void AttackTarget(GameObject* g);
 void NewObj(GameObject* g);
+
+Rect GetObjRect(GameObject* g);
+int GetPlayerOwnedBy(GameObject* g);
+
+void Damage(GameObject* g, float value);
+void Heal(GameObject* g, float value);
+
+void ModifyMaxHP(GameObject* g, float value);
+
 
 //void LoadFolderPrefabs(const char* dirPath);
 //void LoadPrefabs(const char* dirPath);

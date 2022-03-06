@@ -110,3 +110,11 @@ void DrawSprite(Sprite* sprite, int x, int y, ALLEGRO_COLOR tint, bool invert)
         al_draw_tinted_scaled_bitmap(sprite->inverseSprite,tint,0,0,_SCREEN_SIZE,_SCREEN_SIZE,x,y,_SCREEN_SIZE*1,_SCREEN_SIZE*1,0);
 
 }
+void DrawSpriteRegion(Sprite* sprite, float sx, float sy, float sw, float sh, float dx, float dy, ALLEGRO_COLOR tint, bool invert)
+{
+    if (sprite->sprite && !invert)
+        al_draw_tinted_bitmap_region(sprite->sprite,tint,sx,sy,sw,sh,dx,dy,0);
+    if (sprite->inverseSprite && invert)
+        al_draw_tinted_bitmap_region(sprite->inverseSprite,tint,sx,sy,sw,sh,dx,dy,0);
+    
+}

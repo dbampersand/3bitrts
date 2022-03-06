@@ -7,4 +7,5 @@ typedef struct UI
 
 UI ui;
 
-void DrawUI();
+void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
+void DrawAbilityPortraits(GameObject* selected, int index, int startX, int startY, bool keydown);
