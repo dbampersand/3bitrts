@@ -1,4 +1,5 @@
 #pragma once
+#include <allegro5/allegro.h>
 
 ALLEGRO_COLOR BG;
 ALLEGRO_COLOR FRIENDLY;

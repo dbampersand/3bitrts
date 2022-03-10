@@ -18,6 +18,8 @@
 #include "video.h"
 #include "ui.h"
 #include "attack.h"
+#include "particle.h"
+#include <math.h>
 ALLEGRO_BITMAP* SCREEN;
 ALLEGRO_DISPLAY* display;
 
@@ -48,6 +50,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseLast
 {
     if (!(mouseLastFrame.buttons & 1)  && (mouseState.buttons & 1))
     {
+        AddMouseRandomParticles(mouseState, 3);
         players[0].selecting = true;
         players[0].selectionStart = (Vector2){mouseState.x,mouseState.y};
     }
@@ -100,6 +103,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseLast
     }
     if (!(mouseState.buttons & 2) && (mouseLastFrame.buttons & 2))
     {
+        AddMouseRandomParticles(mouseState, 3);
         for (int i = 0; i < players[0].numUnitsSelected; i++)
         {
             SetAttackingObj(players[0].selection[i],NULL);
@@ -227,17 +231,22 @@ void Update(float dt)
         if (index > -1)
         if (players[0].selection[0])
         {
-            players[0].abilityHeld = NULL;
-            currGameObjRunning = players[0].selection[0];
-            currAbilityRunning = &players[0].selection[0]->abilities[index];
-            if (currAbilityRunning->castType == ABILITY_INSTANT)
+            if (players[0].selection[0]->abilities[index].cdTimer <= 0)
             {
-                CastAbility(currAbilityRunning);
+
+                players[0].abilityHeld = NULL;
+                currGameObjRunning = players[0].selection[0];
+                currAbilityRunning = &players[0].selection[0]->abilities[index];
+                if (currAbilityRunning->castType == ABILITY_INSTANT)
+                {
+                    CastAbility(currAbilityRunning);
+                }
+                else
+                {
+                    players[0].abilityHeld = currAbilityRunning;
+                }
             }
-            else
-            {
-                players[0].abilityHeld = currAbilityRunning;
-            }
+
 
         }
     }
@@ -277,6 +286,9 @@ void Update(float dt)
     mouseStateLastFrame = mouseState;
     keyStateLastFrame = keyState;
 
+
+    UpdateParticles(dt);
+
 }
 void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState)
 {
@@ -309,11 +321,15 @@ void Render(float dt)
     }
     if (players[0].selecting)
         DrawMouseSelectBox(GetMouseClamped());
+        
     DrawAttacks(dt);
+    DrawParticles();
+
     DrawUI(&keyState, &keyStateLastFrame);
 }
 int main(int argc, char* args[])
 {
+    srand(time(NULL));
     al_init();
     al_init_font_addon();
     al_init_ttf_addon();
@@ -322,6 +338,7 @@ int main(int argc, char* args[])
     al_install_keyboard();
     init_lua();
     InitAttacks();
+    InitParticles();
   //  init_sprites(); 
 
     init();

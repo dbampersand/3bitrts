@@ -560,7 +560,7 @@ void Teleport(GameObject* g, float x, float y)
     float cX; float cY;
     GetOffsetCenter(g,&cX,&cY);
     g->x = x - cX/2;
-    g->y = y - cY/2;
+    g->y = y - cY/2 ;
     g->xtarg = g->x;
     g->ytarg = g->y;
 

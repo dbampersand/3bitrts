@@ -112,3 +112,7 @@ void Normalize(float* x, float* y)
     *y /= mag;
 
 }
+double RandRange(double min, double max)
+{
+   return ((max - min) * ((double)rand() / RAND_MAX)) + min;
+}    
