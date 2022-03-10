@@ -47,6 +47,10 @@ void DrawAbilityPortraits(GameObject* selected, int index, int startX, int start
     }
     int h = al_get_bitmap_height(s->sprite) * percent;
     int w = al_get_bitmap_width(s->sprite);
+    if (a->cdTimer > 0)
+    {
+        keydown = false;
+    }
     DrawSpriteRegion(s,0,0,w,h,startX,startY,FRIENDLY,keydown);
 }
 void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)

@@ -12,7 +12,8 @@ typedef enum EFFECT_TYPE
 {
     EFFECT_MAXHP = 0,
     EFFECT_DAMAGE = 1,
-    EFFECT_HEAL = 2
+    EFFECT_HEAL = 2,
+    EFFECT_POSITION = 3
 } EFFECT_TYPE;
 typedef struct Effect
 {

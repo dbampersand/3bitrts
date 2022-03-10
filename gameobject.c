@@ -555,3 +555,24 @@ void ModifyMaxHP(GameObject* g, float value)
 {
     g->maxHP += value;
 }
+void Teleport(GameObject* g, float x, float y)
+{
+    float cX; float cY;
+    GetOffsetCenter(g,&cX,&cY);
+    g->x = x - cX/2;
+    g->y = y - cY/2;
+    g->xtarg = g->x;
+    g->ytarg = g->y;
+
+}
+void GetOffsetCenter(GameObject* g, float* x, float* y)
+{
+    if (g->spriteIndex > 0)
+    {
+        *x = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
+        *y = al_get_bitmap_height(sprites[g->spriteIndex].sprite);
+        return;
+    }
+    *x = 0; 
+    *y = 0;
+}

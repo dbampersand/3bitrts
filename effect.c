@@ -35,7 +35,7 @@ void ProcessEffects(GameObject* g, float dt)
             {
                 if (e->numTriggers >= 0)
                 {
-                    if (e->timer > e->duration - (e->numTriggers*e->tickTime))
+                    if (e->timer > e->duration - (e->numTriggers * e->tickTime))
                     {
                         e->numTriggers--;
                         ProcessEffect(&g->effects[i],g);

@@ -203,13 +203,33 @@ void Update(float dt)
         lua_rawgeti(luaState,LUA_REGISTRYINDEX,objects[i].luafunc_update);
         lua_pcall(luaState,0,0,0);
     }
-    if (!al_key_down(&keyState,ALLEGRO_KEY_Q) && al_key_down(&keyStateLastFrame,ALLEGRO_KEY_Q))
+    if (1)
     {
+        int index = -1;
+        if (!al_key_down(&keyState,ALLEGRO_KEY_Q) && al_key_down(&keyStateLastFrame,ALLEGRO_KEY_Q))
+        {
+            index = 0;
+        }
+        if (!al_key_down(&keyState,ALLEGRO_KEY_W) && al_key_down(&keyStateLastFrame,ALLEGRO_KEY_W))
+        {
+            index = 1;
+        }
+        if (!al_key_down(&keyState,ALLEGRO_KEY_E) && al_key_down(&keyStateLastFrame,ALLEGRO_KEY_E))
+        {
+            index = 2;
+        }
+        if (!al_key_down(&keyState,ALLEGRO_KEY_R) && al_key_down(&keyStateLastFrame,ALLEGRO_KEY_R))
+        {
+            index = 3;
+        }
+
+
+        if (index > -1)
         if (players[0].selection[0])
         {
             players[0].abilityHeld = NULL;
             currGameObjRunning = players[0].selection[0];
-            currAbilityRunning = &players[0].selection[0]->abilities[0];
+            currAbilityRunning = &players[0].selection[0]->abilities[index];
             if (currAbilityRunning->castType == ABILITY_INSTANT)
             {
                 CastAbility(currAbilityRunning);
@@ -228,7 +248,7 @@ void Update(float dt)
     if (mouseState.buttons & 1) 
     {
         currGameObjRunning = players[0].selection[0];
-        currAbilityRunning = &players[0].selection[0]->abilities[0];
+        currAbilityRunning = players[0].abilityHeld;
 
         if (players[0].abilityHeld)
         {
@@ -236,6 +256,12 @@ void Update(float dt)
         }
         currAbilityRunning = NULL;
         players[0].abilityHeld = NULL;
+    }
+    if (!(mouseState.buttons & 2) && (mouseStateLastFrame.buttons & 2))
+    {
+        currAbilityRunning = NULL;
+        players[0].abilityHeld = NULL;
+
     }
     if (players[0].abilityHeld)
     {

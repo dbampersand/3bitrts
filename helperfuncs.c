@@ -21,7 +21,7 @@ int GetIndex(int h, int x, int y)
 {
     return (h*x)+y;
 }
-void MoveTo(float* x, float* y, float toX, float toY, float speed, float delta)
+bool MoveTo(float* x, float* y, float toX, float toY, float speed, float delta)
 {
     #define DIST_DELTA 1
 
@@ -34,14 +34,14 @@ void MoveTo(float* x, float* y, float toX, float toY, float speed, float delta)
         {
             *x = toX;
             *y = toY;
-            return;
+            return true;
         }
         float dX = (moveX / dist * speed) * delta;
         float dY = (moveY / dist * speed) * delta;
 
         *x += dX;
         *y += dY;
-
+        return false;
 
 }
 
@@ -98,4 +98,17 @@ void lerpValue(float* x, float tX, float t)
     {
         *x = tX;
     }
+}
+void MoveAngle(float* x, float* y, float dx, float dy, float speed, float delta)
+{
+    *x += dx * delta * speed;
+    *y += dy * delta * speed;
+
+}
+void Normalize(float* x, float* y)
+{
+    float mag = sqrt((*x**x)+(*y**y));
+    *x /= mag;
+    *y /= mag;
+
 }

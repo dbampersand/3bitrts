@@ -6,7 +6,7 @@
 #include "helperfuncs.h"
 #include "colors.h"
 #include <allegro5/allegro_primitives.h>
-
+#include "luafuncs.h"
 int attack_top = 0;
 
 void AddAttack(Attack* a)
@@ -28,6 +28,14 @@ void InitAttacks()
 }
 void RemoveAttack(int attackindex)
 {
+    Attack* a = &attacks[attackindex];
+    lua_rawgeti(luaState,LUA_REGISTRYINDEX,a->cameFrom->luafunc_onhit);
+
+    lua_pushinteger(luaState,a->x);
+    lua_pushinteger(luaState,a->y);    
+    lua_pushinteger(luaState,(-1));    
+    lua_pcall(luaState,3,0,0);
+
     if (attack_top < 0)
         return;
     attack_top--;
@@ -42,25 +50,86 @@ void RemoveAttack(int attackindex)
 
 void ApplyAttack(Attack* a, GameObject* target)
 {
-    for (int i = 0; i < a->numEffects; i++)
+    bool apply = true;
+    if (a->attackType == ATTACK_AOE)
     {
-        ApplyEffect(&a->effects[i],target);
+        if (a->timer > a->tickrate)
+        {
+            a->timer = 0;
+        }
+        else
+        {
+            apply = false;
+        }
+    }
+    if (apply)
+    {
+        for (int i = 0; i < a->numEffects; i++)
+        {
+            ApplyEffect(&a->effects[i],target);
+        }
+        if (a->shouldCallback)
+        {
+            currAbilityRunning = a->cameFrom; 
+            lua_rawgeti(luaState,LUA_REGISTRYINDEX,a->cameFrom->luafunc_onhit);
+
+            lua_pushinteger(luaState,a->x);
+            lua_pushinteger(luaState,a->y);    
+            lua_pushinteger(luaState,(int)(target-objects));    
+
+            lua_pcall(luaState,3,0,0);
+
+
+            //CallLuaFunc(a->callback_onhit);
+        }
     }
 }
 void DrawAttack(Attack* a, float dt)
 {
-    al_draw_filled_circle(a->x,a->y,a->radius,FRIENDLY);
+    if (a->attackType == ATTACK_AOE)
+    {
+        al_draw_circle(a->x,a->y,a->radius,FRIENDLY,1);
+    }
+    else
+    {
+        al_draw_filled_circle(a->x,a->y,a->radius,FRIENDLY);
+    }
 }
 void UpdateAttack(Attack* a, float dt)
 {
+    a->timer += dt;
+    a->duration -= dt;
+
+    if (a->x < 0 || a->y < 0 || a->x >= 255 || a->y >= 255 || a->duration < 0)
+    {
+        RemoveAttack(a-attacks);
+        return;
+    }
     if (a->target)
     {
+
         Rect r = GetObjRect(a->target);
         MoveTo(&a->x,&a->y,r.x+r.w/2.,r.y+r.h/2,a->speed,dt);
     }
     else
     {
-        MoveTo(&a->x,&a->y,a->targx,a->targy,a->speed,dt);
+        if (a->attackType == ATTACK_PROJECTILE_ANGLE)
+        {
+            MoveAngle(&a->x,&a->y,a->targx,a->targy,a->speed,dt);
+        }
+        else if (a->attackType == ATTACK_AOE)
+        {
+
+        }
+        else
+        {
+            if (MoveTo(&a->x,&a->y,a->targx,a->targy,a->speed,dt))
+            {
+                RemoveAttack(a-attacks);
+                return;
+            }
+        }
+
 
         for (int i = 0; i < numObjects; i++)
         {
@@ -90,11 +159,15 @@ void UpdateAttack(Attack* a, float dt)
             if (a->ownedBy == &objects[i])
                 continue;
             Rect r = GetObjRect(&objects[i]);
-            if (CircleInRect(a->x,a->y,a->radius,r))
-            {   
-                ApplyAttack(a,&objects[i]);
-                RemoveAttack(a-attacks);
-            }
+                if (CircleInRect(a->x,a->y,a->radius,r))
+                {   
+                    ApplyAttack(a,&objects[i]);
+                    if (a->attackType != ATTACK_AOE)
+                    {  
+
+                        RemoveAttack(a-attacks);
+                    }
+                 }
         }
     }
 }

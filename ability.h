@@ -14,6 +14,9 @@ typedef struct Ability
     char* luabuffer;
     int luafunc_casted;
     int luafunc_setup;
+    int luafunc_onhit;
+    int luafunc_tick;
+
     char* path;
     int spriteIndex_Portrait;
     float cooldown;

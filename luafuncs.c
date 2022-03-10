@@ -104,6 +104,62 @@ int GetTableField(lua_State* l, int tableIndex, const char* name)
     return 0;
 
 }
+int L_GetObjRef(lua_State* l)
+{
+    lua_pushnumber(l,(int)(currGameObjRunning-objects));
+    return 1;
+}
+
+Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
+{
+    lua_pushnumber(l,index);
+    lua_gettable(l,tableStackPos);
+
+    Effect e;
+    /*e.trigger = GetTableField(l,tableStackPos+1,"trigger");
+    e.effectType = GetTableField(l,tableStackPos+1,"type");
+    e.numTriggers = GetTableField(l,tableStackPos+1,"numTriggers");
+    e.duration = GetTableField(l,tableStackPos+1,"duration");
+    e.tickTime = e.duration / e.numTriggers;
+    e.value = GetTableField(l,tableStackPos+1,"value");*/
+    e.trigger = GetTableField(l,-1,"trigger");
+    e.effectType = GetTableField(l,-1,"type");
+    e.numTriggers = GetTableField(l,-1,"numTriggers");
+    e.duration = GetTableField(l,-1,"duration");
+    e.tickTime = e.duration / e.numTriggers;
+    e.value = GetTableField(l,-1,"value");
+
+    return e;
+}
+int L_GetWidthOf(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index >= 0 && index < MAX_OBJS)
+    {
+        GameObject* g = &objects[index];
+        lua_pushnumber(l,al_get_bitmap_width(sprites[g->spriteIndex].sprite));
+    }
+    else 
+    {
+        lua_pushnumber(l,0);
+    }
+    return 1;
+}
+int L_GetHeightOf(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index >= 0 && index < MAX_OBJS)
+    {
+        GameObject* g = &objects[index];
+        lua_pushnumber(l,al_get_bitmap_height(sprites[g->spriteIndex].sprite));
+    }
+    else 
+    {
+        lua_pushnumber(l,0);
+    }
+    return 1;
+}
+
 int L_CreateProjectile(lua_State* l)
 {
     const int x = lua_tonumber(l,1);
@@ -111,8 +167,10 @@ int L_CreateProjectile(lua_State* l)
     const char* portrait = lua_tostring(l,3);
     const int attackType = lua_tonumber(l,4);
     const int speed = lua_tonumber(l,5);
+    const int duration = lua_tonumber(l,6);
 
-    size_t len =  lua_rawlen(l,6);
+    const bool shouldCallback = lua_toboolean(l, 7);
+    size_t len =  lua_rawlen(l,8);
 
     ALLEGRO_MOUSE_STATE mouseState = GetMouseClamped();
     GameObject* targ = NULL;
@@ -136,38 +194,9 @@ int L_CreateProjectile(lua_State* l)
     memset(effects,0,sizeof(Effect)*len);
     for (int i = 1; i < len+1; i++)
     {
-        lua_pushnumber(l,i);
-        lua_gettable(l,6);
-
         Effect e;
-        /*lua_getfield(l,7,"trigger");
-        e.trigger = lua_tonumber(l,-1);
-        lua_remove(l, -1);
-        e.trigger = GetTableField(l,7,"trigger");
-
-        lua_getfield(l,7,"type");
-        e.effectType = lua_tonumber(l,-1);
-        lua_remove(l, -1); 
-
-        lua_getfield(l,7,"numTriggers");
-        e.numTriggers = lua_tonumber(l,-1);
-        lua_remove(l, -1);  
-
-        lua_getfield(l,7,"duration");
-        if (!lua_isnil(l,-1))
-        {
-            e.duration = lua_tonumber(l,-1);
-        }
-        lua_remove(l,-1);*/
-        e.trigger = GetTableField(l,7,"trigger");
-        e.effectType = GetTableField(l,7,"type");
-        e.numTriggers = GetTableField(l,7,"numTriggers");
-        e.duration = GetTableField(l,7,"duration");
-        e.tickTime = e.duration / e.numTriggers;
-        e.value = GetTableField(l,7,"value");
-
+        e = GetEffectFromTable(l, 8, i);
         lua_remove(l,-1);
-
         effects[i-1] = e;
     }       
     int w=0; int h=0;
@@ -181,8 +210,14 @@ int L_CreateProjectile(lua_State* l)
     a.y = currGameObjRunning->y + h/2;
     a.radius = 1;
     a.target = targ;
-    a.targx = x;
-    a.targy = y;
+    float x2 = x; float y2 = y;
+    if (attackType == ATTACK_PROJECTILE_ANGLE)
+    {
+         x2 = x - a.x;  y2 = y - a.y;
+        Normalize(&x2,&y2);
+    }
+    a.targx = x2;
+    a.targy = y2;
     a.effects = calloc(len,sizeof(Effect));
     memcpy(a.effects,effects,sizeof(Effect)*len);
     a.numEffects = len;
@@ -190,6 +225,10 @@ int L_CreateProjectile(lua_State* l)
     a.ownedBy = currGameObjRunning;
     a.properties |= ATTACK_HITS_ENEMIES;
     a.speed = speed;
+    a.cameFrom = currAbilityRunning;
+    //a.callback_onhit = currAbilityRunning->luafunc_onhit;
+    a.shouldCallback = shouldCallback;
+    a.duration = duration;
     AddAttack(&a);
 
 
@@ -199,8 +238,78 @@ int L_CreateAOE(lua_State* l)
 {
     //read from table of effects
     //eg [Effect: DoT of 10dps, Effect: Slows]
-}
+    const int x = lua_tonumber(l,1);
+    const int y = lua_tonumber(l,2);
+    const char* effectPortrait = lua_tostring(l,3);
+    const float radius = lua_tonumber(l,4);
+    const float tickrate = lua_tonumber(l,5);
+    const float duration = lua_tonumber(l, 6);
+    const bool shouldCallback = lua_toboolean(l, 7);
 
+    size_t len =  lua_rawlen(l,8);
+    Effect effects[len];    
+    memset(effects,0,sizeof(Effect)*len);
+    for (int i = 1; i < len+1; i++)
+    {
+        Effect e;
+        e = GetEffectFromTable(l, 8, i);
+        lua_remove(l,-1);
+        effects[i-1] = e;
+    }       
+
+    Attack a;
+    memset(&a,0,sizeof(Attack));
+    a.x = x;
+    a.y = y;
+    a.targx = x;
+    a.targy = y;
+    a.radius = radius;
+    a.effects = calloc(len,sizeof(Effect));
+    memcpy(a.effects,effects,sizeof(Effect)*len);
+    a.numEffects = len;
+    a.ownedBy = currGameObjRunning;
+    a.properties |= ATTACK_HITS_ENEMIES;
+    //a.callback_onhit = currAbilityRunning->luafunc_onhit;
+    a.cameFrom = currAbilityRunning;
+    a.shouldCallback = shouldCallback;
+    a.duration = duration;
+    a.attackType = ATTACK_AOE;
+    a.tickrate = tickrate;
+    AddAttack(&a);
+
+}
+int L_SetObjTargetPosition(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index >= 0 && index < MAX_OBJS)
+    {
+        GameObject* obj = &objects[index];
+        obj->xtarg = lua_tonumber(l,2);
+        obj->ytarg = lua_tonumber(l,3);
+        obj->targObj = NULL;
+    }
+
+}
+int L_SetObjPosition(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index >= 0 && index < MAX_OBJS)
+    {
+        GameObject* obj = &objects[index];
+        obj->x = lua_tonumber(l,2);
+        obj->y = lua_tonumber(l,3);
+    }
+    return 1;
+}
+int L_Teleport(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index >= 0 && index < MAX_OBJS)
+    {
+        GameObject* obj = &objects[index];
+        Teleport(obj,lua_tonumber(l,2),lua_tonumber(l,3));
+    }
+}
 int L_CreateObject(lua_State* l)
 {
     GameObject* g;
@@ -287,40 +396,61 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,1);
     lua_setglobal(l,"ENEMY");
 
-    lua_pushinteger(l,0);
+    lua_pushinteger(l,TRIGGER_TIMER);
     lua_setglobal(l,"TRIGGER_TIMER");
 
-    lua_pushinteger(l,1);
+    lua_pushinteger(l,TRIGGER_ONATTACK);
     lua_setglobal(l,"TRIGGER_ONATTACK");
 
-    lua_pushinteger(l,2);
+    lua_pushinteger(l,TRIGGER_ONHIT);
     lua_setglobal(l,"TRIGGER_ONHIT");
 
-    lua_pushinteger(l,3);
+    lua_pushinteger(l,TRIGGER_INSTANT);
     lua_setglobal(l,"TRIGGER_INSTANT");
 
-    lua_pushinteger(l,0);
+    lua_pushinteger(l,EFFECT_MAXHP);
     lua_setglobal(l,"EFFECT_MAXHP");
 
-    lua_pushinteger(l,1);
+    lua_pushinteger(l,EFFECT_DAMAGE);
     lua_setglobal(l,"EFFECT_DAMAGE");
 
-    lua_pushinteger(l,2);
+    lua_pushinteger(l,EFFECT_HEAL);
     lua_setglobal(l,"EFFECT_HEAL");
 
+    lua_pushinteger(l,EFFECT_HEAL);
+    lua_setglobal(l,"EFFECT_POSITION");
 
-    lua_pushinteger(l,0);
+
+
+    lua_pushinteger(l,ABILITY_INSTANT);
     lua_setglobal(l,"ABILITY_INSTANT");
-    lua_pushinteger(l,1);
+    lua_pushinteger(l,ABILITY_POINT);
     lua_setglobal(l,"ABILITY_POINT");
-    lua_pushinteger(l,2);
+    lua_pushinteger(l,ABILITY_TARGET_FRIENDLY);
     lua_setglobal(l,"ABILITY_TARGET_FRIENDLY");
-    lua_pushinteger(l,3);
+    lua_pushinteger(l,ABILITY_TARGET_ENEMY);
     lua_setglobal(l,"ABILITY_TARGET_ENEMY");
-    lua_pushinteger(l,4);
+    lua_pushinteger(l,ABILITY_TARGET_ALL);
     lua_setglobal(l,"ABILITY_TARGET_ALL");
     
 
+    lua_pushinteger(l,ATTACK_AOE);
+    lua_setglobal(l,"ATTACK_AOE");
+    lua_pushinteger(l,ATTACK_PROJECTILE_TARGETED);
+    lua_setglobal(l,"ATTACK_PROJECTILE_TARGETED");
+    lua_pushinteger(l,ATTACK_PROJECTILE_POINT);
+    lua_setglobal(l,"ATTACK_PROJECTILE_POINT");
+    lua_pushinteger(l,ATTACK_PROJECTILE_ANGLE);
+    lua_setglobal(l,"ATTACK_PROJECTILE_ANGLE");
+    lua_pushinteger(l,ATTACK_MELEE);
+    lua_setglobal(l,"ATTACK_MELEE");
+
+    lua_pushinteger(l,ATTACK_ACTIVE);
+    lua_setglobal(l,"ATTACK_ACTIVE");
+    lua_pushinteger(l,ATTACK_HITS_ENEMIES);
+    lua_setglobal(l,"ATTACK_HITS_ENEMIES");
+    lua_pushinteger(l,ATTACK_HITS_FRIENDLIES);
+    lua_setglobal(l,"ATTACK_HITS_FRIENDLIES");
 
 
 
@@ -335,6 +465,8 @@ int L_AddAbility(lua_State* l)
 
     Ability* prefab = AddAbility(path); 
     currGameObjRunning->abilities[index] = CloneAbilityPrefab(prefab,l);
+
+    printf("0: %i, 1: %i\n",currGameObjRunning->abilities[0].luafunc_onhit,currGameObjRunning->abilities[1].luafunc_onhit);
     return 1;
 }
 int L_AbilitySetPortrait(lua_State* l)
@@ -378,5 +510,26 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_CreateProjectile);
     lua_setglobal(luaState, "CreateProjectile");
+
+    lua_pushcfunction(luaState, L_CreateAOE);
+    lua_setglobal(luaState, "CreateAOE");
+
+    lua_pushcfunction(luaState, L_GetObjRef);
+    lua_setglobal(luaState, "GetObjRef");
+
+    lua_pushcfunction(luaState, L_SetObjPosition);
+    lua_setglobal(luaState, "SetObjPosition");
+
+    lua_pushcfunction(luaState, L_GetWidthOf);
+    lua_setglobal(luaState, "GetWidthOf");
+
+    lua_pushcfunction(luaState, L_GetHeightOf);
+    lua_setglobal(luaState, "GetHeightOf");
+
+    lua_pushcfunction(luaState, L_SetObjTargetPosition);
+    lua_setglobal(luaState, "SetObjTargetPosition");
+
+    lua_pushcfunction(luaState, L_Teleport);
+    lua_setglobal(luaState, "Teleport");
 
 }

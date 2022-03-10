@@ -102,6 +102,7 @@ void Heal(GameObject* g, float value);
 
 void ModifyMaxHP(GameObject* g, float value);
 
-
+void Teleport(GameObject* g, float x, float y);
+void GetOffsetCenter(GameObject* g, float* x, float* y);
 //void LoadFolderPrefabs(const char* dirPath);
 //void LoadPrefabs(const char* dirPath);

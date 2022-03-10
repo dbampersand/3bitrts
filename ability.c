@@ -63,6 +63,8 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
      }
     else
      {
+            
+        Ability* before = currAbilityRunning;
         a->cooldown = 1;
         int funcIndex;
         if (CheckFuncExists("setup",a->luabuffer))
@@ -85,7 +87,27 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         }
         else
             a->luafunc_casted = -1;
+        if (CheckFuncExists("onhit",a->luabuffer))
+        {
+            lua_getglobal(l, "onhit");
+            funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+            a->luafunc_onhit = funcIndex;
 
+        }
+        else
+            a->luafunc_onhit = -1;
+
+        if (CheckFuncExists("abilitytick",a->luabuffer))
+        {
+            lua_getglobal(l, "abilitytick");
+            funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+            a->luafunc_tick = funcIndex;
+
+        }
+        else
+            a->luafunc_tick = -1;
+
+            currAbilityRunning = before;
 
      }
 }
