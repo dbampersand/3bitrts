@@ -4,6 +4,7 @@
 #include "map.h"
 #include "effect.h"
 #include "attack.h"
+#include "animationeffect.h"
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);
   for (int i=1; i <= top; i++) {
@@ -159,7 +160,27 @@ int L_GetHeightOf(lua_State* l)
     }
     return 1;
 }
+int L_AddAttackSprite(lua_State* l)
+{
+    const char* _path = lua_tostring(l,1);
+    char* path = calloc(strlen(_path)+1,sizeof(char));
+    strcpy(path,_path);
+    int w = lua_tonumber(l,2);
+    int h = lua_tonumber(l,3);
+    float cd = lua_tonumber(l,4);
 
+
+    int before = numAnimationEffectsPrefabs;
+    int index = AddAnimationEffectPrefab(path, w, h, cd);
+
+    if (before + 1 != index)
+    {
+        free(path);
+    }
+    currGameObjRunning->numAttackEffectIndices++;
+    currGameObjRunning->onAttackEffectsIndices = realloc(currGameObjRunning->onAttackEffectsIndices,currGameObjRunning->numAttackEffectIndices*sizeof(int));
+    currGameObjRunning->onAttackEffectsIndices[currGameObjRunning->numAttackEffectIndices-1] = index;
+}
 int L_CreateProjectile(lua_State* l)
 {
     const int x = lua_tonumber(l,1);
@@ -531,5 +552,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_Teleport);
     lua_setglobal(luaState, "Teleport");
+
+    lua_pushcfunction(luaState, L_AddAttackSprite);
+    lua_setglobal(luaState, "AddAttackSprite");
 
 }

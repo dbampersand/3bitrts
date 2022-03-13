@@ -21,6 +21,6 @@ int PARTICLES_TOP;
 void UpdateParticles(float dt);
 void DrawParticles();
 void InitParticles();
-void AddParticle(float x, float y, short lifetime, float speed, float angle, bool colour);
+void AddParticle(float x, float y, short lifetime, float speed, float angle, bool colour);  
 void AddMouseRandomParticles(ALLEGRO_MOUSE_STATE mouseState, int numParticles);
 

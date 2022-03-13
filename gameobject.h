@@ -55,6 +55,9 @@ typedef struct GameObject
      
     Effect effects[MAX_EFFECTS];
 
+    int* onAttackEffectsIndices;
+    int numAttackEffectIndices;
+
 } GameObject;
 
 #define MAX_OBJS 64

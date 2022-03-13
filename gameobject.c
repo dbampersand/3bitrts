@@ -9,6 +9,7 @@
 #include "colors.h"
 #include "video.h"
 #include <allegro5/allegro_primitives.h>
+#include "animationeffect.h"
 
 GameObject* AddGameobject(GameObject* prefab)
 {
@@ -534,6 +535,23 @@ void AttackTarget(GameObject* g)
             CallLuaFunc(g->luafunc_onattack);
         }
         g->targObj->health -= g->baseDamage;
+
+        int randomAtk = g->onAttackEffectsIndices[rand() % g->numAttackEffectIndices];
+        AnimationEffect* ae =  &animationEffectsPrefabs[randomAtk];
+
+        
+        Rect r1 = GetObjRect(g);
+        Rect r2 = GetObjRect(g->targObj);
+        
+        int midX = (r1.x+r1.w/2 + r2.x+r2.w/2) / 2;
+        int midY = (r1.y+r1.h/2 + r2.y+r2.h/2) / 2;
+
+        midX -= ae->rect.w/2;
+        midY -= ae->rect.h/2;
+
+
+
+        AddAnimationEffect_Prefab(ae, g->properties & OBJ_OWNED_BY,midX,midY);
     }
 }
 Rect GetObjRect(GameObject* g)

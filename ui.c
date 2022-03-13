@@ -3,6 +3,9 @@
 #include "colors.h"
 #include "player.h"
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro.h>
+
+
 void DrawHealthUIElement(GameObject* selected)
 {
     float percentHP = selected->health / selected->maxHP;
@@ -71,4 +74,63 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         DrawAbilityPortraits(selected,3,129,220,al_key_down(keyState,ALLEGRO_KEY_R));
 
     }
+}
+void LoadCursorSprite(UI* ui, int* index, char* path)
+{
+    *index = LoadSprite(path,false);    
+    if (*index == -1)
+        return;
+    sprites[*index].inverseSprite = al_clone_bitmap(sprites[*index].sprite);
+    ALLEGRO_BITMAP* inverse = sprites[*index].inverseSprite;
+
+    int w = al_get_bitmap_width(inverse);
+    int h = al_get_bitmap_height(inverse);
+
+
+    al_lock_bitmap(inverse,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+    al_set_target_bitmap(inverse);
+
+    for (int y = 0; y < h; y++) {
+        for (int x = 0; x < w; x++) {
+            
+            ALLEGRO_COLOR pixel = al_get_pixel(sprites[*index].sprite, x, y);
+            if (!pixel.a)
+            {
+                for (int y2 = -1; y2 < 2; y2++)
+                {
+                    for (int x2 = -1; x2 < 2; x2++)
+                    {
+                        if (x2 == 0 && y2 == 0)
+                            continue;
+                        ALLEGRO_COLOR pixel2 = al_get_pixel(sprites[*index].sprite, x+x2, y+y2);
+                        if (pixel2.a)
+                        {
+                            al_put_pixel(x,y,WHITE);
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    al_unlock_bitmap(inverse);
+
+}
+
+void DrawCursor(ALLEGRO_MOUSE_STATE* mouseState, int index, bool clicked)
+{
+    if (mouseState->buttons & 1 || mouseState->buttons & 2)
+    {
+        DrawSprite(&sprites[index],mouseState->x,mouseState->y,FRIENDLY,true);
+        DrawSprite(&sprites[index],mouseState->x,mouseState->y,BG,false);
+
+    }
+    else
+    {
+        DrawSprite(&sprites[index],mouseState->x,mouseState->y,BG,true);
+        DrawSprite(&sprites[index],mouseState->x,mouseState->y,FRIENDLY,false);
+    }
+
+
 }

@@ -3,7 +3,7 @@
 #include "vector2.h"
 typedef struct Rect 
 {
-    unsigned char x; unsigned char y; unsigned char w; unsigned char h;
+    int x; int y; int w; int h;
 } Rect;
 
 bool CheckIntersect(Rect r1, Rect r2);
