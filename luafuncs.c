@@ -28,11 +28,15 @@ static void dumpstack (lua_State* l) {
     }
   }
 }
+int L_GetThisObj(lua_State* l)
+{
+    lua_pushnumber(l,currGameObjRunning-objects);
+    return 1;
+}
 void CallLuaFunc(int funcID)
 {
     lua_rawgeti(luaState,LUA_REGISTRYINDEX,funcID);
     lua_pcall(luaState,0,0,0);
-
 }
 void init_lua()
 {
@@ -92,15 +96,23 @@ int L_GetMouseY(lua_State* l)
     lua_pushnumber(l,mouseState.y);
     return 1;
 }
-int GetTableField(lua_State* l, int tableIndex, const char* name)
+float GetTableField(lua_State* l, int tableIndex, const char* name, bool* isAField)
 {
     lua_getfield(l,tableIndex,name);
     if (!lua_isnil(l,-1))
     {
-        int j = lua_tonumber(l,-1);
+        bool isNum;
+        float j = lua_tonumberx(l,-1, &isNum);
+        if (!isNum)
+        {
+            *isAField = false;
+            return 0;
+        }
         lua_remove(l,-1);
+        *isAField = true;
         return j;
     }
+    *isAField = false; 
     lua_remove(l,-1);
     return 0;
 
@@ -111,24 +123,41 @@ int L_GetObjRef(lua_State* l)
     return 1;
 }
 
+int L_GetThreatRank(lua_State* l)
+{
+    int j = GetNumThreats(&currGameObjRunning->threatList);
+    Threat* next = &currGameObjRunning->threatList;
+
+    for (int i = 0; i < j; i++)
+    {
+        lua_pushnumber(l,(int)(next->obj - objects));
+        next = next->next;
+
+        if (!next) 
+            break;
+    }
+    return j; 
+}
+
 Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
 {
     lua_pushnumber(l,index);
     lua_gettable(l,tableStackPos);
 
     Effect e;
+    bool isField = false;
     /*e.trigger = GetTableField(l,tableStackPos+1,"trigger");
     e.effectType = GetTableField(l,tableStackPos+1,"type");
     e.numTriggers = GetTableField(l,tableStackPos+1,"numTriggers");
     e.duration = GetTableField(l,tableStackPos+1,"duration");
     e.tickTime = e.duration / e.numTriggers;
     e.value = GetTableField(l,tableStackPos+1,"value");*/
-    e.trigger = GetTableField(l,-1,"trigger");
-    e.effectType = GetTableField(l,-1,"type");
-    e.numTriggers = GetTableField(l,-1,"numTriggers");
-    e.duration = GetTableField(l,-1,"duration");
+    e.trigger = GetTableField(l,-1,"trigger", &isField);
+    e.effectType = GetTableField(l,-1,"type",&isField);
+    e.numTriggers = GetTableField(l,-1,"numTriggers",&isField);
+    e.duration = GetTableField(l,-1,"duration",&isField);
     e.tickTime = e.duration / e.numTriggers;
-    e.value = GetTableField(l,-1,"value");
+    e.value = GetTableField(l,-1,"value",&isField);
 
     return e;
 }
@@ -173,7 +202,7 @@ int L_AddAttackSprite(lua_State* l)
     int before = numAnimationEffectsPrefabs;
     int index = AddAnimationEffectPrefab(path, w, h, cd);
 
-    if (before + 1 != index)
+    if (before != index)
     {
         free(path);
     }
@@ -473,9 +502,67 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,ATTACK_HITS_FRIENDLIES);
     lua_setglobal(l,"ATTACK_HITS_FRIENDLIES");
 
+}
+int L_ApplyEffect(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    if (objIndex < 0) 
+        return -1; 
+    if (objIndex >= MAX_OBJS) 
+        return -1;
 
+    size_t len =  lua_rawlen(l,2);
 
+    for (int i = 1; i < len+1; i++)
+    {
+        Effect e;
+        e = GetEffectFromTable(l, 2, i);
+        lua_remove(l,-1);
+        ApplyEffect(&e,&objects[objIndex]);
+    }       
+    
+    return 1;
+}
+int L_DealDamage(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    if (objIndex < 0) return -1; 
+    if (objIndex >= MAX_OBJS) return -1;
 
+    int dmg = lua_tonumber(l,2);
+    Damage(&objects[objIndex],dmg);
+    return 1;
+}
+int L_CastAbility(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+        
+    if (index < 0)
+        index = 0;
+    if (index > 3) 
+        index = 3;
+    if (!AbilityIsInitialised(&currGameObjRunning->abilities[index]))
+        return 0;
+
+    size_t len =  lua_rawlen(l,2);
+
+    int x = -1; int y = -1; int obj = -1; float headingx=-1; float headingy=-1;
+
+    bool isAField;
+    for (int i = 0; i < len; i++)
+    {
+        lua_pushnumber(l,i+1);
+        lua_gettable(l,2);
+
+        x = GetTableField(l,-1,"x",&isAField);
+        y = GetTableField(l,-1,"y",&isAField);
+        obj = GetTableField(l,-1,"target",&isAField);
+        headingx = GetTableField(l,-1,"headingx",&isAField);
+        headingy = GetTableField(l,-1,"headingy",&isAField);
+    }
+
+    CastAbilityAI(currGameObjRunning,&currGameObjRunning->abilities[index],x,y,headingx,headingy,&objects[obj]);
+    return 1;
 }
 int L_AddAbility(lua_State* l)
 {
@@ -487,7 +574,6 @@ int L_AddAbility(lua_State* l)
     Ability* prefab = AddAbility(path); 
     currGameObjRunning->abilities[index] = CloneAbilityPrefab(prefab,l);
 
-    printf("0: %i, 1: %i\n",currGameObjRunning->abilities[0].luafunc_onhit,currGameObjRunning->abilities[1].luafunc_onhit);
     return 1;
 }
 int L_AbilitySetPortrait(lua_State* l)
@@ -555,5 +641,21 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_AddAttackSprite);
     lua_setglobal(luaState, "AddAttackSprite");
+
+    lua_pushcfunction(luaState, L_CastAbility);
+    lua_setglobal(luaState, "CastAbility");
+
+    lua_pushcfunction(luaState, L_ApplyEffect);
+    lua_setglobal(luaState, "ApplyEffect");
+
+    lua_pushcfunction(luaState, L_DealDamage);
+    lua_setglobal(luaState, "DealDamage");
+
+    lua_pushcfunction(luaState, L_GetThreatRank);
+    lua_setglobal(luaState, "GetThreatRank");
+
+    lua_pushcfunction(luaState, L_GetThisObj);
+    lua_setglobal(luaState, "GetThisObj");
+
 
 }

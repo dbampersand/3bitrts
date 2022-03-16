@@ -73,7 +73,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
             for (int i = 0; i < numObjects; i++)
             {
                 GameObject* obj = &objects[i];
-                if (!IsOwnedByPlayer(obj))
+                if (!IsOwnedByPlayer(obj) || !IsActive(obj))
                     continue;
                 Sprite* sp = &sprites[obj->spriteIndex];
                 int j = al_get_bitmap_width(sp->sprite);
@@ -106,7 +106,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
     {
         if (players[0].abilityHeld == NULL)
         {
-        AddMouseRandomParticles(*mouseState, 3);
+            AddMouseRandomParticles(*mouseState, 3);
         }
         for (int i = 0; i < players[0].numUnitsSelected; i++)
         {
@@ -116,6 +116,8 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
         for (int i = 0; i < numObjects; i++)
         {
             GameObject* g = &objects[i];
+            if (!IsActive(g))
+                continue;
             if (IsSelected(g))
             {
                 int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
@@ -146,8 +148,12 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     UpdateAttacks(dt);
     for (int i = 0; i < numObjects; i++)
     {
-
         currGameObjRunning = &objects[i];
+        if (!IsOwnedByPlayer(currGameObjRunning))
+        {
+            DoAI(currGameObjRunning);
+        }
+
         currGameObjRunning->attackTimer -= dt;
         if (currGameObjRunning->attackTimer < 0)
             currGameObjRunning->attackTimer = 0;
@@ -358,7 +364,10 @@ int main(int argc, char* args[])
     GROUND = al_map_rgba(94,98,134,255);
     WHITE = al_map_rgba(255,255,255,255);
 
-   
+    //dodge a lot of crashes by setting the 0th sprite to a zeroed bitmap
+    sprites[0].sprite = al_create_bitmap(0,0);
+    sprites[0].inverseSprite = al_create_bitmap(0,0);
+
 
     SCREEN = al_create_bitmap(256,256);
 

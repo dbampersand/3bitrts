@@ -119,5 +119,27 @@ void CastAbility(Ability* a)
         a->cdTimer = a->cooldown;
     }
 }
+void CastAbilityAI(GameObject* g, Ability* a, int x, int y, float headingx, float headingy, GameObject* target)
+{
 
+    if (target)
+    {
+        printf("gg");
+    }
+    lua_rawgeti(luaState,LUA_REGISTRYINDEX,a->luafunc_casted);
+
+    lua_pushinteger(luaState,x);
+    lua_pushinteger(luaState,y);    
+    lua_pushinteger(luaState,(int)(target-objects));    
+    lua_pushnumber(luaState,headingx);
+    lua_pushnumber(luaState,headingy);    
+
+
+    lua_pcall(luaState,5,0,0);
+
+}
+bool AbilityIsInitialised(Ability* a)
+{
+    return (a->path != 0);
+}
 //void CopyAbility(Ability* prefab)

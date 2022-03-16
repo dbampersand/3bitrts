@@ -6,6 +6,7 @@
 #include <allegro5/allegro.h>
 #include "effect.h"
 #include "rect.h"
+#include "threat.h"
 typedef enum GAMEOBJ_PROPERTIES
 {
     OBJ_SELECTED = 1,
@@ -58,6 +59,7 @@ typedef struct GameObject
     int* onAttackEffectsIndices;
     int numAttackEffectIndices;
 
+    Threat threatList;
 } GameObject;
 
 #define MAX_OBJS 64
@@ -100,12 +102,16 @@ void NewObj(GameObject* g);
 Rect GetObjRect(GameObject* g);
 int GetPlayerOwnedBy(GameObject* g);
 
-void Damage(GameObject* g, float value);
+bool Damage(GameObject* g, float value);
 void Heal(GameObject* g, float value);
 
 void ModifyMaxHP(GameObject* g, float value);
 
 void Teleport(GameObject* g, float x, float y);
 void GetOffsetCenter(GameObject* g, float* x, float* y);
+void KillObj(GameObject* g);
+bool IsActive(GameObject* g);
+void DoAI(GameObject* g);
+
 //void LoadFolderPrefabs(const char* dirPath);
 //void LoadPrefabs(const char* dirPath);

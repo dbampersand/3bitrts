@@ -1,5 +1,8 @@
 #pragma once
 
+#include "stdbool.h"
+typedef struct GameObject GameObject;
+
 typedef enum ABILITY_CAST_TYPE
 {
     ABILITY_INSTANT = 0,
@@ -23,12 +26,13 @@ typedef struct Ability
     float cdTimer;
     ABILITY_CAST_TYPE castType;
 } Ability;
-
 Ability* abilities;
 int numAbilities;
-int numAbilitiesAllocated;
+int numAbilitiesAllocated; 
 typedef struct lua_State lua_State;
 void LoadAbility(const char* path, lua_State* l, Ability* a);
 Ability CloneAbilityPrefab(Ability* prefab, lua_State* l);
 Ability* AddAbility(const char* path);
 void CastAbility(Ability* a);
+void CastAbilityAI(GameObject* g, Ability* a, int x, int y, float headingx, float headingy, GameObject* target);
+bool AbilityIsInitialised(Ability* a);

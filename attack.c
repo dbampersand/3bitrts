@@ -29,12 +29,16 @@ void InitAttacks()
 void RemoveAttack(int attackindex)
 {
     Attack* a = &attacks[attackindex];
-    lua_rawgeti(luaState,LUA_REGISTRYINDEX,a->cameFrom->luafunc_onhit);
+    if (a->cameFrom)
+    {
+        lua_rawgeti(luaState,LUA_REGISTRYINDEX,a->cameFrom->luafunc_onhit);
 
-    lua_pushinteger(luaState,a->x);
-    lua_pushinteger(luaState,a->y);    
-    lua_pushinteger(luaState,(-1));    
-    lua_pcall(luaState,3,0,0);
+        lua_pushinteger(luaState,a->x);
+        lua_pushinteger(luaState,a->y);    
+        lua_pushinteger(luaState,(-1));    
+        lua_pcall(luaState,3,0,0);
+    }
+    a->properties &= ~OBJ_ACTIVE;
 
     if (attack_top < 0)
         return;
@@ -45,7 +49,6 @@ void RemoveAttack(int attackindex)
     {
         free(attacks[attackindex].effects);
     }
-
 }
 
 void ApplyAttack(Attack* a, GameObject* target)
@@ -100,7 +103,7 @@ void UpdateAttack(Attack* a, float dt)
     a->timer += dt;
     a->duration -= dt;
 
-    if (a->x < 0 || a->y < 0 || a->x >= 255 || a->y >= 255 || a->duration < 0)
+    if (a->x < 0 || a->y < 0 || a->x > 255 || a->y > 255 || a->duration < 0)
     {
         RemoveAttack(a-attacks);
         return;

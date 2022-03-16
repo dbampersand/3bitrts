@@ -10,6 +10,7 @@
 #include "video.h"
 #include <allegro5/allegro_primitives.h>
 #include "animationeffect.h"
+#include <stdlib.h>
 
 GameObject* AddGameobject(GameObject* prefab)
 {
@@ -346,7 +347,7 @@ void CheckCollisions(GameObject* g, bool x, float dV)
     for (int i = 0; i < numObjects; i++)
     {
         GameObject* g2 = &objects[i];
-        if (g2 == g) 
+        if (g2 == g || !IsActive(g2)) 
             continue;
         Sprite* s2 = &sprites[g2->spriteIndex];
         Rect r2 = (Rect){g2->x,g2->y,al_get_bitmap_width(s2->sprite),al_get_bitmap_height(s2->sprite)};
@@ -356,8 +357,6 @@ void CheckCollisions(GameObject* g, bool x, float dV)
             continue;
         }
 
-        //if (w <= 0 || h <= 0)
-          //  continue;
         if (x)
         {
             if (dV > 0)
@@ -373,7 +372,7 @@ void CheckCollisions(GameObject* g, bool x, float dV)
             {
                 if (1)
                 {
-                    g->x = g2->x+al_get_bitmap_width(s2->sprite);; //?? 
+                    g->x = g2->x+al_get_bitmap_width(s2->sprite); 
                 }
             }
         }
@@ -384,7 +383,7 @@ void CheckCollisions(GameObject* g, bool x, float dV)
                 if (dV > 0)
                     g->y = g2->y - al_get_bitmap_width(s->sprite);
                 else
-                    g->y = g2->y + al_get_bitmap_width(s2->sprite); //?? 
+                    g->y = g2->y + al_get_bitmap_width(s2->sprite);
 
             }
         }
@@ -506,6 +505,8 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
 }
 void DrawGameObj(GameObject* g)
 {
+    if (!(g->properties & OBJ_ACTIVE))
+        return;
     bool b = IsOwnedByPlayer(g);
     ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
     Sprite* s = &sprites[g->spriteIndex];
@@ -534,24 +535,37 @@ void AttackTarget(GameObject* g)
         {
             CallLuaFunc(g->luafunc_onattack);
         }
-        g->targObj->health -= g->baseDamage;
+        int damage = g->baseDamage;
+       //    g->targObj->health -= damage   ;
 
-        int randomAtk = g->onAttackEffectsIndices[rand() % g->numAttackEffectIndices];
-        AnimationEffect* ae =  &animationEffectsPrefabs[randomAtk];
+        if (g->numAttackEffectIndices > 0)
+        {
 
-        
-        Rect r1 = GetObjRect(g);
-        Rect r2 = GetObjRect(g->targObj);
-        
-        int midX = (r1.x+r1.w/2 + r2.x+r2.w/2) / 2;
-        int midY = (r1.y+r1.h/2 + r2.y+r2.h/2) / 2;
+            int randomAtk = g->onAttackEffectsIndices[rand() % g->numAttackEffectIndices];
+            AnimationEffect* ae =  &animationEffectsPrefabs[randomAtk];
 
-        midX -= ae->rect.w/2;
-        midY -= ae->rect.h/2;
+            
+            Rect r1 = GetObjRect(g);
+            Rect r2 = GetObjRect(g->targObj);
+            
+            int midX = (r1.x+r1.w/2 + r2.x+r2.w/2) / 2;
+            int midY = (r1.y+r1.h/2 + r2.y+r2.h/2) / 2;
+
+            midX -= ae->rect.w/2;
+            midY -= ae->rect.h/2;
 
 
 
-        AddAnimationEffect_Prefab(ae, g->properties & OBJ_OWNED_BY,midX,midY);
+            AddAnimationEffect_Prefab(ae, g->properties & OBJ_OWNED_BY,midX,midY);
+        }
+
+
+        AddThreat(g,g->targObj,damage);
+        if (Damage(g->targObj,damage))
+        {
+            g->targObj = NULL;
+        }
+
     }
 }
 Rect GetObjRect(GameObject* g)
@@ -560,9 +574,15 @@ Rect GetObjRect(GameObject* g)
     Rect r = (Rect){g->x,g->y,al_get_bitmap_width(sprites[g->spriteIndex].sprite),al_get_bitmap_height(sprites[g->spriteIndex].sprite)};
     return r;
 }
-void Damage(GameObject* g, float value)
+bool Damage(GameObject* g, float value)
 {
     g->health -= value;
+    if (g->health <= 0)
+    {
+        KillObj(g);
+        return true;
+    }
+    return false;
 }
 void Heal(GameObject* g, float value)
 {
@@ -594,3 +614,16 @@ void GetOffsetCenter(GameObject* g, float* x, float* y)
     *x = 0; 
     *y = 0;
 }
+void DoAI(GameObject* g)
+{
+    if (g->threatList.obj)
+    {
+        Threat* t = GetHighestThreat(&g->threatList);
+        g->targObj = t->obj;
+    }
+}
+bool IsActive(GameObject* g)
+{
+    return (g->properties & OBJ_ACTIVE);
+}
+

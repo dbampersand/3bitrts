@@ -1,8 +1,15 @@
 function setup()
     SetSprite("Assets/Enemies/wyrm.png");
+    AddAbility("Assets/enemies/wyrm_boss/ability_bite.lua",0)    
+
 end
 
 function update()
+    j = GetThreatRank()
+
+    ddasd = {};
+    ddasd["target"] = j;
+    CastAbility(0,{ddasd});
 end
 
 function kill()
