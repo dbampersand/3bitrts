@@ -189,6 +189,11 @@ int L_GetHeightOf(lua_State* l)
     }
     return 1;
 }
+int L_SetAbilityRange(lua_State* l)
+{
+    currAbilityRunning->range = lua_tonumber(l,1);
+    return 0;
+}
 int L_AddAttackSprite(lua_State* l)
 {
     const char* _path = lua_tostring(l,1);
@@ -230,7 +235,7 @@ int L_CreateProjectile(lua_State* l)
         {
             Rect r = GetObjRect(&objects[i]);
 
-            if (PointInRect((Vector2){x,y},r))
+            if (PointInRect(x,y,r))
             {
                 targ = &objects[i];
                 break;
@@ -283,6 +288,12 @@ int L_CreateProjectile(lua_State* l)
 
 
     return 1;
+}
+int L_SetAbilityCooldown(lua_State* l)
+{
+    const float cd = lua_tonumber(l,1);
+    currAbilityRunning->cooldown = cd;
+    return 0;
 }
 int L_CreateAOE(lua_State* l)
 {
@@ -372,7 +383,7 @@ int L_CreateObject(lua_State* l)
 
 
     bool prefabFound = false;
-    /*for (int i = 0; i < numPrefabs; i++)
+    for (int i = 0; i < numPrefabs; i++)
     {
         if (strcmp(prefabs[i].path,l_path) == 0)
         {
@@ -380,7 +391,7 @@ int L_CreateObject(lua_State* l)
             prefabFound = true;
             break;
         }
-    } */
+    } 
     if (!prefabFound)
     {
         GameObject* prefab = LoadPrefab(l_path);
@@ -397,7 +408,9 @@ int L_CreateObject(lua_State* l)
         g->attackSpeed = 1;
         g->mana = 50;
         g->maxMana = 100;
+        g->aggroRadius = 25;
         SetOwnedBy(g, PLAYER);
+
 
     }
     else
@@ -415,6 +428,7 @@ int L_CreateObject(lua_State* l)
         g->attackSpeed = 1;
         g->mana = 50;
         g->maxMana = 100;
+        g->aggroRadius = 25;
 
 
         SetOwnedBy(g, PLAYER);
@@ -656,6 +670,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetThisObj);
     lua_setglobal(luaState, "GetThisObj");
+
+    lua_pushcfunction(luaState, L_SetAbilityRange);
+    lua_setglobal(luaState, "SetAbilityRange");
 
 
 }

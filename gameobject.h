@@ -43,6 +43,7 @@ typedef struct GameObject
     unsigned char ytarg;
     GameObject* targObj;
 
+    float aggroRadius;
 
     unsigned char speed;
 
@@ -60,6 +61,7 @@ typedef struct GameObject
     int numAttackEffectIndices;
 
     Threat threatList;
+    
 } GameObject;
 
 #define MAX_OBJS 64
@@ -92,7 +94,7 @@ void SetOwnedBy(GameObject* g, bool i);
 void Move(GameObject* g, float delta);
 
 void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col);
-void DrawGameObj(GameObject* g);
+void DrawGameObj(GameObject* g, bool forceInverse);
 
 
 void SetAttackingObj(GameObject* g, GameObject* target);
@@ -112,6 +114,8 @@ void GetOffsetCenter(GameObject* g, float* x, float* y);
 void KillObj(GameObject* g);
 bool IsActive(GameObject* g);
 void DoAI(GameObject* g);
+
+float GetDist(GameObject* g1, GameObject* g2);
 
 //void LoadFolderPrefabs(const char* dirPath);
 //void LoadPrefabs(const char* dirPath);

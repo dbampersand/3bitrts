@@ -11,7 +11,7 @@
 #include <allegro5/allegro_primitives.h>
 #include "animationeffect.h"
 #include <stdlib.h>
-
+#include "video.h"
 GameObject* AddGameobject(GameObject* prefab)
 {
     GameObject* found = NULL;
@@ -503,7 +503,7 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
     al_draw_filled_rectangle(r.x,r.y,r.x+numPixels,r.y+r.h,col);
     
 }
-void DrawGameObj(GameObject* g)
+void DrawGameObj(GameObject* g, bool forceInverse)
 {
     if (!(g->properties & OBJ_ACTIVE))
         return;
@@ -511,7 +511,7 @@ void DrawGameObj(GameObject* g)
     ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
     Sprite* s = &sprites[g->spriteIndex];
     //DrawSprite(&sprites[objects[i].spriteIndex],objects[i].x,objects[i].y,(ALLEGRO_COLOR){94/255.0f,98/255.0f,134/255.0f,255});
-    DrawSprite(s,g->x,g->y,c,IsSelected(g));
+    DrawSprite(s,g->x,g->y,c, IsSelected(g) || forceInverse);
    
     Rect selectRect;
     selectRect.w = al_get_bitmap_width(s->sprite);
@@ -621,9 +621,46 @@ void DoAI(GameObject* g)
         Threat* t = GetHighestThreat(&g->threatList);
         g->targObj = t->obj;
     }
+    //do one of these per frame, just to save some cycles
+    if (_FRAMES % MAX_OBJS  == g-objects)
+    {
+        for (int i = 0; i < MAX_OBJS; i++)
+        {
+            if (objects[i].properties & OBJ_ACTIVE)
+            {
+                if ((g->properties & OBJ_OWNED_BY) != (objects[i].properties & OBJ_OWNED_BY))
+                {
+                    if (GetDist(g,&objects[i]) < g->aggroRadius)
+                    {
+                        //also bring in the others
+                        for (int j = 0; j < MAX_OBJS; j++)
+                        {
+                            if ((g->properties & OBJ_OWNED_BY) == (objects[j].properties & OBJ_OWNED_BY))
+                                AddThreat(&objects[i],&objects[j],0);
+                        }
+                        AddThreat(&objects[i],g, 0);
+                    }
+
+                }
+            }
+
+        }
+
+    }
 }
 bool IsActive(GameObject* g)
 {
     return (g->properties & OBJ_ACTIVE);
 }
 
+float GetDist(GameObject* g1, GameObject* g2)
+{
+    Rect r1 = GetObjRect(g1);
+    Rect r2 = GetObjRect(g2);
+
+    Rect unioned = UnionRect(r1,r2);
+    unioned.w -= r1.w + r2.w;
+    unioned.h -= r1.h + r2.h;
+
+    return unioned.w+unioned.h;
+}

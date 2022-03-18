@@ -1,10 +1,10 @@
 function setup()
-
+    SetAbilityRange(2)
 end
 
 function casted(x,y,obj,headingx,headingy)
     if (obj == GetThisObj()) then
-        return;
+        return false;
     end
     Print("GGGG")
 
@@ -16,6 +16,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["duration"] = 10;
 
     ApplyEffect(obj,{f1});
+    return true; 
 end
 
 function onhit(x,y,objhit)

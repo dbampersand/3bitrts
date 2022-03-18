@@ -128,7 +128,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
             }
             Sprite* s = &sprites[g->spriteIndex];
             Rect r = (Rect){g->x,g->y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)}; 
-            if (PointInRect((Vector2){mouseState->x,mouseState->y},r))
+            if (PointInRect(mouseState->x,mouseState->y,r))
             {
                 for (int i = 0; i < players[0].numUnitsSelected; i++)
                 {
@@ -320,9 +320,33 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     al_set_target_bitmap(SCREEN);
     DrawSprite(&sprites[currMap->spriteIndex],0,0,GROUND,false);
 
+    int objSelected = -1;
+    if (mouseStateLastFrame->buttons & 2 || (mouseState->buttons & 2))
+    {
+        for (int i = 0; i < numObjects; i++)
+        {
+            GameObject* g = &objects[i];
+            if (g->properties & OBJ_ACTIVE && g->properties & OBJ_OWNED_BY)
+            {
+                if (PointInRect(mouseState->x,mouseState->y,GetObjRect(&objects[i])))
+                {
+                    objSelected = i;
+                }
+            }
+        }
+    }
     for (int i = 0; i < numObjects; i++)
     {
-        DrawGameObj(&objects[i]);
+        if (i == objSelected)
+        {
+            DrawGameObj(&objects[i],true);
+            
+        }
+        else
+        {
+            DrawGameObj(&objects[i],false);
+
+        }
     }
     if (players[0].selecting)
         DrawMouseSelectBox(GetMouseClamped());
@@ -336,7 +360,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     {
        //AddAnimationEffect("Assets/UI/slash_fx.png", mouseState->x, mouseState->y, 32,32, 0.1, 0);
         //AddAnimationEffect("Assets/UI/slash_fx2.png", mouseState->x, mouseState->y, 16, 16, 0.05f, 0);
-        AddAnimationEffect_Prefab(&animationEffectsPrefabs[0],0, mouseState->x,mouseState->y);
+        //AddAnimationEffect_Prefab(&animationEffectsPrefabs[0],0, mouseState->x,mouseState->y);
     }   
     DrawAnimationEffects();
     DrawCursor(mouseState, ui.cursorDefaultIndex, false);
@@ -445,7 +469,9 @@ int main(int argc, char* args[])
 
             mouseStateLastFrame = mouseState;
             keyboardStateLastFrame = keyboardState;
-
+            //printf("\n");
+            _FRAMES++;
+            fflush(stdout);
         }
 
     }

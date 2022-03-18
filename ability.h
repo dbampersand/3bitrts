@@ -20,6 +20,8 @@ typedef struct Ability
     int luafunc_onhit;
     int luafunc_tick;
 
+    float range;
+
     char* path;
     int spriteIndex_Portrait;
     float cooldown;

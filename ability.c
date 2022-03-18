@@ -121,10 +121,13 @@ void CastAbility(Ability* a)
 }
 void CastAbilityAI(GameObject* g, Ability* a, int x, int y, float headingx, float headingy, GameObject* target)
 {
+    if (a->cdTimer > 0)
+        return;
+    if (GetDist(g,target) > a->range)
+        return;
 
-    if (target)
+    if (target != g)
     {
-        printf("gg");
     }
     lua_rawgeti(luaState,LUA_REGISTRYINDEX,a->luafunc_casted);
 
@@ -135,7 +138,13 @@ void CastAbilityAI(GameObject* g, Ability* a, int x, int y, float headingx, floa
     lua_pushnumber(luaState,headingy);    
 
 
-    lua_pcall(luaState,5,0,0);
+    lua_pcall(luaState,5,1,0);
+    bool b = lua_toboolean(luaState,-1);
+    if (b)
+    {
+        a->cdTimer = a->cooldown;
+    }
+
 
 }
 bool AbilityIsInitialised(Ability* a)
