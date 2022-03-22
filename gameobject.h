@@ -94,7 +94,7 @@ void SetOwnedBy(GameObject* g, bool i);
 void Move(GameObject* g, float delta);
 
 void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col);
-void DrawGameObj(GameObject* g, bool forceInverse);
+void DrawGameObj(GameObject* g, bool forceInverse); 
 
 
 void SetAttackingObj(GameObject* g, GameObject* target);
@@ -111,11 +111,16 @@ void ModifyMaxHP(GameObject* g, float value);
 
 void Teleport(GameObject* g, float x, float y);
 void GetOffsetCenter(GameObject* g, float* x, float* y);
+void GetCentre(GameObject* g, float* x, float* y);
+
 void KillObj(GameObject* g);
 bool IsActive(GameObject* g);
 void DoAI(GameObject* g);
 
 float GetDist(GameObject* g1, GameObject* g2);
+void CheckCollisions(GameObject* g, bool x, float dV);
+GameObject* GetCollidedWith(GameObject* g);
+
 
 //void LoadFolderPrefabs(const char* dirPath);
 //void LoadPrefabs(const char* dirPath);

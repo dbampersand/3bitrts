@@ -43,6 +43,8 @@ void DeleteThreatList(GameObject* g)
 {
     int numElements = 0;
     Threat* next = g->threatList.next;
+    if (!next)
+        return; 
     while (1)
     {
         numElements++;
@@ -60,7 +62,8 @@ void DeleteThreatList(GameObject* g)
     }
     for (int i = 0; i < numElements; i++)
     {
-        free(list[i]);
+        if (list[i])
+            free(list[i]);
     }
     g->threatList.obj = NULL;
     g->threatList.threat = 0;

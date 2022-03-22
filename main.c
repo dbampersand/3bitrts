@@ -149,7 +149,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     for (int i = 0; i < numObjects; i++)
     {
         currGameObjRunning = &objects[i];
-        if (!IsOwnedByPlayer(currGameObjRunning))
+        if (currGameObjRunning->properties & OBJ_ACTIVE && !IsOwnedByPlayer(currGameObjRunning))
         {
             DoAI(currGameObjRunning);
         }
@@ -209,9 +209,11 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         }
         if (shouldMove)
             Move(currGameObjRunning, dt);
-        
-        lua_rawgeti(luaState,LUA_REGISTRYINDEX,objects[i].luafunc_update);
-        lua_pcall(luaState,0,0,0);
+        if (currGameObjRunning->properties & OBJ_ACTIVE)
+        {
+            lua_rawgeti(luaState,LUA_REGISTRYINDEX,objects[i].luafunc_update);
+            lua_pcall(luaState,0,0,0);
+        }
     }
     if (1)
     {
@@ -245,7 +247,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
                 currAbilityRunning = &players[0].selection[0]->abilities[index];
                 if (currAbilityRunning->castType == ABILITY_INSTANT)
                 {
-                    CastAbility(currAbilityRunning);
+                    CastAbility(currGameObjRunning, currAbilityRunning,0,0,0,0,currGameObjRunning);
                 }
                 else
                 {
@@ -267,7 +269,22 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
         if (players[0].abilityHeld)
         {
-            CastAbility(players[0].abilityHeld);
+            GameObject* target = NULL;
+            for (int i = 0; i < MAX_OBJS; i++)
+            {
+                if (objects[i].properties & OBJ_ACTIVE)
+                {
+                    if (PointInRect(mouseState->x,mouseState->y,GetObjRect(&objects[i])))
+                    {
+                        target = &objects[i];
+                        break;
+                    }
+                }
+            }
+            float midX=0; float midY=0;
+            GetOffsetCenter(currGameObjRunning,&midX,&midY);
+            CastAbility(currGameObjRunning,currAbilityRunning,mouseState->x,mouseState->y,mouseState->x-midX,mouseState->y-midY,target);
+
         }
         currAbilityRunning = NULL;
         players[0].abilityHeld = NULL;
@@ -321,12 +338,20 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     DrawSprite(&sprites[currMap->spriteIndex],0,0,GROUND,false);
 
     int objSelected = -1;
-    if (mouseStateLastFrame->buttons & 2 || (mouseState->buttons & 2))
+    bool abilityCastOnTarget = players[0].abilityHeld && (mouseStateLastFrame->buttons & 1 || mouseState->buttons & 1);
+    if (abilityCastOnTarget)
+    {
+        if (players[0].abilityHeld->castType == ABILITY_TARGET_ENEMY || players[0].abilityHeld->castType == ABILITY_TARGET_ALL)
+            abilityCastOnTarget = true;
+        else
+            abilityCastOnTarget = false;
+    }
+    if ((mouseStateLastFrame->buttons & 2 || mouseState->buttons & 2) || abilityCastOnTarget)
     {
         for (int i = 0; i < numObjects; i++)
         {
             GameObject* g = &objects[i];
-            if (g->properties & OBJ_ACTIVE && g->properties & OBJ_OWNED_BY)
+            if (g->properties & OBJ_ACTIVE && (g->properties & OBJ_OWNED_BY || abilityCastOnTarget))
             {
                 if (PointInRect(mouseState->x,mouseState->y,GetObjRect(&objects[i])))
                 {
@@ -353,7 +378,12 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         
     DrawAttacks(dt);
     DrawParticles();
-
+    if (players[0].abilityHeld)
+    {
+        float cx; float cy;
+        GetCentre(players[0].selection[0], &cx, &cy);
+        al_draw_circle(cx,cy,players[0].abilityHeld->range,FRIENDLY,1);
+    }
     DrawUI(keyState, keyStateLastFrame);
 
     if (al_key_down(keyState,ALLEGRO_KEY_F) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_F))

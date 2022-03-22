@@ -1,5 +1,7 @@
 #pragma once
 #include "stdbool.h"
+typedef struct GameObject GameObject;
+
 typedef enum EFFECT_TRIGGER
 {
    TRIGGER_TIMER = 0,
@@ -27,7 +29,7 @@ typedef struct Effect
     float duration; 
     float tickTime;
     bool enabled;
+    
 } Effect;
-typedef struct GameObject GameObject;
 void ApplyEffect(Effect* e, GameObject* target);
 void ProcessEffects(GameObject* g, float dt);

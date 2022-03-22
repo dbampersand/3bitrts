@@ -28,6 +28,10 @@ static void dumpstack (lua_State* l) {
     }
   }
 }
+int L_SetAttackPosition(lua_State* l)
+{
+    
+}
 int L_GetThisObj(lua_State* l)
 {
     lua_pushnumber(l,currGameObjRunning-objects);
@@ -76,12 +80,54 @@ int L_Print(lua_State* l)
 }
 int L_GetX(lua_State* l)
 {
-    lua_pushnumber(l,currGameObjRunning->x);
+    float x; float y; 
+    if (lua_isnumber(l,1))
+    {
+        int index = lua_tonumber(l,1);
+        if (index >= 0 && index < MAX_OBJS)
+        {
+            GetCentre(&objects[index],&x,&y);
+            lua_pushnumber(l,x);
+            
+        }
+        else
+        {
+            GetCentre(currGameObjRunning,&x,&y);
+            lua_pushnumber(l,x);
+        }
+
+    }
+    else
+    {
+        GetCentre(currGameObjRunning,&x,&y);
+        lua_pushnumber(l,x);
+    }
     return 1;
 }
 int L_GetY(lua_State* l)
 {
-    lua_pushnumber(l,currGameObjRunning->y);
+    float x; float y; 
+    if (lua_isnumber(l,1))
+    {
+        int index = lua_tonumber(l,1);
+        if (index >= 0 && index < MAX_OBJS)
+        {
+            GetCentre(&objects[index],&x,&y);
+            lua_pushnumber(l,y);
+            
+        }
+        else
+        {
+            GetCentre(currGameObjRunning,&x,&y);
+            lua_pushnumber(l,y);
+        }
+
+    }
+    else
+    {
+        GetCentre(currGameObjRunning,&x,&y);
+        lua_pushnumber(l,y);
+    }
     return 1;
 }
 int L_GetMouseX(lua_State* l)
@@ -156,6 +202,8 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
     e.effectType = GetTableField(l,-1,"type",&isField);
     e.numTriggers = GetTableField(l,-1,"numTriggers",&isField);
     e.duration = GetTableField(l,-1,"duration",&isField);
+    e.timer = 0;
+    //e.timer = e.duration;
     e.tickTime = e.duration / e.numTriggers;
     e.value = GetTableField(l,-1,"value",&isField);
 
@@ -225,7 +273,9 @@ int L_CreateProjectile(lua_State* l)
     const int duration = lua_tonumber(l,6);
 
     const bool shouldCallback = lua_toboolean(l, 7);
-    size_t len =  lua_rawlen(l,8);
+    const int properties = lua_tonumber(l,8);
+
+    size_t len =  lua_rawlen(l,9);
 
     ALLEGRO_MOUSE_STATE mouseState = GetMouseClamped();
     GameObject* targ = NULL;
@@ -250,7 +300,7 @@ int L_CreateProjectile(lua_State* l)
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 8, i);
+        e = GetEffectFromTable(l, 9, i);
         lua_remove(l,-1);
         effects[i-1] = e;
     }       
@@ -278,9 +328,13 @@ int L_CreateProjectile(lua_State* l)
     a.numEffects = len;
     a.attackType = attackType;
     a.ownedBy = currGameObjRunning;
-    a.properties |= ATTACK_HITS_ENEMIES;
+   // a.properties |= ATTACK_HITS_ENEMIES;
+    a.properties = properties;
+
     a.speed = speed;
     a.cameFrom = currAbilityRunning;
+    a.ownedBy = currGameObjRunning;
+
     //a.callback_onhit = currAbilityRunning->luafunc_onhit;
     a.shouldCallback = shouldCallback;
     a.duration = duration;
@@ -306,14 +360,15 @@ int L_CreateAOE(lua_State* l)
     const float tickrate = lua_tonumber(l,5);
     const float duration = lua_tonumber(l, 6);
     const bool shouldCallback = lua_toboolean(l, 7);
+    const int properties = lua_tonumber(l,8);
 
-    size_t len =  lua_rawlen(l,8);
+    size_t len =  lua_rawlen(l,9);
     Effect effects[len];    
     memset(effects,0,sizeof(Effect)*len);
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 8, i);
+        e = GetEffectFromTable(l, 9, i);
         lua_remove(l,-1);
         effects[i-1] = e;
     }       
@@ -329,9 +384,10 @@ int L_CreateAOE(lua_State* l)
     memcpy(a.effects,effects,sizeof(Effect)*len);
     a.numEffects = len;
     a.ownedBy = currGameObjRunning;
-    a.properties |= ATTACK_HITS_ENEMIES;
+    a.properties = properties;
     //a.callback_onhit = currAbilityRunning->luafunc_onhit;
     a.cameFrom = currAbilityRunning;
+    a.ownedBy = currGameObjRunning;
     a.shouldCallback = shouldCallback;
     a.duration = duration;
     a.attackType = ATTACK_AOE;
@@ -575,7 +631,7 @@ int L_CastAbility(lua_State* l)
         headingy = GetTableField(l,-1,"headingy",&isAField);
     }
 
-    CastAbilityAI(currGameObjRunning,&currGameObjRunning->abilities[index],x,y,headingx,headingy,&objects[obj]);
+    CastAbility(currGameObjRunning,&currGameObjRunning->abilities[index],x,y,headingx,headingy,&objects[obj]);
     return 1;
 }
 int L_AddAbility(lua_State* l)
@@ -587,8 +643,18 @@ int L_AddAbility(lua_State* l)
 
     Ability* prefab = AddAbility(path); 
     currGameObjRunning->abilities[index] = CloneAbilityPrefab(prefab,l);
-
+    //currGameObjRunning->abilities[index].ownedBy = currGameObjRunning;
     return 1;
+}
+int L_MoveAttack(lua_State* l)
+{
+    if (currAttackRunning)
+    {
+        int x = lua_tonumber(l,1);
+        int y = lua_tonumber(l,2);
+        currAttackRunning->x = x;
+        currAttackRunning->y = y;
+    }
 }
 int L_AbilitySetPortrait(lua_State* l)
 {
@@ -673,6 +739,15 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetAbilityRange);
     lua_setglobal(luaState, "SetAbilityRange");
+
+    lua_pushcfunction(luaState, L_SetAbilityCooldown);
+    lua_setglobal(luaState, "SetAbilityCooldown");
+
+    lua_pushcfunction(luaState, L_AbilitySetCastType);
+    lua_setglobal(luaState, "AbilitySetCastType");
+
+    lua_pushcfunction(luaState, L_MoveAttack);
+    lua_setglobal(luaState, "MoveAttack");
 
 
 }

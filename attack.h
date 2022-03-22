@@ -38,6 +38,7 @@ typedef struct Attack
     float duration;
     float tickrate;
     float timer;
+
     Ability* cameFrom;
 
 } Attack;

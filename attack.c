@@ -102,7 +102,7 @@ void UpdateAttack(Attack* a, float dt)
 {
     a->timer += dt;
     a->duration -= dt;
-
+    currAttackRunning = a;
     if (a->x < 0 || a->y < 0 || a->x > 255 || a->y > 255 || a->duration < 0)
     {
         RemoveAttack(a-attacks);
@@ -159,19 +159,36 @@ void UpdateAttack(Attack* a, float dt)
                 }
 
             }
-            if (a->ownedBy == &objects[i])
-                continue;
+           // if (a->ownedBy == &objects[i])
+             //   continue;
             Rect r = GetObjRect(&objects[i]);
-                if (CircleInRect(a->x,a->y,a->radius,r))
-                {   
-                    ApplyAttack(a,&objects[i]);
-                    if (a->attackType != ATTACK_AOE)
-                    {  
+            if (CircleInRect(a->x,a->y,a->radius,r))
+            {   
+                ApplyAttack(a,&objects[i]);
+                if (a->attackType != ATTACK_AOE)
+                {  
 
-                        RemoveAttack(a-attacks);
-                    }
-                 }
+                    RemoveAttack(a-attacks);
+                }
+                }
         }
+    }
+    if (a->cameFrom)
+    {
+        currAbilityRunning = a->cameFrom;
+        currGameObjRunning = a->ownedBy;
+
+        lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_tick);
+
+        lua_pushnumber(luaState,a->x + a->radius/2.0f);
+        lua_pushnumber(luaState,a->y + a->radius/2.0f);
+        lua_pushnumber(luaState,a->timer);    
+        lua_pushinteger(luaState,currGameObjRunning-objects);
+        lua_pushinteger(luaState,a->target - objects);
+
+
+        lua_pcall(luaState,5,0,0);
+
     }
 }
 void UpdateAttacks(float dt)

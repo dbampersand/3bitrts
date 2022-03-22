@@ -111,25 +111,29 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
 
      }
 }
-void CastAbility(Ability* a)
+bool AbilityShouldBeCastOnTarget(Ability* a)
 {
-    if (a->cdTimer <= 0)
-    {
-        CallLuaFunc(a->luafunc_casted);
-        a->cdTimer = a->cooldown;
-    }
+    return ((a->castType & ABILITY_TARGET_FRIENDLY) || (a->castType & ABILITY_TARGET_ENEMY) || (a->castType & ABILITY_TARGET_ALL));
 }
-void CastAbilityAI(GameObject* g, Ability* a, int x, int y, float headingx, float headingy, GameObject* target)
+void CastAbility(GameObject* g, Ability* a, int x, int y, float headingx, float headingy, GameObject* target)
 {
     if (a->cdTimer > 0)
         return;
-    if (GetDist(g,target) > a->range)
+    
+    if (target && (a->castType & ABILITY_TARGET_ALL || a->castType & ABILITY_TARGET_ENEMY || a->castType & ABILITY_TARGET_FRIENDLY))
+    {
+        if (GetDist(g,target) > a->range)
+            return;
+    }
+    if (target == NULL && AbilityShouldBeCastOnTarget(a))
         return;
 
     if (target != g)
     {
     }
-    lua_rawgeti(luaState,LUA_REGISTRYINDEX,a->luafunc_casted);
+    currAbilityRunning = a; 
+    currGameObjRunning = g; 
+    lua_rawgeti(luaState, LUA_REGISTRYINDEX, a->luafunc_casted);
 
     lua_pushinteger(luaState,x);
     lua_pushinteger(luaState,y);    

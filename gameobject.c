@@ -12,6 +12,7 @@
 #include "animationeffect.h"
 #include <stdlib.h>
 #include "video.h"
+#include <float.h>
 GameObject* AddGameobject(GameObject* prefab)
 {
     GameObject* found = NULL;
@@ -107,6 +108,8 @@ bool CheckFuncExists(const char* funcName, char* lua_buffer)
 void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g) 
 {
     char* cpy;
+    currGameObjRunning = g;
+    
     if (g)
     {
         if (g->lua_buffer)
@@ -133,7 +136,6 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
      }
      else
      {
-        currGameObjRunning=g;
         int funcIndex;
         if (CheckFuncExists("update",g->lua_buffer))
         {
@@ -389,6 +391,27 @@ void CheckCollisions(GameObject* g, bool x, float dV)
         }
     }
 }
+GameObject* GetCollidedWith(GameObject* g)
+{
+        Sprite* s = &sprites[g->spriteIndex];
+    Rect rG = (Rect){g->x,g->y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)};
+    for (int i = 0; i < numObjects; i++)
+    {
+        GameObject* g2 = &objects[i];
+        if (g2 == g || !IsActive(g2)) 
+            continue;
+        Sprite* s2 = &sprites[g2->spriteIndex];
+        Rect r2 = (Rect){g2->x,g2->y,al_get_bitmap_width(s2->sprite),al_get_bitmap_height(s2->sprite)};
+
+        if (!CheckIntersect(rG,r2))
+        {
+            continue;
+        }
+        return g2;
+    }
+    return NULL;
+
+}
 void CheckCollisionsWorld(GameObject* g, bool x, float dV)
 {
     if (dV == 0) return;
@@ -507,6 +530,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
 {
     if (!(g->properties & OBJ_ACTIVE))
         return;
+
     bool b = IsOwnedByPlayer(g);
     ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
     Sprite* s = &sprites[g->spriteIndex];
@@ -587,20 +611,129 @@ bool Damage(GameObject* g, float value)
 void Heal(GameObject* g, float value)
 {
     g->health += value;
+    if (g->health > g->maxHP)
+        g->health = g->maxHP;
 }
 
 void ModifyMaxHP(GameObject* g, float value)
 {
     g->maxHP += value;
-}
+}   
+//TODO: R E F A C T O R THIS FUNCTION
+//ITS BAD
 void Teleport(GameObject* g, float x, float y)
 {
+    float beforeX = g->x;
+    float beforeY = g->y;
+
     float cX; float cY;
     GetOffsetCenter(g,&cX,&cY);
     g->x = x - cX/2;
-    g->y = y - cY/2 ;
+    g->y = y - cY/2;
     g->xtarg = g->x;
     g->ytarg = g->y;
+
+    //CheckCollisions(g,true,x-beforeX);
+    //CheckCollisions(g,false,y-beforeY);
+    GameObject* g2 = GetCollidedWith(g);
+
+    g->x = beforeX;
+    g->y = beforeY;
+
+
+    float centreX; float centreY;
+    GetCentre(g, &centreX, &centreY);
+
+    //if we have collided with a gameobject
+    if (g2)
+    {
+        //kind of a lazy way to do this - test if y - mx + b == 0 for each line segment, then test distance between each for the closest point
+        float slope = (beforeY - y) / (beforeX - x);
+        //top line: y = n
+        typedef struct line { 
+            float x; float y; float x2; float y2;
+        } line; 
+        int w = al_get_bitmap_width(sprites[g2->spriteIndex].sprite); int h =  al_get_bitmap_height(sprites[g2->spriteIndex].sprite); 
+        line VTop = {g2->x,g2->y,g2->x + w,g2->y}; 
+        line VRight = {g2->x + w, g2->y, g2->x + w, g2->y + h}; 
+        line VBottom = {g2->x, g2->y + h, g2->x + w, g2->y + h}; 
+        line VLeft = {g2->x,g2->y,g2->x,g2->y+h}; 
+
+        float outX; float outY; 
+        float closestX = FLT_MAX; float closestY = FLT_MAX;
+        float closestDist = FLT_MAX;
+        if (get_line_intersection(centreX,centreY,x,y,VTop.x,VTop.y,VTop.x2,VTop.y2,&outX,&outY))
+        {
+            closestX = outX;
+            closestY = outY;
+            closestDist = dist(centreX,centreY,outX,outY);
+        }
+        if (get_line_intersection(centreX,centreY,x,y,VRight.x,VRight.y,VRight.x2,VRight.y2,&outX,&outY))
+        {
+            float distance = dist(cX,centreY,outX,outY);
+            if (distance < closestDist)
+            {
+                closestX = outX;
+                closestY = outY;
+                closestDist = distance;
+            }
+        }
+        if (get_line_intersection(centreX,centreY,x,y,VBottom.x,VBottom.y,VBottom.x2,VBottom.y2,&outX,&outY))
+        {
+            float distance = dist(centreX,centreY,outX,outY);
+            if (distance < closestDist)
+            {
+                closestX = outX;
+                closestY = outY;
+                closestDist = distance;
+            }
+        }
+        if (get_line_intersection(centreX,centreY,x,y,VLeft.x,VLeft.y,VLeft.x2,VLeft.y2,&outX,&outY))
+        {
+            float distance = dist(centreX,centreY,outX,outY);
+            if (distance < closestDist)
+            {
+                closestX = outX;
+                closestY = outY;
+                closestDist = distance;
+            }
+        }
+        float w2; float h2;
+        GetOffsetCenter(g,&w2,&h2);
+        if (g->x < g2->x)
+        {
+            g->x = closestX - w2;
+        }
+        else
+        {
+            g->x = closestX;
+        }
+
+        if (g->y < g2->y)
+        {
+            g->y = closestY - h2;
+        }
+        else
+        {
+            g->y = closestY;
+        }
+    }
+    else
+    {
+        g->x = x - cX/2;
+        g->y = y - cY/2;
+
+    }
+    GetCentre(g, &centreX, &centreY);
+
+    int indexMid = GetIndex(_MAPSIZE/_GRAIN, floor((centreX) / (float)_GRAIN), floor((centreY) / (float)_GRAIN));
+
+    if (currMap->collision[indexMid] == false)
+    {
+        g->x = beforeX;
+        g->y = beforeY;
+
+    }
 
 }
 void GetOffsetCenter(GameObject* g, float* x, float* y)
@@ -613,6 +746,13 @@ void GetOffsetCenter(GameObject* g, float* x, float* y)
     }
     *x = 0; 
     *y = 0;
+}
+void GetCentre(GameObject* g, float* x, float* y)
+{
+    
+    *x = g->x + al_get_bitmap_width(sprites[g->spriteIndex].sprite)/2.0f;
+    *y = g->y + al_get_bitmap_height(sprites[g->spriteIndex].sprite)/2.0f;
+
 }
 void DoAI(GameObject* g)
 {

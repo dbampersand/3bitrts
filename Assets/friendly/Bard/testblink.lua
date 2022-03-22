@@ -16,7 +16,7 @@ function casted()
     --SetObjTargetPosition(GetObjRef(),xPos,yPos);
     Teleport(GetObjRef(),GetMouseX(),GetMouseY());
     --CreateProjectile(GetMouseX(),GetMouseY(),"",ATTACK_PROJECTILE_POINT,25,10,true,{})
-    
+    return true;
 end
 
 function onhit(x,y,objhit)

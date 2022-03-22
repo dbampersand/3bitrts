@@ -18,8 +18,8 @@ function casted()
     f2["numTriggers"] = 1 
     f2["value"] = 10;  
 
-    CreateProjectile(GetMouseX(),GetMouseY(),"",ATTACK_PROJECTILE_ANGLE,50,10,true,{f1,f2})
-    
+    CreateProjectile(GetMouseX(),GetMouseY(),"",ATTACK_PROJECTILE_ANGLE,50,10,true,ATTACK_HITS_ENEMIES,{f1,f2})
+    return true;
 end
 
 function onhit(x,y,objhit)
