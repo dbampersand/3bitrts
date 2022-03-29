@@ -10,7 +10,7 @@ function update()
     ddasd = {};
     ddasd["target"] = j;
     --if (j != nil)
-        CastAbility(0,{ddasd});
+     --   CastAbility(0,{ddasd});
 end
 
 function kill()

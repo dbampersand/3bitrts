@@ -48,7 +48,7 @@ Attack attacks[MAX_ATTACKS];
 unsigned char freeAttacks[MAX_ATTACKS]; //indices for attacks
 int attack_top;
 
-void AddAttack(Attack* a);
+Attack* AddAttack(Attack* a);
 void InitAttacks();
 void RemoveAttack(int attackindex);
 void DrawAttack(Attack* a, float dt);

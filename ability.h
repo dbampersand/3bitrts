@@ -9,7 +9,8 @@ typedef enum ABILITY_CAST_TYPE
     ABILITY_POINT = 1,
     ABILITY_TARGET_FRIENDLY = 2,
     ABILITY_TARGET_ENEMY = 4,
-    ABILITY_TARGET_ALL = 8
+    ABILITY_TARGET_ALL = 8,
+    ABILITY_TOGGLE = 16
 } ABILITY_CAST_TYPE;
 typedef struct Ability
 {
@@ -18,6 +19,7 @@ typedef struct Ability
     int luafunc_setup;
     int luafunc_onhit;
     int luafunc_tick;
+    int luafunc_untoggle;
 
     float range;
 
@@ -27,6 +29,7 @@ typedef struct Ability
     float cdTimer;
     ABILITY_CAST_TYPE castType;
 
+    bool toggled;
 } Ability;
 Ability* abilities;
 int numAbilities;

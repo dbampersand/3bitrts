@@ -245,7 +245,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
                 players[0].abilityHeld = NULL;
                 currGameObjRunning = players[0].selection[0];
                 currAbilityRunning = &players[0].selection[0]->abilities[index];
-                if (currAbilityRunning->castType == ABILITY_INSTANT)
+                if (currAbilityRunning->castType == ABILITY_INSTANT || currAbilityRunning->castType == ABILITY_TOGGLE)
                 {
                     CastAbility(currGameObjRunning, currAbilityRunning,0,0,0,0,currGameObjRunning);
                 }
@@ -382,7 +382,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     {
         float cx; float cy;
         GetCentre(players[0].selection[0], &cx, &cy);
-        al_draw_circle(cx,cy,players[0].abilityHeld->range,FRIENDLY,1);
+        al_draw_circle(cx,cy,players[0].abilityHeld->range,FRIENDLY,0);
     }
     DrawUI(keyState, keyStateLastFrame);
 
@@ -393,7 +393,14 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         //AddAnimationEffect_Prefab(&animationEffectsPrefabs[0],0, mouseState->x,mouseState->y);
     }   
     DrawAnimationEffects();
-    DrawCursor(mouseState, ui.cursorDefaultIndex, false);
+    if (players[0].abilityHeld)
+    {
+        DrawCursor(mouseState, ui.cursorCastingIndex, false);
+    }
+    else 
+    {
+        DrawCursor(mouseState, ui.cursorDefaultIndex, false);
+    }
 }
 int main(int argc, char* args[])
 {
@@ -432,6 +439,8 @@ int main(int argc, char* args[])
     ui.panel_sprite_index = LoadSprite("Assets/UI/ui.png",false);
     //ui.cursorDefaultIndex = LoadSprite("Assets/UI/cursor.png",false);
     LoadCursorSprite(&ui,&ui.cursorDefaultIndex,"Assets/UI/cursor.png");
+    LoadCursorSprite(&ui,&ui.cursorCastingIndex,"Assets/UI/cursor_cast.png");
+
     //int* s = LoadSprite("Encounters/01/map.png");
 
     //GameObject boss;
@@ -449,11 +458,25 @@ int main(int argc, char* args[])
     g->speed = 50;
     SetOwnedBy(g, 0);
 
+    //GameObject* warrior = LoadPrefab("Assets/Friendly/Bard/bard.lua");
+    //warrior->speed = 50;
+    //SetOwnedBy(warrior, 0);
+
+
     GameObject* g1 = AddGameobject(g);
+    GameObject* warr = AddGameobject(g);
+
     g1->x = 100;
     g1->y = 150;
     g1->xtarg = 100;
     g1->ytarg = 150;
+
+   // GameObject* warr = AddGameobject(warrior);
+    warr->x = 128;
+    warr->y = 150;
+    warr->xtarg = 128;
+    warr->ytarg = 150;
+
 
 
 

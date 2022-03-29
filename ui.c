@@ -17,9 +17,8 @@ void DrawHealthUIElement(GameObject* selected)
     int startY = startHPY + (hpH - (hpH*percentHP));
     int endY = (startHPY + hpH);
     al_draw_filled_rectangle(startHPX, startY, startHPX+hpW,endY, FRIENDLY);
-
-
 }
+
 void DrawManaUIElement(GameObject* selected)
 {
     float percentMana = selected->mana / selected->maxMana;
@@ -34,10 +33,12 @@ void DrawManaUIElement(GameObject* selected)
 
 
 }
-void DrawAbilityPortraits(GameObject* selected, int index, int startX, int startY, bool keydown)
+void DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, int startX, int startY, bool keydown)
 {
     if (selected->abilities[index].spriteIndex_Portrait <= 0) 
         return;
+    if (heldAbility == &selected->abilities[index])
+        keydown = true;
     Sprite* s = &sprites[selected->abilities[index].spriteIndex_Portrait];
     //DrawSprite(s,startX,startY,FRIENDLY,keydown);
     Ability* a = &selected->abilities[index];
@@ -68,11 +69,11 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
     {
         DrawHealthUIElement(selected);
         DrawManaUIElement(selected);
-        DrawAbilityPortraits(selected,0,33,220,al_key_down(keyState,ALLEGRO_KEY_Q));
-        DrawAbilityPortraits(selected,1,65,220,al_key_down(keyState,ALLEGRO_KEY_W));
-        DrawAbilityPortraits(selected,2,97,220,al_key_down(keyState,ALLEGRO_KEY_E));
-        DrawAbilityPortraits(selected,3,129,220,al_key_down(keyState,ALLEGRO_KEY_R));
-
+        Ability* heldAbility = players[0].abilityHeld;
+        DrawAbilityPortraits(selected,heldAbility,0,33,221,al_key_down(keyState,ALLEGRO_KEY_Q));
+        DrawAbilityPortraits(selected,heldAbility,1,65,221,al_key_down(keyState,ALLEGRO_KEY_W));
+        DrawAbilityPortraits(selected,heldAbility,2,97,221,al_key_down(keyState,ALLEGRO_KEY_E));
+        DrawAbilityPortraits(selected,heldAbility,3,129,221,al_key_down(keyState,ALLEGRO_KEY_R));
     }
 }
 void LoadCursorSprite(UI* ui, int* index, char* path)

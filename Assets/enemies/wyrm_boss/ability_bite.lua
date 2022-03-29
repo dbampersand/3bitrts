@@ -11,7 +11,7 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_TIMER;
     f1["type"] = EFFECT_DAMAGE;
-    f1["numTriggers"] = 5
+    f1["triggersPerSecond"] = 5
     f1["value"] = 2;  
     f1["duration"] = 10;
 

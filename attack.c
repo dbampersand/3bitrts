@@ -7,17 +7,9 @@
 #include "colors.h"
 #include <allegro5/allegro_primitives.h>
 #include "luafuncs.h"
+#include "ability.h"
 int attack_top = 0;
 
-void AddAttack(Attack* a)
-{
-    if (attack_top >= MAX_ATTACKS)
-        return;
-    attacks[freeAttacks[attack_top]] = *a;
-    attacks[freeAttacks[attack_top]].properties |= ATTACK_ACTIVE;
-    attack_top++;   
-
-}
 void InitAttacks()
 {
     for (int i = 0; i < MAX_ATTACKS; i++)
@@ -25,6 +17,17 @@ void InitAttacks()
         freeAttacks[i] = i;
     }
     memset(attacks,0,sizeof(Attack)*MAX_ATTACKS);
+}
+
+Attack* AddAttack(Attack* a)
+{
+    if (attack_top >= MAX_ATTACKS)
+        return NULL;
+    int index = freeAttacks[attack_top];
+    attacks[freeAttacks[attack_top]] = *a;
+    attacks[freeAttacks[attack_top]].properties |= ATTACK_ACTIVE;
+    attack_top++;   
+    return &attacks[index];
 }
 void RemoveAttack(int attackindex)
 {
@@ -38,17 +41,18 @@ void RemoveAttack(int attackindex)
         lua_pushinteger(luaState,(-1));    
         lua_pcall(luaState,3,0,0);
     }
-    a->properties &= ~OBJ_ACTIVE;
+    a->properties = '\0';
 
     if (attack_top < 0)
         return;
     attack_top--;
     freeAttacks[attack_top] = attackindex;
-    attacks[attackindex].properties = '\0';
-    if (attacks[attackindex].effects)
+    if (a->effects)
     {
-        free(attacks[attackindex].effects);
+        free(a->effects);
+        a->effects = NULL;
     }
+
 }
 
 void ApplyAttack(Attack* a, GameObject* target)
@@ -100,8 +104,12 @@ void DrawAttack(Attack* a, float dt)
 }
 void UpdateAttack(Attack* a, float dt)
 {
+    if (a->cameFrom->castType != ABILITY_TOGGLE)
+    {
+        a->duration -= dt;
+    }
     a->timer += dt;
-    a->duration -= dt;
+
     currAttackRunning = a;
     if (a->x < 0 || a->y < 0 || a->x > 255 || a->y > 255 || a->duration < 0)
     {

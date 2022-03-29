@@ -12,7 +12,7 @@ Ability CloneAbilityPrefab(Ability* prefab, lua_State* l)
     a.luabuffer = prefab->luabuffer;
     if (a.path && a.luabuffer)
     {
-        LoadAbility(a.path,l,&a);
+        LoadAbility(a.path, l, &a);
     }
     return a;
 }
@@ -27,9 +27,14 @@ Ability* AddAbility(const char* path)
 
     for (int i = 0; i < numAbilities; i++)
     {
-        if (strcmp(path,abilities[i].path)==0)
+        if (abilities[i].path)
         {
-            return &abilities[i];
+            char* c = path;
+            char* c2 = abilities[i].path;
+            if (strcmp(path,abilities[i].path) == 0)
+            {
+                return &abilities[i];
+            }
         }
     }
     if (numAbilities + 1 >= numAbilitiesAllocated)
@@ -37,7 +42,7 @@ Ability* AddAbility(const char* path)
         numAbilitiesAllocated += BUFFER_PREALLOC_AMT;
         abilities = realloc(abilities,numAbilitiesAllocated*sizeof(Ability));
     }
-
+    
     LoadAbility(path,luaState,&abilities[numAbilities]);
     numAbilities++;
 
@@ -54,13 +59,13 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         char* file = readFile(path);
         a->luabuffer = file;
 
-        a->path = calloc(strlen(path),sizeof(char));
+        a->path = calloc(strlen(path)+1,sizeof(char));
         memcpy(a->path,path,strlen(path)*sizeof(char));
     }
-     if (luaL_loadbuffer(l, a->luabuffer,strlen(a->luabuffer),NULL) || lua_pcall(l, 0, 0, 0))
-     {
-         printf("Can't load lua file %s",lua_tostring(l,-1));
-     }
+    if (luaL_loadbuffer(l, a->luabuffer,strlen(a->luabuffer),NULL) || lua_pcall(l, 0, 0, 0))
+    {
+        printf("Can't load lua file %s",lua_tostring(l,-1));
+    }
     else
      {
             
@@ -107,7 +112,16 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         else
             a->luafunc_tick = -1;
 
-            currAbilityRunning = before;
+        if (CheckFuncExists("untoggle",a->luabuffer))
+        {
+            lua_getglobal(l, "untoggle");
+            funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+            a->luafunc_untoggle = funcIndex;
+        }
+        else
+            a->luafunc_untoggle = -1;
+
+        currAbilityRunning = before;
 
      }
 }
@@ -133,22 +147,48 @@ void CastAbility(GameObject* g, Ability* a, int x, int y, float headingx, float 
     }
     currAbilityRunning = a; 
     currGameObjRunning = g; 
-    lua_rawgeti(luaState, LUA_REGISTRYINDEX, a->luafunc_casted);
-
-    lua_pushinteger(luaState,x);
-    lua_pushinteger(luaState,y);    
-    lua_pushinteger(luaState,(int)(target-objects));    
-    lua_pushnumber(luaState,headingx);
-    lua_pushnumber(luaState,headingy);    
-
-
-    lua_pcall(luaState,5,1,0);
-    bool b = lua_toboolean(luaState,-1);
-    if (b)
+    if ((a->castType != ABILITY_TOGGLE) || (a->castType == ABILITY_TOGGLE && !a->toggled))
     {
-        a->cdTimer = a->cooldown;
+        lua_rawgeti(luaState, LUA_REGISTRYINDEX, a->luafunc_casted);
+
+        lua_pushinteger(luaState,x);
+        lua_pushinteger(luaState,y);    
+        lua_pushinteger(luaState,(int)(target-objects));    
+        lua_pushnumber(luaState,headingx);
+        lua_pushnumber(luaState,headingy);    
+
+
+        lua_pcall(luaState,5,1,0);
+        bool b = lua_toboolean(luaState,-1);
+        if (b)
+        {
+            a->cdTimer = a->cooldown;
+        }
+    }
+    else if (a->castType == ABILITY_TOGGLE && a->toggled)
+    {
+        lua_rawgeti(luaState, LUA_REGISTRYINDEX, a->luafunc_untoggle);
+
+        lua_pushinteger(luaState,x);
+        lua_pushinteger(luaState,y);    
+        lua_pushinteger(luaState,(int)(target-objects));    
+        lua_pushnumber(luaState,headingx);
+        lua_pushnumber(luaState,headingy);    
+
+
+        lua_pcall(luaState,5,1,0);
+        bool b = lua_toboolean(luaState,-1);
+        if (b)
+        {
+            a->cdTimer = a->cooldown;
+        }
     }
 
+
+    if (a->castType == ABILITY_TOGGLE)
+    {
+        a->toggled = !a->toggled;
+    }
 
 }
 bool AbilityIsInitialised(Ability* a)

@@ -42,7 +42,18 @@ GameObject* AddGameobject(GameObject* prefab)
     }
     //objects[numObjects] = *prefab; 
     //objects[numObjects].properties |= OBJ_ACTIVE;
+
+    
     *found = *prefab;
+    currGameObjRunning = found; 
+    memset(found->abilities,0,sizeof(Ability)*4);
+    memset(currGameObjRunning,0,sizeof(GameObject));
+    currGameObjRunning->path = prefab->path;
+    currGameObjRunning->name = prefab->name;
+    currGameObjRunning->lua_buffer = prefab->lua_buffer;
+
+
+    loadLuaGameObj(luaState, found->path, found); 
     found->properties |= OBJ_ACTIVE;
     found->health = 100;
     found->maxHP = 100;
@@ -108,6 +119,9 @@ bool CheckFuncExists(const char* funcName, char* lua_buffer)
 void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g) 
 {
     char* cpy;
+                cpy = calloc(strlen(filename)+1,sizeof(char));
+            strcpy(cpy,filename);
+
     currGameObjRunning = g;
     
     if (g)
@@ -119,8 +133,6 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
         else
         {
             memset(g,0,sizeof(GameObject));    
-            cpy = calloc(strlen(filename)+1,sizeof(char));
-            strcpy(cpy,filename);
             LoadLuaFile(filename,g);
 
         }
@@ -662,13 +674,13 @@ void Teleport(GameObject* g, float x, float y)
         float outX; float outY; 
         float closestX = FLT_MAX; float closestY = FLT_MAX;
         float closestDist = FLT_MAX;
-        if (get_line_intersection(centreX,centreY,x,y,VTop.x,VTop.y,VTop.x2,VTop.y2,&outX,&outY))
+        if (GetLineIntersection(centreX,centreY,x,y,VTop.x,VTop.y,VTop.x2,VTop.y2,&outX,&outY))
         {
             closestX = outX;
             closestY = outY;
             closestDist = dist(centreX,centreY,outX,outY);
         }
-        if (get_line_intersection(centreX,centreY,x,y,VRight.x,VRight.y,VRight.x2,VRight.y2,&outX,&outY))
+        if (GetLineIntersection(centreX,centreY,x,y,VRight.x,VRight.y,VRight.x2,VRight.y2,&outX,&outY))
         {
             float distance = dist(cX,centreY,outX,outY);
             if (distance < closestDist)
@@ -678,7 +690,7 @@ void Teleport(GameObject* g, float x, float y)
                 closestDist = distance;
             }
         }
-        if (get_line_intersection(centreX,centreY,x,y,VBottom.x,VBottom.y,VBottom.x2,VBottom.y2,&outX,&outY))
+        if (GetLineIntersection(centreX,centreY,x,y,VBottom.x,VBottom.y,VBottom.x2,VBottom.y2,&outX,&outY))
         {
             float distance = dist(centreX,centreY,outX,outY);
             if (distance < closestDist)
@@ -688,7 +700,7 @@ void Teleport(GameObject* g, float x, float y)
                 closestDist = distance;
             }
         }
-        if (get_line_intersection(centreX,centreY,x,y,VLeft.x,VLeft.y,VLeft.x2,VLeft.y2,&outX,&outY))
+        if (GetLineIntersection(centreX,centreY,x,y,VLeft.x,VLeft.y,VLeft.x2,VLeft.y2,&outX,&outY))
         {
             float distance = dist(centreX,centreY,outX,outY);
             if (distance < closestDist)
@@ -732,7 +744,6 @@ void Teleport(GameObject* g, float x, float y)
     {
         g->x = beforeX;
         g->y = beforeY;
-
     }
 
 }
