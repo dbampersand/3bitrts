@@ -205,7 +205,7 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
     e.duration = GetTableField(l,-1,"duration",&isField);
     e.timer = 0;
     //e.timer = e.duration;
-    e.numTriggers = e.duration / triggersPerSecond;
+    e.numTriggers = e.duration * triggersPerSecond;
     if (e.numTriggers == 0) 
         e.numTriggers = 1;
 
@@ -277,6 +277,10 @@ int L_AddAttackSprite(lua_State* l)
     currGameObjRunning->onAttackEffectsIndices = realloc(currGameObjRunning->onAttackEffectsIndices,currGameObjRunning->numAttackEffectIndices*sizeof(int));
     currGameObjRunning->onAttackEffectsIndices[currGameObjRunning->numAttackEffectIndices-1] = index;
     return 0;
+}
+void CreateProjectile(lua_State* l)
+{
+
 }
 int L_CreateProjectile(lua_State* l)
 {

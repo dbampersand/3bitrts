@@ -4,6 +4,7 @@
 #include <allegro5/allegro_image.h>
 #include "gameobject.h"
 #include "float.h"
+#include "colors.h"
 int numSprites=1; 
 int maxSprites=0;
 unsigned int _RENDERSIZE=4;
@@ -19,7 +20,7 @@ void GenerateInvertedSprite(Sprite* s)
 
     ALLEGRO_BITMAP* newSprite = al_create_bitmap(w,h);
 
-    ALLEGRO_COLOR white = al_map_rgba(255,255,255,255);
+    ALLEGRO_COLOR white = FRIENDLY;
     ALLEGRO_COLOR transparent = al_map_rgba(0,0,0,0);
 
     ALLEGRO_BITMAP* before = al_get_target_bitmap();

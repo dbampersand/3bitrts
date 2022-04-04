@@ -621,6 +621,7 @@ Rect GetObjRect(GameObject* g)
 }
 bool Damage(GameObject* g, float value)
 {
+    if (!g) return false;
     value = DamageShields(g,value);
     g->health -= value;
     if (g->health <= 0)
@@ -632,22 +633,26 @@ bool Damage(GameObject* g, float value)
 }
 void Heal(GameObject* g, float value)
 {
+    if (!g) return;
     g->health += value;
     if (g->health > g->maxHP)
         g->health = g->maxHP;
 }
 void AddSpeed(GameObject* g, float value)
 {
+    if (!g) return;
     g->speed += value;
 }
 void ModifyMaxHP(GameObject* g, float value)
 {
+    if (!g) return;
     g->maxHP += value;
 }   
 //TODO: R E F A C T O R THIS FUNCTION
 //ITS BAD
 void Teleport(GameObject* g, float x, float y)
 {
+    if (!g) return;
     float beforeX = g->x;
     float beforeY = g->y;
 

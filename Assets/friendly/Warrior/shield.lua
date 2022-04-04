@@ -1,5 +1,5 @@
 function setup()
-    AbilitySetPortrait("Assets/friendly/Bard/icon_shield.png");
+    AbilitySetPortrait("Assets/friendly/Warrior/icon_shield.png");
     AbilitySetCastType(ABILITY_INSTANT);
 
 end

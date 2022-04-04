@@ -74,10 +74,11 @@ void ProcessEffects(GameObject* g, float dt)
             {
                 if (e->numTriggers >= 0)
                 {
-                    if (e->timer > e->duration - (e->numTriggers * e->tickTime))
+                    if (e->timer > e->duration / (e->numTriggers))
                     {
                         e->numTriggers--;
-                        ProcessEffect(&g->effects[i],g,NULL, false);
+                        e->timer=0;
+                        ProcessEffect(&g->effects[i],NULL,g, false);
                     }
                 }
                 else
@@ -97,7 +98,7 @@ void ProcessEffects(GameObject* g, float dt)
 }
 void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
 {
-    if (e->trigger == TRIGGER_INSTANT)
+    //if (e->trigger == TRIGGER_INSTANT)
     {
         ProcessEffect(e,from,target,false);
         /*if (e->effectType ==  EFFECT_DAMAGE)
@@ -117,7 +118,7 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
             AddThreat(from,target,e->value);
         }*/
     }
-    else
+    //else
     {
         for (int i = 0; i < MAX_EFFECTS; i++)
         {

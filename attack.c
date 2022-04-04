@@ -175,10 +175,9 @@ void UpdateAttack(Attack* a, float dt)
                 ApplyAttack(a,&objects[i]);
                 if (a->attackType != ATTACK_AOE)
                 {  
-
                     RemoveAttack(a-attacks);
                 }
-                }
+            }
         }
     }
     if (a->cameFrom)

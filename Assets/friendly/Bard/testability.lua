@@ -20,7 +20,7 @@ function casted()
     f2["trigger"] = TRIGGER_INSTANT
     f2["type"] = EFFECT_DAMAGE
     f2["triggersPerSecond"] = 1 
-    f2["value"] = 10;  
+    f2["value"] = 10; 
 
     CreateProjectile(GetMouseX(),GetMouseY(),"",ATTACK_PROJECTILE_ANGLE,speed,duration,true,ATTACK_HITS_ENEMIES,{f1,f2})
     return true;
@@ -31,9 +31,10 @@ function onhit(x,y,objhit)
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_DAMAGE;
     f1["triggersPerSecond"] = 1
-    f1["value"] = 5;  
+    f1["duration"] = 1
+    f1["value"] = 20;  
 
-    CreateAOE(x,y,"", 30, 1, 10,false,{f1})
+    --CreateAOE(x,y,"", 30, 1, 10,false, {f1})
 end
 
 function abilitytick(x, y, durationLeft)
