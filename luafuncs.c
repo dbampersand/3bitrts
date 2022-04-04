@@ -206,7 +206,8 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
     e.timer = 0;
     //e.timer = e.duration;
     e.numTriggers = e.duration / triggersPerSecond;
-    if (e.numTriggers == 0) e.numTriggers = 1;
+    if (e.numTriggers == 0) 
+        e.numTriggers = 1;
 
     e.tickTime = e.duration / e.numTriggers;
     e.value = GetTableField(l,-1,"value",&isField);
@@ -245,6 +246,12 @@ int L_GetHeightOf(lua_State* l)
 int L_SetAbilityRange(lua_State* l)
 {
     currAbilityRunning->range = lua_tonumber(l,1);
+    return 0;
+}
+int L_SetDamage(lua_State* l)
+{
+    float damage = lua_tonumber(l,1);
+    currGameObjRunning->baseDamage = damage;
     return 0;
 }
 int L_AddAttackSprite(lua_State* l)
@@ -309,6 +316,7 @@ int L_CreateProjectile(lua_State* l)
     {
         Effect e;
         e = GetEffectFromTable(l, 9, i);
+        e.from = currGameObjRunning;
         lua_remove(l,-1);
         effects[i-1] = e;
     }       
@@ -377,6 +385,7 @@ int L_CreateAOE(lua_State* l)
     {
         Effect e;
         e = GetEffectFromTable(l, 9, i);
+        e.from = currGameObjRunning;
         lua_remove(l,-1);
         effects[i-1] = e;
     }       
@@ -443,6 +452,14 @@ int L_Teleport(lua_State* l)
     }
     return 0;
 }
+int L_SetAttacking(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS) 
+        return 0; 
+    currGameObjRunning->targObj = &objects[index];
+    return 0;
+}
 int L_CreateObject(lua_State* l)
 {
     GameObject* g;
@@ -476,7 +493,7 @@ int L_CreateObject(lua_State* l)
         g->health = 100;
         g->maxHP = 100;
         g->range = 1;
-        g->baseDamage = 5;
+       // g->baseDamage = 5;
         g->attackSpeed = 1;
         g->mana = 50;
         g->maxMana = 100;
@@ -496,7 +513,7 @@ int L_CreateObject(lua_State* l)
         g->health = 100;
         g->maxHP = 100;
         g->range = 1;
-        g->baseDamage = 5;
+        //g->baseDamage = 5;
         g->attackSpeed = 1;
         g->mana = 50;
         g->maxMana = 100;
@@ -544,6 +561,10 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,TRIGGER_INSTANT);
     lua_setglobal(l,"TRIGGER_INSTANT");
 
+    lua_pushinteger(l,TRIGGER_CONST);
+    lua_setglobal(l,"TRIGGER_CONST");
+
+
     lua_pushinteger(l,EFFECT_MAXHP);
     lua_setglobal(l,"EFFECT_MAXHP");
 
@@ -553,8 +574,18 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,EFFECT_HEAL);
     lua_setglobal(l,"EFFECT_HEAL");
 
-    lua_pushinteger(l,EFFECT_HEAL);
+    lua_pushinteger(l,EFFECT_POSITION);
     lua_setglobal(l,"EFFECT_POSITION");
+
+    lua_pushinteger(l,EFFECT_THREAT);
+    lua_setglobal(l,"EFFECT_THREAT");
+
+    lua_pushinteger(l,EFFECT_SPEED);
+    lua_setglobal(l,"EFFECT_SPEED");
+
+    lua_pushinteger(l,EFFECT_SHIELD);
+    lua_setglobal(l,"EFFECT_SHIELD");
+
 
 
 
@@ -607,8 +638,9 @@ int L_ApplyEffect(lua_State* l)
     {
         Effect e;
         e = GetEffectFromTable(l, 2, i);
+        e.from = currGameObjRunning;
         lua_remove(l,-1);
-        ApplyEffect(&e,&objects[objIndex]);
+        ApplyEffect(&e,currGameObjRunning,&objects[objIndex]);
     }       
     
     return 1;
@@ -772,6 +804,12 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_RemoveAttack);
     lua_setglobal(luaState, "RemoveAttack");
+
+    lua_pushcfunction(luaState, L_SetAttacking);
+    lua_setglobal(luaState, "SetAttacking");
+
+    lua_pushcfunction(luaState, L_SetDamage);
+    lua_setglobal(luaState, "SetDamage");
 
 
 }

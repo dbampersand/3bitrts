@@ -14,6 +14,7 @@ typedef enum GAMEOBJ_PROPERTIES
     OBJ_ACTIVE = 4,
     //OBJ_ATTACKING_TARGET = 8
 } GAMEOBJ_PROPERTIES;
+typedef struct Shield Shield;
 typedef struct lua_State lua_State;
 #define MAX_EFFECTS 6
 typedef struct GameObject
@@ -23,6 +24,10 @@ typedef struct GameObject
     char properties;
     float health;
     float maxHP;
+
+    Shield* shields;
+    int numShields;
+    
     float mana;
     float maxMana;
     Ability abilities[4];
@@ -106,13 +111,12 @@ int GetPlayerOwnedBy(GameObject* g);
 
 bool Damage(GameObject* g, float value);
 void Heal(GameObject* g, float value);
-
+void AddSpeed(GameObject* g, float value);
 void ModifyMaxHP(GameObject* g, float value);
 
 void Teleport(GameObject* g, float x, float y);
 void GetOffsetCenter(GameObject* g, float* x, float* y);
 void GetCentre(GameObject* g, float* x, float* y);
-
 void KillObj(GameObject* g);
 bool IsActive(GameObject* g);
 void DoAI(GameObject* g);

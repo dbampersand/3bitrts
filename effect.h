@@ -7,20 +7,26 @@ typedef enum EFFECT_TRIGGER
    TRIGGER_TIMER = 0,
    TRIGGER_ONATTACK = 1,
    TRIGGER_ONHIT = 2,
-   TRIGGER_INSTANT = 3
+   TRIGGER_INSTANT = 3,
+   TRIGGER_CONST
 } EFFECT_TRIGGER;
 
 typedef enum EFFECT_TYPE
 {
-    EFFECT_MAXHP = 0,
-    EFFECT_DAMAGE = 1,
-    EFFECT_HEAL = 2,
-    EFFECT_POSITION = 3
+    EFFECT_NONE = 0,
+    EFFECT_MAXHP = 1,
+    EFFECT_DAMAGE = 2,
+    EFFECT_HEAL = 3,
+    EFFECT_POSITION = 4,
+    EFFECT_THREAT = 5,
+    EFFECT_SPEED = 6,
+    EFFECT_SHIELD = 7
 } EFFECT_TYPE;
 typedef struct Effect
 {
     EFFECT_TRIGGER trigger;
     EFFECT_TYPE effectType;
+    GameObject* from;
     float value;
 
     float numTriggers;
@@ -31,5 +37,6 @@ typedef struct Effect
     bool enabled;
     
 } Effect;
-void ApplyEffect(Effect* e, GameObject* target);
+void ApplyEffect(Effect* e, GameObject* from, GameObject* target);
 void ProcessEffects(GameObject* g, float dt);
+void ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove);

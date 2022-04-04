@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include "video.h"
 #include <float.h>
+#include "shield.h"
 GameObject* AddGameobject(GameObject* prefab)
 {
     GameObject* found = NULL;
@@ -50,14 +51,14 @@ GameObject* AddGameobject(GameObject* prefab)
     memset(currGameObjRunning,0,sizeof(GameObject));
     currGameObjRunning->path = prefab->path;
     currGameObjRunning->name = prefab->name;
-    currGameObjRunning->lua_buffer = prefab->lua_buffer;
+    currGameObjRunning->lua_buffer = prefab->lua_buffer; 
 
 
     loadLuaGameObj(luaState, found->path, found); 
     found->properties |= OBJ_ACTIVE;
     found->health = 100;
     found->maxHP = 100;
-    found->baseDamage = 5;
+    //found->baseDamage = 5;
     found->range = 1;
     found->attackSpeed = 1;
     found->mana = 50;
@@ -533,9 +534,17 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
 
     al_draw_rectangle(r.x,r.y,r.x+r.w,r.y+r.h,col,1);
 
-    float percent = g->health / (float)g->maxHP;
+    float percent = (g->health) / (float)g->maxHP;
+
+    float shield = GetTotalShield(g);
+    float percentShield = shield/g->maxHP;
+    if (percentShield > 1) percentShield = 1;
     int numPixels = percent * r.w;
+    int numPixelsShield = percentShield*r.w;
+    
     al_draw_filled_rectangle(r.x,r.y,r.x+numPixels,r.y+r.h,col);
+    al_draw_filled_rectangle(r.x,r.y-5,r.x+numPixelsShield,(r.y-5)+r.h-1,col);
+
     
 }
 void DrawGameObj(GameObject* g, bool forceInverse)
@@ -612,6 +621,7 @@ Rect GetObjRect(GameObject* g)
 }
 bool Damage(GameObject* g, float value)
 {
+    value = DamageShields(g,value);
     g->health -= value;
     if (g->health <= 0)
     {
@@ -626,7 +636,10 @@ void Heal(GameObject* g, float value)
     if (g->health > g->maxHP)
         g->health = g->maxHP;
 }
-
+void AddSpeed(GameObject* g, float value)
+{
+    g->speed += value;
+}
 void ModifyMaxHP(GameObject* g, float value)
 {
     g->maxHP += value;

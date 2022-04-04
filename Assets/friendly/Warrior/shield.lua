@@ -1,21 +1,21 @@
 function setup()
     AbilitySetPortrait("Assets/friendly/Bard/icon_shield.png");
-    AbilitySetCastType(ABILITY_POINT);
+    AbilitySetCastType(ABILITY_INSTANT);
 
 end
 
 function casted()
 
-    objRef = GetObjRef();
-
-    xPos = GetMouseX()-GetWidthOf(objRef)/2;
-    yPos = GetMouseY()-GetHeightOf(objRef)/2;
-
-
     --SetObjPosition(GetObjRef(),xPos,yPos);
     --SetObjTargetPosition(GetObjRef(),xPos,yPos);
-    Teleport(GetObjRef(),GetMouseX(),GetMouseY());
     --CreateProjectile(GetMouseX(),GetMouseY(),"",ATTACK_PROJECTILE_POINT,25,10,true,{})
+    f1 = {};
+    f1["trigger"] = TRIGGER_INSTANT;
+    f1["type"] = EFFECT_SHIELD;
+    f1["value"] = 50;  
+    f1["duration"] = 10;  
+    ApplyEffect(GetThisObj(),{f1});
+
     return true;
 end
 

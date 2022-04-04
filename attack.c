@@ -73,7 +73,7 @@ void ApplyAttack(Attack* a, GameObject* target)
     {
         for (int i = 0; i < a->numEffects; i++)
         {
-            ApplyEffect(&a->effects[i],target);
+            ApplyEffect(&a->effects[i],currGameObjRunning,target);
         }
         if (a->shouldCallback)
         {

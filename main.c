@@ -21,6 +21,7 @@
 #include "particle.h"
 #include <math.h>
 #include "animationeffect.h"
+#include "shield.h"
 ALLEGRO_BITMAP* SCREEN;
 ALLEGRO_DISPLAY* display;
 
@@ -173,6 +174,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         bool shouldMove = true;
         bool shouldAttack = false;
         ProcessEffects(currGameObjRunning,dt);
+        ProcessShields(currGameObjRunning,dt);
 
         if (currGameObjRunning->targObj)
         {
@@ -455,16 +457,18 @@ int main(int argc, char* args[])
     PreprocessMap(m);
     
     GameObject* g = LoadPrefab("Assets/Friendly/Bard/bard.lua");
-    g->speed = 50;
     SetOwnedBy(g, 0);
 
-    //GameObject* warrior = LoadPrefab("Assets/Friendly/Bard/bard.lua");
-    //warrior->speed = 50;
-    //SetOwnedBy(warrior, 0);
+    GameObject* warrior = LoadPrefab("Assets/Friendly/Warrior/warrior.lua");
+    SetOwnedBy(warrior, 0);
 
 
     GameObject* g1 = AddGameobject(g);
-    GameObject* warr = AddGameobject(g);
+    GameObject* warr = AddGameobject(warrior);
+    g1->speed = 50;
+    warr->speed = 50;
+
+
 
     g1->x = 100;
     g1->y = 150;
