@@ -5,6 +5,7 @@
 #include "effect.h"
 #include "attack.h"
 #include "animationeffect.h"
+#include <math.h>
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);
   for (int i=1; i <= top; i++) {
@@ -278,52 +279,9 @@ int L_AddAttackSprite(lua_State* l)
     currGameObjRunning->onAttackEffectsIndices[currGameObjRunning->numAttackEffectIndices-1] = index;
     return 0;
 }
-void CreateProjectile(lua_State* l)
+void CreateProjectile(lua_State* l, float x, float y, const char* portrait, int attackType, int speed, int duration, bool shouldCallback, int properties, GameObject* targ, Effect* effects, size_t len)
 {
 
-}
-int L_CreateProjectile(lua_State* l)
-{
-    const int x = lua_tonumber(l,1);
-    const int y = lua_tonumber(l,2);
-    const char* portrait = lua_tostring(l,3);
-    const int attackType = lua_tonumber(l,4);
-    const int speed = lua_tonumber(l,5);
-    const int duration = lua_tonumber(l,6);
-
-    const bool shouldCallback = lua_toboolean(l, 7);
-    const int properties = lua_tonumber(l,8);
-
-    size_t len =  lua_rawlen(l,9);
-
-    ALLEGRO_MOUSE_STATE mouseState = GetMouseClamped();
-    GameObject* targ = NULL;
-    if (attackType == ATTACK_PROJECTILE_TARGETED)
-    {   
-        for (int i = 0; i < numObjects; i++)
-        {
-            Rect r = GetObjRect(&objects[i]);
-
-            if (PointInRect(x,y,r))
-            {
-                targ = &objects[i];
-                break;
-            }
-        }
-
-    }
-
-
-    Effect effects[len];    
-    memset(effects,0,sizeof(Effect)*len);
-    for (int i = 1; i < len+1; i++)
-    {
-        Effect e;
-        e = GetEffectFromTable(l, 9, i);
-        e.from = currGameObjRunning;
-        lua_remove(l,-1);
-        effects[i-1] = e;
-    }       
     int w=0; int h=0;
     if (currGameObjRunning->spriteIndex)
     {
@@ -360,6 +318,96 @@ int L_CreateProjectile(lua_State* l)
     a.duration = duration;
     AddAttack(&a);
 
+}   
+int L_CreateCircularProjectiles(lua_State* l)
+{
+    const float x = lua_tonumber(l,1);
+    const float y = lua_tonumber(l,2);
+    const char* portrait = lua_tostring(l,3);
+    const int attackType = lua_tonumber(l,4);
+    const int speed = lua_tonumber(l,5);
+    const int duration = lua_tonumber(l,6);
+    const bool shouldCallback = lua_toboolean(l, 7);
+    const int properties = lua_tonumber(l,8);
+    const int numProjectiles = lua_tonumber(l,9);
+
+    size_t len =  lua_rawlen(l,10);
+
+    ALLEGRO_MOUSE_STATE mouseState = GetMouseClamped();
+    GameObject* targ = NULL;
+    if (attackType == ATTACK_PROJECTILE_TARGETED)
+    {   
+        for (int i = 0; i < numObjects; i++)
+        {
+            Rect r = GetObjRect(&objects[i]);
+
+            if (PointInRect(x,y,r))
+            {
+                targ = &objects[i];
+                break;
+            }
+        }
+
+    }
+
+
+    Effect effects[len];    
+    memset(effects,0,sizeof(Effect)*len);
+    for (int i = 1; i < len+1; i++)
+    {
+        Effect e;
+        e = GetEffectFromTable(l, 10, i);
+        e.from = currGameObjRunning;
+        lua_remove(l,-1);
+        effects[i-1] = e;
+    }       
+    for (int i = 0; i < numProjectiles; i++)
+    {
+        float angle = M_PI / (float)numProjectiles*i*2; 
+        CreateProjectile(l, x+sin(angle), y+cos(angle), portrait, attackType, speed, duration, shouldCallback, properties, targ, effects, len);
+
+    }
+}
+int L_CreateProjectile(lua_State* l)
+{
+    const float x = lua_tonumber(l,1);
+    const float y = lua_tonumber(l,2);
+    const char* portrait = lua_tostring(l,3);
+    const int attackType = lua_tonumber(l,4);
+    const int speed = lua_tonumber(l,5);
+    const int duration = lua_tonumber(l,6);
+    const bool shouldCallback = lua_toboolean(l, 7);
+    const int properties = lua_tonumber(l,8);
+
+    size_t len =  lua_rawlen(l,9);
+
+    ALLEGRO_MOUSE_STATE mouseState = GetMouseClamped();
+    GameObject* targ = NULL;
+    if (attackType == ATTACK_PROJECTILE_TARGETED)
+    {   
+        for (int i = 0; i < numObjects; i++)
+        {
+            Rect r = GetObjRect(&objects[i]);
+
+            if (PointInRect(x,y,r))
+            {
+                targ = &objects[i];
+                break;
+            }
+        }
+
+    }
+    Effect effects[len];    
+    memset(effects,0,sizeof(Effect)*len);
+    for (int i = 1; i < len+1; i++)
+    {
+        Effect e;
+        e = GetEffectFromTable(l, 9, i);
+        e.from = currGameObjRunning;
+        lua_remove(l,-1);
+        effects[i-1] = e;
+    }       
+    CreateProjectile(l, x, y, portrait, attackType, speed, duration, shouldCallback, properties, targ, effects, len);
 
     return 1;
 }
@@ -373,8 +421,8 @@ int L_CreateAOE(lua_State* l)
 {
     //read from table of effects
     //eg [Effect: DoT of 10dps, Effect: Slows]
-    const int x = lua_tonumber(l,1);
-    const int y = lua_tonumber(l,2);
+    const float x = lua_tonumber(l,1);
+    const float y = lua_tonumber(l,2);
     const char* effectPortrait = lua_tostring(l,3);
     const float radius = lua_tonumber(l,4);
     const float tickrate = lua_tonumber(l,5);
@@ -815,5 +863,7 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_SetDamage);
     lua_setglobal(luaState, "SetDamage");
 
+    lua_pushcfunction(luaState, L_CreateCircularProjectiles);
+    lua_setglobal(luaState, "CreateCircularProjectiles");
 
 }
