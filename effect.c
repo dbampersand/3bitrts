@@ -77,7 +77,7 @@ void ProcessEffects(GameObject* g, float dt)
                     if (e->timer > e->duration / (e->numTriggers))
                     {
                         e->numTriggers--;
-                        e->timer=0;
+                        e->timer = 0;
                         ProcessEffect(&g->effects[i],NULL,g, false);
                     }
                 }

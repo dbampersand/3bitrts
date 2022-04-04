@@ -177,7 +177,7 @@ void UpdateAttack(Attack* a, float dt)
                 {  
                     RemoveAttack(a-attacks);
                 }
-            }
+                }
         }
     }
     if (a->cameFrom)

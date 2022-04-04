@@ -31,10 +31,10 @@ function onhit(x,y,objhit)
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_DAMAGE;
     f1["triggersPerSecond"] = 1
-    f1["duration"] = 1
+    --f1["duration"] = 1
     f1["value"] = 20;  
 
-    --CreateAOE(x,y,"", 30, 1, 10,false, {f1})
+    CreateAOE(x,y,"", 30, 1, 10,false,ATTACK_HITS_ENEMIES, {f1})
 end
 
 function abilitytick(x, y, durationLeft)
