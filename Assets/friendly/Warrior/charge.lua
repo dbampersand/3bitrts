@@ -25,7 +25,7 @@ function casted(x,y,obj,headingx,headingy)
    -- Teleport(GetObjRef(),GetMouseX(),GetMouseY());
     xPos = GetX();
     yPos = GetY();
-    local speed = 50 
+    local sp = 50 
     local duration = 5
     speed = {};
     speed["trigger"] = TRIGGER_CONST;
@@ -34,7 +34,7 @@ function casted(x,y,obj,headingx,headingy)
     speed["duration"] = 0.1
     ApplyEffect(GetObjRef(),{speed});
     SetMovePoint(GetMouseX(),GetMouseY())
-    CreateCircularProjectiles(xPos,yPos,"",ATTACK_PROJECTILE_ANGLE,speed,duration,true,ATTACK_HITS_ENEMIES,10,{f1})
+    CreateCircularProjectiles(xPos,yPos,"",ATTACK_PROJECTILE_ANGLE,sp,duration,true,ATTACK_HITS_ENEMIES,10,{f1})
 
     --aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES, {f1})
 

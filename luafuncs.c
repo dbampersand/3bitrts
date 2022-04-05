@@ -433,7 +433,7 @@ int L_SetMovePoint(lua_State* l)
 
         currGameObjRunning->xtarg = x-w/2;
         currGameObjRunning->ytarg = y-h/2;
-        
+        currGameObjRunning->targObj = NULL;
     }
 }
 int L_CreateAOE(lua_State* l)
