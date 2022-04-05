@@ -10,6 +10,8 @@ typedef struct Player
     int numUnitsSelected;
 
     Ability* abilityHeld;
+
+    GameObject* controlGroups[10][MAXUNITSSELECTED];
 } Player;
 
 Player* players;

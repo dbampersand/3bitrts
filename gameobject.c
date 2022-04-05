@@ -846,3 +846,10 @@ GameObject* GetClicked(float x, float y)
     return NULL;
 
 }
+void UnsetAll()
+{
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        SetSelected(&objects[i], false);
+    }
+}

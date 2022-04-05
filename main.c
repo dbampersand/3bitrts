@@ -142,11 +142,142 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
 }
 //ALLEGRO_MOUSE_STATE mouseStateLastFrame;
 //ALLEGRO_KEYBOARD_STATE keyStateLastFrame;
+void SetCtrlGroup(int index, GameObject** list, int numUnitsSelected)
+{
+    if (list)
+    {
+        numUnitsSelected = numUnitsSelected > MAXUNITSSELECTED ? MAXUNITSSELECTED : numUnitsSelected;
+        for (int i = 0; i < MAXUNITSSELECTED; i++)
+        {
+            players[0].controlGroups[index][i] = list[i];
+        }
+        //memcpy(players[0].controlGroups[index],list,numUnitsSelected*sizeof(GameObject*));
+    }
+}
+int GetCtrlGroup(int index)
+{
+    //memcpy(players[0].selection,players[0].controlGroups[index],MAXUNITSSELECTED*sizeof(GameObject*));
+    int count = 0; 
+    for (int i = 0; i < MAXUNITSSELECTED; i++)
+    {
+        players[0].selection[i] = players[0].controlGroups[index][i];
+        if (players[0].selection[i] != NULL)
+        {
+            count++;
+            players[0].selection[i]->properties |= OBJ_SELECTED;
+        }
+    }
+    return count; 
 
+}
+void SetControlGroups(ALLEGRO_KEYBOARD_STATE* keyState)
+{
+    if (al_key_down(keyState,ALLEGRO_KEY_LCTRL))
+    {
+        if (al_key_down(keyState,ALLEGRO_KEY_1))
+        {
+            SetCtrlGroup(1,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_2))
+        {
+            SetCtrlGroup(2,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_3))
+        {
+            SetCtrlGroup(3,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_4))
+        {
+            SetCtrlGroup(4,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_5))
+        {
+            SetCtrlGroup(5,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_6))
+        {
+            SetCtrlGroup(6,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_7))
+        {
+            SetCtrlGroup(7,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_8))
+        {
+            SetCtrlGroup(8,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_9))
+        {
+            SetCtrlGroup(9,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_0))
+        {
+            SetCtrlGroup(0,players[0].selection,players[0].numUnitsSelected);
+        }
+    }    
+}
+void GetControlGroup(ALLEGRO_KEYBOARD_STATE* keyState)
+{
+     if (!al_key_down(keyState,ALLEGRO_KEY_LCTRL))
+    {
+        if (al_key_down(keyState,ALLEGRO_KEY_1))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(1);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_2))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(2);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_3))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(3);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_4))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(4);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_5))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(5);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_6))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(6);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_7))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(7);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_8))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(8);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_9))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(9);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_0))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(0);
+        }
+    }  
+}
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
     CheckSelected(mouseState,mouseStateLastFrame);
     UpdateAttacks(dt);
+    SetControlGroups(keyState);
+    GetControlGroup(keyState);
     for (int i = 0; i < numObjects; i++)
     {
         currGameObjRunning = &objects[i];
