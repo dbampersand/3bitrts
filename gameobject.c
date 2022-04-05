@@ -833,3 +833,16 @@ float GetDist(GameObject* g1, GameObject* g2)
 
     return unioned.w+unioned.h;
 }
+GameObject* GetClicked(float x, float y)
+{
+    for (int i = 0; i < numObjects; i++)
+    {
+        Rect r = GetObjRect(&objects[i]);
+        if (PointInRect(x,y,r))
+        {
+            return &objects[i];
+        }
+    }
+    return NULL;
+
+}

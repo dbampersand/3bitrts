@@ -50,7 +50,7 @@ typedef struct GameObject
 
     float aggroRadius;
 
-    unsigned char speed;
+    float speed;
 
     float attackSpeed;
     float attackTimer;
@@ -124,7 +124,7 @@ void DoAI(GameObject* g);
 float GetDist(GameObject* g1, GameObject* g2);
 void CheckCollisions(GameObject* g, bool x, float dV);
 GameObject* GetCollidedWith(GameObject* g);
-
+GameObject* GetClicked(float x, float y);
 
 //void LoadFolderPrefabs(const char* dirPath);
 //void LoadPrefabs(const char* dirPath);

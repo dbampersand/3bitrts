@@ -296,7 +296,7 @@ void CreateProjectile(lua_State* l, float x, float y, const char* portrait, int 
     float x2 = x; float y2 = y;
     if (attackType == ATTACK_PROJECTILE_ANGLE)
     {
-         x2 = x - a.x;  y2 = y - a.y;
+        x2 = x - a.x;  y2 = y - a.y;
         Normalize(&x2,&y2);
     }
     a.targx = x2;
@@ -416,6 +416,25 @@ int L_SetAbilityCooldown(lua_State* l)
     const float cd = lua_tonumber(l,1);
     currAbilityRunning->cooldown = cd;
     return 0;
+}
+int L_SetMovePoint(lua_State* l)
+{
+    const float x = lua_tonumber(l,1);
+    const float y = lua_tonumber(l,2);
+    GameObject* target = GetClicked(x,y);
+    if (target)
+    {
+        currGameObjRunning->targObj = target;
+    }
+    else
+    {
+        int w = al_get_bitmap_width(sprites[currGameObjRunning->spriteIndex].sprite);
+        int h = al_get_bitmap_height(sprites[currGameObjRunning->spriteIndex].sprite);
+
+        currGameObjRunning->xtarg = x-w/2;
+        currGameObjRunning->ytarg = y-h/2;
+        
+    }
 }
 int L_CreateAOE(lua_State* l)
 {
@@ -865,5 +884,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_CreateCircularProjectiles);
     lua_setglobal(luaState, "CreateCircularProjectiles");
+
+    lua_pushcfunction(luaState, L_SetMovePoint);
+    lua_setglobal(luaState, "SetMovePoint");
 
 }
