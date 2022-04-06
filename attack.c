@@ -62,7 +62,7 @@ void ApplyAttack(Attack* a, GameObject* target)
     {
         if (a->timer > a->tickrate)
         {
-            a->timer = 0;
+            //a->timer = 0;
         }
         else
         {
@@ -156,7 +156,7 @@ void UpdateAttack(Attack* a, float dt)
                     continue;
                 }
             }
-            else
+            else if (a->properties & ATTACK_HITS_FRIENDLIES)
             {
                 int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
                 int objOwnedBy = GetPlayerOwnedBy(&objects[i]);
@@ -165,7 +165,6 @@ void UpdateAttack(Attack* a, float dt)
                 {
                     continue;
                 }
-
             }
            // if (a->ownedBy == &objects[i])
              //   continue;
@@ -177,7 +176,14 @@ void UpdateAttack(Attack* a, float dt)
                 {  
                     RemoveAttack(a-attacks);
                 }
-                }
+            }
+        }
+        if (a->attackType == ATTACK_AOE)
+        {
+            if (a->timer > a->tickrate)
+            {
+                a->timer = 0;
+            }
         }
     }
     if (a->cameFrom)

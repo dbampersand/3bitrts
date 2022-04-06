@@ -4,7 +4,7 @@ local duration = 2;
 
 function setup()
     AbilitySetPortrait("Assets/friendly/Warrior/strike.png");
-    AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetCastType(ABILITY_TARGET_ENEMY | ABILITY_TARGET_ENEMY);
     SetAbilityRange(40)
     
 end

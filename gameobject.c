@@ -574,6 +574,10 @@ void SetAttackingObj(GameObject* g, GameObject* target)
 }
 void AttackTarget(GameObject* g)
 {
+    if (g->targObj == g)
+    {
+        return;
+    }
     if (g->targObj)
     {
         if (g->luafunc_onattack >= 0)

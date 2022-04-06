@@ -136,6 +136,24 @@ void CastAbility(GameObject* g, Ability* a, int x, int y, float headingx, float 
     
     if (target && (a->castType & ABILITY_TARGET_ALL || a->castType & ABILITY_TARGET_ENEMY || a->castType & ABILITY_TARGET_FRIENDLY))
     {
+        bool ownedByG = IsOwnedByPlayer(g);
+        bool ownedByTarget = IsOwnedByPlayer(target);
+
+        if (a->castType & ABILITY_TARGET_ENEMY)
+        {
+            if (ownedByG == ownedByTarget)
+            {
+                return;
+            }
+        }
+        if (a->castType & ABILITY_TARGET_FRIENDLY)
+        {
+            if (ownedByG != ownedByTarget)
+            {
+                return;
+            }
+        }
+
         if (GetDist(g,target) > a->range)
             return;
     }
@@ -196,3 +214,40 @@ bool AbilityIsInitialised(Ability* a)
     return (a->path != 0);
 }
 //void CopyAbility(Ability* prefab)
+
+void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled)
+{
+    if (toggled)
+    {
+        float x; float y; 
+        GetCentre(ownedBy,&x,&y);
+        CastAbility(ownedBy,a,x,y,x,y,NULL);
+        return;
+    }
+    a->toggled = toggled;
+
+    if (!toggled)
+    {
+        if (a->luafunc_untoggle)
+        {
+            lua_rawgeti(luaState, LUA_REGISTRYINDEX, a->luafunc_untoggle);
+            float x; float y; 
+            GetCentre(ownedBy,&x,&y);
+            lua_pushinteger(luaState,x);
+            lua_pushinteger(luaState,y);    
+            lua_pushinteger(luaState,(int)(ownedBy-objects));    
+            lua_pushnumber(luaState,x);
+            lua_pushnumber(luaState,y);    
+
+
+            lua_pcall(luaState,5,1,0);
+            bool b = lua_toboolean(luaState,-1);
+            if (b)
+            {
+                a->cdTimer = a->cooldown;
+            }
+
+        }
+    }
+
+}

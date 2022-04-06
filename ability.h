@@ -5,12 +5,12 @@ typedef struct GameObject GameObject;
 
 typedef enum ABILITY_CAST_TYPE
 {
-    ABILITY_INSTANT = 0,
-    ABILITY_POINT = 1,
-    ABILITY_TARGET_FRIENDLY = 2,
-    ABILITY_TARGET_ENEMY = 4,
-    ABILITY_TARGET_ALL = 8,
-    ABILITY_TOGGLE = 16
+    ABILITY_INSTANT = 1,
+    ABILITY_POINT = 2,
+    ABILITY_TARGET_FRIENDLY = 4,
+    ABILITY_TARGET_ENEMY = 8,
+    ABILITY_TARGET_ALL = 16,
+    ABILITY_TOGGLE = 32
 } ABILITY_CAST_TYPE;
 typedef struct Ability
 {
@@ -40,3 +40,4 @@ Ability CloneAbilityPrefab(Ability* prefab, lua_State* l);
 Ability* AddAbility(const char* path);
 void CastAbility(GameObject* g, Ability* a, int x, int y, float headingx, float headingy, GameObject* target);
 bool AbilityIsInitialised(Ability* a);
+void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled);

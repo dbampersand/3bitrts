@@ -417,6 +417,40 @@ int L_SetAbilityCooldown(lua_State* l)
     currAbilityRunning->cooldown = cd;
     return 0;
 }
+int L_ToggleAbility(lua_State* l)
+{
+    Ability* a;
+    bool toggle = false; 
+    if (lua_isnumber(l,1))
+    {
+        int index = lua_tonumber(l,1);
+        if (index < 0 || index >= 4)
+            return 0; 
+        a = &currGameObjRunning->abilities[index];
+        if (lua_isboolean(l,2))
+        {
+            toggle = lua_toboolean(l,2);
+        }
+        else
+        {
+            toggle = !a->toggled;
+        }
+    }
+    else
+    {
+        a = currAbilityRunning;
+        if (lua_isboolean(l,1))
+        {
+            toggle = lua_toboolean(l,1);
+        }
+        else
+        {
+            toggle = !a->toggled;
+        }
+
+    }
+    ToggleAbility(a,currGameObjRunning,toggle);
+}
 int L_SetMovePoint(lua_State* l)
 {
     const float x = lua_tonumber(l,1);
@@ -887,5 +921,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetMovePoint);
     lua_setglobal(luaState, "SetMovePoint");
+
+    lua_pushcfunction(luaState, L_ToggleAbility);
+    lua_setglobal(luaState, "ToggleAbility");
 
 }
