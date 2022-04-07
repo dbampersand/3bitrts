@@ -12,10 +12,10 @@ function casted()
     UntoggleOthers();
     f1 = {};
     f1["trigger"] = TRIGGER_CONST;
-    f1["type"] = EFFECT_SPEED;
+    f1["type"] = EFFECT_DAMAGE;
     --f1["numTriggers"] = 5
     f1["value"] = 400;
-    f1["duration"] = 1  ;
+    f1["duration"] = 1      ;
     f1["triggersPerSecond"] = 1
 
     aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES, {f1})

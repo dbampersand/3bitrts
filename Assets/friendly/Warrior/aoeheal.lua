@@ -7,7 +7,7 @@ function setup()
 end
 
 local aoe = -1;
-local g = 5;
+
 function casted(x,y,obj,headingx,headingy)
 
     
@@ -25,7 +25,6 @@ function casted(x,y,obj,headingx,headingy)
 end
 
 function untoggle()
-    --Print(aoe);
     RemoveAttack(aoe);
     aoe = -1;
 end
@@ -35,9 +34,7 @@ function onhit(x,y,objhit)
 end
 
 function abilitytick(x, y, durationLeft, obj, target)
-    Print(aoe);
-    --Print(g);
-
+    Print("g: " .. g);
 
     MoveAttack(GetX(obj),GetY(obj));
 

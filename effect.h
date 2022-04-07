@@ -15,12 +15,13 @@ typedef enum EFFECT_TYPE
 {
     EFFECT_NONE = 0,
     EFFECT_MAXHP = 1,
-    EFFECT_DAMAGE = 2,
+    EFFECT_HURT = 2,
     EFFECT_HEAL = 3,
     EFFECT_POSITION = 4,
     EFFECT_THREAT = 5,
     EFFECT_SPEED = 6,
-    EFFECT_SHIELD = 7
+    EFFECT_SHIELD = 7,
+    EFFECT_DAMAGE = 8
 } EFFECT_TYPE;
 typedef struct Effect
 {

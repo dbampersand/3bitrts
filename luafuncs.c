@@ -417,6 +417,15 @@ int L_SetAbilityCooldown(lua_State* l)
     currAbilityRunning->cooldown = cd;
     return 0;
 }
+int L_UntoggleOthers(lua_State* l)
+{
+    int index = currAbilityRunning-currGameObjRunning->abilities;
+    for (int i = 0; i < 4; i++)
+    {
+        if (index == i) continue;
+        ToggleAbility(&currGameObjRunning->abilities[i],currGameObjRunning,false);
+    }
+}
 int L_ToggleAbility(lua_State* l)
 {
     Ability* a;
@@ -673,8 +682,8 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,EFFECT_MAXHP);
     lua_setglobal(l,"EFFECT_MAXHP");
 
-    lua_pushinteger(l,EFFECT_DAMAGE);
-    lua_setglobal(l,"EFFECT_DAMAGE");
+    lua_pushinteger(l,EFFECT_HURT);
+    lua_setglobal(l,"EFFECT_HURT");
 
     lua_pushinteger(l,EFFECT_HEAL);
     lua_setglobal(l,"EFFECT_HEAL");
@@ -691,6 +700,8 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,EFFECT_SHIELD);
     lua_setglobal(l,"EFFECT_SHIELD");
 
+    lua_pushinteger(l,EFFECT_DAMAGE);
+    lua_setglobal(l,"EFFECT_DAMAGE");
 
 
 
@@ -925,4 +936,6 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_ToggleAbility);
     lua_setglobal(luaState, "ToggleAbility");
 
+    lua_pushcfunction(luaState, L_UntoggleOthers);
+    lua_setglobal(luaState, "UntoggleOthers");
 }

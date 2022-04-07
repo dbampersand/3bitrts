@@ -9,7 +9,7 @@ void ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         ModifyMaxHP(target,e->value*sign);
     }
-    if (e->effectType == EFFECT_DAMAGE)
+    if (e->effectType == EFFECT_HURT)
     {
         Damage(target,e->value*sign);
     }
@@ -29,6 +29,11 @@ void ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         AttachShield(target,e->duration,e->value*sign);
     }
+    if (e->effectType == EFFECT_DAMAGE)
+    {
+        AddDamage(target,e->value*sign);
+    }
+
 }
 void RemoveEffect(Effect* e, GameObject* from)
 {
@@ -41,7 +46,7 @@ void RemoveEffect(Effect* e, GameObject* from)
         {
             ModifyMaxHP(target,-e->value);
         }
-        if (e->effectType == EFFECT_DAMAGE)
+        if (e->effectType == EFFECT_HURT)
         {
             Damage(target,-e->value);
         }
@@ -101,7 +106,7 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
     if (e->trigger == TRIGGER_INSTANT)
     {
         ProcessEffect(e,from,target,false);
-        if (e->effectType ==  EFFECT_DAMAGE)
+        if (e->effectType ==  EFFECT_HURT)
         {
             Damage(target,e->value);
         }

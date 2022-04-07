@@ -15,7 +15,7 @@ function casted(x,y,obj,headingx,headingy)
     
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
-    f1["type"] = EFFECT_DAMAGE;
+    f1["type"] = EFFECT_HURT;
     --f1["numTriggers"] = 5
     f1["value"] = 20;  
     --f1["duration"] = 10;

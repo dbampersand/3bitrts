@@ -112,6 +112,7 @@ int GetPlayerOwnedBy(GameObject* g);
 bool Damage(GameObject* g, float value);
 void Heal(GameObject* g, float value);
 void AddSpeed(GameObject* g, float value);
+void AddDamage(GameObject* g, float value);
 void ModifyMaxHP(GameObject* g, float value);
 
 void Teleport(GameObject* g, float x, float y);

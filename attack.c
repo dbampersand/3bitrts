@@ -31,6 +31,8 @@ Attack* AddAttack(Attack* a)
 }
 void RemoveAttack(int attackindex)
 {
+    if (attackindex < 0 || attackindex >= MAX_ATTACKS)
+        return;
     Attack* a = &attacks[attackindex];
     if (a->cameFrom)
     {
@@ -43,7 +45,7 @@ void RemoveAttack(int attackindex)
     }
     a->properties = '\0';
 
-    if (attack_top < 0)
+    if (attack_top <= 0)
         return;
     attack_top--;
     freeAttacks[attack_top] = attackindex;

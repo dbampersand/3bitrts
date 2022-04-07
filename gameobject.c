@@ -75,7 +75,11 @@ void NewObj(GameObject* g)
 {
 
 }
-
+void AddDamage(GameObject* g, float value)
+{
+    if (!g) return;
+    g->baseDamage += value;
+}
 bool CheckFuncExists(const char* funcName, char* lua_buffer)
 {
     char* c = strstr(lua_buffer,funcName);
@@ -142,8 +146,7 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
     {
 
     }
-
-     if (luaL_loadbuffer(l, g->lua_buffer,strlen(g->lua_buffer),NULL) || lua_pcall(l, 0, 0, 0))
+    if (luaL_loadbuffer(l, g->lua_buffer,strlen(g->lua_buffer),NULL) || lua_pcall(l, 0, 0, 0))
      {
          printf("Can't load lua file %s",lua_tostring(l,-1));
      }
