@@ -41,4 +41,4 @@ Ability* AddAbility(const char* path);
 void CastAbility(GameObject* g, Ability* a, int x, int y, float headingx, float headingy, GameObject* target);
 bool AbilityIsInitialised(Ability* a);
 void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled);
-bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target);
+bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, float y);

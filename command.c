@@ -82,7 +82,7 @@ void DoCommands(GameObject* g)
     {
         g->targObj = c->target;
 
-        if (AbilityCanBeCast(c->ability,g,c->target) || !IsActive(c->target))
+        if (AbilityCanBeCast(c->ability,g,c->target,c->x,c->y))
         {
             CastAbility(g,c->ability,c->x,c->y,c->x-g->x,c->y-g->y,c->target);
             NextCommand(g);

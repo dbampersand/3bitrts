@@ -251,8 +251,20 @@ void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled)
     }
 
 }
-bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target)
+bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, float y)
 {
+    if (a->castType == ABILITY_INSTANT || a->castType == ABILITY_TOGGLE)
+    {
+        return true;
+    }
+    if (a->castType == ABILITY_POINT)
+    {
+        if (dist(g->x,g->y,x,y) <= a->range)
+            return true;
+        else
+            return false;
+    }
+
     if (GetDist(g,target) > a->range)
         return false;
     if (target == NULL && AbilityShouldBeCastOnTarget(a))

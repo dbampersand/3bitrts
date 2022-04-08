@@ -279,7 +279,7 @@ void GetControlGroup(ALLEGRO_KEYBOARD_STATE* keyState)
 }
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
-    CheckSelected(mouseState,mouseStateLastFrame, keyState);
+    CheckSelected(mouseState,mouseStateLastFrame, keyState  );
     UpdateAttacks(dt);
     SetControlGroups(keyState);
     GetControlGroup(keyState);
@@ -385,8 +385,12 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
                 currAbilityRunning = &players[0].selection[0]->abilities[index];
                 if (currAbilityRunning->castType == ABILITY_INSTANT || currAbilityRunning->castType == ABILITY_TOGGLE)
                 {
-                    if (AbilityCanBeCast(currAbilityRunning, currGameObjRunning, currGameObjRunning))
-                        CastAbility(currGameObjRunning, currAbilityRunning,0,0,0,0,currGameObjRunning);
+                    if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                        ClearCommandQueue(currGameObjRunning);
+                    CastCommand(currGameObjRunning,NULL,currAbilityRunning,mouseState->x,mouseState->y);
+
+                    //if (AbilityCanBeCast(currAbilityRunning, currGameObjRunning, currGameObjRunning))
+                      //  CastAbility(currGameObjRunning, currAbilityRunning,0,0,0,0,currGameObjRunning);
                 }
                 else
                 {
