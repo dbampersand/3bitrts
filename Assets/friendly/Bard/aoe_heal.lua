@@ -2,7 +2,9 @@ function setup()
     AbilitySetCastType(ABILITY_TOGGLE);
 
     SetAbilityRange(20)
-    SetAbilityCooldown(0);
+    SetAbilityCooldown(10);
+    AbilitySetPortrait("Assets/friendly/Bard/icon_aoe_heal.png");
+
 
 end
 
@@ -28,6 +30,7 @@ function untoggle()
     --Print(aoe);
     RemoveAttack(aoe);
     aoe = -1;
+    return true;
 end
 
 function onhit(x,y,objhit)

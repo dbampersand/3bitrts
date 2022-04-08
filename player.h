@@ -12,6 +12,8 @@ typedef struct Player
     Ability* abilityHeld;
 
     GameObject* controlGroups[10][MAXUNITSSELECTED];
+    GameObject* clickedThisFrame;
+
 } Player;
 
 Player* players;

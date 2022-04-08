@@ -23,7 +23,6 @@ int GetIndex(int h, int x, int y)
 }
 bool MoveTo(float* x, float* y, float toX, float toY, float speed, float delta)
 {
-    #define DIST_DELTA 1
 
         float moveX = toX - *x;
         float moveY = toY - *y;

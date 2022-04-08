@@ -826,6 +826,7 @@ void DoAI(GameObject* g)
 }
 bool IsActive(GameObject* g)
 {
+    if (!g) return false;
     return (g->properties & OBJ_ACTIVE);
 }
 

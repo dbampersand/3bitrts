@@ -1,5 +1,5 @@
 function setup()
-    AbilitySetCastType(ABILITY_TARGET_POINT | ABILITY_TARGET_ENEMY); 
+    AbilitySetCastType(Bor(ABILITY_TARGET_POINT,ABILITY_TARGET_ENEMY)); 
     AbilitySetPortrait("Assets/friendly/Warrior/icon_charge.png");
     
 

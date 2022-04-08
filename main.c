@@ -48,7 +48,7 @@ void init()
 
     players = calloc(2,sizeof(GameObject));
 }
-void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLastFrame)
+void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState)
 {
     if (!(mouseLastFrame->buttons & 1)  && (mouseState->buttons & 1))
     {
@@ -123,9 +123,11 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
             {
                 int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
                 int h = al_get_bitmap_height(sprites[g->spriteIndex].sprite);
-
-                g->xtarg = mouseState->x - w/2;
-                g->ytarg = mouseState->y - h/2;
+                    if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                        ClearCommandQueue(g);
+                MoveCommand(g,mouseState->x-w/2,mouseState->y-h/2);
+               // g->xtarg = mouseState->x - w/2;
+                //g->ytarg = mouseState->y - h/2;
             }
             Sprite* s = &sprites[g->spriteIndex];
             Rect r = (Rect){g->x,g->y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)}; 
@@ -133,7 +135,10 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
             {
                 for (int i = 0; i < players[0].numUnitsSelected; i++)
                 {
-                    SetAttackingObj(players[0].selection[i],g);
+                    if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                        ClearCommandQueue(players[0].selection[i]);
+                    AttackCommand(players[0].selection[i],g);
+                    //SetAttackingObj(players[0].selection[i],g);
                 }
                 break;
             }
@@ -274,7 +279,7 @@ void GetControlGroup(ALLEGRO_KEYBOARD_STATE* keyState)
 }
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
-    CheckSelected(mouseState,mouseStateLastFrame);
+    CheckSelected(mouseState,mouseStateLastFrame, keyState);
     UpdateAttacks(dt);
     SetControlGroups(keyState);
     GetControlGroup(keyState);
@@ -285,7 +290,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         {
             DoAI(currGameObjRunning);
         }
-
+        DoCommands(currGameObjRunning);
         currGameObjRunning->attackTimer -= dt;
         if (currGameObjRunning->attackTimer < 0)
             currGameObjRunning->attackTimer = 0;
@@ -380,7 +385,8 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
                 currAbilityRunning = &players[0].selection[0]->abilities[index];
                 if (currAbilityRunning->castType == ABILITY_INSTANT || currAbilityRunning->castType == ABILITY_TOGGLE)
                 {
-                    CastAbility(currGameObjRunning, currAbilityRunning,0,0,0,0,currGameObjRunning);
+                    if (AbilityCanBeCast(currAbilityRunning, currGameObjRunning, currGameObjRunning))
+                        CastAbility(currGameObjRunning, currAbilityRunning,0,0,0,0,currGameObjRunning);
                 }
                 else
                 {
@@ -416,8 +422,19 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
             }
             float midX=0; float midY=0;
             GetOffsetCenter(currGameObjRunning,&midX,&midY);
-            CastAbility(currGameObjRunning,currAbilityRunning,mouseState->x,mouseState->y,mouseState->x-midX,mouseState->y-midY,target);
+            
+            //if (AbilityCanBeCast(currAbilityRunning,currGameObjRunning,target))
+            {
+                if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                    ClearCommandQueue(currGameObjRunning);
+                CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->x,mouseState->y);
+                //CastAbility(currGameObjRunning,currAbilityRunning,mouseState->x,mouseState->y,mouseState->x-midX,mouseState->y-midY,target);
+                players[0].clickedThisFrame = target;
 
+            }
+            //else
+            {
+            }
         }
         currAbilityRunning = NULL;
         players[0].abilityHeld = NULL;
@@ -474,7 +491,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     bool abilityCastOnTarget = players[0].abilityHeld && (mouseStateLastFrame->buttons & 1 || mouseState->buttons & 1);
     if (abilityCastOnTarget)
     {
-        if (players[0].abilityHeld->castType == ABILITY_TARGET_ENEMY || players[0].abilityHeld->castType == ABILITY_TARGET_ALL)
+        if (players[0].abilityHeld->castType & ABILITY_TARGET_ENEMY || players[0].abilityHeld->castType & ABILITY_TARGET_ALL)
             abilityCastOnTarget = true;
         else
             abilityCastOnTarget = false;
@@ -495,7 +512,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     }
     for (int i = 0; i < numObjects; i++)
     {
-        if (i == objSelected)
+        if (i == objSelected || &objects[i] == players[0].clickedThisFrame)
         {
             DrawGameObj(&objects[i],true);
             
@@ -534,6 +551,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     {
         DrawCursor(mouseState, ui.cursorDefaultIndex, false);
     }
+    players[0].clickedThisFrame = NULL;
 }
 int main(int argc, char* args[])
 {

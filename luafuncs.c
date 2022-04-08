@@ -825,6 +825,39 @@ int L_MoveAttack(lua_State* l)
     }
     return 0;
 }
+int L_Bor(lua_State* l)
+{
+    int i = lua_tonumber(l,1);
+    int j = lua_tonumber(l,j);
+    int result = i | j;
+    lua_pushnumber(l,result);
+    return 1;
+}
+int L_Band(lua_State* l)
+{
+    int i = lua_tonumber(l,1);
+    int j = lua_tonumber(l,j);
+    int result = i & j;
+    lua_pushnumber(l,result);
+    return 1;
+}
+int L_Bxor(lua_State* l)
+{
+    int i = lua_tonumber(l,1);
+    int j = lua_tonumber(l,j);
+    int result = i ^ j;
+    lua_pushnumber(l,result);
+    return 1;
+}
+int L_Bnot(lua_State* l)
+{
+    int i = lua_tonumber(l,1);
+    int result = ~i;
+    lua_pushnumber(l,result);
+    return 1;
+}
+
+
 int L_AbilitySetPortrait(lua_State* l)
 {
     currAbilityRunning->spriteIndex_Portrait = LoadSprite(lua_tostring(l,-1),true);
@@ -938,4 +971,15 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_UntoggleOthers);
     lua_setglobal(luaState, "UntoggleOthers");
+
+    lua_pushcfunction(luaState, L_Bor);
+    lua_setglobal(luaState, "Bor");
+    lua_pushcfunction(luaState, L_Band);
+    lua_setglobal(luaState, "Band");
+    lua_pushcfunction(luaState, L_Bxor);
+    lua_setglobal(luaState, "Bxor");
+    lua_pushcfunction(luaState, L_Bnot);
+    lua_setglobal(luaState, "Bnot");
+
+
 }

@@ -7,6 +7,7 @@
 #include "effect.h"
 #include "rect.h"
 #include "threat.h"
+#include "command.h"
 typedef enum GAMEOBJ_PROPERTIES
 {
     OBJ_SELECTED = 1,
@@ -17,6 +18,8 @@ typedef enum GAMEOBJ_PROPERTIES
 typedef struct Shield Shield;
 typedef struct lua_State lua_State;
 #define MAX_EFFECTS 6
+#define MAX_QUEUED_CMD 8
+
 typedef struct GameObject
 {
     float x; float  y;
@@ -50,7 +53,7 @@ typedef struct GameObject
 
     float aggroRadius;
 
-    float    speed;
+    float speed;
 
     float attackSpeed;
     float attackTimer;
@@ -66,6 +69,8 @@ typedef struct GameObject
     int numAttackEffectIndices;
 
     Threat threatList;
+
+    Command queue[MAX_QUEUED_CMD];
     
 } GameObject;
 

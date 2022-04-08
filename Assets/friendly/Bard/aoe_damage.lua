@@ -3,9 +3,10 @@ local duration = 2;
 
 
 function setup()
-    AbilitySetPortrait("Assets/friendly/Bard/icon_shield.png");
+    AbilitySetPortrait("Assets/friendly/Bard/icon_aoe_damage.png");
     AbilitySetCastType(ABILITY_TOGGLE);
     SetAbilityRange(duration * speed)
+    SetAbilityCooldown(10)
     
 end
 function casted()
@@ -25,6 +26,7 @@ function untoggle()
     --Print(aoe);
     RemoveAttack(aoe);
     aoe = -1;
+    return true;
 end
 
 function onhit(x,y,objhit)

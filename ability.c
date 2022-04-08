@@ -251,3 +251,32 @@ void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled)
     }
 
 }
+bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target)
+{
+    if (GetDist(g,target) > a->range)
+        return false;
+    if (target == NULL && AbilityShouldBeCastOnTarget(a))
+        return false;
+
+    if (target && (a->castType & ABILITY_TARGET_ALL || a->castType & ABILITY_TARGET_ENEMY || a->castType & ABILITY_TARGET_FRIENDLY))
+    {
+        bool ownedByG = IsOwnedByPlayer(g);
+        bool ownedByTarget = IsOwnedByPlayer(target);
+
+        if (a->castType & ABILITY_TARGET_ENEMY)
+        {
+            if (ownedByG == ownedByTarget)
+            {
+                return false;
+            }
+        }
+        if (a->castType & ABILITY_TARGET_FRIENDLY)
+        {
+            if (ownedByG != ownedByTarget)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
