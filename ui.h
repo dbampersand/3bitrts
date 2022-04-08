@@ -5,6 +5,8 @@ typedef struct UI
     int panel_sprite_index;
     int cursorDefaultIndex;
     int cursorCastingIndex;
+    int cursorAttackIndex;
+
 } UI;   
 
 UI ui;

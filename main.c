@@ -547,9 +547,33 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         //AddAnimationEffect_Prefab(&animationEffectsPrefabs[0],0, mouseState->x,mouseState->y);
     }   
     DrawAnimationEffects();
+
+    GameObject* mousedOver = NULL;
+    for (int i = 0; i < numObjects; i++)
+    {
+        for (int i = 0; i < numObjects; i++)
+        {
+            GameObject* g = &objects[i];
+            if (g->properties & OBJ_ACTIVE)
+            {
+                if (PointInRect(mouseState->x,mouseState->y,GetObjRect(g)))
+                {
+                    mousedOver = g;
+                }
+            }
+        }
+    }
     if (players[0].abilityHeld)
     {
         DrawCursor(mouseState, ui.cursorCastingIndex, false);
+    }
+    else if (mousedOver)
+    {
+        if (mousedOver->properties & OBJ_OWNED_BY)
+            DrawCursor(mouseState, ui.cursorAttackIndex,false);
+        else
+            DrawCursor(mouseState, ui.cursorDefaultIndex, false);
+
     }
     else 
     {
@@ -595,6 +619,7 @@ int main(int argc, char* args[])
     //ui.cursorDefaultIndex = LoadSprite("Assets/UI/cursor.png",false);
     LoadCursorSprite(&ui,&ui.cursorDefaultIndex,"Assets/UI/cursor.png");
     LoadCursorSprite(&ui,&ui.cursorCastingIndex,"Assets/UI/cursor_cast.png");
+    LoadCursorSprite(&ui,&ui.cursorAttackIndex,"Assets/UI/cursor_attack.png");
 
     //int* s = LoadSprite("Encounters/01/map.png");
 
