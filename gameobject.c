@@ -504,7 +504,6 @@ void Move(GameObject* g, float delta)
         float moveY = ytarg - g->y;
 
         float dist = sqrt(moveX*moveX+moveY*moveY);
-
         if (dist <= DIST_DELTA)
         {
             g->x = xtarg;
@@ -513,6 +512,13 @@ void Move(GameObject* g, float delta)
         }
         float dX = (moveX / dist * g->speed) * delta;
         float dY = (moveY / dist * g->speed) * delta;
+        float mDist = sqrt(dX * dX + dY * dY);
+        if (dist <= mDist)
+        {
+            g->x=xtarg;
+            g->y=ytarg;
+            return;
+        }
 
         g->x += dX;
         CheckCollisions(g,true, dX);
