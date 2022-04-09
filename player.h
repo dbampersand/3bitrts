@@ -7,6 +7,7 @@ typedef struct Player
     Vector2 selectionStart;
     #define MAXUNITSSELECTED 12 //hell yeaaa bw
     GameObject* selection[MAXUNITSSELECTED];
+    int indexSelectedUnit;
     int numUnitsSelected;
 
     Ability* abilityHeld;

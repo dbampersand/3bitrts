@@ -97,7 +97,8 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                     SetSelected(obj,true);
                     players[0].selection[players[0].numUnitsSelected] = obj;
                     players[0].numUnitsSelected++;
-
+                    if (hasSelected) 
+                        players[0].indexSelectedUnit = 0; 
                 }
             }
         }
@@ -283,6 +284,15 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     UpdateAttacks(dt);
     SetControlGroups(keyState);
     GetControlGroup(keyState);
+
+    if (al_key_down(keyState, ALLEGRO_KEY_TAB) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_TAB))
+    {
+        players[0].indexSelectedUnit++;
+        if (players[0].indexSelectedUnit >= MAXUNITSSELECTED || players[0].indexSelectedUnit >= players[0].numUnitsSelected)
+        {
+            players[0].indexSelectedUnit = 0;
+        }
+    }
     for (int i = 0; i < numObjects; i++)
     {
         currGameObjRunning = &objects[i];
@@ -375,14 +385,14 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
 
         if (index > -1)
-        if (players[0].selection[0])
+        if (players[0].selection[players[0].indexSelectedUnit])
         {
-            if (players[0].selection[0]->abilities[index].cdTimer <= 0)
+            if (players[0].selection[players[0].indexSelectedUnit]->abilities[index].cdTimer <= 0)
             {
 
                 players[0].abilityHeld = NULL;
-                currGameObjRunning = players[0].selection[0];
-                currAbilityRunning = &players[0].selection[0]->abilities[index];
+                currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
+                currAbilityRunning = &players[0].selection[players[0].indexSelectedUnit]->abilities[index];
                 if (currAbilityRunning->castType == ABILITY_INSTANT || currAbilityRunning->castType == ABILITY_TOGGLE)
                 {
                     if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
@@ -407,7 +417,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     }
     if (mouseState->buttons & 1) 
     {
-        currGameObjRunning = players[0].selection[0];
+        currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
         currAbilityRunning = players[0].abilityHeld;
 
         if (players[0].abilityHeld)
@@ -535,7 +545,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     if (players[0].abilityHeld)
     {
         float cx; float cy;
-        GetCentre(players[0].selection[0], &cx, &cy);
+        GetCentre(players[0].selection[players[0].indexSelectedUnit], &cx, &cy);
         al_draw_circle(cx,cy,players[0].abilityHeld->range,FRIENDLY,0);
     }
     DrawUI(keyState, keyStateLastFrame);

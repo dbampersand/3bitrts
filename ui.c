@@ -64,7 +64,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
     Sprite* s = &sprites[ui.panel_sprite_index];
     DrawSprite(s,1,218,FRIENDLY,false);
 
-    GameObject* selected = players[0].selection[0];
+    GameObject* selected = players[0].selection[players[0].indexSelectedUnit];
     if (selected)
     {
         DrawHealthUIElement(selected);

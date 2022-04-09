@@ -72,12 +72,6 @@ void DeleteThreatList(GameObject* g)
 
     free(list);
 }
-void KillObj(GameObject* g)
-{
-    g->properties &= ~OBJ_ACTIVE;
-    g->spriteIndex = 0;
-    DeleteThreatList(g);
-}
 Threat* GetHighestThreat(Threat* threatList)
 {
     int highest = -INT_MIN;

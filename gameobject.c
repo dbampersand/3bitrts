@@ -243,6 +243,16 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
      }
      free(cpy);
 }
+void KillObj(GameObject* g)
+{
+    g->properties &= ~OBJ_ACTIVE;
+    g->spriteIndex = 0;
+    DeleteThreatList(g);
+    if (g->shields)
+        free(g->shields);
+    if (g->onAttackEffectsIndices)
+        free(g->onAttackEffectsIndices);
+}
 
 void LoadFolderPrefabs(const char* dirPath)
 {
