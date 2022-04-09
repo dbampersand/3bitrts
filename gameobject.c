@@ -14,6 +14,47 @@
 #include "video.h"
 #include <float.h>
 #include "shield.h"
+#include "player.h"
+void RemoveObjFromSelection(GameObject* g)
+{
+    for (int i = 0; i < MAXUNITSSELECTED; i++)
+    {
+        if (players[0].selection[i] == g)
+        {
+            for (int j = i; j < MAXUNITSSELECTED-1; j++)
+            {
+                players[0].selection[j] = players[0].selection[j+1];
+            }
+            players[0].selection[MAXUNITSSELECTED-1] = NULL;
+
+            players[0].numUnitsSelected--;
+            if (players[0].indexSelectedUnit == i)
+            {
+                players[0].indexSelectedUnit--;
+                if (players[0].indexSelectedUnit < 0) 
+                    players[0].indexSelectedUnit = 0;
+            }
+            break;
+        }
+    }
+
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < MAXUNITSSELECTED; j++)
+        {
+            if (players[0].controlGroups[i][j] == g)
+            {
+                for (int z = j; z < MAXUNITSSELECTED-1; z++)
+                {
+                    players[0].controlGroups[i][z] =  players[0].controlGroups[i][z+1];
+                }
+                players[0].controlGroups[i][MAXUNITSSELECTED-1] = NULL;
+
+            }
+        }
+
+    }
+}
 GameObject* AddGameobject(GameObject* prefab)
 {
     GameObject* found = NULL;
@@ -252,7 +293,8 @@ void KillObj(GameObject* g)
         free(g->shields);
     if (g->onAttackEffectsIndices)
         free(g->onAttackEffectsIndices);
-}
+    RemoveObjFromSelection(g);
+}   
 
 void LoadFolderPrefabs(const char* dirPath)
 {
@@ -593,6 +635,12 @@ void SetAttackingObj(GameObject* g, GameObject* target)
 }
 void AttackTarget(GameObject* g)
 {
+    if (!g) return;
+    if (!g->targObj) return;
+    if (GetPlayerOwnedBy(g) == GetPlayerOwnedBy(g->targObj))
+    {
+        return;
+    }
     if (g->targObj == g)
     {
         return;
@@ -638,6 +686,7 @@ void AttackTarget(GameObject* g)
 }
 Rect GetObjRect(GameObject* g)
 {
+    if (!g) return (Rect){0,0,0,0};
     if (g->spriteIndex <= 0) return (Rect){g->x,g->y,0,0};
     Rect r = (Rect){g->x,g->y,al_get_bitmap_width(sprites[g->spriteIndex].sprite),al_get_bitmap_height(sprites[g->spriteIndex].sprite)};
     return r;
@@ -645,6 +694,7 @@ Rect GetObjRect(GameObject* g)
 bool Damage(GameObject* g, float value)
 {
     if (!g) return false;
+    if (!(g->properties & OBJ_ACTIVE)) return false;
     value = DamageShields(g,value);
     g->health -= value;
     if (g->health <= 0)

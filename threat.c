@@ -72,6 +72,11 @@ void DeleteThreatList(GameObject* g)
 
     free(list);
 }
+void DeleteThreat(Threat* t)
+{
+    if (!t) return;
+    free(t);
+}
 Threat* GetHighestThreat(Threat* threatList)
 {
     int highest = -INT_MIN;
@@ -79,6 +84,13 @@ Threat* GetHighestThreat(Threat* threatList)
     Threat* highestThreat;
     while (1)
     {
+        if (!(next->obj->properties & OBJ_ACTIVE))
+        {
+            next = next->next;
+            if (next == NULL) break;
+        }
+
+
         if (next->threat > highest)
         {
             highest = next->threat;
