@@ -548,7 +548,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         GetCentre(players[0].selection[players[0].indexSelectedUnit], &cx, &cy);
         al_draw_circle(cx,cy,players[0].abilityHeld->range,FRIENDLY,0);
     }
-    DrawUI(keyState, keyStateLastFrame);
+    DrawUI(keyState, keyStateLastFrame, mouseState);
 
     if (al_key_down(keyState,ALLEGRO_KEY_F) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_F))
     {
@@ -624,7 +624,8 @@ int main(int argc, char* args[])
     display = al_create_display(256*_RENDERSIZE,256*_RENDERSIZE);
     ALLEGRO_BITMAP* backbuffer = al_get_backbuffer(display);
 
-    ALLEGRO_FONT* font = al_load_ttf_font("Assets/Fonts/Roboto-Medium.ttf", 64, ALLEGRO_TTF_MONOCHROME);
+    ALLEGRO_FONT* font = al_load_ttf_font("Assets/Fonts/Roboto-Medium.ttf", 8, ALLEGRO_TTF_MONOCHROME);
+    ui.font = font;
     ui.panel_sprite_index = LoadSprite("Assets/UI/ui.png",false);
     //ui.cursorDefaultIndex = LoadSprite("Assets/UI/cursor.png",false);
     LoadCursorSprite(&ui,&ui.cursorDefaultIndex,"Assets/UI/cursor.png");

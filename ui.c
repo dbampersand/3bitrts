@@ -4,7 +4,7 @@
 #include "player.h"
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro.h>
-
+#include <allegro5/allegro_font.h>
 
 void DrawHealthUIElement(GameObject* selected)
 {
@@ -33,10 +33,10 @@ void DrawManaUIElement(GameObject* selected)
 
 
 }
-void DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, int startX, int startY, bool keydown)
+bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, int startX, int startY, bool keydown, ALLEGRO_MOUSE_STATE* mouseState)
 {
     if (selected->abilities[index].spriteIndex_Portrait <= 0) 
-        return;
+        return false;
     if (heldAbility == &selected->abilities[index])
         keydown = true;
     Sprite* s = &sprites[selected->abilities[index].spriteIndex_Portrait];
@@ -56,8 +56,14 @@ void DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
         keydown = false;
     }
     DrawSpriteRegion(s,0,0,w,h,startX,startY,FRIENDLY,keydown);
+
+    if (PointInRect(mouseState->x,mouseState->y,(Rect){startX,startY,w,h}))
+    {
+        return true;
+    }
+    return false;
 }
-void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
+void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState)
 {
     al_draw_filled_rectangle(0, 217, _SCREEN_SIZE, _SCREEN_SIZE, BG);
     
@@ -70,10 +76,24 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         DrawHealthUIElement(selected);
         DrawManaUIElement(selected);
         Ability* heldAbility = players[0].abilityHeld;
-        DrawAbilityPortraits(selected,heldAbility,0,33,221,al_key_down(keyState,ALLEGRO_KEY_Q));
-        DrawAbilityPortraits(selected,heldAbility,1,65,221,al_key_down(keyState,ALLEGRO_KEY_W));
-        DrawAbilityPortraits(selected,heldAbility,2,97,221,al_key_down(keyState,ALLEGRO_KEY_E));
-        DrawAbilityPortraits(selected,heldAbility,3,129,221,al_key_down(keyState,ALLEGRO_KEY_R));
+        
+        if (DrawAbilityPortraits(selected,heldAbility,0,33,221,al_key_down(keyState,ALLEGRO_KEY_Q),mouseState))
+        {
+            DrawDescriptionBox("Test\nThis ability does stuff\nand also does this!", 5, ui.font, 5,64,100);
+
+        }
+        if (DrawAbilityPortraits(selected,heldAbility,1,65,221,al_key_down(keyState,ALLEGRO_KEY_W),mouseState))
+        {
+
+        }
+        if (DrawAbilityPortraits(selected,heldAbility,2,97,221,al_key_down(keyState,ALLEGRO_KEY_E),mouseState))
+        {
+
+        }
+        if (DrawAbilityPortraits(selected,heldAbility,3,129,221,al_key_down(keyState,ALLEGRO_KEY_R),mouseState))
+        {
+            
+        }
     }
 }
 void LoadCursorSprite(UI* ui, int* index, char* path)
@@ -134,4 +154,56 @@ void DrawCursor(ALLEGRO_MOUSE_STATE* mouseState, int index, bool clicked)
     }
 
 
+}
+typedef struct Text
+{
+    ALLEGRO_FONT* f; 
+    int x; 
+    int y;
+    int h; 
+}Text;
+bool cb(int line_num, const char *line, int size, void *extra)
+{
+    Text* t = (Text*)extra;
+    int x = t->x;
+    int y = t->y;
+    ALLEGRO_FONT* f = t->f;
+    int height = al_get_font_line_height(f);
+    y += line_num*height;
+
+    char* buff = calloc(size+1,sizeof(char));
+    memcpy(buff,line,size*sizeof(char));
+    al_draw_text(f,WHITE,x,y,ALLEGRO_ALIGN_LEFT,buff);
+    free(buff);
+    return true;
+}
+bool CB_GetHeight(int line_num, const char *line, int size, void *extra)
+{
+    Text* t = (Text*)extra;
+    ALLEGRO_FONT* f = t->f;
+    t->h += al_get_font_line_height(f);
+    return true;
+}
+void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, int y, int wTextbox)
+{
+    if (!description) return;
+    int w;  
+    int h;
+    int xoffset;
+    int yoffset;
+
+    //al_get_text_dimensions(f,description,&xoffset,&yoffset,&w,&h);
+    void* size = malloc(sizeof(Text));
+    memcpy(size,&(Text){f,x,y,0},sizeof(Text));
+    al_do_multiline_text(f,wTextbox,description,CB_GetHeight,size);
+    Text* t = (Text*)size;
+    
+    al_draw_filled_rectangle(x-padding,y-padding,x+wTextbox+padding,y+t->h+padding,ENEMY);
+    //al_draw_multiline_text(f,FRIENDLY,x,y,wTextbox,8,ALLEGRO_ALIGN_LEFT,description);
+    void* extra = malloc(sizeof(Text));
+    memcpy(extra,&(Text){f,x,y},sizeof(Text));
+    
+    al_do_multiline_text(f,wTextbox,description,cb,extra);
+    free(extra);
+    free(size);
 }

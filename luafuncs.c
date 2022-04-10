@@ -29,6 +29,14 @@ static void dumpstack (lua_State* l) {
     }
   }
 }
+int L_SetDescription(lua_State* l)
+{
+    const char* str = lua_tostring(l,1);
+    char* buff = calloc(strlen(str)+1,sizeof(char));
+    memcpy(buff,str,(strlen(str)+1)*sizeof(char));
+    currAbilityRunning->description = buff;
+    return 0;
+}
 int L_SetAttackPosition(lua_State* l)
 {
     return 0;
@@ -981,5 +989,7 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_Bnot);
     lua_setglobal(luaState, "Bnot");
 
+    lua_pushcfunction(luaState, L_SetDescription);
+    lua_setglobal(luaState, "SetDescription");
 
 }

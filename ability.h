@@ -30,6 +30,8 @@ typedef struct Ability
     ABILITY_CAST_TYPE castType;
 
     bool toggled;
+
+    char* description;
 } Ability;
 Ability* abilities;
 int numAbilities;

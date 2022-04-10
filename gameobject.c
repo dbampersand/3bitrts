@@ -294,6 +294,15 @@ void KillObj(GameObject* g)
     if (g->onAttackEffectsIndices)
         free(g->onAttackEffectsIndices);
     RemoveObjFromSelection(g);
+
+    for (int i = 0; i < 4; i++)
+    {
+        if (g->abilities[i].description)
+        {
+            free(g->abilities[i].description);
+            g->abilities[i].description = NULL;
+        }
+    }
 }   
 
 void LoadFolderPrefabs(const char* dirPath)
