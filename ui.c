@@ -5,7 +5,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
-
+#include <math.h>
 void DrawHealthUIElement(GameObject* selected)
 {
     float percentHP = selected->health / selected->maxHP;
@@ -79,20 +79,48 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         
         if (DrawAbilityPortraits(selected,heldAbility,0,33,221,al_key_down(keyState,ALLEGRO_KEY_Q),mouseState))
         {
-            DrawDescriptionBox("Test\nThis ability does stuff\nand also does this!", 5, ui.font, 5,64,100);
+            if (selected->abilities[0].description)
+            {
+                int h = GetDescriptionBoxH(selected->abilities[0].description,100,ui.font,UI_PADDING);
+                int x = 33 + ceil(UI_PADDING/2.0f);
+                int y = 221 - h - 3;
+                DrawDescriptionBox(selected->abilities[0].description, 5, ui.font, x,y,100);
+            }
 
         }
         if (DrawAbilityPortraits(selected,heldAbility,1,65,221,al_key_down(keyState,ALLEGRO_KEY_W),mouseState))
         {
+            if (selected->abilities[1].description)
+            {
+                int h = GetDescriptionBoxH(selected->abilities[1].description,100,ui.font,UI_PADDING);
+                int x = 65 + ceil(UI_PADDING/2.0f);
+                int y = 221 - h - 3;
+                DrawDescriptionBox(selected->abilities[1].description, 5, ui.font, x,y,100);
+            }
 
         }
         if (DrawAbilityPortraits(selected,heldAbility,2,97,221,al_key_down(keyState,ALLEGRO_KEY_E),mouseState))
         {
+            if (selected->abilities[2].description)
+            {
+                int h = GetDescriptionBoxH(selected->abilities[2].description,100,ui.font,UI_PADDING);
+                int x = 97 + ceil(UI_PADDING/2.0f);
+                int y = 221 - h - 3;
+                DrawDescriptionBox(selected->abilities[2].description, 5, ui.font, x,y,100);
+
+            }
 
         }
         if (DrawAbilityPortraits(selected,heldAbility,3,129,221,al_key_down(keyState,ALLEGRO_KEY_R),mouseState))
         {
-            
+            if (selected->abilities[3].description)
+            {
+                int h = GetDescriptionBoxH(selected->abilities[3].description,100,ui.font,UI_PADDING);
+                int x = 129 + ceil(UI_PADDING/2.0f);
+                int y = 221 - h - 3;
+                DrawDescriptionBox(selected->abilities[3].description, 5, ui.font, x,y,100);
+            }
+
         }
     }
 }
@@ -183,6 +211,17 @@ bool CB_GetHeight(int line_num, const char *line, int size, void *extra)
     ALLEGRO_FONT* f = t->f;
     t->h += al_get_font_line_height(f);
     return true;
+}
+int GetDescriptionBoxH(char* description, int wTextbox, ALLEGRO_FONT* f, int padding)
+{
+    void* size = malloc(sizeof(Text));
+    memcpy(size,&(Text){f,0,0,0},sizeof(Text));
+    al_do_multiline_text(f,wTextbox,description,CB_GetHeight,size);
+    Text* t = (Text*)size;
+    int height = t->h + padding*2;
+    free(size);
+
+    return height;
 }
 void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, int y, int wTextbox)
 {

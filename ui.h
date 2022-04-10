@@ -14,6 +14,7 @@ typedef struct UI
 
 UI ui;
 
+#define UI_PADDING 5
 typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE;
 typedef struct Ability Ability;
 
@@ -22,4 +23,4 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
 void DrawCursor(ALLEGRO_MOUSE_STATE* mouseState, int index, bool clicked);
 void LoadCursorSprite(UI* ui, int* index, char* path);
 void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, int y, int wTextbox);
- 
+int GetDescriptionBoxH(char* description, int wTextbox, ALLEGRO_FONT* f, int padding);

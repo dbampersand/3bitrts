@@ -7,7 +7,7 @@
 #include "gameobject.h"
 Ability CloneAbilityPrefab(Ability* prefab, lua_State* l)
 {
-    Ability a;
+    Ability a = {0};
     a.path = prefab->path;
     a.luabuffer = prefab->luabuffer;
     if (a.path && a.luabuffer)

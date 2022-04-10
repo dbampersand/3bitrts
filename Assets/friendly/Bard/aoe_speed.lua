@@ -7,7 +7,7 @@ function setup()
     AbilitySetCastType(ABILITY_TOGGLE);
     SetAbilityRange(duration * speed)
     SetAbilityCooldown(10)
-    
+    SetDescription("Song of Speed\n\nProvides speed in a radius.")
 end
 function casted()
     UntoggleOthers();

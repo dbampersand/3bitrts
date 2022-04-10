@@ -6,6 +6,7 @@ function setup()
     AbilitySetPortrait("Assets/friendly/Warrior/strike.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(40)
+    SetDescription("Strike\n\nStrikes the target, dealing damage and adding high amounts of threat.")
     
 end
 function casted(x,y,obj,headingx,headingy)

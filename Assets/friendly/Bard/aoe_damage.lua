@@ -7,6 +7,7 @@ function setup()
     AbilitySetCastType(ABILITY_TOGGLE);
     SetAbilityRange(duration * speed)
     SetAbilityCooldown(10)
+    SetDescription("Song of Damage\n\nDoes damage in a radius.")
     
 end
 function casted()

@@ -4,7 +4,7 @@ function setup()
     SetAbilityRange(20)
     SetAbilityCooldown(10);
     AbilitySetPortrait("Assets/friendly/Bard/icon_aoe_heal.png");
-
+    SetDescription("Song of Healing\n\nProvides healing in a radius.")
 
 end
 
