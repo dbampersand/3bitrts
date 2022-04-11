@@ -50,7 +50,7 @@ void init()
 }
 void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState)
 {
-    if (!(mouseLastFrame->buttons & 1)  && (mouseState->buttons & 1))
+    if (!(mouseLastFrame->buttons & 1)  && (mouseState->buttons & 1) && !players[0].abilityHeld)
     {
         AddMouseRandomParticles(*mouseState, 3);
         players[0].selecting = true;

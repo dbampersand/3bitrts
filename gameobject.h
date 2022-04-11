@@ -21,19 +21,26 @@ typedef struct lua_State lua_State;
 #define MAX_QUEUED_CMD 8
 
 typedef struct GameObject
-{
+{    
+    char* lua_buffer;
+
+    char* name; 
+    char* path; 
+    GameObject* targObj;
+    int* onAttackEffectsIndices;
+    Shield* shields;
+    Ability abilities[4]; 
+    Effect effects[MAX_EFFECTS];
+    Command queue[MAX_QUEUED_CMD];
+
     float x; float  y;
-    //void (*update)(struct GameObject* self);
-    char properties;
     float health;
     float maxHP;
 
-    Shield* shields;
     int numShields;
     
     float mana;
     float maxMana;
-    Ability abilities[4];
     unsigned int spriteIndex;
     unsigned int selectedSpriteIndex;
 
@@ -41,15 +48,8 @@ typedef struct GameObject
     int luafunc_setup;
     int luafunc_kill;
     int luafunc_onattack;
+    int numAttackEffectIndices;
 
-    char* lua_buffer;
-
-    char* name; 
-    char* path; 
-
-    unsigned char xtarg;
-    unsigned char ytarg;
-    GameObject* targObj;
 
     float aggroRadius;
 
@@ -63,16 +63,18 @@ typedef struct GameObject
     float baseDamage;
     float armor;
      
-    Effect effects[MAX_EFFECTS];
 
-    int* onAttackEffectsIndices;
-    int numAttackEffectIndices;
 
     Threat threatList;
 
-    Command queue[MAX_QUEUED_CMD];
+
+    char properties;
+    unsigned char xtarg;
+    unsigned char ytarg;
+
     
 } GameObject;
+
 
 #define MAX_OBJS 64
 GameObject* objects;

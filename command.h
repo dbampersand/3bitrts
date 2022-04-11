@@ -5,7 +5,8 @@ typedef enum QueueCommand
     COMMAND_MOVE,
     COMMAND_ATTACK,
     COMMAND_CAST,
-    COMMAND_STOP
+    COMMAND_STOP,
+    COMMAND_AMOVE
 } QueueCommand;
 
 typedef struct GameObject GameObject;

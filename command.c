@@ -89,6 +89,10 @@ void DoCommands(GameObject* g)
             return;
         }
     }
+    if (c->commandType == COMMAND_AMOVE)
+    {
+        
+    }
     if (c->commandType == COMMAND_STOP)
     {
         NextCommand(g);

@@ -33,6 +33,7 @@ typedef struct Ability
 
     char* description;
 } Ability;
+
 Ability* abilities;
 int numAbilities;
 int numAbilitiesAllocated; 
