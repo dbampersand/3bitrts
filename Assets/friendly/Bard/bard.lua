@@ -9,7 +9,7 @@ function setup()
     AddAttackSprite("Assets/UI/slash_fx2.png",16,16,0.05);
     AddAttackSprite("Assets/UI/slash_fx.png",32,32,0.05);
 
-    SetDamage(50);
+    SetDamage(5);
 
 end
 

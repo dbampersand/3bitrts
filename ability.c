@@ -264,7 +264,7 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
         else
             return false;
     }
-    if (a->cooldown > 0)
+    if (a->cooldown < 0)
         return false;
     if (GetDist(g,target) > a->range)
         return false;

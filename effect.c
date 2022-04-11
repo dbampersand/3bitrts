@@ -103,6 +103,7 @@ void ProcessEffects(GameObject* g, float dt)
 }
 void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
 {
+    if (!e) return;
     if (e->trigger == TRIGGER_INSTANT)
     {
         ProcessEffect(e,from,target,false);

@@ -870,7 +870,8 @@ void DoAI(GameObject* g)
     if (g->threatList.obj)
     {
         Threat* t = GetHighestThreat(&g->threatList);
-        g->targObj = t->obj;
+        if (t)
+            g->targObj = t->obj;
     }
     //do one of these per frame, just to save some cycles
     if (_FRAMES % MAX_OBJS  == g-objects)
