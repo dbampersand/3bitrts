@@ -44,3 +44,4 @@ void CastAbility(GameObject* g, Ability* a, int x, int y, float headingx, float 
 bool AbilityIsInitialised(Ability* a);
 void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled);
 bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, float y);
+bool AbilityIsCastImmediately(Ability* a);

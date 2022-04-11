@@ -264,7 +264,8 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
         else
             return false;
     }
-
+    if (a->cooldown > 0)
+        return false;
     if (GetDist(g,target) > a->range)
         return false;
     if (target == NULL && AbilityShouldBeCastOnTarget(a))
@@ -291,4 +292,8 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
         }
     }
     return true;
+}
+bool AbilityIsCastImmediately(Ability* a)
+{
+    return !!((a->castType & ABILITY_TOGGLE) | (a->castType & ABILITY_INSTANT));
 }

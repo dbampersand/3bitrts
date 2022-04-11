@@ -6,10 +6,11 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
 #include <math.h>
+#include "video.h"
 void DrawHealthUIElement(GameObject* selected)
 {
     float percentHP = selected->health / selected->maxHP;
-    int startHPY = 218 + 6;
+    int startHPY = UI_START_Y+1+ 6;
     int startHPX = 4;
     int hpW = 9;
     int hpH = 26;
@@ -22,7 +23,7 @@ void DrawHealthUIElement(GameObject* selected)
 void DrawManaUIElement(GameObject* selected)
 {
     float percentMana = selected->mana / selected->maxMana;
-    int startManaY = 218 + 6;
+    int startManaY = UI_START_Y+1 + 6;
     int startManaX = 18;
     int manaW = 10;
     int manaH = 26;
@@ -33,7 +34,36 @@ void DrawManaUIElement(GameObject* selected)
 
 
 }
-bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, int startX, int startY, bool keydown, ALLEGRO_MOUSE_STATE* mouseState)
+Rect GetAbilityPortraitRect(int index)
+{
+    Rect r;
+    r.w = 30; r.h = 30;
+    if (index == 0)
+    {
+        r.x = 33;
+        r.y = 221;
+    }
+    if (index == 1)
+    {
+        r.x = 65;
+        r.y = 221;
+    }
+    if (index == 2)
+    {
+        r.x = 97;
+        r.y = 221;
+    }
+    if (index == 3)
+    {
+        r.x = 129;
+        r.y = 221;
+    }
+    return r;
+
+
+}
+
+bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, ALLEGRO_MOUSE_STATE* mouseState)
 {
     if (selected->abilities[index].spriteIndex_Portrait <= 0) 
         return false;
@@ -55,9 +85,9 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
     {
         keydown = false;
     }
-    DrawSpriteRegion(s,0,0,w,h,startX,startY,FRIENDLY,keydown);
+    DrawSpriteRegion(s,0,0,w,h,r.x,r.y,FRIENDLY,keydown);
 
-    if (PointInRect(mouseState->x,mouseState->y,(Rect){startX,startY,w,h}))
+    if (PointInRect(mouseState->x,mouseState->y,r))
     {
         return true;
     }
@@ -65,10 +95,10 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
 }
 void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState)
 {
-    al_draw_filled_rectangle(0, 217, _SCREEN_SIZE, _SCREEN_SIZE, BG);
+    al_draw_filled_rectangle(0, UI_START_Y, _SCREEN_SIZE, _SCREEN_SIZE, BG);
     
     Sprite* s = &sprites[ui.panel_sprite_index];
-    DrawSprite(s,1,218,FRIENDLY,false);
+    DrawSprite(s,1,UI_START_Y+1,FRIENDLY,false);
 
     GameObject* selected = players[0].selection[players[0].indexSelectedUnit];
     if (selected)
@@ -77,7 +107,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         DrawManaUIElement(selected);
         Ability* heldAbility = players[0].abilityHeld;
         
-        if (DrawAbilityPortraits(selected,heldAbility,0,33,221,al_key_down(keyState,ALLEGRO_KEY_Q),mouseState))
+        if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0),al_key_down(keyState,ALLEGRO_KEY_Q),mouseState))
         {
             if (selected->abilities[0].description)
             {
@@ -88,7 +118,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        if (DrawAbilityPortraits(selected,heldAbility,1,65,221,al_key_down(keyState,ALLEGRO_KEY_W),mouseState))
+        if (DrawAbilityPortraits(selected,heldAbility,1,GetAbilityPortraitRect(1),al_key_down(keyState,ALLEGRO_KEY_W),mouseState))
         {
             if (selected->abilities[1].description)
             {
@@ -99,7 +129,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        if (DrawAbilityPortraits(selected,heldAbility,2,97,221,al_key_down(keyState,ALLEGRO_KEY_E),mouseState))
+        if (DrawAbilityPortraits(selected,heldAbility,2,GetAbilityPortraitRect(2),al_key_down(keyState,ALLEGRO_KEY_E),mouseState))
         {
             if (selected->abilities[2].description)
             {
@@ -111,7 +141,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        if (DrawAbilityPortraits(selected,heldAbility,3,129,221,al_key_down(keyState,ALLEGRO_KEY_R),mouseState))
+        if (DrawAbilityPortraits(selected,heldAbility,3,GetAbilityPortraitRect(3),al_key_down(keyState,ALLEGRO_KEY_R),mouseState))
         {
             if (selected->abilities[3].description)
             {
@@ -237,7 +267,15 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, 
     al_do_multiline_text(f,wTextbox,description,CB_GetHeight,size);
     Text* t = (Text*)size;
     
-    al_draw_filled_rectangle(x-padding,y-padding,x+wTextbox+padding,y+t->h+padding,ENEMY);
+    Rect r = (Rect){x,y,wTextbox+padding,t->h+padding};
+    al_draw_filled_rectangle(r.x-padding,r.y-padding,x+r.w,y+r.h,BG);
+    
+    r.x-=padding;
+    r.y-=padding;
+    r.w+=padding;
+    r.h+=padding;
+    DrawOutlinedRect_Dithered(&r,FRIENDLY);
+    
     //al_draw_multiline_text(f,FRIENDLY,x,y,wTextbox,8,ALLEGRO_ALIGN_LEFT,description);
     void* extra = malloc(sizeof(Text));
     memcpy(extra,&(Text){f,x,y},sizeof(Text));
@@ -245,4 +283,24 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, 
     al_do_multiline_text(f,wTextbox,description,cb,extra);
     free(extra);
     free(size);
+}
+bool IsInsideUI(int x, int y)
+{
+    if (y >= UI_START_Y)
+        return true;
+    return false;
+}
+int GetAbilityClicked(ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+{
+    if (PointInRect(mouseState->x,mouseState->y,GetAbilityPortraitRect(0)))
+        return 0;
+    if (PointInRect(mouseState->x,mouseState->y,GetAbilityPortraitRect(1)))
+        return 1;
+    if (PointInRect(mouseState->x,mouseState->y,GetAbilityPortraitRect(2)))
+        return 2;
+    if (PointInRect(mouseState->x,mouseState->y,GetAbilityPortraitRect(3)))
+        return 3;
+
+    return -1;
+
 }
