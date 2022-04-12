@@ -59,6 +59,7 @@ float DamageShield(GameObject* g, Shield* s, float damage)
     {
         RemoveShield(g,s);
     }
+    return s->amtLeft;
 }
 float DamageShields(GameObject* g, float damage)
 {

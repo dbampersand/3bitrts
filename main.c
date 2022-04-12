@@ -129,6 +129,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                                 if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
                                     ClearCommandQueue(g);
                             MoveCommand(g,mouseState->x-w/2,mouseState->y-h/2);
+                        
                         // g->xtarg = mouseState->x - w/2;
                             //g->ytarg = mouseState->y - h/2;
                         }
@@ -289,7 +290,12 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     UpdateAttacks(dt);
     SetControlGroups(keyState);
     GetControlGroup(keyState);
-
+    if (al_key_down(keyState, ALLEGRO_KEY_A) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_A))
+    {
+        players[0].amoveSelected = true;
+    }
+    if (players[0].abilityHeld) 
+        players[0].amoveSelected = false;
     if (al_key_down(keyState, ALLEGRO_KEY_TAB) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_TAB))
     {
         players[0].indexSelectedUnit++;
@@ -416,9 +422,10 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
         }
     }
-    if (!al_key_down(keyState,ALLEGRO_KEY_ESCAPE) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_ESCAPE))
+    if (!al_key_down(keyState,ALLEGRO_KEY_ESCAPE) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_ESCAPE) )
     {
         players[0].abilityHeld = NULL;
+        players[0].amoveSelected = false;
     }
     if (mouseState->buttons & 1) 
     {
@@ -427,6 +434,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         
         if (IsInsideUI(mouseState->x,mouseState->y))
         {
+            players[0].amoveSelected = false;
             int index = GetAbilityClicked(mouseState,mouseStateLastFrame);
             if (index != -1)
             {
@@ -450,6 +458,20 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         }
         else
         {
+            if (players[0].amoveSelected)
+            {
+                players[0].amoveSelected = false;
+                for (int i = 0; i < numObjects; i++)
+                {
+                    GameObject* g = &objects[i];
+                    if (IsSelected(g))
+                    {
+                        float w; float h; GetOffsetCenter(g,&w,&h);
+                        AttackMoveCommand(g,mouseState->x-w/2,mouseState->y-h/2);
+                    }
+
+                }
+            }
         if (players[0].abilityHeld)
         {
             GameObject* target = NULL;
@@ -617,6 +639,10 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         else
             DrawCursor(mouseState, ui.cursorDefaultIndex, false);
 
+    }
+    else if (players[0].amoveSelected)
+    {
+        DrawCursor(mouseState, ui.cursorAttackIndex,false);
     }
     else 
     {

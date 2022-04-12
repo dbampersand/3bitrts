@@ -15,6 +15,8 @@ typedef struct Player
     GameObject* controlGroups[10][MAXUNITSSELECTED];
     GameObject* clickedThisFrame;
 
+    bool amoveSelected;
+
 } Player;
 
 Player* players;

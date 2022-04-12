@@ -375,6 +375,7 @@ int L_CreateCircularProjectiles(lua_State* l)
         CreateProjectile(l, x+sin(angle), y+cos(angle), portrait, attackType, speed, duration, shouldCallback, properties, targ, effects, len);
 
     }
+    return 0;
 }
 int L_CreateProjectile(lua_State* l)
 {
@@ -433,6 +434,7 @@ int L_UntoggleOthers(lua_State* l)
         if (index == i) continue;
         ToggleAbility(&currGameObjRunning->abilities[i],currGameObjRunning,false);
     }
+    return 0;
 }
 int L_ToggleAbility(lua_State* l)
 {
@@ -467,6 +469,7 @@ int L_ToggleAbility(lua_State* l)
 
     }
     ToggleAbility(a,currGameObjRunning,toggle);
+    return 0;
 }
 int L_SetMovePoint(lua_State* l)
 {
@@ -486,6 +489,7 @@ int L_SetMovePoint(lua_State* l)
         currGameObjRunning->ytarg = y-h/2;
         currGameObjRunning->targObj = NULL;
     }
+    return 0;
 }
 int L_CreateAOE(lua_State* l)
 {

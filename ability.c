@@ -29,8 +29,8 @@ Ability* AddAbility(const char* path)
     {
         if (abilities[i].path)
         {
-            char* c = path;
-            char* c2 = abilities[i].path;
+            const char* c = path;
+            const char* c2 = abilities[i].path;
             if (strcmp(path,abilities[i].path) == 0)
             {
                 return &abilities[i];

@@ -13,3 +13,4 @@ typedef struct Threat
 void AddThreat(GameObject* source, GameObject* target, int damage);
 Threat* GetHighestThreat(Threat* threatList);
 int GetNumThreats(Threat* threatList);
+void DeleteThreatList(GameObject* g);

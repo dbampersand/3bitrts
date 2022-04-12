@@ -22,6 +22,12 @@ void MoveCommand(GameObject* g, float x, float y)
     Command c = (Command){.x = x, .y = y, .commandType = COMMAND_MOVE, .target = NULL, .ability = NULL};
     AddCommand(g,c);
 }
+void AttackMoveCommand(GameObject* g, float x, float y)
+{
+    Command c = (Command){.x = x, .y = y, .commandType = COMMAND_ATTACKMOVE, .target = NULL, .ability = NULL};
+    AddCommand(g,c);
+}
+
 void AttackCommand(GameObject* g, GameObject* target)
 {
     float x = 0; float y = 0;
@@ -89,9 +95,35 @@ void DoCommands(GameObject* g)
             return;
         }
     }
-    if (c->commandType == COMMAND_AMOVE)
+    if (c->commandType == COMMAND_ATTACKMOVE)
     {
-        
+        g->xtarg = c->x;
+        g->ytarg = c->y;
+        g->targObj = NULL;
+
+        if (dist(g->x,g->y,c->x,c->y) <= DIST_DELTA)
+        {
+            NextCommand(g);
+            return;
+        }
+        for (int i = 0; i < numObjects; i++)
+        {
+            GameObject* g2 = &objects[i];  
+            if (IsActive(g2))
+            {
+                if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(g2))
+                {
+                    if (GetDist(g,g2) <= g->aggroRadius)
+                    {
+                        g->targObj = g2;
+                        g->queue[0].commandType = COMMAND_ATTACK;
+                        g->queue[0].target = g2;
+                        return;  
+                    }
+                }
+            }
+        }
+
     }
     if (c->commandType == COMMAND_STOP)
     {
