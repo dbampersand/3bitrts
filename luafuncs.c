@@ -29,6 +29,11 @@ static void dumpstack (lua_State* l) {
     }
   }
 }
+int L_SetRange(lua_State* l)
+{
+    currGameObjRunning->range = lua_tonumber(l,1);
+    return 0;
+}
 int L_SetDescription(lua_State* l)
 {
     const char* str = lua_tostring(l,1);
@@ -995,5 +1000,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetDescription);
     lua_setglobal(luaState, "SetDescription");
+    
+    lua_pushcfunction(luaState, L_SetRange);
+    lua_setglobal(luaState, "SetRange");
 
 }

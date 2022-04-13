@@ -94,13 +94,13 @@ GameObject* AddGameobject(GameObject* prefab)
     currGameObjRunning->name = prefab->name;
     currGameObjRunning->lua_buffer = prefab->lua_buffer; 
 
+    found->range = 1;
 
     loadLuaGameObj(luaState, found->path, found); 
     found->properties |= OBJ_ACTIVE;
     found->health = 100;
     found->maxHP = 100;
     //found->baseDamage = 5;
-    found->range = 1;
     found->attackSpeed = 1;
     found->mana = 50;
     found->maxMana = 100;
@@ -556,10 +556,18 @@ void Move(GameObject* g, float delta)
 
     int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
     int h = al_get_bitmap_height(sprites[g->spriteIndex].sprite);
+    float xtarg;
+    float ytarg;
 
-
-    int xtarg = g->xtarg;
-    int ytarg = g->ytarg;
+    if (!g->targObj)
+    {
+        xtarg = g->xtarg;
+        ytarg = g->ytarg;
+    }
+    else
+    {
+        GetCentre(g->targObj,&xtarg,&ytarg);
+    }
 
         float moveX = xtarg - g->x;
         float moveY = ytarg - g->y;
@@ -871,7 +879,10 @@ void DoAI(GameObject* g)
     {
         Threat* t = GetHighestThreat(&g->threatList);
         if (t)
-                g->targObj = t->obj;
+        {
+            AttackCommand(g,t->obj);
+        }
+            //g->targObj = t->obj;
     }
     //do one of these per frame, just to save some cycles
     if (_FRAMES % MAX_OBJS  == g-objects)

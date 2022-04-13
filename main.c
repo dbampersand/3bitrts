@@ -333,7 +333,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         ProcessEffects(currGameObjRunning,dt);
         ProcessShields(currGameObjRunning,dt);
 
-        if (currGameObjRunning->targObj)
+        if (currGameObjRunning->targObj && currGameObjRunning->queue[0].commandType == COMMAND_ATTACK) 
         {
             if (currGameObjRunning->properties & OBJ_ACTIVE)
             {
@@ -346,7 +346,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
                 Rect r2 = (Rect){currGameObjRunning->targObj->x,currGameObjRunning->targObj->y,wTarg,hTarg};
                 #define DISTDELTA 0.001f
                 Rect unioned = UnionRect(r,r2);
-                if (RectsTouch(r, r2, DISTDELTA))
+                if (RectsTouch(r, r2, currGameObjRunning->range+DISTDELTA))
                 {
                     shouldMove = false;
                     shouldAttack = true;

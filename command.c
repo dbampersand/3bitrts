@@ -94,12 +94,27 @@ void DoCommands(GameObject* g)
     }
     if (c->commandType == COMMAND_CAST)
     {
-        g->targObj = c->target;
+        if (c->target)
+        {
+            if (IsOwnedByPlayer(g) != IsOwnedByPlayer(c->target))
+                g->targObj = c->target;
+        }
 
         if (AbilityCanBeCast(c->ability,g,c->target,c->x,c->y))
         {
             CastAbility(g,c->ability,c->x,c->y,c->x-g->x,c->y-g->y,c->target);
-            NextCommand(g);
+            if (g->queue[1].commandType == COMMAND_NONE)
+            {
+                if (IsOwnedByPlayer(g) != IsOwnedByPlayer(c->target))
+                {
+                    g->queue[0].commandType = COMMAND_ATTACK;
+
+                }
+            }
+            else
+            {
+                NextCommand(g);
+            }
             return;
         }
     }
