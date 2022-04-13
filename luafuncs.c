@@ -720,6 +720,10 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,EFFECT_DAMAGE);
     lua_setglobal(l,"EFFECT_DAMAGE");
 
+    lua_pushinteger(l,EFFECT_INVULN);
+    lua_setglobal(l,"EFFECT_INVULN");
+
+
 
 
     lua_pushinteger(l,ABILITY_INSTANT);

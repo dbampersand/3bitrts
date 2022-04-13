@@ -307,6 +307,9 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     for (int i = 0; i < numObjects; i++)
     {
         currGameObjRunning = &objects[i];
+        currGameObjRunning->invulnerableTime -= dt;
+        if (currGameObjRunning->invulnerableTime < 0)
+            currGameObjRunning->invulnerableTime = 0;
         if (currGameObjRunning->properties & OBJ_ACTIVE && !IsOwnedByPlayer(currGameObjRunning))
         {
             DoAI(currGameObjRunning);
@@ -727,15 +730,21 @@ int main(int argc, char* args[])
     GameObject* p = LoadPrefab("Assets/Friendly/Priest/priest.lua");
     SetOwnedBy(p, 0);
 
+    GameObject* r = LoadPrefab("Assets/Friendly/Rogue/rogue.lua");
+    SetOwnedBy(p, 0);
+
 
 
     GameObject* g1 = AddGameobject(g);
     GameObject* warr = AddGameobject(warrior);
     GameObject* priest = AddGameobject(p);
+    GameObject* rogue = AddGameobject(r);
+
 
     g1->speed = 50;
     warr->speed = 50;
     priest->speed = 50;
+    rogue->speed = 50;
 
 
 
@@ -756,6 +765,11 @@ int main(int argc, char* args[])
     priest->y = 160;
     priest->xtarg = 180;
     priest->ytarg = 160;
+
+    rogue->x = 201;
+    rogue->y = 180;
+    rogue->xtarg = 201;
+    rogue->ytarg = 201;
 
 
     //AddGameobject(g)->x = 50;

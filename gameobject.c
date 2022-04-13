@@ -363,6 +363,10 @@ GameObject* LoadPrefab(const char* path)
 
     return &prefabs[numPrefabs-1];
 }
+void MakeInvulnerable(GameObject* g, float time)
+{
+    g->invulnerableTime += time;
+}
 void LoadPrefabs(const char* dirPath)
 {
     DIR *d;
@@ -712,6 +716,13 @@ bool Damage(GameObject* g, float value)
 {
     if (!g) return false;
     if (!(g->properties & OBJ_ACTIVE)) return false;
+    if (g->invulnerableTime > 0)
+    {
+        printf("%f\n",g->invulnerableTime);
+        return false;
+
+    }
+
     value = DamageShields(g,value);
     g->health -= value;
     if (g->health <= 0)

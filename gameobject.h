@@ -72,6 +72,7 @@ typedef struct GameObject
     unsigned char xtarg;
     unsigned char ytarg;
 
+    float invulnerableTime;
     
 } GameObject;
 
@@ -134,5 +135,7 @@ void CheckCollisions(GameObject* g, bool x, float dV);
 GameObject* GetCollidedWith(GameObject* g);
 GameObject* GetClicked(float x, float y);
 void UnsetAll();
+void MakeInvulnerable(GameObject* g, float time);
+
 //void LoadFolderPrefabs(const char* dirPath);
 //void LoadPrefabs(const char* dirPath);

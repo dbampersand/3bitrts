@@ -33,6 +33,10 @@ void ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         AddDamage(target,e->value*sign);
     }
+    if (e->effectType == EFFECT_INVULN)
+    {
+        MakeInvulnerable(target,e->duration*sign);
+    }
 
 }
 void RemoveEffect(Effect* e, GameObject* from)
@@ -107,7 +111,7 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
     if (e->trigger == TRIGGER_INSTANT)
     {
         ProcessEffect(e,from,target,false);
-        if (e->effectType ==  EFFECT_HURT)
+       /* if (e->effectType ==  EFFECT_HURT)
         {
             Damage(target,e->value);
         }
@@ -123,6 +127,10 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
         {
             AddThreat(from,target,e->value);
         }
+        if (e->effectType == EFFECT_INVULN)
+        {
+            MakeInvulnerable(target,e->duration);
+        }*/
     }
     else
     {
