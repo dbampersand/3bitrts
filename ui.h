@@ -9,7 +9,7 @@ typedef struct UI
     int cursorDefaultIndex;
     int cursorCastingIndex;
     int cursorAttackIndex;
-
+    int cursorFriendlyIndex;
     ALLEGRO_FONT* font;
 
     #define UI_START_Y 217

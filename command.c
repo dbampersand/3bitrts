@@ -15,21 +15,25 @@ void AddCommand(GameObject* g, Command c)
 }
 void ClearCommandQueue(GameObject* g)
 {
+    if (!g) return;
     memset(&g->queue,0,sizeof(Command)*MAX_QUEUED_CMD);
 }
 void MoveCommand(GameObject* g, float x, float y)
 {
+    if (!g) return;
     Command c = (Command){.x = x, .y = y, .commandType = COMMAND_MOVE, .target = NULL, .ability = NULL};
     AddCommand(g,c);
 }
 void AttackMoveCommand(GameObject* g, float x, float y)
 {
+    if (!g) return;
     Command c = (Command){.x = x, .y = y, .commandType = COMMAND_ATTACKMOVE, .target = NULL, .ability = NULL};
     AddCommand(g,c);
 }
 
 void AttackCommand(GameObject* g, GameObject* target)
 {
+    if (!g) return;
     float x = 0; float y = 0;
     GetCentre(target,&x,&y);
     Command c = (Command){.x = x, .y = y, .commandType = COMMAND_ATTACK, .target = target, .ability = NULL};
@@ -37,17 +41,20 @@ void AttackCommand(GameObject* g, GameObject* target)
 }
 void CastCommand(GameObject* g, GameObject* target, Ability* a, float x, float y)
 {
+    if (!g) return;
     Command c = (Command){.x = x, .y = y, .commandType = COMMAND_CAST, .target = target, .ability = a};
     AddCommand(g,c);
 }
 void StopCommand(GameObject* g)
 {
+    if (!g) return;
     Command c = (Command){.x = g->x, .y = g->y, .commandType = COMMAND_STOP, .target = NULL, .ability = NULL};
     AddCommand(g,c);
 }
 
 void NextCommand(GameObject* g)
 {
+    if (!g) return;
     for (int i = 0; i < MAX_QUEUED_CMD-1; i++)
     {
         g->queue[i] = g->queue[i+1];
@@ -56,6 +63,7 @@ void NextCommand(GameObject* g)
 }
 void DoCommands(GameObject* g)
 {
+    if (!g) return;
     Command* c = &g->queue[0];
     if (c->commandType == COMMAND_NONE)
     {

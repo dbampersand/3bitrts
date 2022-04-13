@@ -295,5 +295,6 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
 }
 bool AbilityIsCastImmediately(Ability* a)
 {
+    if (!a) return false;
     return !!((a->castType & ABILITY_TOGGLE) | (a->castType & ABILITY_INSTANT));
 }

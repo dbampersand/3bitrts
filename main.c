@@ -403,19 +403,23 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
                 players[0].abilityHeld = NULL;
                 currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
-                currAbilityRunning = &players[0].selection[players[0].indexSelectedUnit]->abilities[index];
-                if (currAbilityRunning->castType == ABILITY_INSTANT || currAbilityRunning->castType == ABILITY_TOGGLE)
+                if (currGameObjRunning)
                 {
-                    if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
-                        ClearCommandQueue(currGameObjRunning);
-                    CastCommand(currGameObjRunning,NULL,currAbilityRunning,mouseState->x,mouseState->y);
+                    currAbilityRunning = &players[0].selection[players[0].indexSelectedUnit]->abilities[index];
 
-                    //if (AbilityCanBeCast(currAbilityRunning, currGameObjRunning, currGameObjRunning))
-                      //  CastAbility(currGameObjRunning, currAbilityRunning,0,0,0,0,currGameObjRunning);
-                }
-                else
-                {
-                    players[0].abilityHeld = currAbilityRunning;
+                    if (currAbilityRunning->castType == ABILITY_INSTANT || currAbilityRunning->castType == ABILITY_TOGGLE)
+                    {
+                        if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                            ClearCommandQueue(currGameObjRunning);
+                        CastCommand(currGameObjRunning,NULL,currAbilityRunning,mouseState->x,mouseState->y);
+
+                        //if (AbilityCanBeCast(currAbilityRunning, currGameObjRunning, currGameObjRunning))
+                        //  CastAbility(currGameObjRunning, currAbilityRunning,0,0,0,0,currGameObjRunning);
+                    }
+                    else
+                    {
+                        players[0].abilityHeld = currAbilityRunning;
+                    }
                 }
             }
 
@@ -431,43 +435,50 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     {
         currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
         currAbilityRunning = players[0].abilityHeld;
-        
         if (IsInsideUI(mouseState->x,mouseState->y))
         {
-            players[0].amoveSelected = false;
-            int index = GetAbilityClicked(mouseState,mouseStateLastFrame);
-            if (index != -1)
+            if (mouseStateLastFrame->buttons & 1)
+            if (currGameObjRunning)
             {
-                Ability* a = &currGameObjRunning->abilities[index];
-                if (AbilityIsCastImmediately(a))
+                players[0].amoveSelected = false;
+                int index = GetAbilityClicked(mouseState,mouseStateLastFrame);
+                if (index != -1)
                 {
-                    float x; float y; 
-                    GetCentre(currGameObjRunning,&x,&y);
+                    Ability* a = &currGameObjRunning->abilities[index];
+                    if (AbilityIsCastImmediately(a))
+                    {
+                        float x; float y; 
+                        GetCentre(currGameObjRunning,&x,&y);
 
-                    currAbilityRunning = a; 
-                    players[0].abilityHeld = NULL;
-                    CastAbility(currGameObjRunning,a,x,y,x,y,NULL);
+                        currAbilityRunning = a; 
+                        players[0].abilityHeld = NULL;
+                        CastAbility(currGameObjRunning,a,x,y,x,y,NULL);
 
-                }
-                else
-                {
-                    players[0].abilityHeld = &currGameObjRunning->abilities[index]; 
-                    currAbilityRunning =  &currGameObjRunning->abilities[index];
-                }
-            }  
+                    }
+                    else
+                    {
+                        players[0].abilityHeld = &currGameObjRunning->abilities[index]; 
+                        currAbilityRunning =  &currGameObjRunning->abilities[index];
+                    }
+                }  
+            }
         }
         else
         {
             if (players[0].amoveSelected)
             {
-                players[0].amoveSelected = false;
+                players[0].amoveSelected = false;   
                 for (int i = 0; i < numObjects; i++)
                 {
                     GameObject* g = &objects[i];
                     if (IsSelected(g))
                     {
                         float w; float h; GetOffsetCenter(g,&w,&h);
+                        if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                            ClearCommandQueue(g);
+
                         AttackMoveCommand(g,mouseState->x-w/2,mouseState->y-h/2);
+                        
                     }
 
                 }
@@ -634,8 +645,10 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     }
     else if (mousedOver)
     {
-        if (mousedOver->properties & OBJ_OWNED_BY)
+        if (mousedOver->properties & OBJ_OWNED_BY && players[0].numUnitsSelected > 0)
             DrawCursor(mouseState, ui.cursorAttackIndex,false);
+        else if (!(mousedOver->properties & OBJ_OWNED_BY))
+            DrawCursor(mouseState, ui.cursorFriendlyIndex, false);
         else
             DrawCursor(mouseState, ui.cursorDefaultIndex, false);
 
@@ -690,6 +703,7 @@ int main(int argc, char* args[])
     LoadCursorSprite(&ui,&ui.cursorDefaultIndex,"Assets/UI/cursor.png");
     LoadCursorSprite(&ui,&ui.cursorCastingIndex,"Assets/UI/cursor_cast.png");
     LoadCursorSprite(&ui,&ui.cursorAttackIndex,"Assets/UI/cursor_attack.png");
+    LoadCursorSprite(&ui,&ui.cursorFriendlyIndex,"Assets/UI/cursor_friendly.png");
 
     //int* s = LoadSprite("Encounters/01/map.png");
 
@@ -710,11 +724,19 @@ int main(int argc, char* args[])
     GameObject* warrior = LoadPrefab("Assets/Friendly/Warrior/warrior.lua");
     SetOwnedBy(warrior, 0);
 
+    GameObject* p = LoadPrefab("Assets/Friendly/Priest/priest.lua");
+    SetOwnedBy(p, 0);
+
+
 
     GameObject* g1 = AddGameobject(g);
     GameObject* warr = AddGameobject(warrior);
+    GameObject* priest = AddGameobject(p);
+
     g1->speed = 50;
     warr->speed = 50;
+    priest->speed = 50;
+
 
 
 
@@ -730,6 +752,10 @@ int main(int argc, char* args[])
     warr->ytarg = 150;
 
 
+    priest->x = 180;
+    priest->y = 160;
+    priest->xtarg = 180;
+    priest->ytarg = 160;
 
 
     //AddGameobject(g)->x = 50;
