@@ -474,7 +474,7 @@ void CheckCollisions(GameObject* g, bool x, float dV)
 }
 GameObject* GetCollidedWith(GameObject* g)
 {
-        Sprite* s = &sprites[g->spriteIndex];
+    Sprite* s = &sprites[g->spriteIndex];
     Rect rG = (Rect){g->x,g->y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)};
     for (int i = 0; i < numObjects; i++)
     {
@@ -927,7 +927,17 @@ bool IsActive(GameObject* g)
     if (!g) return false;
     return (g->properties & OBJ_ACTIVE);
 }
+float GetDistCentre(GameObject* g1, GameObject* g2)
+{
+    float x1; float y1; float x2; float y2; 
+    GetCentre(g1,&x1,&y1);
+    GetCentre(g2,&x2,&y2);
 
+    float movex = x2 - x1;
+    float movey = y2 - y1;
+
+    return sqrt(movex*movex+movey*movey);
+}
 float GetDist(GameObject* g1, GameObject* g2)
 {
     Rect r1 = GetObjRect(g1);
@@ -958,4 +968,12 @@ void UnsetAll()
     {
         SetSelected(&objects[i], false);
     }
+}
+float GetWidth(GameObject* g)
+{
+    return al_get_bitmap_width(sprites[g->spriteIndex].sprite);
+}
+float GetHeight(GameObject* g)
+{
+    return al_get_bitmap_height(sprites[g->spriteIndex].sprite);
 }

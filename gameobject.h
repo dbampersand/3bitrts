@@ -125,6 +125,7 @@ void ModifyMaxHP(GameObject* g, float value);
 
 void Teleport(GameObject* g, float x, float y);
 void GetOffsetCenter(GameObject* g, float* x, float* y);
+float GetDistCentre(GameObject* g1, GameObject* g2);
 void GetCentre(GameObject* g, float* x, float* y);
 void KillObj(GameObject* g);
 bool IsActive(GameObject* g);
@@ -136,6 +137,8 @@ GameObject* GetCollidedWith(GameObject* g);
 GameObject* GetClicked(float x, float y);
 void UnsetAll();
 void MakeInvulnerable(GameObject* g, float time);
+float GetWidth(GameObject* g);
+float GetHeight(GameObject* g);
 
 //void LoadFolderPrefabs(const char* dirPath);
 //void LoadPrefabs(const char* dirPath);

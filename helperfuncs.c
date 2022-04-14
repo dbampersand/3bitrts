@@ -2,6 +2,7 @@
 #include "sprite.h"
 #include <math.h>
 #include "rect.h"
+#include "gameobject.h"
 float clamp(float f, float min, float max)
 {
     return f < min ? min : f > max ? max : f;
@@ -115,7 +116,34 @@ double RandRange(double min, double max)
 {
    return ((max - min) * ((double)rand() / RAND_MAX)) + min;
 }    
+bool LineIntersectsObj(GameObject* g, float xLine, float yLine, float x2Line, float y2Line)
+{   
+    typedef struct line { 
+        float x; float y; float x2; float y2;
+    } line; 
 
+    int w = GetWidth(g);
+    int h = GetHeight(g);
+
+    line top = {g->x,g->y,g->x + w,g->y}; 
+    line right = {g->x + w, g->y, g->x + w, g->y + h}; 
+    line bottom = {g->x, g->y + h, g->x + w, g->y + h}; 
+    line left = {g->x,g->y,g->x,g->y+h}; 
+
+    float intersectX;
+    float intersectY;
+
+    if (GetLineIntersection(top.x,top.y,top.x2,top.y2,xLine,yLine,x2Line,y2Line,&intersectX,&intersectY))
+        return true;
+    if (GetLineIntersection(right.x,right.y,right.x2,right.y2,xLine,yLine,x2Line,y2Line,&intersectX,&intersectY))
+        return true;
+    if (GetLineIntersection(bottom.x,bottom.y,bottom.x2,bottom.y2,xLine,yLine,x2Line,y2Line,&intersectX,&intersectY))
+        return true;
+    if (GetLineIntersection(left.x,left.y,left.x2,left.y2,xLine,yLine,x2Line,y2Line,&intersectX,&intersectY))
+        return true;
+
+    return false;
+}
 //note: taken from https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
 bool GetLineIntersection(float p0_x, float p0_y, float p1_x, float p1_y, float p2_x, float p2_y, float p3_x, float p3_y, float* out_x, float* out_y)
 {

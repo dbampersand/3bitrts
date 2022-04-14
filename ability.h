@@ -12,6 +12,12 @@ typedef enum ABILITY_CAST_TYPE
     ABILITY_TARGET_ALL = 16,
     ABILITY_TOGGLE = 32
 } ABILITY_CAST_TYPE;
+typedef enum HINT
+{
+    HINT_NONE=0,
+    HINT_LINE=1
+} HINT;
+
 typedef struct Ability
 {
     char* luabuffer;
@@ -32,6 +38,8 @@ typedef struct Ability
     bool toggled;
 
     char* description;
+    HINT targetingHint;
+
 } Ability;
 
 Ability* abilities;

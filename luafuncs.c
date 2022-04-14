@@ -92,6 +92,14 @@ int L_Print(lua_State* l)
     fflush(stdout);
     return 0;
 }
+int L_GetOwnedBy(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0; 
+    lua_pushnumber(l,GetPlayerOwnedBy(&objects[index]));
+    return 1;
+}
 int L_GetX(lua_State* l)
 {
     float x; float y; 
@@ -141,6 +149,34 @@ int L_GetY(lua_State* l)
     {
         GetCentre(currGameObjRunning,&x,&y);
         lua_pushnumber(l,y);
+    }
+    return 1;
+}
+int L_GetBetween(lua_State* l)
+{
+    int objFrom = lua_tonumber(l,1);
+    if (objFrom < 0 || objFrom >= MAX_OBJS)
+        return 0; 
+    GameObject* g = &objects[objFrom];
+    int x2 = lua_tonumber(l,2);
+    int y2 = lua_tonumber(l,3);
+
+    float x1; float y1; 
+    GetCentre(g,&x1,&y1);
+    int numObjs = 0;
+    lua_newtable(l);
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        GameObject* g2 = &objects[i];
+        if (IsActive(g2))
+        if (LineIntersectsObj(g2,x1,y1,x2,y2))
+        {
+            lua_pushnumber(l,numObjs);
+            lua_pushnumber(l,g2-objects);
+            lua_settable(l, -3);
+
+            numObjs++;
+        }   
     }
     return 1;
 }
@@ -659,17 +695,22 @@ int L_CreateObject(lua_State* l)
 int L_AbilitySetCastType(lua_State* l)
 {
     currAbilityRunning->castType = lua_tonumber(l,1);
-    return 1;   
+    return 0;   
 }
 int L_SetSprite(lua_State* l)
 {
     currGameObjRunning->spriteIndex = LoadSprite(lua_tostring(l,-1),true);
-    return 1;
+    return 0;
 }
 int L_SetMapSprite(lua_State* l)
 {
     currMap->spriteIndex = LoadSprite(lua_tostring(l,-1),false);
-    return 1;
+    return 0;
+}
+int L_SetAbilityTargetHint(lua_State* l)
+{
+    currAbilityRunning->targetingHint = lua_tonumber(l,1);
+    return 0;
 }
 
 void SetGlobals(lua_State* l)
@@ -759,6 +800,9 @@ void SetGlobals(lua_State* l)
     lua_setglobal(l,"ATTACK_HITS_ENEMIES");
     lua_pushinteger(l,ATTACK_HITS_FRIENDLIES);
     lua_setglobal(l,"ATTACK_HITS_FRIENDLIES");
+
+    lua_pushinteger(l,HINT_LINE);
+    lua_setglobal(l,"HINT_LINE");
 
 }
 int L_ApplyEffect(lua_State* l)
@@ -1007,5 +1051,14 @@ void SetLuaFuncs()
     
     lua_pushcfunction(luaState, L_SetRange);
     lua_setglobal(luaState, "SetRange");
+
+    lua_pushcfunction(luaState, L_GetBetween);
+    lua_setglobal(luaState, "GetBetween");
+
+    lua_pushcfunction(luaState, L_GetOwnedBy);
+    lua_setglobal(luaState, "GetOwnedBy");
+
+    lua_pushcfunction(luaState, L_SetAbilityTargetHint);
+    lua_setglobal(luaState, "SetAbilityTargetHint");
 
 }

@@ -10,7 +10,6 @@ typedef enum EFFECT_TRIGGER
    TRIGGER_INSTANT = 3,
    TRIGGER_CONST
 } EFFECT_TRIGGER;
-
 typedef enum EFFECT_TYPE
 {
     EFFECT_NONE = 0,
@@ -37,6 +36,7 @@ typedef struct Effect
     float duration; 
     float tickTime;
     bool enabled;
+
     
 } Effect;
 void ApplyEffect(Effect* e, GameObject* from, GameObject* target);

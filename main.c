@@ -614,8 +614,30 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     if (players[0].abilityHeld)
     {
         float cx; float cy;
-        GetCentre(players[0].selection[players[0].indexSelectedUnit], &cx, &cy);
-        al_draw_circle(cx,cy,players[0].abilityHeld->range,FRIENDLY,0);
+        GameObject* g = players[0].selection[players[0].indexSelectedUnit];
+        GetCentre(g, &cx, &cy);
+        int w; int h;
+        float radius = players[0].abilityHeld->range+GetWidth(g)+GetHeight(g);
+
+        al_draw_circle(cx,cy,radius,FRIENDLY,0);
+        
+        if (players[0].abilityHeld->targetingHint == HINT_LINE)
+        {
+            //normalise then project to min(radius,mousepos)
+            float distX = mouseState->x - cx; 
+            float distY = mouseState->y - cy;
+            float dist = sqrt(distX*distX+distY*distY);
+            
+            float x = mouseState->x - cx;
+            float y = mouseState->y - cy;
+            Normalize(&x,&y); 
+            x = cx + x*_MIN(radius,dist);
+            y = cy + y*_MIN(radius,dist);
+
+            //x *= radius;
+            //y *= radius;
+            al_draw_line(cx,cy,x,y,FRIENDLY,1);
+        }
     }
     DrawUI(keyState, keyStateLastFrame, mouseState);
 
