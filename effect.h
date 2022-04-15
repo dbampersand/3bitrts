@@ -41,4 +41,4 @@ typedef struct Effect
 } Effect;
 void ApplyEffect(Effect* e, GameObject* from, GameObject* target);
 void ProcessEffects(GameObject* g, float dt);
-void ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove);
+bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove);

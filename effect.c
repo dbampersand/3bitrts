@@ -1,7 +1,7 @@
 #include "effect.h"
 #include "gameobject.h"
 #include "shield.h"
-void ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
+bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
 {
     int sign = 1; 
     if (remove) sign = -1;
@@ -11,7 +11,8 @@ void ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     }
     if (e->effectType == EFFECT_HURT)
     {
-        Damage(target,e->value*sign);
+        return Damage(target,e->value*sign);
+
     }
     if (e->effectType == EFFECT_HEAL)
     {
@@ -37,6 +38,7 @@ void ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         MakeInvulnerable(target,e->duration*sign);
     }
+    return false;
 
 }
 void RemoveEffect(Effect* e, GameObject* from)
@@ -142,7 +144,9 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
                 target->effects[i].enabled = true;
                 if (e->trigger == TRIGGER_CONST)
                 {
-                    ProcessEffect(e,from,target,false);
+                    //processeffect returns true if the object died
+                    if (ProcessEffect(e,from,target,false))
+                        break;
                 }
                 break;
             }

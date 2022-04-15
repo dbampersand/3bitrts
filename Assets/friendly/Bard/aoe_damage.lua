@@ -16,7 +16,7 @@ function casted()
     f1["trigger"] = TRIGGER_CONST;
     f1["type"] = EFFECT_DAMAGE;
     --f1["numTriggers"] = 5
-    f1["value"] = 400;
+    f1["value"] = 500;
     f1["duration"] = 1      ;
     f1["triggersPerSecond"] = 1
 

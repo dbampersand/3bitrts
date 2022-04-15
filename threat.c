@@ -81,7 +81,7 @@ Threat* GetHighestThreat(Threat* threatList)
 {
     int highest = -INT_MIN;
     Threat* next = threatList;
-    Threat* highestThreat;
+    Threat* highestThreat = NULL;
     while (1)
     {
         if (!(next->obj->properties & OBJ_ACTIVE))
@@ -89,7 +89,6 @@ Threat* GetHighestThreat(Threat* threatList)
             next = next->next;
             if (next == NULL) break;
         }
-
 
         if (next->threat > highest)
         {
