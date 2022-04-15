@@ -9,8 +9,10 @@ end
 function update()
     j = GetThreatRank()
 
-    ddasd = {};
-    ddasd["target"] = j;
+    --ddasd = {};
+    --ddasd["target"] = j;
+
+    
     --if (j != nil)
      --   CastAbility(0,{ddasd});
 end

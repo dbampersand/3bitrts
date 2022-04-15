@@ -1,5 +1,8 @@
 #include "vector2.h"
+#include "stdbool.h"
 typedef struct Ability Ability; 
+typedef struct GameObject GameObject;
+
 typedef struct Player
 { 
     bool aicontrolled;
@@ -20,3 +23,7 @@ typedef struct Player
 } Player;
 
 Player* players;
+
+
+void RemoveFromSelection(Player* p, int index);
+void RemoveGameObjectFromSelection(Player* p, GameObject* g);

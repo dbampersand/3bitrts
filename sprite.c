@@ -43,9 +43,9 @@ void GenerateInvertedSprite(Sprite* s)
 
     //corners
     al_put_pixel(0,0,transparent);
-    al_put_pixel(w-1,0,transparent);
-    al_put_pixel(w-1,h-1,transparent);
-    al_put_pixel(0,h-1,transparent);
+    al_put_pixel(w,0,transparent);
+    al_put_pixel(w,h,transparent);
+    al_put_pixel(0,h,transparent);
 
 
     al_unlock_bitmap(newSprite);

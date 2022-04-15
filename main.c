@@ -95,9 +95,23 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                         }
                         hasSelected = true;
                     }
-                    SetSelected(obj,true);
-                    players[0].selection[players[0].numUnitsSelected] = obj;
-                    players[0].numUnitsSelected++;
+                    if (al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                    {
+                        bool selected = IsSelected(obj);
+                        SetSelected(obj,!selected);
+                        //we're removing the unit from selection as it is already selected 
+                        if (selected)
+                        {
+                            RemoveGameObjectFromSelection(&players[0],obj);
+                        }
+                    }
+                    else
+                    {
+                        SetSelected(obj,true);
+                        players[0].selection[players[0].numUnitsSelected] = obj;
+                        players[0].numUnitsSelected++;
+
+                    }
                     if (hasSelected) 
                         players[0].indexSelectedUnit = 0; 
                 }
