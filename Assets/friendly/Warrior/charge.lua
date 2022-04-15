@@ -1,5 +1,5 @@
 function setup()
-    AbilitySetCastType(Bor(ABILITY_TARGET_POINT,ABILITY_TARGET_ENEMY)); 
+    AbilitySetCastType(Bor(ABILITY_POINT,ABILITY_TARGET_ENEMY)); 
     AbilitySetPortrait("Assets/friendly/Warrior/icon_charge.png");
     
 
@@ -21,6 +21,12 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 20;  
     --f1["duration"] = 10;
     f1["triggersPerSecond"] = 1
+    
+    f2 = {};
+    f2["trigger"] = TRIGGER_INSTANT;
+    f2["type"] = EFFECT_THREAT;
+    f2["value"] = 100;  
+
 
 
    -- Teleport(GetObjRef(),GetMouseX(),GetMouseY());
@@ -34,8 +40,9 @@ function casted(x,y,obj,headingx,headingy)
     speed["value"] = 400; 
     speed["duration"] = 0.1
     ApplyEffect(GetObjRef(),{speed});
+
     SetMovePoint(GetMouseX(),GetMouseY())
-    CreateCircularProjectiles(xPos,yPos,"",ATTACK_PROJECTILE_ANGLE,sp,duration,true,ATTACK_HITS_ENEMIES,10,{f1})
+    CreateCircularProjectiles(xPos,yPos,"",ATTACK_PROJECTILE_ANGLE,sp,duration,true,ATTACK_HITS_ENEMIES,10,{f1,f2})
 
     --aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES, {f1})
 

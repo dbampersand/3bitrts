@@ -55,7 +55,7 @@ void RemoveObjFromSelection(GameObject* g)
 
     }
 }
-GameObject* AddGameobject(GameObject* prefab)
+GameObject* AddGameobject(GameObject* prefab, float x, float y)
 {
     GameObject* found = NULL;
 
@@ -90,16 +90,31 @@ GameObject* AddGameobject(GameObject* prefab)
     currGameObjRunning = found; 
     memset(found->abilities,0,sizeof(Ability)*4);
     memset(currGameObjRunning,0,sizeof(GameObject));
+    currGameObjRunning->speed = 5;
+    currGameObjRunning->health = 100;
+    currGameObjRunning->maxHP = 100;
+    currGameObjRunning->range = 1;
+    currGameObjRunning->attackSpeed = 1;
+    currGameObjRunning->mana = 50;
+    currGameObjRunning->maxMana = 100;
+    currGameObjRunning->aggroRadius = 25;
     currGameObjRunning->path = prefab->path;
     currGameObjRunning->name = prefab->name;
     currGameObjRunning->lua_buffer = prefab->lua_buffer; 
+    currGameObjRunning->speed = 50;
+
+    currGameObjRunning->x = x;
+    currGameObjRunning->y = y;
+    currGameObjRunning->xtarg = x;
+    currGameObjRunning->ytarg = y;
+
 
     found->range = 1;
 
     loadLuaGameObj(luaState, found->path, found); 
     found->properties |= OBJ_ACTIVE;
-    found->health = 100;
-    found->maxHP = 100;
+    //found->health = 100;
+    //found->maxHP = 100;
     //found->baseDamage = 5;
     found->attackSpeed = 1;
     found->mana = 50;
@@ -891,6 +906,7 @@ void DoAI(GameObject* g)
         Threat* t = GetHighestThreat(&g->threatList);
         if (t)
         {
+            ClearCommandQueue(g);
             AttackCommand(g,t->obj);
         }
             //g->targObj = t->obj;

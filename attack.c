@@ -106,6 +106,8 @@ void DrawAttack(Attack* a, float dt)
 }
 void UpdateAttack(Attack* a, float dt)
 {
+    if (!(a->properties & ATTACK_ACTIVE))
+        return;
     if (a->cameFrom->castType != ABILITY_TOGGLE)
     {
         a->duration -= dt;
@@ -177,6 +179,7 @@ void UpdateAttack(Attack* a, float dt)
                 if (a->attackType != ATTACK_AOE)
                 {  
                     RemoveAttack(a-attacks);
+                    return;
                 }
             }
         }

@@ -9,7 +9,7 @@ end
 function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
-    f1["type"] = EFFECT_DAMAGE
+    f1["type"] = EFFECT_HURT
     f1["value"] = 10;  
 
     ApplyEffect(obj,{f1})

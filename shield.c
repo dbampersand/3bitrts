@@ -72,7 +72,7 @@ float DamageShields(GameObject* g, float damage)
         if (g->shields[i].amtLeft < 0)
         {
             RemoveShield(g,&g->shields[i]);
-            i=0;
+            i--;
         }
         if (diff > 0)
         {

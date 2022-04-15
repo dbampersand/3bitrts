@@ -129,7 +129,7 @@ bool AbilityShouldBeCastOnTarget(Ability* a)
 {
     return ((a->castType & ABILITY_TARGET_FRIENDLY) || (a->castType & ABILITY_TARGET_ENEMY) || (a->castType & ABILITY_TARGET_ALL));
 }
-void CastAbility(GameObject* g, Ability* a, int x, int y, float headingx, float headingy, GameObject* target)
+void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, float headingy, GameObject* target)
 {
     if (a->cdTimer > 0)
         return;
@@ -168,6 +168,10 @@ void CastAbility(GameObject* g, Ability* a, int x, int y, float headingx, float 
     if ((a->castType != ABILITY_TOGGLE) || (a->castType == ABILITY_TOGGLE && !a->toggled))
     {
         lua_rawgeti(luaState, LUA_REGISTRYINDEX, a->luafunc_casted);
+        
+        float cx; float cy;
+        GetCentre(g, &cx,&cy);
+        ClampToRadius(&x,&y,cx,cy,a->range);
 
         lua_pushinteger(luaState,x);
         lua_pushinteger(luaState,y);    
@@ -253,9 +257,16 @@ void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled)
 }
 bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, float y)
 {
+    if (a->cdTimer > 0)
+        return false;
+
     if (a->castType == ABILITY_INSTANT || a->castType == ABILITY_TOGGLE)
     {
         return true;
+    }
+    if (a->castType == ABILITY_ANGLE)
+    {
+        return true;        
     }
     if (a->castType == ABILITY_POINT)
     {
@@ -264,8 +275,6 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
         else
             return false;
     }
-    if (a->cooldown < 0)
-        return false;
     if (GetDist(g,target) > a->range)
         return false;
     if (target == NULL && AbilityShouldBeCastOnTarget(a))

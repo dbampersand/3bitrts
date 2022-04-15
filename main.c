@@ -81,6 +81,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                 Rect rObj = (Rect){obj->x,obj->y,al_get_bitmap_width(sp->sprite),al_get_bitmap_height(sp->sprite)};
                 if (CheckIntersect(rObj,r))
                 {
+                    if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
                     if (!hasSelected)
                     {
                         for (int j = 0; j < numObjects; j++)
@@ -617,7 +618,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         GameObject* g = players[0].selection[players[0].indexSelectedUnit];
         GetCentre(g, &cx, &cy);
         int w; int h;
-        float radius = players[0].abilityHeld->range+GetWidth(g)+GetHeight(g);
+        float radius = players[0].abilityHeld->range;
 
         al_draw_circle(cx,cy,radius,FRIENDLY,0);
         
@@ -757,41 +758,12 @@ int main(int argc, char* args[])
 
 
 
-    GameObject* g1 = AddGameobject(g);
-    GameObject* warr = AddGameobject(warrior);
-    GameObject* priest = AddGameobject(p);
-    GameObject* rogue = AddGameobject(r);
+    GameObject* g1 = AddGameobject(g,100,150);
+    GameObject* warr = AddGameobject(warrior,128,150);
+    GameObject* priest = AddGameobject(p,180,160);
+    GameObject* rogue = AddGameobject(r,201,180);
 
 
-    g1->speed = 50;
-    warr->speed = 50;
-    priest->speed = 50;
-    rogue->speed = 50;
-
-
-
-
-    g1->x = 100;
-    g1->y = 150;
-    g1->xtarg = 100;
-    g1->ytarg = 150;
-
-   // GameObject* warr = AddGameobject(warrior);
-    warr->x = 128;
-    warr->y = 150;
-    warr->xtarg = 128;
-    warr->ytarg = 150;
-
-
-    priest->x = 180;
-    priest->y = 160;
-    priest->xtarg = 180;
-    priest->ytarg = 160;
-
-    rogue->x = 201;
-    rogue->y = 180;
-    rogue->xtarg = 201;
-    rogue->ytarg = 201;
 
 
     //AddGameobject(g)->x = 50;

@@ -60,6 +60,13 @@ void NextCommand(GameObject* g)
         g->queue[i] = g->queue[i+1];
     }
     memset(&g->queue[MAX_QUEUED_CMD-1],0,sizeof(Command));
+    if (g->queue[0].commandType == COMMAND_NONE)
+    {
+        g->targObj = NULL;
+        g->xtarg = g->x;
+        g->ytarg = g->y;
+
+    }
 }
 void DoCommands(GameObject* g)
 {
@@ -110,15 +117,31 @@ void DoCommands(GameObject* g)
                     if (IsOwnedByPlayer(g) != IsOwnedByPlayer(c->target))
                     {
                         g->queue[0].commandType = COMMAND_ATTACK;
+                        g->queue[0].ability = NULL; 
 
                     }
+                    else
+                        NextCommand(g);
                 }
                 else
+                {
                     NextCommand(g);
+                }
             }
             else
             {
-                NextCommand(g);
+                if (c->target)
+                {
+
+                    if (IsOwnedByPlayer(g) != IsOwnedByPlayer(c->target))
+                    {
+                         NextCommand(g);
+                    }
+                }
+                else
+                {
+                    NextCommand(g);
+                }
             }
             return;
         }

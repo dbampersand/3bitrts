@@ -94,7 +94,7 @@ int numPrefabsAllocated;
 //add 8 more free objects when we need to realloc objects array
 #define BUFFER_PREALLOC_AMT 8
 
-GameObject* AddGameobject(GameObject* prefab);
+GameObject* AddGameobject(GameObject* prefab, float x, float y);
 bool CheckFuncExists(const char* funcName, char* lua_buffer);
 void loadLuaGameObj(lua_State* l,const char* filename, GameObject* g);
 GameObject* LoadPrefab(const char* path);

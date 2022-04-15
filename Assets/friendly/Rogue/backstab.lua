@@ -9,11 +9,11 @@ end
 function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
-    f1["type"] = EFFECT_DAMAGE
+    f1["type"] = EFFECT_HURT
     f1["value"] = 40;  
 
     f2["trigger"] = TRIGGER_TIMER
-    f2["type"] = EFFECT_DAMAGE
+    f2["type"] = EFFECT_HURT
     f2["value"] = 5;
     f2["duration"] = 10;
     f2["triggersPerSecond"] = 1 

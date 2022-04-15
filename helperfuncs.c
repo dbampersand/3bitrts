@@ -177,3 +177,17 @@ float dist(float x1, float y1, float x2, float y2)
 
     return sqrt(moveX*moveX+moveY*moveY);
 }
+void ClampToRadius(float* x, float* y, float cx, float cy, float radius)
+{
+
+    float distX = *x - cx; 
+    float distY = *y - cy;
+    float dist = sqrt(distX*distX+distY*distY);
+            
+
+    *x = *x - cx;
+    *y = *y - cy;
+    Normalize(x,y); 
+    *x = cx + *x*_MIN(radius,dist);
+    *y = cy + *y*_MIN(radius,dist);
+}

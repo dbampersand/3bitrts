@@ -1,10 +1,11 @@
 
 function setup()
     AbilitySetPortrait("Assets/friendly/Rogue/icon_dash.png");
-    AbilitySetCastType(ABILITY_POINT);
+    AbilitySetCastType(ABILITY_ANGLE);
     SetAbilityRange(120)
     SetDescription("Dash\n\nDashes through enemies, dealing damage.")
     SetAbilityTargetHint(HINT_LINE)
+    SetAbilityCooldown(15);
 end
 function casted(x,y,obj,headingx,headingy)
     f1 = {};
@@ -21,7 +22,8 @@ function casted(x,y,obj,headingx,headingy)
             ApplyEffect(objsHit[i],{f1});
         end
     end
-    return true;
+   Teleport(GetObjRef(),x,y);
+   return true;
 end
 function onhit(x,y,objhit)
 end

@@ -10,7 +10,8 @@ typedef enum ABILITY_CAST_TYPE
     ABILITY_TARGET_FRIENDLY = 4,
     ABILITY_TARGET_ENEMY = 8,
     ABILITY_TARGET_ALL = 16,
-    ABILITY_TOGGLE = 32
+    ABILITY_TOGGLE = 32,
+    ABILITY_ANGLE = 64
 } ABILITY_CAST_TYPE;
 typedef enum HINT
 {
@@ -49,7 +50,7 @@ typedef struct lua_State lua_State;
 void LoadAbility(const char* path, lua_State* l, Ability* a);
 Ability CloneAbilityPrefab(Ability* prefab, lua_State* l);
 Ability* AddAbility(const char* path);
-void CastAbility(GameObject* g, Ability* a, int x, int y, float headingx, float headingy, GameObject* target);
+void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, float headingy, GameObject* target);
 bool AbilityIsInitialised(Ability* a);
 void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled);
 bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, float y);

@@ -586,6 +586,16 @@ int L_RemoveAttack(lua_State* l)
     RemoveAttack(lua_tonumber(l,1));
     return 0;
 }
+int L_SetMaxHP(lua_State* l)
+{
+    float hp = lua_tonumber(l,1);
+    bool heal = lua_toboolean(l,2);
+
+    currGameObjRunning->maxHP = hp;
+    if (heal)
+        Heal(currGameObjRunning,hp);
+    return 0;
+}
 int L_SetObjTargetPosition(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -651,40 +661,13 @@ int L_CreateObject(lua_State* l)
     if (!prefabFound)
     {
         GameObject* prefab = LoadPrefab(l_path);
-        g = AddGameobject(prefab);
-        g->x = x;
-        g->y = y;
-        g->xtarg = x;
-        g->ytarg = y;
-        g->speed = 5;
-        g->health = 100;
-        g->maxHP = 100;
-        g->range = 1;
-       // g->baseDamage = 5;
-        g->attackSpeed = 1;
-        g->mana = 50;
-        g->maxMana = 100;
-        g->aggroRadius = 25;
+        g = AddGameobject(prefab,x,y);
         SetOwnedBy(g, PLAYER);
-
 
     }
     else
     {
-        g = AddGameobject(g);
-        g->x = x;
-        g->y = y;
-        g->xtarg = x;
-        g->ytarg = y;
-        g->speed = 5;
-        g->health = 100;
-        g->maxHP = 100;
-        g->range = 1;
-        //g->baseDamage = 5;
-        g->attackSpeed = 1;
-        g->mana = 50;
-        g->maxMana = 100;
-        g->aggroRadius = 25;
+        g = AddGameobject(g,x,y);
 
 
         SetOwnedBy(g, PLAYER);
@@ -710,6 +693,11 @@ int L_SetMapSprite(lua_State* l)
 int L_SetAbilityTargetHint(lua_State* l)
 {
     currAbilityRunning->targetingHint = lua_tonumber(l,1);
+    return 0;
+}
+int L_SetSpeed(lua_State* l)
+{
+    currGameObjRunning->speed = lua_tonumber(l,1);
     return 0;
 }
 
@@ -780,7 +768,9 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,ABILITY_TOGGLE);
     lua_setglobal(l,"ABILITY_TOGGLE");
 
-    
+        lua_pushinteger(l,ABILITY_ANGLE);
+    lua_setglobal(l,"ABILITY_ANGLE");
+
     
 
     lua_pushinteger(l,ATTACK_AOE);
@@ -1060,5 +1050,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetAbilityTargetHint);
     lua_setglobal(luaState, "SetAbilityTargetHint");
+
+    lua_pushcfunction(luaState, L_SetMaxHP);
+    lua_setglobal(luaState, "SetMaxHP");
+
+    lua_pushcfunction(luaState, L_SetSpeed);
+    lua_setglobal(luaState, "SetSpeed");
 
 }
