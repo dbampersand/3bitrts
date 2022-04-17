@@ -350,9 +350,10 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         bool shouldAttack = false;
         ProcessEffects(currGameObjRunning,dt);
         ProcessShields(currGameObjRunning,dt);
-
         if (currGameObjRunning->targObj && currGameObjRunning->queue[0].commandType == COMMAND_ATTACK) 
         {
+            GameObject* tempAttack = currGameObjRunning->targObj;
+
             if (currGameObjRunning->properties & OBJ_ACTIVE)
             {
                 int wTarg = al_get_bitmap_width(sprites[currGameObjRunning->targObj->spriteIndex].sprite);
@@ -364,24 +365,59 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
                 Rect r2 = (Rect){currGameObjRunning->targObj->x,currGameObjRunning->targObj->y,wTarg,hTarg};
                 #define DISTDELTA 0.001f
                 Rect unioned = UnionRect(r,r2);
-                if (RectsTouch(r, r2, currGameObjRunning->range+DISTDELTA))
+                //if (RectsTouch(r, r2, currGameObjRunning->range+DISTDELTA))
+               if (RectDist(currGameObjRunning,currGameObjRunning->targObj) < currGameObjRunning->range+DISTDELTA)
                 {
                     shouldMove = false;
                     shouldAttack = true;
+                }
+                else
+                {
+                    //if we're AI controlled and the object moves out of range 
+                    //but something is still in range - temporarily attack that, but keep moving towards the original target
+                    if (GetPlayerOwnedBy(currGameObjRunning) == 1)
+                    {
+                        for (int i = 0; i < MAX_OBJS; i++)
+                        {
+                            GameObject* g2 = &objects[i];
+                            if (IsActive(g2))
+                            {
+                                if (GetPlayerOwnedBy(g2) != GetPlayerOwnedBy(currGameObjRunning))
+                                {
+                                    if (RectDist(currGameObjRunning,g2) < currGameObjRunning->range+DISTDELTA)
+                                    {
+                                        tempAttack = g2;
+                                        shouldMove = true;
+                                        shouldAttack = true;
+                                        break;
+                                    }
+                                    
+                                }
+                            }
+                        }
+
+                    }
                 }
             }   
             else
             {
                 SetAttackingObj(currGameObjRunning, NULL);
             }
+            GameObject* old = currGameObjRunning->targObj;
+            currGameObjRunning->targObj = tempAttack;
+
             if (shouldAttack)
             {
+
                 if (currGameObjRunning->attackTimer <= 0)
                 {
                     AttackTarget(currGameObjRunning);
                     currGameObjRunning->attackTimer = currGameObjRunning->attackSpeed;
                 }
+
             }
+                currGameObjRunning->targObj = old;
+
 
         }
         if (shouldMove)

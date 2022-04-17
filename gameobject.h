@@ -133,6 +133,7 @@ bool IsActive(GameObject* g);
 void DoAI(GameObject* g);
 
 float GetDist(GameObject* g1, GameObject* g2);
+float RectDist(GameObject* g1, GameObject* g2);
 void CheckCollisionsWorld(GameObject* g, bool x, float dV); 
 void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush);
 GameObject* GetCollidedWith(GameObject* g);

@@ -470,13 +470,22 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         float v = g2->x;
                         g2->x = g->x + GetWidth(g);
                         v -= g2->x;
+                        if (g2->x <0)
+                        {
+                            v = -1;
+                            g2->x=0;
+                        }
+                        if (g2->x + GetWidth(g2) > _MAPSIZE)
+                        {
+                            g2->x = _MAPSIZE - GetWidth(g2);
+                            v = 1;
+                        }
+
                         float v2 = g2->x;
                         CheckCollisions(g2,true,-v,true);
                         v2 -= g2->x;
-                        float v3 = g2->x;
+
                         CheckCollisionsWorld(g2,true,-v2);
-                        v3 -= g2->x;
-                        CheckCollisions(g2,true,-v3,true);
 
                     }
                     else
@@ -495,13 +504,22 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         float v = g2->x;
                         g2->x = g->x - GetWidth(g2);
                         v -= g2->x;
+                        if (g2->x <0)
+                        {
+                            v = -1;
+                            g2->x=0;
+                        }
+                        if (g2->x + GetWidth(g2) > _MAPSIZE)
+                        {
+                            g2->x = _MAPSIZE - GetWidth(g2);
+                            v = 1;
+                        }
+
                         float v2 = g2->x;
                         CheckCollisions(g2,true,-v,true);
                         v2 -= g2->x;
-                        float v3 = g2->x;
+
                         CheckCollisionsWorld(g2,true,-v2);
-                        v3 -= g2->x;
-                        CheckCollisions(g2,true,-v3,true);
 
                     }
                     else
@@ -536,10 +554,8 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
 
                         CheckCollisions(g2,false,-v,true);
                         v2 -= g2->y;
-                        float v3 = g2->y;
                          
                         CheckCollisionsWorld(g2,false,-v2);
-                        v3 -= g2->y;
 
                         //CheckCollisions(g2,false,-v3,true);
 
@@ -1119,4 +1135,13 @@ float GetWidth(GameObject* g)
 float GetHeight(GameObject* g)
 {
     return al_get_bitmap_height(sprites[g->spriteIndex].sprite);
+}
+
+float RectDist(GameObject* g1, GameObject* g2)
+{
+    Rect r1 = (Rect){g1->x,g1->y,GetWidth(g1),GetHeight(g1)};
+    Rect r2 = (Rect){g2->x,g2->y,GetWidth(g2),GetHeight(g2)};
+    Rect unioned = UnionRect(r1,r2);
+    float dist = (unioned.w+unioned.h) - (r1.w+r2.w+r1.h+r2.h);
+    return dist;
 }
