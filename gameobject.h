@@ -13,6 +13,7 @@ typedef enum GAMEOBJ_PROPERTIES
     OBJ_SELECTED = 1,
     OBJ_OWNED_BY = 2,
     OBJ_ACTIVE = 4,
+    OBJ_CAN_PUSH = 8
     //OBJ_ATTACKING_TARGET = 8
 } GAMEOBJ_PROPERTIES;
 typedef struct Shield Shield;
@@ -132,13 +133,16 @@ bool IsActive(GameObject* g);
 void DoAI(GameObject* g);
 
 float GetDist(GameObject* g1, GameObject* g2);
-void CheckCollisions(GameObject* g, bool x, float dV);
+void CheckCollisionsWorld(GameObject* g, bool x, float dV); 
+void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush);
 GameObject* GetCollidedWith(GameObject* g);
 GameObject* GetClicked(float x, float y);
 void UnsetAll();
 void MakeInvulnerable(GameObject* g, float time);
 float GetWidth(GameObject* g);
 float GetHeight(GameObject* g);
+
+bool ObjectCanPush(GameObject* g);
 
 //void LoadFolderPrefabs(const char* dirPath);
 //void LoadPrefabs(const char* dirPath);

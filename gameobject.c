@@ -15,6 +15,7 @@
 #include <float.h>
 #include "shield.h"
 #include "player.h"
+#include "ui.h"
 void RemoveObjFromSelection(GameObject* g)
 {
     for (int i = 0; i < MAXUNITSSELECTED; i++)
@@ -438,8 +439,10 @@ void SetOwnedBy(GameObject* g, bool i)
         g->properties |= OBJ_OWNED_BY;
     }
 }
-void CheckCollisions(GameObject* g, bool x, float dV)
+void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
 {
+    if (!g)
+    if (dV == 0) return;
     Sprite* s = &sprites[g->spriteIndex];
     Rect rG = (Rect){g->x,g->y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)};
     for (int i = 0; i < numObjects; i++)
@@ -461,16 +464,48 @@ void CheckCollisions(GameObject* g, bool x, float dV)
             {
                 if (1)
                 {
-                    g->x = g2->x - al_get_bitmap_width(s->sprite);//xresult - al_get_bitmap_width(s->sprite);
+                    //moving right
+                    if (objectCanPush)
+                    {
+                        float v = g2->x;
+                        g2->x = g->x + GetWidth(g);
+                        v -= g2->x;
+                        float v2 = g2->x;
+                        CheckCollisions(g2,true,-v,true);
+                        v2 -= g2->x;
+                        float v3 = g2->x;
+                        CheckCollisionsWorld(g2,true,-v2);
+                        v3 -= g2->x;
+                        CheckCollisions(g2,true,-v3,true);
+
+                    }
+                    else
+                        g->x = g2->x - al_get_bitmap_width(s->sprite);//xresult - al_get_bitmap_width(s->sprite);
                     //g->x = xresult - w - al_get_bitmap_width(s->sprite);
 
                 }
             }
-            else if (dV <= 0)
+            else if (dV < 0)
             {
                 if (1)
                 {
-                    g->x = g2->x+al_get_bitmap_width(s2->sprite); 
+                    //moving left
+                    if (objectCanPush)
+                    {
+                        float v = g2->x;
+                        g2->x = g->x - GetWidth(g2);
+                        v -= g2->x;
+                        float v2 = g2->x;
+                        CheckCollisions(g2,true,-v,true);
+                        v2 -= g2->x;
+                        float v3 = g2->x;
+                        CheckCollisionsWorld(g2,true,-v2);
+                        v3 -= g2->x;
+                        CheckCollisions(g2,true,-v3,true);
+
+                    }
+                    else
+                        g->x = g2->x+al_get_bitmap_width(s2->sprite); 
                 }
             }
         }
@@ -478,10 +513,77 @@ void CheckCollisions(GameObject* g, bool x, float dV)
         {
             if (1)
             {
+
                 if (dV > 0)
-                    g->y = g2->y - al_get_bitmap_width(s->sprite);
-                else
-                    g->y = g2->y + al_get_bitmap_width(s2->sprite);
+                {
+                    //moving down
+                    if (objectCanPush)
+                    {
+                        float v = g2->y;
+                        g2->y = g->y + GetHeight(g);
+                        v -= g2->y;
+                        float v2 = g2->y;
+                        if (g2->y <0)
+                        {
+                            v = 1;
+                            g2->y=0;
+                        }
+                        if (g2->y + GetHeight(g2) > UI_START_Y)
+                        {
+                            g2->y = UI_START_Y - GetHeight(g2);
+                            v = 1;
+                        }
+
+                        CheckCollisions(g2,false,-v,true);
+                        v2 -= g2->y;
+                        float v3 = g2->y;
+                         
+                        CheckCollisionsWorld(g2,false,-v2);
+                        v3 -= g2->y;
+
+                        //CheckCollisions(g2,false,-v3,true);
+
+                    }
+                    else
+                    {
+                        g->y = g2->y - al_get_bitmap_height(s->sprite);
+                    }
+                }
+                else if (dV < 0)
+                {
+                    //moving up
+                    if (objectCanPush)
+                    {
+                        float v = g2->y;
+                        g2->y = g->y - GetHeight(g2);
+                        v -= g2->y;
+                        float v2 = g2->y;
+                        if (g2->y <0)
+                        {
+                            v = -1;
+                            g2->y=0;
+                        }
+                        if (g2->y + GetHeight(g2) > UI_START_Y)
+                        {
+                            g2->y = UI_START_Y - GetHeight(g2);
+                            v = 1;
+                        }
+
+                        CheckCollisions(g2,false,-v,true);
+                        v2 -= g2->y;
+                        float v3 = g2->y;
+                        CheckCollisionsWorld(g2,false,-v2);
+                        v3 -= g2->y;
+                        //CheckCollisions(g2,false,v3,true);
+
+                    }
+                    else
+                    {
+                        g->y = g2->y + al_get_bitmap_height(s2->sprite);
+
+                    }
+                    
+                }
 
             }
         }
@@ -510,25 +612,35 @@ GameObject* GetCollidedWith(GameObject* g)
 }
 void CheckCollisionsWorld(GameObject* g, bool x, float dV)
 {
-    if (dV == 0) return;
-    
-
-    int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
+        int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
     int h = al_get_bitmap_height(sprites[g->spriteIndex].sprite);
 
     float posX = g->x;
     float posY = g->y;
 
-    if (posX < 0 || posX > _MAPSIZE)
-        return;
-    if (posY < 0 || posY > _MAPSIZE)
+    if (posX < 0 || posX+w > _MAPSIZE)
+    {
+        if (posX < 0) g->x = 0;
+        if (posX+w > _MAPSIZE) g->x = _MAPSIZE-w;
         return;
 
+    }
+    if (posY < 0 || posY+h > _MAPSIZE)
+    {
+        if (posY < 0) g->y = 0;
+        if (posY+h > _MAPSIZE) g->y = _MAPSIZE-h;
+        return;
+    }
+
+    if (dV == 0) return;
     
-    int indexTop = GetIndex(_MAPSIZE/_GRAIN, floor(posX / (float)_GRAIN), floor(posY / (float)_GRAIN));
-    int indexRight = GetIndex(_MAPSIZE/_GRAIN, floor((posX+w) / (float)_GRAIN), floor((posY+h/2) / (float)_GRAIN));
-    int indexBottom = GetIndex(_MAPSIZE/_GRAIN, floor((posX+w/2) / (float)_GRAIN), floor((posY+h) / (float)_GRAIN));
-    int indexLeft = GetIndex(_MAPSIZE/_GRAIN, floor((posX) / (float)_GRAIN), floor((posY+h/2) / (float)_GRAIN));
+
+
+    
+    int indexTop = GetIndex(_MAPSIZE/_GRAIN, floor(posX/ (float)_GRAIN), floor(posY / (float)_GRAIN));
+    int indexRight = GetIndex(_MAPSIZE/_GRAIN, floor((posX+w) / (float)_GRAIN), floor((posY) / (float)_GRAIN));
+    int indexBottom = GetIndex(_MAPSIZE/_GRAIN, floor((posX) / (float)_GRAIN), floor((posY+h) / (float)_GRAIN));
+    int indexLeft = GetIndex(_MAPSIZE/_GRAIN, floor((posX) / (float)_GRAIN), floor((posY) / (float)_GRAIN));
 
     if (x)
     {
@@ -571,6 +683,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
 }
 void Move(GameObject* g, float delta)
 {
+    if (!g) return;
     #define DIST_DELTA 1
 
     int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
@@ -603,20 +716,34 @@ void Move(GameObject* g, float delta)
         float mDist = sqrt(dX * dX + dY * dY);
         if (dist <= mDist)
         {
+            dX = g->x-xtarg;
+            dY = g->y-ytarg;
+
             g->x=xtarg;
             g->y=ytarg;
+
+            CheckCollisions(g,false, dY,ObjectCanPush(g));
+            CheckCollisionsWorld(g,false, dY);
+            CheckCollisions(g,true, dX,ObjectCanPush(g));
+            CheckCollisionsWorld(g,true, dX);
+
             return;
         }
 
-        g->x += dX;
-        CheckCollisions(g,true, dX);
-        CheckCollisionsWorld(g,true, dX);
 
         g->y += dY;
-        CheckCollisions(g,false, dY);
+        CheckCollisions(g,false, dY,ObjectCanPush(g));
         CheckCollisionsWorld(g,false, dY);
 
+        g->x += dX;
+        CheckCollisions(g,true, dX,ObjectCanPush(g));
+        CheckCollisionsWorld(g,true, dX);
 
+
+}
+bool ObjectCanPush(GameObject* g)
+{
+    return (g->properties & OBJ_CAN_PUSH);
 }
 void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
 {

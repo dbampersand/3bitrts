@@ -826,6 +826,15 @@ int L_DealDamage(lua_State* l)
     Damage(&objects[objIndex],dmg);
     return 1;
 }
+int L_SetObjectPush(lua_State* l)
+{   
+    bool b = lua_toboolean(l,1);
+    if (b)
+        currGameObjRunning->properties |= OBJ_CAN_PUSH;
+    else
+        currGameObjRunning->properties &= !OBJ_CAN_PUSH;
+    return 0;
+}
 int L_CastAbility(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -1056,5 +1065,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetSpeed);
     lua_setglobal(luaState, "SetSpeed");
+
+    lua_pushcfunction(luaState, L_SetObjectPush);
+    lua_setglobal(luaState, "SetObjectPush");
 
 }

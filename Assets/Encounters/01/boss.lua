@@ -4,6 +4,7 @@ function setup()
     SetDamage(10);
     SetMaxHP(10000,true)
     SetSpeed(10)
+    SetObjectPush(true);
 end
 
 function update()
