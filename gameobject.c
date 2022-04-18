@@ -1145,3 +1145,12 @@ float RectDist(GameObject* g1, GameObject* g2)
     float dist = (unioned.w+unioned.h) - (r1.w+r2.w+r1.h+r2.h);
     return dist;
 }
+
+bool IsInCombat(GameObject* g)
+{
+    if (g->threatList.obj || g->threatList.next)
+    {
+        return true;
+    }
+    return false;
+}

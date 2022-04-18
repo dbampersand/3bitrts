@@ -10,8 +10,12 @@ end
 function update()
     j = GetThreatRank()
 
-    --ddasd = {};
-    --ddasd["target"] = j;
+    target = {};
+    target["target"] = j;
+
+    if (IsInCombat()) then
+        CastAbility(0,target);
+    end
 
     
     --if (j != nil)

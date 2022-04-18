@@ -1,12 +1,12 @@
 function setup()
     SetAbilityRange(2)
-    SetAbilityCooldown(20);
 end
 
 function casted(x,y,obj,headingx,headingy)
     if (obj == GetThisObj()) then
         return false;
     end
+    Print("GGGG")
 
     f1 = {};
     f1["trigger"] = TRIGGER_TIMER;

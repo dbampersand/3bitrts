@@ -416,9 +416,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
                 }
 
             }
-                currGameObjRunning->targObj = old;
-
-
+            currGameObjRunning->targObj = old;
         }
         if (shouldMove)
             Move(currGameObjRunning, dt);
@@ -757,10 +755,18 @@ int main(int argc, char* args[])
     init();
 
     BG = al_map_rgba(40,32,36,255);
+    GROUND = al_map_rgba(115,119,148,255);
+
+    ENEMY = al_map_rgba(60,255,255,255);
     FRIENDLY = al_map_rgba(255,255,255,255);
-    ENEMY = al_map_rgba(255,131,131,255);
-    GROUND = al_map_rgba(94,98,134,255);
+
     WHITE = al_map_rgba(255,255,255,255);
+  
+    HEAL = al_map_rgba(92,204,12,255);
+    POISON = al_map_rgba(195,94,241,255);
+    DAMAGE = al_map_rgba(248,100,100,255);
+
+
 
     //dodge a lot of crashes by setting the 0th sprite to a zeroed bitmap
     sprites[0].sprite = al_create_bitmap(0,0);

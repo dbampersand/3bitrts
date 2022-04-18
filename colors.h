@@ -1,8 +1,25 @@
 #pragma once
 #include <allegro5/allegro.h>
+typedef enum Color
+{
+    COLOR_DEFAULT = 0, //COLOR_DEFAULT inherits whoever owns the object's color
+    COLOR_BG,
+    COLOR_FRIENDLY,
+    COLOR_ENEMY,
+    COLOR_GROUND,
+    COLOR_POISON,
+    COLOR_HEAL,
+    COLOR_DAMAGE
+} Color;
 
 ALLEGRO_COLOR BG;
 ALLEGRO_COLOR FRIENDLY;
 ALLEGRO_COLOR ENEMY;
 ALLEGRO_COLOR GROUND;
 ALLEGRO_COLOR WHITE;
+
+ALLEGRO_COLOR POISON;
+ALLEGRO_COLOR HEAL;
+ALLEGRO_COLOR DAMAGE;
+
+ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy);

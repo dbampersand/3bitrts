@@ -6,6 +6,7 @@
 #include "attack.h"
 #include "animationeffect.h"
 #include <math.h>
+#include "colors.h"
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);
   for (int i=1; i <= top; i++) {
@@ -328,7 +329,7 @@ int L_AddAttackSprite(lua_State* l)
     currGameObjRunning->onAttackEffectsIndices[currGameObjRunning->numAttackEffectIndices-1] = index;
     return 0;
 }
-void CreateProjectile(lua_State* l, float x, float y, const char* portrait, int attackType, int speed, int duration, bool shouldCallback, int properties, GameObject* targ, Effect* effects, size_t len)
+void CreateProjectile(lua_State* l, float x, float y, const char* portrait, int attackType, int speed, int duration, bool shouldCallback, int properties, GameObject* targ, uint32_t color, Effect* effects, size_t len)
 {
 
     int w=0; int h=0;
@@ -365,6 +366,7 @@ void CreateProjectile(lua_State* l, float x, float y, const char* portrait, int 
     //a.callback_onhit = currAbilityRunning->luafunc_onhit;
     a.shouldCallback = shouldCallback;
     a.duration = duration;
+    a.color = color;
     AddAttack(&a);
 
 }   
@@ -379,7 +381,58 @@ int L_CreateCircularProjectiles(lua_State* l)
     const bool shouldCallback = lua_toboolean(l, 7);
     const int properties = lua_tonumber(l,8);
     const int numProjectiles = lua_tonumber(l,9);
+    const int color = lua_tonumber(l,10);
 
+
+    size_t len =  lua_rawlen(l,11);
+
+    ALLEGRO_MOUSE_STATE mouseState = GetMouseClamped();
+    GameObject* targ = NULL;
+    if (attackType == ATTACK_PROJECTILE_TARGETED)
+    {   
+        for (int i = 0; i < numObjects; i++)
+        {
+            Rect r = GetObjRect(&objects[i]);
+
+            if (PointInRect(x,y,r))
+            {
+                targ = &objects[i];
+                break;
+            }
+        }
+
+    }
+
+
+    Effect effects[len];    
+    memset(effects,0,sizeof(Effect)*len);
+    for (int i = 1; i < len+1; i++)
+    {
+        Effect e;
+        e = GetEffectFromTable(l, 11, i);
+        e.from = currGameObjRunning;
+        lua_remove(l,-1);
+        effects[i-1] = e;
+    }       
+    for (int i = 0; i < numProjectiles; i++)
+    {
+        float angle = M_PI / (float)numProjectiles*i*2; 
+        CreateProjectile(l, x+sin(angle), y+cos(angle), portrait, attackType, speed, duration, shouldCallback, properties, targ,color, effects, len);
+
+    }
+    return 0;
+}
+int L_CreateProjectile(lua_State* l)
+{
+    const float x = lua_tonumber(l,1);
+    const float y = lua_tonumber(l,2);
+    const char* portrait = lua_tostring(l,3);
+    const int attackType = lua_tonumber(l,4);
+    const int speed = lua_tonumber(l,5);
+    const int duration = lua_tonumber(l,6);
+    const bool shouldCallback = lua_toboolean(l, 7);
+    const int properties = lua_tonumber(l,8);
+    const uint32_t color = lua_tonumber(l,9);
     size_t len =  lua_rawlen(l,10);
 
     ALLEGRO_MOUSE_STATE mouseState = GetMouseClamped();
@@ -398,8 +451,6 @@ int L_CreateCircularProjectiles(lua_State* l)
         }
 
     }
-
-
     Effect effects[len];    
     memset(effects,0,sizeof(Effect)*len);
     for (int i = 1; i < len+1; i++)
@@ -410,54 +461,7 @@ int L_CreateCircularProjectiles(lua_State* l)
         lua_remove(l,-1);
         effects[i-1] = e;
     }       
-    for (int i = 0; i < numProjectiles; i++)
-    {
-        float angle = M_PI / (float)numProjectiles*i*2; 
-        CreateProjectile(l, x+sin(angle), y+cos(angle), portrait, attackType, speed, duration, shouldCallback, properties, targ, effects, len);
-
-    }
-    return 0;
-}
-int L_CreateProjectile(lua_State* l)
-{
-    const float x = lua_tonumber(l,1);
-    const float y = lua_tonumber(l,2);
-    const char* portrait = lua_tostring(l,3);
-    const int attackType = lua_tonumber(l,4);
-    const int speed = lua_tonumber(l,5);
-    const int duration = lua_tonumber(l,6);
-    const bool shouldCallback = lua_toboolean(l, 7);
-    const int properties = lua_tonumber(l,8);
-
-    size_t len =  lua_rawlen(l,9);
-
-    ALLEGRO_MOUSE_STATE mouseState = GetMouseClamped();
-    GameObject* targ = NULL;
-    if (attackType == ATTACK_PROJECTILE_TARGETED)
-    {   
-        for (int i = 0; i < numObjects; i++)
-        {
-            Rect r = GetObjRect(&objects[i]);
-
-            if (PointInRect(x,y,r))
-            {
-                targ = &objects[i];
-                break;
-            }
-        }
-
-    }
-    Effect effects[len];    
-    memset(effects,0,sizeof(Effect)*len);
-    for (int i = 1; i < len+1; i++)
-    {
-        Effect e;
-        e = GetEffectFromTable(l, 9, i);
-        e.from = currGameObjRunning;
-        lua_remove(l,-1);
-        effects[i-1] = e;
-    }       
-    CreateProjectile(l, x, y, portrait, attackType, speed, duration, shouldCallback, properties, targ, effects, len);
+    CreateProjectile(l, x, y, portrait, attackType, speed, duration, shouldCallback, properties, targ, color, effects, len);
 
     return 1;
 }
@@ -520,6 +524,8 @@ int L_SetMovePoint(lua_State* l)
     if (target)
     {
         currGameObjRunning->targObj = target;
+        AttackCommand(currGameObjRunning,target);
+
     }
     else
     {
@@ -529,6 +535,7 @@ int L_SetMovePoint(lua_State* l)
         currGameObjRunning->xtarg = x-w/2;
         currGameObjRunning->ytarg = y-h/2;
         currGameObjRunning->targObj = NULL;
+        MoveCommand(currGameObjRunning,x-w/2,y-w/2);
     }
     return 0;
 }
@@ -794,6 +801,32 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,HINT_LINE);
     lua_setglobal(l,"HINT_LINE");
 
+
+    lua_pushinteger(l,COLOR_DEFAULT);
+    lua_setglobal(l,"COLOR_DEFAULT");
+
+    lua_pushinteger(l,COLOR_BG);
+    lua_setglobal(l,"COLOR_BG");
+
+    lua_pushinteger(l,COLOR_FRIENDLY);
+    lua_setglobal(l,"COLOR_FRIENDLY");
+
+    lua_pushinteger(l,COLOR_ENEMY);
+    lua_setglobal(l,"COLOR_ENEMY");
+
+    lua_pushinteger(l,COLOR_GROUND);
+    lua_setglobal(l,"COLOR_GROUND");
+    
+    lua_pushinteger(l,COLOR_POISON);
+    lua_setglobal(l,"COLOR_POISON");
+
+    lua_pushinteger(l,COLOR_HEAL);
+    lua_setglobal(l,"COLOR_HEAL");
+
+    lua_pushinteger(l,COLOR_DAMAGE);
+    lua_setglobal(l,"COLOR_DAMAGE");
+
+
 }
 int L_ApplyEffect(lua_State* l)
 {
@@ -834,6 +867,11 @@ int L_SetObjectPush(lua_State* l)
     else
         currGameObjRunning->properties &= !OBJ_CAN_PUSH;
     return 0;
+}
+int L_IsInCombat(lua_State* l)
+{
+    lua_pushboolean(l,IsInCombat(currGameObjRunning));
+    return 1;
 }
 int L_CastAbility(lua_State* l)
 {
@@ -1068,5 +1106,10 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetObjectPush);
     lua_setglobal(luaState, "SetObjectPush");
+
+    lua_pushcfunction(luaState, L_IsInCombat);
+    lua_setglobal(luaState, "IsInCombat");
+
+
 
 }

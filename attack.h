@@ -1,6 +1,7 @@
 #pragma once
 
 #include "stdbool.h"
+#include "colors.h"
 
 typedef struct GameObject GameObject;
 typedef struct Effect Effect;
@@ -40,6 +41,8 @@ typedef struct Attack
     float timer;
 
     Ability* cameFrom;
+
+    Color color;
 
 } Attack;
 

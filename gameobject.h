@@ -144,6 +144,7 @@ float GetWidth(GameObject* g);
 float GetHeight(GameObject* g);
 
 bool ObjectCanPush(GameObject* g);
+bool IsInCombat(GameObject* g);
 
 //void LoadFolderPrefabs(const char* dirPath);
 //void LoadPrefabs(const char* dirPath);

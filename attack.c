@@ -97,11 +97,11 @@ void DrawAttack(Attack* a, float dt)
 {
     if (a->attackType == ATTACK_AOE)
     {
-        al_draw_circle(a->x,a->y,a->radius,FRIENDLY,1);
+        al_draw_circle(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)),1);
     }
     else
     {
-        al_draw_filled_circle(a->x,a->y,a->radius,FRIENDLY);
+        al_draw_filled_circle(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)));
     }
 }
 void UpdateAttack(Attack* a, float dt)
