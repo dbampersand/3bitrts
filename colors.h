@@ -1,5 +1,28 @@
 #pragma once
 #include <allegro5/allegro.h>
+
+typedef enum DITHER_PATTERN
+{
+    DITHER_NONE=0,
+    DITHER_FILL=1,
+    DITHER_HALF=2,
+    DITHER_QUARTER=4,
+    DITHER_EIGTH=8,
+
+    DITHER_VERTICAL_HALF,
+    DITHER_VERTICAL_QUARTER,
+    DITHER_VERTICAL_EIGTH,
+
+
+    DITHER_HORIZONTAL_HALF,
+    DITHER_HORIZONTAL_QUARTER,
+    DITHER_HORIZONTAL_EIGTH,
+
+    DITHER_STAR_HALF,
+    DITHER_STAR_QUARTER,
+    DITHER_STAR_EIGTH
+
+} DITHER_PATTERN;
 typedef enum Color
 {
     COLOR_DEFAULT = 0, //COLOR_DEFAULT inherits whoever owns the object's color

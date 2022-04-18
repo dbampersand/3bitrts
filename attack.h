@@ -7,6 +7,7 @@ typedef struct GameObject GameObject;
 typedef struct Effect Effect;
 typedef struct Ability Ability;
 
+
 typedef enum ATTACK_TYPE
 {
     ATTACK_AOE = 0,
@@ -43,6 +44,7 @@ typedef struct Attack
     Ability* cameFrom;
 
     Color color;
+    DITHER_PATTERN dither;
 
 } Attack;
 

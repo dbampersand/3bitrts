@@ -19,7 +19,7 @@ function casted()
     f1["duration"] = 1  ;
     f1["triggersPerSecond"] = 1
 
-    aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES, {f1})
+    aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_DEFAULT,DITHER_HALF, {f1})
     return true;
 end
 function untoggle()

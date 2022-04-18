@@ -191,3 +191,8 @@ void ClampToRadius(float* x, float* y, float cx, float cy, float radius)
     *x = cx + *x*_MIN(radius,dist);
     *y = cy + *y*_MIN(radius,dist);
 }
+bool PointInCircle(float x, float y, float cx, float cy, float radius)
+{
+    
+    return (dist(x,y,cx,cy) < radius);
+}

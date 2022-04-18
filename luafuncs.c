@@ -551,14 +551,18 @@ int L_CreateAOE(lua_State* l)
     const float duration = lua_tonumber(l, 6);
     const bool shouldCallback = lua_toboolean(l, 7);
     const int properties = lua_tonumber(l,8);
+    const int color = lua_tonumber(l,9);
+    const int dither = lua_tonumber(l,10);
 
-    size_t len =  lua_rawlen(l,9);
+
+
+    size_t len =  lua_rawlen(l,11);
     Effect effects[len];    
     memset(effects,0,sizeof(Effect)*len);
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 9, i);
+        e = GetEffectFromTable(l, 11, i);
         e.from = currGameObjRunning;
         lua_remove(l,-1);
         effects[i-1] = e;
@@ -583,6 +587,8 @@ int L_CreateAOE(lua_State* l)
     a.duration = duration;
     a.attackType = ATTACK_AOE;
     a.tickrate = tickrate;
+    a.color = color;
+    a.dither = dither;
     Attack* ref = AddAttack(&a);
 
     lua_pushnumber(l,ref - attacks);
@@ -825,6 +831,40 @@ void SetGlobals(lua_State* l)
 
     lua_pushinteger(l,COLOR_DAMAGE);
     lua_setglobal(l,"COLOR_DAMAGE");
+
+    lua_pushinteger(l,DITHER_NONE);
+    lua_setglobal(l,"DITHER_NONE");
+    lua_pushinteger(l,DITHER_FILL);
+    lua_setglobal(l,"DITHER_FILL");
+    lua_pushinteger(l,DITHER_HALF);
+    lua_setglobal(l,"DITHER_HALF");
+    lua_pushinteger(l,DITHER_QUARTER);
+    lua_setglobal(l,"DITHER_QUARTER");
+    lua_pushinteger(l,DITHER_EIGTH);
+    lua_setglobal(l,"DITHER_EIGTH");
+    
+    lua_pushinteger(l,DITHER_VERTICAL_HALF);
+    lua_setglobal(l,"DITHER_VERTICAL_HALF");
+    lua_pushinteger(l,DITHER_VERTICAL_QUARTER);
+    lua_setglobal(l,"DITHER_VERTICAL_QUARTER");
+    lua_pushinteger(l,DITHER_VERTICAL_EIGTH);
+    lua_setglobal(l,"DITHER_VERTICAL_EIGTH");
+
+    lua_pushinteger(l,DITHER_HORIZONTAL_HALF);
+    lua_setglobal(l,"DITHER_HORIZONTAL_HALF");
+    lua_pushinteger(l,DITHER_HORIZONTAL_QUARTER);
+    lua_setglobal(l,"DITHER_HORIZONTAL_QUARTER");
+    lua_pushinteger(l,DITHER_HORIZONTAL_EIGTH);
+    lua_setglobal(l,"DITHER_HORIZONTAL_EIGTH");
+
+    lua_pushinteger(l,DITHER_STAR_HALF);
+    lua_setglobal(l,"DITHER_STAR_HALF");
+    lua_pushinteger(l,DITHER_STAR_QUARTER);
+    lua_setglobal(l,"DITHER_STAR_QUARTER");
+    lua_pushinteger(l,DITHER_STAR_EIGTH);
+    lua_setglobal(l,"DITHER_STAR_EIGTH");
+
+
 
 
 }

@@ -93,11 +93,107 @@ void ApplyAttack(Attack* a, GameObject* target)
         }
     }
 }
+void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color, DITHER_PATTERN dither)
+{
+    if (dither == DITHER_NONE)
+    {
+        return;
+    }
+    if (dither == DITHER_FILL)
+    {
+        al_draw_filled_circle(cX,cY,radius,color);
+    }
+    if (dither == DITHER_HALF || dither == DITHER_QUARTER || dither == DITHER_EIGTH)
+    {
+        for (int x = cX-radius; x < cX+radius; x++)
+        {
+            for (int y = cY-radius; y < cY+radius; y++)
+            {
+                if (PointInCircle(x,y,cX,cY,radius))
+                {
+                    if (y%dither==0 && x%dither == 0)
+                    {
+                        al_draw_pixel(x,y,color);
+                    }
+                }
+            }
+
+        }
+    }
+    if (dither == DITHER_VERTICAL_HALF || dither == DITHER_VERTICAL_QUARTER || dither == DITHER_VERTICAL_EIGTH)
+    {
+        int pattern;
+        if (dither == DITHER_VERTICAL_HALF)
+            pattern=2;
+        if (dither == DITHER_VERTICAL_QUARTER)
+            pattern=4;
+        if (dither == DITHER_VERTICAL_EIGTH)
+            pattern=8;
+        for (int x = cX-radius; x < cX+radius; x+=pattern)
+        {
+            for (int y = cY-radius; y < cY+radius; y++)
+            {
+                if (PointInCircle(x,y,cX,cY,radius))
+                {
+                    al_draw_pixel(x,y,color);
+                }
+            }
+        }
+    }
+    if (dither == DITHER_HORIZONTAL_HALF || dither == DITHER_HORIZONTAL_QUARTER || dither == DITHER_HORIZONTAL_EIGTH)
+    {
+        int pattern;
+        if (dither == DITHER_HORIZONTAL_HALF)
+            pattern=2;
+        if (dither == DITHER_HORIZONTAL_QUARTER)
+            pattern=4;
+        if (dither == DITHER_HORIZONTAL_EIGTH)
+            pattern=8;
+        for (int y = cY-radius; y < cY+radius; y+=pattern)
+        {
+            for (int x = cX-radius; x < cX+radius; x++)
+            {
+                if (PointInCircle(x,y,cX,cY,radius))
+                {
+                    al_draw_pixel(x,y,color);
+                }
+            }
+        }
+    }
+    if (dither == DITHER_STAR_HALF || dither == DITHER_STAR_QUARTER || dither == DITHER_STAR_EIGTH)
+    {
+        int pattern;
+        if (dither == DITHER_STAR_HALF)
+            pattern=2;
+        if (dither == DITHER_STAR_QUARTER)
+            pattern=4;
+        if (dither == DITHER_STAR_EIGTH)
+            pattern=8;
+        for (int x = cX-radius-pattern*2; x < cX+radius; x+=pattern*2)
+        {
+            for (int y = cY-radius-pattern*2; y < cY+radius; y+=pattern*2)
+            {
+                if (PointInCircle(x,y,cX,cY,radius))
+                    al_draw_pixel(x,y,color);
+                if (PointInCircle(x-1,y+1,cX,cY,radius))
+                    al_draw_pixel(x-1,y+1,color);
+                if (PointInCircle(x+1,y+1,cX,cY,radius))
+                    al_draw_pixel(x+1,y+1,color);
+                if (PointInCircle(x,y+2,cX,cY,radius))
+                    al_draw_pixel(x,y+2,color);
+            }
+        }
+        
+
+    }
+
+}
 void DrawAttack(Attack* a, float dt)
 {
     if (a->attackType == ATTACK_AOE)
     {
         al_draw_circle(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)),1);
+        draw_circle_dithered(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)),a->dither);
     }
     else
     {

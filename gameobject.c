@@ -1154,3 +1154,4 @@ bool IsInCombat(GameObject* g)
     }
     return false;
 }
+
