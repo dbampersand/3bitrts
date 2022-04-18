@@ -1,6 +1,6 @@
 local speed = 50;
 local duration = 2;
-
+local aoe = -1;
 
 function setup()
     AbilitySetPortrait("Assets/friendly/Bard/icon_aoe_speed.png");

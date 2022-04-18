@@ -16,6 +16,25 @@ typedef enum GAMEOBJ_PROPERTIES
     OBJ_CAN_PUSH = 8
     //OBJ_ATTACKING_TARGET = 8
 } GAMEOBJ_PROPERTIES;
+
+//a unit can be multiple of these
+typedef enum GAMEOBJ_TYPE_HINT
+{
+    TYPE_TANK = 1,
+    TYPE_HEALER = 2,
+    TYPE_MELEEDPS = 4,
+    TYPE_RANGEDDPS = 8,
+    TYPE_UTILITY = 16,
+    TYPE_ALL = 256
+
+} GAMEOBJ_TYPE_HINT;
+
+typedef enum OBJ_FRIENDLINESS
+{
+    TYPE_ENEMY=0,
+    TYPE_FRIENDLY=1
+}OBJ_FRIENDLINESS;
+
 typedef struct Shield Shield;
 typedef struct lua_State lua_State;
 #define MAX_EFFECTS 6
@@ -74,6 +93,8 @@ typedef struct GameObject
     unsigned char ytarg;
 
     float invulnerableTime;
+
+    GAMEOBJ_TYPE_HINT objType;
     
 } GameObject;
 
@@ -145,6 +166,6 @@ float GetHeight(GameObject* g);
 
 bool ObjectCanPush(GameObject* g);
 bool IsInCombat(GameObject* g);
-
+bool ObjHasType(GameObject* g, GAMEOBJ_TYPE_HINT typeHint);
 //void LoadFolderPrefabs(const char* dirPath);
 //void LoadPrefabs(const char* dirPath);

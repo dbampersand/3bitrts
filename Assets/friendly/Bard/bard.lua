@@ -12,6 +12,8 @@ function setup()
     SetDamage(5);
     SetRange(30);
 
+    SetObjType(Bor(TYPE_HEALER,TYPE_UTILITY));
+
 end
 
 function update()

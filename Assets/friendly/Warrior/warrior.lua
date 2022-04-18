@@ -11,6 +11,7 @@ function setup()
 
     SetDamage(5);
 
+    SetObjType(TYPE_TANK)
 
 
 end

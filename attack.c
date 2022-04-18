@@ -120,6 +120,7 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
 
         }
     }
+    //todo: could make this one more efficient
     if (dither == DITHER_VERTICAL_HALF || dither == DITHER_VERTICAL_QUARTER || dither == DITHER_VERTICAL_EIGTH)
     {
         int pattern;

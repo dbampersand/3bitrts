@@ -111,6 +111,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
 
 
     found->range = 1;
+    found->objType = TYPE_ALL;
 
     loadLuaGameObj(luaState, found->path, found); 
     found->properties |= OBJ_ACTIVE;
@@ -178,11 +179,15 @@ bool CheckFuncExists(const char* funcName, char* lua_buffer)
     }
     return false;
 }
+bool ObjHasType(GameObject* g, GAMEOBJ_TYPE_HINT typeHint)
+{
+    return (g->objType & typeHint);
+}
 void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g) 
 {
     char* cpy;
-                cpy = calloc(strlen(filename)+1,sizeof(char));
-            strcpy(cpy,filename);
+    cpy = calloc(strlen(filename)+1,sizeof(char));
+    strcpy(cpy,filename);
 
     currGameObjRunning = g;
     
@@ -206,6 +211,7 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
     if (luaL_loadbuffer(l, g->lua_buffer,strlen(g->lua_buffer),NULL) || lua_pcall(l, 0, 0, 0))
      {
          printf("Can't load lua file %s",lua_tostring(l,-1));
+         fflush(stdout);
      }
      else
      {

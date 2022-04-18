@@ -12,6 +12,8 @@ function setup()
     SetDamage(5);
     SetRange(100)
 
+    SetObjType(TYPE_HEALER);
+
 
 
 

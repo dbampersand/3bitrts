@@ -1,5 +1,6 @@
 local speed = 50;
 local duration = 2;
+local aoe = -1
 
 
 function setup()

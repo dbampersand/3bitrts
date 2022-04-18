@@ -618,6 +618,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
     al_set_target_bitmap(SCREEN);
     DrawSprite(&sprites[currMap->spriteIndex],0,0,GROUND,false);
+    DrawAttacks(dt);
 
     int objSelected = -1;
     bool abilityCastOnTarget = players[0].abilityHeld && (mouseStateLastFrame->buttons & 1 || mouseState->buttons & 1);
@@ -658,7 +659,6 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     if (players[0].selecting)
         DrawMouseSelectBox(GetMouseClamped());
         
-    DrawAttacks(dt);
     DrawParticles();
     if (players[0].abilityHeld)
     {

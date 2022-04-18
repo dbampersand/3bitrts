@@ -12,6 +12,8 @@ function setup()
     SetDamage(5);
     SetRange(1)
 
+    SetObjType(TYPE_MELEEDPS);
+
 
 
 

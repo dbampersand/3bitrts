@@ -65,6 +65,49 @@ void init_lua()
     SetLuaFuncs();
 
 }
+int L_SetObjType(lua_State* l)
+{
+    currGameObjRunning->objType = lua_tonumber(l,1);
+    return 0; 
+}
+int L_GetRandomUnit(lua_State* l)
+{
+    OBJ_FRIENDLINESS friend = lua_tonumber(l,1);
+    GAMEOBJ_TYPE_HINT typeHint = lua_tonumber(l,2);
+
+    GameObject** list = calloc(MAX_OBJS,sizeof(GameObject*));
+    int numObjs=0;
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        GameObject* g = &objects[i];
+        if (IsActive(g))
+        {
+            if (ObjHasType(g,typeHint))
+            {
+                if (friend == TYPE_ENEMY)
+                {
+                    if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(currGameObjRunning))
+                    {
+                        list[numObjs] = g;
+                        numObjs++;
+                    }
+                }
+                if (friend == TYPE_FRIENDLY)
+                {
+                    if (GetPlayerOwnedBy(g) == GetPlayerOwnedBy(currGameObjRunning))
+                    {
+                        list[numObjs] = g;
+                        numObjs++;
+                    }
+                }
+            }
+        }
+    }
+    GameObject* randObj = list[rand()%numObjs];
+    lua_pushnumber(l,randObj-objects);
+    free(list);
+    return 1;
+}
 void LoadLuaFile(const char* filename, GameObject* g)
 {
     
@@ -219,21 +262,36 @@ int L_GetObjRef(lua_State* l)
     lua_pushnumber(l,(int)(currGameObjRunning-objects));
     return 1;
 }
-
+int L_AbilityIsOnCooldown(lua_State* l)
+{
+    GameObject* g = &objects[(int)lua_tonumber(l,1)];
+    Ability* a = &g->abilities[(int)lua_tonumber(l,1)];
+    if (a->cdTimer  <= 0)
+    {
+        lua_pushboolean(l,false);
+        return 1;
+    }
+    lua_pushboolean(l,true);
+    return 1;
+}
 int L_GetThreatRank(lua_State* l)
 {
     int j = GetNumThreats(&currGameObjRunning->threatList);
     Threat* next = &currGameObjRunning->threatList;
-
+    lua_newtable(l);
     for (int i = 0; i < j; i++)
     {
-        lua_pushnumber(l,(int)(next->obj - objects));
+        lua_pushnumber(l,i);
+        lua_pushnumber(l,objects-next->obj);
+
+        lua_settable(l,-3);
         next = next->next;
 
         if (!next) 
             break;
     }
-    return j; 
+
+    return 1; 
 }
 
 Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
@@ -596,7 +654,8 @@ int L_CreateAOE(lua_State* l)
 }
 int L_RemoveAttack(lua_State* l)
 {
-    RemoveAttack(lua_tonumber(l,1));
+    int atk = lua_tonumber(l,1);
+    RemoveAttack(atk);
     return 0;
 }
 int L_SetMaxHP(lua_State* l)
@@ -864,6 +923,23 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,DITHER_STAR_EIGTH);
     lua_setglobal(l,"DITHER_STAR_EIGTH");
 
+    lua_pushinteger(l,TYPE_ALL);
+    lua_setglobal(l,"TYPE_ALL");
+    lua_pushinteger(l,TYPE_TANK);
+    lua_setglobal(l,"TYPE_TANK");
+    lua_pushinteger(l,TYPE_HEALER);
+    lua_setglobal(l,"TYPE_HEALER");
+    lua_pushinteger(l,TYPE_MELEEDPS);
+    lua_setglobal(l,"TYPE_MELEEDPS");
+    lua_pushinteger(l,TYPE_RANGEDDPS);
+    lua_setglobal(l,"TYPE_RANGEDDPS");
+    lua_pushinteger(l,TYPE_UTILITY);
+    lua_setglobal(l,"TYPE_UTILITY");
+
+    lua_pushinteger(l,TYPE_ENEMY);
+    lua_setglobal(l,"TYPE_ENEMY");
+    lua_pushinteger(l,TYPE_FRIENDLY);
+    lua_setglobal(l,"TYPE_FRIENDLY");
 
 
 
@@ -942,6 +1018,13 @@ int L_CastAbility(lua_State* l)
     }
 
     CastAbility(currGameObjRunning,&currGameObjRunning->abilities[index],x,y,headingx,headingy,&objects[obj]);
+    return 1;
+}
+int L_RandRange(lua_State* l)
+{
+    double min = lua_tonumber(l,1);
+    double max = lua_tonumber(l,2);
+    lua_pushnumber(l,RandRange(min,max));
     return 1;
 }
 int L_AddAbility(lua_State* l)
@@ -1150,6 +1233,18 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_IsInCombat);
     lua_setglobal(luaState, "IsInCombat");
 
+    lua_pushcfunction(luaState, L_RandRange);
+    lua_setglobal(luaState, "RandRange");
 
+    lua_pushcfunction(luaState, L_AbilityIsOnCooldown);
+    lua_setglobal(luaState, "AbilityIsOnCooldown");
+
+    lua_pushcfunction(luaState, L_SetObjType);
+    lua_setglobal(luaState, "SetObjType");
+
+    lua_pushcfunction(luaState, L_GetRandomUnit);
+    lua_setglobal(luaState, "GetRandomUnit");
+
+    
 
 }
