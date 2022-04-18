@@ -24,7 +24,9 @@ typedef enum ATTACK_PROPERTIES
 } ATTACK_PROPERTIES;
 typedef struct Attack
 {
-    float x; float y; int radius;
+    float x; float y; float radius; float targetRadius; 
+    float easing;
+
     float targx; float targy; 
     GameObject* target;
     Effect* effects;    

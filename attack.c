@@ -209,6 +209,27 @@ void UpdateAttack(Attack* a, float dt)
     {
         a->duration -= dt;
     }
+    float amtToIncreaseBy = (a->timer*a->timer*a->timer);
+
+    if (a->radius != a->targetRadius)
+    {
+        if (a->radius < a->targetRadius && a->radius + amtToIncreaseBy < a->targetRadius)
+        {
+            a->radius+=amtToIncreaseBy;
+        }
+        else if (a->radius > a->targetRadius && a->radius + amtToIncreaseBy > a->targetRadius)
+        {
+            a->radius-=amtToIncreaseBy;
+        }
+        else
+        {
+            a->radius = a->targetRadius;
+        }
+    }
+    a->radius = a->easing*a->easing*a->easing * (a->targetRadius);
+    if (a->easing >= 1)
+        a->radius = a->targetRadius;
+    a->easing += dt*2.5f;
     a->timer += dt;
 
     currAttackRunning = a;

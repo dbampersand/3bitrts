@@ -400,6 +400,8 @@ void CreateProjectile(lua_State* l, float x, float y, const char* portrait, int 
     a.x = currGameObjRunning->x + w/2;
     a.y = currGameObjRunning->y + h/2;
     a.radius = 1;
+    a.easing=0;
+    a.targetRadius = a.radius;
     a.target = targ;
     float x2 = x; float y2 = y;
     if (attackType == ATTACK_PROJECTILE_ANGLE)
@@ -632,7 +634,9 @@ int L_CreateAOE(lua_State* l)
     a.y = y;
     a.targx = x;
     a.targy = y;
-    a.radius = radius;
+    a.radius = 0;
+    a.easing=0.1f;
+    a.targetRadius = radius;
     a.effects = calloc(len,sizeof(Effect));
     memcpy(a.effects,effects,sizeof(Effect)*len);
     a.numEffects = len;
@@ -647,6 +651,7 @@ int L_CreateAOE(lua_State* l)
     a.tickrate = tickrate;
     a.color = color;
     a.dither = dither;
+
     Attack* ref = AddAttack(&a);
 
     lua_pushnumber(l,ref - attacks);
