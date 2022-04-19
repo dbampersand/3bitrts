@@ -1161,3 +1161,61 @@ bool IsInCombat(GameObject* g)
     return false;
 }
 
+bool ObjIsChannelling(GameObject* g)
+{
+    return (g->properties & OBJ_IS_CHANNELLING);
+}
+void SetObjChannelling(GameObject* g, Ability* a, float time,float x, float y, GameObject* target, float heading_x, float heading_y)
+{
+    g->properties |= OBJ_IS_CHANNELLING;
+    g->channelledAbility = a;
+    g->channellingTime = time;
+    g->channellingTotal = time;
+    g->channelled_x = x;
+    g->channelled_y = y;
+    g->channelled_target = target;
+    g->target_heading_x = heading_x;
+    g->target_heading_y = heading_y;
+}
+void UpdateChannellingdObj(GameObject* g, float dt)
+{
+    if (ObjIsChannelling(g))
+    {
+        g->channellingTime -= dt;
+        if (g->channellingTime < 0)
+        {
+            g->properties &= ~OBJ_IS_CHANNELLING;
+            CastAbility(g,g->channelledAbility,g->channelled_x,g->channelled_y,g->target_heading_x,g->target_heading_y,g->channelled_target);
+            g->channelledAbility = NULL;
+        }
+    }
+}
+void DrawChannelHint(GameObject* g)
+{
+
+    if (ObjIsChannelling(g) && g->channelledAbility)
+    {
+        Ability* a  = g->channelledAbility;
+        float x; float y; GetCentre(g,&x,&y);
+        float x2; float y2;
+        ALLEGRO_COLOR col = GetPlayerOwnedBy(g) == 0 ? FRIENDLY : ENEMY;
+        if (g->channelled_target)
+        {
+            GetCentre(g->channelled_target,&x2,&y2);
+        }
+        else
+        {
+            x2 = g->channelled_x;
+            x2 = g->channelled_y;
+        }
+        if (a->targetingHint == HINT_LINE)
+        {
+            al_draw_line(x,y,x2,y2,col,1);
+        }
+        if (a->targetingHint == HINT_CIRCLE)
+        {
+            al_draw_circle(x2,y2,a->hintRadius,col,1);
+        }
+
+    }
+}

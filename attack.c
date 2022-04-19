@@ -33,6 +33,7 @@ void RemoveAttack(int attackindex)
 {
     if (attackindex < 0 || attackindex >= MAX_ATTACKS)
         return;
+    
     Attack* a = &attacks[attackindex];
     if (a->cameFrom)
     {
@@ -233,14 +234,8 @@ void UpdateAttack(Attack* a, float dt)
     a->timer += dt;
 
     currAttackRunning = a;
-    if (a->x < 0 || a->y < 0 || a->x > 255 || a->y > 255 || a->duration < 0)
-    {
-        RemoveAttack(a-attacks);
-        return;
-    }
     if (a->target)
     {
-
         Rect r = GetObjRect(a->target);
         MoveTo(&a->x,&a->y,r.x+r.w/2.,r.y+r.h/2,a->speed,dt);
     }
@@ -326,6 +321,12 @@ void UpdateAttack(Attack* a, float dt)
         lua_pcall(luaState,5,0,0);
 
     }
+    if (a->x < 0 || a->y < 0 || a->x > 255 || a->y > 255 || a->duration < 0)
+    {
+        RemoveAttack(a-attacks);
+        return;
+    }
+
 }
 void UpdateAttacks(float dt)
 {

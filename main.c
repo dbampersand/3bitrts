@@ -322,6 +322,9 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     for (int i = 0; i < numObjects; i++)
     {
         currGameObjRunning = &objects[i];
+        if (!IsActive(currGameObjRunning))
+            continue;
+        UpdateChannellingdObj(currGameObjRunning,dt);
         currGameObjRunning->invulnerableTime -= dt;
         if (currGameObjRunning->invulnerableTime < 0)
             currGameObjRunning->invulnerableTime = 0;
@@ -645,6 +648,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     }
     for (int i = 0; i < numObjects; i++)
     {
+        DrawChannelHint(&objects[i]);
         if (i == objSelected || &objects[i] == players[0].clickedThisFrame)
         {
             DrawGameObj(&objects[i],true);

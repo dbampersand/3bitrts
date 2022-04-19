@@ -16,7 +16,8 @@ typedef enum ABILITY_CAST_TYPE
 typedef enum HINT
 {
     HINT_NONE=0,
-    HINT_LINE=1
+    HINT_LINE=1,
+    HINT_CIRCLE
 } HINT;
 
 typedef struct Ability
@@ -29,7 +30,6 @@ typedef struct Ability
     int luafunc_untoggle;
 
     float range;
-
     char* path;
     int spriteIndex_Portrait;
     float cooldown;
@@ -39,7 +39,10 @@ typedef struct Ability
     bool toggled;
 
     char* description;
+
     HINT targetingHint;
+    float hintRadius;
+
 
 } Ability;
 

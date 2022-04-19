@@ -599,6 +599,20 @@ int L_SetMovePoint(lua_State* l)
     }
     return 0;
 }
+int L_CreateCone(lua_State* l)
+{
+    const float x = lua_tonumber(l,1);
+    const float y = lua_tonumber(l,2);
+    const char* effectPortrait = lua_tostring(l,3);
+    const float radius = lua_tonumber(l,4);
+    const float tickrate = lua_tonumber(l,5);
+    const float duration = lua_tonumber(l, 6);
+    const bool shouldCallback = lua_toboolean(l, 7);
+    const int properties = lua_tonumber(l,8);
+    const int color = lua_tonumber(l,9);
+    const int dither = lua_tonumber(l,10);
+
+}
 int L_CreateAOE(lua_State* l)
 {
     //read from table of effects
@@ -628,8 +642,8 @@ int L_CreateAOE(lua_State* l)
         effects[i-1] = e;
     }       
 
-    Attack a;
-    memset(&a,0,sizeof(Attack));
+    Attack a = {0};
+    //memset(&a,0,sizeof(Attack));
     a.x = x;
     a.y = y;
     a.targx = x;
@@ -870,6 +884,8 @@ void SetGlobals(lua_State* l)
 
     lua_pushinteger(l,HINT_LINE);
     lua_setglobal(l,"HINT_LINE");
+    lua_pushinteger(l,HINT_CIRCLE);
+    lua_setglobal(l,"HINT_CIRCLE");
 
 
     lua_pushinteger(l,COLOR_DEFAULT);
@@ -996,16 +1012,25 @@ int L_IsInCombat(lua_State* l)
 }
 int L_CastAbility(lua_State* l)
 {
+    if (ObjIsChannelling(currGameObjRunning))
+        return 0;
+
     int index = lua_tonumber(l,1);
         
     if (index < 0)
         index = 0;
     if (index > 3) 
         index = 3;
+
+    if (currGameObjRunning->abilities[index].cdTimer > 0.001f)
+    {
+        return 0;
+    }
     if (!AbilityIsInitialised(&currGameObjRunning->abilities[index]))
         return 0;
+    float channelTime = lua_tonumber(l,2);
 
-    size_t len =  lua_rawlen(l,2);
+    size_t len =  lua_rawlen(l,3);
 
     int x = -1; int y = -1; int obj = -1; float headingx=-1; float headingy=-1;
 
@@ -1013,7 +1038,7 @@ int L_CastAbility(lua_State* l)
     for (int i = 0; i < len; i++)
     {
         lua_pushnumber(l,i+1);
-        lua_gettable(l,2);
+        lua_gettable(l,3);
 
         x = GetTableField(l,-1,"x",&isAField);
         y = GetTableField(l,-1,"y",&isAField);
@@ -1021,8 +1046,17 @@ int L_CastAbility(lua_State* l)
         headingx = GetTableField(l,-1,"headingx",&isAField);
         headingy = GetTableField(l,-1,"headingy",&isAField);
     }
+    if (channelTime > 0)
+    {
+        Ability* a = &currGameObjRunning->abilities[index];
+        SetObjChannelling(currGameObjRunning,a,channelTime,x,y,&objects[obj],headingx,headingy);
+    }
+    else
+    {
+        CastAbility(currGameObjRunning,&currGameObjRunning->abilities[index],x,y,headingx,headingy,&objects[obj]);
 
-    CastAbility(currGameObjRunning,&currGameObjRunning->abilities[index],x,y,headingx,headingy,&objects[obj]);
+
+    }
     return 1;
 }
 int L_RandRange(lua_State* l)
@@ -1031,6 +1065,14 @@ int L_RandRange(lua_State* l)
     double max = lua_tonumber(l,2);
     lua_pushnumber(l,RandRange(min,max));
     return 1;
+}
+int L_SetAbilityHint(lua_State* l)
+{
+    currAbilityRunning->targetingHint = lua_tonumber(l,1);
+    if (lua_isnumber(l,2))
+    {
+        currAbilityRunning->hintRadius = lua_tonumber(l,2);
+    }
 }
 int L_AddAbility(lua_State* l)
 {
@@ -1250,6 +1292,7 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_GetRandomUnit);
     lua_setglobal(luaState, "GetRandomUnit");
 
-    
+    lua_pushcfunction(luaState, L_SetAbilityHint);
+    lua_setglobal(luaState, "SetAbilityHint");
 
 }

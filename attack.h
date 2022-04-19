@@ -14,7 +14,8 @@ typedef enum ATTACK_TYPE
     ATTACK_PROJECTILE_TARGETED,
     ATTACK_PROJECTILE_POINT,
     ATTACK_PROJECTILE_ANGLE,
-    ATTACK_MELEE
+    ATTACK_MELEE,
+    ATTACK_CONE
 } ATTACK_TYPE;
 typedef enum ATTACK_PROPERTIES
 {
@@ -26,7 +27,7 @@ typedef struct Attack
 {
     float x; float y; float radius; float targetRadius; 
     float easing;
-
+    
     float targx; float targy; 
     GameObject* target;
     Effect* effects;    

@@ -16,6 +16,7 @@ Ability CloneAbilityPrefab(Ability* prefab, lua_State* l)
     }
     return a;
 }
+
 Ability* AddAbility(const char* path)
 {
     if (!abilities)
@@ -42,7 +43,7 @@ Ability* AddAbility(const char* path)
         numAbilitiesAllocated += BUFFER_PREALLOC_AMT;
         abilities = realloc(abilities,numAbilitiesAllocated*sizeof(Ability));
     }
-    
+    abilities[numAbilities].hintRadius = 1;
     LoadAbility(path,luaState,&abilities[numAbilities]);
     numAbilities++;
 

@@ -13,7 +13,8 @@ typedef enum GAMEOBJ_PROPERTIES
     OBJ_SELECTED = 1,
     OBJ_OWNED_BY = 2,
     OBJ_ACTIVE = 4,
-    OBJ_CAN_PUSH = 8
+    OBJ_CAN_PUSH = 8,
+    OBJ_IS_CHANNELLING = 16
     //OBJ_ATTACKING_TARGET = 8
 } GAMEOBJ_PROPERTIES;
 
@@ -95,6 +96,17 @@ typedef struct GameObject
     float invulnerableTime;
 
     GAMEOBJ_TYPE_HINT objType;
+
+    float channellingTime;
+    float channellingTotal;  
+    float channelled_x;
+    float channelled_y;
+    GameObject* channelled_target;
+    float target_heading_x;
+    float target_heading_y;
+
+
+    Ability* channelledAbility;
     
 } GameObject;
 
@@ -167,5 +179,10 @@ float GetHeight(GameObject* g);
 bool ObjectCanPush(GameObject* g);
 bool IsInCombat(GameObject* g);
 bool ObjHasType(GameObject* g, GAMEOBJ_TYPE_HINT typeHint);
+bool ObjIsChannelling(GameObject* g);
+void SetObjChannelling(GameObject* g, Ability* a, float time,float x, float y, GameObject* target, float heading_x, float heading_y);
+void UpdateChannellingdObj(GameObject* g, float dt);
+void DrawChannelHint(GameObject* g);
+
 //void LoadFolderPrefabs(const char* dirPath);
 //void LoadPrefabs(const char* dirPath);
