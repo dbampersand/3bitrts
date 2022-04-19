@@ -301,6 +301,7 @@ void GetControlGroup(ALLEGRO_KEYBOARD_STATE* keyState)
 }
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
+    lua_settop(luaState,0);
     CheckSelected(mouseState,mouseStateLastFrame, keyState);
     UpdateAttacks(dt);
     SetControlGroups(keyState);

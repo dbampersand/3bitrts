@@ -319,6 +319,10 @@ void KillObj(GameObject* g)
 
     for (int i = 0; i < 4; i++)
     {
+        if (g->abilities[i].toggled)
+        {
+            ToggleAbility(&g->abilities[i],g,false);
+        }
         if (g->abilities[i].description)
         {
             free(g->abilities[i].description);
