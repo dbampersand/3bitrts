@@ -7,6 +7,7 @@
 #include <allegro5/allegro_font.h>
 #include <math.h>
 #include "video.h"
+#include "sprite.h"
 void DrawHealthUIElement(GameObject* selected)
 {
     float percentHP = selected->health / selected->maxHP;
@@ -153,6 +154,210 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
 
         }
     }
+    DrawMenus();
+}
+void AddElement(Panel* p, UIElement* u)
+{
+    if (!p->elements)
+    {
+        p->elements = calloc(1,sizeof(UIElement));
+        p->numElements=0;
+        p->numElementsAllocated=1;
+    }   
+    if (p->numElements >= p->numElementsAllocated)
+    {
+        p->elements = realloc(p->elements,(p->numElementsAllocated+1)*sizeof(UIElement));
+        p->numElements = p->numElementsAllocated;
+        p->numElementsAllocated++;
+    }
+    p->elements[p->numElements] = *u;
+    p->numElements++;
+}
+void AddButton(Panel* p, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak)
+{
+    Button* b = calloc(1,sizeof(Button));
+    b->description = description;
+    b->clicked = false; 
+    UIElement u = {0};
+    u.data = (void*)b;
+    u.w = w;
+    u.h = h;
+    u.padding = padding;
+    u.linebreak = shouldLinebreak;
+    u.name = name;
+    u.elementType = ELEMENT_BUTTON;
+    u.x = x;
+    AddElement(p,&u);
+}
+void InitUI()
+{
+    ui.mainMenuPanel = (Panel){.elements = 0x0, .numElements = 0,.numElementsAllocated=0, .x = 48,.y=48, .w = 160,.h = 112,.shownPercent=0,.padding=15};
+    //AddButton(&ui.mainMenuPanel,"","Return",96,16,15,true,ALIGN_CENTER);
+    //AddButton(&ui.mainMenuPanel,"","Options",96,16,15,true,ALIGN_CENTER);
+    //AddButton(&ui.mainMenuPanel,"","Exit Game",96,16,15,true,ALIGN_CENTER);
+    AddButton(&ui.mainMenuPanel,"Return","Return",80,96,16,15,true);
+    AddButton(&ui.mainMenuPanel,"Options","Options",80,96,16,15,true);
+    AddButton(&ui.mainMenuPanel,"Exit","Exit Game",80,96,16,15,true);
+    
+    
+    ui.currentPanel = &ui.mainMenuPanel;
+}
+bool GetButton(Panel* p, char* name)
+{
+    if (!p) 
+        return false;
+    for (int i = 0; i < p->numElements; i++)
+    {
+        UIElement* u = &p->elements[i];
+        if (strcmp(u->name,name)==0)
+        {
+            Button* b = (Button*)u->data;
+            return (b->activated);
+        }
+    }
+    return false;
+}
+void UpdateButton(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+{
+    Button* b = (Button*)u->data;
+    b->activated = false;
+    if (mouseState->buttons & 1 && !(mouseStateLastFrame->buttons & 1))
+    {
+        Rect r = (Rect){rX,rY,u->w,u->h};
+        if (PointInRect(mouseState->x,mouseState->y,r))
+        {
+            b->clicked = true;
+        }
+    }
+    if (mouseStateLastFrame->buttons & 1 && !(mouseState->buttons & 1))
+    {
+        Rect r = (Rect){rX,rY,u->w,u->h};
+        if (b->clicked)
+        {
+            if (PointInRect(mouseState->x,mouseState->y,r))
+            {
+                b->activated = true;
+            }
+        }
+    }
+    if (!(mouseState->buttons & 1))
+    {
+        b->clicked = false;
+    }
+}
+void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+{
+    int x; int y;
+    GetUILocation(p,u,&x,&y);
+    if (u->elementType == ELEMENT_BUTTON)
+    {
+        UpdateButton(x,y,u,mouseState,mouseStateLastFrame);
+    }
+}
+void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+{
+    if (p)
+    {
+        for (int i = 0; i < p->numElements; i++)
+        {
+            UpdateElement(p,&p->elements[i],mouseState,mouseStateLastFrame);
+        }
+    }
+
+}
+void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+{
+    if (!al_key_down(keyState,ALLEGRO_KEY_P) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_P))
+    {
+        if (ui.currentPanel)
+        {
+            ui.currentPanel = NULL;
+        }
+        else
+        {
+            ui.currentPanel = &ui.mainMenuPanel;
+        }
+    }
+    if (ui.currentPanel)
+    {
+        UpdatePanel(ui.currentPanel,mouseState,mouseStateLastFrame);
+    }
+}
+void DrawButton(UIElement* u, int x, int y)
+{
+    Button* b = (Button*)u->data;
+    ALLEGRO_FONT* font = ui.font;
+    if (b->clicked)
+    {
+        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,FRIENDLY);
+        al_draw_rectangle(x,y,x+u->w,y+u->h,BG,1);
+        al_draw_text(ui.font,BG,x+u->w/2,y+u->h/2 - al_get_font_line_height(font)/2,ALLEGRO_ALIGN_CENTRE,b->description);
+    }
+    else
+    {
+        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,BG);
+        al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
+        al_draw_text(ui.font,FRIENDLY,x+u->w/2,y+u->h/2 - al_get_font_line_height(font)/2,ALLEGRO_ALIGN_CENTRE,b->description);
+
+    }
+
+}
+void DrawUIElement(UIElement* u, int x, int y)
+{
+    if (u->elementType == ELEMENT_BUTTON)
+    {
+        DrawButton(u,x,y);
+    }
+}
+void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)
+{
+    int currX=p->x+p->padding; int currY=p->y+p->padding; 
+
+    for (int i = 0; i < p->numElements; i++)
+    {
+        UIElement* u = ((UIElement*)&p->elements[i]);
+        currX += u->x - u->w/2 - u->padding;
+        if (u == uF)
+        {
+            *x = currX; 
+            *y = currY;
+        }
+        if (u->linebreak)
+        {
+            currY += u->h+u->padding;
+            currX = p->x+p->padding;
+        }
+        else
+        {
+            currX += u->w + u->padding + u->x;
+        }
+    }
+
+}
+void DrawPanel(Panel* p)
+{
+    al_draw_filled_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,BG);
+    al_draw_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,FRIENDLY,1);
+
+    al_set_clipping_rectangle(p->x,p->y,p->w,p->h);
+    int currX=p->x+p->padding; int currY=p->y+p->padding; 
+
+    for (int i = 0; i < p->numElements; i++)
+    {
+        UIElement* u = ((UIElement*)&p->elements[i]);
+        int x; int y;
+        GetUILocation(p, u, &x, &y);
+        DrawUIElement(u,x,y);
+
+    }
+    al_reset_clipping_rectangle();
+
+
+}
+void DrawMenus()
+{
+    if (ui.currentPanel)
+        DrawPanel(ui.currentPanel);
 }
 void LoadCursorSprite(UI* ui, int* index, char* path)
 {

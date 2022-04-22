@@ -28,6 +28,7 @@ ALLEGRO_DISPLAY* display;
 
 int _TARGET_FPS = 60;
 
+bool shouldExit;
 void init()
 {
     objects = calloc(MAX_OBJS,sizeof(GameObject));
@@ -306,6 +307,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     UpdateAttacks(dt);
     SetControlGroups(keyState);
     GetControlGroup(keyState);
+    UpdateUI(keyState,mouseState,keyStateLastFrame,mouseStateLastFrame);
     if (al_key_down(keyState, ALLEGRO_KEY_A) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_A))
     {
         players[0].amoveSelected = true;
@@ -591,11 +593,19 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
     }
 
-
+    if (GetButton(ui.currentPanel,"Return"))
+    {
+        ui.currentPanel = NULL;
+    }
+    if (GetButton(ui.currentPanel,"Exit"))
+    {
+        shouldExit = true;
+    }
 
 
     UpdateParticles(dt);
     ProcessAnimationEffects(dt);
+
 
 }
 void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState)
@@ -718,6 +728,8 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             }
         }
     }
+    DrawMenus();
+
     if (players[0].abilityHeld)
     {
         DrawCursor(mouseState, ui.cursorCastingIndex, false);
@@ -755,6 +767,7 @@ int main(int argc, char* args[])
     InitAttacks();
     InitParticles();
     InitAnimationEffects();
+    InitUI();
   //  init_sprites(); 
 
     init();
@@ -846,7 +859,7 @@ int main(int argc, char* args[])
    ALLEGRO_MOUSE_STATE mouseStateLastFrame;
     mouseStateLastFrame = GetMouseClamped();
 
-    while (true) {
+    while (!shouldExit) {
         
         ALLEGRO_EVENT event;
         al_wait_for_event(queue, &event);
@@ -875,5 +888,6 @@ int main(int argc, char* args[])
         }
 
     }
+    return 1;
 }
 

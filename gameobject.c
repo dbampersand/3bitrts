@@ -201,7 +201,6 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
         {
             memset(g,0,sizeof(GameObject));    
             LoadLuaFile(filename,g);
-
         }
     }
     else
