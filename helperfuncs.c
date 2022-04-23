@@ -196,3 +196,14 @@ bool PointInCircle(float x, float y, float cx, float cy, float radius)
     
     return (dist(x,y,cx,cy) < radius);
 }
+void RotatePoint(int* x, int* y, int cx, int cy, float angle)
+{
+    *x -= cx;
+    *y -= cy;
+
+    int xN = *x * cos(angle) - *y * sin(angle);
+    int yN = *y * cos(angle) + *x * sin(angle);
+
+    *x = xN + cx;
+    *y = yN + cy;
+}

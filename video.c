@@ -1,6 +1,8 @@
 #include "video.h"
 #include <allegro5/allegro_primitives.h>
-
+#include <math.h>
+#include "colors.h"
+#include "helperfuncs.h"
 unsigned long long _FRAMES = 0;
 
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color)
@@ -59,4 +61,16 @@ void DrawOutlinedRect_Dithered(Rect* r, ALLEGRO_COLOR color)
 
 
     //}
+}
+void DrawCone(int x, int y, float angle, float radius, int length)
+{
+    int x2 = x + length; int y2 = y + length;
+    int x3 = x + length; int y3 = y + length;
+
+    RotatePoint(&x2,&y2,x,y, angle-radius/2.0f);
+    RotatePoint(&x3,&y3,x,y, angle);
+
+
+
+    al_draw_triangle(x,y,x2,y2,x3,y3,FRIENDLY,1);
 }

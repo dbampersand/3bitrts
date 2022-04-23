@@ -300,6 +300,21 @@ void GetControlGroup(ALLEGRO_KEYBOARD_STATE* keyState)
         }
     }  
 }
+void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+{
+    UpdateUI(keyState,mouseState,keyStateLastFrame,mouseStateLastFrame);
+    if (ui.currentPanel == &ui.mainMenuPanel)
+    {
+        if (GetButton(&ui.mainMenuPanel,"Return"))
+        {
+            ui.currentPanel = NULL;
+        }
+        if (GetButton(&ui.mainMenuPanel,"Exit"))
+        {
+            shouldExit = true;
+        }
+    }
+}
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
     lua_settop(luaState,0);
@@ -307,7 +322,6 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     UpdateAttacks(dt);
     SetControlGroups(keyState);
     GetControlGroup(keyState);
-    UpdateUI(keyState,mouseState,keyStateLastFrame,mouseStateLastFrame);
     if (al_key_down(keyState, ALLEGRO_KEY_A) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_A))
     {
         players[0].amoveSelected = true;
@@ -593,14 +607,6 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
     }
 
-    if (GetButton(ui.currentPanel,"Return"))
-    {
-        ui.currentPanel = NULL;
-    }
-    if (GetButton(ui.currentPanel,"Exit"))
-    {
-        shouldExit = true;
-    }
 
 
     UpdateParticles(dt);
@@ -608,6 +614,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
 
 }
+
 void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState)
 {
     Vector2 endSelection = (Vector2){mouseState.x,mouseState.y};
@@ -625,6 +632,8 @@ void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState)
     r.h = _MAX(endSelection.y,players[0].selectionStart.y) - _MIN(endSelection.y,players[0].selectionStart.y);
     al_draw_filled_rectangle(r.x, r.y, r.x+r.w, r.y+r.h, al_premul_rgba(255, 255, 255,128));
 }
+float angle = 0;
+
 void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
     al_hide_mouse_cursor(display);
@@ -753,6 +762,9 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         DrawCursor(mouseState, ui.cursorDefaultIndex, false);
     }
     players[0].clickedThisFrame = NULL;
+    
+    DrawCone(160, 160, 90, 90, 40);
+    angle += dt;
 }
 int main(int argc, char* args[])
 {
@@ -854,8 +866,8 @@ int main(int argc, char* args[])
     al_register_event_source(queue, al_get_display_event_source(display));
    al_register_event_source(queue, al_get_timer_event_source(_FPS_TIMER));
 
-   ALLEGRO_KEYBOARD_STATE keyboardStateLastFrame;
-   al_get_keyboard_state(&keyboardStateLastFrame);
+   ALLEGRO_KEYBOARD_STATE keyStateLastFrame;
+   al_get_keyboard_state(&keyStateLastFrame);
    ALLEGRO_MOUSE_STATE mouseStateLastFrame;
     mouseStateLastFrame = GetMouseClamped();
 
@@ -865,23 +877,25 @@ int main(int argc, char* args[])
         al_wait_for_event(queue, &event);
         if (event.type == ALLEGRO_EVENT_TIMER) {
             ALLEGRO_MOUSE_STATE mouseState;
-            ALLEGRO_KEYBOARD_STATE keyboardState;
+            ALLEGRO_KEYBOARD_STATE keyState;
 
-            al_get_keyboard_state(&keyboardState);
+            al_get_keyboard_state(&keyState);
             mouseState = GetMouseClamped();
 
             al_set_target_bitmap(SCREEN);
             al_clear_to_color(al_map_rgb(40,32,36));
-
-            Update(1/(float)_TARGET_FPS,&keyboardState,&mouseState, &keyboardStateLastFrame, &mouseStateLastFrame);
-            Render(1/(float)_TARGET_FPS, &mouseState, &mouseStateLastFrame, &keyboardState, &keyboardStateLastFrame);
+    
+            if (!ui.currentPanel)
+                Update(1/(float)_TARGET_FPS,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
+            UpdateInterface(1/(float)_TARGET_FPS,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
+            Render(1/(float)_TARGET_FPS, &mouseState, &mouseStateLastFrame, &keyState, &keyStateLastFrame);
             al_set_target_bitmap(backbuffer);
             al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE,0,0,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
 
             al_flip_display();
 
             mouseStateLastFrame = mouseState;
-            keyboardStateLastFrame = keyboardState;
+            keyStateLastFrame = keyState;
             //printf("\n");
             _FRAMES++;
             fflush(stdout);

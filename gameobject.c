@@ -1219,6 +1219,10 @@ void DrawChannelHint(GameObject* g)
         {
             al_draw_circle(x2,y2,a->hintRadius,col,1);
         }
+        if (a->targetingHint == HINT_CONE)
+        {
+            
+        }
 
     }
 }

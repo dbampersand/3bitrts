@@ -11,13 +11,15 @@ typedef enum ABILITY_CAST_TYPE
     ABILITY_TARGET_ENEMY = 8,
     ABILITY_TARGET_ALL = 16,
     ABILITY_TOGGLE = 32,
-    ABILITY_ANGLE = 64
+    ABILITY_ANGLE = 64,
+    ABILITY_CONE = 128
 } ABILITY_CAST_TYPE;
 typedef enum HINT
 {
     HINT_NONE=0,
     HINT_LINE=1,
-    HINT_CIRCLE
+    HINT_CIRCLE,
+    HINT_CONE
 } HINT;
 
 typedef struct Ability

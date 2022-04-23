@@ -27,7 +27,7 @@ typedef struct Attack
 {
     float x; float y; float radius; float targetRadius; 
     float easing;
-    
+
     float targx; float targy; 
     GameObject* target;
     Effect* effects;    
@@ -43,6 +43,7 @@ typedef struct Attack
     float duration;
     float tickrate;
     float timer;
+    float range;
 
     Ability* cameFrom;
 

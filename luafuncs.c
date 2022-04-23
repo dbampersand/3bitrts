@@ -180,14 +180,12 @@ int L_GetY(lua_State* l)
         {
             GetCentre(&objects[index],&x,&y);
             lua_pushnumber(l,y);
-            
         }
         else
         {
             GetCentre(currGameObjRunning,&x,&y);
             lua_pushnumber(l,y);
         }
-
     }
     else
     {
@@ -611,7 +609,47 @@ int L_CreateCone(lua_State* l)
     const int properties = lua_tonumber(l,8);
     const int color = lua_tonumber(l,9);
     const int dither = lua_tonumber(l,10);
+    size_t len =  lua_rawlen(l,11);
 
+    Effect effects[len];    
+    memset(effects,0,sizeof(Effect)*len);
+    for (int i = 1; i < len+1; i++)
+    {
+        Effect e;
+        e = GetEffectFromTable(l, 11, i);
+        e.from = currGameObjRunning;
+        lua_remove(l,-1);
+        effects[i-1] = e;
+    }  
+
+    Attack a = {0};
+    //memset(&a,0,sizeof(Attack));
+    a.x = x;
+    a.y = y;
+    a.targx = x;
+    a.targy = y;
+    a.radius = 0;
+    a.easing=0.1f;
+    a.targetRadius = radius;
+    a.effects = calloc(len,sizeof(Effect));
+    memcpy(a.effects,effects,sizeof(Effect)*len);
+    a.numEffects = len;
+    a.ownedBy = currGameObjRunning;
+    a.properties = properties;
+    //a.callback_onhit = currAbilityRunning->luafunc_onhit;
+    a.cameFrom = currAbilityRunning;
+    a.ownedBy = currGameObjRunning;
+    a.shouldCallback = shouldCallback;
+    a.duration = duration;
+    a.attackType = ATTACK_CONE;
+    a.tickrate = tickrate;
+    a.color = color;
+    a.dither = dither;
+    Attack* ref = AddAttack(&a);
+
+    lua_pushnumber(l,ref - attacks);
+
+    return 1;
 }
 int L_CreateAOE(lua_State* l)
 {
@@ -859,10 +897,13 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,ABILITY_TOGGLE);
     lua_setglobal(l,"ABILITY_TOGGLE");
 
-        lua_pushinteger(l,ABILITY_ANGLE);
+    lua_pushinteger(l,ABILITY_ANGLE);
     lua_setglobal(l,"ABILITY_ANGLE");
 
-    
+    lua_pushinteger(l,ABILITY_CONE);
+    lua_setglobal(l,"ABILITY_CONE");
+
+
 
     lua_pushinteger(l,ATTACK_AOE);
     lua_setglobal(l,"ATTACK_AOE");
@@ -886,6 +927,8 @@ void SetGlobals(lua_State* l)
     lua_setglobal(l,"HINT_LINE");
     lua_pushinteger(l,HINT_CIRCLE);
     lua_setglobal(l,"HINT_CIRCLE");
+    lua_pushinteger(l,HINT_CONE);
+    lua_setglobal(l,"HINT_CONE");
 
 
     lua_pushinteger(l,COLOR_DEFAULT);
@@ -1054,8 +1097,6 @@ int L_CastAbility(lua_State* l)
     else
     {
         CastAbility(currGameObjRunning,&currGameObjRunning->abilities[index],x,y,headingx,headingy,&objects[obj]);
-
-
     }
     return 1;
 }
@@ -1295,4 +1336,6 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_SetAbilityHint);
     lua_setglobal(luaState, "SetAbilityHint");
 
+    lua_pushcfunction(luaState, L_CreateCone);
+    lua_setglobal(luaState, "CreateCone");
 }
