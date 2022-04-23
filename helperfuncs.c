@@ -196,6 +196,10 @@ bool PointInCircle(float x, float y, float cx, float cy, float radius)
     
     return (dist(x,y,cx,cy) < radius);
 }
+float cotan(float i)
+{
+    return 1 / tan(i);
+}
 void RotatePoint(int* x, int* y, int cx, int cy, float angle)
 {
     *x -= cx;

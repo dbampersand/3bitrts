@@ -763,8 +763,8 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     }
     players[0].clickedThisFrame = NULL;
     
-    DrawCone(160, 160, 90, 90, 40);
-    angle += dt;
+    DrawCone(160, 160, 0, 60, angle);
+    angle += dt*10;
 }
 int main(int argc, char* args[])
 {

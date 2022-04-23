@@ -24,3 +24,4 @@ bool GetLineIntersection(float p0_x, float p0_y, float p1_x, float p1_y, float p
 void ClampToRadius(float* x, float* y, float cx, float cy, float radius);
 bool PointInCircle(float x, float y, float cx, float cy, float radius);
 void RotatePoint(int* x, int* y, int cx, int cy, float radius);
+float cotan(float i);   
