@@ -25,3 +25,5 @@ void ClampToRadius(float* x, float* y, float cx, float cy, float radius);
 bool PointInCircle(float x, float y, float cx, float cy, float radius);
 void RotatePoint(int* x, int* y, int cx, int cy, float radius);
 float cotan(float i);   
+float Normalise(float v, float start, float end);
+

@@ -91,21 +91,53 @@ bool isInsideSector(int x, int y, int cx, int cy, int startX, int startY, int en
     }
     return false;
 }
-void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO_COLOR col)
+float extra=0;
+
+void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO_COLOR col, float length)
 {
+
+    start = Normalise(start,0, M_PI*2);
+    end = Normalise(end, 0, M_PI*2);
+
+    int sign = start < end ? 1 : -1;
+
+    float inc = 1 /  radius;
+    if (sign == -1)
+    {
+        float temp = start;
+        end -= radius * M_PI/180.0f - (length*M_PI/180.0f);
+        float rad = (360-radius) * M_PI/180.0f;
+        start -= rad + (length*M_PI/180.0f);
+    }
+
     float theta = start;
-    float inc = 0.01f;
-    while (theta <= end) {
-        float xn = xc + radius * sin(theta);
-        float yn = yc + radius * cos(theta);
-        al_draw_pixel(xn, yn, col);
-        theta = theta + inc;
+
+    if (theta <= end)
+    {
+        while (theta <= end) {
+            float xn; float yn;
+            xn = xc + radius * (sin(theta));
+            yn = yc + radius * (cos(theta));
+            al_draw_pixel(xn, yn, col);
+            theta += inc;
+        }
+    }
+    else if (theta >= end)
+    {
+        while (theta >= end) {
+            float xn; float yn;
+            xn = xc + radius * (sin(theta));
+            yn = yc + radius * (cos(theta));
+            al_draw_pixel(xn, yn, col);
+            theta += inc * -1;
+        }
+
     }
 
 }
 void DrawCone(int x, int y, float angle, float radius, int length)
 {
-    angle -= 135;
+    //angle -= 135;
     int x2 = x + length; int y2 = y + length;
     int x3 = x + length; int y3 = y + length;
 
@@ -121,45 +153,42 @@ void DrawCone(int x, int y, float angle, float radius, int length)
     al_get_keyboard_state(&a);
     if (al_key_down(&a,ALLEGRO_KEY_Y))
     {
-        printf("gg");
+        extra+=0.01f;
     }
+    if (al_key_down(&a,ALLEGRO_KEY_T))
+    {
+        extra-=0.01f;
+    }
+    printf("%f\n",extra);
     //al_draw_triangle(x,y,x2,y2,x3,y3,FRIENDLY,1);
     al_draw_line(x,y,x2,y2,FRIENDLY,1);
     al_draw_line(x,y,x3,y3,FRIENDLY,1);
 
-    //float angle2 = atan(x2/(float)y2) - radius/2.0f;
-    //float angle3 = atan(x3/(float)y3) + radius/2.0f;
     float angle2 = atan2(y-y2,x-x2);
     float angle3 = atan2(y-y3,x-x3);
-    angle2+=1.578;
-    angle3+=1.578;
+    angle2 -= (angle+(90*M_PI/180.0f)) * 2;
+    angle3 -= (angle+(90*M_PI/180.0f)) * 2;
 
+    if (angle2 > angle3)
+    {
+        //float temp = angle2;
+        //angle2 = angle3;
+        //angle3 = temp;
+        //angle3 = -angle3;
+    }
     //angle2 -= angle;
     //angle3 -= angle;
 
     ALLEGRO_MOUSE_STATE m = GetMouseClamped();
-    int startX = x2; int startY = y2;
-    int endX = x3; int endY = y3;
-    if (startY > endY)
-    {
-        int tempX = startX;
-        int tempY = startY;
-
-        startX = endX;
-        startY = endY;
-
-        endX = tempX;
-        endY = tempY;
-
-    }
+    
     float distX = x - x2;
     float distY = y - y2;
 
     float l = sqrt(distX*distX+distY*distY);
-   // if (isInsideSector(m.x,m.y,x,y,startX,startY,endX,endY,radius))
-     //   CircleSegment(x,y,radius+(length*sqrt(2))-1,angle2,angle3,FRIENDLY);
+   // if (isInsideSector(m.x,m.y,x,y,startX,startY,endX,endY,l))
+     //   CircleSegment(x,y,l,angle2,angle3,FRIENDLY);
     //else
-    CircleSegment(x,y,l,angle2,angle3,ENEMY);
+    CircleSegment(x,y,l,angle2,angle3,ENEMY,length);
 
 
 }

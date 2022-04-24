@@ -211,3 +211,10 @@ void RotatePoint(int* x, int* y, int cx, int cy, float angle)
     *x = xN + cx;
     *y = yN + cy;
 }
+float Normalise(float v, float start, float end)
+{
+    float w = end-start;
+    float offset = v - start;
+
+    return (offset - (floor(offset/w)*w))+start;
+}
