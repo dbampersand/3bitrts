@@ -106,8 +106,8 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
 
     currGameObjRunning->position.x = x;
     currGameObjRunning->position.y = y;
-    currGameObjRunning->xtarg = x;
-    currGameObjRunning->ytarg = y;
+    currGameObjRunning->targetPosition.x = x;
+    currGameObjRunning->targetPosition.y = y;
 
 
     found->range = 1;
@@ -718,8 +718,8 @@ void Move(GameObject* g, float delta)
 
     if (!g->targObj)
     {
-        xtarg = g->xtarg;
-        ytarg = g->ytarg;
+        xtarg = g->targetPosition.x;
+        ytarg = g->targetPosition.y;
     }
     else
     {
@@ -928,8 +928,8 @@ void Teleport(GameObject* g, float x, float y)
     GetOffsetCenter(g,&cX,&cY);
     g->position.x = x - cX/2;
     g->position.y = y - cY/2;
-    g->xtarg = g->position.x;
-    g->ytarg = g->position.y;
+    g->targetPosition.x = g->position.x;
+    g->targetPosition.y = g->position.y;
 
     //CheckCollisions(g,true,x-beforeX);
     //CheckCollisions(g,false,y-beforeY);

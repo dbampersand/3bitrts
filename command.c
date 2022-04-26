@@ -63,8 +63,8 @@ void NextCommand(GameObject* g)
     if (g->queue[0].commandType == COMMAND_NONE)
     {
         g->targObj = NULL;
-        g->xtarg = g->position.x;
-        g->ytarg = g->position.y;
+        g->targetPosition.x = g->position.x;
+        g->targetPosition.y = g->position.y;
 
     }
 }
@@ -78,8 +78,8 @@ void DoCommands(GameObject* g)
     }
     if (c->commandType == COMMAND_MOVE)
     {
-        g->xtarg = c->x;
-        g->ytarg = c->y;
+        g->targetPosition.x = c->x;
+        g->targetPosition.y = c->y;
         g->targObj = NULL;
 
         if (dist(g->position.x,g->position.y,c->x,c->y) <= DIST_DELTA)
@@ -148,8 +148,8 @@ void DoCommands(GameObject* g)
     }
     if (c->commandType == COMMAND_ATTACKMOVE)
     {
-        g->xtarg = c->x;
-        g->ytarg = c->y;
+        g->targetPosition.x = c->x;
+        g->targetPosition.y = c->y;
         g->targObj = NULL;
 
         if (dist(g->position.x,g->position.y,c->x,c->y) <= DIST_DELTA)

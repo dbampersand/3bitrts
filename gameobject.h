@@ -92,8 +92,9 @@ typedef struct GameObject
 
 
     char properties;
-    unsigned char xtarg;
-    unsigned char ytarg;
+    Point targetPosition;
+    //unsigned char xtarg;
+    //unsigned char ytarg;
 
     float invulnerableTime;
 

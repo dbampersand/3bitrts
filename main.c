@@ -379,8 +379,8 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
                 int wTarg = al_get_bitmap_width(sprites[currGameObjRunning->targObj->spriteIndex].sprite);
                 int hTarg = al_get_bitmap_height(sprites[currGameObjRunning->targObj->spriteIndex].sprite);
 
-                currGameObjRunning->xtarg = currGameObjRunning->targObj->position.x + wTarg/2;
-                currGameObjRunning->ytarg = currGameObjRunning->targObj->position.y + hTarg/2;
+                currGameObjRunning->targetPosition.x = currGameObjRunning->targObj->position.x + wTarg/2;
+                currGameObjRunning->targetPosition.y = currGameObjRunning->targObj->position.y + hTarg/2;
 
                 Rect r2 = (Rect){currGameObjRunning->targObj->position.x,currGameObjRunning->targObj->position.y,wTarg,hTarg};
                 #define DISTDELTA 0.001f
