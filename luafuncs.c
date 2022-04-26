@@ -737,6 +737,7 @@ int L_SetObjTargetPosition(lua_State* l)
     }
     return 0;
 }
+
 int L_SetObjPosition(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -1091,12 +1092,20 @@ int L_CastAbility(lua_State* l)
     }
     if (channelTime > 0)
     {
+        GameObject* target;
+        if (obj >= 0 && obj < MAX_OBJS)
+        {
+            target = &objects[obj];
+        }
+        else
+            target = NULL;
         Ability* a = &currGameObjRunning->abilities[index];
-        SetObjChannelling(currGameObjRunning,a,channelTime,x,y,&objects[obj],headingx,headingy);
+        SetObjChannelling(currGameObjRunning,a,channelTime,x,y,target,headingx,headingy);
     }
     else
     {
         CastAbility(currGameObjRunning,&currGameObjRunning->abilities[index],x,y,headingx,headingy,&objects[obj]);
+
     }
     return 1;
 }

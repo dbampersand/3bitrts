@@ -1,8 +1,8 @@
 function setup()
 
     SetAbilityRange(2)
-    AbilitySetCastType(ABILITY_CONE);
-    SetAbilityHint(HINT_CONE,30);
+    --AbilitySetCastType(ABILITY_CONE);
+    --SetAbilityHint(HINT_CONE,30);
 
 end
 

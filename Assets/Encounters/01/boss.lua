@@ -3,7 +3,7 @@ function setup()
     AddAbility("Assets/enemies/wyrm_boss/ability_bite.lua",0)   
     AddAbility("Assets/enemies/wyrm_boss/ability_fire.lua",1)    
     AddAbility("Assets/enemies/wyrm_boss/ability_nuke.lua",2)    
-    AddAbility("Assets/enemies/wyrm_boss/ability_firebreath.lua",2)    
+    AddAbility("Assets/enemies/wyrm_boss/ability_firebreath.lua",3)    
 
     SetDamage(10);
     SetMaxHP(10000,true)
@@ -32,8 +32,8 @@ function update()
            -- CastAbility(1,{targ});
         end
         targ2 = {};
-        --targ2["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_HEALER)
-       -- CastAbility(2,4,{target});
+        targ2["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_HEALER)
+        CastAbility(2,4,{targ2});
 
     end
 

@@ -32,6 +32,7 @@ typedef struct Ability
     int luafunc_untoggle;
 
     float range;
+    float length;
     char* path;
     int spriteIndex_Portrait;
     float cooldown;

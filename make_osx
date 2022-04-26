@@ -1,1 +1,1 @@
-Clang *.c -Iinclude/ -lallegro -lallegro_main -lallegro_ttf -lallegro_primitives -Linclude/lua-5.4.3/src -lallegro_font -lallegro_image -llua -L/usr/local/lib -Iinclude -o game  -g    
+Clang *.c -Iinclude/ -lallegro -lallegro_main -lallegro_ttf -lallegro_primitives -Linclude/lua-5.4.3/src -lallegro_font -lallegro_image -llua -L/usr/local/lib -Iinclude -o game  -g    -fsanitize=address 

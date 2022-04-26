@@ -1159,6 +1159,7 @@ bool IsInCombat(GameObject* g)
 {
     if (g->threatList.obj || g->threatList.next)
     {
+
         return true;
     }
     return false;
@@ -1221,7 +1222,9 @@ void DrawChannelHint(GameObject* g)
         }
         if (a->targetingHint == HINT_CONE)
         {
-            
+            float angle;
+            angle = atan2(y2-y,x2-x);
+           // DrawCone(x,y,angle,a->radius)   
         }
 
     }
