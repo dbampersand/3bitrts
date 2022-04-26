@@ -3,6 +3,7 @@
 #include <math.h>
 #include "colors.h"
 #include "helperfuncs.h"
+#include <float.h>
 unsigned long long _FRAMES = 0;
 
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color)
@@ -95,11 +96,11 @@ bool PointInTri(int x0, int y0, int x1, int y1, int x2, int y2, int pX, int pY)
     {
         SwapPoint(&x1,&y1,&x2,&y2);
     }
-
-    al_draw_line(x1,y1,x2,y2,HEAL,1);
-    al_draw_line(x2,y2,x0,y0,HEAL,1);
-    al_draw_line(x0,y0,x1,y1,HEAL,1);
-
+    #ifdef DEBUG
+        al_draw_line(x1,y1,x2,y2,HEAL,1);
+        al_draw_line(x2,y2,x0,y0,HEAL,1);
+        al_draw_line(x0,y0,x1,y1,HEAL,1);
+    #endif
     float bary12 = GetBarycentricCoord(x1,y1,x2,y2,x0,y0);
     float bary20 = GetBarycentricCoord(x2,y2,x0,y0,x1,y1);
     float bary01 = GetBarycentricCoord(x0,y0,x1,y1,x2,y2);
@@ -148,52 +149,18 @@ bool isInsideSector(int x, int y, int cx, int cy, float startX, float startY, fl
         angle3 = temp;
     }
 
-    //special case for when one of the lines crosses over 360degrees and the other doesnt
-    //rotate all points back
-    //this doesn't feel like  a good way to do this
-    //also doesn't work r > 180
-    //TODO: fix?
-   /* if (angle2 + 2*rad >= 2*M_PI && (angle3 - 2*rad <= rad))
-    {
-        RotatePoint(&x,&y,cx,cy,(-rad));
-        RotatePoint(&startX,&startY,cx,cy,(-rad));
-        RotatePoint(&endX,&endY,cx,cy,(-rad));
-        angle = (atan2(y-cy,x-cx));
-        angle2 = (atan2(startY-cy,startX-cx));
-        angle3 = (atan2(endY-cy,endX-cx));
-        angle = Normalise(angle, 0, 2*M_PI);
-        angle2 = Normalise(angle2,0, 2*M_PI);
-        angle3 = Normalise(angle3,0, 2*M_PI);
-        if (angle2 < angle3) 
-        {
-            float temp = angle2;
-            angle2 = angle3;
-            angle3 = temp;
-        }
-        al_draw_line(cx,cy,startX,startY,HEAL,1);
-        al_draw_line(cx,cy,endX,endY,HEAL,1);
-
-        //float temp = angle2;
-        //angle2 = angle3;
-        //angle3 = temp;
-
-    }*/
 
     if (dX*dX+dY*dY <= length*length)
     {
-        if ((angle <= angle2 && angle >= angle3) || (!isClockwise(startX,startY,x,y) && isClockwise(endX,endY,x,y)))
-        {
-            //return true;
-        }
         float newX = startX-cx; float newY = startY-cy;
         float newX2 = endX-cx; float newY2 = endY-cy;
         Normalize(&newX,&newY);
         Normalize(&newX2,&newY2);
-        newX*=length;
-        newY*=length;
+        newX*=10000;
+        newY*=10000;
 
-        newX2*=length;
-        newY2*=length;
+        newX2*=10000;
+        newY2*=10000;
         newX += startX;
         newY += startY;
         newX2 += endX;
@@ -202,35 +169,27 @@ bool isInsideSector(int x, int y, int cx, int cy, float startX, float startY, fl
 
         float midX = startX;
         float midY = startY;
-        //Normalize(&midX,&midY);
-        //midX*=radius;
-        //midY*=radius;
 
-        float fdsfds = RadToDeg(radius);
-       // float midAngle = atan2(endY-startY,endX-startX)- amtRotated  - DegToRad(60+45);// - DegToRad(45) - rad; 
         float midAngle = M_PI - ((atan2(endY-startY,endX-startX)) + DegToRad(90) - radius/2.0) + amtRotated;
         
         midAngle = Normalise(midAngle, 0, 2*M_PI);
 
-        RotatePointF(&midX,&midY,cx,cy,(midAngle+extra));
-        float midXNrm = midX;
-        float midYNrm = midY;
-        //Normalize(&midXNrm,&midYNrm);
-       // midXNrm+=radius*2;
-        //midYNrm+=radius*2;
-        //midX += midXNrm;
-        //midY += midYNrm;
+        RotatePointF(&midX,&midY,cx,cy,(midAngle));
+        float midXNrm = midX - cx;
+        float midYNrm = midY - cy;
+        Normalize(&midXNrm,&midYNrm);
+        midXNrm*=10000;
+        midYNrm*=10000;
+        midX += midXNrm;
+        midY += midYNrm;
         
-        printf("%f,%f\n",midAngle,extra);
-        //bool tri1 = PointInTri(cx,cy,newX,newY,midX,midY,x,y);
-        //bool tri2 =  PointInTri(cx,cy,newX2,newY2,midX,midY,x,y);
-
-        al_draw_line(cx,cy,midX,midY,POISON,1);
-
-        //PointInTri(cx,cy,newX,newY,newX2,newY2,x,y));
-        //if (tri1 || tri2)
+        bool tri1 = PointInTri(cx,cy,newX,newY,midX,midY,x,y);
+        bool tri2 =  PointInTri(cx,cy,newX2,newY2,midX,midY,x,y);
+        #ifdef DEBUG
+            al_draw_line(cx,cy,midX,midY,POISON,1);
+        #endif
+        if (tri1 || tri2)
         {
-            printf("gg");
             return true;
         }
 
@@ -280,8 +239,10 @@ void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO
     }
 
 }
-void DrawCone(int x, int y, float angle, float radius, int length)
+void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR color)
 {
+    radius += extra;
+
     angle -= 45;
     int x2 = x + length; int y2 = y + length;
     int x3 = x + length; int y3 = y + length;
@@ -296,17 +257,9 @@ void DrawCone(int x, int y, float angle, float radius, int length)
 
     ALLEGRO_KEYBOARD_STATE a;
     al_get_keyboard_state(&a);
-    if (al_key_down(&a,ALLEGRO_KEY_Y))
-    {
-        extra+=0.1f;
-    }
-    if (al_key_down(&a,ALLEGRO_KEY_T))
-    {
-        extra-=0.1f;
-    }
-    //al_draw_triangle(x,y,x2,y2,x3,y3,FRIENDLY,1);
-    al_draw_line(x,y,x2,y2,FRIENDLY,1);
-    al_draw_line(x,y,x3,y3,FRIENDLY,1);
+
+    al_draw_line(x,y,x2,y2,color,1);
+    al_draw_line(x,y,x3,y3,color,1);
 
     float angle2 = atan2(y-y2,x-x2);
     float angle3 = atan2(y-y3,x-x3);
@@ -328,16 +281,16 @@ void DrawCone(int x, int y, float angle, float radius, int length)
     int startX = x2; int startY = y2;
     int endX = x3; int endY = y3;
 
-        if (startY > endY)
+    if (startY > endY)
     {
         int tempX = startX;
         int tempY = startY;
 
-       // startX = endX;
-        //startY = endY;
+        // startX = endX;
+            //startY = endY;
 
-        //endX = tempX;
-        //endY = tempY;
+            //endX = tempX;
+            //endY = tempY;
 
     }
 
@@ -347,9 +300,9 @@ void DrawCone(int x, int y, float angle, float radius, int length)
 
     float l = sqrt(distX*distX+distY*distY);
     if (isInsideSector(m.x,m.y,x,y,x2,y2,x3,y3,l,radius,angle+DegToRad(45)))
-        CircleSegment(x,y,l,angle2,angle3,FRIENDLY,length); 
+        CircleSegment(x,y,l,angle2,angle3,color,length); 
     else
-        CircleSegment(x,y,l,angle2,angle3,ENEMY,length);
+        CircleSegment(x,y,l,angle2,angle3,color,length);
     printf("\n");
 
 }
