@@ -104,8 +104,8 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     currGameObjRunning->lua_buffer = prefab->lua_buffer; 
     currGameObjRunning->speed = 50;
 
-    currGameObjRunning->x = x;
-    currGameObjRunning->y = y;
+    currGameObjRunning->position.x = x;
+    currGameObjRunning->position.y = y;
     currGameObjRunning->xtarg = x;
     currGameObjRunning->ytarg = y;
 
@@ -453,14 +453,14 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
     if (!g)
     if (dV == 0) return;
     Sprite* s = &sprites[g->spriteIndex];
-    Rect rG = (Rect){g->x,g->y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)};
+    Rect rG = (Rect){g->position.x,g->position.y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)};
     for (int i = 0; i < numObjects; i++)
     {
         GameObject* g2 = &objects[i];
         if (g2 == g || !IsActive(g2)) 
             continue;
         Sprite* s2 = &sprites[g2->spriteIndex];
-        Rect r2 = (Rect){g2->x,g2->y,al_get_bitmap_width(s2->sprite),al_get_bitmap_height(s2->sprite)};
+        Rect r2 = (Rect){g2->position.x,g2->position.y,al_get_bitmap_width(s2->sprite),al_get_bitmap_height(s2->sprite)};
 
         if (!CheckIntersect(rG,r2))
         {
@@ -476,29 +476,29 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     //moving right
                     if (objectCanPush)
                     {
-                        float v = g2->x;
-                        g2->x = g->x + GetWidth(g);
-                        v -= g2->x;
-                        if (g2->x <0)
+                        float v = g2->position.x;
+                        g2->position.x = g->position.x + GetWidth(g);
+                        v -= g2->position.x;
+                        if (g2->position.x <0)
                         {
                             v = -1;
-                            g2->x=0;
+                            g2->position.x=0;
                         }
-                        if (g2->x + GetWidth(g2) > _MAPSIZE)
+                        if (g2->position.x + GetWidth(g2) > _MAPSIZE)
                         {
-                            g2->x = _MAPSIZE - GetWidth(g2);
+                            g2->position.x = _MAPSIZE - GetWidth(g2);
                             v = 1;
                         }
 
-                        float v2 = g2->x;
+                        float v2 = g2->position.x;
                         CheckCollisions(g2,true,-v,true);
-                        v2 -= g2->x;
+                        v2 -= g2->position.x;
 
                         CheckCollisionsWorld(g2,true,-v2);
 
                     }
                     else
-                        g->x = g2->x - al_get_bitmap_width(s->sprite);//xresult - al_get_bitmap_width(s->sprite);
+                        g->position.x = g2->position.x - al_get_bitmap_width(s->sprite);//xresult - al_get_bitmap_width(s->sprite);
                     //g->x = xresult - w - al_get_bitmap_width(s->sprite);
 
                 }
@@ -510,29 +510,29 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     //moving left
                     if (objectCanPush)
                     {
-                        float v = g2->x;
-                        g2->x = g->x - GetWidth(g2);
-                        v -= g2->x;
-                        if (g2->x <0)
+                        float v = g2->position.x;
+                        g2->position.x = g->position.x - GetWidth(g2);
+                        v -= g2->position.x;
+                        if (g2->position.x <0)
                         {
                             v = -1;
-                            g2->x=0;
+                            g2->position.x=0;
                         }
-                        if (g2->x + GetWidth(g2) > _MAPSIZE)
+                        if (g2->position.x + GetWidth(g2) > _MAPSIZE)
                         {
-                            g2->x = _MAPSIZE - GetWidth(g2);
+                            g2->position.x = _MAPSIZE - GetWidth(g2);
                             v = 1;
                         }
 
-                        float v2 = g2->x;
+                        float v2 = g2->position.x;
                         CheckCollisions(g2,true,-v,true);
-                        v2 -= g2->x;
+                        v2 -= g2->position.x;
 
                         CheckCollisionsWorld(g2,true,-v2);
 
                     }
                     else
-                        g->x = g2->x+al_get_bitmap_width(s2->sprite); 
+                        g->position.x = g2->position.x+al_get_bitmap_width(s2->sprite); 
                 }
             }
         }
@@ -546,23 +546,23 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     //moving down
                     if (objectCanPush)
                     {
-                        float v = g2->y;
-                        g2->y = g->y + GetHeight(g);
-                        v -= g2->y;
-                        float v2 = g2->y;
-                        if (g2->y <0)
+                        float v = g2->position.y;
+                        g2->position.y = g->position.y + GetHeight(g);
+                        v -= g2->position.y;
+                        float v2 = g2->position.y;
+                        if (g2->position.y <0)
                         {
                             v = 1;
-                            g2->y=0;
+                            g2->position.y=0;
                         }
-                        if (g2->y + GetHeight(g2) > UI_START_Y)
+                        if (g2->position.y + GetHeight(g2) > UI_START_Y)
                         {
-                            g2->y = UI_START_Y - GetHeight(g2);
+                            g2->position.y = UI_START_Y - GetHeight(g2);
                             v = 1;
                         }
 
                         CheckCollisions(g2,false,-v,true);
-                        v2 -= g2->y;
+                        v2 -= g2->position.y;
                          
                         CheckCollisionsWorld(g2,false,-v2);
 
@@ -571,7 +571,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     }
                     else
                     {
-                        g->y = g2->y - al_get_bitmap_height(s->sprite);
+                        g->position.y = g2->position.y - al_get_bitmap_height(s->sprite);
                     }
                 }
                 else if (dV < 0)
@@ -579,32 +579,32 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     //moving up
                     if (objectCanPush)
                     {
-                        float v = g2->y;
-                        g2->y = g->y - GetHeight(g2);
-                        v -= g2->y;
-                        float v2 = g2->y;
-                        if (g2->y <0)
+                        float v = g2->position.y;
+                        g2->position.y = g->position.y - GetHeight(g2);
+                        v -= g2->position.y;
+                        float v2 = g2->position.y;
+                        if (g2->position.y <0)
                         {
                             v = -1;
-                            g2->y=0;
+                            g2->position.y=0;
                         }
-                        if (g2->y + GetHeight(g2) > UI_START_Y)
+                        if (g2->position.y + GetHeight(g2) > UI_START_Y)
                         {
-                            g2->y = UI_START_Y - GetHeight(g2);
+                            g2->position.y = UI_START_Y - GetHeight(g2);
                             v = 1;
                         }
 
                         CheckCollisions(g2,false,-v,true);
-                        v2 -= g2->y;
-                        float v3 = g2->y;
+                        v2 -= g2->position.y;
+                        float v3 = g2->position.y;
                         CheckCollisionsWorld(g2,false,-v2);
-                        v3 -= g2->y;
+                        v3 -= g2->position.y;
                         //CheckCollisions(g2,false,v3,true);
 
                     }
                     else
                     {
-                        g->y = g2->y + al_get_bitmap_height(s2->sprite);
+                        g->position.y = g2->position.y + al_get_bitmap_height(s2->sprite);
 
                     }
                     
@@ -617,14 +617,14 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
 GameObject* GetCollidedWith(GameObject* g)
 {
     Sprite* s = &sprites[g->spriteIndex];
-    Rect rG = (Rect){g->x,g->y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)};
+    Rect rG = (Rect){g->position.x,g->position.y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)};
     for (int i = 0; i < numObjects; i++)
     {
         GameObject* g2 = &objects[i];
         if (g2 == g || !IsActive(g2)) 
             continue;
         Sprite* s2 = &sprites[g2->spriteIndex];
-        Rect r2 = (Rect){g2->x,g2->y,al_get_bitmap_width(s2->sprite),al_get_bitmap_height(s2->sprite)};
+        Rect r2 = (Rect){g2->position.x,g2->position.y,al_get_bitmap_width(s2->sprite),al_get_bitmap_height(s2->sprite)};
 
         if (!CheckIntersect(rG,r2))
         {
@@ -640,20 +640,20 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
         int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
     int h = al_get_bitmap_height(sprites[g->spriteIndex].sprite);
 
-    float posX = g->x;
-    float posY = g->y;
+    float posX = g->position.x;
+    float posY = g->position.y;
 
     if (posX < 0 || posX+w > _MAPSIZE)
     {
-        if (posX < 0) g->x = 0;
-        if (posX+w > _MAPSIZE) g->x = _MAPSIZE-w;
+        if (posX < 0) g->position.x = 0;
+        if (posX+w > _MAPSIZE) g->position.x = _MAPSIZE-w;
         return;
 
     }
     if (posY < 0 || posY+h > _MAPSIZE)
     {
-        if (posY < 0) g->y = 0;
-        if (posY+h > _MAPSIZE) g->y = _MAPSIZE-h;
+        if (posY < 0) g->position.y = 0;
+        if (posY+h > _MAPSIZE) g->position.y = _MAPSIZE-h;
         return;
     }
 
@@ -673,14 +673,14 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
         {
             if (currMap->collision[indexLeft] == false)
             {
-                g->x = ((indexLeft/(_MAPSIZE/_GRAIN))*_GRAIN)+_GRAIN;
+                g->position.x = ((indexLeft/(_MAPSIZE/_GRAIN))*_GRAIN)+_GRAIN;
             }
         }
         if (dV > 0)
         {
             if (currMap->collision[indexRight] == false)
             {
-                g->x = (indexRight/(_MAPSIZE/_GRAIN))*_GRAIN - w;
+                g->position.x = (indexRight/(_MAPSIZE/_GRAIN))*_GRAIN - w;
             }
         }
 
@@ -692,7 +692,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             if (currMap->collision[indexTop] == false)
             {
                 int yCoord = (indexTop%(_MAPSIZE/_GRAIN)+1)*_GRAIN;
-                g->y = yCoord;
+                g->position.y = yCoord;
             }
 
         }
@@ -701,7 +701,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             if (currMap->collision[indexBottom] == false)
             {
                 int yCoord = (indexBottom%(_MAPSIZE/_GRAIN))*_GRAIN - h;
-                g->y = yCoord;
+                g->position.y = yCoord;
             }
         }
     }
@@ -726,14 +726,14 @@ void Move(GameObject* g, float delta)
         GetCentre(g->targObj,&xtarg,&ytarg);
     }
 
-        float moveX = xtarg - g->x;
-        float moveY = ytarg - g->y;
+        float moveX = xtarg - g->position.x;
+        float moveY = ytarg - g->position.y;
 
         float dist = sqrt(moveX*moveX+moveY*moveY);
         if (dist <= DIST_DELTA)
         {
-            g->x = xtarg;
-            g->y = ytarg;
+            g->position.x = xtarg;
+            g->position.y = ytarg;
             return;
         }
         float dX = (moveX / dist * g->speed) * delta;
@@ -741,11 +741,11 @@ void Move(GameObject* g, float delta)
         float mDist = sqrt(dX * dX + dY * dY);
         if (dist <= mDist)
         {
-            dX = g->x-xtarg;
-            dY = g->y-ytarg;
+            dX = g->position.x-xtarg;
+            dY = g->position.y-ytarg;
 
-            g->x=xtarg;
-            g->y=ytarg;
+            g->position.x=xtarg;
+            g->position.y=ytarg;
 
             CheckCollisions(g,false, dY,ObjectCanPush(g));
             CheckCollisionsWorld(g,false, dY);
@@ -756,11 +756,11 @@ void Move(GameObject* g, float delta)
         }
 
 
-        g->y += dY;
+        g->position.y += dY;
         CheckCollisions(g,false, dY,ObjectCanPush(g));
         CheckCollisionsWorld(g,false, dY);
 
-        g->x += dX;
+        g->position.x += dX;
         CheckCollisions(g,true, dX,ObjectCanPush(g));
         CheckCollisionsWorld(g,true, dX);
 
@@ -776,8 +776,8 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
     int padding = 4;
 
     Rect r;
-    r.x = g->x;
-    r.y = g->y - padding;
+    r.x = g->position.x;
+    r.y = g->position.y - padding;
     r.w = al_get_bitmap_width(s->sprite);
     r.h = 2;
 
@@ -805,13 +805,13 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
     Sprite* s = &sprites[g->spriteIndex];
     //DrawSprite(&sprites[objects[i].spriteIndex],objects[i].x,objects[i].y,(ALLEGRO_COLOR){94/255.0f,98/255.0f,134/255.0f,255});
-    DrawSprite(s,g->x,g->y,c, IsSelected(g) || forceInverse);
+    DrawSprite(s,g->position.x,g->position.y,c, IsSelected(g) || forceInverse);
    
     Rect selectRect;
     selectRect.w = al_get_bitmap_width(s->sprite);
     selectRect.h = al_get_bitmap_height(s->sprite);
-    selectRect.x = g->x;
-    selectRect.y = g->y;
+    selectRect.x = g->position.x;
+    selectRect.y = g->position.y;
 
     DrawRoundedRect(selectRect, c);
     DrawHealthBar(g,c);
@@ -875,8 +875,8 @@ void AttackTarget(GameObject* g)
 Rect GetObjRect(GameObject* g)
 {
     if (!g) return (Rect){0,0,0,0};
-    if (g->spriteIndex <= 0) return (Rect){g->x,g->y,0,0};
-    Rect r = (Rect){g->x,g->y,al_get_bitmap_width(sprites[g->spriteIndex].sprite),al_get_bitmap_height(sprites[g->spriteIndex].sprite)};
+    if (g->spriteIndex <= 0) return (Rect){g->position.x,g->position.y,0,0};
+    Rect r = (Rect){g->position.x,g->position.y,al_get_bitmap_width(sprites[g->spriteIndex].sprite),al_get_bitmap_height(sprites[g->spriteIndex].sprite)};
     return r;
 }
 bool Damage(GameObject* g, float value)
@@ -921,22 +921,22 @@ void ModifyMaxHP(GameObject* g, float value)
 void Teleport(GameObject* g, float x, float y)
 {
     if (!g) return;
-    float beforeX = g->x;
-    float beforeY = g->y;
+    float beforeX = g->position.x;
+    float beforeY = g->position.y;
 
     float cX; float cY;
     GetOffsetCenter(g,&cX,&cY);
-    g->x = x - cX/2;
-    g->y = y - cY/2;
-    g->xtarg = g->x;
-    g->ytarg = g->y;
+    g->position.x = x - cX/2;
+    g->position.y = y - cY/2;
+    g->xtarg = g->position.x;
+    g->ytarg = g->position.y;
 
     //CheckCollisions(g,true,x-beforeX);
     //CheckCollisions(g,false,y-beforeY);
     GameObject* g2 = GetCollidedWith(g);
 
-    g->x = beforeX;
-    g->y = beforeY;
+    g->position.x = beforeX;
+    g->position.y = beforeY;
 
 
     float centreX; float centreY;
@@ -952,10 +952,10 @@ void Teleport(GameObject* g, float x, float y)
             float x; float y; float x2; float y2;
         } line; 
         int w = al_get_bitmap_width(sprites[g2->spriteIndex].sprite); int h =  al_get_bitmap_height(sprites[g2->spriteIndex].sprite); 
-        line VTop = {g2->x,g2->y,g2->x + w,g2->y}; 
-        line VRight = {g2->x + w, g2->y, g2->x + w, g2->y + h}; 
-        line VBottom = {g2->x, g2->y + h, g2->x + w, g2->y + h}; 
-        line VLeft = {g2->x,g2->y,g2->x,g2->y+h}; 
+        line VTop = {g2->position.x,g2->position.y,g2->position.x + w,g2->position.y}; 
+        line VRight = {g2->position.x + w, g2->position.y, g2->position.x + w, g2->position.y + h}; 
+        line VBottom = {g2->position.x, g2->position.y + h, g2->position.x + w, g2->position.y + h}; 
+        line VLeft = {g2->position.x,g2->position.y,g2->position.x,g2->position.y+h}; 
 
         float outX; float outY; 
         float closestX = FLT_MAX; float closestY = FLT_MAX;
@@ -998,28 +998,28 @@ void Teleport(GameObject* g, float x, float y)
         }
         float w2; float h2;
         GetOffsetCenter(g,&w2,&h2);
-        if (g->x < g2->x)
+        if (g->position.x < g2->position.x)
         {
-            g->x = closestX - w2;
+            g->position.x = closestX - w2;
         }
         else
         {
-            g->x = closestX;
+            g->position.x = closestX;
         }
 
-        if (g->y < g2->y)
+        if (g->position.y < g2->position.y)
         {
-            g->y = closestY - h2;
+            g->position.y = closestY - h2;
         }
         else
         {
-            g->y = closestY;
+            g->position.y = closestY;
         }
     }
     else
     {
-        g->x = x - cX/2;
-        g->y = y - cY/2;
+        g->position.x = x - cX/2;
+        g->position.y = y - cY/2;
 
     }
     GetCentre(g, &centreX, &centreY);
@@ -1028,8 +1028,8 @@ void Teleport(GameObject* g, float x, float y)
 
     if (currMap->collision[indexMid] == false)
     {
-        g->x = beforeX;
-        g->y = beforeY;
+        g->position.x = beforeX;
+        g->position.y = beforeY;
     }
 
 }
@@ -1047,8 +1047,8 @@ void GetOffsetCenter(GameObject* g, float* x, float* y)
 void GetCentre(GameObject* g, float* x, float* y)
 {
     
-    *x = g->x + al_get_bitmap_width(sprites[g->spriteIndex].sprite)/2.0f;
-    *y = g->y + al_get_bitmap_height(sprites[g->spriteIndex].sprite)/2.0f;
+    *x = g->position.x + al_get_bitmap_width(sprites[g->spriteIndex].sprite)/2.0f;
+    *y = g->position.y + al_get_bitmap_height(sprites[g->spriteIndex].sprite)/2.0f;
 
 }
 void DoAI(GameObject* g)
@@ -1148,8 +1148,8 @@ float GetHeight(GameObject* g)
 
 float RectDist(GameObject* g1, GameObject* g2)
 {
-    Rect r1 = (Rect){g1->x,g1->y,GetWidth(g1),GetHeight(g1)};
-    Rect r2 = (Rect){g2->x,g2->y,GetWidth(g2),GetHeight(g2)};
+    Rect r1 = (Rect){g1->position.x,g1->position.y,GetWidth(g1),GetHeight(g1)};
+    Rect r2 = (Rect){g2->position.x,g2->position.y,GetWidth(g2),GetHeight(g2)};
     Rect unioned = UnionRect(r1,r2);
     float dist = (unioned.w+unioned.h) - (r1.w+r2.w+r1.h+r2.h);
     return dist;

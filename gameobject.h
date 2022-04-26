@@ -8,6 +8,7 @@
 #include "rect.h"
 #include "threat.h"
 #include "command.h"
+#include "point.h"
 typedef enum GAMEOBJ_PROPERTIES
 {
     OBJ_SELECTED = 1,
@@ -54,7 +55,8 @@ typedef struct GameObject
     Effect effects[MAX_EFFECTS];
     Command queue[MAX_QUEUED_CMD];
 
-    float x; float  y;
+    Point position;
+    //float x; float  y;
     float health;
     float maxHP;
 

@@ -79,7 +79,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                     continue;
                 Sprite* sp = &sprites[obj->spriteIndex];
                 int j = al_get_bitmap_width(sp->sprite);
-                Rect rObj = (Rect){obj->x,obj->y,al_get_bitmap_width(sp->sprite),al_get_bitmap_height(sp->sprite)};
+                Rect rObj = (Rect){obj->position.x,obj->position.y,al_get_bitmap_width(sp->sprite),al_get_bitmap_height(sp->sprite)};
                 if (CheckIntersect(rObj,r))
                 {
                     if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
@@ -150,7 +150,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                             //g->ytarg = mouseState->y - h/2;
                         }
                         Sprite* s = &sprites[g->spriteIndex];
-                        Rect r = (Rect){g->x,g->y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)}; 
+                        Rect r = (Rect){g->position.x,g->position.y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)}; 
                         if (PointInRect(mouseState->x,mouseState->y,r))
                         {
                             for (int i = 0; i < players[0].numUnitsSelected; i++)
@@ -364,7 +364,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         int w = al_get_bitmap_width(sprites[currGameObjRunning->spriteIndex].sprite);
         int h = al_get_bitmap_height(sprites[currGameObjRunning->spriteIndex].sprite);
 
-        Rect r = (Rect){currGameObjRunning->x,currGameObjRunning->y,w,h};
+        Rect r = (Rect){currGameObjRunning->position.x,currGameObjRunning->position.y,w,h};
 
         bool shouldMove = true;
         bool shouldAttack = false;
@@ -379,10 +379,10 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
                 int wTarg = al_get_bitmap_width(sprites[currGameObjRunning->targObj->spriteIndex].sprite);
                 int hTarg = al_get_bitmap_height(sprites[currGameObjRunning->targObj->spriteIndex].sprite);
 
-                currGameObjRunning->xtarg = currGameObjRunning->targObj->x + wTarg/2;
-                currGameObjRunning->ytarg = currGameObjRunning->targObj->y + hTarg/2;
+                currGameObjRunning->xtarg = currGameObjRunning->targObj->position.x + wTarg/2;
+                currGameObjRunning->ytarg = currGameObjRunning->targObj->position.y + hTarg/2;
 
-                Rect r2 = (Rect){currGameObjRunning->targObj->x,currGameObjRunning->targObj->y,wTarg,hTarg};
+                Rect r2 = (Rect){currGameObjRunning->targObj->position.x,currGameObjRunning->targObj->position.y,wTarg,hTarg};
                 #define DISTDELTA 0.001f
                 Rect unioned = UnionRect(r,r2);
                 //if (RectsTouch(r, r2, currGameObjRunning->range+DISTDELTA))

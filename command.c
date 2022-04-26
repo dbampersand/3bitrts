@@ -48,7 +48,7 @@ void CastCommand(GameObject* g, GameObject* target, Ability* a, float x, float y
 void StopCommand(GameObject* g)
 {
     if (!g) return;
-    Command c = (Command){.x = g->x, .y = g->y, .commandType = COMMAND_STOP, .target = NULL, .ability = NULL};
+    Command c = (Command){.x = g->position.x, .y = g->position.y, .commandType = COMMAND_STOP, .target = NULL, .ability = NULL};
     AddCommand(g,c);
 }
 
@@ -63,8 +63,8 @@ void NextCommand(GameObject* g)
     if (g->queue[0].commandType == COMMAND_NONE)
     {
         g->targObj = NULL;
-        g->xtarg = g->x;
-        g->ytarg = g->y;
+        g->xtarg = g->position.x;
+        g->ytarg = g->position.y;
 
     }
 }
@@ -82,7 +82,7 @@ void DoCommands(GameObject* g)
         g->ytarg = c->y;
         g->targObj = NULL;
 
-        if (dist(g->x,g->y,c->x,c->y) <= DIST_DELTA)
+        if (dist(g->position.x,g->position.y,c->x,c->y) <= DIST_DELTA)
         {
             NextCommand(g);
             return;
@@ -109,7 +109,7 @@ void DoCommands(GameObject* g)
 
         if (AbilityCanBeCast(c->ability,g,c->target,c->x,c->y))
         {
-            CastAbility(g,c->ability,c->x,c->y,c->x-g->x,c->y-g->y,c->target);
+            CastAbility(g,c->ability,c->x,c->y,c->x-g->position.x,c->y-g->position.y,c->target);
             if (g->queue[1].commandType == COMMAND_NONE)
             {
                 if (c->target)
@@ -152,7 +152,7 @@ void DoCommands(GameObject* g)
         g->ytarg = c->y;
         g->targObj = NULL;
 
-        if (dist(g->x,g->y,c->x,c->y) <= DIST_DELTA)
+        if (dist(g->position.x,g->position.y,c->x,c->y) <= DIST_DELTA)
         {
             NextCommand(g);
             return;
