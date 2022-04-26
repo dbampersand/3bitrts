@@ -26,4 +26,9 @@ bool PointInCircle(float x, float y, float cx, float cy, float radius);
 void RotatePoint(int* x, int* y, int cx, int cy, float radius);
 float cotan(float i);   
 float Normalise(float v, float start, float end);
+int sign(float j);
+float DegToRad(float deg);
+float RadToDeg(float rad);
+float magnitude(float* x, float* y);
+void RotatePointF(float* x, float* y, float cx, float cy, float angle);
 

@@ -110,7 +110,10 @@ void Normalize(float* x, float* y)
     float mag = sqrt((*x**x)+(*y**y));
     *x /= mag;
     *y /= mag;
-
+}
+float magnitude(float* x, float* y)
+{
+    return  sqrt((*x**x)+(*y**y));
 }
 double RandRange(double min, double max)
 {
@@ -211,10 +214,37 @@ void RotatePoint(int* x, int* y, int cx, int cy, float angle)
     *x = xN + cx;
     *y = yN + cy;
 }
+void RotatePointF(float* x, float* y, float cx, float cy, float angle)
+{
+    *x -= cx;
+    *y -= cy;
+
+    int xN = *x * cos(angle) - *y * sin(angle);
+    int yN = *y * cos(angle) + *x * sin(angle);
+
+    *x = xN + cx;
+    *y = yN + cy;
+
+}
 float Normalise(float v, float start, float end)
 {
     float w = end-start;
     float offset = v - start;
 
     return (offset - (floor(offset/w)*w))+start;
+}
+int sign(float j)
+{
+    if (j < 0)
+        return -1;
+    else
+        return 1;
+}
+float DegToRad(float deg)
+{
+    return deg * M_PI/180.0f;
+}
+float RadToDeg(float rad)
+{
+    return rad * 180/M_PI;
 }
