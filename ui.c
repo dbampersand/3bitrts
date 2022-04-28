@@ -200,7 +200,7 @@ void InitUI()
     AddButton(&ui.mainMenuPanel,"Exit","Exit Game",80,96,16,15,true);
     
     
-    ui.currentPanel = &ui.mainMenuPanel;
+    ui.currentPanel =NULL;
 }
 bool GetButton(Panel* p, char* name)
 {

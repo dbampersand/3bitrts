@@ -76,12 +76,9 @@ void SwapPoint(int* x0, int* y0, int* x1, int* y1)
     *y1 = *y0;
     *y0 = temp;
 }
-float extra=0;
 
 bool PointInTri(int x0, int y0, int x1, int y1, int x2, int y2, int pX, int pY)
 {
-    //RotatePoint(&x1,&y1,x0,y0,extra);
-    //RotatePoint(&x2,&y2,x0,y0,extra);
 
     if (y0 > y1)
     {
@@ -239,9 +236,22 @@ void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO
     }
 
 }
+void GetConeVertices(int cx, int cy, int* x1, int* y1, int* x2, int* y2, float angle, float radius, int length)
+{
+    angle -= 45;
+    *x1 = cx + length; *y1 = cy + length;
+    *x2 = cx + length; *y2 = cy + length;
+
+    radius = radius * M_PI/180.0f;
+    angle = angle * M_PI/180.0f;
+    float l_r = length * M_PI/180.0f;
+
+    RotatePoint(x1,y1,cx,cy, -radius/2.0f+angle);
+    RotatePoint(x2,y2,cx,cy, radius/2.0f+angle);
+
+}
 void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR color)
 {
-    radius += extra;
 
     angle -= 45;
     int x2 = x + length; int y2 = y + length;

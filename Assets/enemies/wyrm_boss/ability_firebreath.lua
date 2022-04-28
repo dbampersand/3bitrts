@@ -2,7 +2,8 @@ function setup()
 
     SetAbilityRange(2)
     --AbilitySetCastType(ABILITY_CONE);
-    --SetAbilityHint(HINT_CONE,30);
+    SetAbilityHint(HINT_CONE,80);
+    SetAbilityCooldown(10); 
 
 end
 
@@ -12,13 +13,12 @@ function casted(x,y,obj,headingx,headingy)
     end
 
     f1 = {};
-    f1["trigger"] = TRIGGER_TIMER;
+    f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["triggersPerSecond"] = 5
-    f1["value"] = 2;  
-    f1["duration"] = 10;
-
-    ApplyEffect(obj,{f1});
+    f1["value"] = 50;  
+    center = GetCentre(GetObjRef());
+    centertarget = GetCentre(obj);
+    CreateCone(center.x,center.y,centertarget.x,centertarget.y,"", 80, 10, 10, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER,80, {f1})
     return true; 
 end
 

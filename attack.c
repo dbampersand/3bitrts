@@ -8,6 +8,8 @@
 #include <allegro5/allegro_primitives.h>
 #include "luafuncs.h"
 #include "ability.h"
+#include <math.h>
+#include "video.h"
 int attack_top = 0;
 
 void InitAttacks()
@@ -61,7 +63,7 @@ void RemoveAttack(int attackindex)
 void ApplyAttack(Attack* a, GameObject* target)
 {
     bool apply = true;
-    if (a->attackType == ATTACK_AOE)
+    if (a->attackType == ATTACK_AOE || a->attackType == ATTACK_CONE)
     {
         if (a->timer > a->tickrate)
         {
@@ -197,6 +199,19 @@ void DrawAttack(Attack* a, float dt)
         al_draw_circle(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)),1);
         draw_circle_dithered(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)),a->dither);
     }
+    else if (a->attackType == ATTACK_CONE)
+    {
+        float x2 = a->targx; float y2 = a->targy;
+        if (a->target)
+        {
+            GetCentre(a->target,&x2,&y2);
+            Normalize(&x2,&y2);
+            x2 *= a->radius;
+            y2 *= a->radius;
+        }
+        float angle = RadToDeg(atan2(y2-a->y,x2-a->x));
+        DrawCone(a->ownedBy->position.x,a->ownedBy->position.y,angle,a->radius,a->range,FRIENDLY);
+    }
     else
     {
         al_draw_filled_circle(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)));
@@ -245,7 +260,7 @@ void UpdateAttack(Attack* a, float dt)
         {
             MoveAngle(&a->x,&a->y,a->targx,a->targy,a->speed,dt);
         }
-        else if (a->attackType == ATTACK_AOE)
+        else if (a->attackType == ATTACK_AOE || a->attackType == ATTACK_CONE)
         {
 
         }
@@ -286,17 +301,34 @@ void UpdateAttack(Attack* a, float dt)
            // if (a->ownedBy == &objects[i])
              //   continue;
             Rect r = GetObjRect(&objects[i]);
-            if (CircleInRect(a->x,a->y,a->radius,r))
-            {   
-                ApplyAttack(a,&objects[i]);
-                if (a->attackType != ATTACK_AOE)
-                {  
-                    RemoveAttack(a-attacks);
-                    return;
+            if (a->attackType == ATTACK_AOE || a->attackType ==ATTACK_PROJECTILE_TARGETED || a->attackType ==   ATTACK_PROJECTILE_POINT ||a->attackType == ATTACK_PROJECTILE_ANGLE)
+            {
+                if (CircleInRect(a->x,a->y,a->radius,r))
+                {   
+                    ApplyAttack(a,&objects[i]);
+                    if (a->attackType != ATTACK_AOE && a->attackType != ATTACK_CONE)
+                    {  
+                        RemoveAttack(a-attacks);
+                        return;
+                    }
+                }
+            }
+            if (a->attackType == ATTACK_CONE)
+            {
+                float x2; float y2;
+                GetCentre(&objects[i],&x2,&y2);
+
+                float angle = RadToDeg(atan2(y2-a->y,x2-a->x));
+                int startX; int startY; int endX; int endY;
+                GetConeVertices(a->x,a->y,&startX,&startY,&endX,&endY,angle,a->radius,a->range);
+                if (isInsideSector(x2,y2,a->x,a->y,startX,startY,endX,endY,a->range,a->radius,angle))
+                {
+                    printf("ggggg");
+                    ApplyAttack(a,&objects[i]);
                 }
             }
         }
-        if (a->attackType == ATTACK_AOE)
+        if (a->attackType == ATTACK_AOE || a->attackType == ATTACK_CONE)
         {
             if (a->timer > a->tickrate)
             {

@@ -1194,6 +1194,7 @@ void UpdateChannellingdObj(GameObject* g, float dt)
         }
     }
 }
+float ang = 0;
 void DrawChannelHint(GameObject* g)
 {
 
@@ -1224,7 +1225,8 @@ void DrawChannelHint(GameObject* g)
         {
             float angle;
             angle = atan2(y2-y,x2-x);
-           // DrawCone(x,y,angle,a->radius)   
+            float length = dist(x,y,x2,y2);
+            DrawCone(x,y,RadToDeg(angle),90,a->hintRadius,ENEMY);   
         }
 
     }

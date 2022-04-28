@@ -194,6 +194,38 @@ int L_GetY(lua_State* l)
     }
     return 1;
 }
+int L_GetCentre(lua_State* l)
+{
+    GameObject* g;
+    if (!lua_isnumber(l,1))
+    {
+        g = currGameObjRunning;
+    }
+    else
+    {
+        int index = lua_tonumber(l,1);
+        if (index >= 0 && index < MAX_OBJS)
+        {
+            g = &objects[index];
+        }
+        else
+        {
+            g = currGameObjRunning;
+        }
+    }
+    lua_newtable(l);
+    float x; float y; 
+    GetCentre(g,&x,&y);
+    lua_pushstring(l,"x");
+    lua_pushnumber(l,x);
+    lua_settable(l,-3);
+
+    lua_pushstring(l,"y");
+    lua_pushnumber(l,y);
+    lua_settable(l,-3);
+
+    return 1;
+}
 int L_GetBetween(lua_State* l)
 {
     int objFrom = lua_tonumber(l,1);
@@ -601,22 +633,26 @@ int L_CreateCone(lua_State* l)
 {
     const float x = lua_tonumber(l,1);
     const float y = lua_tonumber(l,2);
-    const char* effectPortrait = lua_tostring(l,3);
-    const float radius = lua_tonumber(l,4);
-    const float tickrate = lua_tonumber(l,5);
-    const float duration = lua_tonumber(l, 6);
-    const bool shouldCallback = lua_toboolean(l, 7);
-    const int properties = lua_tonumber(l,8);
-    const int color = lua_tonumber(l,9);
-    const int dither = lua_tonumber(l,10);
-    size_t len =  lua_rawlen(l,11);
+    const float x2 = lua_tonumber(l,3);
+    const float y2 = lua_tonumber(l,4);
+
+    const char* effectPortrait = lua_tostring(l,5);
+    const float radius = lua_tonumber(l,6);
+    const float tickrate = lua_tonumber(l,7);
+    const float duration = lua_tonumber(l, 8);
+    const bool shouldCallback = lua_toboolean(l, 9);
+    const int properties = lua_tonumber(l,10);
+    const int color = lua_tonumber(l,11);
+    const int dither = lua_tonumber(l,12);
+    const float length = lua_tonumber(l,13);
+    size_t len =  lua_rawlen(l,14);
 
     Effect effects[len];    
     memset(effects,0,sizeof(Effect)*len);
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 11, i);
+        e = GetEffectFromTable(l, 14, i);
         e.from = currGameObjRunning;
         lua_remove(l,-1);
         effects[i-1] = e;
@@ -626,10 +662,10 @@ int L_CreateCone(lua_State* l)
     //memset(&a,0,sizeof(Attack));
     a.x = x;
     a.y = y;
-    a.targx = x;
-    a.targy = y;
-    a.radius = 0;
-    a.easing=0.1f;
+    a.targx = x2;
+    a.targy = y2;
+    a.easing=1.0;
+    a.radius = radius;
     a.targetRadius = radius;
     a.effects = calloc(len,sizeof(Effect));
     memcpy(a.effects,effects,sizeof(Effect)*len);
@@ -645,6 +681,7 @@ int L_CreateCone(lua_State* l)
     a.tickrate = tickrate;
     a.color = color;
     a.dither = dither;
+    a.range = length;
     Attack* ref = AddAttack(&a);
 
     lua_pushnumber(l,ref - attacks);
@@ -900,9 +937,6 @@ void SetGlobals(lua_State* l)
 
     lua_pushinteger(l,ABILITY_ANGLE);
     lua_setglobal(l,"ABILITY_ANGLE");
-
-    lua_pushinteger(l,ABILITY_CONE);
-    lua_setglobal(l,"ABILITY_CONE");
 
 
 
@@ -1212,6 +1246,11 @@ void SetLuaFuncs()
     lua_setglobal(luaState, "GetX");
     lua_pushcfunction(luaState, L_GetY);
     lua_setglobal(luaState, "GetY");
+
+    lua_pushcfunction(luaState, L_GetCentre);
+    lua_setglobal(luaState, "GetCentre");
+
+
 
     lua_pushcfunction(luaState, L_GetMouseX);
     lua_setglobal(luaState, "GetMouseX");

@@ -32,8 +32,8 @@ function update()
            -- CastAbility(1,{targ});
         end
         targ2 = {};
-        targ2["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_HEALER)
-        CastAbility(2,4,{targ2});
+        targ2["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_TANK)
+        CastAbility(3,0,{targ2});
 
     end
 
