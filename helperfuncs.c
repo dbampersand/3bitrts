@@ -248,3 +248,20 @@ float RadToDeg(float rad)
 {
     return rad * 180/M_PI;
 }
+float CircleRectDist(int cx, int cy, float radius, Rect r)
+{
+    Point cd;
+    cd.x = abs(cx - r.x);
+    cd.y = abs(cy - r.y);
+
+    if (cd.x > (r.w/2.0f + radius)) { return false; }
+    if (cd.y > (r.h/2.0f + radius)) { return false; }
+
+    if (cd.x <= (r.w/2.0f)) { return true; } 
+    if (cd.y <= (r.h/2.0f)) { return true; }
+
+    float cornerdistx = cd.x-r.w/2.0f;
+    float cornerdisty = cd.y-r.h/2.0f;
+
+    return (cornerdistx*cornerdistx + cornerdisty*cornerdisty <= radius*radius);
+}

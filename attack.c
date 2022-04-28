@@ -206,11 +206,12 @@ void DrawAttack(Attack* a, float dt)
         {
             GetCentre(a->target,&x2,&y2);
             Normalize(&x2,&y2);
-            x2 *= a->radius;
-            y2 *= a->radius;
+            x2 *= a->x + a->range;
+            y2 *= a->y + a->range;
+            al_draw_pixel(x2,y2,POISON);
         }
         float angle = RadToDeg(atan2(y2-a->y,x2-a->x));
-        DrawCone(a->ownedBy->position.x,a->ownedBy->position.y,angle,a->radius,a->range,FRIENDLY);
+        DrawCone(a->x,a->y,angle,a->radius,a->range,FRIENDLY);
     }
     else
     {
@@ -249,12 +250,12 @@ void UpdateAttack(Attack* a, float dt)
     a->timer += dt;
 
     currAttackRunning = a;
-    if (a->target)
+    if (a->target ) 
     {
-        Rect r = GetObjRect(a->target);
-        MoveTo(&a->x,&a->y,r.x+r.w/2.,r.y+r.h/2,a->speed,dt);
+       // Rect r = GetObjRect(a->target);
+        //MoveTo(&a->x,&a->y,r.x+r.w/2.,r.y+r.h/2,a->speed,dt);
     }
-    else
+    //else
     {
         if (a->attackType == ATTACK_PROJECTILE_ANGLE)
         {
@@ -319,12 +320,14 @@ void UpdateAttack(Attack* a, float dt)
                 GetCentre(&objects[i],&x2,&y2);
 
                 float angle = RadToDeg(atan2(y2-a->y,x2-a->x));
-                int startX; int startY; int endX; int endY;
-                GetConeVertices(a->x,a->y,&startX,&startY,&endX,&endY,angle,a->radius,a->range);
-                if (isInsideSector(x2,y2,a->x,a->y,startX,startY,endX,endY,a->range,a->radius,angle))
+                //int startX; int startY; int endX; int endY;
+                //GetConeVertices(a->x,a->y,&startX,&startY,&endX,&endY,angle,a->radius,a->range);
+                Rect r = GetObjRect(&objects[i]);
+                printf("bbb");
+                if (RectInCone(r,a->x,a->y,angle,a->radius,a->range))
                 {
-                    printf("ggggg");
                     ApplyAttack(a,&objects[i]);
+                    printf("gg");
                 }
             }
         }
@@ -340,6 +343,7 @@ void UpdateAttack(Attack* a, float dt)
     {
         currAbilityRunning = a->cameFrom;
         currGameObjRunning = a->ownedBy;
+        currAttackRunning = a;
 
         lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_tick);
 

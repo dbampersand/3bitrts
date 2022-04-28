@@ -45,6 +45,10 @@ int L_SetDescription(lua_State* l)
 }
 int L_SetAttackPosition(lua_State* l)
 {
+    int index = lua_tonumber(l,1);
+    currAttackRunning->x = lua_tonumber(l,2);
+    currAttackRunning->y = lua_tonumber(l,3);
+
     return 0;
 }
 int L_GetThisObj(lua_State* l)
@@ -103,8 +107,16 @@ int L_GetRandomUnit(lua_State* l)
             }
         }
     }
-    GameObject* randObj = list[rand()%numObjs];
-    lua_pushnumber(l,randObj-objects);
+    if (numObjs > 0)
+    {
+        GameObject* randObj = list[rand()%numObjs];
+         lua_pushnumber(l,randObj-objects);
+
+    }
+    else
+    {
+         lua_pushnumber(l,-1);
+    }
     free(list);
     return 1;
 }
@@ -626,6 +638,17 @@ int L_SetMovePoint(lua_State* l)
         currGameObjRunning->targetPosition.y = y-h/2;
         currGameObjRunning->targObj = NULL;
         MoveCommand(currGameObjRunning,x-w/2,y-w/2);
+    }
+    return 0;
+}
+int L_SetAttackTarget(lua_State* l)
+{
+    int indexAtk = lua_tonumber(l,1);
+    int indexTarget = lua_tonumber(l,2);
+
+    if (indexAtk >= 0 && indexAtk < MAX_ATTACKS && indexTarget >= 0 && indexTarget < MAX_OBJS)
+    {
+        attacks[indexAtk].target = &objects[indexTarget];
     }
     return 0;
 }
@@ -1386,4 +1409,12 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_CreateCone);
     lua_setglobal(luaState, "CreateCone");
+
+    lua_pushcfunction(luaState, L_SetAttackPosition);
+    lua_setglobal(luaState, "SetAttackPosition");
+
+    lua_pushcfunction(luaState, L_SetAttackTarget);
+    lua_setglobal(luaState, "SetAttackTarget");
+
+
 }

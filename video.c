@@ -4,6 +4,7 @@
 #include "colors.h"
 #include "helperfuncs.h"
 #include <float.h>
+#include "point.h"
 unsigned long long _FRAMES = 0;
 
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color)
@@ -235,6 +236,36 @@ void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO
 
     }
 
+}
+
+//TODO: this isn't an accurate function.
+//right now it will return true just when the center or corners are intersected
+//does this need fixed? Unlikely for a cone to be *that* small radius
+//either way, there should be a more efficient way to do this
+bool RectInCone(Rect r, int cx, int cy, float angle, float radius, float length)
+{
+    float dx = _MIN(cx-r.x,cx-r.x+r.w);
+    float dy = _MIN(cy-r.y,cy-r.y+r.h);
+    if (CircleRectDist(cx,cy,length,r))
+    {      
+        Point rc = (Point){r.x+r.w/2.0f,r.y+r.h/2.0f};
+        Point tl = (Point){r.x,r.y};
+        Point tr = (Point){r.x+r.w,r.y};
+        Point bl = (Point){r.x,r.y+r.h};
+        Point br = (Point){r.x+r.h,r.y+r.h};
+        
+        int startX; int startY; int endX; int endY;
+        GetConeVertices(cx,cy,&startX,&startY,&endX,&endY,angle,radius,length);
+        if (isInsideSector(rc.x, rc.y,cx,cy,startX,startY,endX,endY,length,radius,angle) ||
+            isInsideSector(tl.x, tl.y,cx,cy,startX,startY,endX,endY,length,radius,angle) ||
+            isInsideSector(tr.x, tr.y,cx,cy,startX,startY,endX,endY,length,radius,angle) ||
+            isInsideSector(bl.x, bl.y,cx,cy,startX,startY,endX,endY,length,radius,angle) ||
+            isInsideSector(br.x, br.y,cx,cy,startX,startY,endX,endY,length,radius,angle))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 void GetConeVertices(int cx, int cy, int* x1, int* y1, int* x2, int* y2, float angle, float radius, int length)
 {
