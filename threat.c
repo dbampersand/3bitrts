@@ -79,7 +79,7 @@ void DeleteThreat(Threat* t)
 }
 Threat* GetHighestThreat(Threat* threatList)
 {
-    int highest = -INT_MIN;
+    int highest = INT_MIN;
     Threat* next = threatList;
     Threat* highestThreat = NULL;
     while (1)

@@ -12,7 +12,7 @@ function setup()
     SetDamage(5);
 
     SetObjType(TYPE_TANK)
-    SetThreatMultiplier(3);
+    SetThreatMultiplier(5);
 
 
 end
