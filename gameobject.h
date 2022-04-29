@@ -89,7 +89,7 @@ typedef struct GameObject
 
 
     Threat threatList;
-
+    float threatMultiplier; 
 
     char properties;
     Point targetPosition;
@@ -105,7 +105,7 @@ typedef struct GameObject
     float channelled_x;
     float channelled_y;
     GameObject* channelled_target;
-    
+
     float target_heading_x;
     float target_heading_y;
 

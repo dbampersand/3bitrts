@@ -20,7 +20,7 @@ void AddThreat(GameObject* source, GameObject* target, int damage)
     {
         if (next->obj == source)
         {
-            next->threat += damage;
+            next->threat += damage * source->threatMultiplier;
             found = true;
             break;
         }

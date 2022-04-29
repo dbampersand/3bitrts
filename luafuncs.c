@@ -206,6 +206,11 @@ int L_GetY(lua_State* l)
     }
     return 1;
 }
+int L_SetThreatMultiplier(lua_State* l)
+{
+    currGameObjRunning->threatMultiplier = lua_tonumber(l,1);
+    return 0;
+}
 int L_GetCentre(lua_State* l)
 {
     GameObject* g;
@@ -1416,5 +1421,7 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_SetAttackTarget);
     lua_setglobal(luaState, "SetAttackTarget");
 
+    lua_pushcfunction(luaState, L_SetThreatMultiplier);
+    lua_setglobal(luaState, "SetThreatMultiplier");
 
 }

@@ -91,6 +91,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     currGameObjRunning = found; 
     memset(found->abilities,0,sizeof(Ability)*4);
     memset(currGameObjRunning,0,sizeof(GameObject));
+    currGameObjRunning->threatMultiplier = 1;
     currGameObjRunning->speed = 5;
     currGameObjRunning->health = 100;
     currGameObjRunning->maxHP = 100;

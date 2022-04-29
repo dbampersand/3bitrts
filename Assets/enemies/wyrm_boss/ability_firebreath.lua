@@ -16,11 +16,11 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 500;  
+    f1["value"] = 50;  
     center = GetCentre(GetObjRef());
     centertarget = GetCentre(obj);
     objTargetting = obj;
-    cone = CreateCone(center.x,center.y,centertarget.x,centertarget.y,"", 80, 0.1, 0.1, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER,80, {f1})
+    cone = CreateCone(center.x,center.y,centertarget.x,centertarget.y,"", 80, 0, 0, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER,80, {f1})
     SetAttackTarget(cone,objTargetting);
 
     return true; 
