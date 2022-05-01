@@ -8,6 +8,12 @@
 #include <math.h>
 #include "video.h"
 #include "sprite.h"
+void ChangeUIPanel(Panel* to)
+{
+    ui.animatePanel = true;
+    ui.changingTo = to;
+    ui.animatePanel = UI_ANIMATE_OUT;
+}
 void DrawHealthUIElement(GameObject* selected)
 {
     float percentHP = selected->health / selected->maxHP;
@@ -154,7 +160,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
 
         }
     }
-    DrawMenus();
+    DrawMenus(mouseState);
 }
 void AddElement(Panel* p, UIElement* u)
 {
@@ -189,16 +195,68 @@ void AddButton(Panel* p, char* name, char* description, int x, int w, int h, int
     u.x = x;
     AddElement(p,&u);
 }
+Panel CreatePanel(int x, int y, int w, int h, int padding)
+{
+    Panel p = {0};
+    p.x = x;
+    p.y = y;
+    p.w = w;
+    p.h = h;
+    p.padding = padding;
+    return p;
+}
+void TabGroup(int numPanels, ...)
+{
+    va_list argp;
+    va_start(argp, numPanels);
+
+    Panel** list = malloc(numPanels*sizeof(Panel*));
+    
+
+    for (int i = 0; i < numPanels; i++)
+    {
+        Panel* tab = va_arg(argp, Panel*);
+        list[i] = tab;
+    }
+    for (int i = 0; i < numPanels; i++)
+    {
+        if (list[i]->tabs)
+        {
+            free(list[i]->tabs);
+        }
+        list[i]->tabs = malloc(numPanels*sizeof(Panel*));
+        list[i]->numTabs = numPanels;
+        for (int j = 0; j < numPanels; j++)
+        {
+            list[i]->tabs[j] = list[j];
+        }
+    }
+    free(list);
+    va_end(argp);
+}
 void InitUI()
 {
-    ui.mainMenuPanel = (Panel){.elements = 0x0, .numElements = 0,.numElementsAllocated=0, .x = 48,.y=48, .w = 160,.h = 112,.shownPercent=0,.padding=15};
-    //AddButton(&ui.mainMenuPanel,"","Return",96,16,15,true,ALIGN_CENTER);
-    //AddButton(&ui.mainMenuPanel,"","Options",96,16,15,true,ALIGN_CENTER);
-    //AddButton(&ui.mainMenuPanel,"","Exit Game",96,16,15,true,ALIGN_CENTER);
+    ui.mainMenuPanel = CreatePanel(48,48,160,112,15);
     AddButton(&ui.mainMenuPanel,"Return","Return",80,96,16,15,true);
     AddButton(&ui.mainMenuPanel,"Options","Options",80,96,16,15,true);
     AddButton(&ui.mainMenuPanel,"Exit","Exit Game",80,96,16,15,true);
-    
+
+    ui.videoOptionsPanel = CreatePanel(48,48,160,112,15);
+    AddButton(&ui.videoOptionsPanel,"RenderScale+","+",80,96,16,15,true);
+    AddButton(&ui.videoOptionsPanel,"RenderScale-","-",80,96,16,15,true);
+
+    ui.audioOptionsPanel = CreatePanel(48,48,160,112,15);
+    AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 80,96,16,15,true);
+    AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",80,96,16,15,true);
+
+    ui.accessibilityOptionsPanel = CreatePanel(48,48,160,112,15);
+    AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 80,96,16,15,true);
+    AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",80,96,16,15,true);
+    TabGroup(3,&ui.videoOptionsPanel,&ui.audioOptionsPanel,&ui.accessibilityOptionsPanel);
+
+    ui.animatePanel = UI_ANIMATE_STATIC;
+    ui.panelShownPercent = 0;
+    ui.changingTo = NULL;
     
     ui.currentPanel =NULL;
 }
@@ -265,17 +323,47 @@ void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE*
     }
 
 }
-void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, float dt)
 {
     if (!al_key_down(keyState,ALLEGRO_KEY_P) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_P))
     {
         if (ui.currentPanel)
         {
-            ui.currentPanel = NULL;
+            ChangeUIPanel(NULL);
+            //ui.currentPanel = NULL;
         }
         else
         {
-            ui.currentPanel = &ui.mainMenuPanel;
+            ChangeUIPanel(&ui.mainMenuPanel);
+
+           // ui.currentPanel = &ui.mainMenuPanel;
+        }
+    }
+    if (ui.animatePanel != UI_ANIMATE_STATIC)
+    {
+        if (ui.changingTo)
+        {
+            if (ui.animatePanel == UI_ANIMATE_IN)
+            {
+                ui.panelShownPercent += dt;
+                if (ui.panelShownPercent >= 1)
+                {
+                    ui.panelShownPercent = 1;
+                    ui.animatePanel = UI_ANIMATE_STATIC;
+                    ui.currentPanel = ui.changingTo;
+                }
+            }
+            if (ui.animatePanel == UI_ANIMATE_OUT)
+            {
+                ui.panelShownPercent -= dt;
+                if (ui.panelShownPercent <= 0)
+                {
+                    ui.panelShownPercent = 0;
+                    ui.animatePanel = UI_ANIMATE_IN;
+                    ui.currentPanel = ui.changingTo;
+                }
+            }
+
         }
     }
     if (ui.currentPanel)
@@ -283,10 +371,11 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
         UpdatePanel(ui.currentPanel,mouseState,mouseStateLastFrame);
     }
 }
-void DrawButton(UIElement* u, int x, int y)
+void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState)
 {
     Button* b = (Button*)u->data;
     ALLEGRO_FONT* font = ui.font;
+    Rect button = (Rect){x,y,u->w,u->h};
     if (b->clicked)
     {
         al_draw_filled_rectangle(x,y,x+u->w,y+u->h,FRIENDLY);
@@ -300,13 +389,17 @@ void DrawButton(UIElement* u, int x, int y)
         al_draw_text(ui.font,FRIENDLY,x+u->w/2,y+u->h/2 - al_get_font_line_height(font)/2,ALLEGRO_ALIGN_CENTRE,b->description);
 
     }
+    if (PointInRect(mouseState->x,mouseState->y,button))
+    {
+        al_draw_rectangle(x+2,y+2,x+u->w-2,y+u->h-2,FRIENDLY,1);
+    }
 
 }
-void DrawUIElement(UIElement* u, int x, int y)
+void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState)
 {
     if (u->elementType == ELEMENT_BUTTON)
     {
-        DrawButton(u,x,y);
+        DrawButton(u,x,y,mouseState);
     }
 }
 void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)
@@ -332,32 +425,64 @@ void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)
             currX += u->w + u->padding + u->x;
         }
     }
+    if (p->tabs)
+    {
+        *x += 25;
+    }
 
 }
-void DrawPanel(Panel* p)
+void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
 {
+    al_set_clipping_rectangle(p->x-1,p->y,p->w+1,p->h*ui.panelShownPercent+1);
+
     al_draw_filled_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,BG);
     al_draw_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,FRIENDLY,1);
 
-    al_set_clipping_rectangle(p->x,p->y,p->w,p->h);
     int currX=p->x+p->padding; int currY=p->y+p->padding; 
-
+    for (int i = 0; i < p->numTabs; i++)
+    {
+        int x = p->x+p->padding;
+        int y = p->y*25*i+p->padding;
+        al_draw_rectangle(x,y,x+25,y+25,FRIENDLY,1);
+    }
     for (int i = 0; i < p->numElements; i++)
     {
         UIElement* u = ((UIElement*)&p->elements[i]);
         int x; int y;
         GetUILocation(p, u, &x, &y);
-        DrawUIElement(u,x,y);
+        DrawUIElement(u,x,y,mouseState);
 
     }
     al_reset_clipping_rectangle();
 
 
 }
-void DrawMenus()
+void AddPanelTabs(Panel* p, int numTabs, ...)
+{
+    va_list argp;
+    va_start(argp, numTabs);
+    if (!p->tabs)
+    {
+        p->tabs = malloc(numTabs * sizeof(Panel*));
+        p->numTabs = 0;
+    }
+    else
+    {
+        p->tabs = realloc(p->tabs,sizeof(Panel*)*(p->numTabs+numTabs));
+    }
+    for (int i = 0; i < numTabs; i++)
+    {
+        Panel* tab = va_arg(argp, Panel*);
+        p->tabs[i+p->numTabs] = tab;
+    }
+    p->numTabs = numTabs + p->numTabs;
+
+    va_end(argp);
+}
+void DrawMenus(ALLEGRO_MOUSE_STATE* mouseState)
 {
     if (ui.currentPanel)
-        DrawPanel(ui.currentPanel);
+        DrawPanel(ui.currentPanel,mouseState);
 }
 void LoadCursorSprite(UI* ui, int* index, char* path)
 {

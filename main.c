@@ -302,17 +302,27 @@ void GetControlGroup(ALLEGRO_KEYBOARD_STATE* keyState)
 }
 void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
-    UpdateUI(keyState,mouseState,keyStateLastFrame,mouseStateLastFrame);
+    UpdateUI(keyState,mouseState,keyStateLastFrame,mouseStateLastFrame,dt);
     if (ui.currentPanel == &ui.mainMenuPanel)
     {
         if (GetButton(&ui.mainMenuPanel,"Return"))
         {
             ui.currentPanel = NULL;
         }
+        if (GetButton(&ui.mainMenuPanel,"Options"))
+        {
+            ChangeUIPanel(&ui.videoOptionsPanel);
+        }
         if (GetButton(&ui.mainMenuPanel,"Exit"))
         {
             shouldExit = true;
         }
+
+
+    }
+    if (ui.currentPanel == &ui.mainMenuPanel)
+    {
+
     }
 }
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
@@ -737,7 +747,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             }
         }
     }
-    DrawMenus();
+    DrawMenus(mouseState);
 
     if (players[0].abilityHeld)
     {
