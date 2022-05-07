@@ -88,6 +88,11 @@ bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MO
     }
 
     DrawSprite(s,x,y,color,shouldInvert);
+
+    if (shouldInvert)
+        return true;
+    else
+        return false;
 }
 bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, ALLEGRO_MOUSE_STATE* mouseState)
 {
@@ -140,7 +145,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                 int h = GetDescriptionBoxH(selected->abilities[0].description,100,ui.font,UI_PADDING);
                 int x = 33 + ceil(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[0].description, 5, ui.font, x,y,100);
+                DrawDescriptionBox(selected->abilities[0].description, 5, ui.font, x,y,100,FRIENDLY);
             }
 
         }
@@ -151,7 +156,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                 int h = GetDescriptionBoxH(selected->abilities[1].description,100,ui.font,UI_PADDING);
                 int x = 65 + ceil(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[1].description, 5, ui.font, x,y,100);
+                DrawDescriptionBox(selected->abilities[1].description, 5, ui.font, x,y,100,FRIENDLY);
             }
 
         }
@@ -162,7 +167,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                 int h = GetDescriptionBoxH(selected->abilities[2].description,100,ui.font,UI_PADDING);
                 int x = 97 + ceil(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[2].description, 5, ui.font, x,y,100);
+                DrawDescriptionBox(selected->abilities[2].description, 5, ui.font, x,y,100,FRIENDLY);
 
             }
 
@@ -174,13 +179,13 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                 int h = GetDescriptionBoxH(selected->abilities[3].description,100,ui.font,UI_PADDING);
                 int x = 129 + ceil(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[3].description, 5, ui.font, x,y,100);
+                DrawDescriptionBox(selected->abilities[3].description, 5, ui.font, x,y,100,FRIENDLY);
             }
 
         }
     }
 }
-void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState)
+void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
     Encounter* e = encounters[selectedEncounterIndex];
     al_draw_text(ui.font,FRIENDLY,16,18,0,"Augment");
@@ -188,18 +193,45 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState)
 
     al_draw_line(10,73,246,73,FRIENDLY,1);
     
-    al_draw_text(ui.font,FRIENDLY,16,18,0,"Wyrm");
+    al_draw_text(ui.font,FRIENDLY,16,81,0,"Wyrm");
     DrawSprite(&sprites[e->spriteIndex],17,102,ENEMY,false);
 
-    DrawAbility(&e->abilities[0], 96, 80, ENEMY, mouseState);
-    DrawAbility(&e->abilities[1], 136, 80, ENEMY, mouseState);
-    DrawAbility(&e->abilities[2], 175, 80, ENEMY, mouseState);
-    DrawAbility(&e->abilities[3], 214, 80, ENEMY, mouseState);
-    DrawAbility(&e->abilities[4], 96, 134, ENEMY, mouseState);
-    DrawAbility(&e->abilities[5], 136, 134, ENEMY, mouseState);
-    DrawAbility(&e->abilities[6], 175, 134, ENEMY, mouseState);
-    DrawAbility(&e->abilities[7], 214, 134, ENEMY, mouseState);
+    Ability* mousedOver = NULL;
+    mousedOver = DrawAbility(&e->abilities[0], 96, 80, ENEMY, mouseState) == true ? &abilities[0] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[1], 136, 80, ENEMY, mouseState) == true ? &abilities[0] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[2], 175, 80, ENEMY, mouseState) == true ? &abilities[0] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[3], 214, 80, ENEMY, mouseState) == true ? &abilities[0] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[4], 96, 134, ENEMY, mouseState) == true ? &abilities[0] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[5], 136, 134, ENEMY, mouseState) == true ? &abilities[0] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[6], 175, 134, ENEMY, mouseState) == true ? &abilities[0] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[7], 214, 134, ENEMY, mouseState) == true ? &abilities[0] : mousedOver;
 
+
+    char* descriptionToDraw;
+    if (mousedOver)
+    {
+        descriptionToDraw = mousedOver->description;
+    }
+    else
+    {
+        descriptionToDraw = e->description;
+    }
+    if (descriptionToDraw)
+    {
+        DrawDescriptionBox(descriptionToDraw,2,ui.font,16,170,224,ENEMY);
+       // al_do_multiline_text(f,wTextbox,description,CB_GetHeight,size);
+
+    }
+    ui.panelShownPercent=1.0f;
+    //DrawPanel(&ui.encounter_scroll,mouseState);
+
+    UpdateButton(16,224,&ui.encounter_ButtonLeft,mouseState,mouseStateLastFrame);
+    UpdateButton(80,224,&ui.encounter_ButtonConfirm,mouseState,mouseStateLastFrame);
+    UpdateButton(192,224,&ui.encounter_ButtonRight,mouseState,mouseStateLastFrame);
+
+    DrawUIElement(&ui.encounter_ButtonLeft,16,224,mouseState);
+    DrawUIElement(&ui.encounter_ButtonConfirm,80,224,mouseState);
+    DrawUIElement(&ui.encounter_ButtonRight,192,224,mouseState);
 
 }
 void AddElement(Panel* p, UIElement* u)
@@ -274,6 +306,20 @@ void TabGroup(int numPanels, ...)
     free(list);
     va_end(argp);
 }
+void InitButton(UIElement* u, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak)
+{
+    Button* b = calloc(1,sizeof(Button));
+    b->description = description;
+    b->clicked = false; 
+    u->data = (void*)b;
+    u->w = w;
+    u->h = h;
+    u->padding = padding;
+    u->linebreak = shouldLinebreak;
+    u->name = name;
+    u->elementType = ELEMENT_BUTTON;
+    u->x = x;
+}
 void InitUI()
 {
     ui.mainMenuPanel = CreatePanel(48,48,160,112,15);
@@ -298,6 +344,15 @@ void InitUI()
     AddButton(&ui.startMenuPanel,"Start Game", "Start Game", 80,96,16,15,true);
     AddButton(&ui.startMenuPanel,"Options", "Options", 80,96,16,15,true);
     AddButton(&ui.startMenuPanel,"End Game", "End Game", 80,96,16,15,true);
+
+    ui.encounter_scroll = CreatePanel(16,224,224,16,0);
+    InitButton(&ui.encounter_ButtonLeft,"<","<",0,48,16,0,false);
+    InitButton(&ui.encounter_ButtonConfirm,"Select Party","Select Party",0,96,16,0,false);
+    InitButton(&ui.encounter_ButtonRight,">",">",0,48,16,0,false);
+
+    //AddButton(&ui.encounter_scroll,"<", "<", 16,49,16,16,false);
+    //AddButton(&ui.encounter_scroll,"Select Party", "Select Party", 80,96,16,15,false);
+    //AddButton(&ui.encounter_scroll,">", ">", 192,49,16,16,false);
 
     
 
@@ -370,6 +425,7 @@ void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE*
     }
 
 }
+
 void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, float dt)
 {
     if (!al_key_down(keyState,ALLEGRO_KEY_P) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_P))
@@ -596,6 +652,7 @@ typedef struct Text
     int x; 
     int y;
     int h; 
+    ALLEGRO_COLOR color;
 }Text;
 bool cb(int line_num, const char *line, int size, void *extra)
 {
@@ -608,7 +665,7 @@ bool cb(int line_num, const char *line, int size, void *extra)
 
     char* buff = calloc(size+1,sizeof(char));
     memcpy(buff,line,size*sizeof(char));
-    al_draw_text(f,WHITE,x,y,ALLEGRO_ALIGN_LEFT,buff);
+    al_draw_text(f,t->color,x,y,ALLEGRO_ALIGN_LEFT,buff);
     free(buff);
     return true;
 }
@@ -630,7 +687,7 @@ int GetDescriptionBoxH(char* description, int wTextbox, ALLEGRO_FONT* f, int pad
 
     return height;
 }
-void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, int y, int wTextbox)
+void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, int y, int wTextbox, ALLEGRO_COLOR color)
 {
     if (!description) return;
     int w;  
@@ -643,6 +700,7 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, 
     memcpy(size,&(Text){f,x,y,0},sizeof(Text));
     al_do_multiline_text(f,wTextbox,description,CB_GetHeight,size);
     Text* t = (Text*)size;
+    t->color = color;
     
     Rect r = (Rect){x,y,wTextbox+padding,t->h+padding};
     al_draw_filled_rectangle(r.x-padding,r.y-padding,x+r.w,y+r.h,BG);
@@ -651,11 +709,11 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, 
     r.y-=padding;
     r.w+=padding;
     r.h+=padding;
-    DrawOutlinedRect_Dithered(&r,FRIENDLY);
+    DrawOutlinedRect_Dithered(&r,color);
     
     //al_draw_multiline_text(f,FRIENDLY,x,y,wTextbox,8,ALLEGRO_ALIGN_LEFT,description);
     void* extra = malloc(sizeof(Text));
-    memcpy(extra,&(Text){f,x,y},sizeof(Text));
+    memcpy(extra,&(Text){.f=f,.x=x,.y=y,.color=color},sizeof(Text));
     
     al_do_multiline_text(f,wTextbox,description,cb,extra);
     free(extra);

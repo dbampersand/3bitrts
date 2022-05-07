@@ -689,7 +689,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     
     if (gameState == CHOOSING_ENCOUNTER)
     {
-        DrawLevelSelect(mouseState);
+        DrawLevelSelect(mouseState,mouseStateLastFrame);
         DrawMouse(mouseState, NULL);
         return;
     }
