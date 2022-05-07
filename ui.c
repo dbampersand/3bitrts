@@ -9,7 +9,7 @@
 #include "video.h"
 #include "sprite.h"
 #include "encounter.h"
-
+#include "gamestate.h"
 void ChangeUIPanel(Panel* to)
 {
     ui.animatePanel = true;
@@ -188,6 +188,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
 void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
     Encounter* e = encounters[selectedEncounterIndex];
+
     al_draw_text(ui.font,FRIENDLY,16,18,0,"Augment");
     al_draw_text(ui.font,FRIENDLY,84,18,0,"3");
 
@@ -225,14 +226,33 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     ui.panelShownPercent=1.0f;
     //DrawPanel(&ui.encounter_scroll,mouseState);
 
+
+
     UpdateButton(16,224,&ui.encounter_ButtonLeft,mouseState,mouseStateLastFrame);
     UpdateButton(80,224,&ui.encounter_ButtonConfirm,mouseState,mouseStateLastFrame);
     UpdateButton(192,224,&ui.encounter_ButtonRight,mouseState,mouseStateLastFrame);
 
-    DrawUIElement(&ui.encounter_ButtonLeft,16,224,mouseState);
-    DrawUIElement(&ui.encounter_ButtonConfirm,80,224,mouseState);
-    DrawUIElement(&ui.encounter_ButtonRight,192,224,mouseState);
+    DrawUIElement(&ui.encounter_ButtonLeft,16,224,mouseState,selectedEncounterIndex>0);
+    DrawUIElement(&ui.encounter_ButtonConfirm,80,224,mouseState,true);
+    DrawUIElement(&ui.encounter_ButtonRight,192,224,mouseState,selectedEncounterIndex+1<numEncounters);
 
+    if (GetButtonIsClicked(&ui.encounter_ButtonLeft))
+    {
+        selectedEncounterIndex--;
+        if (selectedEncounterIndex < 0)
+            selectedEncounterIndex = 0;
+    }
+    if (GetButtonIsClicked(&ui.encounter_ButtonConfirm))
+    {
+        gameState = INGAME;
+    }
+    if (GetButtonIsClicked(&ui.encounter_ButtonRight))
+    {
+        selectedEncounterIndex++;
+        if (selectedEncounterIndex >= numEncounters)
+            selectedEncounterIndex = numEncounters-1;
+
+    }
 }
 void AddElement(Panel* p, UIElement* u)
 {
@@ -474,12 +494,12 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
         UpdatePanel(ui.currentPanel,mouseState,mouseStateLastFrame);
     }
 }
-void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState)
+void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive)
 {
     Button* b = (Button*)u->data;
     ALLEGRO_FONT* font = ui.font;
     Rect button = (Rect){x,y,u->w,u->h};
-    if (b->clicked)
+    if (b->clicked && isActive)
     {
         al_draw_filled_rectangle(x,y,x+u->w,y+u->h,FRIENDLY);
         al_draw_rectangle(x,y,x+u->w,y+u->h,BG,1);
@@ -488,21 +508,28 @@ void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState)
     else
     {
         al_draw_filled_rectangle(x,y,x+u->w,y+u->h,BG);
-        al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
+        if (isActive)
+        {
+            al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
+        }
+        else
+        {
+            DrawOutlinedRect_Dithered(&button,FRIENDLY);
+        }
         al_draw_text(ui.font,FRIENDLY,x+u->w/2,y+u->h/2 - al_get_font_line_height(font)/2,ALLEGRO_ALIGN_CENTRE,b->description);
 
     }
-    if (PointInRect(mouseState->x,mouseState->y,button))
+    if (PointInRect(mouseState->x,mouseState->y,button) && isActive)
     {
         al_draw_rectangle(x+2,y+2,x+u->w-2,y+u->h-2,FRIENDLY,1);
     }
 
 }
-void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState)
+void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive)
 {
     if (u->elementType == ELEMENT_BUTTON)
     {
-        DrawButton(u,x,y,mouseState);
+        DrawButton(u,x,y,mouseState,isActive);
     }
 }
 void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)
@@ -553,7 +580,7 @@ void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
         UIElement* u = ((UIElement*)&p->elements[i]);
         int x; int y;
         GetUILocation(p, u, &x, &y);
-        DrawUIElement(u,x,y,mouseState);
+        DrawUIElement(u,x,y,mouseState,true);
 
     }
     al_reset_clipping_rectangle();
@@ -628,6 +655,15 @@ void LoadCursorSprite(UI* ui, int* index, char* path)
 
     al_unlock_bitmap(inverse);
 
+}
+bool GetButtonIsClicked(UIElement* u)
+{
+    if (u->elementType == ELEMENT_BUTTON)
+    {
+        Button* b = (Button*)(u->data);
+        return b->activated;
+    }
+    return false;
 }
 
 void DrawCursor(ALLEGRO_MOUSE_STATE* mouseState, int index, bool clicked)

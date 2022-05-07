@@ -23,6 +23,7 @@
 #include "animationeffect.h"
 #include "shield.h"
 #include "encounter.h"
+#include "gamestate.h"
 ALLEGRO_BITMAP* SCREEN;
 ALLEGRO_DISPLAY* display;
 
@@ -30,13 +31,6 @@ ALLEGRO_DISPLAY* display;
 int _TARGET_FPS = 60;
 
 bool shouldExit;
-typedef enum GameState {
-    MAIN_MENU,
-    CHOOSING_ENCOUNTER,
-    CHOOSING_UNITS,
-    INGAME
-} GameState;
-GameState gameState = CHOOSING_ENCOUNTER;
 void init()
 {
     objects = calloc(MAX_OBJS,sizeof(GameObject));
@@ -56,6 +50,7 @@ void init()
     numPrefabsAllocated = 1;
 
     players = calloc(2,sizeof(GameObject));
+    gameState = CHOOSING_ENCOUNTER;
 }
 void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState)
 {

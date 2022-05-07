@@ -1,7 +1,7 @@
 #pragma once
 #include "sprite.h"
 #include "rect.h"
-
+#include "stdbool.h"
 typedef struct ALLEGRO_FONT ALLEGRO_FONT;
 typedef struct Scrollbar
 {
@@ -120,10 +120,11 @@ void GetUILocation(Panel* p, UIElement* uF, int* x, int* y);
 void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, float dt);
 bool GetButton(Panel* p, char* name);
-void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState);
+void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive);
 void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState);
 void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void ChangeUIPanel(Panel* to);
 bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MOUSE_STATE* mouse);
 void InitButton(UIElement* u, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak);
 void AddButton(Panel* p, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak);
+bool GetButtonIsClicked(UIElement* u);
