@@ -1,7 +1,7 @@
 #include "sprite.h"
-#include <allegro5/allegro_ttf.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_image.h>
+#include "allegro5/allegro_ttf.h"
+#include "allegro5/allegro_font.h"
+#include "allegro5/allegro_image.h"
 #include "gameobject.h"
 #include "float.h"
 #include "colors.h"
@@ -36,7 +36,10 @@ void GenerateInvertedSprite(Sprite* s)
             al_put_pixel(x,y,transparent);
         }
         else
+        {
             al_put_pixel(x,y,white);
+            
+        }
 
       }
     }

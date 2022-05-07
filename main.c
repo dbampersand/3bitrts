@@ -1,9 +1,9 @@
 
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_ttf.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_image.h>
-#include <allegro5/allegro_primitives.h>
+#include "allegro5/allegro.h"
+#include "allegro5/allegro_ttf.h"
+#include "allegro5/allegro_font.h"
+#include "allegro5/allegro_image.h"
+#include "allegro5/allegro_primitives.h"
 
 
 #include "gameobject.h"
@@ -22,6 +22,7 @@
 #include <math.h>
 #include "animationeffect.h"
 #include "shield.h"
+#include "encounter.h"
 ALLEGRO_BITMAP* SCREEN;
 ALLEGRO_DISPLAY* display;
 
@@ -29,6 +30,13 @@ ALLEGRO_DISPLAY* display;
 int _TARGET_FPS = 60;
 
 bool shouldExit;
+typedef enum GameState {
+    MAIN_MENU,
+    CHOOSING_ENCOUNTER,
+    CHOOSING_UNITS,
+    INGAME
+} GameState;
+GameState gameState = CHOOSING_ENCOUNTER;
 void init()
 {
     objects = calloc(MAX_OBJS,sizeof(GameObject));
@@ -317,11 +325,14 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_S
         {
             shouldExit = true;
         }
-
-
     }
-    if (ui.currentPanel == &ui.mainMenuPanel)
+    if (ui.currentPanel == &ui.startMenuPanel)
     {
+        if (GetButton(&ui.startMenuPanel,"Start Game"))
+        {
+            ui.currentPanel = NULL;
+            gameState = CHOOSING_ENCOUNTER;
+        }
 
     }
 }
@@ -624,7 +635,32 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
 
 }
+void DrawMouse(ALLEGRO_MOUSE_STATE* mouseState, GameObject* mousedOver)
+{
+    if (players[0].abilityHeld)
+    {
+        DrawCursor(mouseState, ui.cursorCastingIndex, false);
+    }
+    else if (mousedOver)
+    {
+        if (mousedOver->properties & OBJ_OWNED_BY && players[0].numUnitsSelected > 0)
+            DrawCursor(mouseState, ui.cursorAttackIndex,false);
+        else if (!(mousedOver->properties & OBJ_OWNED_BY))
+            DrawCursor(mouseState, ui.cursorFriendlyIndex, false);
+        else
+            DrawCursor(mouseState, ui.cursorDefaultIndex, false);
 
+    }
+    else if (players[0].amoveSelected)
+    {
+        DrawCursor(mouseState, ui.cursorAttackIndex,false);
+    }
+    else 
+    {
+        DrawCursor(mouseState, ui.cursorDefaultIndex, false);
+    }
+
+}
 void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState)
 {
     Vector2 endSelection = (Vector2){mouseState.x,mouseState.y};
@@ -650,6 +686,14 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     al_grab_mouse(display);
 
     al_set_target_bitmap(SCREEN);
+    
+    if (gameState == CHOOSING_ENCOUNTER)
+    {
+        DrawLevelSelect(mouseState);
+        DrawMouse(mouseState, NULL);
+        return;
+    }
+    
     DrawSprite(&sprites[currMap->spriteIndex],0,0,GROUND,false);
     DrawAttacks(dt);
 
@@ -722,7 +766,13 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             al_draw_line(cx,cy,x,y,FRIENDLY,1);
         }
     }
-    DrawUI(keyState, keyStateLastFrame, mouseState);
+    if (gameState == MAIN_MENU)
+    {
+        al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+    }
+    if (gameState != MAIN_MENU)
+        DrawUI(keyState, keyStateLastFrame, mouseState);
+    DrawMenus(mouseState);
 
     if (al_key_down(keyState,ALLEGRO_KEY_F) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_F))
     {
@@ -748,32 +798,16 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         }
     }
     DrawMenus(mouseState);
-
-    if (players[0].abilityHeld)
-    {
-        DrawCursor(mouseState, ui.cursorCastingIndex, false);
-    }
-    else if (mousedOver)
-    {
-        if (mousedOver->properties & OBJ_OWNED_BY && players[0].numUnitsSelected > 0)
-            DrawCursor(mouseState, ui.cursorAttackIndex,false);
-        else if (!(mousedOver->properties & OBJ_OWNED_BY))
-            DrawCursor(mouseState, ui.cursorFriendlyIndex, false);
-        else
-            DrawCursor(mouseState, ui.cursorDefaultIndex, false);
-
-    }
-    else if (players[0].amoveSelected)
-    {
-        DrawCursor(mouseState, ui.cursorAttackIndex,false);
-    }
-    else 
-    {
-        DrawCursor(mouseState, ui.cursorDefaultIndex, false);
-    }
+    DrawMouse(mouseState, mousedOver);
     players[0].clickedThisFrame = NULL;
     
     //DrawCone(160, 160, 60, 270, 10,FRIENDLY);
+}
+
+void DrawMainMenu()
+{
+    al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+
 }
 int main(int argc, char* args[])
 {
@@ -805,6 +839,9 @@ int main(int argc, char* args[])
     POISON = al_map_rgba(195,94,241,255);
     DAMAGE = al_map_rgba(248,100,100,255);
 
+    LoadEncounters("Assets/Encounters",luaState);
+
+
 
 
     //dodge a lot of crashes by setting the 0th sprite to a zeroed bitmap
@@ -834,10 +871,9 @@ int main(int argc, char* args[])
 
     //lua_rawgeti(luaState,LUA_REGISTRYINDEX,boss.luafunc_setup);
     //lua_pcall(luaState,0,0,0);
-
+    //Map* selectionMap = 
     Map* m = LoadMap("Assets/Encounters/01/map.lua");  
     SetMap(&maps[0]);
-    PreprocessMap(m);
     
     GameObject* g = LoadPrefab("Assets/Friendly/Bard/bard.lua");
     SetOwnedBy(g, 0);
@@ -879,6 +915,10 @@ int main(int argc, char* args[])
    al_get_keyboard_state(&keyStateLastFrame);
    ALLEGRO_MOUSE_STATE mouseStateLastFrame;
     mouseStateLastFrame = GetMouseClamped();
+    if (gameState == MAIN_MENU)
+    {
+        ChangeUIPanel(&ui.startMenuPanel);
+    }
 
     while (!shouldExit) {
         
@@ -893,7 +933,7 @@ int main(int argc, char* args[])
 
             al_set_target_bitmap(SCREEN);
             al_clear_to_color(al_map_rgb(40,32,36));
-    
+
             if (!ui.currentPanel)
                 Update(1/(float)_TARGET_FPS,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
             UpdateInterface(1/(float)_TARGET_FPS,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);

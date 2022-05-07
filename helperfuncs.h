@@ -1,6 +1,6 @@
 #pragma once
 
-#include <allegro5/allegro.h>
+#include "allegro5/allegro.h"
 #include "rect.h"
 #define DIST_DELTA 1
 

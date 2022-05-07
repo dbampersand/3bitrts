@@ -4,6 +4,8 @@ function setup()
     --AbilitySetCastType(ABILITY_CONE);
     SetAbilityHint(HINT_CONE,80);
     SetAbilityCooldown(10); 
+    AbilitySetPortrait("Assets/enemies/wyrm_boss/ability_firebreath.png");
+
 
 end
 local cone = -1
@@ -16,7 +18,7 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 50;  
+    f1["value"] = 10;  
     center = GetCentre(GetObjRef());
     centertarget = GetCentre(obj);
     objTargetting = obj;

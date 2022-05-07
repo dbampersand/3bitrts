@@ -8,7 +8,7 @@
 #include "helperfuncs.h"
 #include "colors.h"
 #include "video.h"
-#include <allegro5/allegro_primitives.h>
+#include "allegro5/allegro_primitives.h"
 #include "animationeffect.h"
 #include <stdlib.h>
 #include "video.h"
@@ -16,6 +16,7 @@
 #include "shield.h"
 #include "player.h"
 #include "ui.h"
+#include "encounter.h"
 void RemoveObjFromSelection(GameObject* g)
 {
     for (int i = 0; i < MAXUNITSSELECTED; i++)

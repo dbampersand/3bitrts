@@ -1,6 +1,8 @@
 function setup()
     SetAbilityRange(2)
     SetAbilityCooldown(10)
+    AbilitySetPortrait("Assets/enemies/wyrm_boss/ability_fire.png");
+
 end
 
 function casted(x,y,obj,headingx,headingy)

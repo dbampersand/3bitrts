@@ -2,12 +2,14 @@
 #include "gameobject.h"
 #include "colors.h"
 #include "player.h"
-#include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_font.h>
+#include "allegro5/allegro_primitives.h"
+#include "allegro5/allegro.h"
+#include "allegro5/allegro_font.h"
 #include <math.h>
 #include "video.h"
 #include "sprite.h"
+#include "encounter.h"
+
 void ChangeUIPanel(Panel* to)
 {
     ui.animatePanel = true;
@@ -69,7 +71,24 @@ Rect GetAbilityPortraitRect(int index)
 
 
 }
+bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MOUSE_STATE* mouse)
+{
+    Sprite* s = &sprites[ability->spriteIndex_Portrait];
+    int w = al_get_bitmap_width(s->sprite);
+    int h = al_get_bitmap_height(s->sprite);
 
+    Rect r = (Rect){x,y,w,h};
+    if (w > 0 && h > 0)
+        al_draw_rectangle(x,y,x+w,y+h,color,1);
+    bool shouldInvert = false;
+
+    if (PointInRect(mouse->x,mouse->y,r))
+    {
+        shouldInvert = true;
+    }
+
+    DrawSprite(s,x,y,color,shouldInvert);
+}
 bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, ALLEGRO_MOUSE_STATE* mouseState)
 {
     if (selected->abilities[index].spriteIndex_Portrait <= 0) 
@@ -160,7 +179,28 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
 
         }
     }
-    DrawMenus(mouseState);
+}
+void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState)
+{
+    Encounter* e = encounters[selectedEncounterIndex];
+    al_draw_text(ui.font,FRIENDLY,16,18,0,"Augment");
+    al_draw_text(ui.font,FRIENDLY,84,18,0,"3");
+
+    al_draw_line(10,73,246,73,FRIENDLY,1);
+    
+    al_draw_text(ui.font,FRIENDLY,16,18,0,"Wyrm");
+    DrawSprite(&sprites[e->spriteIndex],17,102,ENEMY,false);
+
+    DrawAbility(&e->abilities[0], 96, 80, ENEMY, mouseState);
+    DrawAbility(&e->abilities[1], 136, 80, ENEMY, mouseState);
+    DrawAbility(&e->abilities[2], 175, 80, ENEMY, mouseState);
+    DrawAbility(&e->abilities[3], 214, 80, ENEMY, mouseState);
+    DrawAbility(&e->abilities[4], 96, 134, ENEMY, mouseState);
+    DrawAbility(&e->abilities[5], 136, 134, ENEMY, mouseState);
+    DrawAbility(&e->abilities[6], 175, 134, ENEMY, mouseState);
+    DrawAbility(&e->abilities[7], 214, 134, ENEMY, mouseState);
+
+
 }
 void AddElement(Panel* p, UIElement* u)
 {
@@ -253,6 +293,13 @@ void InitUI()
     AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 80,96,16,15,true);
     AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",80,96,16,15,true);
     TabGroup(3,&ui.videoOptionsPanel,&ui.audioOptionsPanel,&ui.accessibilityOptionsPanel);
+
+    ui.startMenuPanel = CreatePanel(48,48,160,112,15);
+    AddButton(&ui.startMenuPanel,"Start Game", "Start Game", 80,96,16,15,true);
+    AddButton(&ui.startMenuPanel,"Options", "Options", 80,96,16,15,true);
+    AddButton(&ui.startMenuPanel,"End Game", "End Game", 80,96,16,15,true);
+
+    
 
     ui.animatePanel = UI_ANIMATE_STATIC;
     ui.panelShownPercent = 0;

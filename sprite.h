@@ -1,7 +1,7 @@
 
 
 #pragma once
-#include <allegro5/allegro.h>
+#include "allegro5/allegro.h"
 
 unsigned int _RENDERSIZE;
 #define _SCREEN_SIZE 256

@@ -7,6 +7,8 @@
 #include "animationeffect.h"
 #include <math.h>
 #include "colors.h"
+#include "encounter.h"
+#include "sprite.h"
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);
   for (int i=1; i <= top; i++) {
@@ -30,6 +32,33 @@ static void dumpstack (lua_State* l) {
     }
   }
 }
+int L_SetEncounterSprite(lua_State* l)
+{
+    const char* path = lua_tostring(l,1);
+    
+    currEncounterRunning->spriteIndex = LoadSprite(path,true);
+    return 0;
+}
+int L_SetEncounterDescription(lua_State* l)
+{
+    const char* str = lua_tostring(l,1);
+    currEncounterRunning->description = calloc(strlen(str)+1,sizeof(char));
+    strcpy(currEncounterRunning->description,str);
+    return 0;
+}
+int L_AddEncounterAbility(lua_State* l)
+{
+    const char* str = lua_tostring(l,1);
+    int index = lua_tonumber(l,2);
+    int ascendLevel = lua_tonumber(l,3);
+
+    if (index >= 0 && index < 8)
+    {
+        LoadAbility(str,l,&currEncounterRunning->abilities[index]);
+    }
+}
+
+
 int L_SetRange(lua_State* l)
 {
     currGameObjRunning->range = lua_tonumber(l,1);
@@ -898,6 +927,7 @@ int L_SetSpeed(lua_State* l)
 
 void SetGlobals(lua_State* l)
 {
+    //-- Enums -- 
     lua_pushinteger(l,0);
     lua_setglobal(l,"PLAYER");
 
@@ -1252,6 +1282,9 @@ void SetLuaFuncs()
 {
     SetGlobals(luaState);
 
+
+    //Functions for the scripting API
+
     lua_pushcfunction(luaState, L_Print);
     lua_setglobal(luaState, "Print");
 
@@ -1423,5 +1456,14 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetThreatMultiplier);
     lua_setglobal(luaState, "SetThreatMultiplier");
+
+    lua_pushcfunction(luaState, L_SetEncounterSprite);
+    lua_setglobal(luaState, "SetEncounterSprite");
+
+    lua_pushcfunction(luaState, L_SetEncounterDescription);
+    lua_setglobal(luaState, "SetEncounterDescription");
+
+    lua_pushcfunction(luaState, L_AddEncounterAbility);
+    lua_setglobal(luaState, "AddEncounterAbility");
 
 }

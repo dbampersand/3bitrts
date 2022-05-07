@@ -77,6 +77,7 @@ typedef struct UI
     #define UI_MAIN_MENU_H 112
 
     Panel* currentPanel;
+    Panel startMenuPanel;
     Panel mainMenuPanel;
     Panel videoOptionsPanel;
     Panel audioOptionsPanel;
@@ -114,4 +115,6 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
 bool GetButton(Panel* p, char* name);
 void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState);
 void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState);
+void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState);
 void ChangeUIPanel(Panel* to);
+bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MOUSE_STATE* mouse);

@@ -1,5 +1,5 @@
 #include "video.h"
-#include <allegro5/allegro_primitives.h>
+#include "allegro5/allegro_primitives.h"
 #include <math.h>
 #include "colors.h"
 #include "helperfuncs.h"

@@ -5,7 +5,7 @@
 #include "gameobject.h"
 #include "helperfuncs.h"
 #include "colors.h"
-#include <allegro5/allegro_primitives.h>
+#include "allegro5/allegro_primitives.h"
 #include "luafuncs.h"
 #include "ability.h"
 #include <math.h>

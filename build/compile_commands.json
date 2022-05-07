@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/Users/Emi/Documents/3bitrts/build",
+  "command": "/usr/bin/clang++   -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk -o CMakeFiles/3bitrts.dir/main.cpp.o -c /Users/Emi/Documents/3bitrts/main.cpp",
+  "file": "/Users/Emi/Documents/3bitrts/main.cpp"
+}
+]

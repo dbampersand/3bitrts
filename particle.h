@@ -1,7 +1,7 @@
 #pragma once
 #define MAX_PARTICLES 256
 #include "stdbool.h"
-#include <allegro5/allegro.h>
+#include "allegro5/allegro.h"
 
 typedef enum PARTICLE_PROPERTIES
 {

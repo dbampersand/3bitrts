@@ -3,7 +3,7 @@
 
 #include "sprite.h"
 #include "ability.h"
-#include <allegro5/allegro.h>
+#include "allegro5/allegro.h"
 #include "effect.h"
 #include "rect.h"
 #include "threat.h"
