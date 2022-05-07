@@ -7,4 +7,6 @@ function setup()
     AddEncounterAbility("Assets/enemies/wyrm_boss/ability_fire.lua",2,0);
     AddEncounterAbility("Assets/enemies/wyrm_boss/ability_nuke.lua",3,0);
 
+
+    SetEncounterMapPath("Assets/Encounters/01/map.lua");
 end

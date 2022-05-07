@@ -13,6 +13,8 @@ function setup()
     SetRange(1)
 
     SetObjType(TYPE_MELEEDPS);
+    IsPlayerChoosable(true);
+
 
 
 

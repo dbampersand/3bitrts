@@ -924,7 +924,11 @@ int L_SetSpeed(lua_State* l)
     currGameObjRunning->speed = lua_tonumber(l,1);
     return 0;
 }
-
+int L_IsPlayerChoosable(lua_State* l)
+{
+    currGameObjRunning->playerChoosable = lua_toboolean(l,1);
+    return 0;
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -1277,6 +1281,13 @@ int L_AbilitySetPortrait(lua_State* l)
     currAbilityRunning->spriteIndex_Portrait = LoadSprite(lua_tostring(l,-1),true);
     return 1;   
 }
+int L_SetEncounterMapPath(lua_State* l)
+{
+    const char* str = lua_tostring(l,1);
+    currEncounterRunning->mapPath = calloc(strlen(str)+1,sizeof(char));
+    strcpy(currEncounterRunning->mapPath,str);
+    return 0;
+}
 
 void SetLuaFuncs()
 {
@@ -1465,5 +1476,12 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_AddEncounterAbility);
     lua_setglobal(luaState, "AddEncounterAbility");
+
+
+    lua_pushcfunction(luaState, L_SetEncounterMapPath);
+    lua_setglobal(luaState, "SetEncounterMapPath");
+
+    lua_pushcfunction(luaState, L_IsPlayerChoosable);
+    lua_setglobal(luaState, "IsPlayerChoosable");
 
 }

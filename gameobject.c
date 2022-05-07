@@ -332,38 +332,37 @@ void KillObj(GameObject* g)
     }
 }   
 
-void LoadFolderPrefabs(const char* dirPath)
+void LoadFolderPrefabs(const char* dirPath, char* name)
 {
     DIR *d;
 
     struct dirent *dir;
     d = opendir(dirPath);
 
+    char* file = calloc(strlen(name)+strlen(".lua")+1,sizeof(char));
+    strcpy(file,name);
+    strcat(file,".lua");
+
+
     if (d) {
         while ((dir = readdir(d)) != NULL) {
             if (dir->d_type == DT_REG &&  strcmp(dir->d_name,".DS_Store")!=0 && strlen(dir->d_name) > 0)
             {
-                char* tok = strtok(dir->d_name,".");
-                tok = strtok(NULL,".");
-                if (tok)
+
+                if (strcasecmp(dir->d_name,file) == 0)
                 {
-                    if (strcmp(tok,"lua") == 0)
-                    {
-                        char* dirConcat = calloc(strlen(dirPath)+strlen("/")+strlen(".lua")+strlen(dir->d_name)+1,sizeof(char));
-                        strcpy(dirConcat,dirPath);
-                        strcat(dirConcat,"/");
-                        strcat(dirConcat,dir->d_name);
-                        strcat(dirConcat,".lua");
-                        GameObject g;
-                        loadLuaGameObj(luaState,dirConcat,&g);
-                        
-                        free(dirConcat);
-                    }
-            }
+                    char* dirConcat = calloc(strlen(dirPath)+strlen("/")+strlen(".lua")+strlen(dir->d_name)+1,sizeof(char));
+                    strcpy(dirConcat,dirPath);
+                    strcat(dirConcat,dir->d_name);
+                    GameObject g;
+                    //loadLuaGameObj(luaState,dirConcat,&g);
+                    LoadPrefab(dirConcat);
+                    free(dirConcat);
+                }
             }
         }
     }
-    
+    free(file);
 
 
 }
@@ -371,7 +370,7 @@ GameObject* LoadPrefab(const char* path)
 {
     for (int i = 0; i < numPrefabs; i++)
     {
-        if (strcmp(prefabs[i].path,path)==0)
+        if (strcasecmp(prefabs[i].path,path)==0)
         {
             return &prefabs[i];
         }
@@ -409,8 +408,8 @@ void LoadPrefabs(const char* dirPath)
                 strcat(dirConcat,"/");
                 strcat(dirConcat,dir->d_name);
                 strcat(dirConcat,"/");
-                LoadFolderPrefabs(dirConcat);
-                LoadPrefabs(dirConcat);
+                LoadFolderPrefabs(dirConcat,dir->d_name);
+                //LoadPrefabs(dirConcat);
                 free(dirConcat);
             }
         }

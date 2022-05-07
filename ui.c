@@ -10,6 +10,7 @@
 #include "sprite.h"
 #include "encounter.h"
 #include "gamestate.h"
+#include "map.h"
 void ChangeUIPanel(Panel* to)
 {
     ui.animatePanel = true;
@@ -244,7 +245,9 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     }
     if (GetButtonIsClicked(&ui.encounter_ButtonConfirm))
     {
-        gameState = INGAME;
+        //SetMap(LoadMap(e->mapPath));  
+        gameState = CHOOSING_UNITS;
+        //gameState = INGAME;
     }
     if (GetButtonIsClicked(&ui.encounter_ButtonRight))
     {

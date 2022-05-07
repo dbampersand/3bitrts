@@ -13,6 +13,7 @@ function setup()
 
     SetObjType(TYPE_TANK)
     SetThreatMultiplier(5);
+    IsPlayerChoosable(true);
 
 
 end

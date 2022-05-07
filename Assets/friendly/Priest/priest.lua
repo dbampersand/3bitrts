@@ -13,6 +13,8 @@ function setup()
     SetRange(100)
 
     SetObjType(TYPE_HEALER);
+    IsPlayerChoosable(true);
+
 
 
 

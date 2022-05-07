@@ -688,6 +688,10 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         DrawMouse(mouseState, NULL);
         return;
     }
+    if (gameState == CHOOSING_UNITS)
+    {
+
+    }
     
     DrawSprite(&sprites[currMap->spriteIndex],0,0,GROUND,false);
     DrawAttacks(dt);
@@ -870,24 +874,34 @@ int main(int argc, char* args[])
     Map* m = LoadMap("Assets/Encounters/01/map.lua");  
     SetMap(&maps[0]);
     
-    GameObject* g = LoadPrefab("Assets/Friendly/Bard/bard.lua");
-    SetOwnedBy(g, 0);
+    LoadPrefabs("Assets/friendly");
 
-    GameObject* warrior = LoadPrefab("Assets/Friendly/Warrior/warrior.lua");
-    SetOwnedBy(warrior, 0);
+    //GameObject* g = LoadPrefab("Assets/Friendly/Bard/bard.lua");
+    //SetOwnedBy(g, 0);
 
-    GameObject* p = LoadPrefab("Assets/Friendly/Priest/priest.lua");
-    SetOwnedBy(p, 0);
+    //GameObject* warrior = LoadPrefab("Assets/Friendly/Warrior/warrior.lua");
+    //SetOwnedBy(warrior, 0);
 
-    GameObject* r = LoadPrefab("Assets/Friendly/Rogue/rogue.lua");
-    SetOwnedBy(p, 0);
+    //GameObject* p = LoadPrefab("Assets/Friendly/Priest/priest.lua");
+    //SetOwnedBy(p, 0);
+
+    //GameObject* r = LoadPrefab("Assets/Friendly/Rogue/rogue.lua");
+    //SetOwnedBy(p, 0);
 
 
 
-    GameObject* g1 = AddGameobject(g,100,150);
-    GameObject* warr = AddGameobject(warrior,128,150);
-    GameObject* priest = AddGameobject(p,180,160);
-    GameObject* rogue = AddGameobject(r,201,180);
+    //GameObject* g1 = AddGameobject(&prefabs[1],100,150);
+   // GameObject* warr = AddGameobject(&prefabs[2],128,150);
+    //GameObject* priest = AddGameobject(&prefabs[3],180,160);
+    //GameObject* rogue = AddGameobject(&prefabs[4],201,180);
+
+    for (int i = 0; i < numPrefabs; i++)
+    {
+        if (prefabs[i].playerChoosable == true)
+        {
+            AddGameobject(&prefabs[i],100,150);
+        }   
+    }
 
 
 

@@ -13,7 +13,8 @@ function setup()
     SetRange(30);
 
     SetObjType(Bor(TYPE_HEALER,TYPE_UTILITY));
-
+    IsPlayerChoosable(true);
+    
 end
 
 function update()

@@ -111,7 +111,7 @@ typedef struct GameObject
 
 
     Ability* channelledAbility;
-    
+    bool playerChoosable;
 } GameObject;
 
 
@@ -136,7 +136,6 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y);
 bool CheckFuncExists(const char* funcName, char* lua_buffer);
 void loadLuaGameObj(lua_State* l,const char* filename, GameObject* g);
 GameObject* LoadPrefab(const char* path);
-void LoadFolderPrefabs(const char* dirPath);
 bool IsSelected(GameObject* g);
 void SetSelected(GameObject* g, bool select);
 
@@ -188,5 +187,5 @@ void SetObjChannelling(GameObject* g, Ability* a, float time,float x, float y, G
 void UpdateChannellingdObj(GameObject* g, float dt);
 void DrawChannelHint(GameObject* g);
 
-//void LoadFolderPrefabs(const char* dirPath);
-//void LoadPrefabs(const char* dirPath);
+void LoadFolderPrefabs(const char* dirPath, char* name);
+void LoadPrefabs(const char* dirPath);
