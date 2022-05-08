@@ -15,6 +15,7 @@ typedef struct Encounter
     int luafunc_setup;
 
     char* mapPath;
+    int numUnitsToSelect;
 } Encounter;
 
 void LoadEncounter(char* dirPath,lua_State* l);

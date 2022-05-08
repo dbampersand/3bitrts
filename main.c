@@ -688,10 +688,6 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         DrawMouse(mouseState, NULL);
         return;
     }
-    if (gameState == CHOOSING_UNITS)
-    {
-
-    }
     
     DrawSprite(&sprites[currMap->spriteIndex],0,0,GROUND,false);
     DrawAttacks(dt);
@@ -796,6 +792,47 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             }
         }
     }
+    if (gameState == CHOOSING_UNITS)
+    {
+
+        Rect selectedUnitsR = (Rect){8,146,240,41};
+        int numUnitsInRect = GetNumObjectsInRect(&selectedUnitsR);
+        
+        char* number = calloc(log10(INT_MAX)*2+2,sizeof(char));
+        sprintf(number,"%i/%i",numUnitsInRect,4);
+
+        al_draw_text(ui.font,FRIENDLY,202,162,ALLEGRO_ALIGN_LEFT,number);
+
+        if (numUnitsInRect < 4)
+        {
+            DrawOutlinedRect_Dithered(&selectedUnitsR,FRIENDLY);
+        }
+        else if (numUnitsInRect == 4)
+        {
+            al_draw_rectangle(selectedUnitsR.x,selectedUnitsR.y,selectedUnitsR.x+selectedUnitsR.w,selectedUnitsR.y+selectedUnitsR.h,FRIENDLY,1);
+        }
+        free(number);
+
+        UpdateButton(45,194,&ui.choosingUnits_Back,mouseState,mouseStateLastFrame);
+        UpdateButton(109,194,&ui.choosingUnits_GO,mouseState,mouseStateLastFrame);
+
+
+        DrawUIElement(&ui.choosingUnits_Back,45,194,mouseState,true,BG);
+        DrawUIElement(&ui.choosingUnits_GO,109,194,mouseState,numUnitsInRect==4,BG);
+
+        if (GetButtonIsClicked(&ui.choosingUnits_Back))
+        {
+            gameState = CHOOSING_ENCOUNTER;
+        }
+        if (GetButtonIsClicked(&ui.choosingUnits_GO) && numUnitsInRect==4)
+        {
+            gameState = INGAME;
+            Encounter* e = encounters[selectedEncounterIndex];
+            SetMap(LoadMap(e->mapPath));
+        }
+
+    }
+
     DrawMenus(mouseState);
     DrawMouse(mouseState, mousedOver);
     players[0].clickedThisFrame = NULL;
@@ -871,7 +908,7 @@ int main(int argc, char* args[])
     //lua_rawgeti(luaState,LUA_REGISTRYINDEX,boss.luafunc_setup);
     //lua_pcall(luaState,0,0,0);
     //Map* selectionMap = 
-    Map* m = LoadMap("Assets/Encounters/01/map.lua");  
+    Map* m = LoadMap("Assets/UI/map_unitselect.lua");  
     SetMap(&maps[0]);
     
     LoadPrefabs("Assets/friendly");

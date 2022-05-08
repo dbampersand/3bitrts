@@ -17,6 +17,20 @@
 #include "player.h"
 #include "ui.h"
 #include "encounter.h"
+
+int GetNumObjectsInRect(Rect* r)
+{
+    int j = 0;
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        Rect r2 = GetObjRect(&objects[i]);
+        if (CheckIntersect(*r,r2))
+        {
+            j++;
+        }
+    }
+    return j;
+}
 void RemoveObjFromSelection(GameObject* g)
 {
     for (int i = 0; i < MAXUNITSSELECTED; i++)

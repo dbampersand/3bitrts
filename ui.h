@@ -89,10 +89,14 @@ typedef struct UI
     float panelShownPercent;
 
     //Encounter selection
-    Panel encounter_scroll;
+    Panel encounter_scroll; 
     UIElement encounter_ButtonLeft;
     UIElement encounter_ButtonConfirm;
     UIElement encounter_ButtonRight;
+
+    UIElement choosingUnits_Back;
+    UIElement choosingUnits_GO;
+
 
 
 } UI;   
@@ -120,7 +124,7 @@ void GetUILocation(Panel* p, UIElement* uF, int* x, int* y);
 void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, float dt);
 bool GetButton(Panel* p, char* name);
-void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive);
+void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive,ALLEGRO_COLOR bgColor); 
 void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState);
 void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void ChangeUIPanel(Panel* to);

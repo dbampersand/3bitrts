@@ -233,9 +233,9 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     UpdateButton(80,224,&ui.encounter_ButtonConfirm,mouseState,mouseStateLastFrame);
     UpdateButton(192,224,&ui.encounter_ButtonRight,mouseState,mouseStateLastFrame);
 
-    DrawUIElement(&ui.encounter_ButtonLeft,16,224,mouseState,selectedEncounterIndex>0);
-    DrawUIElement(&ui.encounter_ButtonConfirm,80,224,mouseState,true);
-    DrawUIElement(&ui.encounter_ButtonRight,192,224,mouseState,selectedEncounterIndex+1<numEncounters);
+    DrawUIElement(&ui.encounter_ButtonLeft,16,224,mouseState,selectedEncounterIndex>0,BG);
+    DrawUIElement(&ui.encounter_ButtonConfirm,80,224,mouseState,true,BG);
+    DrawUIElement(&ui.encounter_ButtonRight,192,224,mouseState,selectedEncounterIndex+1<numEncounters,BG);
 
     if (GetButtonIsClicked(&ui.encounter_ButtonLeft))
     {
@@ -373,11 +373,10 @@ void InitUI()
     InitButton(&ui.encounter_ButtonConfirm,"Select Party","Select Party",0,96,16,0,false);
     InitButton(&ui.encounter_ButtonRight,">",">",0,48,16,0,false);
 
-    //AddButton(&ui.encounter_scroll,"<", "<", 16,49,16,16,false);
-    //AddButton(&ui.encounter_scroll,"Select Party", "Select Party", 80,96,16,15,false);
-    //AddButton(&ui.encounter_scroll,">", ">", 192,49,16,16,false);
+    InitButton(&ui.choosingUnits_Back,"Back","Back",0,48,16,0,false);
+    InitButton(&ui.choosingUnits_GO,"Adventure","Adventure",0,96,16,0,false);
 
-    
+
 
     ui.animatePanel = UI_ANIMATE_STATIC;
     ui.panelShownPercent = 0;
@@ -497,7 +496,7 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
         UpdatePanel(ui.currentPanel,mouseState,mouseStateLastFrame);
     }
 }
-void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive)
+void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive, ALLEGRO_COLOR bgColor)
 {
     Button* b = (Button*)u->data;
     ALLEGRO_FONT* font = ui.font;
@@ -510,7 +509,7 @@ void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, boo
     }
     else
     {
-        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,BG);
+        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,bgColor);
         if (isActive)
         {
             al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
@@ -528,11 +527,11 @@ void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, boo
     }
 
 }
-void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive)
+void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive, ALLEGRO_COLOR bgColor)
 {
     if (u->elementType == ELEMENT_BUTTON)
     {
-        DrawButton(u,x,y,mouseState,isActive);
+        DrawButton(u,x,y,mouseState,isActive,bgColor);
     }
 }
 void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)
@@ -583,7 +582,7 @@ void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
         UIElement* u = ((UIElement*)&p->elements[i]);
         int x; int y;
         GetUILocation(p, u, &x, &y);
-        DrawUIElement(u,x,y,mouseState,true);
+        DrawUIElement(u,x,y,mouseState,true,BG);
 
     }
     al_reset_clipping_rectangle();
