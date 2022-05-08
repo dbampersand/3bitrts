@@ -1102,6 +1102,16 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,TYPE_FRIENDLY);
     lua_setglobal(l,"TYPE_FRIENDLY");
 
+    lua_pushinteger(l,DIFFICULTY_EASY);
+    lua_setglobal(l,"DIFFICULTY_EASY");
+    lua_pushinteger(l,DIFFICULTY_MEDIUM);
+    lua_setglobal(l,"DIFFICULTY_MEDIUM");
+    lua_pushinteger(l,DIFFICULTY_HARD);
+    lua_setglobal(l,"DIFFICULTY_HARD");
+    lua_pushinteger(l,DIFFICULTY_IMPOSSIBLE);
+    lua_setglobal(l,"DIFFICULTY_IMPOSSIBLE");
+
+
 
 
 }
@@ -1288,7 +1298,11 @@ int L_SetEncounterMapPath(lua_State* l)
     strcpy(currEncounterRunning->mapPath,str);
     return 0;
 }
-
+int L_SetEncounterDifficulty(lua_State* l)
+{
+    currEncounterRunning->difficulty = lua_tonumber(l,1);
+    return 0;
+}
 void SetLuaFuncs()
 {
     SetGlobals(luaState);
@@ -1483,5 +1497,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_IsPlayerChoosable);
     lua_setglobal(luaState, "IsPlayerChoosable");
+
+    lua_pushcfunction(luaState, L_SetEncounterDifficulty);
+    lua_setglobal(luaState, "SetEncounterDifficulty");
+
 
 }

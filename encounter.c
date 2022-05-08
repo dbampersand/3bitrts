@@ -78,6 +78,13 @@ bool FileIsInFolder(char* dirPath, char* fileName)
     return false;
 
 }
+int sortEncounters(const void* a, const void* b)
+{
+    Encounter* e =  *(Encounter**)a;
+    Encounter* e2 = *(Encounter**)b;
+
+       return ( e->difficulty - e2->difficulty);
+}
 void LoadEncounters(char* dirPath, lua_State* l)
 {
     numEncountersAlloced=0;
@@ -124,5 +131,5 @@ void LoadEncounters(char* dirPath, lua_State* l)
         }
         closedir(d);
     }
-
+    qsort(encounters,numEncounters,sizeof(Encounter*),sortEncounters);
 }
