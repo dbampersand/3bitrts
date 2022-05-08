@@ -111,7 +111,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
 bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, ALLEGRO_MOUSE_STATE* mouseState);
 void DrawCursor(ALLEGRO_MOUSE_STATE* mouseState, int index, bool clicked);
 void LoadCursorSprite(UI* ui, int* index, char* path);
-void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, int y, int wTextbox,ALLEGRO_COLOR color);
+void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, int y, int wTextbox, int minH, ALLEGRO_COLOR color);
 int GetDescriptionBoxH(char* description, int wTextbox, ALLEGRO_FONT* f, int padding);
 bool IsInsideUI(int x, int y);
 int GetAbilityClicked(ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
