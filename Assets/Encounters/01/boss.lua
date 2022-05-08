@@ -6,7 +6,7 @@ function setup()
     AddAbility("Assets/enemies/wyrm_boss/ability_firebreath.lua",3)    
 
     SetDamage(10);
-    SetMaxHP(10000,true)
+    SetMaxHP(2500,true)
     SetSpeed(10)
     SetObjectPush(true);
 end

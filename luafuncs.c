@@ -9,6 +9,8 @@
 #include "colors.h"
 #include "encounter.h"
 #include "sprite.h"
+#include <time.h>
+
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);
   for (int i=1; i <= top; i++) {
@@ -31,6 +33,22 @@ static void dumpstack (lua_State* l) {
         break;
     }
   }
+}
+int L_SetHP(lua_State* l)
+{
+    currGameObjRunning->health = lua_tonumber(l,1);
+    if (currGameObjRunning->health > currGameObjRunning->maxHP)
+    {
+        currGameObjRunning->health = currGameObjRunning->maxHP;
+    } 
+    return 0;
+}
+int L_GetTime(lua_State* l)
+{
+   time_t seconds;
+   seconds = time(NULL);
+   lua_pushnumber(l,(int)seconds);
+    return 1;
 }
 int L_SetEncounterSprite(lua_State* l)
 {
@@ -1501,5 +1519,10 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_SetEncounterDifficulty);
     lua_setglobal(luaState, "SetEncounterDifficulty");
 
+    lua_pushcfunction(luaState, L_GetTime);
+    lua_setglobal(luaState, "GetTime");
+
+    lua_pushcfunction(luaState, L_SetHP);
+    lua_setglobal(luaState, "SetHP");
 
 }

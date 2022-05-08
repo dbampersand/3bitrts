@@ -380,7 +380,7 @@ void InitUI()
     ui.panelShownPercent = 0;
     ui.changingTo = NULL;
     
-    ui.currentPanel =NULL;
+    ui.currentPanel = NULL;
 }
 bool GetButton(Panel* p, char* name)
 {

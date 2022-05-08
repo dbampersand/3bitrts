@@ -50,7 +50,10 @@ void init()
     numPrefabsAllocated = 1;
 
     players = calloc(2,sizeof(GameObject));
-    gameState = CHOOSING_ENCOUNTER;
+
+    gameState = MAIN_MENU;
+    ui.panelShownPercent = 1.0f;
+    
 }
 void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState)
 {
@@ -904,8 +907,6 @@ int main(int argc, char* args[])
     LoadEncounters("Assets/Encounters",luaState);
 
 
-
-
     //dodge a lot of crashes by setting the 0th sprite to a zeroed bitmap
     sprites[0].sprite = al_create_bitmap(0,0);
     sprites[0].inverseSprite = al_create_bitmap(0,0);
@@ -958,12 +959,15 @@ int main(int argc, char* args[])
     //GameObject* priest = AddGameobject(&prefabs[3],180,160);
     //GameObject* rogue = AddGameobject(&prefabs[4],201,180);
 
+    int xPos = 100;
     for (int i = 0; i < numPrefabs; i++)
     {
         if (prefabs[i].playerChoosable == true)
         {
-            AddGameobject(&prefabs[i],100,150);
+            AddGameobject(&prefabs[i],xPos,150);
+            xPos+=GetWidth(&prefabs[i]);
         }   
+
     }
 
 
@@ -989,7 +993,10 @@ int main(int argc, char* args[])
     mouseStateLastFrame = GetMouseClamped();
     if (gameState == MAIN_MENU)
     {
-        ChangeUIPanel(&ui.startMenuPanel);
+        //ChangeUIPanel(&ui.startMenuPanel);
+        ui.currentPanel = &ui.startMenuPanel;
+        ui.panelShownPercent=1.0f;
+        ui.animatePanel = UI_ANIMATE_STATIC;
     }
 
     while (!shouldExit) {
