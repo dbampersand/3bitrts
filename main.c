@@ -828,7 +828,33 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         {
             gameState = INGAME;
             Encounter* e = encounters[selectedEncounterIndex];
+            GameObject** list = calloc(4,sizeof(GameObject*));
+
+            int foundIndex = 0;
+            for (int i = 0; i < MAX_OBJS; i++)
+            {
+                if (IsActive(&objects[i]))
+                {
+                    Rect r2 = GetObjRect(&objects[i]);
+
+                    if (CheckIntersect(selectedUnitsR,r2))
+                    {
+                        list[foundIndex] = objects[i].prefab;
+                        foundIndex++;
+                    }
+                }
+            }
+            RemoveAllGameObjects();
+
             SetMap(LoadMap(e->mapPath));
+
+            int xPos = 0; 
+            for (int i = 0; i < 4; i++)
+            {
+                AddGameobject(list[i],80+xPos,180);   
+                xPos += GetWidth(list[i]);
+            }
+            free(list);
         }
 
     }

@@ -44,6 +44,7 @@ typedef struct lua_State lua_State;
 
 typedef struct GameObject
 {    
+    struct GameObject* prefab;
     char* lua_buffer;
 
     char* name; 
@@ -190,3 +191,4 @@ void DrawChannelHint(GameObject* g);
 void LoadFolderPrefabs(const char* dirPath, char* name);
 void LoadPrefabs(const char* dirPath);
 int GetNumObjectsInRect(Rect* r);
+void RemoveAllGameObjects();

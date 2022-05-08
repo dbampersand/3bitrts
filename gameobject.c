@@ -137,6 +137,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     found->attackSpeed = 1;
     found->mana = 50;
     found->maxMana = 100;
+    currGameObjRunning->prefab = prefab;
 
     
     numObjects++;
@@ -1246,3 +1247,13 @@ void DrawChannelHint(GameObject* g)
 
     }
 }
+
+void RemoveAllGameObjects()
+{
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        KillObj(&objects[i]);
+
+    }
+}
+
