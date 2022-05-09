@@ -2,7 +2,7 @@ function setup()
     SetAbilityRange(2)
     SetAbilityCooldown(20);
     AbilitySetPortrait("Assets/enemies/wyrm_boss/ability_bite.png");
-    SetDescription("Bite\n\nDeals damage over time to the currently attacked target.")
+    SetDescription("[b]Bite\n\nDeals damage over time to the currently attacked target.")
 
 end
 

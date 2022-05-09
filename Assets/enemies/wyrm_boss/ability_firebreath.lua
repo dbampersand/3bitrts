@@ -5,7 +5,7 @@ function setup()
     SetAbilityHint(HINT_CONE,80);
     SetAbilityCooldown(10); 
     AbilitySetPortrait("Assets/enemies/wyrm_boss/ability_firebreath.png");
-    SetDescription("Firebreath\n\nDeals damage in a cone.")
+    SetDescription("[b]Firebreath\n\nDeals damage in a cone.")
 
 end
 local cone = -1

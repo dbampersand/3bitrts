@@ -928,6 +928,8 @@ int main(int argc, char* args[])
     ALLEGRO_BITMAP* backbuffer = al_get_backbuffer(display);
 
     ALLEGRO_FONT* font = al_load_ttf_font("Assets/Fonts/font.ttf", 8, ALLEGRO_TTF_MONOCHROME);
+    ui.boldFont = al_load_ttf_font("Assets/Fonts/fontbold.ttf", 8, ALLEGRO_TTF_MONOCHROME);
+
     ui.font = font;
     ui.panel_sprite_index = LoadSprite("Assets/UI/ui.png",false);
     //ui.cursorDefaultIndex = LoadSprite("Assets/UI/cursor.png",false);

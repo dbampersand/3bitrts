@@ -146,7 +146,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                 int h = GetDescriptionBoxH(selected->abilities[0].description,100,ui.font,UI_PADDING);
                 int x = 33 + ceil(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[0].description, 5, ui.font, x,y,100,0,FRIENDLY);
+                DrawDescriptionBox(selected->abilities[0].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY);
             }
 
         }
@@ -157,7 +157,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                 int h = GetDescriptionBoxH(selected->abilities[1].description,100,ui.font,UI_PADDING);
                 int x = 65 + ceil(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[1].description, 5, ui.font, x,y,100,0,FRIENDLY);
+                DrawDescriptionBox(selected->abilities[1].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY);
             }
 
         }
@@ -168,7 +168,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                 int h = GetDescriptionBoxH(selected->abilities[2].description,100,ui.font,UI_PADDING);
                 int x = 97 + ceil(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[2].description, 5, ui.font, x,y,100,0,FRIENDLY);
+                DrawDescriptionBox(selected->abilities[2].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY);
 
             }
 
@@ -180,7 +180,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                 int h = GetDescriptionBoxH(selected->abilities[3].description,100,ui.font,UI_PADDING);
                 int x = 129 + ceil(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[3].description, 5, ui.font, x,y,100,0,FRIENDLY);
+                DrawDescriptionBox(selected->abilities[3].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY);
             }
 
         }
@@ -220,7 +220,7 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     }
     if (descriptionToDraw)
     {
-        DrawDescriptionBox(descriptionToDraw,2,ui.font,16,170,224,41,ENEMY);
+        DrawDescriptionBox(descriptionToDraw,2,ui.font,ui.boldFont,16,170,224,41,ENEMY);
 
     }
     ui.panelShownPercent=1.0f;
@@ -684,6 +684,7 @@ void DrawCursor(ALLEGRO_MOUSE_STATE* mouseState, int index, bool clicked)
 typedef struct Text
 {
     ALLEGRO_FONT* f; 
+    ALLEGRO_FONT* bold;
     int x; 
     int y;
     int h; 
@@ -699,9 +700,23 @@ bool cb(int line_num, const char *line, int size, void *extra)
     int height = t->lineHeight;
     y += line_num*height;
 
+    bool bold = false;
+    if (strncmp("[b]",line,3)==0)
+    {
+        bold = true;
+    }
+    
     char* buff = calloc(size+1,sizeof(char));
-    memcpy(buff,line,size*sizeof(char));
-    al_draw_text(f,t->color,x,y,ALLEGRO_ALIGN_LEFT,buff);
+    if (bold)
+    {
+        memcpy(buff,line+3,(size-3)*sizeof(char));
+        al_draw_text(t->bold,t->color,x,y,ALLEGRO_ALIGN_LEFT,buff);
+    }
+    else
+    {
+        memcpy(buff,line,size*sizeof(char));
+        al_draw_text(t->f,t->color,x,y,ALLEGRO_ALIGN_LEFT,buff);
+    }
     free(buff);
     return true;
 }
@@ -715,7 +730,7 @@ bool CB_GetHeight(int line_num, const char *line, int size, void *extra)
 int GetDescriptionBoxH(char* description, int wTextbox, ALLEGRO_FONT* f, int padding)
 {
     void* size = malloc(sizeof(Text));
-    memcpy(size,&(Text){f,0,0,0,FRIENDLY,al_get_font_line_height(f)+2},sizeof(Text));
+    memcpy(size,&(Text){f,NULL,0,0,0,FRIENDLY,al_get_font_line_height(f)+2},sizeof(Text));
     al_do_multiline_text(f,wTextbox,description,CB_GetHeight,size);
     Text* t = (Text*)size;
     int height = t->h + padding*2;
@@ -723,7 +738,7 @@ int GetDescriptionBoxH(char* description, int wTextbox, ALLEGRO_FONT* f, int pad
 
     return height;
 }
-void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, int y, int wTextbox, int minH, ALLEGRO_COLOR color)
+void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, ALLEGRO_FONT* bold, int x, int y, int wTextbox, int minH, ALLEGRO_COLOR color)
 {
     if (!description) return;
     int w;  
@@ -734,7 +749,7 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, 
 
     //al_get_text_dimensions(f,description,&xoffset,&yoffset,&w,&h);
     void* size = malloc(sizeof(Text));
-    memcpy(size,&(Text){f,x,y,0,color,lineHeight},sizeof(Text));
+    memcpy(size,&(Text){f,bold,x,y,0,color,lineHeight},sizeof(Text));
     al_do_multiline_text(f,wTextbox,description,CB_GetHeight,size);
     Text* t = (Text*)size;
     t->color = color;
@@ -751,7 +766,7 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, 
     
     //al_draw_multiline_text(f,FRIENDLY,x,y,wTextbox,8,ALLEGRO_ALIGN_LEFT,description);
     void* extra = malloc(sizeof(Text));
-    memcpy(extra,&(Text){.f=f,.x=x,.y=y,.color=color,.lineHeight=lineHeight},sizeof(Text));
+    memcpy(extra,&(Text){.f=f,.bold=bold,.x=x,.y=y,.color=color,.lineHeight=lineHeight},sizeof(Text));
     
     al_do_multiline_text(f,wTextbox,description,cb,extra);
     free(extra);
