@@ -709,13 +709,13 @@ bool CB_GetHeight(int line_num, const char *line, int size, void *extra)
 {
     Text* t = (Text*)extra;
     ALLEGRO_FONT* f = t->f;
-    t->h += al_get_font_line_height(f);
+    t->h += t->lineHeight;
     return true;
 }
 int GetDescriptionBoxH(char* description, int wTextbox, ALLEGRO_FONT* f, int padding)
 {
     void* size = malloc(sizeof(Text));
-    memcpy(size,&(Text){f,0,0,0},sizeof(Text));
+    memcpy(size,&(Text){f,0,0,0,FRIENDLY,al_get_font_line_height(f)+2},sizeof(Text));
     al_do_multiline_text(f,wTextbox,description,CB_GetHeight,size);
     Text* t = (Text*)size;
     int height = t->h + padding*2;
@@ -730,7 +730,7 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, 
     int h;
     int xoffset;
     int yoffset;
-    int lineHeight = al_get_font_line_height(f);
+    int lineHeight = al_get_font_line_height(f)+2;
 
     //al_get_text_dimensions(f,description,&xoffset,&yoffset,&w,&h);
     void* size = malloc(sizeof(Text));
