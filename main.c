@@ -691,9 +691,39 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         DrawMouse(mouseState, NULL);
         return;
     }
-    
     DrawSprite(&sprites[currMap->spriteIndex],0,0,GROUND,false);
     DrawAttacks(dt);
+
+        if (gameState == CHOOSING_UNITS) 
+    {
+        Rect selectedUnitsR = (Rect){8,146,240,41};
+
+        int numUnitsInRect = GetNumObjectsInRect(&selectedUnitsR);
+
+        UpdateButton(45,194,&ui.choosingUnits_Back,mouseState,mouseStateLastFrame);
+        UpdateButton(109,194,&ui.choosingUnits_GO,mouseState,mouseStateLastFrame);
+
+
+        DrawUIElement(&ui.choosingUnits_Back,45,194,mouseState,true,BG);
+        DrawUIElement(&ui.choosingUnits_GO,109,194,mouseState,numUnitsInRect==4,BG);
+
+
+        if (numUnitsInRect < 4)
+        {
+            DrawOutlinedRect_Dithered(&selectedUnitsR,FRIENDLY);
+        }
+        else if (numUnitsInRect == 4)
+        {
+            al_draw_rectangle(selectedUnitsR.x,selectedUnitsR.y,selectedUnitsR.x+selectedUnitsR.w,selectedUnitsR.y+selectedUnitsR.h,FRIENDLY,1);
+        }
+                char* number = calloc(log10(INT_MAX)*2+2,sizeof(char));
+        sprintf(number,"%i/%i",numUnitsInRect,4);
+
+        al_draw_text(ui.font,FRIENDLY,202,162,ALLEGRO_ALIGN_LEFT,number);
+
+        free(number);
+        }
+
 
     int objSelected = -1;
     bool abilityCastOnTarget = players[0].abilityHeld && (mouseStateLastFrame->buttons & 1 || mouseState->buttons & 1);
@@ -801,27 +831,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         Rect selectedUnitsR = (Rect){8,146,240,41};
         int numUnitsInRect = GetNumObjectsInRect(&selectedUnitsR);
         
-        char* number = calloc(log10(INT_MAX)*2+2,sizeof(char));
-        sprintf(number,"%i/%i",numUnitsInRect,4);
 
-        al_draw_text(ui.font,FRIENDLY,202,162,ALLEGRO_ALIGN_LEFT,number);
-
-        if (numUnitsInRect < 4)
-        {
-            DrawOutlinedRect_Dithered(&selectedUnitsR,FRIENDLY);
-        }
-        else if (numUnitsInRect == 4)
-        {
-            al_draw_rectangle(selectedUnitsR.x,selectedUnitsR.y,selectedUnitsR.x+selectedUnitsR.w,selectedUnitsR.y+selectedUnitsR.h,FRIENDLY,1);
-        }
-        free(number);
-
-        UpdateButton(45,194,&ui.choosingUnits_Back,mouseState,mouseStateLastFrame);
-        UpdateButton(109,194,&ui.choosingUnits_GO,mouseState,mouseStateLastFrame);
-
-
-        DrawUIElement(&ui.choosingUnits_Back,45,194,mouseState,true,BG);
-        DrawUIElement(&ui.choosingUnits_GO,109,194,mouseState,numUnitsInRect==4,BG);
 
         if (GetButtonIsClicked(&ui.choosingUnits_Back))
         {
@@ -917,7 +927,7 @@ int main(int argc, char* args[])
     display = al_create_display(256*_RENDERSIZE,256*_RENDERSIZE);
     ALLEGRO_BITMAP* backbuffer = al_get_backbuffer(display);
 
-    ALLEGRO_FONT* font = al_load_ttf_font("Assets/Fonts/Roboto-Medium.ttf", 8, ALLEGRO_TTF_MONOCHROME);
+    ALLEGRO_FONT* font = al_load_ttf_font("Assets/Fonts/font.ttf", 8, ALLEGRO_TTF_MONOCHROME);
     ui.font = font;
     ui.panel_sprite_index = LoadSprite("Assets/UI/ui.png",false);
     //ui.cursorDefaultIndex = LoadSprite("Assets/UI/cursor.png",false);

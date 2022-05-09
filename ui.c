@@ -221,7 +221,6 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     if (descriptionToDraw)
     {
         DrawDescriptionBox(descriptionToDraw,2,ui.font,16,170,224,41,ENEMY);
-       // al_do_multiline_text(f,wTextbox,description,CB_GetHeight,size);
 
     }
     ui.panelShownPercent=1.0f;
@@ -503,7 +502,7 @@ void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, boo
     {
         al_draw_filled_rectangle(x,y,x+u->w,y+u->h,FRIENDLY);
         al_draw_rectangle(x,y,x+u->w,y+u->h,BG,1);
-        al_draw_text(ui.font,BG,x+u->w/2,y+u->h/2 - al_get_font_line_height(font)/2,ALLEGRO_ALIGN_CENTRE,b->description);
+        al_draw_text(ui.font,BG,x+u->w/2,y+u->h/2 - al_get_font_line_height(font),ALLEGRO_ALIGN_CENTRE,b->description);
     }
     else
     {
@@ -516,7 +515,7 @@ void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, boo
         {
             DrawOutlinedRect_Dithered(&button,FRIENDLY);
         }
-        al_draw_text(ui.font,FRIENDLY,x+u->w/2,y+u->h/2 - al_get_font_line_height(font)/2,ALLEGRO_ALIGN_CENTRE,b->description);
+        al_draw_text(ui.font,FRIENDLY,x+u->w/2,y+u->h/2 - al_get_font_line_height(font),ALLEGRO_ALIGN_CENTRE,b->description);
 
     }
     if (PointInRect(mouseState->x,mouseState->y,button) && isActive)
@@ -689,6 +688,7 @@ typedef struct Text
     int y;
     int h; 
     ALLEGRO_COLOR color;
+    int lineHeight;
 }Text;
 bool cb(int line_num, const char *line, int size, void *extra)
 {
@@ -696,7 +696,7 @@ bool cb(int line_num, const char *line, int size, void *extra)
     int x = t->x;
     int y = t->y;
     ALLEGRO_FONT* f = t->f;
-    int height = al_get_font_line_height(f);
+    int height = t->lineHeight;
     y += line_num*height;
 
     char* buff = calloc(size+1,sizeof(char));
@@ -730,10 +730,11 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, 
     int h;
     int xoffset;
     int yoffset;
+    int lineHeight = al_get_font_line_height(f);
 
     //al_get_text_dimensions(f,description,&xoffset,&yoffset,&w,&h);
     void* size = malloc(sizeof(Text));
-    memcpy(size,&(Text){f,x,y,0},sizeof(Text));
+    memcpy(size,&(Text){f,x,y,0,color,lineHeight},sizeof(Text));
     al_do_multiline_text(f,wTextbox,description,CB_GetHeight,size);
     Text* t = (Text*)size;
     t->color = color;
@@ -750,7 +751,7 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, int x, 
     
     //al_draw_multiline_text(f,FRIENDLY,x,y,wTextbox,8,ALLEGRO_ALIGN_LEFT,description);
     void* extra = malloc(sizeof(Text));
-    memcpy(extra,&(Text){.f=f,.x=x,.y=y,.color=color},sizeof(Text));
+    memcpy(extra,&(Text){.f=f,.x=x,.y=y,.color=color,.lineHeight=lineHeight},sizeof(Text));
     
     al_do_multiline_text(f,wTextbox,description,cb,extra);
     free(extra);

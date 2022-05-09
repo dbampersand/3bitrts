@@ -1,6 +1,6 @@
 function setup()
-    SetEncounterSprite("Assets/enemies/wyrm.png");
-    SetEncounterDescription("AAAA.")
+    SetEncounterSprite("Assets/encounters/02/minotaur/minotaur.png");
+    SetEncounterDescription("The minotaur.")
 
     AddEncounterAbility("Assets/enemies/wyrm_boss/ability_bite.lua",0,0);
     AddEncounterAbility("Assets/enemies/wyrm_boss/ability_firebreath.lua",1,0);

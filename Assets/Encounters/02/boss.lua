@@ -1,5 +1,5 @@
 function setup()
-    SetSprite("Assets/Enemies/wyrm.png");
+    SetSprite("Assets/encounters/02/minotaur/minotaur.png");
     AddAbility("Assets/enemies/wyrm_boss/ability_bite.lua",0)   
     AddAbility("Assets/enemies/wyrm_boss/ability_fire.lua",1)    
     AddAbility("Assets/enemies/wyrm_boss/ability_nuke.lua",2)    

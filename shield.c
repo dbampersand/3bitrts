@@ -38,12 +38,17 @@ void RemoveShield(GameObject* g, Shield* s)
 }
 void ProcessShields(GameObject* g, float dt)
 {
+    if (!g->shields)
+    {
+        return;
+    }
     for (int i = 0; i < g->numShields; i++)
     {
         g->shields[i].duration -= dt;
         if (g->shields[i].duration <= 0) 
         {
             RemoveShield(g,&g->shields[i]);
+            return;
         }
         if (g->shields[i].amtLeft <= 0) 
         {
