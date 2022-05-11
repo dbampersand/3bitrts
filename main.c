@@ -694,9 +694,10 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     DrawSprite(&sprites[currMap->spriteIndex],0,0,GROUND,false);
     DrawAttacks(dt);
 
-        if (gameState == CHOOSING_UNITS) 
+    if (gameState == CHOOSING_UNITS) 
     {
         Rect selectedUnitsR = (Rect){8,146,240,41};
+        Encounter* e = encounters[selectedEncounterIndex];
 
         int numUnitsInRect = GetNumObjectsInRect(&selectedUnitsR);
 
@@ -705,19 +706,19 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
 
         DrawUIElement(&ui.choosingUnits_Back,45,194,mouseState,true,BG);
-        DrawUIElement(&ui.choosingUnits_GO,109,194,mouseState,numUnitsInRect==4,BG);
+        DrawUIElement(&ui.choosingUnits_GO,109,194,mouseState,numUnitsInRect==e->numUnitsToSelect,BG);
 
 
-        if (numUnitsInRect < 4)
+        if (numUnitsInRect != e->numUnitsToSelect)
         {
             DrawOutlinedRect_Dithered(&selectedUnitsR,FRIENDLY);
         }
-        else if (numUnitsInRect == 4)
+        else if (numUnitsInRect == e->numUnitsToSelect)
         {
             al_draw_rectangle(selectedUnitsR.x,selectedUnitsR.y,selectedUnitsR.x+selectedUnitsR.w,selectedUnitsR.y+selectedUnitsR.h,FRIENDLY,1);
         }
                 char* number = calloc(log10(INT_MAX)*2+2,sizeof(char));
-        sprintf(number,"%i/%i",numUnitsInRect,4);
+        sprintf(number,"%i/%i",numUnitsInRect,e->numUnitsToSelect);
 
         al_draw_text(ui.font,FRIENDLY,202,162,ALLEGRO_ALIGN_LEFT,number);
 
@@ -837,11 +838,12 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         {
             gameState = CHOOSING_ENCOUNTER;
         }
-        if (GetButtonIsClicked(&ui.choosingUnits_GO) && numUnitsInRect==4)
+
+        if (GetButtonIsClicked(&ui.choosingUnits_GO) && numUnitsInRect==encounters[selectedEncounterIndex]->numUnitsToSelect)
         {
             gameState = INGAME;
             Encounter* e = encounters[selectedEncounterIndex];
-            GameObject** list = calloc(4,sizeof(GameObject*));
+            GameObject** list = calloc(e->numUnitsToSelect,sizeof(GameObject*));
 
             int foundIndex = 0;
             for (int i = 0; i < MAX_OBJS; i++)
@@ -862,7 +864,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             SetMap(LoadMap(e->mapPath));
 
             int xPos = 0; 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < e->numUnitsToSelect; i++)
             {
                 AddGameobject(list[i],80+xPos,180);   
                 xPos += GetWidth(list[i]);

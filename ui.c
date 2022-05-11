@@ -702,7 +702,7 @@ bool cb(int line_num, const char *line, int size, void *extra)
 
     bool bold = false;
     if (strncmp("[b]",line,3)==0)
-    {
+    {   
         bold = true;
     }
     

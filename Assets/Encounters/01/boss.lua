@@ -14,7 +14,7 @@ end
 function update()
     j = GetThreatRank()
 
-    target = {};
+    target = {};    
     target["target"] = j[0];
     
     
@@ -23,17 +23,26 @@ function update()
     if (IsInCombat()) then
         --CastAbility(0,target);
 
+        targ0 = {};
+        targ0["target"] = GetHighestThreat();
+        CastAbility(0,1,{targ2});
 
         if (AbilityIsOnCooldown(GetObjRef(),1) == false) then
 
             aoeTarget = GetRandomUnit(TYPE_ENEMY,TYPE_HEALER)
-            targ = {};
-            targ["target"] = aoeTarget;
-           -- CastAbility(1,{targ});
+            targ1 = {};
+            targ1["target"] = aoeTarget;
+            CastAbility(1,0,{targ1});
         end
-        targ2 = {};
-        targ2["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_TANK)
-        CastAbility(3,2,{targ2});
+        
+        targ2 = {}
+        targ2["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL);
+        CastAbility(2,4,{targ2});
+
+        targ3 = {};
+        targ3["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_TANK)
+        --CastAbility(3,2,{targ3});
+
 
     end
 

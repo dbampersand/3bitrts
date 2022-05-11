@@ -11,4 +11,6 @@ function setup()
     SetEncounterMapPath("Assets/Encounters/01/map.lua");
     SetEncounterDifficulty(DIFFICULTY_EASY);
 
+    EncounterSetNumUnitsToSelect(2);
+
 end

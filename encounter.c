@@ -13,7 +13,7 @@ void LoadEncounter(char* dirPath, lua_State* l)
     d = opendir(dirPath);
 
     Encounter* e = calloc(1,sizeof(Encounter));
-
+    e->numUnitsToSelect = 4;
 
     if (d) {
         while ((dir = readdir(d)) != NULL) {

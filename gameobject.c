@@ -198,6 +198,10 @@ bool CheckFuncExists(const char* funcName, char* lua_buffer)
 }
 bool ObjHasType(GameObject* g, GAMEOBJ_TYPE_HINT typeHint)
 {
+    int i = g->objType;
+    int j = typeHint;
+
+    bool b = ((g->objType & typeHint));
     return (g->objType & typeHint);
 }
 void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g) 
@@ -226,7 +230,7 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
     }
     if (luaL_loadbuffer(l, g->lua_buffer,strlen(g->lua_buffer),NULL) || lua_pcall(l, 0, 0, 0))
      {
-         printf("Can't load lua file %s",lua_tostring(l,-1));
+         printf("%s\n\n---\nCan't load lua file:\n %s\n---\n\n\n",COL_ERR,lua_tostring(l,-1));
          fflush(stdout);
      }
      else

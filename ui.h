@@ -2,6 +2,10 @@
 #include "sprite.h"
 #include "rect.h"
 #include "stdbool.h"
+
+//error printf colour
+#define COL_ERR  "\x1B[31m"
+
 typedef struct ALLEGRO_FONT ALLEGRO_FONT;
 typedef struct Scrollbar
 {

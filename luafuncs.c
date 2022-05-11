@@ -175,6 +175,11 @@ void LoadLuaFile(const char* filename, GameObject* g)
         g->lua_buffer = readFile(filename);
      }
 }
+int L_EncounterSetNumUnitsToSelect(lua_State* l)
+{
+    currEncounterRunning->numUnitsToSelect = lua_tonumber(l,1);
+    return 0;
+}
 int L_Print(lua_State* l)
 {
     if (currGameObjRunning)
@@ -251,6 +256,12 @@ int L_GetY(lua_State* l)
         GetCentre(currGameObjRunning,&x,&y);
         lua_pushnumber(l,y);
     }
+    return 1;
+}
+int L_GetHighestThreat(lua_State* l)
+{
+    Threat* t = GetHighestThreat(&currGameObjRunning->threatList);
+    lua_pushnumber(l,t->obj-objects);
     return 1;
 }
 int L_SetThreatMultiplier(lua_State* l)
@@ -368,6 +379,7 @@ int L_AbilityIsOnCooldown(lua_State* l)
     lua_pushboolean(l,true);
     return 1;
 }
+
 int L_GetThreatRank(lua_State* l)
 {
     int j = GetNumThreats(&currGameObjRunning->threatList);
@@ -1524,5 +1536,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetHP);
     lua_setglobal(luaState, "SetHP");
+
+    lua_pushcfunction(luaState, L_EncounterSetNumUnitsToSelect);
+    lua_setglobal(luaState, "EncounterSetNumUnitsToSelect");
+
+    lua_pushcfunction(luaState, L_GetHighestThreat);
+    lua_setglobal(luaState, "GetHighestThreat");
 
 }
