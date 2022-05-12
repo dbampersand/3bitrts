@@ -362,6 +362,27 @@ float GetTableField(lua_State* l, int tableIndex, const char* name, bool* isAFie
     return 0;
 
 }
+const char* GetTableField_Str(lua_State* l, int tableIndex, const char* name, bool* isAField)
+{
+    lua_getfield(l,tableIndex,name);
+    if (!lua_isnil(l,-1))
+    {
+        const char* str = lua_tostring(l,-1);
+        if (!str)
+        {
+            *isAField = false;
+            return 0;
+        }
+        lua_remove(l,-1);
+        *isAField = true;
+        return str;
+    }
+    *isAField = false; 
+    lua_remove(l,-1);
+    return 0;
+
+}
+
 int L_GetObjRef(lua_State* l)
 {
     lua_pushnumber(l,(int)(currGameObjRunning-objects));
@@ -418,6 +439,16 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
     float triggersPerSecond = GetTableField(l,-1,"triggersPerSecond",&isField);
     //e.numTriggers = GetTableField(l,-1,"numTriggers",&isField);
     e.duration = GetTableField(l,-1,"duration",&isField);
+    const char* portrait = GetTableField_Str(l,-1,"portrait",&isField);
+    if (isField && portrait)
+    {
+        e.spriteIndex_Portrait = LoadSprite(portrait,false);
+
+    }
+    else
+    {
+        e.spriteIndex_Portrait = 0;
+    }
     e.timer = 0;
     //e.timer = e.duration;
     e.numTriggers = e.duration * triggersPerSecond;

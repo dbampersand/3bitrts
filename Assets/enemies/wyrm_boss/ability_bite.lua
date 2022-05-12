@@ -17,6 +17,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["triggersPerSecond"] = 5
     f1["value"] = 2;  
     f1["duration"] = 10;
+    f1["portrait"] = "Assets/enemies/wyrm_boss/ability_bite_effect_portrait.png"
 
     ApplyEffect(obj,{f1});
     return true; 

@@ -39,7 +39,7 @@ typedef enum OBJ_FRIENDLINESS
 
 typedef struct Shield Shield;
 typedef struct lua_State lua_State;
-#define MAX_EFFECTS 6
+#define MAX_EFFECTS 12
 #define MAX_QUEUED_CMD 8
 
 typedef struct GameObject

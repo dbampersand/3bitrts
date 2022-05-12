@@ -25,19 +25,19 @@ function update()
 
         targ0 = {};
         targ0["target"] = GetHighestThreat();
-        CastAbility(0,1,{targ2});
+        CastAbility(0,1,{targ0});
 
         if (AbilityIsOnCooldown(GetObjRef(),1) == false) then
 
             aoeTarget = GetRandomUnit(TYPE_ENEMY,TYPE_HEALER)
             targ1 = {};
             targ1["target"] = aoeTarget;
-            CastAbility(1,0,{targ1});
+            --CastAbility(1,0,{targ1});
         end
         
         targ2 = {}
         targ2["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL);
-        CastAbility(2,4,{targ2});
+        --CastAbility(2,4,{targ2});
 
         targ3 = {};
         targ3["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_TANK)

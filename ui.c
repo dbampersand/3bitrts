@@ -11,6 +11,7 @@
 #include "encounter.h"
 #include "gamestate.h"
 #include "map.h"
+#include "effect.h"
 void ChangeUIPanel(Panel* to)
 {
     ui.animatePanel = true;
@@ -94,6 +95,13 @@ bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MO
         return true;
     else
         return false;
+}
+void DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c)
+{
+    if (e->spriteIndex_Portrait > 0 && e->enabled)
+    {
+        DrawSprite(&sprites[e->spriteIndex_Portrait],x,y,FRIENDLY,false);
+    }
 }
 bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, ALLEGRO_MOUSE_STATE* mouseState)
 {
@@ -184,6 +192,19 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
+        DrawEffectPortrait(162,223,&selected->effects[0],FRIENDLY);
+        DrawEffectPortrait(178,223,&selected->effects[1],FRIENDLY);
+        DrawEffectPortrait(194,223,&selected->effects[2],FRIENDLY);
+        DrawEffectPortrait(209,223,&selected->effects[3],FRIENDLY);
+        DrawEffectPortrait(225,223,&selected->effects[4],FRIENDLY);
+        DrawEffectPortrait(241,223,&selected->effects[5],FRIENDLY);
+
+        DrawEffectPortrait(162,241,&selected->effects[6],FRIENDLY);
+        DrawEffectPortrait(178,241,&selected->effects[7],FRIENDLY);
+        DrawEffectPortrait(194,241,&selected->effects[8],FRIENDLY);
+        DrawEffectPortrait(209,241,&selected->effects[9],FRIENDLY);
+        DrawEffectPortrait(225,241,&selected->effects[10],FRIENDLY);
+        DrawEffectPortrait(241,241,&selected->effects[11],FRIENDLY);
     }
 }
 void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)

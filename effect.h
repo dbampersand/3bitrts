@@ -37,6 +37,8 @@ typedef struct Effect
     float tickTime;
     bool enabled;
 
+    int spriteIndex_Portrait;
+
     
 } Effect;
 void ApplyEffect(Effect* e, GameObject* from, GameObject* target);

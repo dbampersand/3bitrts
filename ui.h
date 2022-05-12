@@ -7,6 +7,7 @@
 #define COL_ERR  "\x1B[31m"
 
 typedef struct ALLEGRO_FONT ALLEGRO_FONT;
+typedef struct Effect Effect;
 typedef struct Scrollbar
 {
     float percent;
@@ -137,3 +138,4 @@ bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MO
 void InitButton(UIElement* u, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak);
 void AddButton(Panel* p, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak);
 bool GetButtonIsClicked(UIElement* u);
+void DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c);

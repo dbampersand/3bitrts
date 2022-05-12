@@ -13,6 +13,7 @@ typedef enum ABILITY_CAST_TYPE
     ABILITY_TOGGLE = 32,
     ABILITY_ANGLE = 64,
 } ABILITY_CAST_TYPE;
+
 typedef enum HINT
 {
     HINT_NONE=0,
