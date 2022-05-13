@@ -138,6 +138,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
     al_draw_filled_rectangle(0, UI_START_Y, _SCREEN_SIZE, _SCREEN_SIZE, BG);
     
     Sprite* s = &sprites[ui.panel_sprite_index];
+    if (!s) return;
     DrawSprite(s,1,UI_START_Y+1,FRIENDLY,false);
 
     GameObject* selected = players[0].selection[players[0].indexSelectedUnit];
