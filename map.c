@@ -7,7 +7,6 @@
 #include "gameobject.h"
 #include "luafuncs.h"
 #include "helperfuncs.h"
-int numMaps = 0;
 
 void PreprocessMap(Map* map)
 {

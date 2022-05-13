@@ -5,9 +5,6 @@
 #include "gameobject.h"
 #include "float.h"
 #include "colors.h"
-int numSprites=1; 
-int maxSprites=0;
-unsigned int _RENDERSIZE=4;
 
 //loads a sprite, and also generates an inverse sprite for selection
 void GenerateInvertedSprite(Sprite* s)

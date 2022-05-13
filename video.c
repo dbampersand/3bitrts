@@ -7,7 +7,6 @@
 #include "stdio.h"
 #include "point.h"
 
-unsigned long long _FRAMES = 0;
 
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color)
 {

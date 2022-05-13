@@ -55,6 +55,12 @@ void init()
 
     gameState = MAIN_MENU;
     ui.panelShownPercent = 1.0f;
+    numMaps = 0;
+    numSprites=1;
+    maxSprites = 0;
+    _RENDERSIZE = 1;
+    _FRAMES = 0;
+
     
 }
 void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState)
