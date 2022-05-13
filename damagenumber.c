@@ -15,9 +15,12 @@ void DrawDamageNumbers()
     for (int i = 0; i < MAX_DAMAGE_NUMBERS; i++)
     {
         DamageNumber* d = &damageNumbers[i];
+        unsigned char r; unsigned char g; unsigned char b;
+        al_unmap_rgb(FRIENDLY,&r,&g,&b);
+        ALLEGRO_COLOR color = al_map_rgba(r,g,b,d->fade);
         if (d->text)
         {
-            al_draw_text(ui.font,FRIENDLY,d->pos.x,d->pos.y,ALLEGRO_ALIGN_CENTER,d->text);
+            al_draw_text(ui.font,color,d->pos.x,d->pos.y,ALLEGRO_ALIGN_CENTER,d->text);
         }
     }
 }
@@ -27,6 +30,7 @@ void UpdateDamageNumbers(float dt)
     {
         DamageNumber* d = &damageNumbers[i];
         d->pos.y -= dt*4;
+        d->fade -= dt/2.0f;
     }
 }
 void AddDamageNumber(int damage, int x, int y)
@@ -49,7 +53,7 @@ void AddDamageNumber(int damage, int x, int y)
     {
         free(damageNumbers[currDamageNumber].text);
     }
-    damageNumbers[currDamageNumber++] = (DamageNumber){.text = str, .pos = (Point){x,y}};
+    damageNumbers[currDamageNumber++] = (DamageNumber){.text = str, .pos = (Point){x,y}, .fade = 1};
     
     if (currDamageNumber >= MAX_DAMAGE_NUMBERS)
         currDamageNumber = 0;

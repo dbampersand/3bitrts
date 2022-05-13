@@ -893,8 +893,10 @@ int main(int argc, char* args[])
     al_init_font_addon();
     al_init_ttf_addon();
     al_init_image_addon();
+    al_init_primitives_addon();
     al_install_mouse();
     al_install_keyboard();
+
     init_lua();
     InitAttacks();
     InitParticles();
@@ -922,7 +924,11 @@ int main(int argc, char* args[])
     //dodge a lot of crashes by setting the 0th sprite to a zeroed bitmap
     sprites[0].sprite = al_create_bitmap(0,0);
     sprites[0].inverseSprite = al_create_bitmap(0,0);
+    
+    ALLEGRO_MONITOR_INFO monitor;
+    al_get_monitor_info(0, &monitor);
 
+    _RENDERSIZE = _MIN(monitor.x2,monitor.y2)/256 -1;
 
     SCREEN = al_create_bitmap(256,256);
 
