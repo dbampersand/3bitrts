@@ -5,6 +5,7 @@ typedef struct DamageNumber
 {
     char* text;
     Point pos;
+    float fade;
 } DamageNumber;
 #define MAX_DAMAGE_NUMBERS 16
 DamageNumber damageNumbers[MAX_DAMAGE_NUMBERS];
