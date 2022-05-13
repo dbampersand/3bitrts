@@ -17,6 +17,7 @@
 #include "player.h"
 #include "ui.h"
 #include "encounter.h"
+#include "damagenumber.h"
 
 int GetNumObjectsInRect(Rect* r)
 {
@@ -912,6 +913,7 @@ bool Damage(GameObject* g, float value)
 
     value = DamageShields(g,value);
     g->health -= value;
+    AddDamageNumber((int)value,g->position.x+(rand()%(int)GetWidth(g)*1.1f),g->position.y+(rand()%(int)GetHeight(g)*1.1f));
     if (g->health <= 0)
     {
         KillObj(g);

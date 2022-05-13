@@ -32,7 +32,7 @@ Ability* AddAbility(const char* path)
         {
             const char* c = path;
             const char* c2 = abilities[i].path;
-            if (strcmp(path,abilities[i].path) == 0)
+            if (strcasecmp(path,abilities[i].path) == 0)
             {
                 return &abilities[i];
             }

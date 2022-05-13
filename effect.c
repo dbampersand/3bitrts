@@ -88,7 +88,6 @@ void ProcessEffects(GameObject* g, float dt)
                     if (e->timer > e->tickTime)//e->duration / (e->numTriggers))
                     {
                         e->numTriggers--;
-                        printf("%f\n",e->numTriggers);
                         e->timer = 0;
                         ProcessEffect(&g->effects[i],NULL,g, false);
                     }

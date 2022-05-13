@@ -24,6 +24,8 @@
 #include "shield.h"
 #include "encounter.h"
 #include "gamestate.h"
+#include "damagenumber.h"
+
 ALLEGRO_BITMAP* SCREEN;
 ALLEGRO_DISPLAY* display;
 
@@ -341,6 +343,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     UpdateAttacks(dt);
     SetControlGroups(keyState);
     GetControlGroup(keyState);
+    UpdateDamageNumbers(dt);
     if (al_key_down(keyState, ALLEGRO_KEY_A) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_A))
     {
         players[0].amoveSelected = true;
@@ -873,7 +876,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         }
 
     }
-
+    DrawDamageNumbers();
     DrawMenus(mouseState);
     DrawMouse(mouseState, mousedOver);
     players[0].clickedThisFrame = NULL;

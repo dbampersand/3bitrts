@@ -936,7 +936,7 @@ int L_CreateObject(lua_State* l)
     bool prefabFound = false;
     for (int i = 0; i < numPrefabs; i++)
     {
-        if (strcmp(prefabs[i].path,l_path) == 0)
+        if (strcasecmp(prefabs[i].path,l_path) == 0)
         {
             g = &prefabs[i];
             prefabFound = true;

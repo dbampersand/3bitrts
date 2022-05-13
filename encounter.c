@@ -19,7 +19,7 @@ void LoadEncounter(char* dirPath, lua_State* l)
         while ((dir = readdir(d)) != NULL) {
             if (strcmp(dir->d_name,".") != 0 && strcmp(dir->d_name,"..") != 0 && strcmp(dir->d_name,".DS_Store")!=0 && strlen(dir->d_name) > 0)
             {
-                if (strcmp(dir->d_name,"encounter.lua")==0)
+                if (strcasecmp(dir->d_name,"encounter.lua")==0)
                 {
                     if (!e->lua_buffer)
                     {
@@ -68,7 +68,7 @@ bool FileIsInFolder(char* dirPath, char* fileName)
     d = opendir(dirPath);
     if (d) {
     while ((dir = readdir(d)) != NULL) {
-        if (strcmp(dir->d_name,fileName)==0)
+        if (strcasecmp(dir->d_name,fileName)==0)
         {
             return true;
         }

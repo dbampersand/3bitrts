@@ -1,0 +1,1 @@
+clang *.c `pkg-config --cflags --libs allegro` -lallegro -lallegro_main -lallegro_ttf -lallegro_primitives `pkg-config --cflags --libs lua` -lallegro_font -lallegro_image -llua  -o game -fcommon -g -O0 -ggdb  -fsanitize=address

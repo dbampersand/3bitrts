@@ -31,7 +31,7 @@ int AddAnimationEffectPrefab(char* path, int w, int h, float cd)
 {
     for (int i = 0; i < numAnimationEffectsPrefabs; i++)
     {
-        if (strcmp(path, animationEffectsPrefabs[i].path) == 0)
+        if (strcasecmp(path, animationEffectsPrefabs[i].path) == 0)
             return i;
     }
 

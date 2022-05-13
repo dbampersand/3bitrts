@@ -409,7 +409,7 @@ bool GetButton(Panel* p, char* name)
     for (int i = 0; i < p->numElements; i++)
     {
         UIElement* u = &p->elements[i];
-        if (strcmp(u->name,name)==0)
+        if (strcasecmp(u->name,name)==0)
         {
             Button* b = (Button*)u->data;
             return (b->activated);
