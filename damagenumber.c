@@ -5,6 +5,7 @@
 #include "ui.h"
 #include "allegro5/allegro_ttf.h"
 #include "colors.h"
+#include <stdio.h>
 void InitDamageNumbers()
 {
     memset(damageNumbers,0,sizeof(DamageNumber)*MAX_DAMAGE_NUMBERS);

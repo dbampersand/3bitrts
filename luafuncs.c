@@ -74,6 +74,7 @@ int L_AddEncounterAbility(lua_State* l)
     {
         LoadAbility(str,l,&currEncounterRunning->abilities[index]);
     }
+    return 0;
 }
 
 
@@ -1290,6 +1291,7 @@ int L_SetAbilityHint(lua_State* l)
     {
         currAbilityRunning->hintRadius = lua_tonumber(l,2);
     }
+    return 0;
 }
 int L_AddAbility(lua_State* l)
 {

@@ -4,7 +4,9 @@
 #include "colors.h"
 #include "helperfuncs.h"
 #include <float.h>
+#include "stdio.h"
 #include "point.h"
+
 unsigned long long _FRAMES = 0;
 
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color)
