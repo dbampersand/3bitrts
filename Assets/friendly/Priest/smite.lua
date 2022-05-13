@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("Assets/friendly/priest/icon_smite.png");
+    AbilitySetPortrait("assets/friendly/priest/icon_smite.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(60)
     SetDescription("Smite\n\nHits the target for minor damage.")

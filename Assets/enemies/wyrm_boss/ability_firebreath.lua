@@ -4,7 +4,7 @@ function setup()
     --AbilitySetCastType(ABILITY_CONE);
     SetAbilityHint(HINT_CONE,80);
     SetAbilityCooldown(10); 
-    AbilitySetPortrait("Assets/enemies/wyrm_boss/ability_firebreath.png");
+    AbilitySetPortrait("assets/enemies/wyrm_boss/ability_firebreath.png");
     SetDescription("[b]Firebreath\n\nDeals damage in a cone.")
 
 end

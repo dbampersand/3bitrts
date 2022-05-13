@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("Assets/friendly/priest/icon_greaterheal.png");
+    AbilitySetPortrait("assets/friendly/priest/icon_greaterheal.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
     SetAbilityRange(120)
     SetDescription("Greater Heal\n\nA large, but inefficient heal.")

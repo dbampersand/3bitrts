@@ -137,7 +137,7 @@ void InitAnimationEffects()
     animationEffectsPrefabs = calloc(8,sizeof(AnimationEffect));
     allocatedEffectPrefabs = 8;
 
-    AddAnimationEffectPrefab("Assets/UI/slash_fx2.png", 16, 16, 0.05f);
+    AddAnimationEffectPrefab("assets/ui/slash_fx2.png", 16, 16, 0.05f);
 }
 void DrawAnimationEffects()
 {

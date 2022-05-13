@@ -1,7 +1,7 @@
 function setup()
     SetAbilityRange(2)
     SetAbilityCooldown(20);
-    AbilitySetPortrait("Assets/enemies/wyrm_boss/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/wyrm_boss/ability_bite.png");
     SetDescription("[b]Bite\n\nDeals damage over time to the currently attacked target.")
 
 end
@@ -17,7 +17,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["triggersPerSecond"] = 5
     f1["value"] = 2;  
     f1["duration"] = 10;
-    f1["portrait"] = "Assets/enemies/wyrm_boss/ability_bite_effect_portrait.png"
+    f1["portrait"] = "assets/enemies/wyrm_boss/ability_bite_effect_portrait.png"
 
     ApplyEffect(obj,{f1});
     return true; 

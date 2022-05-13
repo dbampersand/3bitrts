@@ -3,7 +3,7 @@ function setup()
     SetAbilityCooldown(10)
     SetAbilityHint(HINT_CIRCLE,30);
     AbilitySetCastType(ABILITY_POINT);
-    AbilitySetPortrait("Assets/enemies/wyrm_boss/ability_nuke.png");
+    AbilitySetPortrait("assets/enemies/wyrm_boss/ability_nuke.png");
     SetDescription("[b]Nuke\n\nDeals massive damage in a circular area after 10 seconds.")
 
 end

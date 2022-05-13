@@ -1,5 +1,5 @@
 function setup()
-    AbilitySetPortrait("Assets/friendly/Warrior/icon_taunt.png");
+    AbilitySetPortrait("assets/friendly/warrior/icon_taunt.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityCooldown(5);
     SetAbilityRange(40);

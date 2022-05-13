@@ -1,6 +1,6 @@
 function setup()
     AbilitySetCastType(Bor(ABILITY_POINT,ABILITY_TARGET_ENEMY)); 
-    AbilitySetPortrait("Assets/friendly/Warrior/icon_charge.png");
+    AbilitySetPortrait("assets/friendly/warrior/icon_charge.png");
     
 
     SetAbilityRange(60)

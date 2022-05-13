@@ -1,5 +1,5 @@
 function setup()
-    AbilitySetPortrait("Assets/friendly/Warrior/icon_shield.png");
+    AbilitySetPortrait("assets/friendly/warrior/icon_shield.png");
     AbilitySetCastType(ABILITY_INSTANT);
     SetDescription("Shield\n\nGives 50 shield")
     SetAbilityCooldown(15);

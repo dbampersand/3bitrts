@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("Assets/friendly/Rogue/icon_shiv.png");
+    AbilitySetPortrait("assets/friendly/rogue/icon_shiv.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(10)
     SetDescription("Shiv\n\nDamages the target.")

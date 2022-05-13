@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("Assets/friendly/Rogue/icon_backstab.png");
+    AbilitySetPortrait("assets/friendly/rogue/icon_backstab.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(10)
     SetDescription("Backstab\n\nHits the target for major damage and causes a bleed effect.")

@@ -4,7 +4,7 @@ local aoe = -1
 
 
 function setup()
-    AbilitySetPortrait("Assets/friendly/Bard/icon_aoe_shield.png");
+    AbilitySetPortrait("assets/friendly/bard/icon_aoe_shield.png");
     AbilitySetCastType(ABILITY_TOGGLE);
     SetAbilityRange(duration * speed)
     SetAbilityCooldown(10)

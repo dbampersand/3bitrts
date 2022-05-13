@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("Assets/friendly/Rogue/icon_cloak.png");
+    AbilitySetPortrait("assets/friendly/rogue/icon_cloak.png");
     AbilitySetCastType(ABILITY_INSTANT);
     SetDescription("Cloak\n\nProtects you from damage for 4 seconds.")
     SetAbilityCooldown(30);

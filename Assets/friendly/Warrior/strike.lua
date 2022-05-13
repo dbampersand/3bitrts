@@ -3,7 +3,7 @@ local duration = 2;
 
 
 function setup()
-    AbilitySetPortrait("Assets/friendly/Warrior/strike.png");
+    AbilitySetPortrait("assets/friendly/warrior/strike.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(40)
     SetDescription("Strike\n\nStrikes the target, dealing damage and adding high amounts of threat.")

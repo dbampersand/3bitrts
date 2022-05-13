@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("Assets/friendly/Rogue/icon_dash.png");
+    AbilitySetPortrait("assets/friendly/rogue/icon_dash.png");
     AbilitySetCastType(ABILITY_ANGLE);
     SetAbilityRange(120)
     SetDescription("Dash\n\nDashes through enemies, dealing damage.")

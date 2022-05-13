@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("Assets/friendly/priest/icon_minorheal.png");
+    AbilitySetPortrait("assets/friendly/priest/icon_minorheal.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
     SetAbilityRange(60)
     SetDescription("Minor Heal\n\nA small, efficient heal.")

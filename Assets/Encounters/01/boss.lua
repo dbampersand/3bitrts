@@ -1,9 +1,9 @@
 function setup()
-    SetSprite("Assets/Enemies/wyrm.png");
-    AddAbility("Assets/enemies/wyrm_boss/ability_bite.lua",0)   
-    AddAbility("Assets/enemies/wyrm_boss/ability_fire.lua",1)    
-    AddAbility("Assets/enemies/wyrm_boss/ability_nuke.lua",2)    
-    AddAbility("Assets/enemies/wyrm_boss/ability_firebreath.lua",3)    
+    SetSprite("assets/enemies/wyrm.png");
+    AddAbility("assets/enemies/wyrm_boss/ability_bite.lua",0)   
+    AddAbility("assets/enemies/wyrm_boss/ability_fire.lua",1)    
+    AddAbility("assets/enemies/wyrm_boss/ability_nuke.lua",2)    
+    AddAbility("assets/enemies/wyrm_boss/ability_firebreath.lua",3)    
 
     SetDamage(10);
     SetMaxHP(2500,true)

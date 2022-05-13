@@ -1,5 +1,5 @@
 function setup()
-    SetSprite("Assets/Enemies/trainingdummy/trainingdummy.png");
+    SetSprite("assets/enemies/trainingdummy/trainingdummy.png");
 
     SetDamage(0);
     SetMaxHP(9999,true)

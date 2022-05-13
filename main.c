@@ -808,9 +808,6 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
     if (al_key_down(keyState,ALLEGRO_KEY_F) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_F))
     {
-       //AddAnimationEffect("Assets/UI/slash_fx.png", mouseState->x, mouseState->y, 32,32, 0.1, 0);
-        //AddAnimationEffect("Assets/UI/slash_fx2.png", mouseState->x, mouseState->y, 16, 16, 0.05f, 0);
-        //AddAnimationEffect_Prefab(&animationEffectsPrefabs[0],0, mouseState->x,mouseState->y);
     }   
     DrawAnimationEffects();
 
@@ -919,7 +916,7 @@ int main(int argc, char* args[])
     POISON = al_map_rgba(195,94,241,255);
     DAMAGE = al_map_rgba(248,100,100,255);
 
-    LoadEncounters("Assets/Encounters",luaState);
+    LoadEncounters("assets/encounters",luaState);
 
 
     //dodge a lot of crashes by setting the 0th sprite to a zeroed bitmap
@@ -932,16 +929,15 @@ int main(int argc, char* args[])
     display = al_create_display(256*_RENDERSIZE,256*_RENDERSIZE);
     ALLEGRO_BITMAP* backbuffer = al_get_backbuffer(display);
 
-    ALLEGRO_FONT* font = al_load_ttf_font("Assets/Fonts/font.ttf", 8, ALLEGRO_TTF_MONOCHROME);
-    ui.boldFont = al_load_ttf_font("Assets/Fonts/fontbold.ttf", 8, ALLEGRO_TTF_MONOCHROME);
+    ALLEGRO_FONT* font = al_load_ttf_font("assets/fonts/font.ttf", 8, ALLEGRO_TTF_MONOCHROME);
+    ui.boldFont = al_load_ttf_font("assets/fonts/fontbold.ttf", 8, ALLEGRO_TTF_MONOCHROME);
 
     ui.font = font;
-    ui.panel_sprite_index = LoadSprite("Assets/UI/ui.png",false);
-    //ui.cursorDefaultIndex = LoadSprite("Assets/UI/cursor.png",false);
-    LoadCursorSprite(&ui,&ui.cursorDefaultIndex,"Assets/UI/cursor.png");
-    LoadCursorSprite(&ui,&ui.cursorCastingIndex,"Assets/UI/cursor_cast.png");
-    LoadCursorSprite(&ui,&ui.cursorAttackIndex,"Assets/UI/cursor_attack.png");
-    LoadCursorSprite(&ui,&ui.cursorFriendlyIndex,"Assets/UI/cursor_friendly.png");
+    ui.panel_sprite_index = LoadSprite("assets/ui/ui.png",false);
+    LoadCursorSprite(&ui,&ui.cursorDefaultIndex,"assets/ui/cursor.png");
+    LoadCursorSprite(&ui,&ui.cursorCastingIndex,"assets/ui/cursor_cast.png");
+    LoadCursorSprite(&ui,&ui.cursorAttackIndex,"assets/ui/cursor_attack.png");
+    LoadCursorSprite(&ui,&ui.cursorFriendlyIndex,"assets/ui/cursor_friendly.png");
 
     //int* s = LoadSprite("Encounters/01/map.png");
 
@@ -952,29 +948,10 @@ int main(int argc, char* args[])
     //lua_rawgeti(luaState,LUA_REGISTRYINDEX,boss.luafunc_setup);
     //lua_pcall(luaState,0,0,0);
     //Map* selectionMap = 
-    Map* m = LoadMap("Assets/UI/map_unitselect.lua");  
+    Map* m = LoadMap("assets/ui/map_unitselect.lua");  
     SetMap(&maps[0]);
     
-    LoadPrefabs("Assets/friendly");
-
-    //GameObject* g = LoadPrefab("Assets/Friendly/Bard/bard.lua");
-    //SetOwnedBy(g, 0);
-
-    //GameObject* warrior = LoadPrefab("Assets/Friendly/Warrior/warrior.lua");
-    //SetOwnedBy(warrior, 0);
-
-    //GameObject* p = LoadPrefab("Assets/Friendly/Priest/priest.lua");
-    //SetOwnedBy(p, 0);
-
-    //GameObject* r = LoadPrefab("Assets/Friendly/Rogue/rogue.lua");
-    //SetOwnedBy(p, 0);
-
-
-
-    //GameObject* g1 = AddGameobject(&prefabs[1],100,150);
-   // GameObject* warr = AddGameobject(&prefabs[2],128,150);
-    //GameObject* priest = AddGameobject(&prefabs[3],180,160);
-    //GameObject* rogue = AddGameobject(&prefabs[4],201,180);
+    LoadPrefabs("assets/friendly");
 
     int xPos = 100;
     for (int i = 0; i < numPrefabs; i++)
