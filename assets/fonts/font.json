@@ -1,0 +1,44 @@
+{
+	"$baseURI": "https://yal.cc/r/20/pixelfont/",
+	"$version": "1.0",
+	"in-glyphs": [
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+		"abcdefghijklmnopqrstuvwxyz",
+		"1234567890!?.,@£$%&+-*/=()",
+		"[]><'\"~_^\\;:-"
+	],
+	"glyph-color": "white",
+	"in-kerning": [
+		"u i -2",
+		""
+	],
+	"glyph-width": 8,
+	"glyph-height": 16,
+	"glyph-ofs-x": 0,
+	"glyph-ofs-y": 0,
+	"glyph-sep-x": 0,
+	"glyph-sep-y": 0,
+	"glyph-base-x": 0,
+	"glyph-baseline": 0,
+	"glyph-spacing": 1,
+	"font-is-mono": false,
+	"font-em-square": 1024,
+	"font-line-gap": 0,
+	"font-ascend": 0,
+	"font-descend": 1024,
+	"font-px-size": 128,
+	"font-name": "font",
+	"font-author": "",
+	"font-copy": "",
+	"font-version": "",
+	"font-desc": "",
+	"font-license": "",
+	"font-license-url": "",
+	"font-sample-text": "",
+	"font-preview-text": [
+		"ggggg",
+		"ggggg",
+		"Target",
+		""
+	]
+}
