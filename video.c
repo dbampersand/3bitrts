@@ -296,12 +296,6 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
     RotatePoint(&x2,&y2,x,y, -radius/2.0f+angle);
     RotatePoint(&x3,&y3,x,y, radius/2.0f+angle);
 
-
-    ALLEGRO_KEYBOARD_STATE a;
-    al_get_keyboard_state(&a);
-
-
-
     al_draw_line(x,y,x2,y2,color,1);
     al_draw_line(x,y,x3,y3,color,1);
 
