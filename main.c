@@ -944,6 +944,7 @@ int main(int argc, char* args[])
 
     ALLEGRO_FONT* font = al_load_ttf_font("assets/fonts/font.ttf", 8, ALLEGRO_TTF_MONOCHROME);
     ui.boldFont = al_load_ttf_font("assets/fonts/fontbold.ttf", 8, ALLEGRO_TTF_MONOCHROME);
+    ui.tinyFont = al_load_ttf_font("assets/fonts/4x8.ttf", 8, ALLEGRO_TTF_MONOCHROME);
 
     ui.font = font;
     ui.panel_sprite_index = LoadSprite("assets/ui/ui.png",false);

@@ -21,7 +21,7 @@ void DrawDamageNumbers()
         ALLEGRO_COLOR color = al_map_rgba(r,g,b,d->fade);
         if (d->text)
         {
-            al_draw_text(ui.font,color,d->pos.x,d->pos.y,ALLEGRO_ALIGN_CENTER,d->text);
+            al_draw_text(ui.tinyFont,color,d->pos.x,d->pos.y,ALLEGRO_ALIGN_CENTER,d->text);
         }
     }
 }

@@ -76,6 +76,7 @@ typedef struct UI
     int cursorFriendlyIndex;
     ALLEGRO_FONT* font;
     ALLEGRO_FONT* boldFont;
+    ALLEGRO_FONT* tinyFont;
 
     bool escMenuEnabled;
     #define UI_START_Y 217
