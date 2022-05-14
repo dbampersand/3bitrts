@@ -61,6 +61,7 @@ void init()
     _RENDERSIZE = 1;
     _FRAMES = 0;
 
+    numAnimationEffectsPrefabs = 0;
     
 }
 void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState)
