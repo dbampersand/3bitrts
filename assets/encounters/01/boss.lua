@@ -37,11 +37,11 @@ function update()
         
         targ2 = {}
         targ2["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL);
-        --CastAbility(2,4,{targ2});
+        CastAbility(2,4,{targ2});
 
         targ3 = {};
         targ3["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_TANK)
-        --CastAbility(3,2,{targ3});
+        CastAbility(3,2,{targ3});
 
 
     end

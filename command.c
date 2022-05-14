@@ -1,6 +1,7 @@
 #include "command.h"
 #include "gameobject.h"
 #include "helperfuncs.h"
+#include "ability.h"
 void AddCommand(GameObject* g, Command c)
 {
     for (int i = 0; i < MAX_QUEUED_CMD; i++)
@@ -103,7 +104,7 @@ void DoCommands(GameObject* g)
     {
         if (c->target)
         {
-            if (IsOwnedByPlayer(g) != IsOwnedByPlayer(c->target))
+            if (AbilityShouldBeCastOnTarget(c->ability))//if (IsOwnedByPlayer(g) != IsOwnedByPlayer(c->target) && )
                 g->targObj = c->target;
         }
 

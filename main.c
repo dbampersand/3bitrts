@@ -399,6 +399,11 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         bool shouldAttack = false;
         ProcessEffects(currGameObjRunning,dt);
         ProcessShields(currGameObjRunning,dt);
+           // if (currGameObjRunning->queue[0].commandType == COMMAND_CAST &&  RectDist(currGameObjRunning,currGameObjRunning->targObj) < currGameObjRunning->queue[0].ability->range+DISTDELTA)
+            //{
+              //  shouldMove = true;
+            //}
+
         if (currGameObjRunning->targObj && currGameObjRunning->queue[0].commandType == COMMAND_ATTACK) 
         {
             GameObject* tempAttack = currGameObjRunning->targObj;
@@ -415,7 +420,8 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
                 #define DISTDELTA 0.001f
                 Rect unioned = UnionRect(r,r2);
                 //if (RectsTouch(r, r2, currGameObjRunning->range+DISTDELTA))
-               if (RectDist(currGameObjRunning,currGameObjRunning->targObj) < currGameObjRunning->range+DISTDELTA)
+                
+                if (RectDist(currGameObjRunning,currGameObjRunning->targObj) < currGameObjRunning->range+DISTDELTA)
                 {
                     shouldMove = false;
                     shouldAttack = true;
