@@ -891,7 +891,11 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     DrawMouse(mouseState, mousedOver);
     players[0].clickedThisFrame = NULL;
     
-    //DrawCone(160, 160, 60, 270, 10,FRIENDLY);
+    //DrawCone(160, 160, 60, 80, 10,FRIENDLY);
+    //float angle = RadToDeg(atan2(mouseState->x-70,mouseState->y-67));
+    //DrawCone(67,70,angle,90,80,FRIENDLY);
+
+    //  CircleSegment(65,66, 112.378822, 5.76727676, 1.05488777, FRIENDLY, 80);
 }
 
 void DrawMainMenu()

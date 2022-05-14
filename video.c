@@ -195,7 +195,6 @@ bool isInsideSector(int x, int y, int cx, int cy, float startX, float startY, fl
     }
     return false;
 }
-
 void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO_COLOR col, float length)
 {
     
@@ -205,12 +204,13 @@ void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO
     int sign = start < end ? 1 : -1;
 
     float inc = 1 /  radius;
+    
     if (sign == -1)
     {
         float temp = start;
-        end -= radius * M_PI/180.0f - (length*M_PI/180.0f);
+        end -= radius * M_PI/180.0f - (length*M_PI/180.0f)+1;
         float rad = (360-radius) * M_PI/180.0f;
-        start -= rad + (length*M_PI/180.0f);
+        start -= rad + (length*M_PI/180.0f)-1;
     }
 
     float theta = start;
@@ -300,6 +300,8 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
     ALLEGRO_KEYBOARD_STATE a;
     al_get_keyboard_state(&a);
 
+
+
     al_draw_line(x,y,x2,y2,color,1);
     al_draw_line(x,y,x3,y3,color,1);
 
@@ -345,6 +347,5 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
         CircleSegment(x,y,l,angle2,angle3,color,length); 
     else
         CircleSegment(x,y,l,angle2,angle3,color,length);
-    printf("\n");
 
 }
