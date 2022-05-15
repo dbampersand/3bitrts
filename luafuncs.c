@@ -1205,7 +1205,7 @@ int L_DealDamage(lua_State* l)
     if (objIndex >= MAX_OBJS) return -1;
 
     int dmg = lua_tonumber(l,2);
-    Damage(&objects[objIndex],dmg);
+    Damage(currGameObjRunning,&objects[objIndex],dmg);
     return 1;
 }
 int L_SetObjectPush(lua_State* l)

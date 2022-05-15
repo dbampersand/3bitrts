@@ -886,7 +886,7 @@ void AttackTarget(GameObject* g)
 
 
         AddThreat(g,g->targObj,damage);
-        if (Damage(g->targObj,damage))
+        if (Damage(g,g->targObj,damage))
         {
             g->targObj = NULL;
         }
@@ -900,20 +900,18 @@ Rect GetObjRect(GameObject* g)
     Rect r = (Rect){g->position.x,g->position.y,al_get_bitmap_width(sprites[g->spriteIndex].sprite),al_get_bitmap_height(sprites[g->spriteIndex].sprite)};
     return r;
 }
-bool Damage(GameObject* g, float value)
+bool Damage(GameObject* source, GameObject* g, float value)
 {
     if (!g) return false;
     if (!(g->properties & OBJ_ACTIVE)) return false;
     if (g->invulnerableTime > 0)
     {
-        printf("%f\n",g->invulnerableTime);
         return false;
-
     }
 
     value = DamageShields(g,value);
     g->health -= value;
-    AddDamageNumber((int)value,g->position.x+(rand()%(int)GetWidth(g)*1.1f),g->position.y+(rand()%(int)GetHeight(g)*1.1f));
+    AddDamageNumber((int)value,g->position.x+(rand()%(int)GetWidth(g)*1.1f),g->position.y+(rand()%(int)GetHeight(g)*1.1f),source);
     if (g->health <= 0)
     {
         KillObj(g);

@@ -11,7 +11,7 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     }
     if (e->effectType == EFFECT_HURT)
     {
-        return Damage(target,e->value*sign);
+        return Damage(from,target,e->value*sign);
 
     }
     if (e->effectType == EFFECT_HEAL)
@@ -89,7 +89,7 @@ void ProcessEffects(GameObject* g, float dt)
                     {
                         e->numTriggers--;
                         e->timer = 0;
-                        ProcessEffect(&g->effects[i],NULL,g, false);
+                        ProcessEffect(&g->effects[i],g->effects[i].from,g, false);
                     }
                 }
                 else

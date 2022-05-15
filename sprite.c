@@ -65,6 +65,11 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
         sprites[0].path = "";
         numSprites=1;
         maxSprites=2;
+
+            //dodge a lot of crashes by setting the 0th sprite to a zeroed bitmap
+    sprites[0].sprite = al_create_bitmap(0,0);
+    sprites[0].inverseSprite = al_create_bitmap(0,0);
+
     }
     for (int i = 0; i < numSprites; i++)
     {

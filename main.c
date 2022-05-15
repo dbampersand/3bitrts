@@ -54,6 +54,8 @@ void init()
     players = calloc(2,sizeof(GameObject));
 
     gameState = MAIN_MENU;
+    ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Start");
+
     ui.panelShownPercent = 1.0f;
     numMaps = 0;
     numSprites=1;
@@ -62,6 +64,8 @@ void init()
     _FRAMES = 0;
 
     numAnimationEffectsPrefabs = 0;
+
+
     
 }
 void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState)
@@ -323,6 +327,11 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_S
         if (GetButton(&ui.mainMenuPanel,"Return"))
         {
             ui.currentPanel = NULL;
+            if (gameState == MAIN_MENU)
+            {
+                gameState = CHOOSING_ENCOUNTER;
+                ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
+            }
         }
         if (GetButton(&ui.mainMenuPanel,"Options"))
         {
@@ -332,15 +341,6 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_S
         {
             shouldExit = true;
         }
-    }
-    if (ui.currentPanel == &ui.startMenuPanel)
-    {
-        if (GetButton(&ui.startMenuPanel,"Start Game"))
-        {
-            ui.currentPanel = NULL;
-            gameState = CHOOSING_ENCOUNTER;
-        }
-
     }
 }
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
@@ -850,11 +850,14 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         if (GetButtonIsClicked(&ui.choosingUnits_Back))
         {
             gameState = CHOOSING_ENCOUNTER;
+            ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
         }
 
         if (GetButtonIsClicked(&ui.choosingUnits_GO) && numUnitsInRect==encounters[selectedEncounterIndex]->numUnitsToSelect)
         {
             gameState = INGAME;
+            ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
+
             Encounter* e = encounters[selectedEncounterIndex];
             GameObject** list = calloc(e->numUnitsToSelect,sizeof(GameObject*));
 
@@ -908,6 +911,7 @@ int main(int argc, char* args[])
     al_init_primitives_addon();
     al_install_mouse();
     al_install_keyboard();
+    init();
 
     init_lua();
     InitAttacks();
@@ -916,7 +920,6 @@ int main(int argc, char* args[])
     InitUI();
   //  init_sprites(); 
 
-    init();
 
     BG = al_map_rgba(40,32,36,255);
     GROUND = al_map_rgba(115,119,148,255);
@@ -933,9 +936,6 @@ int main(int argc, char* args[])
     LoadEncounters("assets/encounters",luaState);
 
 
-    //dodge a lot of crashes by setting the 0th sprite to a zeroed bitmap
-    sprites[0].sprite = al_create_bitmap(0,0);
-    sprites[0].inverseSprite = al_create_bitmap(0,0);
     
     ALLEGRO_MONITOR_INFO monitor;
     al_get_monitor_info(0, &monitor);
@@ -1006,8 +1006,7 @@ int main(int argc, char* args[])
     mouseStateLastFrame = GetMouseClamped();
     if (gameState == MAIN_MENU)
     {
-        //ChangeUIPanel(&ui.startMenuPanel);
-        ui.currentPanel = &ui.startMenuPanel;
+        ui.currentPanel = &ui.mainMenuPanel;
         ui.panelShownPercent=1.0f;
         ui.animatePanel = UI_ANIMATE_STATIC;
     }

@@ -296,7 +296,8 @@ void AddElement(Panel* p, UIElement* u)
 void AddButton(Panel* p, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak)
 {
     Button* b = calloc(1,sizeof(Button));
-    b->description = description;
+    b->description = calloc(strlen(description)+1,sizeof(char));
+    strcpy(b->description,description);
     b->clicked = false; 
     UIElement u = {0};
     u.data = (void*)b;
@@ -340,6 +341,8 @@ void TabGroup(int numPanels, ...)
         }
         list[i]->tabs = malloc(numPanels*sizeof(Panel*));
         list[i]->numTabs = numPanels;
+        InitButton(&list[i]->tabButton, "Tab", "", 0, 14, 33, 0, false, 0);
+
         for (int j = 0; j < numPanels; j++)
         {
             list[i]->tabs[j] = list[j];
@@ -348,11 +351,15 @@ void TabGroup(int numPanels, ...)
     free(list);
     va_end(argp);
 }
-void InitButton(UIElement* u, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak)
+void InitButton(UIElement* u, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak, int sprite)
 {
     Button* b = calloc(1,sizeof(Button));
-    b->description = description;
+
+    b->description = calloc(strlen(description)+1,sizeof(char));
+    strcpy(b->description,description);
+
     b->clicked = false; 
+    b->spriteIndex = sprite;
     u->data = (void*)b;
     u->w = w;
     u->h = h;
@@ -362,6 +369,35 @@ void InitButton(UIElement* u, char* name, char* description, int x, int w, int h
     u->elementType = ELEMENT_BUTTON;
     u->x = x;
 }
+void ChangeButtonText(Button* b, char* newstr)
+{
+    if (!b)
+    {
+        return;
+    }
+    if (b->description)
+    {
+        free(b->description);
+    }
+    b->description = calloc(strlen(newstr)+1,sizeof(char));
+    strcpy(b->description,newstr);
+}
+Button* GetButtonB(Panel* p, char* name)
+{
+    if (!p) 
+        return NULL;
+    for (int i = 0; i < p->numElements; i++)
+    {
+        UIElement* u = &p->elements[i];
+        if (strcasecmp(u->name,name)==0)
+        {
+            Button* b = (Button*)u->data;
+            return b;
+        }
+    }
+    return NULL;
+}
+
 void InitUI()
 {
     ui.mainMenuPanel = CreatePanel(48,48,160,112,15);
@@ -382,19 +418,32 @@ void InitUI()
     AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",80,96,16,15,true);
     TabGroup(3,&ui.videoOptionsPanel,&ui.audioOptionsPanel,&ui.accessibilityOptionsPanel);
 
-    ui.startMenuPanel = CreatePanel(48,48,160,112,15);
-    AddButton(&ui.startMenuPanel,"Start Game", "Start Game", 80,96,16,15,true);
-    AddButton(&ui.startMenuPanel,"Options", "Options", 80,96,16,15,true);
-    AddButton(&ui.startMenuPanel,"End Game", "End Game", 80,96,16,15,true);
 
     ui.encounter_scroll = CreatePanel(16,224,224,16,0);
-    InitButton(&ui.encounter_ButtonLeft,"<","<",0,48,16,0,false);
-    InitButton(&ui.encounter_ButtonConfirm,"Select Party","Select Party",0,96,16,0,false);
-    InitButton(&ui.encounter_ButtonRight,">",">",0,48,16,0,false);
+    InitButton(&ui.encounter_ButtonLeft,"<","<",0,48,16,0,false,0);
+    InitButton(&ui.encounter_ButtonConfirm,"Select Party","Select Party",0,96,16,0,false,0);
+    InitButton(&ui.encounter_ButtonRight,">",">",0,48,16,0,false,0);
 
-    InitButton(&ui.choosingUnits_Back,"Back","Back",0,48,16,0,false);
-    InitButton(&ui.choosingUnits_GO,"Adventure","Adventure",0,96,16,0,false);
+    InitButton(&ui.choosingUnits_Back,"Back","Back",0,48,16,0,false,0);
+    InitButton(&ui.choosingUnits_GO,"Adventure","Adventure",0,96,16,0,false,0);
 
+    /*ui.mainMenuPanel.spriteIndex_tabIcon = LoadSprite("assets/ui/back_tab_icon.png",true);
+    ui.videoOptionsPanel.spriteIndex_tabIcon = LoadSprite("assets/ui/video_tab_icon.png",true);
+    ui.audioOptionsPanel.spriteIndex_tabIcon = LoadSprite("assets/ui/audio_tab_icon.png",true);
+    ui.accessibilityOptionsPanel.spriteIndex_tabIcon = LoadSprite("assets/ui/accessiblity_tab_icon.png",true);
+*/
+    InitButton(&ui.videoOptionsPanel.backButton, "Back", "", 0, 14, 14, 0, false,LoadSprite("assets/ui/back_tab_icon.png",true));
+    InitButton(&ui.audioOptionsPanel.backButton, "Back", "", 0, 14, 14, 0, false,LoadSprite("assets/ui/back_tab_icon.png",true));
+    InitButton(&ui.accessibilityOptionsPanel.backButton, "Back", "", 0, 14, 14, 0, false,LoadSprite("assets/ui/back_tab_icon.png",true));
+
+
+    InitButton(&ui.videoOptionsPanel.tabButton, "Tab", "", 0, 14, 33, 0, false,LoadSprite("assets/ui/video_tab_icon.png",true));
+    InitButton(&ui.audioOptionsPanel.tabButton, "Tab", "", 0, 14, 33, 0, false,LoadSprite("assets/ui/audio_tab_icon.png",true));
+    InitButton(&ui.accessibilityOptionsPanel.tabButton, "Tab", "", 0, 14, 33, 0, false,LoadSprite("assets/ui/accessiblity_tab_icon.png",true));
+
+    ui.videoOptionsPanel.back = &ui.mainMenuPanel;
+    ui.audioOptionsPanel.back = &ui.mainMenuPanel;
+    ui.accessibilityOptionsPanel.back = &ui.mainMenuPanel;
 
 
     ui.animatePanel = UI_ANIMATE_STATIC;
@@ -417,6 +466,38 @@ bool GetButton(Panel* p, char* name)
         }
     }
     return false;
+}
+void UpdateTabButtons(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+{
+    int y = p->y; 
+    int x = p->x;
+
+    if (p->backButton.data)
+    {
+        Button* b = (Button*)p->backButton.data;
+
+        UpdateButton(x,y,&p->backButton,mouseState,mouseStateLastFrame);
+        if (b->activated)
+        {
+            ChangeUIPanel(p->back);
+        }
+
+        y+=p->backButton.h;
+    }
+    for (int i = 0; i < p->numTabs; i++)
+    {
+        Panel* tab = p->tabs[i];
+        Button* b = (Button*)tab->tabButton.data;
+        int w; int h; 
+        h = al_get_bitmap_height(sprites[b->spriteIndex].sprite);
+        w = al_get_bitmap_width(sprites[b->spriteIndex].sprite);
+        UpdateButton(x,y,&tab->tabButton,mouseState,mouseStateLastFrame);
+        if (b->activated)
+        {
+            ChangeUIPanel(tab);
+        }
+        y += h;
+    }
 }
 void UpdateButton(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
@@ -469,6 +550,11 @@ void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE*
 
 void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, float dt)
 {
+    if (ui.currentPanel)
+    {
+        UpdateTabButtons(ui.currentPanel, mouseState,mouseStateLastFrame);
+    }
+
     if (!al_key_down(keyState,ALLEGRO_KEY_P) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_P))
     {
         if (ui.currentPanel)
@@ -544,6 +630,10 @@ void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, boo
     {
         al_draw_rectangle(x+2,y+2,x+u->w-2,y+u->h-2,FRIENDLY,1);
     }
+    if (b->spriteIndex)
+    {
+        DrawSprite(&sprites[b->spriteIndex],x,y,FRIENDLY,false);
+    }
 
 }
 void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive, ALLEGRO_COLOR bgColor)
@@ -582,6 +672,32 @@ void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)
     }
 
 }
+void DrawPanelTabs(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
+{
+    int y = p->y; 
+    int x = p->x;
+
+    if (p->backButton.data)
+    {
+        DrawButton(&p->backButton,x,y,mouseState,true,BG);
+        y+=p->backButton.h;
+    }
+    for (int i = 0; i < p->numTabs; i++)
+    {
+        Panel* tab = p->tabs[i];
+        if (tab->tabButton.data)
+        {
+            Button* b = (Button*)tab->tabButton.data;
+            int w; int h; 
+            h = al_get_bitmap_height(sprites[b->spriteIndex].sprite);
+            w = al_get_bitmap_width(sprites[b->spriteIndex].sprite);
+            al_draw_rectangle(x,y,x+w,y+h,FRIENDLY,1);
+            DrawButton(&tab->tabButton,x,y,mouseState,true,BG);
+            //DrawSprite(&sprites[b->spriteIndex],p->x,y,FRIENDLY,false);
+            y += h;
+        } 
+    }
+}
 void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
 {
     al_set_clipping_rectangle(p->x-1,p->y,p->w+1,p->h*ui.panelShownPercent+1);
@@ -604,7 +720,12 @@ void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
         DrawUIElement(u,x,y,mouseState,true,BG);
 
     }
+    if (p->tabs)
+    {
+        DrawPanelTabs(p, mouseState);
+    }
     al_reset_clipping_rectangle();
+    
 
 
 }

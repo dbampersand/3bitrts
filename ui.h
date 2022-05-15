@@ -31,6 +31,7 @@ typedef struct Button
     char* description;
     bool clicked; 
     bool activated;
+    int spriteIndex;
 } Button;
 
 typedef struct UIElement
@@ -48,7 +49,7 @@ typedef struct UIElement
 
 typedef struct Panel
 {
-    Sprite* tabIcon;
+    int spriteIndex_tabIcon;
     UIElement* elements;
     int numElements;
     int numElementsAllocated;
@@ -59,6 +60,10 @@ typedef struct Panel
     int padding;
     struct Panel** tabs;    
     int numTabs;
+
+    UIElement backButton;
+    UIElement tabButton;
+    struct Panel* back;
 
 } Panel;
 typedef enum UI_AnimState
@@ -84,7 +89,6 @@ typedef struct UI
     #define UI_MAIN_MENU_H 112
 
     Panel* currentPanel;
-    Panel startMenuPanel;
     Panel mainMenuPanel;
     Panel videoOptionsPanel;
     Panel audioOptionsPanel;
@@ -131,12 +135,15 @@ void GetUILocation(Panel* p, UIElement* uF, int* x, int* y);
 void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, float dt);
 bool GetButton(Panel* p, char* name);
+Button* GetButtonB(Panel* p, char* name);
 void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive,ALLEGRO_COLOR bgColor); 
 void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState);
 void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void ChangeUIPanel(Panel* to);
 bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MOUSE_STATE* mouse);
-void InitButton(UIElement* u, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak);
+void InitButton(UIElement* u, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak, int sprite);
 void AddButton(Panel* p, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak);
 bool GetButtonIsClicked(UIElement* u);
 void DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c);
+void UpdateTabButtons(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
+void ChangeButtonText(Button* b, char* newstr);
