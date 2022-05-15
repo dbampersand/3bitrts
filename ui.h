@@ -30,8 +30,12 @@ typedef enum UIElement_Align
 typedef struct UI_Text
 {
     char* str;
-
 }UI_Text;
+typedef struct Slider
+{
+    bool clicked; 
+    float value;
+}Slider;
 typedef struct Button
 {
     char* description;

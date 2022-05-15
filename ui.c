@@ -309,6 +309,31 @@ void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int
     u.x = x;
     AddElement(p,&u);
 }
+void UpdateSlider(Slider* s, int x, int y, int w, int h, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+{
+    Rect r = (Rect){x,y,w,h};
+    if (mouseState->buttons & 1 && !(mouseStateLastFrame->buttons & 1))
+    {
+        if (PointInRect(mouseState->x,mouseState->y,r))
+        {
+            s->clicked = true;
+        }
+    }
+    if (!(mouseState->buttons & 1))
+    {
+        s->clicked = false;
+    }
+
+    if (s->clicked)
+    {
+        float v = 1-((x+w) - mouseState->x) / (float)w;
+        if (v>1)
+            v = 1;
+        if (v<0)
+            v = 0;
+        s->value = v;
+    }
+}
 Panel CreatePanel(int x, int y, int w, int h, int padding)
 {
     Panel p = {0};
@@ -410,7 +435,27 @@ Button* GetButtonB(Panel* p, char* name)
     }
     return NULL;
 }
-
+void DrawSlider(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive, ALLEGRO_COLOR bgColor)
+{
+    Slider* s = (Slider*)u->data;
+    al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
+    float w = u->w * s->value;
+    al_draw_filled_rectangle(x,y,x+w,y+u->h,FRIENDLY);
+}
+void AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled)
+{
+    Slider* s = calloc(1,sizeof(Slider));
+    UIElement u = {0};
+    u.x = x;
+    u.y = y;
+    u.w = w;
+    u.h = h;
+    s->value = filled;
+    u.name = name;
+    u.data = (void*)s;
+    u.elementType = ELEMENT_SLIDER;
+    AddElement(p,&u);
+}
 void InitUI()
 {
     ui.mainMenuPanel = CreatePanel(48,48,160,112,15);
@@ -425,8 +470,9 @@ void InitUI()
     AddButton(&ui.videoOptionsPanel,"RenderScale-","-",132,53,11,11);
 
     ui.audioOptionsPanel = CreatePanel(48,48,160,112,15);
-    AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 132,29,96,16);
-    AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",132,29,96,16);
+    AddText(&ui.audioOptionsPanel,33,41,"Tag_MasterVolume","Master Volume");
+    AddSlider(&ui.audioOptionsPanel,34,52,110,10,"MasterVolume",0.35f);
+
 
     ui.accessibilityOptionsPanel = CreatePanel(48,48,160,112,15);
     AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 132,29,96,16);
@@ -550,6 +596,10 @@ void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLE
     {
         UpdateButton(x,y,u,mouseState,mouseStateLastFrame);
     }
+    if (u->elementType == ELEMENT_SLIDER)
+    {
+        UpdateSlider((Slider*)u->data, x,  y, u->w,u->h,mouseState, mouseStateLastFrame);
+    }
 }
 void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
@@ -666,6 +716,11 @@ void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, 
     {
         UIDrawText(u,x,y);
     }
+    if (u->elementType == ELEMENT_SLIDER)
+    {
+        DrawSlider(u,x,y,mouseState,isActive,bgColor);
+    }
+
 }
 void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)
 {
