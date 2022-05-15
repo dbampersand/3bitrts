@@ -442,6 +442,71 @@ void DrawSlider(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, boo
     float w = u->w * s->value;
     al_draw_filled_rectangle(x,y,x+w,y+u->h,FRIENDLY);
 }
+void UpdateCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+{
+    if (!isActive)
+        return;
+    if (mouseState->buttons & 1 && !(mouseStateLastFrame->buttons & 1))
+    {
+        Rect r = (Rect){x,y,w,h};
+        if (PointInRect(mouseState->x,mouseState->y,r))
+        {
+            c->clicked = true;
+        }
+    }
+    if (mouseStateLastFrame->buttons & 1 && !(mouseState->buttons & 1))
+    {
+        Rect r = (Rect){x,y,w,h};
+        if (c->clicked)
+        {
+            if (PointInRect(mouseState->x,mouseState->y,r))
+            {
+                c->activated = !c->activated;
+            }
+        }
+    }
+    if (!(mouseState->buttons & 1))
+    {
+        c->clicked = false;
+    }
+
+}
+void DrawCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive,ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_COLOR bgColor)
+{
+    Rect checkbox = (Rect){x,y,w,h};
+    if (c->activated && isActive)
+    {
+        al_draw_filled_rectangle(x,y,x+w,y+h,FRIENDLY);
+        al_draw_rectangle(x,y,w,y+h,BG,1);
+    }
+    else
+    {
+        al_draw_filled_rectangle(x,y,x+w,y+h,bgColor);
+        if (isActive)
+        {
+            al_draw_rectangle(x,y,x+w,y+h,FRIENDLY,1);
+        }
+        else
+        {
+            DrawOutlinedRect_Dithered(&checkbox,FRIENDLY);
+        }
+
+    }
+}
+void AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool activated)
+{
+    Checkbox* c = calloc(1,sizeof(Checkbox));
+    UIElement u = {0};
+    u.x = x;
+    u.y = y;
+    u.w = w;
+    u.h = h;
+    c->activated = activated;
+    u.name = name;
+    u.data = (void*)c;
+    u.elementType = ELEMENT_CHECKBOX;
+    AddElement(p,&u);
+}
 void AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled)
 {
     Slider* s = calloc(1,sizeof(Slider));
@@ -468,6 +533,7 @@ void InitUI()
     AddText(&ui.videoOptionsPanel,132,43,"RenderScale","2x");
     AddButton(&ui.videoOptionsPanel,"RenderScale+","+",132,29,11,11);
     AddButton(&ui.videoOptionsPanel,"RenderScale-","-",132,53,11,11);
+    AddCheckbox(&ui.videoOptionsPanel,131,72,13,13,"EnableParticles",true);
 
     ui.audioOptionsPanel = CreatePanel(48,48,160,112,15);
     AddText(&ui.audioOptionsPanel,33,41,"Tag_MasterVolume","Master Volume");
@@ -475,8 +541,8 @@ void InitUI()
 
 
     ui.accessibilityOptionsPanel = CreatePanel(48,48,160,112,15);
-    AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 132,29,96,16);
-    AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",132,29,96,16);
+    //AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 132,29,96,16);
+    //AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",132,29,96,16);
     TabGroup(3,&ui.videoOptionsPanel,&ui.audioOptionsPanel,&ui.accessibilityOptionsPanel);
 
 
@@ -600,6 +666,11 @@ void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLE
     {
         UpdateSlider((Slider*)u->data, x,  y, u->w,u->h,mouseState, mouseStateLastFrame);
     }
+    if (u->elementType == ELEMENT_CHECKBOX)
+    {
+        UpdateCheckbox((Checkbox*)u->data, x,  y, u->w,u->h,true,mouseState, mouseStateLastFrame);
+    }
+
 }
 void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
@@ -720,6 +791,11 @@ void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, 
     {
         DrawSlider(u,x,y,mouseState,isActive,bgColor);
     }
+    if (u->elementType == ELEMENT_CHECKBOX)
+    {
+        DrawCheckbox((Checkbox*)u->data,x,y,u->w,u->h,isActive,mouseState,bgColor);
+    }
+
 
 }
 void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)

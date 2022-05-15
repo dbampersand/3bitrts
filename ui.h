@@ -36,6 +36,11 @@ typedef struct Slider
     bool clicked; 
     float value;
 }Slider;
+typedef struct Checkbox
+{
+    bool clicked; 
+    bool activated;
+}Checkbox;
 typedef struct Button
 {
     char* description;
