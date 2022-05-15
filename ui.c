@@ -293,7 +293,7 @@ void AddElement(Panel* p, UIElement* u)
     p->elements[p->numElements] = *u;
     p->numElements++;
 }
-void AddButton(Panel* p, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak)
+void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h)
 {
     Button* b = calloc(1,sizeof(Button));
     b->description = calloc(strlen(description)+1,sizeof(char));
@@ -303,8 +303,7 @@ void AddButton(Panel* p, char* name, char* description, int x, int w, int h, int
     u.data = (void*)b;
     u.w = w;
     u.h = h;
-    u.padding = padding;
-    u.linebreak = shouldLinebreak;
+    u.y = y;
     u.name = name;
     u.elementType = ELEMENT_BUTTON;
     u.x = x;
@@ -341,7 +340,7 @@ void TabGroup(int numPanels, ...)
         }
         list[i]->tabs = malloc(numPanels*sizeof(Panel*));
         list[i]->numTabs = numPanels;
-        InitButton(&list[i]->tabButton, "Tab", "", 0, 14, 33, 0, false, 0);
+        InitButton(&list[i]->tabButton, "Tab", "", 0,0, 14, 33, 0);
 
         for (int j = 0; j < numPanels; j++)
         {
@@ -351,7 +350,7 @@ void TabGroup(int numPanels, ...)
     free(list);
     va_end(argp);
 }
-void InitButton(UIElement* u, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak, int sprite)
+void InitButton(UIElement* u, char* name, char* description, int x, int y, int w, int h, int sprite)
 {
     Button* b = calloc(1,sizeof(Button));
 
@@ -363,11 +362,10 @@ void InitButton(UIElement* u, char* name, char* description, int x, int w, int h
     u->data = (void*)b;
     u->w = w;
     u->h = h;
-    u->padding = padding;
-    u->linebreak = shouldLinebreak;
     u->name = name;
     u->elementType = ELEMENT_BUTTON;
     u->x = x;
+    u->y = y;
 }
 void ChangeButtonText(Button* b, char* newstr)
 {
@@ -381,6 +379,21 @@ void ChangeButtonText(Button* b, char* newstr)
     }
     b->description = calloc(strlen(newstr)+1,sizeof(char));
     strcpy(b->description,newstr);
+}
+void AddText(Panel* p,int x, int y, char* name, char* description)
+{
+    UIElement u = {0};
+    UI_Text* t = calloc(1,sizeof(UI_Text));
+
+    t->str = calloc(strlen(description)+1,sizeof(char));
+    strcpy(t->str,description);
+    u.data = (void*)t;
+
+    u.x = x; 
+    u.y = y;
+    u.elementType = ELEMENT_TEXT;
+    u.name = name;
+    AddElement(p,&u);
 }
 Button* GetButtonB(Panel* p, char* name)
 {
@@ -401,45 +414,47 @@ Button* GetButtonB(Panel* p, char* name)
 void InitUI()
 {
     ui.mainMenuPanel = CreatePanel(48,48,160,112,15);
-    AddButton(&ui.mainMenuPanel,"Return","Return",80,96,16,15,true);
-    AddButton(&ui.mainMenuPanel,"Options","Options",80,96,16,15,true);
-    AddButton(&ui.mainMenuPanel,"Exit","Exit Game",80,96,16,15,true);
+    AddButton(&ui.mainMenuPanel,"Return","Return",33,17,96,16);
+    AddButton(&ui.mainMenuPanel,"Options","Options",33,49,96,16);
+    AddButton(&ui.mainMenuPanel,"Exit","Exit Game",33,81,96,16);
 
     ui.videoOptionsPanel = CreatePanel(48,48,160,112,15);
-    AddButton(&ui.videoOptionsPanel,"RenderScale+","+",80,96,16,15,true);
-    AddButton(&ui.videoOptionsPanel,"RenderScale-","-",80,96,16,15,true);
+    AddText(&ui.videoOptionsPanel,33,41,"Tag_RenderScale","RenderScale");
+    AddText(&ui.videoOptionsPanel,132,43,"RenderScale","2x");
+    AddButton(&ui.videoOptionsPanel,"RenderScale+","+",132,29,11,11);
+    AddButton(&ui.videoOptionsPanel,"RenderScale-","-",132,53,11,11);
 
     ui.audioOptionsPanel = CreatePanel(48,48,160,112,15);
-    AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 80,96,16,15,true);
-    AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",80,96,16,15,true);
+    AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 132,29,96,16);
+    AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",132,29,96,16);
 
     ui.accessibilityOptionsPanel = CreatePanel(48,48,160,112,15);
-    AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 80,96,16,15,true);
-    AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",80,96,16,15,true);
+    AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 132,29,96,16);
+    AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",132,29,96,16);
     TabGroup(3,&ui.videoOptionsPanel,&ui.audioOptionsPanel,&ui.accessibilityOptionsPanel);
 
 
     ui.encounter_scroll = CreatePanel(16,224,224,16,0);
-    InitButton(&ui.encounter_ButtonLeft,"<","<",0,48,16,0,false,0);
-    InitButton(&ui.encounter_ButtonConfirm,"Select Party","Select Party",0,96,16,0,false,0);
-    InitButton(&ui.encounter_ButtonRight,">",">",0,48,16,0,false,0);
+    InitButton(&ui.encounter_ButtonLeft,"<","<",0,224,48,16,0);
+    InitButton(&ui.encounter_ButtonConfirm,"Select Party","Select Party",0,224,96,16,0);
+    InitButton(&ui.encounter_ButtonRight,">",">",0,224,48,16,0);
 
-    InitButton(&ui.choosingUnits_Back,"Back","Back",0,48,16,0,false,0);
-    InitButton(&ui.choosingUnits_GO,"Adventure","Adventure",0,96,16,0,false,0);
+    InitButton(&ui.choosingUnits_Back,"Back","Back",45,194,48,16,0);
+    InitButton(&ui.choosingUnits_GO,"Adventure","Adventure",109,194,96,16,0);
 
     /*ui.mainMenuPanel.spriteIndex_tabIcon = LoadSprite("assets/ui/back_tab_icon.png",true);
     ui.videoOptionsPanel.spriteIndex_tabIcon = LoadSprite("assets/ui/video_tab_icon.png",true);
     ui.audioOptionsPanel.spriteIndex_tabIcon = LoadSprite("assets/ui/audio_tab_icon.png",true);
     ui.accessibilityOptionsPanel.spriteIndex_tabIcon = LoadSprite("assets/ui/accessiblity_tab_icon.png",true);
 */
-    InitButton(&ui.videoOptionsPanel.backButton, "Back", "", 0, 14, 14, 0, false,LoadSprite("assets/ui/back_tab_icon.png",true));
-    InitButton(&ui.audioOptionsPanel.backButton, "Back", "", 0, 14, 14, 0, false,LoadSprite("assets/ui/back_tab_icon.png",true));
-    InitButton(&ui.accessibilityOptionsPanel.backButton, "Back", "", 0, 14, 14, 0, false,LoadSprite("assets/ui/back_tab_icon.png",true));
+    InitButton(&ui.videoOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
+    InitButton(&ui.audioOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
+    InitButton(&ui.accessibilityOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
 
 
-    InitButton(&ui.videoOptionsPanel.tabButton, "Tab", "", 0, 14, 33, 0, false,LoadSprite("assets/ui/video_tab_icon.png",true));
-    InitButton(&ui.audioOptionsPanel.tabButton, "Tab", "", 0, 14, 33, 0, false,LoadSprite("assets/ui/audio_tab_icon.png",true));
-    InitButton(&ui.accessibilityOptionsPanel.tabButton, "Tab", "", 0, 14, 33, 0, false,LoadSprite("assets/ui/accessiblity_tab_icon.png",true));
+    InitButton(&ui.videoOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/video_tab_icon.png",true));
+    InitButton(&ui.audioOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/audio_tab_icon.png",true));
+    InitButton(&ui.accessibilityOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/accessiblity_tab_icon.png",true));
 
     ui.videoOptionsPanel.back = &ui.mainMenuPanel;
     ui.audioOptionsPanel.back = &ui.mainMenuPanel;
@@ -636,17 +651,26 @@ void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, boo
     }
 
 }
+void UIDrawText(UIElement* u, int x, int y)
+{
+   UI_Text* t = u->data;
+   al_draw_text(ui.font,FRIENDLY,x,y,ALLEGRO_ALIGN_LEFT,t->str);   
+}
 void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive, ALLEGRO_COLOR bgColor)
 {
     if (u->elementType == ELEMENT_BUTTON)
     {
         DrawButton(u,x,y,mouseState,isActive,bgColor);
     }
+    if (u->elementType == ELEMENT_TEXT)
+    {
+        UIDrawText(u,x,y);
+    }
 }
 void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)
 {
     int currX=p->x+p->padding; int currY=p->y+p->padding; 
-
+    /*
     for (int i = 0; i < p->numElements; i++)
     {
         UIElement* u = ((UIElement*)&p->elements[i]);
@@ -665,10 +689,13 @@ void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)
         {
             currX += u->w + u->padding + u->x;
         }
-    }
+    }*/
+    *x = p->x + uF->x;
+    *y = p->y  + uF->y;
+
     if (p->tabs)
     {
-        *x += 25;
+        //*x += 25;
     }
 
 }

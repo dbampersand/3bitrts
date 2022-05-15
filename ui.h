@@ -17,7 +17,8 @@ typedef enum UIElement_Type
 {
     ELEMENT_BUTTON,
     ELEMENT_SLIDER,
-    ELEMENT_CHECKBOX
+    ELEMENT_CHECKBOX,
+    ELEMENT_TEXT
 
 } UIElement_Type;
 typedef enum UIElement_Align
@@ -26,6 +27,11 @@ typedef enum UIElement_Align
     ALIGN_CENTER,
     ALIGN_RIGHT
 } UIElement_Align;
+typedef struct UI_Text
+{
+    char* str;
+
+}UI_Text;
 typedef struct Button
 {
     char* description;
@@ -37,14 +43,11 @@ typedef struct Button
 typedef struct UIElement
 {
     UIElement_Type elementType;
-    bool linebreak;
-    int padding;
-    int lineSpacing;
     int w; int h;
     void* data;
     char* name;
     UIElement_Align alignment;
-    int x;
+    int x; int y;
 } UIElement;
 
 typedef struct Panel
@@ -141,8 +144,8 @@ void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState);
 void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void ChangeUIPanel(Panel* to);
 bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MOUSE_STATE* mouse);
-void InitButton(UIElement* u, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak, int sprite);
-void AddButton(Panel* p, char* name, char* description, int x, int w, int h, int padding, bool shouldLinebreak);
+void InitButton(UIElement* u, char* name, char* description, int x, int y, int w, int h, int sprite);
+void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h);
 bool GetButtonIsClicked(UIElement* u);
 void DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c);
 void UpdateTabButtons(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
