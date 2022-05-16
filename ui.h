@@ -8,6 +8,17 @@
 
 typedef struct ALLEGRO_FONT ALLEGRO_FONT;
 typedef struct Effect Effect;
+typedef struct Text
+{
+    ALLEGRO_FONT* f; 
+    ALLEGRO_FONT* bold;
+    int x; 
+    int y;
+    int h; 
+    ALLEGRO_COLOR color;
+    int lineHeight;
+} Text;
+
 typedef struct Scrollbar
 {
     float percent;
@@ -170,3 +181,4 @@ bool GetButtonIsClicked(UIElement* u);
 void DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c);
 void UpdateTabButtons(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void ChangeButtonText(Button* b, char* newstr);
+bool cb(int line_num, const char *line, int size, void *extra);

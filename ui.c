@@ -553,7 +553,6 @@ void AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int s
 }
 void UpdatePulldownMenu(Pulldown* p, int x, int y, int w, int h, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
-
     if (p->clicked)
     {
         if (mouseState->buttons & 1 && !(mouseStateLastFrame->buttons & 1))
@@ -674,6 +673,7 @@ void InitUI()
     AddButton(&ui.videoOptionsPanel,"RenderScale-","-",132,53,11,11);
     AddText(&ui.videoOptionsPanel,33,73,"Tag_Particles","Particles");
     AddCheckbox(&ui.videoOptionsPanel,131,72,13,13,"EnableParticles",true);
+    AddText(&ui.videoOptionsPanel,33,105,"Display\nHealth Bar","Display\nHealth Bar");
     AddPulldownMenu(&ui.videoOptionsPanel,97,108,48,13,"HealthBarDisplay",0,3,"Always","Selected","Never");
 
     ui.audioOptionsPanel = CreatePanel(48,48,160,112,15);
@@ -922,7 +922,11 @@ void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, boo
 void UIDrawText(UIElement* u, int x, int y)
 {
    UI_Text* t = u->data;
-   al_draw_text(ui.font,FRIENDLY,x,y,ALLEGRO_ALIGN_LEFT,t->str);   
+   //al_draw_text(ui.font,FRIENDLY,x,y,ALLEGRO_ALIGN_LEFT,t->str);
+   Text te = (Text){.f = ui.font,ui.boldFont,.x=x,.y=y,.color=FRIENDLY,.lineHeight=al_get_font_line_height(ui.font)};
+
+   al_do_multiline_text(ui.font,256,t->str,cb,&te);
+
 }
 void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive, ALLEGRO_COLOR bgColor)
 {
@@ -1160,16 +1164,6 @@ void DrawCursor(ALLEGRO_MOUSE_STATE* mouseState, int index, bool clicked)
 
 
 }
-typedef struct Text
-{
-    ALLEGRO_FONT* f; 
-    ALLEGRO_FONT* bold;
-    int x; 
-    int y;
-    int h; 
-    ALLEGRO_COLOR color;
-    int lineHeight;
-}Text;
 bool cb(int line_num, const char *line, int size, void *extra)
 {
     Text* t = (Text*)extra;
