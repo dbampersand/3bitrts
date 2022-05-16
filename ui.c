@@ -521,6 +521,101 @@ void AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled)
     u.elementType = ELEMENT_SLIDER;
     AddElement(p,&u);
 }
+void AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int startIndex, int numElements, ...)
+{
+    va_list argp;
+    va_start(argp, numElements);
+    char** list = calloc(numElements,sizeof(char*)); 
+    for (int i = 0; i < numElements; i++)
+    {
+        char* element = va_arg(argp, char*);
+        list[i] = element;
+    }
+    UIElement u = {0};
+    u.x = x;
+    u.y = y;
+    u.w = w;
+    u.h = h;
+    
+    Pulldown* p = calloc(1,sizeof(Pulldown));
+    p->clicked = false;
+    p->elements = list;
+    p->selectedIndex = startIndex;
+    p->numElements = numElements;
+
+    u.data = (void*)p;
+
+    AddElement(panel,&u);
+
+}
+void UpdatePulldownMenu(Pulldown* p, int x, int y, int w, int h)
+{
+
+}
+void DrawPullDownMenu(Pulldown* p, int x, int y, int w, int h, bool isActive, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_COLOR bgColor)
+{
+    Rect r = (Rect){x,y,w,h};
+    if (p->clicked && isActive)
+    {
+        int y2 = y;
+        for (int i = 0; i < p->numElements; i++)
+        {
+            al_draw_filled_rectangle(x,y2,x+w,y+h,FRIENDLY);
+            al_draw_rectangle(x,y2,x+w,y+h,BG,1);
+            al_draw_text(ui.font,FRIENDLY,x,y2+h/2.0f,ALLEGRO_ALIGN_LEFT,p->elements[i]);
+            y2 += h;
+        }
+
+        
+        //al_draw_text(ui.font,BG,x+w/2,y+h/2 - al_get_font_line_height(font)/2.0,ALLEGRO_ALIGN_CENTRE,b->description);
+    }
+    else
+    {
+        al_draw_filled_rectangle(x,y,x+w,y+h,FRIENDLY);
+        al_draw_rectangle(x,y,x+w,y+h,BG,1);
+        al_draw_text(ui.font,FRIENDLY,x,y+h/2.0f,ALLEGRO_ALIGN_LEFT,p->elements[p->selectedIndex]);
+    }
+    if (PointInRect(mouseState->x,mouseState->y,r) && isActive)
+    {
+        al_draw_rectangle(x+2,y+2,x+w-2,y+h-2,FRIENDLY,1);
+    }
+}
+void DrawScrollbar(Panel* p)
+{
+    int w = SCROLLBARW;
+    al_draw_rectangle(p->x+p->w-w,p->y,p->x+p->w,p->x+p->w,FRIENDLY,1);
+
+
+    float yPos = p->y + p->scrollPercent * p->h;
+    al_draw_filled_rectangle(p->x+p->w-w, yPos, p->x+p->w, yPos+14, FRIENDLY);
+
+}
+void UpdateScrollbar(Panel* p, ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+{
+    int w = SCROLLBARW;
+    Rect scrollbar = (Rect){p->x+p->w-w,p->y,w,p->h};
+    if (mouseState->buttons & 1 && !(mouseStateLastFrame->buttons & 1))
+    {
+        if (PointInRect(mouseState->x,mouseState->y,scrollbar))
+        {
+            p->scrollbarClicked = true;
+        }
+    }
+    if (!(mouseState->buttons & 1))
+    {
+        p->scrollbarClicked = false;
+    }
+    if (p->scrollbarClicked)
+    {
+        float v = 1-((p->y+p->h) - mouseState->y) / (float)p->h;
+        if (v>1)
+            v = 1;
+        if (v<0)
+            v = 0;
+
+        p->scrollPercent = v;
+    }
+}
 void InitUI()
 {
     ui.mainMenuPanel = CreatePanel(48,48,160,112,15);
@@ -533,7 +628,9 @@ void InitUI()
     AddText(&ui.videoOptionsPanel,132,43,"RenderScale","2x");
     AddButton(&ui.videoOptionsPanel,"RenderScale+","+",132,29,11,11);
     AddButton(&ui.videoOptionsPanel,"RenderScale-","-",132,53,11,11);
+    AddText(&ui.videoOptionsPanel,33,73,"Tag_Particles","Particles");
     AddCheckbox(&ui.videoOptionsPanel,131,72,13,13,"EnableParticles",true);
+    AddPulldownMenu(&ui.videoOptionsPanel,97,108,48,13,"HealthBarDisplay",0,3,"Always","Selected","Never");
 
     ui.audioOptionsPanel = CreatePanel(48,48,160,112,15);
     AddText(&ui.audioOptionsPanel,33,41,"Tag_MasterVolume","Master Volume");
@@ -681,6 +778,7 @@ void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE*
             UpdateElement(p,&p->elements[i],mouseState,mouseStateLastFrame);
         }
     }
+    UpdateScrollbar(p,mouseState,mouseStateLastFrame);
 
 }
 
@@ -711,7 +809,7 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
         {
             if (ui.animatePanel == UI_ANIMATE_IN)
             {
-                ui.panelShownPercent += dt;
+                ui.panelShownPercent += dt*4;
                 if (ui.panelShownPercent >= 1)
                 {
                     ui.panelShownPercent = 1;
@@ -721,7 +819,7 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
             }
             if (ui.animatePanel == UI_ANIMATE_OUT)
             {
-                ui.panelShownPercent -= dt;
+                ui.panelShownPercent -= dt*4;
                 if (ui.panelShownPercent <= 0)
                 {
                     ui.panelShownPercent = 0;
@@ -795,11 +893,33 @@ void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, 
     {
         DrawCheckbox((Checkbox*)u->data,x,y,u->w,u->h,isActive,mouseState,bgColor);
     }
+    if (u->elementType == ELEMENT_PULLDOWN)
+    {
+        DrawPullDownMenu((Pulldown*)u->data,x,y,u->w,u->h,isActive,mouseState,bgColor);
+    }
+
 
 
 }
+int GetPanelMaxY(Panel* p)
+{
+    if (p->numElements <= 0)
+        return 0;
+    int maxY = -INT_MAX;
+    for (int i = 0; i < p->numElements; i++)
+    {
+        UIElement* u = ((UIElement*)&p->elements[i]);
+        if (u->y+u->h > maxY)
+        {
+            maxY = u->y+u->h;
+        }
+    }
+    return maxY;
+}
+
 void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)
 {
+    int maxY = GetPanelMaxY(p);
     int currX=p->x+p->padding; int currY=p->y+p->padding; 
     /*
     for (int i = 0; i < p->numElements; i++)
@@ -822,7 +942,7 @@ void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)
         }
     }*/
     *x = p->x + uF->x;
-    *y = p->y  + uF->y;
+    *y = (p->y  + uF->y) - ((maxY-p->h) * p->scrollPercent);
 
     if (p->tabs)
     {
@@ -881,6 +1001,14 @@ void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
     if (p->tabs)
     {
         DrawPanelTabs(p, mouseState);
+    }
+    if (GetPanelMaxY(p) > p->h)
+    {
+        DrawScrollbar(p);
+    }
+    else
+    {
+        p->scrollPercent = 0;
     }
     al_reset_clipping_rectangle();
     

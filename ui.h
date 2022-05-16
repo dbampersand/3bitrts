@@ -18,7 +18,8 @@ typedef enum UIElement_Type
     ELEMENT_BUTTON,
     ELEMENT_SLIDER,
     ELEMENT_CHECKBOX,
-    ELEMENT_TEXT
+    ELEMENT_TEXT,
+    ELEMENT_PULLDOWN
 
 } UIElement_Type;
 typedef enum UIElement_Align
@@ -31,6 +32,13 @@ typedef struct UI_Text
 {
     char* str;
 }UI_Text;
+typedef struct Pulldown
+{
+    char** elements;
+    int numElements;
+    int selectedIndex;
+    bool clicked; 
+} Pulldown;
 typedef struct Slider
 {
     bool clicked; 
@@ -76,8 +84,11 @@ typedef struct Panel
     UIElement backButton;
     UIElement tabButton;
     struct Panel* back;
+    float scrollPercent;
+    bool scrollbarClicked;
 
 } Panel;
+#define SCROLLBARW 6;
 typedef enum UI_AnimState
 {
     UI_ANIMATE_STATIC = 0,
