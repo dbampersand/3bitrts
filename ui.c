@@ -529,7 +529,9 @@ void AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int s
     for (int i = 0; i < numElements; i++)
     {
         char* element = va_arg(argp, char*);
-        list[i] = element;
+        char* new = calloc(strlen(element)+1,sizeof(char));
+        strcpy(new,element);
+        list[i] = new;
     }
     UIElement u = {0};
     u.x = x;
@@ -544,41 +546,83 @@ void AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int s
     p->numElements = numElements;
 
     u.data = (void*)p;
+    u.elementType = ELEMENT_PULLDOWN;
 
     AddElement(panel,&u);
 
 }
-void UpdatePulldownMenu(Pulldown* p, int x, int y, int w, int h)
+void UpdatePulldownMenu(Pulldown* p, int x, int y, int w, int h, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
 
+    if (p->clicked)
+    {
+        if (mouseState->buttons & 1 && !(mouseStateLastFrame->buttons & 1))
+        {
+            int y2 = y;
+            for (int i = 0; i < p->numElements; i++)
+            {
+                Rect r = (Rect){x,y2,w,h};
+                if (PointInRect(mouseState->x,mouseState->y,r))
+                {
+                    p->clicked = false;
+                    p->selectedIndex = i;
+                    return;
+                }
+                y2 += h;
+            }
+
+        }
+    } 
+
+    if (mouseState->buttons & 1 && !(mouseStateLastFrame->buttons & 1))
+    {
+        Rect r = (Rect){x,y,w,h};
+        if (PointInRect(mouseState->x,mouseState->y,r))
+        {
+            p->clicked = true;
+        }
+        else
+        {
+            p->clicked = false; 
+        }
+    }
 }
 void DrawPullDownMenu(Pulldown* p, int x, int y, int w, int h, bool isActive, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_COLOR bgColor)
 {
+    Rect clip;
+    al_get_clipping_rectangle(&clip.x,&clip.y,&clip.w,&clip.h);
     Rect r = (Rect){x,y,w,h};
     if (p->clicked && isActive)
     {
         int y2 = y;
+        al_reset_clipping_rectangle();
         for (int i = 0; i < p->numElements; i++)
         {
-            al_draw_filled_rectangle(x,y2,x+w,y+h,FRIENDLY);
-            al_draw_rectangle(x,y2,x+w,y+h,BG,1);
-            al_draw_text(ui.font,FRIENDLY,x,y2+h/2.0f,ALLEGRO_ALIGN_LEFT,p->elements[i]);
+            al_draw_filled_rectangle(x,y2,x+w,y2+h,bgColor);
+            al_draw_rectangle(x,y2,x+w,y2+h,FRIENDLY,1);
+            al_draw_text(ui.font,FRIENDLY,x+w/2,y2+h/2 - al_get_font_line_height(ui.font)/2.0,ALLEGRO_ALIGN_CENTRE,p->elements[i]);
+            Rect r2 = (Rect){x,y2,w,h};
+            if (PointInRect(mouseState->x,mouseState->y,r2))
+            {
+                al_draw_rectangle(x+2,y2+2,x+w-2,y2+h-2,FRIENDLY,1);
+            }
             y2 += h;
-        }
 
-        
+        }
         //al_draw_text(ui.font,BG,x+w/2,y+h/2 - al_get_font_line_height(font)/2.0,ALLEGRO_ALIGN_CENTRE,b->description);
     }
-    else
+    if (!p->clicked)
     {
-        al_draw_filled_rectangle(x,y,x+w,y+h,FRIENDLY);
-        al_draw_rectangle(x,y,x+w,y+h,BG,1);
-        al_draw_text(ui.font,FRIENDLY,x,y+h/2.0f,ALLEGRO_ALIGN_LEFT,p->elements[p->selectedIndex]);
+        al_draw_filled_rectangle(x,y,x+w,y+h,bgColor);
+        al_draw_rectangle(x,y,x+w,y+h,FRIENDLY,1);
+        al_draw_text(ui.font,FRIENDLY,x+w/2,y+h/2 - al_get_font_line_height(ui.font)/2.0,ALLEGRO_ALIGN_CENTRE,p->elements[p->selectedIndex]);
+        if (PointInRect(mouseState->x,mouseState->y,r) && isActive)
+        {
+            al_draw_rectangle(x+2,y+2,x+w-2,y+h-2,FRIENDLY,1);
+        }
+
     }
-    if (PointInRect(mouseState->x,mouseState->y,r) && isActive)
-    {
-        al_draw_rectangle(x+2,y+2,x+w-2,y+h-2,FRIENDLY,1);
-    }
+    al_set_clipping_rectangle(clip.x,clip.y,clip.w,clip.h);
 }
 void DrawScrollbar(Panel* p)
 {
@@ -767,6 +811,11 @@ void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLE
     {
         UpdateCheckbox((Checkbox*)u->data, x,  y, u->w,u->h,true,mouseState, mouseStateLastFrame);
     }
+    if (u->elementType == ELEMENT_PULLDOWN)
+    {
+        UpdatePulldownMenu((Pulldown*)u->data, x,  y, u->w,u->h,mouseState, mouseStateLastFrame);
+    }
+
 
 }
 void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
@@ -942,7 +991,7 @@ void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)
         }
     }*/
     *x = p->x + uF->x;
-    *y = (p->y  + uF->y) - ((maxY-p->h) * p->scrollPercent);
+    *y = (p->y  + uF->y) - ((maxY+p->padding-p->h) * p->scrollPercent);
 
     if (p->tabs)
     {
@@ -978,10 +1027,11 @@ void DrawPanelTabs(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
 }
 void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
 {
-    al_set_clipping_rectangle(p->x-1,p->y,p->w+1,p->h*ui.panelShownPercent+1);
 
     al_draw_filled_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,BG);
     al_draw_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,FRIENDLY,1);
+
+    al_set_clipping_rectangle(p->x-1,p->y,p->w,p->h*ui.panelShownPercent);
 
     int currX=p->x+p->padding; int currY=p->y+p->padding; 
     for (int i = 0; i < p->numTabs; i++)
