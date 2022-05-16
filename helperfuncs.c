@@ -265,3 +265,9 @@ float CircleRectDist(int cx, int cy, float radius, Rect r)
 
     return (cornerdistx*cornerdistx + cornerdisty*cornerdisty <= radius*radius);
 }
+int NumDigits(int i)
+{
+    if (i == 0)
+        return 1;
+    return (int)ceil(log10(i))+1;
+}

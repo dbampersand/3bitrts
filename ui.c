@@ -12,6 +12,7 @@
 #include "gamestate.h"
 #include "map.h"
 #include "effect.h"
+#include "helperfuncs.h"
 void ChangeUIPanel(Panel* to)
 {
     ui.animatePanel = true;
@@ -659,6 +660,25 @@ void UpdateScrollbar(Panel* p, ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STA
         p->scrollPercent = v;
     }
 }
+void SetUITextStr(UI_Text* t, char* str)
+{
+    if (t->str)
+        free(t->str);
+    t->str = calloc(strlen(str)+1,sizeof(char));
+    strcpy(t->str,str);
+}
+UIElement* GetUIElement(Panel* p, char* name)
+{
+    for (int i = 0; i < p->numElements; i++)
+    {
+        UIElement* u = &p->elements[i];
+        if (strcasecmp(u->name,name)==0)
+        {
+            return u;
+        }
+    }
+    return NULL;
+}
 void InitUI()
 {
     ui.mainMenuPanel = CreatePanel(48,48,160,112,15);
@@ -669,6 +689,12 @@ void InitUI()
     ui.videoOptionsPanel = CreatePanel(48,48,160,112,15);
     AddText(&ui.videoOptionsPanel,33,41,"Tag_RenderScale","RenderScale");
     AddText(&ui.videoOptionsPanel,132,43,"RenderScale","2x");
+    
+    char* renderScale = calloc(NumDigits(_RENDERSIZE)+2,sizeof(char));
+    sprintf(renderScale,"%ix",_RENDERSIZE);
+    SetUITextStr(GetUIElement(&ui.videoOptionsPanel,"RenderScale")->data,renderScale);
+    free(renderScale);
+    
     AddButton(&ui.videoOptionsPanel,"RenderScale+","+",132,29,11,11);
     AddButton(&ui.videoOptionsPanel,"RenderScale-","-",132,53,11,11);
     AddText(&ui.videoOptionsPanel,33,73,"Tag_Particles","Particles");
@@ -1263,5 +1289,31 @@ int GetAbilityClicked(ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouse
         return 3;
 
     return -1;
+
+}
+void SetOptions()
+{
+    if (GetButton(&ui.videoOptionsPanel,"RenderScale+"))
+    {
+
+        _RENDERSIZE++;
+        char* newText = calloc(NumDigits(_RENDERSIZE)+2  ,sizeof(char));
+        sprintf(newText,"%ix",_RENDERSIZE);
+        SetUITextStr(GetUIElement(&ui.videoOptionsPanel,"RenderScale")->data,newText);
+        SetDisplaySize();
+
+        free(newText);
+    }
+    if (GetButton(&ui.videoOptionsPanel,"RenderScale-"))
+    {
+
+        _RENDERSIZE--;
+        char* newText = calloc(NumDigits(_RENDERSIZE)+2  ,sizeof(char));
+        sprintf(newText,"%ix",_RENDERSIZE);
+        SetUITextStr(GetUIElement(&ui.videoOptionsPanel,"RenderScale")->data,newText);
+        SetDisplaySize();
+
+        free(newText);
+    }
 
 }

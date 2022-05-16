@@ -31,4 +31,4 @@ float DegToRad(float deg);
 float RadToDeg(float rad);
 float magnitude(float* x, float* y);
 void RotatePointF(float* x, float* y, float cx, float cy, float angle);
-
+int NumDigits(int i);

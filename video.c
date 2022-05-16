@@ -343,3 +343,13 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
         CircleSegment(x,y,l,angle2,angle3,color,length);
 
 }
+void SetDisplaySize()
+{
+    al_set_target_bitmap(backbuffer);
+
+    al_clear_to_color(BG);
+    al_flip_display();
+    
+    al_set_target_bitmap(SCREEN);
+
+}

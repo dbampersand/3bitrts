@@ -161,7 +161,7 @@ int GetDescriptionBoxH(char* description, int wTextbox, ALLEGRO_FONT* f, int pad
 bool IsInsideUI(int x, int y);
 int GetAbilityClicked(ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 Rect GetAbilityPortraitRect(int index);
-void InitUI();
+void InitUI();  
 void DrawMenus(ALLEGRO_MOUSE_STATE* mouseState);
 void UpdateButton(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
@@ -182,3 +182,5 @@ void DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c);
 void UpdateTabButtons(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void ChangeButtonText(Button* b, char* newstr);
 bool cb(int line_num, const char *line, int size, void *extra);
+void SetOptions();
+void SetUITextStr(UI_Text* t, char* str);

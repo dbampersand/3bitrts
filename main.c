@@ -26,8 +26,6 @@
 #include "gamestate.h"
 #include "damagenumber.h"
 
-ALLEGRO_BITMAP* SCREEN;
-ALLEGRO_DISPLAY* display;
 
 
 int _TARGET_FPS = 60;
@@ -60,7 +58,6 @@ void init()
     numMaps = 0;
     numSprites=1;
     maxSprites = 0;
-    _RENDERSIZE = 1;
     _FRAMES = 0;
 
     numAnimationEffectsPrefabs = 0;
@@ -342,6 +339,7 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_S
             shouldExit = true;
         }
     }
+    SetOptions();
 }
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
@@ -911,6 +909,13 @@ int main(int argc, char* args[])
     al_init_primitives_addon();
     al_install_mouse();
     al_install_keyboard();
+    ALLEGRO_MONITOR_INFO monitor;
+    al_get_monitor_info(0, &monitor);
+
+    _RENDERSIZE = _MIN(monitor.x2,monitor.y2)/256 -1;
+
+
+
     init();
 
     init_lua();
@@ -936,16 +941,12 @@ int main(int argc, char* args[])
     LoadEncounters("assets/encounters",luaState);
 
 
-    
-    ALLEGRO_MONITOR_INFO monitor;
-    al_get_monitor_info(0, &monitor);
-
-    _RENDERSIZE = _MIN(monitor.x2,monitor.y2)/256 -1;
-
+    int resX = 256*_RENDERSIZE;
+    int resY = 256*_RENDERSIZE;
     SCREEN = al_create_bitmap(256,256);
 
     display = al_create_display(256*_RENDERSIZE,256*_RENDERSIZE);
-    ALLEGRO_BITMAP* backbuffer = al_get_backbuffer(display);
+    backbuffer = al_get_backbuffer(display);
 
     ALLEGRO_FONT* font = al_load_ttf_font("assets/fonts/font.ttf", 8, ALLEGRO_TTF_MONOCHROME);
     ui.boldFont = al_load_ttf_font("assets/fonts/fontbold.ttf", 8, ALLEGRO_TTF_MONOCHROME);
@@ -1031,7 +1032,10 @@ int main(int argc, char* args[])
             Render(1/(float)_TARGET_FPS, &mouseState, &mouseStateLastFrame, &keyState, &keyStateLastFrame);
 
             al_set_target_bitmap(backbuffer);
-            al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE,0,0,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
+            int displayW = al_get_display_width(display);
+            int displayH = al_get_display_height(display);
+
+            al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE, displayW/2 - (_RENDERSIZE*256/2), displayH/2 - (_RENDERSIZE*256)/2,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
 
             al_flip_display();
 
