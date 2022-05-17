@@ -1058,10 +1058,13 @@ void DrawPanelTabs(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
 void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
 {
 
+    al_set_clipping_rectangle(p->x-1,p->y,p->w+1,p->h*ui.panelShownPercent+1);
+
     al_draw_filled_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,BG);
     al_draw_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,FRIENDLY,1);
 
     al_set_clipping_rectangle(p->x-1,p->y,p->w,p->h*ui.panelShownPercent);
+
 
     int currX=p->x+p->padding; int currY=p->y+p->padding; 
     for (int i = 0; i < p->numTabs; i++)

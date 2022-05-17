@@ -345,11 +345,11 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
 }
 void SetDisplaySize()
 {
-    al_set_target_bitmap(backbuffer);
+    //al_set_target_bitmap(backbuffer);
 
-    al_clear_to_color(BG);
-    al_flip_display();
+    //al_clear_to_color(BG);
+    //al_flip_display();
     
-    al_set_target_bitmap(SCREEN);
+    //al_set_target_bitmap(SCREEN);
 
 }

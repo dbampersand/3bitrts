@@ -1035,7 +1035,11 @@ int main(int argc, char* args[])
             int displayW = al_get_display_width(display);
             int displayH = al_get_display_height(display);
 
-            al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE, displayW/2 - (_RENDERSIZE*256/2), displayH/2 - (_RENDERSIZE*256)/2,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
+            int drawposx = displayW/2 - (_RENDERSIZE*256)/2; 
+            int drawposy = displayH/2 - (_RENDERSIZE*256)/2;
+            printf("%i,%i\n",drawposx,drawposy);
+
+            al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE, drawposx, drawposy,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
 
             al_flip_display();
 
