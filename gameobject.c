@@ -18,6 +18,7 @@
 #include "ui.h"
 #include "encounter.h"
 #include "damagenumber.h"
+#include "gamestate.h"
 
 int GetNumObjectsInRect(Rect* r)
 {
@@ -835,7 +836,13 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     selectRect.y = g->position.y;
 
     DrawRoundedRect(selectRect, c);
-    DrawHealthBar(g,c);
+    if (*gameOptions.displayHealthBar == OPTION_HPBAR_ALWAYS)
+        DrawHealthBar(g,c);
+    else if (*gameOptions.displayHealthBar == OPTION_HPBAR_SELECTED && (IsOwnedByPlayer(g) && IsSelected(g)))
+        DrawHealthBar(g,c);
+    else if (*gameOptions.displayHealthBar == OPTION_HPBAR_NEVER && (!IsOwnedByPlayer(g)))
+        DrawHealthBar(g,c);
+
     
 }
 void SetAttackingObj(GameObject* g, GameObject* target)

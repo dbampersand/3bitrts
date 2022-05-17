@@ -545,6 +545,7 @@ void AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int s
     u.w = w;
     u.h = h;
     u.enabled = true;
+    u.name = name;
 
     
     Pulldown* p = calloc(1,sizeof(Pulldown));
@@ -755,6 +756,10 @@ void InitUI()
 
     Checkbox* particles = (Checkbox*)GetUIElement(&ui.videoOptionsPanel,"EnableParticles")->data;
     gameOptions.particlesEnabled = &particles->activated;
+
+    Pulldown* healthbar = (Pulldown*)GetUIElement(&ui.videoOptionsPanel,"HealthBarDisplay")->data;
+    gameOptions.displayHealthBar = (Option_HealthBar*)&healthbar->selectedIndex;
+
 }
 bool GetButton(Panel* p, char* name)
 {
