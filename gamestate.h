@@ -9,5 +9,5 @@ GameState gameState;
 typedef struct GameOptions
 {
     bool* particlesEnabled;
-    int renderScale;
 } GameOptions;
+GameOptions gameOptions;

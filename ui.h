@@ -76,6 +76,7 @@ typedef struct UIElement
     char* name;
     UIElement_Align alignment;
     int x; int y;
+    bool enabled;
 } UIElement;
 
 typedef struct Panel

@@ -308,6 +308,8 @@ void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int
     u.name = name;
     u.elementType = ELEMENT_BUTTON;
     u.x = x;
+    u.enabled = true;
+
     AddElement(p,&u);
 }
 void UpdateSlider(Slider* s, int x, int y, int w, int h, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
@@ -505,7 +507,9 @@ void AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool activate
     c->activated = activated;
     u.name = name;
     u.data = (void*)c;
+    u.enabled = true;
     u.elementType = ELEMENT_CHECKBOX;
+    u.enabled = true;
     AddElement(p,&u);
 }
 void AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled)
@@ -516,6 +520,7 @@ void AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled)
     u.y = y;
     u.w = w;
     u.h = h;
+    u.enabled = true;
     s->value = filled;
     u.name = name;
     u.data = (void*)s;
@@ -539,6 +544,8 @@ void AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int s
     u.y = y;
     u.w = w;
     u.h = h;
+    u.enabled = true;
+
     
     Pulldown* p = calloc(1,sizeof(Pulldown));
     p->clicked = false;
@@ -745,6 +752,9 @@ void InitUI()
     ui.changingTo = NULL;
     
     ui.currentPanel = NULL;
+
+    Checkbox* particles = (Checkbox*)GetUIElement(&ui.videoOptionsPanel,"EnableParticles")->data;
+    gameOptions.particlesEnabled = &particles->activated;
 }
 bool GetButton(Panel* p, char* name)
 {
@@ -823,8 +833,11 @@ void UpdateButton(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState,
 }
 void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
+    if (!u->enabled)
+        return;
     int x; int y;
     GetUILocation(p,u,&x,&y);
+   
     if (u->elementType == ELEMENT_BUTTON)
     {
         UpdateButton(x,y,u,mouseState,mouseStateLastFrame);
@@ -909,6 +922,31 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
     {
         UpdatePanel(ui.currentPanel,mouseState,mouseStateLastFrame);
     }
+    int displayW = al_get_display_width(display);
+    int displayH = al_get_display_height(display);
+
+    if ((_RENDERSIZE+1)*256 > displayH || (_RENDERSIZE+1)*256 > displayW)
+    {
+        UIElement* u = GetUIElement(&ui.videoOptionsPanel,"RenderScale+");
+        u->enabled = false;
+    }
+    else
+    {
+        UIElement* u = GetUIElement(&ui.videoOptionsPanel,"RenderScale+");
+        u->enabled = true;
+    }
+
+    if (_RENDERSIZE == 1)
+    {
+        UIElement* u = GetUIElement(&ui.videoOptionsPanel,"RenderScale-");
+        u->enabled = false;
+    }
+    else
+    {
+        UIElement* u = GetUIElement(&ui.videoOptionsPanel,"RenderScale-");
+        u->enabled = true;
+    }
+
 }
 void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive, ALLEGRO_COLOR bgColor)
 {
@@ -1078,7 +1116,7 @@ void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
         UIElement* u = ((UIElement*)&p->elements[i]);
         int x; int y;
         GetUILocation(p, u, &x, &y);
-        DrawUIElement(u,x,y,mouseState,true,BG);
+        DrawUIElement(u,x,y,mouseState,u->enabled,BG);
 
     }
     if (p->tabs)

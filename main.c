@@ -62,6 +62,7 @@ void init()
 
     numAnimationEffectsPrefabs = 0;
 
+    memset(&gameOptions,0,sizeof(GameOptions));
 
     
 }
@@ -780,7 +781,8 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     if (players[0].selecting)
         DrawMouseSelectBox(GetMouseClamped());
         
-    DrawParticles();
+    if (*gameOptions.particlesEnabled)    
+        DrawParticles();
     if (players[0].abilityHeld)
     {
         float cx; float cy;
@@ -1037,7 +1039,6 @@ int main(int argc, char* args[])
 
             int drawposx = displayW/2 - (_RENDERSIZE*256)/2; 
             int drawposy = displayH/2 - (_RENDERSIZE*256)/2;
-            printf("%i,%i\n",drawposx,drawposy);
 
             al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE, drawposx, drawposy,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
 
