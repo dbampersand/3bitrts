@@ -20,3 +20,5 @@ typedef struct GameOptions
     Option_HealthBar* displayHealthBar; 
 } GameOptions;
 GameOptions gameOptions;
+
+ALLEGRO_EVENT_QUEUE* queue;

@@ -946,8 +946,13 @@ int main(int argc, char* args[])
     int resX = 256*_RENDERSIZE;
     int resY = 256*_RENDERSIZE;
     SCREEN = al_create_bitmap(256,256);
+    background_screen = al_create_bitmap(monitor.x2,monitor.y2);
 
-    display = al_create_display(256*_RENDERSIZE,256*_RENDERSIZE);
+    al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
+
+    //display = al_create_display(256*_RENDERSIZE,256*_RENDERSIZE);
+    display = al_create_display(monitor.x2,monitor.y2);
+    
     backbuffer = al_get_backbuffer(display);
 
     ALLEGRO_FONT* font = al_load_ttf_font("assets/fonts/font.ttf", 8, ALLEGRO_TTF_MONOCHROME);
@@ -998,7 +1003,7 @@ int main(int argc, char* args[])
     ALLEGRO_TIMER* _FPS_TIMER = al_create_timer(1.0f / (double)_TARGET_FPS);
 
     al_start_timer(_FPS_TIMER);
-    ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
+    queue = al_create_event_queue();
 
     al_register_event_source(queue, al_get_display_event_source(display));
    al_register_event_source(queue, al_get_timer_event_source(_FPS_TIMER));
@@ -1015,18 +1020,34 @@ int main(int argc, char* args[])
     }
 
     while (!shouldExit) {
+        //al_set_mouse_xy(display, 128,128);
+
         
         ALLEGRO_EVENT event;
         al_wait_for_event(queue, &event);
+
+
         if (event.type == ALLEGRO_EVENT_TIMER) {
+            
+            int displayW = al_get_display_width(display);
+            int displayH = al_get_display_height(display);
+
+            int drawposx = displayW/2 - (_RENDERSIZE*256)/2; 
+            int drawposy = displayH/2 - (_RENDERSIZE*256)/2;
+
             ALLEGRO_MOUSE_STATE mouseState;
             ALLEGRO_KEYBOARD_STATE keyState;
 
             al_get_keyboard_state(&keyState);
             mouseState = GetMouseClamped();
+            
+            al_set_target_bitmap(backbuffer);
+            al_draw_bitmap(backbuffer,0,0,0);
+            al_clear_to_color(BG);
+
 
             al_set_target_bitmap(SCREEN);
-            al_clear_to_color(al_map_rgb(40,32,36));
+            al_clear_to_color(BG);
 
             if (!ui.currentPanel)
                 Update(1/(float)_TARGET_FPS,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
@@ -1034,11 +1055,6 @@ int main(int argc, char* args[])
             Render(1/(float)_TARGET_FPS, &mouseState, &mouseStateLastFrame, &keyState, &keyStateLastFrame);
 
             al_set_target_bitmap(backbuffer);
-            int displayW = al_get_display_width(display);
-            int displayH = al_get_display_height(display);
-
-            int drawposx = displayW/2 - (_RENDERSIZE*256)/2; 
-            int drawposy = displayH/2 - (_RENDERSIZE*256)/2;
 
             al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE, drawposx, drawposy,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
 
@@ -1050,7 +1066,6 @@ int main(int argc, char* args[])
             _FRAMES++;
             fflush(stdout);
         }
-
     }
     return 1;
 }

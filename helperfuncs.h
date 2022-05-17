@@ -9,6 +9,9 @@
 
 typedef struct GameObject GameObject;
 
+#define MOUSECURSORSIZE 5
+
+
 int GetIndex(int h, int x, int y);
 ALLEGRO_MOUSE_STATE GetMouseClamped();
 char* readFile(const char* filename);

@@ -5,6 +5,7 @@ unsigned long long _FRAMES;
 
 ALLEGRO_BITMAP* backbuffer;
 ALLEGRO_BITMAP* SCREEN;
+ALLEGRO_BITMAP* background_screen;
 ALLEGRO_DISPLAY* display;
 
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color);

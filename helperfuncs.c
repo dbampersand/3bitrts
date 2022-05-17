@@ -3,6 +3,10 @@
 #include <math.h>
 #include "rect.h"
 #include "gameobject.h"
+#include "video.h"
+#include "gamestate.h"
+#include "colors.h"
+#include "allegro5/allegro_primitives.h"
 float clamp(float f, float min, float max)
 {
     return f < min ? min : f > max ? max : f;
@@ -44,24 +48,31 @@ bool MoveTo(float* x, float* y, float toX, float toY, float speed, float delta)
         return false;
 
 }
-
 ALLEGRO_MOUSE_STATE GetMouseClamped()
 {
     ALLEGRO_MOUSE_STATE mouse;
     al_get_mouse_state(&mouse);
     int beforeX = mouse.x;
     int beforeY = mouse.y;
-
     mouse.x = mouse.x/(float)_RENDERSIZE;
     mouse.y = mouse.y/(float)_RENDERSIZE;
-    
-    if (beforeX > 255*_RENDERSIZE)
-        mouse.x = 255;
-    if (beforeY > 255*_RENDERSIZE)
-        mouse.y = 255;
-    if (beforeX < 0)
+
+    if (mouse.x + MOUSECURSORSIZE > (_SCREEN_SIZE))
+    {
+        mouse.x = _SCREEN_SIZE - MOUSECURSORSIZE;
+
+
+        //This function is giving very weird results
+        //al_set_mouse_xy(display, x-MOUSECURSORSIZE*_RENDERSIZE, beforeY);
+    }
+    if (mouse.y > (_SCREEN_SIZE-MOUSECURSORSIZE))
+    {
+        mouse.y = 255 - MOUSECURSORSIZE;
+       // al_set_mouse_xy(display,beforeX, (_SCREEN_SIZE-MOUSECURSORSIZE)*_RENDERSIZE);
+    }
+    if (mouse.x < 0)
         mouse.x = 0;
-   if (beforeY < 0)
+   if (mouse.y < 0)
         mouse.y = 0;
 
     return mouse;
