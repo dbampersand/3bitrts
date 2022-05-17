@@ -1042,7 +1042,7 @@ int main(int argc, char* args[])
             mouseState = GetMouseClamped();
             
             al_set_target_bitmap(backbuffer);
-            al_draw_bitmap(backbuffer,0,0,0);
+            //al_draw_bitmap(backbuffer,0,0,0);
             al_clear_to_color(BG);
 
 
