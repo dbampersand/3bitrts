@@ -216,6 +216,8 @@ void DrawAttack(Attack* a, float dt)
     else
     {
         al_draw_filled_circle(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)));
+        al_draw_filled_circle(a->x+2,a->y+2,a->radius,BG);
+
     }
 }
 void UpdateAttack(Attack* a, float dt)

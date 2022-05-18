@@ -4,6 +4,7 @@
 #include "allegro5/allegro_font.h"
 #include "allegro5/allegro_image.h"
 #include "allegro5/allegro_primitives.h"
+#include <allegro5/allegro_audio.h> 
 
 
 #include "gameobject.h"
@@ -912,6 +913,7 @@ int main(int argc, char* args[])
     al_init_primitives_addon();
     al_install_mouse();
     al_install_keyboard();
+    al_install_audio();
     ALLEGRO_MONITOR_INFO monitor;
     al_get_monitor_info(0, &monitor);
 
