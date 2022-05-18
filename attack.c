@@ -323,11 +323,9 @@ void UpdateAttack(Attack* a, float dt)
                 //int startX; int startY; int endX; int endY;
                 //GetConeVertices(a->x,a->y,&startX,&startY,&endX,&endY,angle,a->radius,a->range);
                 Rect r = GetObjRect(&objects[i]);
-                printf("bbb");
                 if (RectInCone(r,a->x,a->y,angle,a->radius,a->range))
                 {
                     ApplyAttack(a,&objects[i]);
-                    printf("gg");
                 }
             }
         }
