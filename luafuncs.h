@@ -4,6 +4,11 @@
 #include "lua-5.4.3/src/lualib.h"
 #include "lua-5.4.3/src/luaconf.h"
 #include "stdbool.h"
+#include <stdint.h>
+
+#ifndef M_PI
+    #define M_PI 3.14159265358979323846
+#endif
 
 
 typedef struct GameObject GameObject;

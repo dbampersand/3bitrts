@@ -1,6 +1,10 @@
 #pragma once
 #include "rect.h"
 #include "allegro5/allegro.h"
+
+#ifndef M_PI
+    #define M_PI 3.14159265358979323846
+#endif
 unsigned long long _FRAMES;
 
 ALLEGRO_BITMAP* backbuffer;

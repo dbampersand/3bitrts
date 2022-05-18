@@ -417,7 +417,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
                 Rect r2 = (Rect){currGameObjRunning->targObj->position.x,currGameObjRunning->targObj->position.y,wTarg,hTarg};
                 #define DISTDELTA 0.001f
-                Rect unioned = UnionRect(r,r2);
+                Rect unioned = UnionRectR(r,r2);
                 //if (RectsTouch(r, r2, currGameObjRunning->range+DISTDELTA))
                 
                 if (RectDist(currGameObjRunning,currGameObjRunning->targObj) < currGameObjRunning->range+DISTDELTA)
@@ -690,6 +690,7 @@ void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState)
     r.w = _MAX(endSelection.x,players[0].selectionStart.x) - _MIN(endSelection.x,players[0].selectionStart.x);
     r.h = _MAX(endSelection.y,players[0].selectionStart.y) - _MIN(endSelection.y,players[0].selectionStart.y);
     al_draw_filled_rectangle(r.x, r.y, r.x+r.w, r.y+r.h, al_premul_rgba(255, 255, 255,128));
+   
 }
 float angle = 0;
 
@@ -948,7 +949,7 @@ int main(int argc, char* args[])
     SCREEN = al_create_bitmap(256,256);
     background_screen = al_create_bitmap(monitor.x2,monitor.y2);
 
-    al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
+    //al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
 
     //display = al_create_display(256*_RENDERSIZE,256*_RENDERSIZE);
     display = al_create_display(monitor.x2,monitor.y2);
@@ -961,6 +962,7 @@ int main(int argc, char* args[])
 
     ui.font = font;
     ui.panel_sprite_index = LoadSprite("assets/ui/ui.png",false);
+
     LoadCursorSprite(&ui,&ui.cursorDefaultIndex,"assets/ui/cursor.png");
     LoadCursorSprite(&ui,&ui.cursorCastingIndex,"assets/ui/cursor_cast.png");
     LoadCursorSprite(&ui,&ui.cursorAttackIndex,"assets/ui/cursor_attack.png");
@@ -998,6 +1000,9 @@ int main(int argc, char* args[])
    // AddGameobject(g)->x = 100;
 
 
+    printf("gggg\n"); fflush(stdout);
+
+    printf("bbbb\n"); fflush(stdout);
 
     fflush(stdout);
     ALLEGRO_TIMER* _FPS_TIMER = al_create_timer(1.0f / (double)_TARGET_FPS);

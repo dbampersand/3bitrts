@@ -1138,7 +1138,7 @@ float GetDist(GameObject* g1, GameObject* g2)
     Rect r1 = GetObjRect(g1);
     Rect r2 = GetObjRect(g2);
 
-    Rect unioned = UnionRect(r1,r2);
+    Rect unioned = UnionRectR(r1,r2);
     unioned.w -= r1.w + r2.w;
     unioned.h -= r1.h + r2.h;
 
@@ -1177,7 +1177,7 @@ float RectDist(GameObject* g1, GameObject* g2)
 {
     Rect r1 = (Rect){g1->position.x,g1->position.y,GetWidth(g1),GetHeight(g1)};
     Rect r2 = (Rect){g2->position.x,g2->position.y,GetWidth(g2),GetHeight(g2)};
-    Rect unioned = UnionRect(r1,r2);
+    Rect unioned = UnionRectR(r1,r2);
     float dist = (unioned.w+unioned.h) - (r1.w+r2.w+r1.h+r2.h);
     return dist;
 }

@@ -13,6 +13,7 @@
 #include "map.h"
 #include "effect.h"
 #include "helperfuncs.h"
+#include <stdio.h>
 void ChangeUIPanel(Panel* to)
 {
     ui.animatePanel = true;
@@ -995,6 +996,7 @@ void UIDrawText(UIElement* u, int x, int y)
    Text te = (Text){.f = ui.font,ui.boldFont,.x=x,.y=y,.color=FRIENDLY,.lineHeight=al_get_font_line_height(ui.font)};
 
    al_do_multiline_text(ui.font,256,t->str,cb,&te);
+
 
 }
 void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive, ALLEGRO_COLOR bgColor)

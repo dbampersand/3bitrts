@@ -44,7 +44,7 @@ bool PointInRect(float x, float y, Rect r)
     }
     return false;
 }
-Rect UnionRect(Rect r1, Rect r2)
+Rect UnionRectR(Rect r1, Rect r2)
 {
     float lowestx = _MIN(r1.x,r2.x);
     float lowesty = _MIN(r1.y,r2.y);
@@ -55,7 +55,7 @@ Rect UnionRect(Rect r1, Rect r2)
 }
 bool RectsTouch(Rect r1, Rect r2, float delta)
 {
-    Rect unioned = UnionRect(r1,r2);
+    Rect unioned = UnionRectR(r1,r2);
     if (unioned.w < r1.w+r2.w+delta)
     {
         if (unioned.h < r1.h+r2.h+delta)
