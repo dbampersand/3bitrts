@@ -1,1 +1,1 @@
-clang *.c -I/usr/local/cellar/allegro/5.2.7.0/include -lallegro -lallegro_main -lallegro_ttf -lallegro_primitives -Linclude/lua-5.4.4/src -lallegro_font -lallegro_image -llua -lallegro_audio -L/usr/local/lib  -o game -fcommon -g -O0 -ggdb  -fsanitize=address
+clang *.c -I/usr/local/cellar/allegro/5.2.7.0/include -L/usr/local/lib -lallegro -lallegro_main -lallegro_ttf -lallegro_primitives -Linclude/lua-5.4.4/src -lallegro_font -lallegro_image -llua -lallegro_audio -lallegro_acodec  -o game -fcommon -g -O0 -ggdb  -fsanitize=address

@@ -3,11 +3,13 @@
 #include "rect.h"
 #include "stdbool.h"
 
+
 //error printf colour
 #define COL_ERR  "\x1B[31m"
 
 typedef struct ALLEGRO_FONT ALLEGRO_FONT;
 typedef struct Effect Effect;
+typedef struct Sound Sound;
 typedef struct Text
 {
     ALLEGRO_FONT* f; 
@@ -143,7 +145,7 @@ typedef struct UI
     UIElement choosingUnits_Back;
     UIElement choosingUnits_GO;
 
-
+    Sound* uiClickedSound;
 
 } UI;   
  

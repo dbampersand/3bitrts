@@ -26,6 +26,7 @@
 #include "encounter.h"
 #include "gamestate.h"
 #include "damagenumber.h"
+#include "sound.h"
 
 
 
@@ -507,7 +508,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         {
             if (players[0].selection[players[0].indexSelectedUnit]->abilities[index].cdTimer <= 0)
             {
-
+                PlaySound(ui.uiClickedSound);
                 players[0].abilityHeld = NULL;
                 currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
                 if (currGameObjRunning)
@@ -812,6 +813,10 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             //y *= radius;
             al_draw_line(cx,cy,x,y,FRIENDLY,1);
         }
+        GameObject* heldSelected = players[0].selection[players[0].indexSelectedUnit];
+        float cxHeld; float cyHeld; 
+        GetCentre(heldSelected,&cxHeld,&cyHeld);
+        al_draw_line(mouseState->x+2,mouseState->y+2,cxHeld,cyHeld,FRIENDLY,1);
     }
     if (gameState == MAIN_MENU)
     {
@@ -914,6 +919,7 @@ int main(int argc, char* args[])
     al_install_mouse();
     al_install_keyboard();
     al_install_audio();
+    InitSound();
     ALLEGRO_MONITOR_INFO monitor;
     al_get_monitor_info(0, &monitor);
 

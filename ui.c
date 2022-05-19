@@ -14,6 +14,7 @@
 #include "effect.h"
 #include "helperfuncs.h"
 #include <stdio.h>
+#include "sound.h"
 void ChangeUIPanel(Panel* to)
 {
     ui.animatePanel = true;
