@@ -35,6 +35,12 @@ Sound* LoadSound(char* path)
         }
     }
 
+    if (numSounds >= numSoundsAllocated)
+    {
+        sounds = realloc(sounds,(numSoundsAllocated+NUMSOUNDSTOPREALLOC)*sizeof(Sound));
+        numSoundsAllocated = numSounds + NUMSOUNDSTOPREALLOC;
+    }
+
     sounds[numSounds].sample = al_load_sample(path);
     sounds[numSounds].path = path;
     numSounds++;
