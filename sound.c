@@ -13,7 +13,7 @@ void InitSound()
         numSoundsAllocated = NUMSOUNDSTOPREALLOC;
         numSounds = 0;
     }
-    ui.uiClickedSound = LoadSound("assets/audio/other_04.ogg");
+    ui.uiClickedSound = LoadSound("assets/audio/ui_click.wav");
 
 
 }
