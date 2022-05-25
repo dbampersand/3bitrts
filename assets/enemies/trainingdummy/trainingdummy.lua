@@ -7,7 +7,7 @@ function setup()
     SetObjectPush(true);
 end
 
-function update()
+function update(dt)
     if (GetTime() % 10 == 0) then
         SetHP(9999);
     end

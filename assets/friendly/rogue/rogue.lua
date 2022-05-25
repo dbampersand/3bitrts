@@ -21,7 +21,7 @@ function setup()
 
 end
 
-function update()
+function update(dt)
 end
 
 function kill()

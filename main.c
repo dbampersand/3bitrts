@@ -479,7 +479,8 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         if (currGameObjRunning->properties & OBJ_ACTIVE)
         {
             lua_rawgeti(luaState,LUA_REGISTRYINDEX,objects[i].luafunc_update);
-            lua_pcall(luaState,0,0,0);
+            lua_pushnumber(luaState,dt);
+            lua_pcall(luaState,1,0,0);
         }
     }
     if (1)
@@ -643,7 +644,15 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
     }
 
-
+    if (GetNumPlayerControlledObjs(&players[0]) == 0)
+    {
+        shouldExit = true;
+    }
+    if (GetNumPlayerControlledObjs(&players[1]) == 0)
+    {
+        gameState = CHOOSING_ENCOUNTER;
+        SetMap(&maps[0]);
+    }
 
     UpdateParticles(dt);
     ProcessAnimationEffects(dt);

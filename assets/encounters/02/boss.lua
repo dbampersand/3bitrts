@@ -1,3 +1,4 @@
+
 function setup()
     SetSprite("assets/encounters/02/minotaur/minotaur.png");
     AddAbility("assets/enemies/wyrm_boss/ability_bite.lua",0)   
@@ -11,7 +12,7 @@ function setup()
     SetObjectPush(true);
 end
 
-function update()
+function update(dt)
     j = GetThreatRank()
 
     target = {};
@@ -34,8 +35,9 @@ function update()
         targ2 = {};
         targ2["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_TANK)
         CastAbility(3,2,{targ2});
-
+        addsTimer = addsTimer + dt
     end
+    Print("" .. addsTimer)
 
     
     --if (j != nil)

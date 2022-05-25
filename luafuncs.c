@@ -714,6 +714,11 @@ int L_ToggleAbility(lua_State* l)
     ToggleAbility(a,currGameObjRunning,toggle);
     return 0;
 }
+int L_GetHP(lua_State* l)
+{
+    lua_pushnumber(l,currGameObjRunning->health);
+    return 1;
+}
 int L_SetMovePoint(lua_State* l)
 {
     const float x = lua_tonumber(l,1);
@@ -930,6 +935,7 @@ int L_CreateObject(lua_State* l)
     const int x = lua_tonumber(l,2);
     const int y = lua_tonumber(l,3);
     int PLAYER = lua_tonumber(l,4);
+    float summonTime = lua_tonumber(l,5);
     if (!lua_isnumber(l,PLAYER)) 
         PLAYER = 1;
 
@@ -958,7 +964,8 @@ int L_CreateObject(lua_State* l)
 
         SetOwnedBy(g, PLAYER);
     }
-
+    g->summonTime = summonTime;
+    g->summonMax = summonTime;
     return 1;
 }
 int L_AbilitySetCastType(lua_State* l)
@@ -1575,5 +1582,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetHighestThreat);
     lua_setglobal(luaState, "GetHighestThreat");
+
+    lua_pushcfunction(luaState, L_GetHP);
+    lua_setglobal(luaState, "GetHP");
 
 }

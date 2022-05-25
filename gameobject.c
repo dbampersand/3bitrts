@@ -1073,7 +1073,12 @@ void GetOffsetCenter(GameObject* g, float* x, float* y)
 }
 void GetCentre(GameObject* g, float* x, float* y)
 {
-    
+    if (!g)
+    {
+        *x = 0;
+        *y = 0;
+         return;
+    }
     *x = g->position.x + al_get_bitmap_width(sprites[g->spriteIndex].sprite)/2.0f;
     *y = g->position.y + al_get_bitmap_height(sprites[g->spriteIndex].sprite)/2.0f;
 
@@ -1268,3 +1273,20 @@ void RemoveAllGameObjects()
     }
 }
 
+
+int GetNumPlayerControlledObjs(Player* p)
+{
+    int count = 0;
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        GameObject* g = &objects[i];
+        if (IsActive(g))
+        {
+            if (GetPlayerOwnedBy(g) == (p-players))
+            {
+                count++;
+            }
+        }
+    }
+    return count;
+}

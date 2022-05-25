@@ -3,7 +3,7 @@ function setup()
     CreateObject("assets/encounters/02/boss.lua",32,32,ENEMY);
 end
 
-function update()
+function update(dt)
 end
 
 function kill()

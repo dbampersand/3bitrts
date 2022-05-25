@@ -39,8 +39,10 @@ typedef enum OBJ_FRIENDLINESS
 
 typedef struct Shield Shield;
 typedef struct lua_State lua_State;
+typedef struct Player Player;
 #define MAX_EFFECTS 12
 #define MAX_QUEUED_CMD 8
+#define MAX_ABILITIES 8
 
 typedef struct GameObject
 {    
@@ -52,7 +54,7 @@ typedef struct GameObject
     GameObject* targObj;
     int* onAttackEffectsIndices;
     Shield* shields;
-    Ability abilities[4]; 
+    Ability abilities[MAX_ABILITIES]; 
     Effect effects[MAX_EFFECTS];
     Command queue[MAX_QUEUED_CMD];
 
@@ -113,6 +115,9 @@ typedef struct GameObject
 
     Ability* channelledAbility;
     bool playerChoosable;
+
+    float summonTime;
+    float summonMax;
 } GameObject;
 
 
@@ -192,3 +197,4 @@ void LoadFolderPrefabs(const char* dirPath, char* name);
 void LoadPrefabs(const char* dirPath);
 int GetNumObjectsInRect(Rect* r);
 void RemoveAllGameObjects();
+int GetNumPlayerControlledObjs(Player* p);

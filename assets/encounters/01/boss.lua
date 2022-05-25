@@ -1,17 +1,20 @@
+local maxHP = 100
+
 function setup()
     SetSprite("assets/enemies/wyrm.png");
     AddAbility("assets/enemies/wyrm_boss/ability_bite.lua",0)   
     AddAbility("assets/enemies/wyrm_boss/ability_fire.lua",1)    
     AddAbility("assets/enemies/wyrm_boss/ability_nuke.lua",2)    
     AddAbility("assets/enemies/wyrm_boss/ability_firebreath.lua",3)    
+    AddAbility("assets/enemies/wyrm_boss/ability_summon_adds.lua",4)    
 
     SetDamage(10);
-    SetMaxHP(2500,true)
+    SetMaxHP(maxHP,true)
     SetSpeed(10)
     SetObjectPush(true);
 end
 
-function update()
+function update(dt)
     j = GetThreatRank()
 
     target = {};    
@@ -32,7 +35,7 @@ function update()
             aoeTarget = GetRandomUnit(TYPE_ENEMY,TYPE_HEALER)
             targ1 = {};
             targ1["target"] = aoeTarget;
-            --CastAbility(1,0,{targ1});
+            CastAbility(1,0,{targ1});
         end
         
         targ2 = {}
@@ -44,9 +47,12 @@ function update()
         CastAbility(3,2,{targ3});
 
 
+
     end
 
-    
+    if (GetHP() <= 200) then
+        CastAbility(5,0);
+    end
     --if (j != nil)
      --   CastAbility(0,{ddasd});
 end
