@@ -1,7 +1,9 @@
 #include "sound.h"
 #include "ui.h"
 #include "allegro5/allegro_acodec.h"
-
+#include "helperfuncs.h"
+#include "stdio.h"
+#include "gamestate.h"
 void InitSound()
 {
     al_init_acodec_addon();
@@ -14,7 +16,14 @@ void InitSound()
         numSounds = 0;
     }
     ui.uiClickedSound = LoadSound("assets/audio/ui_click.wav");
+    musicMixer1 = al_create_mixer(44100, ALLEGRO_AUDIO_DEPTH_FLOAT32, ALLEGRO_CHANNEL_CONF_2);
+    musicMixer2 = al_create_mixer(44100, ALLEGRO_AUDIO_DEPTH_FLOAT32, ALLEGRO_CHANNEL_CONF_2);
+    musicVoice1 = al_create_voice(44100, ALLEGRO_AUDIO_DEPTH_INT16, ALLEGRO_CHANNEL_CONF_2);
+    musicVoice2 = al_create_voice(44100, ALLEGRO_AUDIO_DEPTH_INT16, ALLEGRO_CHANNEL_CONF_2);
 
+    al_attach_mixer_to_voice(musicMixer1, musicVoice1);
+    al_attach_mixer_to_voice(musicMixer2, musicVoice2);
+   
 
 }
 
@@ -51,4 +60,58 @@ Sound* LoadSound(char* path)
 void PlaySound(Sound* s)
 {
     al_play_sample(s->sample, 1.0f, 0, 1.0f, ALLEGRO_PLAYMODE_ONCE, NULL);
+}
+void PlayMusic(char* path)
+{
+    if (musicFadingTo)
+        return;
+    musicFadingTo = al_load_audio_stream(path, 4, 2048);
+    if (!musicFadingTo) {
+        printf("Audio stream could not be created: %s\n",path);
+        fflush(stdout);
+    }
+    if (musicFadingTo)
+        if (!al_attach_audio_stream_to_mixer(musicFadingTo, musicMixer2))
+        {
+            printf("al_attach_audio_stream_to_mixer failed.\n");
+        }
+    musicVolMixer2 = 0;
+    //al_set_voice_playing(musicVoice,true);
+    //al_register_event_source(queue, al_get_audio_stream_event_source(musicFadingTo));
+}
+void UpdateMusic(float dt)
+{
+    if (musicFadingTo)
+    {
+        printf("musicVolMixer1: %f,\n",musicVolMixer1);
+        musicVolMixer1 -= dt*2;
+        musicVolMixer2 += dt*2;
+
+        musicVolMixer1 = clamp(musicVolMixer1,0,1);
+        musicVolMixer2 = clamp(musicVolMixer2,0,1);
+
+        al_set_mixer_gain(musicMixer1,musicVolMixer1);
+        al_set_mixer_gain(musicMixer2,musicVolMixer2);
+        if (musicVolMixer2 >= 0.99f)
+        {
+            musicVolMixer2 = 0.0f;
+            musicVolMixer1 = 1.0f;
+
+            if (music)
+                al_destroy_audio_stream(music);
+
+            ALLEGRO_MIXER* temp = musicMixer1;
+            musicMixer1 = musicMixer2;
+            musicMixer2 = temp;
+
+            music = musicFadingTo;
+            musicFadingTo = NULL;
+
+            al_set_mixer_gain(musicMixer1,musicVolMixer1);
+            al_set_mixer_gain(musicMixer2,musicVolMixer2);
+            
+
+        }
+        
+    }
 }

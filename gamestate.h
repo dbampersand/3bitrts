@@ -1,3 +1,6 @@
+#pragma once
+#include <stdbool.h>
+
 typedef enum GameState {
     MAIN_MENU,
     CHOOSING_ENCOUNTER,
@@ -13,7 +16,7 @@ typedef enum Option_HealthBar
     OPTION_HPBAR_NEVER = 2
 }Option_HealthBar;
 
-
+typedef struct ALLEGRO_EVENT_QUEUE ALLEGRO_EVENT_QUEUE;
 typedef struct GameOptions
 {
     bool* particlesEnabled;

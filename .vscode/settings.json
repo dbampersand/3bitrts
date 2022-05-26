@@ -7,6 +7,8 @@
         "type_traits": "c",
         "vector": "c",
         "xstring": "c",
-        "xutility": "c"
+        "xutility": "c",
+        "system_error": "c",
+        "helperfuncs.h": "c"
     }
 }

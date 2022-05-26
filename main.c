@@ -1030,6 +1030,7 @@ int main(int argc, char* args[])
     al_register_event_source(queue, al_get_display_event_source(display));
    al_register_event_source(queue, al_get_timer_event_source(_FPS_TIMER));
 
+
    ALLEGRO_KEYBOARD_STATE keyStateLastFrame;
    al_get_keyboard_state(&keyStateLastFrame);
    ALLEGRO_MOUSE_STATE mouseStateLastFrame;
@@ -1040,6 +1041,7 @@ int main(int argc, char* args[])
         ui.panelShownPercent=1.0f;
         ui.animatePanel = UI_ANIMATE_STATIC;
     }
+    PlayMusic("assets/audio/first_boss.wav");
 
     while (!shouldExit) {
         //al_set_mouse_xy(display, 128,128);
@@ -1070,6 +1072,17 @@ int main(int argc, char* args[])
 
             al_set_target_bitmap(SCREEN);
             al_clear_to_color(BG);
+
+            if (al_key_down(&keyState,ALLEGRO_KEY_F1) && !al_key_down(&keyStateLastFrame,ALLEGRO_KEY_F1))
+            {
+                PlayMusic("assets/audio/first_boss.wav");
+            }
+            if (al_key_down(&keyState,ALLEGRO_KEY_F2) && !al_key_down(&keyStateLastFrame,ALLEGRO_KEY_F2))
+            {
+                PlayMusic("assets/audio/2ndtrack.wav");
+            }
+
+            UpdateMusic(1/(float)_TARGET_FPS);
 
             if (!ui.currentPanel)
                 Update(1/(float)_TARGET_FPS,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
