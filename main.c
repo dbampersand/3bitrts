@@ -78,68 +78,15 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     SetControlGroups(keyState);
     GetControlGroup(keyState);
     UpdateDamageNumbers(dt);
-    if (al_key_down(keyState, ALLEGRO_KEY_A) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_A))
-    {
-        players[0].amoveSelected = true;
-    }
-    if (players[0].abilityHeld) 
-        players[0].amoveSelected = false;
-    if (al_key_down(keyState, ALLEGRO_KEY_TAB) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_TAB))
-    {
-        players[0].indexSelectedUnit++;
-        if (players[0].indexSelectedUnit >= MAXUNITSSELECTED || players[0].indexSelectedUnit >= players[0].numUnitsSelected)
-        {
-            players[0].indexSelectedUnit = 0;
-        }
-    }
+    UpdatePlayerObjectInteractions(keyState,keyStateLastFrame,mouseState);
     for (int i = 0; i < numObjects; i++)
     {
         UpdateObject(&objects[i],dt);
     }
-    CheckAbilityClicked(keyState,keyStateLastFrame, mouseState);
-    if (mouseState->buttons & 1) 
-    {
-        currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
-        currAbilityRunning = players[0].abilityHeld;
-        if (IsInsideUI(mouseState->x,mouseState->y))
-        {
-            GetAbilityClickedInsideUI(mouseState,mouseStateLastFrame);
-        }
-        else
-        {
-            ProcessAttackMoveMouseCommand(mouseState, keyState);
-            CastAbilityOnMouse(mouseState, keyState);
-        }
-        currAbilityRunning = NULL;
-        players[0].abilityHeld = NULL;
-    }
-    
-    if (!(mouseState->buttons & 2) && (mouseStateLastFrame->buttons & 2))
-    {
-        currAbilityRunning = NULL;
-        players[0].abilityHeld = NULL;
+    UpdateAbilityInteractions(keyState, keyStateLastFrame,mouseState,mouseStateLastFrame);
 
-    }
-    if (players[0].abilityHeld)
-    {
-        al_set_system_mouse_cursor(display, ALLEGRO_SYSTEM_MOUSE_CURSOR_EDIT);
-    }
-    else
-    {
-        al_set_system_mouse_cursor(display, ALLEGRO_SYSTEM_MOUSE_CURSOR_ARROW);
-
-    }
-
-    if (GetNumPlayerControlledObjs(&players[0]) == 0 && gameState == INGAME)
-    {
-        gameState = GAMESTATE_EXIT;
-    }
-    if (GetNumPlayerControlledObjs(&players[1]) == 0 && gameState == INGAME)
-    {
-        gameState = CHOOSING_ENCOUNTER;
-        StopMusic();
-        SetMap(&maps[0]);
-    }
+    CheckIfGameIsLost();
+    CheckIfGameIsWon();
 
     UpdateParticles(dt);
     ProcessAnimationEffects(dt);

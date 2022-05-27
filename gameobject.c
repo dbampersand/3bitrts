@@ -20,6 +20,24 @@
 #include "damagenumber.h"
 #include "gamestate.h"
 #include "particle.h"
+void UpdatePlayerObjectInteractions(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState)
+{
+    if (al_key_down(keyState, ALLEGRO_KEY_A) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_A))
+    {
+        players[0].amoveSelected = true;
+    }
+    if (players[0].abilityHeld) 
+        players[0].amoveSelected = false;
+    if (al_key_down(keyState, ALLEGRO_KEY_TAB) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_TAB))
+    {
+        players[0].indexSelectedUnit++;
+        if (players[0].indexSelectedUnit >= MAXUNITSSELECTED || players[0].indexSelectedUnit >= players[0].numUnitsSelected)
+        {
+            players[0].indexSelectedUnit = 0;
+        }
+    }
+
+}
 void ProcessAttackMoveMouseCommand(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyState)
 {
     if (players[0].amoveSelected)

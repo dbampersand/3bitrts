@@ -69,7 +69,7 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_S
         }
         if (GetButton(&ui.mainMenuPanel,"Exit"))
         {
-            gameState = GAMESTATE_EXIT;
+            Quit();
         }
     }
     SetOptions();

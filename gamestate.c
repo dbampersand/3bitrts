@@ -2,7 +2,7 @@
 #include "sound.h"
 #include "gameobject.h"
 #include "map.h"
-
+#include "player.h"
 void StartCombat()
 {
     if (combatStarted)
@@ -32,4 +32,25 @@ void SetGameStateToChoosingParty()
     }
     gameState = CHOOSING_UNITS;
 
+}
+void Quit()
+{
+    gameState = GAMESTATE_EXIT;
+}
+void CheckIfGameIsWon()
+{
+    if (GetNumPlayerControlledObjs(&players[1]) == 0 && gameState == INGAME)
+    {
+        gameState = CHOOSING_ENCOUNTER;
+        StopMusic();
+        SetMap(&maps[0]);
+    }
+
+}
+void CheckIfGameIsLost()
+{
+    if (GetNumPlayerControlledObjs(&players[0]) == 0 && gameState == INGAME)
+    {
+        Quit();
+    }
 }

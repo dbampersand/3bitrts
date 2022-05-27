@@ -137,6 +137,7 @@ int numPrefabsAllocated;
 
 //add 8 more free objects when we need to realloc objects array
 #define BUFFER_PREALLOC_AMT 8
+void UpdatePlayerObjectInteractions(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState);
 void ProcessAttackMoveMouseCommand(ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_KEYBOARD_STATE* keyState);
 void UpdateObject(GameObject* g, float dt);
 void InitObjects();

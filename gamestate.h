@@ -31,3 +31,6 @@ ALLEGRO_EVENT_QUEUE* queue;
 void StartCombat();
 void InitGameState();
 void SetGameStateToChoosingParty();
+void Quit();
+void CheckIfGameIsLost();
+void CheckIfGameIsWon();

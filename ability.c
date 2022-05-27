@@ -6,7 +6,44 @@
 #include "luafuncs.h"
 #include "gameobject.h"
 #include "player.h"
+#include "video.h"
+#include "ui.h"
+void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+{
+    CheckAbilityClicked(keyState,keyStateLastFrame, mouseState);
+    if (mouseState->buttons & 1) 
+    {
+        currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
+        currAbilityRunning = players[0].abilityHeld;
+        if (IsInsideUI(mouseState->x,mouseState->y))
+        {
+            GetAbilityClickedInsideUI(mouseState,mouseStateLastFrame);
+        }
+        else
+        {
+            ProcessAttackMoveMouseCommand(mouseState, keyState);
+            CastAbilityOnMouse(mouseState, keyState);
+        }
+        currAbilityRunning = NULL;
+        players[0].abilityHeld = NULL;
+    }
 
+    if (!(mouseState->buttons & 2) && (mouseStateLastFrame->buttons & 2))
+    {
+        currAbilityRunning = NULL;
+        players[0].abilityHeld = NULL;
+
+    }
+    if (players[0].abilityHeld)
+    {
+        al_set_system_mouse_cursor(display, ALLEGRO_SYSTEM_MOUSE_CURSOR_EDIT);
+    }
+    else
+    {
+        al_set_system_mouse_cursor(display, ALLEGRO_SYSTEM_MOUSE_CURSOR_ARROW);
+
+    }
+}
 void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyState)
 {
     if (players[0].abilityHeld)
