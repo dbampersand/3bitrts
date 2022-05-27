@@ -4,6 +4,7 @@
 #include "helperfuncs.h"
 #include "stdio.h"
 #include "gamestate.h"
+#include "encounter.h"
 void InitSound()
 {
     al_init_acodec_addon();
@@ -61,10 +62,28 @@ void PlaySound(Sound* s)
 {
     al_play_sample(s->sample, 1.0f, 0, 1.0f, ALLEGRO_PLAYMODE_ONCE, NULL);
 }
-void PlayMusic(char* path)
+void StopMusic()
+{
+    if (music)
+        al_destroy_audio_stream(music);
+    if (musicFadingTo)
+        al_destroy_audio_stream(musicFadingTo);
+    music = NULL;
+    musicFadingTo = NULL;
+    musicVolMixer1 = 0;
+    musicVolMixer2 = 0;
+
+}
+void PlayMusic(const char* path)
 {
     if (musicFadingTo)
         return;
+    if (musicPath)
+    {
+        free(musicPath);
+    }
+    musicPath = calloc(strlen(path)+1,sizeof(char));
+    strcpy(musicPath,path);
     musicFadingTo = al_load_audio_stream(path, 4, 2048);
     if (!musicFadingTo) {
         printf("Audio stream could not be created: %s\n",path);
@@ -76,14 +95,21 @@ void PlayMusic(char* path)
             printf("al_attach_audio_stream_to_mixer failed.\n");
         }
     musicVolMixer2 = 0;
+    al_set_audio_stream_playmode(musicFadingTo,ALLEGRO_PLAYMODE_LOOP);
     //al_set_voice_playing(musicVoice,true);
     //al_register_event_source(queue, al_get_audio_stream_event_source(musicFadingTo));
+}
+void PlayEncounterMusic()
+{
+    if (currEncounterRunning->musicPath)
+    {
+        PlayMusic(currEncounterRunning->musicPath);
+    }
 }
 void UpdateMusic(float dt)
 {
     if (musicFadingTo)
     {
-        printf("musicVolMixer1: %f,\n",musicVolMixer1);
         musicVolMixer1 -= dt*2;
         musicVolMixer2 += dt*2;
 

@@ -10,7 +10,7 @@ function setup()
 
     SetEncounterMapPath("assets/encounters/01/map.lua");
     SetEncounterDifficulty(DIFFICULTY_EASY);
-
+    SetEncounterMusic("assets/audio/first_boss.wav");
     EncounterSetNumUnitsToSelect(2);
 
 end

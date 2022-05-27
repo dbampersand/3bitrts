@@ -24,4 +24,7 @@ typedef struct GameOptions
 } GameOptions;
 GameOptions gameOptions;
 
+bool combatStarted;
 ALLEGRO_EVENT_QUEUE* queue;
+
+void StartCombat();

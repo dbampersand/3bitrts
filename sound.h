@@ -18,8 +18,10 @@ MusicState musicState;
 void InitSound();
 Sound* LoadSound();
 void PlaySound(Sound* s);
-void PlayMusic(char* path);
+void PlayMusic(const char* path);
 void UpdateMusic(float dt);
+void PlayEncounterMusic();
+void StopMusic();
 
 
 #define RESERVED_SAMPLES 16
@@ -37,6 +39,7 @@ ALLEGRO_VOICE* musicVoice2;
 ALLEGRO_MIXER* musicMixer1;
 ALLEGRO_MIXER* musicMixer2;
 
+char* musicPath;
 
 Sound* sounds;
 int numSoundsAllocated;

@@ -330,6 +330,8 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_S
             if (gameState == MAIN_MENU)
             {
                 gameState = CHOOSING_ENCOUNTER;
+                StopMusic();
+                combatStarted = false;
                 ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
             }
         }
@@ -651,6 +653,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     if (GetNumPlayerControlledObjs(&players[1]) == 0)
     {
         gameState = CHOOSING_ENCOUNTER;
+        StopMusic();
         SetMap(&maps[0]);
     }
 
@@ -872,9 +875,12 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         if (GetButtonIsClicked(&ui.choosingUnits_GO) && numUnitsInRect==encounters[selectedEncounterIndex]->numUnitsToSelect)
         {
             gameState = INGAME;
+            combatStarted = false;
+
             ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
 
             Encounter* e = encounters[selectedEncounterIndex];
+            currEncounterRunning = e;
             GameObject** list = calloc(e->numUnitsToSelect,sizeof(GameObject*));
 
             int foundIndex = 0;
@@ -892,7 +898,6 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
                 }
             }
             RemoveAllGameObjects();
-
             SetMap(LoadMap(e->mapPath));
 
             int xPos = 0; 
@@ -1017,11 +1022,6 @@ int main(int argc, char* args[])
    // AddGameobject(g)->x = 100;
 
 
-    printf("gggg\n"); fflush(stdout);
-
-    printf("bbbb\n"); fflush(stdout);
-
-    fflush(stdout);
     ALLEGRO_TIMER* _FPS_TIMER = al_create_timer(1.0f / (double)_TARGET_FPS);
 
     al_start_timer(_FPS_TIMER);
@@ -1041,7 +1041,7 @@ int main(int argc, char* args[])
         ui.panelShownPercent=1.0f;
         ui.animatePanel = UI_ANIMATE_STATIC;
     }
-    PlayMusic("assets/audio/first_boss.wav");
+    //PlayMusic("assets/audio/first_boss.wav");
 
     while (!shouldExit) {
         //al_set_mouse_xy(display, 128,128);
@@ -1073,15 +1073,10 @@ int main(int argc, char* args[])
             al_set_target_bitmap(SCREEN);
             al_clear_to_color(BG);
 
-            if (al_key_down(&keyState,ALLEGRO_KEY_F1) && !al_key_down(&keyStateLastFrame,ALLEGRO_KEY_F1))
+            if (al_key_down(&keyState,ALLEGRO_KEY_F1))
             {
-                PlayMusic("assets/audio/first_boss.wav");
+                StopMusic();
             }
-            if (al_key_down(&keyState,ALLEGRO_KEY_F2) && !al_key_down(&keyStateLastFrame,ALLEGRO_KEY_F2))
-            {
-                PlayMusic("assets/audio/2ndtrack.wav");
-            }
-
             UpdateMusic(1/(float)_TARGET_FPS);
 
             if (!ui.currentPanel)

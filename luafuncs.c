@@ -10,6 +10,7 @@
 #include "encounter.h"
 #include "sprite.h"
 #include <time.h>
+#include "sound.h"
 
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);
@@ -41,6 +42,27 @@ int L_SetHP(lua_State* l)
     {
         currGameObjRunning->health = currGameObjRunning->maxHP;
     } 
+    return 0;
+}
+int L_PlayMusic(lua_State* l)
+{
+    const char* path = lua_tostring(l,1);
+    if (path)
+    {
+        PlayMusic(path);
+    }
+    return 0;
+}
+int L_SetEncounterMusic(lua_State* l)
+{
+    const char* path = lua_tostring(l,1);
+    if (path)
+    {
+        if (currEncounterRunning->musicPath)
+            free(currEncounterRunning->musicPath);
+        currEncounterRunning->musicPath = calloc(strlen(path)+1,sizeof(char));
+        strcpy(currEncounterRunning->musicPath,path);
+    }
     return 0;
 }
 int L_GetTime(lua_State* l)
@@ -1585,5 +1607,12 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetHP);
     lua_setglobal(luaState, "GetHP");
+
+    lua_pushcfunction(luaState, L_SetEncounterMusic);
+    lua_setglobal(luaState, "SetEncounterMusic");
+
+    lua_pushcfunction(luaState, L_PlayMusic);
+    lua_setglobal(luaState, "PlayMusic");
+
 
 }

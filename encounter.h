@@ -28,6 +28,7 @@ typedef struct Encounter
 
     char* mapPath;
     int numUnitsToSelect;
+    char* musicPath;
     Encounter_Difficulty difficulty;
 } Encounter;
 
