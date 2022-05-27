@@ -46,3 +46,4 @@ ALLEGRO_COLOR HEAL;
 ALLEGRO_COLOR DAMAGE;
 
 ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy);
+void InitColors();

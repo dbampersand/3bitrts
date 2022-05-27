@@ -19,7 +19,278 @@
 #include "encounter.h"
 #include "damagenumber.h"
 #include "gamestate.h"
+#include "particle.h"
+void InitObjects()
+{
+    objects = calloc(MAX_OBJS,sizeof(GameObject));
+    numObjects = 0;
+    objectsAllocated = MAX_OBJS;
 
+    freeObjs = calloc(MAX_OBJS,sizeof(GameObject*));
+    numFreeObjs = MAX_OBJS;
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        freeObjs[i] = &objects[i];
+    }
+
+
+    prefabs = calloc(1,sizeof(GameObject));
+    numPrefabs = 0;
+    numPrefabsAllocated = 1;
+}
+void GetControlGroup(ALLEGRO_KEYBOARD_STATE* keyState)
+{
+     if (!al_key_down(keyState,ALLEGRO_KEY_LCTRL))
+    {
+        if (al_key_down(keyState,ALLEGRO_KEY_1))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(1);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_2))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(2);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_3))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(3);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_4))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(4);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_5))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(5);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_6))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(6);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_7))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(7);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_8))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(8);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_9))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(9);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_0))
+        {
+            UnsetAll();
+            players[0].numUnitsSelected = GetCtrlGroup(0);
+        }
+    }  
+}
+void SetControlGroups(ALLEGRO_KEYBOARD_STATE* keyState)
+{
+    if (al_key_down(keyState,ALLEGRO_KEY_LCTRL))
+    {
+        if (al_key_down(keyState,ALLEGRO_KEY_1))
+        {
+            SetCtrlGroup(1,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_2))
+        {
+            SetCtrlGroup(2,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_3))
+        {
+            SetCtrlGroup(3,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_4))
+        {
+            SetCtrlGroup(4,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_5))
+        {
+            SetCtrlGroup(5,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_6))
+        {
+            SetCtrlGroup(6,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_7))
+        {
+            SetCtrlGroup(7,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_8))
+        {
+            SetCtrlGroup(8,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_9))
+        {
+            SetCtrlGroup(9,players[0].selection,players[0].numUnitsSelected);
+        }
+         if (al_key_down(keyState,ALLEGRO_KEY_0))
+        {
+            SetCtrlGroup(0,players[0].selection,players[0].numUnitsSelected);
+        }
+    }    
+}
+
+int GetCtrlGroup(int index)
+{
+    //memcpy(players[0].selection,players[0].controlGroups[index],MAXUNITSSELECTED*sizeof(GameObject*));
+    int count = 0; 
+    for (int i = 0; i < MAXUNITSSELECTED; i++)
+    {
+        players[0].selection[i] = players[0].controlGroups[index][i];
+        if (players[0].selection[i] != NULL)
+        {
+            count++;
+            players[0].selection[i]->properties |= OBJ_SELECTED;
+        }
+    }
+    return count; 
+
+}
+
+
+void SetCtrlGroup(int index, GameObject** list, int numUnitsSelected)
+{
+    if (list)
+    {
+        numUnitsSelected = numUnitsSelected > MAXUNITSSELECTED ? MAXUNITSSELECTED : numUnitsSelected;
+        for (int i = 0; i < MAXUNITSSELECTED; i++)
+        {
+            players[0].controlGroups[index][i] = list[i];
+        }
+        //memcpy(players[0].controlGroups[index],list,numUnitsSelected*sizeof(GameObject*));
+    }
+}
+
+void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState)
+{
+    if (!(mouseLastFrame->buttons & 1)  && (mouseState->buttons & 1) && !players[0].abilityHeld)
+    {
+        AddMouseRandomParticles(*mouseState, 3);
+        players[0].selecting = true;
+        players[0].selectionStart = (Vector2){mouseState->x,mouseState->y};
+    }
+    if (players[0].selecting)
+    {
+    }
+    if (!(mouseState->buttons & 1))
+    {
+        if (players[0].selecting)
+        {
+            Vector2 endSelection = (Vector2){mouseState->x,mouseState->y};
+            Rect r;
+            r.x = _MIN(endSelection.x,players[0].selectionStart.x);
+            r.y = _MIN(endSelection.y,players[0].selectionStart.y);
+            r.w = _MAX(endSelection.x,players[0].selectionStart.x) - _MIN(endSelection.x,players[0].selectionStart.x);
+            r.h = _MAX(endSelection.y,players[0].selectionStart.y) - _MIN(endSelection.y,players[0].selectionStart.y);
+            bool hasSelected = false;
+            
+            for (int i = 0; i < numObjects; i++)
+            {
+                GameObject* obj = &objects[i];
+                if (!IsOwnedByPlayer(obj) || !IsActive(obj))
+                    continue;
+                Sprite* sp = &sprites[obj->spriteIndex];
+                int j = al_get_bitmap_width(sp->sprite);
+                Rect rObj = (Rect){obj->position.x,obj->position.y,al_get_bitmap_width(sp->sprite),al_get_bitmap_height(sp->sprite)};
+                if (CheckIntersect(rObj,r))
+                {
+                    if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                    if (!hasSelected)
+                    {
+                        for (int j = 0; j < numObjects; j++)
+                        {
+                            SetSelected(&objects[j],false);
+                            for (int i = 0; i < players[0].numUnitsSelected; i++)
+                            {
+                                players[0].selection[i] = NULL;
+                            }
+                            players[0].numUnitsSelected = 0;
+                        }
+                        hasSelected = true;
+                    }
+                    if (al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                    {
+                        bool selected = IsSelected(obj);
+                        SetSelected(obj,!selected);
+                        //we're removing the unit from selection as it is already selected 
+                        if (selected)
+                        {
+                            RemoveGameObjectFromSelection(&players[0],obj);
+                        }
+                    }
+                    else
+                    {
+                        SetSelected(obj,true);
+                        players[0].selection[players[0].numUnitsSelected] = obj;
+                        players[0].numUnitsSelected++;
+
+                    }
+                    if (hasSelected) 
+                        players[0].indexSelectedUnit = 0; 
+                }
+            }
+        }
+        players[0].selecting = false;
+    }
+    if (!(mouseState->buttons & 2) && (mouseLastFrame->buttons & 2))
+    {
+        if (!IsInsideUI(mouseState->x,mouseState->y))
+        {
+            if (players[0].abilityHeld == NULL)
+                    {
+                        AddMouseRandomParticles(*mouseState, 3);
+                    }
+                    for (int i = 0; i < players[0].numUnitsSelected; i++)
+                    {
+                        SetAttackingObj(players[0].selection[i],NULL);
+                    }
+
+                    for (int i = 0; i < numObjects; i++)
+                    {
+                        GameObject* g = &objects[i];
+                        if (!IsActive(g))
+                            continue;
+                        if (IsSelected(g))
+                        {
+                            int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
+                            int h = al_get_bitmap_height(sprites[g->spriteIndex].sprite);
+                                if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                                    ClearCommandQueue(g);
+                            MoveCommand(g,mouseState->x-w/2,mouseState->y-h/2);
+                        
+                        // g->xtarg = mouseState->x - w/2;
+                            //g->ytarg = mouseState->y - h/2;
+                        }
+                        Sprite* s = &sprites[g->spriteIndex];
+                        Rect r = (Rect){g->position.x,g->position.y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)}; 
+                        if (PointInRect(mouseState->x,mouseState->y,r))
+                        {
+                            for (int i = 0; i < players[0].numUnitsSelected; i++)
+                            {
+                                if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                                    ClearCommandQueue(players[0].selection[i]);
+                                AttackCommand(players[0].selection[i],g);
+                                //SetAttackingObj(players[0].selection[i],g);
+                            }
+                            break;
+                        }
+                    }
+        }
+    
+        
+    }
+}
 int GetNumObjectsInRect(Rect* r)
 {
     int j = 0;

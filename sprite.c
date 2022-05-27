@@ -133,3 +133,8 @@ void DrawSpriteRegion(Sprite* sprite, float sx, float sy, float sw, float sh, fl
         al_draw_tinted_bitmap_region(sprite->inverseSprite,tint,sx,sy,sw,sh,dx,dy,0);
     
 }
+void InitSprites()
+{
+    numSprites=1;
+    maxSprites = 0;
+}

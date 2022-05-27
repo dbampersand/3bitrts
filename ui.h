@@ -154,7 +154,7 @@ UI ui;
 #define UI_PADDING 5
 typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE;
 typedef struct Ability Ability;
-
+void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState);
 bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, ALLEGRO_MOUSE_STATE* mouseState);
 void DrawCursor(ALLEGRO_MOUSE_STATE* mouseState, int index, bool clicked);
@@ -165,6 +165,7 @@ bool IsInsideUI(int x, int y);
 int GetAbilityClicked(ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 Rect GetAbilityPortraitRect(int index);
 void InitUI();  
+void InitFonts();
 void DrawMenus(ALLEGRO_MOUSE_STATE* mouseState);
 void UpdateButton(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);

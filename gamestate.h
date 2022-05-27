@@ -5,7 +5,8 @@ typedef enum GameState {
     MAIN_MENU,
     CHOOSING_ENCOUNTER,
     CHOOSING_UNITS,
-    INGAME
+    INGAME,
+    GAMESTATE_EXIT
 } GameState;
 GameState gameState;
 
@@ -28,3 +29,5 @@ bool combatStarted;
 ALLEGRO_EVENT_QUEUE* queue;
 
 void StartCombat();
+void InitGameState();
+void SetGameStateToChoosingParty();

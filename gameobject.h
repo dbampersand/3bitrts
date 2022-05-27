@@ -137,7 +137,12 @@ int numPrefabsAllocated;
 
 //add 8 more free objects when we need to realloc objects array
 #define BUFFER_PREALLOC_AMT 8
-
+void InitObjects();
+void GetControlGroup(ALLEGRO_KEYBOARD_STATE* keyState);
+void SetControlGroups(ALLEGRO_KEYBOARD_STATE* keyState);
+int GetCtrlGroup(int index);
+void SetCtrlGroup(int index, GameObject** list, int numUnitsSelected);
+void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState);
 GameObject* AddGameobject(GameObject* prefab, float x, float y);
 bool CheckFuncExists(const char* funcName, char* lua_buffer);
 void loadLuaGameObj(lua_State* l,const char* filename, GameObject* g);

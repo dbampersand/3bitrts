@@ -131,6 +131,8 @@ void ProcessAnimationEffects(float dt)
 
 void InitAnimationEffects()
 {
+    numAnimationEffectsPrefabs = 0;
+
     memset(animationEffects,0,sizeof(AnimationEffect)*MAX_ANIMATIONEFFECTS);
     animationEffect_TOP = 0;
 

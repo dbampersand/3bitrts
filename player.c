@@ -27,3 +27,7 @@ void RemoveGameObjectFromSelection(Player* p, GameObject* g)
         RemoveIndexFromSelection(p,index);
     }
 }
+void InitPlayers()
+{
+    players = calloc(2,sizeof(GameObject));
+}

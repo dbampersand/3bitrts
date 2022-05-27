@@ -23,7 +23,8 @@ typedef struct Map
 Map* currMap;
 Map* maps;
 int numMaps;
-void PreprocessMap(Map* map);
 
+void PreprocessMap(Map* map);
 Map* LoadMap(char* path);
 void SetMap(Map* m);
+void InitMaps();

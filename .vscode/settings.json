@@ -9,6 +9,7 @@
         "xstring": "c",
         "xutility": "c",
         "system_error": "c",
-        "helperfuncs.h": "c"
+        "helperfuncs.h": "c",
+        "rect.h": "c"
     }
 }

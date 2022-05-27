@@ -32,320 +32,44 @@
 
 int _TARGET_FPS = 60;
 
-bool shouldExit;
 void init()
 {
-    objects = calloc(MAX_OBJS,sizeof(GameObject));
-    numObjects = 0;
-    objectsAllocated = MAX_OBJS;
+    srand(time(NULL));
 
-    freeObjs = calloc(MAX_OBJS,sizeof(GameObject*));
-    numFreeObjs = MAX_OBJS;
-    for (int i = 0; i < MAX_OBJS; i++)
-    {
-        freeObjs[i] = &objects[i];
-    }
+    al_init();
+    al_init_font_addon();
+    al_init_ttf_addon();
+    al_init_image_addon();
+    al_init_primitives_addon();
+    al_install_mouse();
+    al_install_keyboard();
+    al_install_audio();
 
-
-    prefabs = calloc(1,sizeof(GameObject));
-    numPrefabs = 0;
-    numPrefabsAllocated = 1;
-
-    players = calloc(2,sizeof(GameObject));
-
-    gameState = MAIN_MENU;
-    ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Start");
-
-    ui.panelShownPercent = 1.0f;
-    numMaps = 0;
-    numSprites=1;
-    maxSprites = 0;
-    _FRAMES = 0;
-
-    numAnimationEffectsPrefabs = 0;
+    InitGameState();
+    InitSound();
+    InitColors();
+    InitVideo();
+    InitObjects();
+    InitPlayers();
+    InitMaps();
+    InitAnimationEffects();
 
     memset(&gameOptions,0,sizeof(GameOptions));
 
+    init_lua();
+    InitAttacks();
+    InitParticles();
+    InitUI();
     
-}
-void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState)
-{
-    if (!(mouseLastFrame->buttons & 1)  && (mouseState->buttons & 1) && !players[0].abilityHeld)
-    {
-        AddMouseRandomParticles(*mouseState, 3);
-        players[0].selecting = true;
-        players[0].selectionStart = (Vector2){mouseState->x,mouseState->y};
-    }
-    if (players[0].selecting)
-    {
-    }
-    if (!(mouseState->buttons & 1))
-    {
-        if (players[0].selecting)
-        {
-            Vector2 endSelection = (Vector2){mouseState->x,mouseState->y};
-            Rect r;
-            r.x = _MIN(endSelection.x,players[0].selectionStart.x);
-            r.y = _MIN(endSelection.y,players[0].selectionStart.y);
-            r.w = _MAX(endSelection.x,players[0].selectionStart.x) - _MIN(endSelection.x,players[0].selectionStart.x);
-            r.h = _MAX(endSelection.y,players[0].selectionStart.y) - _MIN(endSelection.y,players[0].selectionStart.y);
-            bool hasSelected = false;
-            
-            for (int i = 0; i < numObjects; i++)
-            {
-                GameObject* obj = &objects[i];
-                if (!IsOwnedByPlayer(obj) || !IsActive(obj))
-                    continue;
-                Sprite* sp = &sprites[obj->spriteIndex];
-                int j = al_get_bitmap_width(sp->sprite);
-                Rect rObj = (Rect){obj->position.x,obj->position.y,al_get_bitmap_width(sp->sprite),al_get_bitmap_height(sp->sprite)};
-                if (CheckIntersect(rObj,r))
-                {
-                    if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
-                    if (!hasSelected)
-                    {
-                        for (int j = 0; j < numObjects; j++)
-                        {
-                            SetSelected(&objects[j],false);
-                            for (int i = 0; i < players[0].numUnitsSelected; i++)
-                            {
-                                players[0].selection[i] = NULL;
-                            }
-                            players[0].numUnitsSelected = 0;
-                        }
-                        hasSelected = true;
-                    }
-                    if (al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
-                    {
-                        bool selected = IsSelected(obj);
-                        SetSelected(obj,!selected);
-                        //we're removing the unit from selection as it is already selected 
-                        if (selected)
-                        {
-                            RemoveGameObjectFromSelection(&players[0],obj);
-                        }
-                    }
-                    else
-                    {
-                        SetSelected(obj,true);
-                        players[0].selection[players[0].numUnitsSelected] = obj;
-                        players[0].numUnitsSelected++;
+    LoadEncounters("assets/encounters",luaState);
 
-                    }
-                    if (hasSelected) 
-                        players[0].indexSelectedUnit = 0; 
-                }
-            }
-        }
-        players[0].selecting = false;
-    }
-    if (!(mouseState->buttons & 2) && (mouseLastFrame->buttons & 2))
-    {
-        if (!IsInsideUI(mouseState->x,mouseState->y))
-        {
-            if (players[0].abilityHeld == NULL)
-                    {
-                        AddMouseRandomParticles(*mouseState, 3);
-                    }
-                    for (int i = 0; i < players[0].numUnitsSelected; i++)
-                    {
-                        SetAttackingObj(players[0].selection[i],NULL);
-                    }
+    Map* m = LoadMap("assets/ui/map_unitselect.lua");  
+    SetMap(&maps[0]);
+    LoadPrefabs("assets/friendly");
 
-                    for (int i = 0; i < numObjects; i++)
-                    {
-                        GameObject* g = &objects[i];
-                        if (!IsActive(g))
-                            continue;
-                        if (IsSelected(g))
-                        {
-                            int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
-                            int h = al_get_bitmap_height(sprites[g->spriteIndex].sprite);
-                                if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
-                                    ClearCommandQueue(g);
-                            MoveCommand(g,mouseState->x-w/2,mouseState->y-h/2);
-                        
-                        // g->xtarg = mouseState->x - w/2;
-                            //g->ytarg = mouseState->y - h/2;
-                        }
-                        Sprite* s = &sprites[g->spriteIndex];
-                        Rect r = (Rect){g->position.x,g->position.y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)}; 
-                        if (PointInRect(mouseState->x,mouseState->y,r))
-                        {
-                            for (int i = 0; i < players[0].numUnitsSelected; i++)
-                            {
-                                if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
-                                    ClearCommandQueue(players[0].selection[i]);
-                                AttackCommand(players[0].selection[i],g);
-                                //SetAttackingObj(players[0].selection[i],g);
-                            }
-                            break;
-                        }
-                    }
-        }
-    
-        
-    }
-}
-//ALLEGRO_MOUSE_STATE mouseStateLastFrame;
-//ALLEGRO_KEYBOARD_STATE keyStateLastFrame;
-void SetCtrlGroup(int index, GameObject** list, int numUnitsSelected)
-{
-    if (list)
-    {
-        numUnitsSelected = numUnitsSelected > MAXUNITSSELECTED ? MAXUNITSSELECTED : numUnitsSelected;
-        for (int i = 0; i < MAXUNITSSELECTED; i++)
-        {
-            players[0].controlGroups[index][i] = list[i];
-        }
-        //memcpy(players[0].controlGroups[index],list,numUnitsSelected*sizeof(GameObject*));
-    }
-}
-int GetCtrlGroup(int index)
-{
-    //memcpy(players[0].selection,players[0].controlGroups[index],MAXUNITSSELECTED*sizeof(GameObject*));
-    int count = 0; 
-    for (int i = 0; i < MAXUNITSSELECTED; i++)
-    {
-        players[0].selection[i] = players[0].controlGroups[index][i];
-        if (players[0].selection[i] != NULL)
-        {
-            count++;
-            players[0].selection[i]->properties |= OBJ_SELECTED;
-        }
-    }
-    return count; 
 
 }
-void SetControlGroups(ALLEGRO_KEYBOARD_STATE* keyState)
-{
-    if (al_key_down(keyState,ALLEGRO_KEY_LCTRL))
-    {
-        if (al_key_down(keyState,ALLEGRO_KEY_1))
-        {
-            SetCtrlGroup(1,players[0].selection,players[0].numUnitsSelected);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_2))
-        {
-            SetCtrlGroup(2,players[0].selection,players[0].numUnitsSelected);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_3))
-        {
-            SetCtrlGroup(3,players[0].selection,players[0].numUnitsSelected);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_4))
-        {
-            SetCtrlGroup(4,players[0].selection,players[0].numUnitsSelected);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_5))
-        {
-            SetCtrlGroup(5,players[0].selection,players[0].numUnitsSelected);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_6))
-        {
-            SetCtrlGroup(6,players[0].selection,players[0].numUnitsSelected);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_7))
-        {
-            SetCtrlGroup(7,players[0].selection,players[0].numUnitsSelected);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_8))
-        {
-            SetCtrlGroup(8,players[0].selection,players[0].numUnitsSelected);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_9))
-        {
-            SetCtrlGroup(9,players[0].selection,players[0].numUnitsSelected);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_0))
-        {
-            SetCtrlGroup(0,players[0].selection,players[0].numUnitsSelected);
-        }
-    }    
-}
-void GetControlGroup(ALLEGRO_KEYBOARD_STATE* keyState)
-{
-     if (!al_key_down(keyState,ALLEGRO_KEY_LCTRL))
-    {
-        if (al_key_down(keyState,ALLEGRO_KEY_1))
-        {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(1);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_2))
-        {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(2);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_3))
-        {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(3);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_4))
-        {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(4);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_5))
-        {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(5);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_6))
-        {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(6);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_7))
-        {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(7);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_8))
-        {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(8);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_9))
-        {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(9);
-        }
-         if (al_key_down(keyState,ALLEGRO_KEY_0))
-        {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(0);
-        }
-    }  
-}
-void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
-{
-    UpdateUI(keyState,mouseState,keyStateLastFrame,mouseStateLastFrame,dt);
-    if (ui.currentPanel == &ui.mainMenuPanel)
-    {
-        if (GetButton(&ui.mainMenuPanel,"Return"))
-        {
-            ui.currentPanel = NULL;
-            if (gameState == MAIN_MENU)
-            {
-                gameState = CHOOSING_ENCOUNTER;
-                StopMusic();
-                combatStarted = false;
-                ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
-            }
-        }
-        if (GetButton(&ui.mainMenuPanel,"Options"))
-        {
-            ChangeUIPanel(&ui.videoOptionsPanel);
-        }
-        if (GetButton(&ui.mainMenuPanel,"Exit"))
-        {
-            shouldExit = true;
-        }
-    }
-    SetOptions();
-}
+
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
     lua_settop(luaState,0);
@@ -646,11 +370,11 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
     }
 
-    if (GetNumPlayerControlledObjs(&players[0]) == 0)
+    if (GetNumPlayerControlledObjs(&players[0]) == 0 && gameState == INGAME)
     {
-        shouldExit = true;
+        gameState = GAMESTATE_EXIT;
     }
-    if (GetNumPlayerControlledObjs(&players[1]) == 0)
+    if (GetNumPlayerControlledObjs(&players[1]) == 0 && gameState == INGAME)
     {
         gameState = CHOOSING_ENCOUNTER;
         StopMusic();
@@ -924,86 +648,14 @@ void DrawMainMenu()
 }
 int main(int argc, char* args[])
 {
-    srand(time(NULL));
-    al_init();
-    al_init_font_addon();
-    al_init_ttf_addon();
-    al_init_image_addon();
-    al_init_primitives_addon();
-    al_install_mouse();
-    al_install_keyboard();
-    al_install_audio();
-    InitSound();
-    ALLEGRO_MONITOR_INFO monitor;
-    al_get_monitor_info(0, &monitor);
 
-    _RENDERSIZE = _MIN(monitor.x2,monitor.y2)/256 -1;
 
 
 
     init();
 
-    init_lua();
-    InitAttacks();
-    InitParticles();
-    InitAnimationEffects();
-    InitUI();
-  //  init_sprites(); 
-
-
-    BG = al_map_rgba(40,32,36,255);
-    GROUND = al_map_rgba(115,119,148,255);
-
-    ENEMY = al_map_rgba(60,255,255,255);
-    FRIENDLY = al_map_rgba(255,255,255,255);
-
-    WHITE = al_map_rgba(255,255,255,255);
-  
-    HEAL = al_map_rgba(92,204,12,255);
-    POISON = al_map_rgba(195,94,241,255);
-    DAMAGE = al_map_rgba(248,100,100,255);
-
-    LoadEncounters("assets/encounters",luaState);
-
-
-    int resX = 256*_RENDERSIZE;
-    int resY = 256*_RENDERSIZE;
-    SCREEN = al_create_bitmap(256,256);
-    background_screen = al_create_bitmap(monitor.x2,monitor.y2);
-
-    //al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
-
-    //display = al_create_display(256*_RENDERSIZE,256*_RENDERSIZE);
-    display = al_create_display(monitor.x2,monitor.y2);
     
-    backbuffer = al_get_backbuffer(display);
-
-    ALLEGRO_FONT* font = al_load_ttf_font("assets/fonts/font.ttf", 8, ALLEGRO_TTF_MONOCHROME);
-    ui.boldFont = al_load_ttf_font("assets/fonts/fontbold.ttf", 8, ALLEGRO_TTF_MONOCHROME);
-    ui.tinyFont = al_load_ttf_font("assets/fonts/4x8.ttf", 8, ALLEGRO_TTF_MONOCHROME);
-
-    ui.font = font;
-    ui.panel_sprite_index = LoadSprite("assets/ui/ui.png",false);
-
-    LoadCursorSprite(&ui,&ui.cursorDefaultIndex,"assets/ui/cursor.png");
-    LoadCursorSprite(&ui,&ui.cursorCastingIndex,"assets/ui/cursor_cast.png");
-    LoadCursorSprite(&ui,&ui.cursorAttackIndex,"assets/ui/cursor_attack.png");
-    LoadCursorSprite(&ui,&ui.cursorFriendlyIndex,"assets/ui/cursor_friendly.png");
-
-    //int* s = LoadSprite("Encounters/01/map.png");
-
-    //GameObject boss;
-    //memset(&boss,0,sizeof(GameObject));
-    //loadLuaGameObj(luaState,"Encounters/01/boss.lua",&boss);
-
-    //lua_rawgeti(luaState,LUA_REGISTRYINDEX,boss.luafunc_setup);
-    //lua_pcall(luaState,0,0,0);
-    //Map* selectionMap = 
-    Map* m = LoadMap("assets/ui/map_unitselect.lua");  
-    SetMap(&maps[0]);
-    
-    LoadPrefabs("assets/friendly");
-
+    /*
     int xPos = 100;
     for (int i = 0; i < numPrefabs; i++)
     {
@@ -1013,7 +665,7 @@ int main(int argc, char* args[])
             xPos+=GetWidth(&prefabs[i]);
         }   
 
-    }
+    }*/
 
 
 
@@ -1043,7 +695,7 @@ int main(int argc, char* args[])
     }
     //PlayMusic("assets/audio/first_boss.wav");
 
-    while (!shouldExit) {
+    while (!gameState != GAMESTATE_EXIT) {
         //al_set_mouse_xy(display, 128,128);
 
         

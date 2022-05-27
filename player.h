@@ -28,3 +28,4 @@ Player* players;
 
 void RemoveFromSelection(Player* p, int index);
 void RemoveGameObjectFromSelection(Player* p, GameObject* g);
+void InitPlayers();

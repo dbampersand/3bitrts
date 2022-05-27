@@ -24,3 +24,4 @@ unsigned int LoadSprite(const char* path, bool needsInverted);
 void DrawSprite(Sprite* sprite, int x, int y, ALLEGRO_COLOR tint, bool invert);
 void GenerateInvertedSprite(Sprite* s);
 void DrawSpriteRegion(Sprite* s, float sx, float sy, float sw, float sh, float dx, float dy, ALLEGRO_COLOR tint, bool invert);
+void InitSprites();

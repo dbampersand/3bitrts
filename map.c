@@ -137,3 +137,7 @@ void SetMap(Map* m)
     PreprocessMap(m);
 
 }
+void InitMaps()
+{
+    numMaps = 0;
+}

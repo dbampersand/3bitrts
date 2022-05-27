@@ -5,6 +5,7 @@
 #include "allegro5/allegro_primitives.h"
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_font.h"
+#include "allegro5/allegro_ttf.h"
 #include <math.h>
 #include "video.h"
 #include "sprite.h"
@@ -15,6 +16,35 @@
 #include "helperfuncs.h"
 #include <stdio.h>
 #include "sound.h"
+
+void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+{
+    UpdateUI(keyState,mouseState,keyStateLastFrame,mouseStateLastFrame,dt);
+    if (ui.currentPanel == &ui.mainMenuPanel)
+    {
+        if (GetButton(&ui.mainMenuPanel,"Return"))
+        {
+            ui.currentPanel = NULL;
+            if (gameState == MAIN_MENU)
+            {
+                gameState = CHOOSING_ENCOUNTER;
+                StopMusic();
+                combatStarted = false;
+                ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
+            }
+        }
+        if (GetButton(&ui.mainMenuPanel,"Options"))
+        {
+            ChangeUIPanel(&ui.videoOptionsPanel);
+        }
+        if (GetButton(&ui.mainMenuPanel,"Exit"))
+        {
+            gameState = GAMESTATE_EXIT;
+        }
+    }
+    SetOptions();
+}
+
 void ChangeUIPanel(Panel* to)
 {
     ui.animatePanel = true;
@@ -269,7 +299,8 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     }
     if (GetButtonIsClicked(&ui.encounter_ButtonConfirm))
     {
-        gameState = CHOOSING_UNITS;
+        //gameState = CHOOSING_UNITS;
+        SetGameStateToChoosingParty();
     }
     if (GetButtonIsClicked(&ui.encounter_ButtonRight))
     {
@@ -761,6 +792,27 @@ void InitUI()
 
     Pulldown* healthbar = (Pulldown*)GetUIElement(&ui.videoOptionsPanel,"HealthBarDisplay")->data;
     gameOptions.displayHealthBar = (Option_HealthBar*)&healthbar->selectedIndex;
+
+    ui.panel_sprite_index = LoadSprite("assets/ui/ui.png",false);
+
+    ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Start");
+    ui.panelShownPercent = 1.0f;
+
+
+    LoadCursorSprite(&ui,&ui.cursorDefaultIndex,"assets/ui/cursor.png");
+    LoadCursorSprite(&ui,&ui.cursorCastingIndex,"assets/ui/cursor_cast.png");
+    LoadCursorSprite(&ui,&ui.cursorAttackIndex,"assets/ui/cursor_attack.png");
+    LoadCursorSprite(&ui,&ui.cursorFriendlyIndex,"assets/ui/cursor_friendly.png");
+
+
+    InitFonts();
+}
+void InitFonts()
+{
+    ui.font = al_load_ttf_font("assets/fonts/font.ttf", 8, ALLEGRO_TTF_MONOCHROME);
+    ui.boldFont = al_load_ttf_font("assets/fonts/fontbold.ttf", 8, ALLEGRO_TTF_MONOCHROME);
+    ui.tinyFont = al_load_ttf_font("assets/fonts/4x8.ttf", 8, ALLEGRO_TTF_MONOCHROME);
+
 
 }
 bool GetButton(Panel* p, char* name)
