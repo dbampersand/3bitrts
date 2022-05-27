@@ -27,6 +27,9 @@ GameOptions gameOptions;
 
 bool combatStarted;
 ALLEGRO_EVENT_QUEUE* queue;
+typedef struct GameObject GameObject;
+typedef struct Encounter Encounter;
+
 
 void StartCombat();
 void InitGameState();
@@ -34,3 +37,4 @@ void SetGameStateToChoosingParty();
 void Quit();
 void CheckIfGameIsLost();
 void CheckIfGameIsWon();
+void SetGameStateToInGame(GameObject** list, int numObjectsToAdd, Encounter* e);

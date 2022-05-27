@@ -20,6 +20,24 @@
 #include "damagenumber.h"
 #include "gamestate.h"
 #include "particle.h"
+GameObject* GetMousedOver(ALLEGRO_MOUSE_STATE* mouseState)
+{
+    for (int i = 0; i < numObjects; i++)
+    {
+        for (int i = 0; i < numObjects; i++)
+        {
+            GameObject* g = &objects[i];
+            if (g->properties & OBJ_ACTIVE)
+            {
+                if (PointInRect(mouseState->x,mouseState->y,GetObjRect(g)))
+                {
+                    return(g);
+                }
+            }
+        }
+    }
+    return NULL;
+}
 void UpdatePlayerObjectInteractions(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState)
 {
     if (al_key_down(keyState, ALLEGRO_KEY_A) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_A))

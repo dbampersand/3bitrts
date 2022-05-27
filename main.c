@@ -90,60 +90,12 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
     UpdateParticles(dt);
     ProcessAnimationEffects(dt);
-
-
 }
-void DrawMouse(ALLEGRO_MOUSE_STATE* mouseState, GameObject* mousedOver)
-{
-    if (players[0].abilityHeld)
-    {
-        DrawCursor(mouseState, ui.cursorCastingIndex, false);
-    }
-    else if (mousedOver)
-    {
-        if (mousedOver->properties & OBJ_OWNED_BY && players[0].numUnitsSelected > 0)
-            DrawCursor(mouseState, ui.cursorAttackIndex,false);
-        else if (!(mousedOver->properties & OBJ_OWNED_BY))
-            DrawCursor(mouseState, ui.cursorFriendlyIndex, false);
-        else
-            DrawCursor(mouseState, ui.cursorDefaultIndex, false);
-
-    }
-    else if (players[0].amoveSelected)
-    {
-        DrawCursor(mouseState, ui.cursorAttackIndex,false);
-    }
-    else 
-    {
-        DrawCursor(mouseState, ui.cursorDefaultIndex, false);
-    }
-
-}
-void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState)
-{
-    Vector2 endSelection = (Vector2){mouseState.x,mouseState.y};
-    Rect r;
-    ALLEGRO_KEYBOARD_STATE keyState;
-    al_get_keyboard_state(&keyState);
-
-    if (al_key_down(&keyState, ALLEGRO_KEY_Q))
-    {
-
-    }
-    r.x = _MIN(endSelection.x,players[0].selectionStart.x);
-    r.y = _MIN(endSelection.y,players[0].selectionStart.y);
-    r.w = _MAX(endSelection.x,players[0].selectionStart.x) - _MIN(endSelection.x,players[0].selectionStart.x);
-    r.h = _MAX(endSelection.y,players[0].selectionStart.y) - _MIN(endSelection.y,players[0].selectionStart.y);
-    al_draw_filled_rectangle(r.x, r.y, r.x+r.w, r.y+r.h, al_premul_rgba(255, 255, 255,128));
-   
-}
-float angle = 0;
 
 void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
     al_hide_mouse_cursor(display);
     al_grab_mouse(display);
-
     al_set_target_bitmap(SCREEN);
     
     if (gameState == CHOOSING_ENCOUNTER)
@@ -152,39 +104,14 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         DrawMouse(mouseState, NULL);
         return;
     }
-    DrawSprite(&sprites[currMap->spriteIndex],0,0,GROUND,false);
+
+    DrawMap();
     DrawAttacks(dt);
 
     if (gameState == CHOOSING_UNITS) 
     {
-        Rect selectedUnitsR = (Rect){8,146,240,41};
-        Encounter* e = encounters[selectedEncounterIndex];
-
-        int numUnitsInRect = GetNumObjectsInRect(&selectedUnitsR);
-
-        UpdateButton(45,194,&ui.choosingUnits_Back,mouseState,mouseStateLastFrame);
-        UpdateButton(109,194,&ui.choosingUnits_GO,mouseState,mouseStateLastFrame);
-
-
-        DrawUIElement(&ui.choosingUnits_Back,45,194,mouseState,true,BG);
-        DrawUIElement(&ui.choosingUnits_GO,109,194,mouseState,numUnitsInRect==e->numUnitsToSelect,BG);
-
-
-        if (numUnitsInRect != e->numUnitsToSelect)
-        {
-            DrawOutlinedRect_Dithered(&selectedUnitsR,FRIENDLY);
-        }
-        else if (numUnitsInRect == e->numUnitsToSelect)
-        {
-            al_draw_rectangle(selectedUnitsR.x,selectedUnitsR.y,selectedUnitsR.x+selectedUnitsR.w,selectedUnitsR.y+selectedUnitsR.h,FRIENDLY,1);
-        }
-                char* number = calloc(log10(INT_MAX)*2+2,sizeof(char));
-        sprintf(number,"%i/%i",numUnitsInRect,e->numUnitsToSelect);
-
-        al_draw_text(ui.font,FRIENDLY,202,162,ALLEGRO_ALIGN_LEFT,number);
-
-        free(number);
-        }
+        DrawUnitChoiceUI(mouseState, mouseStateLastFrame);
+    }
 
 
     int objSelected = -1;
@@ -216,7 +143,6 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         if (i == objSelected || &objects[i] == players[0].clickedThisFrame)
         {
             DrawGameObj(&objects[i],true);
-            
         }
         else
         {
@@ -229,37 +155,10 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         
     if (*gameOptions.particlesEnabled)    
         DrawParticles();
+
     if (players[0].abilityHeld)
     {
-        float cx; float cy;
-        GameObject* g = players[0].selection[players[0].indexSelectedUnit];
-        GetCentre(g, &cx, &cy);
-        int w; int h;
-        float radius = players[0].abilityHeld->range;
-
-        al_draw_circle(cx,cy,radius,FRIENDLY,0);
-        
-        if (players[0].abilityHeld->targetingHint == HINT_LINE)
-        {
-            //normalise then project to min(radius,mousepos)
-            float distX = mouseState->x - cx; 
-            float distY = mouseState->y - cy;
-            float dist = sqrt(distX*distX+distY*distY);
-            
-            float x = mouseState->x - cx;
-            float y = mouseState->y - cy;
-            Normalize(&x,&y); 
-            x = cx + x*_MIN(radius,dist);
-            y = cy + y*_MIN(radius,dist);
-
-            //x *= radius;
-            //y *= radius;
-            al_draw_line(cx,cy,x,y,FRIENDLY,1);
-        }
-        GameObject* heldSelected = players[0].selection[players[0].indexSelectedUnit];
-        float cxHeld; float cyHeld; 
-        GetCentre(heldSelected,&cxHeld,&cyHeld);
-        al_draw_line(mouseState->x+2,mouseState->y+2,cxHeld,cyHeld,FRIENDLY,1);
+        DrawHeldAbility(mouseState);
     }
     if (gameState == MAIN_MENU)
     {
@@ -268,34 +167,14 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     if (gameState != MAIN_MENU)
         DrawUI(keyState, keyStateLastFrame, mouseState);
     DrawMenus(mouseState);
-
-    if (al_key_down(keyState,ALLEGRO_KEY_F) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_F))
-    {
-    }   
     DrawAnimationEffects();
 
-    GameObject* mousedOver = NULL;
-    for (int i = 0; i < numObjects; i++)
-    {
-        for (int i = 0; i < numObjects; i++)
-        {
-            GameObject* g = &objects[i];
-            if (g->properties & OBJ_ACTIVE)
-            {
-                if (PointInRect(mouseState->x,mouseState->y,GetObjRect(g)))
-                {
-                    mousedOver = g;
-                }
-            }
-        }
-    }
+    GameObject* mousedOver = GetMousedOver(mouseState);
     if (gameState == CHOOSING_UNITS)
     {
 
         Rect selectedUnitsR = (Rect){8,146,240,41};
         int numUnitsInRect = GetNumObjectsInRect(&selectedUnitsR);
-        
-
 
         if (GetButtonIsClicked(&ui.choosingUnits_Back))
         {
@@ -305,7 +184,6 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
         if (GetButtonIsClicked(&ui.choosingUnits_GO) && numUnitsInRect==encounters[selectedEncounterIndex]->numUnitsToSelect)
         {
-            gameState = INGAME;
             combatStarted = false;
 
             ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
@@ -314,6 +192,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             currEncounterRunning = e;
             GameObject** list = calloc(e->numUnitsToSelect,sizeof(GameObject*));
 
+            //Get the number of units in the rect and make a list of them
             int foundIndex = 0;
             for (int i = 0; i < MAX_OBJS; i++)
             {
@@ -328,15 +207,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
                     }
                 }
             }
-            RemoveAllGameObjects();
-            SetMap(LoadMap(e->mapPath));
-
-            int xPos = 0; 
-            for (int i = 0; i < e->numUnitsToSelect; i++)
-            {
-                AddGameobject(list[i],80+xPos,180);   
-                xPos += GetWidth(list[i]);
-            }
+            SetGameStateToInGame(list,foundIndex,e); 
             free(list);
         }
 

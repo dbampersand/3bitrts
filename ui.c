@@ -47,6 +47,82 @@ void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_ST
     }
 
 }
+void DrawMouse(ALLEGRO_MOUSE_STATE* mouseState, GameObject* mousedOver)
+{
+    if (players[0].abilityHeld)
+    {
+        DrawCursor(mouseState, ui.cursorCastingIndex, false);
+    }
+    else if (mousedOver)
+    {
+        if (mousedOver->properties & OBJ_OWNED_BY && players[0].numUnitsSelected > 0)
+            DrawCursor(mouseState, ui.cursorAttackIndex,false);
+        else if (!(mousedOver->properties & OBJ_OWNED_BY))
+            DrawCursor(mouseState, ui.cursorFriendlyIndex, false);
+        else
+            DrawCursor(mouseState, ui.cursorDefaultIndex, false);
+
+    }
+    else if (players[0].amoveSelected)
+    {
+        DrawCursor(mouseState, ui.cursorAttackIndex,false);
+    }
+    else 
+    {
+        DrawCursor(mouseState, ui.cursorDefaultIndex, false);
+    }
+
+}
+void DrawUnitChoiceUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+{
+            Rect selectedUnitsR = (Rect){8,146,240,41};
+        Encounter* e = encounters[selectedEncounterIndex];
+
+        int numUnitsInRect = GetNumObjectsInRect(&selectedUnitsR);
+
+        UpdateButton(45,194,&ui.choosingUnits_Back,mouseState,mouseStateLastFrame);
+        UpdateButton(109,194,&ui.choosingUnits_GO,mouseState,mouseStateLastFrame);
+
+
+        DrawUIElement(&ui.choosingUnits_Back,45,194,mouseState,true,BG);
+        DrawUIElement(&ui.choosingUnits_GO,109,194,mouseState,numUnitsInRect==e->numUnitsToSelect,BG);
+
+
+        if (numUnitsInRect != e->numUnitsToSelect)
+        {
+            DrawOutlinedRect_Dithered(&selectedUnitsR,FRIENDLY);
+        }
+        else if (numUnitsInRect == e->numUnitsToSelect)
+        {
+            al_draw_rectangle(selectedUnitsR.x,selectedUnitsR.y,selectedUnitsR.x+selectedUnitsR.w,selectedUnitsR.y+selectedUnitsR.h,FRIENDLY,1);
+        }
+                char* number = calloc(log10(INT_MAX)*2+2,sizeof(char));
+        sprintf(number,"%i/%i",numUnitsInRect,e->numUnitsToSelect);
+
+        al_draw_text(ui.font,FRIENDLY,202,162,ALLEGRO_ALIGN_LEFT,number);
+
+        free(number);
+
+}
+void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState)
+{
+    Vector2 endSelection = (Vector2){mouseState.x,mouseState.y};
+    Rect r;
+    ALLEGRO_KEYBOARD_STATE keyState;
+    al_get_keyboard_state(&keyState);
+
+    if (al_key_down(&keyState, ALLEGRO_KEY_Q))
+    {
+
+    }
+    r.x = _MIN(endSelection.x,players[0].selectionStart.x);
+    r.y = _MIN(endSelection.y,players[0].selectionStart.y);
+    r.w = _MAX(endSelection.x,players[0].selectionStart.x) - _MIN(endSelection.x,players[0].selectionStart.x);
+    r.h = _MAX(endSelection.y,players[0].selectionStart.y) - _MIN(endSelection.y,players[0].selectionStart.y);
+    al_draw_filled_rectangle(r.x, r.y, r.x+r.w, r.y+r.h, al_premul_rgba(255, 255, 255,128));
+   
+}
+
 void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
     UpdateUI(keyState,mouseState,keyStateLastFrame,mouseStateLastFrame,dt);

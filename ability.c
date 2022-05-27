@@ -8,6 +8,43 @@
 #include "player.h"
 #include "video.h"
 #include "ui.h"
+#include "allegro5/allegro.h"
+#include "allegro5/allegro_primitives.h"
+#include "math.h"
+#include "colors.h"
+void DrawHeldAbility(ALLEGRO_MOUSE_STATE* mouseState)
+{
+        float cx; float cy;
+        GameObject* g = players[0].selection[players[0].indexSelectedUnit];
+        GetCentre(g, &cx, &cy);
+        int w; int h;
+        float radius = players[0].abilityHeld->range;
+
+        al_draw_circle(cx,cy,radius,FRIENDLY,0);
+        
+        if (players[0].abilityHeld->targetingHint == HINT_LINE)
+        {
+            //normalise then project to min(radius,mousepos)
+            float distX = mouseState->x - cx; 
+            float distY = mouseState->y - cy;
+            float dist = sqrt(distX*distX+distY*distY);
+            
+            float x = mouseState->x - cx;
+            float y = mouseState->y - cy;
+            Normalize(&x,&y); 
+            x = cx + x*_MIN(radius,dist);
+            y = cy + y*_MIN(radius,dist);
+
+            //x *= radius;
+            //y *= radius;
+            al_draw_line(cx,cy,x,y,FRIENDLY,1);
+        }
+        GameObject* heldSelected = players[0].selection[players[0].indexSelectedUnit];
+        float cxHeld; float cyHeld; 
+        GetCentre(heldSelected,&cxHeld,&cyHeld);
+        al_draw_line(mouseState->x+2,mouseState->y+2,cxHeld,cyHeld,FRIENDLY,1);
+
+}
 void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
     CheckAbilityClicked(keyState,keyStateLastFrame, mouseState);

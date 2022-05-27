@@ -3,6 +3,7 @@
 #include "gameobject.h"
 #include "map.h"
 #include "player.h"
+#include "encounter.h"
 void StartCombat()
 {
     if (combatStarted)
@@ -15,6 +16,21 @@ void StartCombat()
 void InitGameState()
 {
     gameState = MAIN_MENU;
+
+}
+void SetGameStateToInGame(GameObject** list, int numObjectsToAdd, Encounter* e)
+{
+    gameState = INGAME;
+    RemoveAllGameObjects();
+    SetMap(LoadMap(e->mapPath));
+
+    int xPos = 0; 
+    for (int i = 0; i < e->numUnitsToSelect; i++)
+    {
+        AddGameobject(list[i],80+xPos,180);   
+        xPos += GetWidth(list[i]);
+    }
+
 
 }
 void SetGameStateToChoosingParty()

@@ -7,7 +7,7 @@
 #include "gameobject.h"
 #include "luafuncs.h"
 #include "helperfuncs.h"
-
+#include "colors.h"
 void PreprocessMap(Map* map)
 {
     memset(&map->collision,0,_MAPSIZE*_MAPSIZE/_GRAIN);
@@ -140,4 +140,8 @@ void SetMap(Map* m)
 void InitMaps()
 {
     numMaps = 0;
+}
+void DrawMap()
+{
+    DrawSprite(&sprites[currMap->spriteIndex],0,0,GROUND,false);
 }
