@@ -47,27 +47,6 @@ void RemoveEffect(Effect* e, GameObject* from)
     if (e->trigger == TRIGGER_CONST)
     {
         ProcessEffect(e,e->from,from,true);
-        /*GameObject* target = from;
-        if (e->effectType == EFFECT_MAXHP)
-        {
-            ModifyMaxHP(target,-e->value);
-        }
-        if (e->effectType == EFFECT_HURT)
-        {
-            Damage(target,-e->value);
-        }
-        if (e->effectType == EFFECT_HEAL)
-        {
-            Heal(target,-e->value);
-        }
-        if (e->effectType == EFFECT_THREAT)
-        {
-            AddThreat(e->from,target,-e->value);
-        }
-        if (e->effectType == EFFECT_SPEED)
-        {
-            AddSpeed(target,-e->value);
-        }*/
     }
 
 }
@@ -85,7 +64,7 @@ void ProcessEffects(GameObject* g, float dt)
             {
                 if (e->numTriggers >= 0)
                 {
-                    if (e->timer > e->tickTime)//e->duration / (e->numTriggers))
+                    if (e->timer > e->tickTime)
                     {
                         e->numTriggers--;
                         e->timer = 0;
@@ -113,26 +92,6 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
     if (e->trigger == TRIGGER_INSTANT)
     {
         ProcessEffect(e,from,target,false);
-       /* if (e->effectType ==  EFFECT_HURT)
-        {
-            Damage(target,e->value);
-        }
-        if (e->effectType ==  EFFECT_MAXHP)
-        {
-            ModifyMaxHP(target,e->value);
-        }        
-        if (e->effectType ==  EFFECT_HEAL)
-        {
-            Heal(target,e->value);
-        }
-        if (e->effectType ==  EFFECT_THREAT)
-        {
-            AddThreat(from,target,e->value);
-        }
-        if (e->effectType == EFFECT_INVULN)
-        {
-            MakeInvulnerable(target,e->duration);
-        }*/
     }
     else
     {

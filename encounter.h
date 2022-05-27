@@ -14,8 +14,9 @@ typedef enum Encounter_Difficulty
     DIFFICULTY_HARD = 512,
     DIFFICULTY_IMPOSSIBLE = 1024,
 
-    forceenumtoint = INT_MAX
+    DIFFICULTY_FORCEENUM = INT_MAX
 } Encounter_Difficulty;
+
 typedef struct Encounter
 {
     Ability abilities[8];

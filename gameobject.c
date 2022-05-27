@@ -20,6 +20,7 @@
 #include "damagenumber.h"
 #include "gamestate.h"
 #include "particle.h"
+
 GameObject* GetMousedOver(ALLEGRO_MOUSE_STATE* mouseState)
 {
     for (int i = 0; i < numObjects; i++)
@@ -111,10 +112,6 @@ void UpdateObject(GameObject* g, float dt)
         bool shouldAttack = false;
         ProcessEffects(currGameObjRunning,dt);
         ProcessShields(currGameObjRunning,dt);
-           // if (currGameObjRunning->queue[0].commandType == COMMAND_CAST &&  RectDist(currGameObjRunning,currGameObjRunning->targObj) < currGameObjRunning->queue[0].ability->range+DISTDELTA)
-            //{
-              //  shouldMove = true;
-            //}
 
         if (currGameObjRunning->targObj && currGameObjRunning->queue[0].commandType == COMMAND_ATTACK) 
         {
@@ -131,7 +128,6 @@ void UpdateObject(GameObject* g, float dt)
                 Rect r2 = (Rect){currGameObjRunning->targObj->position.x,currGameObjRunning->targObj->position.y,wTarg,hTarg};
                 #define DISTDELTA 0.001f
                 Rect unioned = UnionRectR(r,r2);
-                //if (RectsTouch(r, r2, currGameObjRunning->range+DISTDELTA))
                 
                 if (RectDist(currGameObjRunning,currGameObjRunning->targObj) < currGameObjRunning->range+DISTDELTA)
                 {
@@ -318,7 +314,6 @@ void SetControlGroups(ALLEGRO_KEYBOARD_STATE* keyState)
 
 int GetCtrlGroup(int index)
 {
-    //memcpy(players[0].selection,players[0].controlGroups[index],MAXUNITSSELECTED*sizeof(GameObject*));
     int count = 0; 
     for (int i = 0; i < MAXUNITSSELECTED; i++)
     {
@@ -343,7 +338,6 @@ void SetCtrlGroup(int index, GameObject** list, int numUnitsSelected)
         {
             players[0].controlGroups[index][i] = list[i];
         }
-        //memcpy(players[0].controlGroups[index],list,numUnitsSelected*sizeof(GameObject*));
     }
 }
 
@@ -444,8 +438,6 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                                     ClearCommandQueue(g);
                             MoveCommand(g,mouseState->x-w/2,mouseState->y-h/2);
                         
-                        // g->xtarg = mouseState->x - w/2;
-                            //g->ytarg = mouseState->y - h/2;
                         }
                         Sprite* s = &sprites[g->spriteIndex];
                         Rect r = (Rect){g->position.x,g->position.y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)}; 
@@ -456,7 +448,6 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                                 if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
                                     ClearCommandQueue(players[0].selection[i]);
                                 AttackCommand(players[0].selection[i],g);
-                                //SetAttackingObj(players[0].selection[i],g);
                             }
                             break;
                         }
@@ -539,16 +530,6 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     if (!found)
         return NULL;
 
-
-    if (numObjects >= objectsAllocated)
-    {
-        // return NULL;
-        //objectsAllocated += BUFFER_PREALLOC_AMT;
-        //objects = realloc(objects,objectsAllocated*sizeof(GameObject));
-    }
-    //objects[numObjects] = *prefab; 
-    //objects[numObjects].properties |= OBJ_ACTIVE;
-
     
     *found = *prefab;
     currGameObjRunning = found; 
@@ -579,18 +560,12 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
 
     loadLuaGameObj(luaState, found->path, found); 
     found->properties |= OBJ_ACTIVE;
-    //found->health = 100;
-    //found->maxHP = 100;
-    //found->baseDamage = 5;
     found->attackSpeed = 1;
     found->mana = 50;
     found->maxMana = 100;
     currGameObjRunning->prefab = prefab;
 
-    
     numObjects++;
-
-
 
     return found;
 }
@@ -876,7 +851,6 @@ void LoadPrefabs(const char* dirPath)
                 strcat(dirConcat,dir->d_name);
                 strcat(dirConcat,"/");
                 LoadFolderPrefabs(dirConcat,dir->d_name);
-                //LoadPrefabs(dirConcat);
                 free(dirConcat);
             }
         }
@@ -966,8 +940,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
 
                     }
                     else
-                        g->position.x = g2->position.x - al_get_bitmap_width(s->sprite);//xresult - al_get_bitmap_width(s->sprite);
-                    //g->x = xresult - w - al_get_bitmap_width(s->sprite);
+                        g->position.x = g2->position.x - al_get_bitmap_width(s->sprite);;
 
                 }
             }
@@ -1033,9 +1006,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         v2 -= g2->position.y;
                          
                         CheckCollisionsWorld(g2,false,-v2);
-
-                        //CheckCollisions(g2,false,-v3,true);
-
                     }
                     else
                     {
@@ -1067,17 +1037,13 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         float v3 = g2->position.y;
                         CheckCollisionsWorld(g2,false,-v2);
                         v3 -= g2->position.y;
-                        //CheckCollisions(g2,false,v3,true);
-
                     }
                     else
                     {
                         g->position.y = g2->position.y + al_get_bitmap_height(s2->sprite);
 
                     }
-                    
                 }
-
             }
         }
     }
@@ -1126,9 +1092,6 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
     }
 
     if (dV == 0) return;
-    
-
-
     
     int indexTop = GetIndex(_MAPSIZE/_GRAIN, floor(posX/ (float)_GRAIN), floor(posY / (float)_GRAIN));
     int indexRight = GetIndex(_MAPSIZE/_GRAIN, floor((posX+w) / (float)_GRAIN), floor((posY) / (float)_GRAIN));
@@ -1272,7 +1235,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     bool b = IsOwnedByPlayer(g);
     ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
     Sprite* s = &sprites[g->spriteIndex];
-    //DrawSprite(&sprites[objects[i].spriteIndex],objects[i].x,objects[i].y,(ALLEGRO_COLOR){94/255.0f,98/255.0f,134/255.0f,255});
+
     DrawSprite(s,g->position.x,g->position.y,c, IsSelected(g) || forceInverse);
    
     Rect selectRect;
@@ -1390,7 +1353,6 @@ void ModifyMaxHP(GameObject* g, float value)
     g->maxHP += value;
 }   
 //TODO: R E F A C T O R THIS FUNCTION
-//ITS BAD
 void Teleport(GameObject* g, float x, float y)
 {
     if (!g) return;
@@ -1404,8 +1366,6 @@ void Teleport(GameObject* g, float x, float y)
     g->targetPosition.x = g->position.x;
     g->targetPosition.y = g->position.y;
 
-    //CheckCollisions(g,true,x-beforeX);
-    //CheckCollisions(g,false,y-beforeY);
     GameObject* g2 = GetCollidedWith(g);
 
     g->position.x = beforeX;

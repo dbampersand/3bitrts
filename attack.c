@@ -10,6 +10,7 @@
 #include "ability.h"
 #include <math.h>
 #include "video.h"
+
 int attack_top = 0;
 
 void InitAttacks()
@@ -67,7 +68,6 @@ void ApplyAttack(Attack* a, GameObject* target)
     {
         if (a->timer > a->tickrate)
         {
-            //a->timer = 0;
         }
         else
         {
@@ -90,9 +90,6 @@ void ApplyAttack(Attack* a, GameObject* target)
             lua_pushinteger(luaState,(int)(target-objects));    
 
             lua_pcall(luaState,3,0,0);
-
-
-            //CallLuaFunc(a->callback_onhit);
         }
     }
 }
@@ -187,10 +184,7 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
                     al_draw_pixel(x,y+2,color);
             }
         }
-        
-
     }
-
 }
 void DrawAttack(Attack* a, float dt)
 {
@@ -254,8 +248,6 @@ void UpdateAttack(Attack* a, float dt)
     currAttackRunning = a;
     if (a->target ) 
     {
-       // Rect r = GetObjRect(a->target);
-        //MoveTo(&a->x,&a->y,r.x+r.w/2.,r.y+r.h/2,a->speed,dt);
     }
     //else
     {
@@ -322,8 +314,6 @@ void UpdateAttack(Attack* a, float dt)
                 GetCentre(&objects[i],&x2,&y2);
 
                 float angle = RadToDeg(atan2(y2-a->y,x2-a->x));
-                //int startX; int startY; int endX; int endY;
-                //GetConeVertices(a->x,a->y,&startX,&startY,&endX,&endY,angle,a->radius,a->range);
                 Rect r = GetObjRect(&objects[i]);
                 if (RectInCone(r,a->x,a->y,angle,a->radius,a->range))
                 {

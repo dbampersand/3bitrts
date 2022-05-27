@@ -14,35 +14,33 @@
 #include "colors.h"
 void DrawHeldAbility(ALLEGRO_MOUSE_STATE* mouseState)
 {
-        float cx; float cy;
-        GameObject* g = players[0].selection[players[0].indexSelectedUnit];
-        GetCentre(g, &cx, &cy);
-        int w; int h;
-        float radius = players[0].abilityHeld->range;
+    float cx; float cy;
+    GameObject* g = players[0].selection[players[0].indexSelectedUnit];
+    GetCentre(g, &cx, &cy);
+    int w; int h;
+    float radius = players[0].abilityHeld->range;
 
-        al_draw_circle(cx,cy,radius,FRIENDLY,0);
+    al_draw_circle(cx,cy,radius,FRIENDLY,0);
+    
+    if (players[0].abilityHeld->targetingHint == HINT_LINE)
+    {
+        //normalise then project to min(radius,mousepos)
+        float distX = mouseState->x - cx; 
+        float distY = mouseState->y - cy;
+        float dist = sqrt(distX*distX+distY*distY);
         
-        if (players[0].abilityHeld->targetingHint == HINT_LINE)
-        {
-            //normalise then project to min(radius,mousepos)
-            float distX = mouseState->x - cx; 
-            float distY = mouseState->y - cy;
-            float dist = sqrt(distX*distX+distY*distY);
-            
-            float x = mouseState->x - cx;
-            float y = mouseState->y - cy;
-            Normalize(&x,&y); 
-            x = cx + x*_MIN(radius,dist);
-            y = cy + y*_MIN(radius,dist);
+        float x = mouseState->x - cx;
+        float y = mouseState->y - cy;
+        Normalize(&x,&y); 
+        x = cx + x*_MIN(radius,dist);
+        y = cy + y*_MIN(radius,dist);
 
-            //x *= radius;
-            //y *= radius;
-            al_draw_line(cx,cy,x,y,FRIENDLY,1);
-        }
-        GameObject* heldSelected = players[0].selection[players[0].indexSelectedUnit];
-        float cxHeld; float cyHeld; 
-        GetCentre(heldSelected,&cxHeld,&cyHeld);
-        al_draw_line(mouseState->x+2,mouseState->y+2,cxHeld,cyHeld,FRIENDLY,1);
+        al_draw_line(cx,cy,x,y,FRIENDLY,1);
+    }
+    GameObject* heldSelected = players[0].selection[players[0].indexSelectedUnit];
+    float cxHeld; float cyHeld; 
+    GetCentre(heldSelected,&cxHeld,&cyHeld);
+    al_draw_line(mouseState->x+2,mouseState->y+2,cxHeld,cyHeld,FRIENDLY,1);
 
 }
 void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
@@ -100,18 +98,12 @@ void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE*
         float midX=0; float midY=0;
         GetOffsetCenter(currGameObjRunning,&midX,&midY);
     
-        //if (AbilityCanBeCast(currAbilityRunning,currGameObjRunning,target))
-        {
-            if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
-                ClearCommandQueue(currGameObjRunning);
-            CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->x,mouseState->y);
-            //CastAbility(currGameObjRunning,currAbilityRunning,mouseState->x,mouseState->y,mouseState->x-midX,mouseState->y-midY,target);
-            players[0].clickedThisFrame = target;
+        if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+            ClearCommandQueue(currGameObjRunning);
+        CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->x,mouseState->y);
+        //CastAbility(currGameObjRunning,currAbilityRunning,mouseState->x,mouseState->y,mouseState->x-midX,mouseState->y-midY,target);
+        players[0].clickedThisFrame = target;
 
-        }
-        //else
-        {
-        }
     }
 
 }
@@ -198,8 +190,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         printf("Can't load lua file %s",lua_tostring(l,-1));
     }
     else
-     {
-            
+    {
         Ability* before = currAbilityRunning;
         a->cooldown = 1;
         int funcIndex;
@@ -310,7 +301,6 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         lua_pushnumber(luaState,headingx);
         lua_pushnumber(luaState,headingy);    
 
-
         lua_pcall(luaState,5,1,0);
         bool b = lua_toboolean(luaState,-1);
         if (b)
@@ -348,7 +338,6 @@ bool AbilityIsInitialised(Ability* a)
 {
     return (a->path != 0);
 }
-//void CopyAbility(Ability* prefab)
 
 void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled)
 {
@@ -381,10 +370,8 @@ void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled)
             {
                 a->cdTimer = a->cooldown;
             }
-
         }
     }
-
 }
 bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, float y)
 {

@@ -98,7 +98,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     al_grab_mouse(display);
     al_set_target_bitmap(SCREEN);
     
-    if (gameState == CHOOSING_ENCOUNTER)
+    if (gameState == GAMESTATE_CHOOSING_ENCOUNTER)
     {
         DrawLevelSelect(mouseState,mouseStateLastFrame);
         DrawMouse(mouseState, NULL);
@@ -108,7 +108,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     DrawMap();
     DrawAttacks(dt);
 
-    if (gameState == CHOOSING_UNITS) 
+    if (gameState == GAMESTATE_CHOOSING_UNITS) 
     {
         DrawUnitChoiceUI(mouseState, mouseStateLastFrame);
     }
@@ -160,17 +160,17 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     {
         DrawHeldAbility(mouseState);
     }
-    if (gameState == MAIN_MENU)
+    if (gameState == GAMESTATE_MAIN_MENU)
     {
         al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
     }
-    if (gameState != MAIN_MENU)
+    if (gameState != GAMESTATE_MAIN_MENU)
         DrawUI(keyState, keyStateLastFrame, mouseState);
     DrawMenus(mouseState);
     DrawAnimationEffects();
 
     GameObject* mousedOver = GetMousedOver(mouseState);
-    if (gameState == CHOOSING_UNITS)
+    if (gameState == GAMESTATE_CHOOSING_UNITS)
     {
 
         Rect selectedUnitsR = (Rect){8,146,240,41};
@@ -178,7 +178,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
         if (GetButtonIsClicked(&ui.choosingUnits_Back))
         {
-            gameState = CHOOSING_ENCOUNTER;
+            gameState = GAMESTATE_CHOOSING_ENCOUNTER;
             ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
         }
 

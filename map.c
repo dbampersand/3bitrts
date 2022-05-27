@@ -8,6 +8,7 @@
 #include "luafuncs.h"
 #include "helperfuncs.h"
 #include "colors.h"
+
 void PreprocessMap(Map* map)
 {
     memset(&map->collision,0,_MAPSIZE*_MAPSIZE/_GRAIN);
@@ -108,7 +109,6 @@ void loadLuaGameMap(lua_State* l, const char* filename, Map* m)
             strcpy(m->name,two);
 
         }
-        //SET_BIT(&g->properties,0);
 
      }
      free(cpy);

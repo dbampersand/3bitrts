@@ -104,7 +104,7 @@ void DoCommands(GameObject* g)
     {
         if (c->target)
         {
-            if (AbilityShouldBeCastOnTarget(c->ability))//if (IsOwnedByPlayer(g) != IsOwnedByPlayer(c->target) && )
+            if (AbilityShouldBeCastOnTarget(c->ability))
                 g->targObj = c->target;
         }
 

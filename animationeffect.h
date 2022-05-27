@@ -38,7 +38,6 @@ int AddAnimationEffectPrefab(char* path, int w, int h, float cd);
 
 AnimationEffect animationEffects[MAX_ANIMATIONEFFECTS];
 int animationEffect_TOP;
-
 AnimationEffect* animationEffectsPrefabs;
 int numAnimationEffectsPrefabs;
 int allocatedEffectPrefabs;

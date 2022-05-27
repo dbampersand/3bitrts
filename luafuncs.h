@@ -20,6 +20,7 @@ lua_State* luaState;
 GameObject* currGameObjRunning;
 Ability* currAbilityRunning;
 Attack* currAttackRunning;
+
 void CallLuaFunc(int funcID);
 void init_lua();
 void LoadLuaFile(const char* filename, GameObject* g);

@@ -131,9 +131,9 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_S
         if (GetButton(&ui.mainMenuPanel,"Return"))
         {
             ui.currentPanel = NULL;
-            if (gameState == MAIN_MENU)
+            if (gameState == GAMESTATE_MAIN_MENU)
             {
-                gameState = CHOOSING_ENCOUNTER;
+                gameState = GAMESTATE_CHOOSING_ENCOUNTER;
                 StopMusic();
                 combatStarted = false;
                 ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
@@ -405,7 +405,7 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     }
     if (GetButtonIsClicked(&ui.encounter_ButtonConfirm))
     {
-        //gameState = CHOOSING_UNITS;
+        //gameState = GAMESTATE_CHOOSING_UNITS;
         SetGameStateToChoosingParty();
     }
     if (GetButtonIsClicked(&ui.encounter_ButtonRight))
@@ -1458,7 +1458,6 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, ALLEGRO
     int yoffset;
     int lineHeight = al_get_font_line_height(f)+2;
 
-    //al_get_text_dimensions(f,description,&xoffset,&yoffset,&w,&h);
     void* size = malloc(sizeof(Text));
     memcpy(size,&(Text){f,bold,x,y,0,color,lineHeight},sizeof(Text));
     al_do_multiline_text(f,wTextbox,description,CB_GetHeight,size);
@@ -1475,7 +1474,6 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, ALLEGRO
     r.h+=padding;
     DrawOutlinedRect_Dithered(&r,color);
     
-    //al_draw_multiline_text(f,FRIENDLY,x,y,wTextbox,8,ALLEGRO_ALIGN_LEFT,description);
     void* extra = malloc(sizeof(Text));
     memcpy(extra,&(Text){.f=f,.bold=bold,.x=x,.y=y,.color=color,.lineHeight=lineHeight},sizeof(Text));
     

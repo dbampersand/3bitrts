@@ -2,10 +2,10 @@
 #include <stdbool.h>
 
 typedef enum GameState {
-    MAIN_MENU,
-    CHOOSING_ENCOUNTER,
-    CHOOSING_UNITS,
-    INGAME,
+    GAMESTATE_MAIN_MENU,
+    GAMESTATE_CHOOSING_ENCOUNTER,
+    GAMESTATE_CHOOSING_UNITS,
+    GAMESTATE_INGAME,
     GAMESTATE_EXIT
 } GameState;
 GameState gameState;

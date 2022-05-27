@@ -7,6 +7,7 @@
 #include "gamestate.h"
 #include "colors.h"
 #include "allegro5/allegro_primitives.h"
+
 float clamp(float f, float min, float max)
 {
     return f < min ? min : f > max ? max : f;
@@ -61,14 +62,12 @@ ALLEGRO_MOUSE_STATE GetMouseClamped()
     {
         mouse.x = _SCREEN_SIZE - MOUSECURSORSIZE;
 
-
         //This function is giving very weird results
         //al_set_mouse_xy(display, x-MOUSECURSORSIZE*_RENDERSIZE, beforeY);
     }
     if (mouse.y > (_SCREEN_SIZE-MOUSECURSORSIZE))
     {
         mouse.y = 255 - MOUSECURSORSIZE;
-       // al_set_mouse_xy(display,beforeX, (_SCREEN_SIZE-MOUSECURSORSIZE)*_RENDERSIZE);
     }
     if (mouse.x < 0)
         mouse.x = 0;

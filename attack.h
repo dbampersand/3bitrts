@@ -7,7 +7,6 @@ typedef struct GameObject GameObject;
 typedef struct Effect Effect;
 typedef struct Ability Ability;
 
-
 typedef enum ATTACK_TYPE
 {
     ATTACK_AOE = 0,
@@ -17,12 +16,14 @@ typedef enum ATTACK_TYPE
     ATTACK_MELEE,
     ATTACK_CONE
 } ATTACK_TYPE;
+
 typedef enum ATTACK_PROPERTIES
 {
     ATTACK_ACTIVE = 1,
     ATTACK_HITS_ENEMIES = 2,
     ATTACK_HITS_FRIENDLIES = 4,
 } ATTACK_PROPERTIES;
+
 typedef struct Attack
 {
     float x; float y; float radius; float targetRadius; 
@@ -36,8 +37,6 @@ typedef struct Attack
     char properties;
     GameObject* ownedBy;
     float speed;    
-
-    //int callback_onhit;
 
     bool shouldCallback;
     float duration;

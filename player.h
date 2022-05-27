@@ -1,6 +1,7 @@
 #pragma once
 #include "vector2.h"
 #include "stdbool.h"
+
 typedef struct Ability Ability; 
 typedef struct GameObject GameObject;
 

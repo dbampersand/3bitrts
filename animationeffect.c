@@ -19,12 +19,9 @@ void AddAnimationEffect_Prefab(AnimationEffect* animEffect, bool ownedBy, int x,
         a->properties &= ~ANIMATION_EFFECT_OWNED_BY;
     a->properties |= ANIMATION_EFFECT_ENABLED;
 
-
     animationEffect_TOP++;
     if (animationEffect_TOP >= MAX_ANIMATIONEFFECTS)
         animationEffect_TOP = 0;
-
-
 }
 
 int AddAnimationEffectPrefab(char* path, int w, int h, float cd)
@@ -118,10 +115,6 @@ void ProcessAnimationEffects(float dt)
                     {   
                         a->properties &= ~ANIMATION_EFFECT_ENABLED;
                     }
-                }
-                else
-                {
-                    //a->rect.x += a->rect.w;
                 }
             }
         }           

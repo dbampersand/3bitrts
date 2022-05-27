@@ -14,6 +14,7 @@ typedef enum ABILITY_CAST_TYPE
     ABILITY_ANGLE = 64,
 } ABILITY_CAST_TYPE;
 
+
 typedef enum HINT
 {
     HINT_NONE=0,
@@ -50,9 +51,11 @@ typedef struct Ability
 
 } Ability;
 
+
 Ability* abilities;
 int numAbilities;
 int numAbilitiesAllocated; 
+
 
 typedef struct lua_State lua_State;
 typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE;

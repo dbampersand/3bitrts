@@ -15,12 +15,12 @@ void StartCombat()
 }
 void InitGameState()
 {
-    gameState = MAIN_MENU;
+    gameState = GAMESTATE_MAIN_MENU;
 
 }
 void SetGameStateToInGame(GameObject** list, int numObjectsToAdd, Encounter* e)
 {
-    gameState = INGAME;
+    gameState = GAMESTATE_INGAME;
     RemoveAllGameObjects();
     SetMap(LoadMap(e->mapPath));
 
@@ -46,7 +46,7 @@ void SetGameStateToChoosingParty()
             xPos+=GetWidth(&prefabs[i]);
         }   
     }
-    gameState = CHOOSING_UNITS;
+    gameState = GAMESTATE_CHOOSING_UNITS;
 
 }
 void Quit()
@@ -55,9 +55,9 @@ void Quit()
 }
 void CheckIfGameIsWon()
 {
-    if (GetNumPlayerControlledObjs(&players[1]) == 0 && gameState == INGAME)
+    if (GetNumPlayerControlledObjs(&players[1]) == 0 && gameState == GAMESTATE_INGAME)
     {
-        gameState = CHOOSING_ENCOUNTER;
+        gameState = GAMESTATE_CHOOSING_ENCOUNTER;
         StopMusic();
         SetMap(&maps[0]);
     }
@@ -65,7 +65,7 @@ void CheckIfGameIsWon()
 }
 void CheckIfGameIsLost()
 {
-    if (GetNumPlayerControlledObjs(&players[0]) == 0 && gameState == INGAME)
+    if (GetNumPlayerControlledObjs(&players[0]) == 0 && gameState == GAMESTATE_INGAME)
     {
         Quit();
     }

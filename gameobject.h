@@ -59,7 +59,6 @@ typedef struct GameObject
     Command queue[MAX_QUEUED_CMD];
 
     Point position;
-    //float x; float  y;
     float health;
     float maxHP;
 
@@ -96,8 +95,6 @@ typedef struct GameObject
 
     char properties;
     Point targetPosition;
-    //unsigned char xtarg;
-    //unsigned char ytarg;
 
     float invulnerableTime;
 
