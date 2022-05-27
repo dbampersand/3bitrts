@@ -16,7 +16,37 @@
 #include "helperfuncs.h"
 #include <stdio.h>
 #include "sound.h"
+#include "luafuncs.h"
 
+void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+{
+    if (mouseStateLastFrame->buttons & 1)
+    if (currGameObjRunning)
+    {
+        players[0].amoveSelected = false;
+        int index = GetAbilityClicked(mouseState,mouseStateLastFrame);
+        if (index != -1)
+        {
+            Ability* a = &currGameObjRunning->abilities[index];
+            if (AbilityIsCastImmediately(a))
+            {
+                float x; float y; 
+                GetCentre(currGameObjRunning,&x,&y);
+
+                currAbilityRunning = a; 
+                players[0].abilityHeld = NULL;
+                CastAbility(currGameObjRunning,a,x,y,x,y,NULL);
+
+            }
+            else
+            {
+                players[0].abilityHeld = &currGameObjRunning->abilities[index]; 
+                currAbilityRunning =  &currGameObjRunning->abilities[index];
+            }
+        }  
+    }
+
+}
 void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
     UpdateUI(keyState,mouseState,keyStateLastFrame,mouseStateLastFrame,dt);
@@ -806,6 +836,11 @@ void InitUI()
 
 
     InitFonts();
+
+    ui.currentPanel = &ui.mainMenuPanel;
+    ui.panelShownPercent=1.0f;
+    ui.animatePanel = UI_ANIMATE_STATIC;
+
 }
 void InitFonts()
 {

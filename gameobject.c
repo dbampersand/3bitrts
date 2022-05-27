@@ -20,6 +20,145 @@
 #include "damagenumber.h"
 #include "gamestate.h"
 #include "particle.h"
+void ProcessAttackMoveMouseCommand(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyState)
+{
+    if (players[0].amoveSelected)
+    {
+        players[0].amoveSelected = false;   
+        for (int i = 0; i < numObjects; i++)
+        {
+            GameObject* g = &objects[i];
+            if (IsSelected(g))
+            {
+                float w; float h; GetOffsetCenter(g,&w,&h);
+                if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                    ClearCommandQueue(g);
+
+                AttackMoveCommand(g,mouseState->x-w/2,mouseState->y-h/2);
+                
+            }
+
+        }
+    }
+}
+void UpdateObject(GameObject* g, float dt)
+{
+    currGameObjRunning = g;
+        if (!IsActive(currGameObjRunning))
+            return;
+        UpdateChannellingdObj(currGameObjRunning,dt);
+        currGameObjRunning->invulnerableTime -= dt;
+        if (currGameObjRunning->invulnerableTime < 0)
+            currGameObjRunning->invulnerableTime = 0;
+        if (currGameObjRunning->properties & OBJ_ACTIVE && !IsOwnedByPlayer(currGameObjRunning))
+        {
+            DoAI(currGameObjRunning);
+        }
+        DoCommands(currGameObjRunning);
+        currGameObjRunning->attackTimer -= dt;
+        if (currGameObjRunning->attackTimer < 0)
+            currGameObjRunning->attackTimer = 0;
+        for (int i = 0; i < 4; i++)
+        {
+            currGameObjRunning->abilities[i].cdTimer -= dt;
+            if (currGameObjRunning->abilities[i].cdTimer < 0)
+                currGameObjRunning->abilities[i].cdTimer = 0;
+
+        }
+
+        int w = al_get_bitmap_width(sprites[currGameObjRunning->spriteIndex].sprite);
+        int h = al_get_bitmap_height(sprites[currGameObjRunning->spriteIndex].sprite);
+
+        Rect r = (Rect){currGameObjRunning->position.x,currGameObjRunning->position.y,w,h};
+
+        bool shouldMove = true;
+        bool shouldAttack = false;
+        ProcessEffects(currGameObjRunning,dt);
+        ProcessShields(currGameObjRunning,dt);
+           // if (currGameObjRunning->queue[0].commandType == COMMAND_CAST &&  RectDist(currGameObjRunning,currGameObjRunning->targObj) < currGameObjRunning->queue[0].ability->range+DISTDELTA)
+            //{
+              //  shouldMove = true;
+            //}
+
+        if (currGameObjRunning->targObj && currGameObjRunning->queue[0].commandType == COMMAND_ATTACK) 
+        {
+            GameObject* tempAttack = currGameObjRunning->targObj;
+
+            if (currGameObjRunning->properties & OBJ_ACTIVE)
+            {
+                int wTarg = al_get_bitmap_width(sprites[currGameObjRunning->targObj->spriteIndex].sprite);
+                int hTarg = al_get_bitmap_height(sprites[currGameObjRunning->targObj->spriteIndex].sprite);
+
+                currGameObjRunning->targetPosition.x = currGameObjRunning->targObj->position.x + wTarg/2;
+                currGameObjRunning->targetPosition.y = currGameObjRunning->targObj->position.y + hTarg/2;
+
+                Rect r2 = (Rect){currGameObjRunning->targObj->position.x,currGameObjRunning->targObj->position.y,wTarg,hTarg};
+                #define DISTDELTA 0.001f
+                Rect unioned = UnionRectR(r,r2);
+                //if (RectsTouch(r, r2, currGameObjRunning->range+DISTDELTA))
+                
+                if (RectDist(currGameObjRunning,currGameObjRunning->targObj) < currGameObjRunning->range+DISTDELTA)
+                {
+                    shouldMove = false;
+                    shouldAttack = true;
+                }
+                else
+                {
+                    //if we're AI controlled and the object moves out of range 
+                    //but something is still in range - temporarily attack that, but keep moving towards the original target
+                    if (GetPlayerOwnedBy(currGameObjRunning) == 1)
+                    {
+                        for (int i = 0; i < MAX_OBJS; i++)
+                        {
+                            GameObject* g2 = &objects[i];
+                            if (IsActive(g2))
+                            {
+                                if (GetPlayerOwnedBy(g2) != GetPlayerOwnedBy(currGameObjRunning))
+                                {
+                                    if (RectDist(currGameObjRunning,g2) < currGameObjRunning->range+DISTDELTA)
+                                    {
+                                        tempAttack = g2;
+                                        shouldMove = true;
+                                        shouldAttack = true;
+                                        break;
+                                    }
+                                    
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }   
+            else
+            {
+                SetAttackingObj(currGameObjRunning, NULL);
+            }
+            GameObject* old = currGameObjRunning->targObj;
+            currGameObjRunning->targObj = tempAttack;
+
+            if (shouldAttack)
+            {
+
+                if (currGameObjRunning->attackTimer <= 0)
+                {
+                    AttackTarget(currGameObjRunning);
+                    currGameObjRunning->attackTimer = currGameObjRunning->attackSpeed;
+                }
+
+            }
+            currGameObjRunning->targObj = old;
+        }
+        if (shouldMove)
+            Move(currGameObjRunning, dt);
+        if (currGameObjRunning->properties & OBJ_ACTIVE)
+        {
+            lua_rawgeti(luaState,LUA_REGISTRYINDEX,g->luafunc_update);
+            lua_pushnumber(luaState,dt);
+            lua_pcall(luaState,1,0,0);
+        }
+}
+
 void InitObjects()
 {
     objects = calloc(MAX_OBJS,sizeof(GameObject));

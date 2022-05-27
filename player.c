@@ -1,5 +1,8 @@
 #include "player.h"
 #include "gameobject.h"
+#include "ui.h"
+#include "luafuncs.h"
+#include "sound.h"
 void RemoveIndexFromSelection(Player* p, int index)
 {
     for (int i = index; i < MAXUNITSSELECTED-1; i++)
@@ -30,4 +33,41 @@ void RemoveGameObjectFromSelection(Player* p, GameObject* g)
 void InitPlayers()
 {
     players = calloc(2,sizeof(GameObject));
+}
+void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState)
+{
+    int index = GetAbilityIndexClicked(keyState,keyStateLastFrame);
+
+    if (index > -1)
+    if (players[0].selection[players[0].indexSelectedUnit])
+    {
+        if (players[0].selection[players[0].indexSelectedUnit]->abilities[index].cdTimer <= 0)
+        {
+            PlaySound(ui.uiClickedSound);
+            players[0].abilityHeld = NULL;
+            currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
+            if (currGameObjRunning)
+            {
+                currAbilityRunning = &players[0].selection[players[0].indexSelectedUnit]->abilities[index];
+
+                if (currAbilityRunning->castType == ABILITY_INSTANT || currAbilityRunning->castType == ABILITY_TOGGLE)
+                {
+                    if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                        ClearCommandQueue(currGameObjRunning);
+                    CastCommand(currGameObjRunning,NULL,currAbilityRunning,mouseState->x,mouseState->y);
+                }
+                else
+                {
+                    players[0].abilityHeld = currAbilityRunning;
+                }
+            }
+        }
+    }
+
+    if (!al_key_down(keyState,ALLEGRO_KEY_ESCAPE) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_ESCAPE) )
+    {
+        players[0].abilityHeld = NULL;
+        players[0].amoveSelected = false;
+    }
+
 }

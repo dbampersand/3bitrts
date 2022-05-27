@@ -5,6 +5,62 @@
 #include "lua-5.4.3/src/lualib.h"
 #include "luafuncs.h"
 #include "gameobject.h"
+#include "player.h"
+
+void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyState)
+{
+    if (players[0].abilityHeld)
+    {
+        GameObject* target = NULL;
+        for (int i = 0; i < MAX_OBJS; i++)
+        {
+            if (objects[i].properties & OBJ_ACTIVE)
+            {
+                if (PointInRect(mouseState->x,mouseState->y,GetObjRect(&objects[i])))
+                {
+                    target = &objects[i];
+                    break;
+                }
+            }
+        }
+        float midX=0; float midY=0;
+        GetOffsetCenter(currGameObjRunning,&midX,&midY);
+    
+        //if (AbilityCanBeCast(currAbilityRunning,currGameObjRunning,target))
+        {
+            if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                ClearCommandQueue(currGameObjRunning);
+            CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->x,mouseState->y);
+            //CastAbility(currGameObjRunning,currAbilityRunning,mouseState->x,mouseState->y,mouseState->x-midX,mouseState->y-midY,target);
+            players[0].clickedThisFrame = target;
+
+        }
+        //else
+        {
+        }
+    }
+
+}
+int GetAbilityIndexClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
+{
+    if (!al_key_down(keyState,ALLEGRO_KEY_Q) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_Q))
+    {
+        return 0;
+    }
+    if (!al_key_down(keyState,ALLEGRO_KEY_W) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_W))
+    {
+        return 1;
+    }
+    if (!al_key_down(keyState,ALLEGRO_KEY_E) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_E))
+    {
+        return 2;
+    }
+    if (!al_key_down(keyState,ALLEGRO_KEY_R) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_R))
+    {
+        return 3;
+    }
+    return -1;
+}
 Ability CloneAbilityPrefab(Ability* prefab, lua_State* l)
 {
     Ability a = {0};

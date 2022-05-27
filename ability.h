@@ -53,7 +53,11 @@ typedef struct Ability
 Ability* abilities;
 int numAbilities;
 int numAbilitiesAllocated; 
+
 typedef struct lua_State lua_State;
+typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE;
+typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE;
+
 void LoadAbility(const char* path, lua_State* l, Ability* a);
 Ability CloneAbilityPrefab(Ability* prefab, lua_State* l);
 Ability* AddAbility(const char* path);
@@ -63,3 +67,5 @@ void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled);
 bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, float y);
 bool AbilityIsCastImmediately(Ability* a);
 bool AbilityShouldBeCastOnTarget(Ability* a);
+int GetAbilityIndexClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
+void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyState);

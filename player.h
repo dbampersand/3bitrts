@@ -25,7 +25,11 @@ typedef struct Player
 
 Player* players;
 
+typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE;
+typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE; 
+
 
 void RemoveFromSelection(Player* p, int index);
 void RemoveGameObjectFromSelection(Player* p, GameObject* g);
 void InitPlayers();
+void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame,ALLEGRO_MOUSE_STATE* mouseState);

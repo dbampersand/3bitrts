@@ -94,266 +94,26 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     }
     for (int i = 0; i < numObjects; i++)
     {
-        currGameObjRunning = &objects[i];
-        if (!IsActive(currGameObjRunning))
-            continue;
-        UpdateChannellingdObj(currGameObjRunning,dt);
-        currGameObjRunning->invulnerableTime -= dt;
-        if (currGameObjRunning->invulnerableTime < 0)
-            currGameObjRunning->invulnerableTime = 0;
-        if (currGameObjRunning->properties & OBJ_ACTIVE && !IsOwnedByPlayer(currGameObjRunning))
-        {
-            DoAI(currGameObjRunning);
-        }
-        DoCommands(currGameObjRunning);
-        currGameObjRunning->attackTimer -= dt;
-        if (currGameObjRunning->attackTimer < 0)
-            currGameObjRunning->attackTimer = 0;
-        for (int i = 0; i < 4; i++)
-        {
-            currGameObjRunning->abilities[i].cdTimer -= dt;
-            if (currGameObjRunning->abilities[i].cdTimer < 0)
-                currGameObjRunning->abilities[i].cdTimer = 0;
-
-        }
-
-        int w = al_get_bitmap_width(sprites[currGameObjRunning->spriteIndex].sprite);
-        int h = al_get_bitmap_height(sprites[currGameObjRunning->spriteIndex].sprite);
-
-        Rect r = (Rect){currGameObjRunning->position.x,currGameObjRunning->position.y,w,h};
-
-        bool shouldMove = true;
-        bool shouldAttack = false;
-        ProcessEffects(currGameObjRunning,dt);
-        ProcessShields(currGameObjRunning,dt);
-           // if (currGameObjRunning->queue[0].commandType == COMMAND_CAST &&  RectDist(currGameObjRunning,currGameObjRunning->targObj) < currGameObjRunning->queue[0].ability->range+DISTDELTA)
-            //{
-              //  shouldMove = true;
-            //}
-
-        if (currGameObjRunning->targObj && currGameObjRunning->queue[0].commandType == COMMAND_ATTACK) 
-        {
-            GameObject* tempAttack = currGameObjRunning->targObj;
-
-            if (currGameObjRunning->properties & OBJ_ACTIVE)
-            {
-                int wTarg = al_get_bitmap_width(sprites[currGameObjRunning->targObj->spriteIndex].sprite);
-                int hTarg = al_get_bitmap_height(sprites[currGameObjRunning->targObj->spriteIndex].sprite);
-
-                currGameObjRunning->targetPosition.x = currGameObjRunning->targObj->position.x + wTarg/2;
-                currGameObjRunning->targetPosition.y = currGameObjRunning->targObj->position.y + hTarg/2;
-
-                Rect r2 = (Rect){currGameObjRunning->targObj->position.x,currGameObjRunning->targObj->position.y,wTarg,hTarg};
-                #define DISTDELTA 0.001f
-                Rect unioned = UnionRectR(r,r2);
-                //if (RectsTouch(r, r2, currGameObjRunning->range+DISTDELTA))
-                
-                if (RectDist(currGameObjRunning,currGameObjRunning->targObj) < currGameObjRunning->range+DISTDELTA)
-                {
-                    shouldMove = false;
-                    shouldAttack = true;
-                }
-                else
-                {
-                    //if we're AI controlled and the object moves out of range 
-                    //but something is still in range - temporarily attack that, but keep moving towards the original target
-                    if (GetPlayerOwnedBy(currGameObjRunning) == 1)
-                    {
-                        for (int i = 0; i < MAX_OBJS; i++)
-                        {
-                            GameObject* g2 = &objects[i];
-                            if (IsActive(g2))
-                            {
-                                if (GetPlayerOwnedBy(g2) != GetPlayerOwnedBy(currGameObjRunning))
-                                {
-                                    if (RectDist(currGameObjRunning,g2) < currGameObjRunning->range+DISTDELTA)
-                                    {
-                                        tempAttack = g2;
-                                        shouldMove = true;
-                                        shouldAttack = true;
-                                        break;
-                                    }
-                                    
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }   
-            else
-            {
-                SetAttackingObj(currGameObjRunning, NULL);
-            }
-            GameObject* old = currGameObjRunning->targObj;
-            currGameObjRunning->targObj = tempAttack;
-
-            if (shouldAttack)
-            {
-
-                if (currGameObjRunning->attackTimer <= 0)
-                {
-                    AttackTarget(currGameObjRunning);
-                    currGameObjRunning->attackTimer = currGameObjRunning->attackSpeed;
-                }
-
-            }
-            currGameObjRunning->targObj = old;
-        }
-        if (shouldMove)
-            Move(currGameObjRunning, dt);
-        if (currGameObjRunning->properties & OBJ_ACTIVE)
-        {
-            lua_rawgeti(luaState,LUA_REGISTRYINDEX,objects[i].luafunc_update);
-            lua_pushnumber(luaState,dt);
-            lua_pcall(luaState,1,0,0);
-        }
+        UpdateObject(&objects[i],dt);
     }
-    if (1)
-    {
-        int index = -1;
-        if (!al_key_down(keyState,ALLEGRO_KEY_Q) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_Q))
-        {
-            index = 0;
-        }
-        if (!al_key_down(keyState,ALLEGRO_KEY_W) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_W))
-        {
-            index = 1;
-        }
-        if (!al_key_down(keyState,ALLEGRO_KEY_E) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_E))
-        {
-            index = 2;
-        }
-        if (!al_key_down(keyState,ALLEGRO_KEY_R) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_R))
-        {
-            index = 3;
-        }
-
-
-        if (index > -1)
-        if (players[0].selection[players[0].indexSelectedUnit])
-        {
-            if (players[0].selection[players[0].indexSelectedUnit]->abilities[index].cdTimer <= 0)
-            {
-                PlaySound(ui.uiClickedSound);
-                players[0].abilityHeld = NULL;
-                currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
-                if (currGameObjRunning)
-                {
-                    currAbilityRunning = &players[0].selection[players[0].indexSelectedUnit]->abilities[index];
-
-                    if (currAbilityRunning->castType == ABILITY_INSTANT || currAbilityRunning->castType == ABILITY_TOGGLE)
-                    {
-                        if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
-                            ClearCommandQueue(currGameObjRunning);
-                        CastCommand(currGameObjRunning,NULL,currAbilityRunning,mouseState->x,mouseState->y);
-
-                        //if (AbilityCanBeCast(currAbilityRunning, currGameObjRunning, currGameObjRunning))
-                        //  CastAbility(currGameObjRunning, currAbilityRunning,0,0,0,0,currGameObjRunning);
-                    }
-                    else
-                    {
-                        players[0].abilityHeld = currAbilityRunning;
-                    }
-                }
-            }
-
-
-        }
-    }
-    if (!al_key_down(keyState,ALLEGRO_KEY_ESCAPE) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_ESCAPE) )
-    {
-        players[0].abilityHeld = NULL;
-        players[0].amoveSelected = false;
-    }
+    CheckAbilityClicked(keyState,keyStateLastFrame, mouseState);
     if (mouseState->buttons & 1) 
     {
         currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
         currAbilityRunning = players[0].abilityHeld;
         if (IsInsideUI(mouseState->x,mouseState->y))
         {
-            if (mouseStateLastFrame->buttons & 1)
-            if (currGameObjRunning)
-            {
-                players[0].amoveSelected = false;
-                int index = GetAbilityClicked(mouseState,mouseStateLastFrame);
-                if (index != -1)
-                {
-                    Ability* a = &currGameObjRunning->abilities[index];
-                    if (AbilityIsCastImmediately(a))
-                    {
-                        float x; float y; 
-                        GetCentre(currGameObjRunning,&x,&y);
-
-                        currAbilityRunning = a; 
-                        players[0].abilityHeld = NULL;
-                        CastAbility(currGameObjRunning,a,x,y,x,y,NULL);
-
-                    }
-                    else
-                    {
-                        players[0].abilityHeld = &currGameObjRunning->abilities[index]; 
-                        currAbilityRunning =  &currGameObjRunning->abilities[index];
-                    }
-                }  
-            }
+            GetAbilityClickedInsideUI(mouseState,mouseStateLastFrame);
         }
         else
         {
-            if (players[0].amoveSelected)
-            {
-                players[0].amoveSelected = false;   
-                for (int i = 0; i < numObjects; i++)
-                {
-                    GameObject* g = &objects[i];
-                    if (IsSelected(g))
-                    {
-                        float w; float h; GetOffsetCenter(g,&w,&h);
-                        if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
-                            ClearCommandQueue(g);
-
-                        AttackMoveCommand(g,mouseState->x-w/2,mouseState->y-h/2);
-                        
-                    }
-
-                }
-            }
-        if (players[0].abilityHeld)
-        {
-            GameObject* target = NULL;
-            for (int i = 0; i < MAX_OBJS; i++)
-            {
-                if (objects[i].properties & OBJ_ACTIVE)
-                {
-                    if (PointInRect(mouseState->x,mouseState->y,GetObjRect(&objects[i])))
-                    {
-                        target = &objects[i];
-                        break;
-                    }
-                }
-            }
-            float midX=0; float midY=0;
-            GetOffsetCenter(currGameObjRunning,&midX,&midY);
-            
-            //if (AbilityCanBeCast(currAbilityRunning,currGameObjRunning,target))
-            {
-                if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
-                    ClearCommandQueue(currGameObjRunning);
-                CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->x,mouseState->y);
-                //CastAbility(currGameObjRunning,currAbilityRunning,mouseState->x,mouseState->y,mouseState->x-midX,mouseState->y-midY,target);
-                players[0].clickedThisFrame = target;
-
-            }
-            //else
-            {
-            }
+            ProcessAttackMoveMouseCommand(mouseState, keyState);
+            CastAbilityOnMouse(mouseState, keyState);
         }
         currAbilityRunning = NULL;
         players[0].abilityHeld = NULL;
-
-        }
-
     }
+    
     if (!(mouseState->buttons & 2) && (mouseStateLastFrame->buttons & 2))
     {
         currAbilityRunning = NULL;
@@ -649,30 +409,7 @@ void DrawMainMenu()
 int main(int argc, char* args[])
 {
 
-
-
-
     init();
-
-    
-    /*
-    int xPos = 100;
-    for (int i = 0; i < numPrefabs; i++)
-    {
-        if (prefabs[i].playerChoosable == true)
-        {
-            AddGameobject(&prefabs[i],xPos,150);
-            xPos+=GetWidth(&prefabs[i]);
-        }   
-
-    }*/
-
-
-
-
-    //AddGameobject(g)->x = 50;
-   // AddGameobject(g)->x = 100;
-
 
     ALLEGRO_TIMER* _FPS_TIMER = al_create_timer(1.0f / (double)_TARGET_FPS);
 
@@ -687,12 +424,7 @@ int main(int argc, char* args[])
    al_get_keyboard_state(&keyStateLastFrame);
    ALLEGRO_MOUSE_STATE mouseStateLastFrame;
     mouseStateLastFrame = GetMouseClamped();
-    if (gameState == MAIN_MENU)
-    {
-        ui.currentPanel = &ui.mainMenuPanel;
-        ui.panelShownPercent=1.0f;
-        ui.animatePanel = UI_ANIMATE_STATIC;
-    }
+
     //PlayMusic("assets/audio/first_boss.wav");
 
     while (!gameState != GAMESTATE_EXIT) {
@@ -718,7 +450,6 @@ int main(int argc, char* args[])
             mouseState = GetMouseClamped();
             
             al_set_target_bitmap(backbuffer);
-            //al_draw_bitmap(backbuffer,0,0,0);
             al_clear_to_color(BG);
 
 
@@ -734,17 +465,16 @@ int main(int argc, char* args[])
             if (!ui.currentPanel)
                 Update(1/(float)_TARGET_FPS,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
             UpdateInterface(1/(float)_TARGET_FPS,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
+            if (gameState == GAMESTATE_EXIT)
+                break;
             Render(1/(float)_TARGET_FPS, &mouseState, &mouseStateLastFrame, &keyState, &keyStateLastFrame);
 
             al_set_target_bitmap(backbuffer);
-
             al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE, drawposx, drawposy,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
-
             al_flip_display();
 
             mouseStateLastFrame = mouseState;
             keyStateLastFrame = keyState;
-            //printf("\n");
             _FRAMES++;
             fflush(stdout);
         }
