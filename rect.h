@@ -1,6 +1,8 @@
 #pragma once
+
 #include <stdbool.h>
 #include "vector2.h"
+
 typedef struct Rect 
 {
     int x; int y; int w; int h;

@@ -1,14 +1,17 @@
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "allegro5/allegro_primitives.h"
+
 #include "attack.h"
-#include "string.h"
-#include "stdlib.h"
+
 #include "rect.h"
 #include "gameobject.h"
 #include "helperfuncs.h"
 #include "colors.h"
-#include "allegro5/allegro_primitives.h"
 #include "luafuncs.h"
 #include "ability.h"
-#include <math.h>
 #include "video.h"
 
 int attack_top = 0;

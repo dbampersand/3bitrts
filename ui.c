@@ -1,12 +1,16 @@
-#include "ui.h"
-#include "gameobject.h"
-#include "colors.h"
-#include "player.h"
+#include <stdio.h>
+#include <math.h>
+
 #include "allegro5/allegro_primitives.h"
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_font.h"
 #include "allegro5/allegro_ttf.h"
-#include <math.h>
+
+#include "ui.h"
+
+#include "gameobject.h"
+#include "colors.h"
+#include "player.h"
 #include "video.h"
 #include "sprite.h"
 #include "encounter.h"
@@ -14,7 +18,6 @@
 #include "map.h"
 #include "effect.h"
 #include "helperfuncs.h"
-#include <stdio.h>
 #include "sound.h"
 #include "luafuncs.h"
 

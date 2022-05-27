@@ -1,15 +1,18 @@
+#include <time.h>
+#include <math.h>
+
+
 #include "luafuncs.h"
+
 #include "gameobject.h"
 #include "helperfuncs.h"
 #include "map.h"
 #include "effect.h"
 #include "attack.h"
 #include "animationeffect.h"
-#include <math.h>
 #include "colors.h"
 #include "encounter.h"
 #include "sprite.h"
-#include <time.h>
 #include "sound.h"
 
 static void dumpstack (lua_State* l) {

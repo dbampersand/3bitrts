@@ -1,4 +1,5 @@
 #pragma once
+
 typedef enum QueueCommand
 {
     COMMAND_NONE = 0,

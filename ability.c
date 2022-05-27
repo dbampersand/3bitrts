@@ -1,17 +1,22 @@
-#include "ability.h"
-#include "helperfuncs.h"
+#include <math.h>
+
 #include "lua-5.4.3/src/lua.h"
 #include "lua-5.4.3/src/lauxlib.h"
 #include "lua-5.4.3/src/lualib.h"
+
+#include "allegro5/allegro.h"
+#include "allegro5/allegro_primitives.h"
+
+#include "ability.h"
+#include "helperfuncs.h"
 #include "luafuncs.h"
 #include "gameobject.h"
 #include "player.h"
 #include "video.h"
 #include "ui.h"
-#include "allegro5/allegro.h"
-#include "allegro5/allegro_primitives.h"
-#include "math.h"
 #include "colors.h"
+
+
 void DrawHeldAbility(ALLEGRO_MOUSE_STATE* mouseState)
 {
     float cx; float cy;

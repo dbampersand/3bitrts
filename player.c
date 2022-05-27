@@ -1,8 +1,10 @@
 #include "player.h"
+
 #include "gameobject.h"
 #include "ui.h"
 #include "luafuncs.h"
 #include "sound.h"
+
 void RemoveIndexFromSelection(Player* p, int index)
 {
     for (int i = index; i < MAXUNITSSELECTED-1; i++)

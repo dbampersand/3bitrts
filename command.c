@@ -1,7 +1,9 @@
 #include "command.h"
+
 #include "gameobject.h"
 #include "helperfuncs.h"
 #include "ability.h"
+
 void AddCommand(GameObject* g, Command c)
 {
     for (int i = 0; i < MAX_QUEUED_CMD; i++)

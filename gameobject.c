@@ -1,18 +1,21 @@
-#include "gameobject.h"
 #include <dirent.h>
-#include "luafuncs.h"
-#include <ctype.h>
+#include <stdlib.h>
+#include <float.h>
 #include <math.h>
+#include <ctype.h>
+
+#include "allegro5/allegro_primitives.h"
+
+#include "gameobject.h"
+
+#include "luafuncs.h"
 #include "rect.h"
 #include "map.h"
 #include "helperfuncs.h"
 #include "colors.h"
 #include "video.h"
-#include "allegro5/allegro_primitives.h"
 #include "animationeffect.h"
-#include <stdlib.h>
 #include "video.h"
-#include <float.h>
 #include "shield.h"
 #include "player.h"
 #include "ui.h"

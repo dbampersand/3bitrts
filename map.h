@@ -1,6 +1,6 @@
 #pragma once
 
-#include "stdbool.h"
+#include <stdbool.h>
 
 #define _GRAIN 4
 typedef struct Sprite Sprite; 

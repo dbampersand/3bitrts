@@ -1,10 +1,13 @@
 #pragma once
 #define MAX_PARTICLES 256
+
 #include "stdbool.h"
 #include "allegro5/allegro.h"
+
 #ifndef M_PI
     #define M_PI 3.14159265358979323846
 #endif
+
 typedef enum PARTICLE_PROPERTIES
 {
     PARTICLE_ENABLED = 1,

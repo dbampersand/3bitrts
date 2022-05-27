@@ -1,5 +1,7 @@
 #pragma once
+
 #include "stdbool.h"
+
 typedef struct GameObject GameObject;
 
 typedef enum EFFECT_TRIGGER

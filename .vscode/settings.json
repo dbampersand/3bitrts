@@ -10,6 +10,16 @@
         "xutility": "c",
         "system_error": "c",
         "helperfuncs.h": "c",
-        "rect.h": "c"
+        "rect.h": "c",
+        "gameobject.h": "c",
+        "luafuncs.h": "c",
+        "colors.h": "c",
+        "shield.h": "c",
+        "map.h": "c",
+        "stdio.h": "c",
+        "gamestate.h": "c",
+        "limits.h": "c",
+        "math.h": "c",
+        "string.h": "c"
     }
 }

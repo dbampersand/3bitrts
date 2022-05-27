@@ -1,4 +1,5 @@
 #pragma once
+
 #include "rect.h"
 
 typedef struct GameObject GameObject;

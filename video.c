@@ -1,10 +1,13 @@
-#include "video.h"
-#include "allegro5/allegro_primitives.h"
+#include <float.h>
+#include <stdio.h>
 #include <math.h>
+
+#include "allegro5/allegro_primitives.h"
+
+#include "video.h"
+
 #include "colors.h"
 #include "helperfuncs.h"
-#include <float.h>
-#include "stdio.h"
 #include "point.h"
 #include "sprite.h"
 

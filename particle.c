@@ -1,5 +1,7 @@
+#include <math.h>
+
 #include "particle.h"
-#include "math.h"
+
 #include "colors.h" 
 #include "helperfuncs.h"
 

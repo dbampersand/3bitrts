@@ -1,8 +1,8 @@
 #pragma once
+
 #include "sprite.h"
 #include "rect.h"
 #include "stdbool.h"
-
 
 //error printf colour
 #define COL_ERR  "\x1B[31m"

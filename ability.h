@@ -1,6 +1,7 @@
 #pragma once
 
 #include "stdbool.h"
+
 typedef struct GameObject GameObject;
 
 typedef enum ABILITY_CAST_TYPE

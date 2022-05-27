@@ -1,7 +1,10 @@
 #pragma once
+
 #include "point.h"
+
 typedef struct ALLEGRO_COLOR ALLEGRO_COLOR;
 typedef struct GameObject GameObject;
+
 typedef struct DamageNumber
 {
     ALLEGRO_COLOR* color; 

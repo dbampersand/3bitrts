@@ -1,3 +1,4 @@
+#include <math.h>
 
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_ttf.h"
@@ -20,7 +21,6 @@
 #include "ui.h"
 #include "attack.h"
 #include "particle.h"
-#include <math.h>
 #include "animationeffect.h"
 #include "shield.h"
 #include "encounter.h"

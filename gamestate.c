@@ -1,9 +1,11 @@
 #include "gamestate.h"
+
 #include "sound.h"
 #include "gameobject.h"
 #include "map.h"
 #include "player.h"
 #include "encounter.h"
+
 void StartCombat()
 {
     if (combatStarted)

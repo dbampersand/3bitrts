@@ -1,7 +1,10 @@
+#include <math.h>
+
 #include "rect.h"
+
 #include "vector2.h"
 #include "helperfuncs.h"
-#include <math.h>
+
 bool CheckIntersect(Rect r1, Rect r2)
 {
     if (r1.x < r2.x + r2.w && r1.x + r1.w > r2.x) 

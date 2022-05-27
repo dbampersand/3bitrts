@@ -1,6 +1,7 @@
 #pragma once
 
-#include "stdbool.h"
+#include <stdbool.h>
+
 #include "colors.h"
 
 typedef struct GameObject GameObject;

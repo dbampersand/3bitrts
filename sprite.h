@@ -1,6 +1,7 @@
 
 
 #pragma once
+
 #include "allegro5/allegro.h"
 
 unsigned int _RENDERSIZE;

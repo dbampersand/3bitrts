@@ -1,10 +1,14 @@
-#include "sound.h"
-#include "ui.h"
+#include <stdio.h>
+
 #include "allegro5/allegro_acodec.h"
+
+#include "sound.h"
+
+#include "ui.h"
 #include "helperfuncs.h"
-#include "stdio.h"
 #include "gamestate.h"
 #include "encounter.h"
+
 void InitSound()
 {
     al_init_acodec_addon();

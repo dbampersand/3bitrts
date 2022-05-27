@@ -1,12 +1,15 @@
-#include "helperfuncs.h"
-#include "sprite.h"
 #include <math.h>
+
+#include "allegro5/allegro_primitives.h"
+
+#include "helperfuncs.h"
+
+#include "sprite.h"
 #include "rect.h"
 #include "gameobject.h"
 #include "video.h"
 #include "gamestate.h"
 #include "colors.h"
-#include "allegro5/allegro_primitives.h"
 
 float clamp(float f, float min, float max)
 {

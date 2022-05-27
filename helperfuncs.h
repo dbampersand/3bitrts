@@ -2,6 +2,7 @@
 
 #include "allegro5/allegro.h"
 #include "rect.h"
+
 #define DIST_DELTA 1
 
 #define _MIN(X,Y) ((X) < (Y) ? (X) : (Y))

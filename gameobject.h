@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "sprite.h"
 #include "ability.h"
 #include "allegro5/allegro.h"
@@ -9,6 +8,7 @@
 #include "threat.h"
 #include "command.h"
 #include "point.h"
+
 typedef enum GAMEOBJ_PROPERTIES
 {
     OBJ_SELECTED = 1,

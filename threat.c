@@ -1,7 +1,8 @@
+#include <limits.h>
 
 #include "threat.h"
+
 #include "gameobject.h"
-#include "limits.h"
 #include "gamestate.h"
 
 void AddThreat(GameObject* source, GameObject* target, int damage)

@@ -1,6 +1,8 @@
 #include "effect.h"
+
 #include "gameobject.h"
 #include "shield.h"
+
 bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
 {
     int sign = 1; 

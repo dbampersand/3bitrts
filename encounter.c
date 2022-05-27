@@ -1,8 +1,10 @@
-#include "encounter.h"
 #include <stdio.h>
 #include <string.h>
-#include "helperfuncs.h"
 #include <dirent.h>
+
+#include "encounter.h"
+
+#include "helperfuncs.h"
 #include "luafuncs.h"
 #include "gameobject.h"
 

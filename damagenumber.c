@@ -1,12 +1,14 @@
-#include "damagenumber.h"
-#include <stdlib.h>
-#include "helperfuncs.h"
 #include <math.h>
-#include "ui.h"
-#include "allegro5/allegro_ttf.h"
-#include "colors.h"
+#include <stdlib.h>
 #include <stdio.h>
+
+#include "allegro5/allegro_ttf.h"
 #include "allegro5/allegro.h"
+
+#include "damagenumber.h"
+#include "helperfuncs.h"
+#include "ui.h"
+#include "colors.h"
 #include "gameobject.h"
 
 void InitDamageNumbers()

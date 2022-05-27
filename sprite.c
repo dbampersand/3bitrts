@@ -1,9 +1,12 @@
-#include "sprite.h"
+#include <float.h>
+
 #include "allegro5/allegro_ttf.h"
 #include "allegro5/allegro_font.h"
 #include "allegro5/allegro_image.h"
+
+#include "sprite.h"
+
 #include "gameobject.h"
-#include "float.h"
 #include "colors.h"
 
 //loads a sprite, and also generates an inverse sprite for selection

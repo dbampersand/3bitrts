@@ -1,7 +1,9 @@
 #include "animationeffect.h"
+
 #include "sprite.h"
 #include "colors.h"
 #include "gameobject.h"
+
 void AddAnimationEffect_Prefab(AnimationEffect* animEffect, bool ownedBy, int x, int y)
 {
    AnimationEffect* a = &animationEffects[animationEffect_TOP];
