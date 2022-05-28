@@ -465,6 +465,8 @@ int GetNumObjectsInRect(Rect* r)
     int j = 0;
     for (int i = 0; i < MAX_OBJS; i++)
     {
+        if (!IsActive(&objects[i]))
+            continue;
         Rect r2 = GetObjRect(&objects[i]);
         if (CheckIntersect(*r,r2))
         {
@@ -754,13 +756,20 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
 }
 void KillObj(GameObject* g)
 {
+    if (!g) return;
     g->properties &= ~OBJ_ACTIVE;
     g->spriteIndex = 0;
     DeleteThreatList(g);
     if (g->shields)
+    {
         free(g->shields);
+        g->shields = NULL;
+    }
     if (g->onAttackEffectsIndices)
+    {
         free(g->onAttackEffectsIndices);
+        g->onAttackEffectsIndices = NULL;
+    }
     RemoveObjFromSelection(g);
 
     for (int i = 0; i < 4; i++)
