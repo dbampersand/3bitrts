@@ -84,7 +84,7 @@ void ProcessAttackMoveMouseCommand(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYB
 void UpdateObject(GameObject* g, float dt)
 {
     currGameObjRunning = g;
-        if (!IsActive(currGameObjRunning))
+        if (!IsActive(currGameObjRunning) || ObjIsDecoration(g))
             return;
         UpdateChannellingdObj(currGameObjRunning,dt);
         currGameObjRunning->invulnerableTime -= dt;
@@ -450,7 +450,10 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                             {
                                 if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
                                     ClearCommandQueue(players[0].selection[i]);
-                                AttackCommand(players[0].selection[i],g);
+                                if (!ObjIsInvincible(g))
+                                    AttackCommand(players[0].selection[i],g);
+                                else
+                                    MoveCommand(players[0].selection[i],mouseState->x,mouseState->y);
                             }
                             break;
                         }
@@ -465,7 +468,7 @@ int GetNumObjectsInRect(Rect* r)
     int j = 0;
     for (int i = 0; i < MAX_OBJS; i++)
     {
-        if (!IsActive(&objects[i]))
+        if (!IsActive(&objects[i]) || ObjIsDecoration(&objects[i]))
             continue;
         Rect r2 = GetObjRect(&objects[i]);
         if (CheckIntersect(*r,r2))
@@ -1246,6 +1249,8 @@ void DrawGameObj(GameObject* g, bool forceInverse)
 
     bool b = IsOwnedByPlayer(g);
     ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
+    if (ObjIsDecoration(g))
+        c = BG;
     Sprite* s = &sprites[g->spriteIndex];
 
     DrawSprite(s,g->position.x,g->position.y,c, IsSelected(g) || forceInverse);
@@ -1255,15 +1260,17 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     selectRect.h = al_get_bitmap_height(s->sprite);
     selectRect.x = g->position.x;
     selectRect.y = g->position.y;
+    if (!ObjIsInvincible(g))
+    {
+        DrawRoundedRect(selectRect, c);
 
-    DrawRoundedRect(selectRect, c);
-    if (*gameOptions.displayHealthBar == OPTION_HPBAR_ALWAYS)
-        DrawHealthBar(g,c);
-    else if (*gameOptions.displayHealthBar == OPTION_HPBAR_SELECTED && (IsOwnedByPlayer(g) && IsSelected(g)))
-        DrawHealthBar(g,c);
-    else if (*gameOptions.displayHealthBar == OPTION_HPBAR_NEVER && (!IsOwnedByPlayer(g)))
-        DrawHealthBar(g,c);
-
+        if (*gameOptions.displayHealthBar == OPTION_HPBAR_ALWAYS)
+            DrawHealthBar(g,c);
+        else if (*gameOptions.displayHealthBar == OPTION_HPBAR_SELECTED && (IsOwnedByPlayer(g) && IsSelected(g)))
+            DrawHealthBar(g,c);
+        else if (*gameOptions.displayHealthBar == OPTION_HPBAR_NEVER && (!IsOwnedByPlayer(g)))
+            DrawHealthBar(g,c);
+    }
     
 }
 void SetAttackingObj(GameObject* g, GameObject* target)
@@ -1390,9 +1397,7 @@ void Teleport(GameObject* g, float x, float y)
     //if we have collided with a gameobject
     if (g2)
     {
-        //kind of a lazy way to do this - test if y - mx + b == 0 for each line segment, then test distance between each for the closest point
         float slope = (beforeY - y) / (beforeX - x);
-        //top line: y = n
         typedef struct line { 
             float x; float y; float x2; float y2;
         } line; 
@@ -1413,8 +1418,8 @@ void Teleport(GameObject* g, float x, float y)
         }
         if (GetLineIntersection(centreX,centreY,x,y,VRight.x,VRight.y,VRight.x2,VRight.y2,&outX,&outY))
         {
-            float distance = dist(cX,centreY,outX,outY);
-            if (distance < closestDist)
+            float distance = dist(centreX,centreY,outX,outY);
+            if (distance <= closestDist)
             {
                 closestX = outX;
                 closestY = outY;
@@ -1424,7 +1429,7 @@ void Teleport(GameObject* g, float x, float y)
         if (GetLineIntersection(centreX,centreY,x,y,VBottom.x,VBottom.y,VBottom.x2,VBottom.y2,&outX,&outY))
         {
             float distance = dist(centreX,centreY,outX,outY);
-            if (distance < closestDist)
+            if (distance <= closestDist)
             {
                 closestX = outX;
                 closestY = outY;
@@ -1434,7 +1439,7 @@ void Teleport(GameObject* g, float x, float y)
         if (GetLineIntersection(centreX,centreY,x,y,VLeft.x,VLeft.y,VLeft.x2,VLeft.y2,&outX,&outY))
         {
             float distance = dist(centreX,centreY,outX,outY);
-            if (distance < closestDist)
+            if (distance <= closestDist)
             {
                 closestX = outX;
                 closestY = outY;
@@ -1443,22 +1448,25 @@ void Teleport(GameObject* g, float x, float y)
         }
         float w2; float h2;
         GetOffsetCenter(g,&w2,&h2);
-        if (g->position.x < g2->position.x)
+        if (closestX != FLT_MAX && closestY != FLT_MAX)
         {
-            g->position.x = closestX - w2;
-        }
-        else
-        {
-            g->position.x = closestX;
-        }
+            if (g->position.x < g2->position.x)
+            {
+                g->position.x = closestX - w2;
+            }
+            else
+            {
+                g->position.x = closestX;
+            }
 
-        if (g->position.y < g2->position.y)
-        {
-            g->position.y = closestY - h2;
-        }
-        else
-        {
-            g->position.y = closestY;
+            if (g->position.y < g2->position.y)
+            {
+                g->position.y = closestY - h2;
+            }
+            else
+            {
+                g->position.y = closestY;
+            }
         }
     }
     else
@@ -1470,13 +1478,16 @@ void Teleport(GameObject* g, float x, float y)
     GetCentre(g, &centreX, &centreY);
 
     int indexMid = GetIndex(_MAPSIZE/_GRAIN, floor((centreX) / (float)_GRAIN), floor((centreY) / (float)_GRAIN));
-
-    if (currMap->collision[indexMid] == false)
+    if (indexMid >= 0 && indexMid < _MAPSIZE/_GRAIN*_MAPSIZE/_GRAIN)
     {
-        g->position.x = beforeX;
-        g->position.y = beforeY;
-    }
+        if (currMap->collision[indexMid] == false)
+        {
+            g->position.x = beforeX;
+            g->position.y = beforeY;
+        }
 
+    }
+    
 }
 void GetOffsetCenter(GameObject* g, float* x, float* y)
 {
@@ -1707,4 +1718,41 @@ int GetNumPlayerControlledObjs(Player* p)
         }
     }
     return count;
+}
+void SetDecoration(GameObject* g, bool b)
+{
+    if (g)
+    {
+        if (b)
+        {
+            g->properties |= OBJ_IS_DECORATION;
+        }
+        else
+        {
+            g->properties &= ~OBJ_IS_DECORATION;
+        }
+    }
+   
+}
+bool ObjIsDecoration(GameObject* g)
+{
+    return (g->properties & OBJ_IS_DECORATION);
+}
+void SetInvincible(GameObject* g, bool b)
+{
+    if (g)
+    {
+        if (b)
+        {
+            g->properties |= OBJ_IS_INVINCIBLE;
+        }
+        else
+        {
+            g->properties &= ~OBJ_IS_INVINCIBLE;
+        }
+    }
+}
+bool ObjIsInvincible(GameObject* g)
+{
+    return (g->properties & OBJ_IS_INVINCIBLE);
 }

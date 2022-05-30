@@ -76,9 +76,17 @@ void DrawMouse(ALLEGRO_MOUSE_STATE* mouseState, GameObject* mousedOver)
     }
 
 }
+//float angle;
+//ALLEGRO_BITMAP* wheel;
 void DrawUnitChoiceUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
-            Rect selectedUnitsR = (Rect){8,146,240,41};
+        //angle += 0.1f;
+
+        //if (!wheel)
+         //   wheel = al_load_bitmap("assets/decor/wheel.png");
+       // al_draw_rotated_bitmap(wheel,41/2,41/2,50,50,DegToRad(angle),0);
+        
+        Rect selectedUnitsR = (Rect){8,146,240,41};
         Encounter* e = encounters[selectedEncounterIndex];
 
         int numUnitsInRect = GetNumObjectsInRect(&selectedUnitsR);

@@ -287,7 +287,10 @@ int L_GetY(lua_State* l)
 int L_GetHighestThreat(lua_State* l)
 {
     Threat* t = GetHighestThreat(&currGameObjRunning->threatList);
-    lua_pushnumber(l,t->obj-objects);
+    if (t)
+        lua_pushnumber(l,t->obj-objects);
+    else
+        return 0;
     return 1;
 }
 int L_SetThreatMultiplier(lua_State* l)
@@ -937,6 +940,29 @@ int L_SetAttacking(lua_State* l)
     if (index < 0 || index >= MAX_OBJS) 
         return 0; 
     currGameObjRunning->targObj = &objects[index];
+    return 0;
+}
+int L_SetInvincible(lua_State* l)
+{
+    int obj = lua_tonumber(l,1);
+    bool set = lua_toboolean(l,2);
+
+    if (obj >= 0 && obj < MAX_OBJS)
+    {
+        SetInvincible(&objects[obj],set);
+    }
+    return 0;
+}
+
+int L_SetDecoration(lua_State* l)
+{
+    int obj = lua_tonumber(l,1);
+    bool set = lua_toboolean(l,2);
+
+    if (obj >= 0 && obj < MAX_OBJS)
+    {
+        SetDecoration(&objects[obj],set);
+    }
     return 0;
 }
 int L_CreateObject(lua_State* l)
@@ -1595,5 +1621,10 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_PlayMusic);
     lua_setglobal(luaState, "PlayMusic");
 
+    lua_pushcfunction(luaState, L_SetDecoration);
+    lua_setglobal(luaState, "SetDecoration");
+
+    lua_pushcfunction(luaState, L_SetInvincible);
+    lua_setglobal(luaState, "SetInvincible");
 
 }

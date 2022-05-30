@@ -15,7 +15,9 @@ typedef enum GAMEOBJ_PROPERTIES
     OBJ_OWNED_BY = 2,
     OBJ_ACTIVE = 4,
     OBJ_CAN_PUSH = 8,
-    OBJ_IS_CHANNELLING = 16
+    OBJ_IS_CHANNELLING = 16,
+    OBJ_IS_DECORATION = 32,
+    OBJ_IS_INVINCIBLE = 64
     //OBJ_ATTACKING_TARGET = 8
 } GAMEOBJ_PROPERTIES;
 
@@ -115,6 +117,7 @@ typedef struct GameObject
 
     float summonTime;
     float summonMax;
+
 } GameObject;
 
 
@@ -130,6 +133,7 @@ int numFreeObjs;
 GameObject* prefabs;
 int numPrefabs;
 int numPrefabsAllocated;
+
 
 
 //add 8 more free objects when we need to realloc objects array
@@ -204,3 +208,7 @@ void LoadPrefabs(const char* dirPath);
 int GetNumObjectsInRect(Rect* r);
 void RemoveAllGameObjects();
 int GetNumPlayerControlledObjs(Player* p);
+void SetDecoration(GameObject* g, bool b);
+bool ObjIsDecoration(GameObject* g);
+void SetInvincible(GameObject* g, bool b);
+bool ObjIsInvincible(GameObject* g);

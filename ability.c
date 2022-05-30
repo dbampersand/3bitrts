@@ -105,7 +105,17 @@ void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE*
     
         if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
             ClearCommandQueue(currGameObjRunning);
-        CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->x,mouseState->y);
+        if (target)
+        {
+            if (!ObjIsInvincible(target))
+            {
+                CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->x,mouseState->y);
+            }
+            else
+                MoveCommand(currGameObjRunning,mouseState->x,mouseState->y);
+        }
+        else
+            CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->x,mouseState->y);
         //CastAbility(currGameObjRunning,currAbilityRunning,mouseState->x,mouseState->y,mouseState->x-midX,mouseState->y-midY,target);
         players[0].clickedThisFrame = target;
 

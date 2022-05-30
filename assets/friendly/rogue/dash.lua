@@ -5,7 +5,7 @@ function setup()
     SetAbilityRange(120)
     SetDescription("Dash\n\nDashes through enemies, dealing damage.")
     SetAbilityTargetHint(HINT_LINE)
-    SetAbilityCooldown(15);
+    SetAbilityCooldown(0);
 end
 function casted(x,y,obj,headingx,headingy)
     f1 = {};

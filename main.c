@@ -140,7 +140,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     for (int i = 0; i < numObjects; i++)
     {
         DrawChannelHint(&objects[i]);
-        if (i == objSelected || &objects[i] == players[0].clickedThisFrame)
+        if ((i == objSelected || &objects[i] == players[0].clickedThisFrame) && !ObjIsInvincible(&objects[i]))
         {
             DrawGameObj(&objects[i],true);
         }
@@ -196,7 +196,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             int foundIndex = 0;
             for (int i = 0; i < MAX_OBJS; i++)
             {
-                if (IsActive(&objects[i]))
+                if (IsActive(&objects[i]) && !ObjIsDecoration(&objects[i]))
                 {
                     Rect r2 = GetObjRect(&objects[i]);
 
@@ -245,7 +245,7 @@ int main(int argc, char* args[])
 
     //PlayMusic("assets/audio/first_boss.wav");
 
-    while (!gameState != GAMESTATE_EXIT) {
+    while (gameState != GAMESTATE_EXIT) {
         //al_set_mouse_xy(display, 128,128);
 
         
