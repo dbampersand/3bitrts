@@ -79,6 +79,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     GetControlGroup(keyState);
     UpdateDamageNumbers(dt);
     UpdatePlayerObjectInteractions(keyState,keyStateLastFrame,mouseState);
+    UpdateTransition(dt);
     for (int i = 0; i < numObjects; i++)
     {
         UpdateObject(&objects[i],dt);
@@ -108,7 +109,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     DrawMap();
     DrawAttacks(dt);
 
-    if (gameState == GAMESTATE_CHOOSING_UNITS) 
+    if (gameState == GAMESTATE_CHOOSING_UNITS || gameState == GAMESTATE_TRANSITION_TO_INGAME) 
     {
         DrawUnitChoiceUI(mouseState, mouseStateLastFrame);
     }
@@ -168,9 +169,10 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         DrawUI(keyState, keyStateLastFrame, mouseState);
     DrawMenus(mouseState);
     DrawAnimationEffects();
+    DrawTransition(dt);
 
     GameObject* mousedOver = GetMousedOver(mouseState);
-    if (gameState == GAMESTATE_CHOOSING_UNITS)
+    if (gameState == GAMESTATE_CHOOSING_UNITS || gameState == GAMESTATE_TRANSITION_TO_INGAME) 
     {
 
         Rect selectedUnitsR = (Rect){8,146,240,41};
@@ -209,6 +211,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             }
             SetGameStateToInGame(list,foundIndex,e); 
             free(list);
+            
         }
 
     }

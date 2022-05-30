@@ -8,8 +8,11 @@ end
 local angle = 0
 
 function update(dt)
-    angle = angle +  dt*5;
-    SetRotation(angle);
+    if (GetGamestate() == GAMESTATE_TRANSITION_TO_INGAME) then
+        Print("gg");
+        angle = angle +  dt*5;
+        SetRotation(angle);
+    end
 end
 
 function kill()

@@ -14,6 +14,7 @@
 #include "encounter.h"
 #include "sprite.h"
 #include "sound.h"
+#include "gamestate.h"
 
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);
@@ -284,6 +285,11 @@ int L_GetY(lua_State* l)
     }
     return 1;
 }
+int L_GetGamestate(lua_State* l)
+{
+    lua_pushnumber(l,gameState);
+    return 1;
+}
 int L_GetHighestThreat(lua_State* l)
 {
     Threat* t = GetHighestThreat(&currGameObjRunning->threatList);
@@ -291,6 +297,11 @@ int L_GetHighestThreat(lua_State* l)
         lua_pushnumber(l,t->obj-objects);
     else
         return 0;
+    return 1;
+}
+int L_GetRotation(lua_State* l)
+{
+    lua_pushnumber(l,currGameObjRunning->angle);
     return 1;
 }
 int L_SetRotation(lua_State* l)
@@ -1219,6 +1230,24 @@ void SetGlobals(lua_State* l)
     lua_setglobal(l,"DIFFICULTY_HARD");
     lua_pushinteger(l,DIFFICULTY_IMPOSSIBLE);
     lua_setglobal(l,"DIFFICULTY_IMPOSSIBLE");
+
+   lua_pushinteger(l,GAMESTATE_MAIN_MENU);
+    lua_setglobal(l,"GAMESTATE_MAIN_MENU");
+    lua_pushinteger(l,GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER);
+    lua_setglobal(l,"GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER");
+    lua_pushinteger(l,GAMESTATE_CHOOSING_ENCOUNTER);
+    lua_setglobal(l,"GAMESTATE_CHOOSING_ENCOUNTER");
+    lua_pushinteger(l,GAMESTATE_TRANSITION_TO_CHOOSING_UNITS);
+    lua_setglobal(l,"GAMESTATE_TRANSITION_TO_CHOOSING_UNITS");
+    lua_pushinteger(l,GAMESTATE_CHOOSING_UNITS);
+    lua_setglobal(l,"GAMESTATE_CHOOSING_UNITS");
+    lua_pushinteger(l,GAMESTATE_TRANSITION_TO_INGAME);
+    lua_setglobal(l,"GAMESTATE_TRANSITION_TO_INGAME");
+    lua_pushinteger(l,GAMESTATE_INGAME);
+    lua_setglobal(l,"GAMESTATE_INGAME");
+    lua_pushinteger(l,GAMESTATE_EXIT);
+    lua_setglobal(l,"GAMESTATE_EXIT");
+
 }
 int L_ApplyEffect(lua_State* l)
 {
@@ -1635,5 +1664,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetRotation);
     lua_setglobal(luaState, "SetRotation");
+
+    lua_pushcfunction(luaState, L_GetRotation);
+    lua_setglobal(luaState, "GetRotation");
+
+    lua_pushcfunction(luaState, L_GetGamestate);
+    lua_setglobal(luaState, "GetGamestate");
 
 }
