@@ -9,7 +9,6 @@ local angle = 0
 
 function update(dt)
     if (GetGamestate() == GAMESTATE_TRANSITION_TO_INGAME) then
-        Print("gg");
         angle = angle +  dt*5;
         SetRotation(angle);
     end

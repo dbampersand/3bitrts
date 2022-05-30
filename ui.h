@@ -147,6 +147,10 @@ typedef struct UI
 
     Sound* uiClickedSound;
 
+    UIElement endScreen_Back;
+    UIElement endScreen_Retry;
+
+
 } UI;   
  
 UI ui;
@@ -192,3 +196,4 @@ bool cb(int line_num, const char *line, int size, void *extra);
 void SetOptions();
 void SetUITextStr(UI_Text* t, char* str);
 void DrawUnitChoiceUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
+void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);

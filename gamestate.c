@@ -80,6 +80,10 @@ void FinishTransition()
     {
         gameState = GAMESTATE_INGAME;
     }
+    if (gameState == GAMESTATE_TRANSITION_TO_END)
+    {
+        gameState = GAMESTATE_END;
+    }
 }
 void SetGameStateToChoosingParty()
 {
@@ -106,7 +110,8 @@ void CheckIfGameIsWon()
 {
     if (GetNumPlayerControlledObjs(&players[1]) == 0 && gameState == GAMESTATE_INGAME)
     {
-        gameState = GAMESTATE_CHOOSING_ENCOUNTER;
+        SetGameStateToEndscreen();
+        //gameState = GAMESTATE_CHOOSING_ENCOUNTER;
         StopMusic();
         SetMap(&maps[0]);
     }
@@ -116,7 +121,9 @@ void CheckIfGameIsLost()
 {
     if (GetNumPlayerControlledObjs(&players[0]) == 0 && gameState == GAMESTATE_INGAME)
     {
-        Quit();
+        SetGameStateToEndscreen();
+        StopMusic();
+
     }
 }
 void UpdateTransition(float dt)
@@ -193,5 +200,11 @@ void DrawTransition(float dt)
 }
 bool GameStateIsTransition(GameState* g)
 {
-    return (*g == GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER || *g == GAMESTATE_TRANSITION_TO_CHOOSING_UNITS || *g == GAMESTATE_TRANSITION_TO_INGAME);
+    return (*g == GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER || *g == GAMESTATE_TRANSITION_TO_CHOOSING_UNITS || *g == GAMESTATE_TRANSITION_TO_INGAME || *g == GAMESTATE_TRANSITION_TO_END);
+}
+void SetGameStateToEndscreen()
+{
+    gameState = GAMESTATE_TRANSITION_TO_END;
+    transitionTimer = 0;    
+
 }

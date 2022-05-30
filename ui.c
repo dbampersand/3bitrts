@@ -893,6 +893,12 @@ void InitUI()
     InitButton(&ui.audioOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/audio_tab_icon.png",true));
     InitButton(&ui.accessibilityOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/accessiblity_tab_icon.png",true));
 
+
+    //endScreen
+    InitButton(&ui.endScreen_Back,"Back","Back",16,224,104,16,0);
+    InitButton(&ui.endScreen_Retry,"Retry","Retry",136,224,104,16,0);
+
+
     ui.videoOptionsPanel.back = &ui.mainMenuPanel;
     ui.audioOptionsPanel.back = &ui.mainMenuPanel;
     ui.accessibilityOptionsPanel.back = &ui.mainMenuPanel;
@@ -1535,6 +1541,41 @@ void SetOptions()
         SetDisplaySize();
 
         free(newText);
+    }
+
+}
+void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+{
+    al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+    al_draw_text(ui.font,FRIENDLY,20,18,0,"Defeat");
+    al_draw_line(20,30,56,30,FRIENDLY,1);
+    al_draw_line(17,52,239,52,FRIENDLY,1);
+
+    al_draw_text(ui.font,ENEMY,16,70,0,"Wyrm");
+    al_draw_text(ui.font,ENEMY,90,89,0,"Augment 3");
+    al_draw_text(ui.font,ENEMY,90,111,0,"+20%% Damage");
+    al_draw_text(ui.font,ENEMY,185,111,0,"+15%% HP");
+    al_draw_text(ui.font,ENEMY,90,124,0,"Random damaging pools");
+
+    al_draw_text(ui.font,FRIENDLY,17,173,0,"Time: 2:30");
+    al_draw_text(ui.font,FRIENDLY,17,184,0,"Damage dealt: 200");
+    al_draw_text(ui.font,FRIENDLY,17,196,0,"Healing done: 100");
+
+
+    UpdateButton(16,224,&ui.endScreen_Back,mouseState,mouseStateLastFrame);
+    UpdateButton(136,224,&ui.endScreen_Retry,mouseState,mouseStateLastFrame);
+
+    DrawUIElement(&ui.endScreen_Back,16,224,mouseState,true,BG);
+    DrawUIElement(&ui.endScreen_Retry,136,224,mouseState,true,BG);
+
+
+    if (GetButtonIsClicked(&ui.endScreen_Back))
+    {
+        gameState = GAMESTATE_TRANSITION_END_TO_CHOOSE_ENCOUNTER;
+    }
+    if (GetButtonIsClicked(&ui.endScreen_Retry))
+    {
+        gameState = GAMESTATE_TRANSITION_END_TO_INGAME;
     }
 
 }

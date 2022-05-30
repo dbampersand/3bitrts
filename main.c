@@ -216,6 +216,11 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
     }
     DrawDamageNumbers();
+    if (gameState == GAMESTATE_END)
+    {
+        DrawEndScreen(mouseState,mouseStateLastFrame);
+    }
+
     DrawMenus(mouseState);
     DrawMouse(mouseState, mousedOver);
     players[0].clickedThisFrame = NULL;
