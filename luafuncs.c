@@ -293,6 +293,12 @@ int L_GetHighestThreat(lua_State* l)
         return 0;
     return 1;
 }
+int L_SetRotation(lua_State* l)
+{
+    float angle = lua_tonumber(l,1);
+    currGameObjRunning->angle = angle;
+    return 0;
+}
 int L_SetThreatMultiplier(lua_State* l)
 {
     currGameObjRunning->threatMultiplier = lua_tonumber(l,1);
@@ -1626,5 +1632,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetInvincible);
     lua_setglobal(luaState, "SetInvincible");
+
+    lua_pushcfunction(luaState, L_SetRotation);
+    lua_setglobal(luaState, "SetRotation");
 
 }

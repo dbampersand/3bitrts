@@ -239,7 +239,7 @@ bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MO
         shouldInvert = true;
     }
 
-    DrawSprite(s,x,y,color,shouldInvert);
+    DrawSprite(s,x,y,0,color,shouldInvert);
 
     if (shouldInvert)
         return true;
@@ -250,7 +250,7 @@ void DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c)
 {
     if (e->spriteIndex_Portrait > 0 && e->enabled)
     {
-        DrawSprite(&sprites[e->spriteIndex_Portrait],x,y,FRIENDLY,false);
+        DrawSprite(&sprites[e->spriteIndex_Portrait],x,y,0,FRIENDLY,false);
     }
 }
 bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, ALLEGRO_MOUSE_STATE* mouseState)
@@ -289,7 +289,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
     
     Sprite* s = &sprites[ui.panel_sprite_index];
     if (!s) return;
-    DrawSprite(s,1,UI_START_Y+1,FRIENDLY,false);
+    DrawSprite(s,1,UI_START_Y+1,0,FRIENDLY,false);
 
     GameObject* selected = players[0].selection[players[0].indexSelectedUnit];
     if (selected)
@@ -368,7 +368,7 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     al_draw_line(10,73,246,73,FRIENDLY,1);
     
     al_draw_text(ui.font,FRIENDLY,16,81,0,"Wyrm");
-    DrawSprite(&sprites[e->spriteIndex],17,102,ENEMY,false);
+    DrawSprite(&sprites[e->spriteIndex],17,102,0,ENEMY,false);
 
     Ability* mousedOver = NULL;
     mousedOver = DrawAbility(&e->abilities[0], 96, 80, ENEMY, mouseState) == true ? &e->abilities[0] : mousedOver;
@@ -1160,7 +1160,7 @@ void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, boo
     }
     if (b->spriteIndex)
     {
-        DrawSprite(&sprites[b->spriteIndex],x,y,FRIENDLY,false);
+        DrawSprite(&sprites[b->spriteIndex],x,y,0,FRIENDLY,false);
     }
 
 }
@@ -1401,14 +1401,14 @@ void DrawCursor(ALLEGRO_MOUSE_STATE* mouseState, int index, bool clicked)
 {
     if (mouseState->buttons & 1 || mouseState->buttons & 2)
     {
-        DrawSprite(&sprites[index],mouseState->x,mouseState->y,FRIENDLY,true);
-        DrawSprite(&sprites[index],mouseState->x,mouseState->y,BG,false);
+        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0,FRIENDLY,true);
+        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0,BG,false);
 
     }
     else
     {
-        DrawSprite(&sprites[index],mouseState->x,mouseState->y,BG,true);
-        DrawSprite(&sprites[index],mouseState->x,mouseState->y,FRIENDLY,false);
+        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0,BG,true);
+        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0,FRIENDLY,false);
     }
 
 

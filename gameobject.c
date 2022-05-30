@@ -84,6 +84,15 @@ void ProcessAttackMoveMouseCommand(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYB
 void UpdateObject(GameObject* g, float dt)
 {
     currGameObjRunning = g;
+    if (ObjIsDecoration(g))
+    {
+        if (currGameObjRunning->properties & OBJ_ACTIVE)
+        {
+            lua_rawgeti(luaState,LUA_REGISTRYINDEX,g->luafunc_update);
+            lua_pushnumber(luaState,dt);
+            lua_pcall(luaState,1,0,0);
+        }
+    }
         if (!IsActive(currGameObjRunning) || ObjIsDecoration(g))
             return;
         UpdateChannellingdObj(currGameObjRunning,dt);
@@ -1253,7 +1262,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
         c = BG;
     Sprite* s = &sprites[g->spriteIndex];
 
-    DrawSprite(s,g->position.x,g->position.y,c, IsSelected(g) || forceInverse);
+    DrawSprite(s,g->position.x,g->position.y,g->angle,c, IsSelected(g) || forceInverse);
    
     Rect selectRect;
     selectRect.w = al_get_bitmap_width(s->sprite);

@@ -111,21 +111,25 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
 
     return -1;
 }
-void DrawSprite(Sprite* sprite, int x, int y, ALLEGRO_COLOR tint, bool invert)
+void DrawSprite(Sprite* sprite, int x, int y, float angle, ALLEGRO_COLOR tint, bool invert)
 {
     if (sprite->sprite && !invert)
     {
         int w = al_get_bitmap_width(sprite->sprite);
         int h = al_get_bitmap_height(sprite->sprite);
 
-        al_draw_tinted_scaled_bitmap(sprite->sprite,tint,0,0,w,h,x,y,w,h,0);
+        //al_draw_tinted_scaled_bitmap(sprite->sprite,tint,0,0,w,h,x,y,w,h,0);
+        al_draw_tinted_scaled_rotated_bitmap(sprite->sprite,tint,w/2,h/2,x+w/2,y+h/2,1,1,angle,0);
+
     }
     if (sprite->inverseSprite && invert)
     {
         int w = al_get_bitmap_width(sprite->inverseSprite);
         int h = al_get_bitmap_height(sprite->inverseSprite);
 
-        al_draw_tinted_scaled_bitmap(sprite->inverseSprite,tint,0,0,w,h,x,y,w,h,0);
+        //al_draw_tinted_scaled_bitmap(sprite->inverseSprite,tint,0,0,w,h,x,y,w,h,0);
+        al_draw_tinted_scaled_rotated_bitmap(sprite->inverseSprite,tint,w/2,h/2,x+w/2,y+h/2,1,1,angle,0);
+
     }
 }
 void DrawSpriteRegion(Sprite* sprite, float sx, float sy, float sw, float sh, float dx, float dy, ALLEGRO_COLOR tint, bool invert)

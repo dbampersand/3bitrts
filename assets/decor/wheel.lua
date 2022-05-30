@@ -8,7 +8,8 @@ end
 local angle = 0
 
 function update(dt)
-
+    angle = angle +  dt*5;
+    SetRotation(angle);
 end
 
 function kill()

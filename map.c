@@ -145,5 +145,5 @@ void InitMaps()
 }
 void DrawMap()
 {
-    DrawSprite(&sprites[currMap->spriteIndex],0,0,GROUND,false);
+    DrawSprite(&sprites[currMap->spriteIndex],0,0,0,GROUND,false);
 }
