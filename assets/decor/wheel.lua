@@ -8,8 +8,8 @@ end
 local angle = 0
 
 function update(dt)
-    if (GetGamestate() == GAMESTATE_TRANSITION_TO_INGAME) then
-        angle = angle +  dt*5;
+    if (GetTransitioningTo() ==  GAMESTATE_INGAME) then
+       angle = angle +  dt*5;
         SetRotation(angle);
     end
 end

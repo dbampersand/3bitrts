@@ -98,7 +98,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     al_grab_mouse(display);
     al_set_target_bitmap(SCREEN);
     
-    if (gameState == GAMESTATE_CHOOSING_ENCOUNTER || gameState == GAMESTATE_TRANSITION_TO_CHOOSING_UNITS)
+    if (gameState == GAMESTATE_CHOOSING_ENCOUNTER)
     {
         DrawLevelSelect(mouseState,mouseStateLastFrame);
         DrawMouse(mouseState, NULL);
@@ -110,7 +110,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     DrawMap();
     DrawAttacks(dt);
 
-    if (gameState == GAMESTATE_CHOOSING_UNITS || gameState == GAMESTATE_TRANSITION_TO_INGAME) 
+    if (gameState == GAMESTATE_CHOOSING_UNITS)
     {
         DrawUnitChoiceUI(mouseState, mouseStateLastFrame);
     }
@@ -162,17 +162,17 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     {
         DrawHeldAbility(mouseState);
     }
-    if (gameState == GAMESTATE_MAIN_MENU || (gameState == GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER))
+    if (gameState == GAMESTATE_MAIN_MENU)
     {
         al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
     }
-    if (gameState != GAMESTATE_MAIN_MENU && gameState != GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER)
+    if (gameState != GAMESTATE_MAIN_MENU)
         DrawUI(keyState, keyStateLastFrame, mouseState);
     DrawMenus(mouseState);
     DrawAnimationEffects();
 
     GameObject* mousedOver = GetMousedOver(mouseState);
-    if (gameState == GAMESTATE_CHOOSING_UNITS || gameState == GAMESTATE_TRANSITION_TO_INGAME) 
+    if (gameState == GAMESTATE_CHOOSING_UNITS) 
     {
 
         Rect selectedUnitsR = (Rect){8,146,240,41};

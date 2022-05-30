@@ -261,6 +261,12 @@ int L_GetX(lua_State* l)
     }
     return 1;
 }
+int L_GamestateIsInTransition(lua_State* l)
+{
+    bool b = GameStateIsTransition(&gameState);
+    lua_pushboolean(l,b);
+    return 1;
+}
 int L_GetY(lua_State* l)
 {
     float x; float y; 
@@ -1052,6 +1058,11 @@ int L_IsPlayerChoosable(lua_State* l)
     currGameObjRunning->playerChoosable = lua_toboolean(l,1);
     return 0;
 }
+int L_GetTransitioningTo(lua_State* l)
+{
+    lua_pushnumber(l,transitioningTo);
+    return 1;
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -1233,16 +1244,10 @@ void SetGlobals(lua_State* l)
 
    lua_pushinteger(l,GAMESTATE_MAIN_MENU);
     lua_setglobal(l,"GAMESTATE_MAIN_MENU");
-    lua_pushinteger(l,GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER);
-    lua_setglobal(l,"GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER");
     lua_pushinteger(l,GAMESTATE_CHOOSING_ENCOUNTER);
     lua_setglobal(l,"GAMESTATE_CHOOSING_ENCOUNTER");
-    lua_pushinteger(l,GAMESTATE_TRANSITION_TO_CHOOSING_UNITS);
-    lua_setglobal(l,"GAMESTATE_TRANSITION_TO_CHOOSING_UNITS");
     lua_pushinteger(l,GAMESTATE_CHOOSING_UNITS);
     lua_setglobal(l,"GAMESTATE_CHOOSING_UNITS");
-    lua_pushinteger(l,GAMESTATE_TRANSITION_TO_INGAME);
-    lua_setglobal(l,"GAMESTATE_TRANSITION_TO_INGAME");
     lua_pushinteger(l,GAMESTATE_INGAME);
     lua_setglobal(l,"GAMESTATE_INGAME");
     lua_pushinteger(l,GAMESTATE_EXIT);
@@ -1670,5 +1675,12 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetGamestate);
     lua_setglobal(luaState, "GetGamestate");
+
+
+    lua_pushcfunction(luaState, L_GamestateIsInTransition);
+    lua_setglobal(luaState, "GamestateIsInTransition");
+
+    lua_pushcfunction(luaState, L_GetTransitioningTo);
+    lua_setglobal(luaState, "GetTransitioningTo");
 
 }

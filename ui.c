@@ -1571,11 +1571,11 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
 
     if (GetButtonIsClicked(&ui.endScreen_Back))
     {
-        gameState = GAMESTATE_TRANSITION_END_TO_CHOOSE_ENCOUNTER;
+        transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
     }
     if (GetButtonIsClicked(&ui.endScreen_Retry))
     {
-        gameState = GAMESTATE_TRANSITION_END_TO_INGAME;
+        transitioningTo = GAMESTATE_INGAME;
     }
 
 }

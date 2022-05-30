@@ -29,7 +29,7 @@ void InitGameState()
 void SetGameStateToInGame(GameObject** list, int numObjectsToAdd, Encounter* e)
 {
     //gameState = GAMESTATE_INGAME;
-    gameState = GAMESTATE_TRANSITION_TO_INGAME;
+    transitioningTo = GAMESTATE_INGAME;
     transitionTimer = 0;
 
 
@@ -44,14 +44,17 @@ void SetGameStateToInGame(GameObject** list, int numObjectsToAdd, Encounter* e)
 void SetGameStateToChoosingEncounter()
 {
     //gameState = GAMESTATE_INGAME;
-    gameState = GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER;
+    transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
     transitionTimer = 0;
 
 }
 void FinishTransition()
 {
-    if (gameState == GAMESTATE_TRANSITION_TO_INGAME)
+    if (transitioningTo == GAMESTATE_INGAME)
     {
+        gameState = GAMESTATE_INGAME;
+        transitioningTo = GAMESTATE_INGAME;
+
         RemoveAllGameObjects();
         SetMap(LoadMap(encounterGoingTo->mapPath));
 
@@ -64,25 +67,27 @@ void FinishTransition()
             xPos += GetWidth(toSpawn[i]);
         }
         free(toSpawn);
+
     }
-    if (gameState == GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER)
+    if (transitioningTo == GAMESTATE_CHOOSING_ENCOUNTER)
     {
         gameState = GAMESTATE_CHOOSING_ENCOUNTER;
+        transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
+
         ui.currentPanel = NULL;
         ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
 
     }
-    if (gameState == GAMESTATE_TRANSITION_TO_CHOOSING_UNITS)
+    if (transitioningTo == GAMESTATE_CHOOSING_UNITS)
     {
         gameState = GAMESTATE_CHOOSING_UNITS;
+        transitioningTo = GAMESTATE_CHOOSING_UNITS;
     }
-    if (gameState == GAMESTATE_TRANSITION_TO_INGAME)
-    {
-        gameState = GAMESTATE_INGAME;
-    }
-    if (gameState == GAMESTATE_TRANSITION_TO_END)
+    if (transitioningTo == GAMESTATE_END)
     {
         gameState = GAMESTATE_END;
+        transitioningTo = GAMESTATE_END;
+
     }
 }
 void SetGameStateToChoosingParty()
@@ -98,7 +103,7 @@ void SetGameStateToChoosingParty()
             xPos+=GetWidth(&prefabs[i]);
         }   
     }
-    gameState = GAMESTATE_TRANSITION_TO_CHOOSING_UNITS;
+    transitioningTo = GAMESTATE_CHOOSING_UNITS;
     transitionTimer = 0;
 
 }
@@ -108,6 +113,9 @@ void Quit()
 }
 void CheckIfGameIsWon()
 {
+    if (GameStateIsTransition(&gameState)) 
+        return;
+
     if (GetNumPlayerControlledObjs(&players[1]) == 0 && gameState == GAMESTATE_INGAME)
     {
         SetGameStateToEndscreen();
@@ -119,6 +127,8 @@ void CheckIfGameIsWon()
 }
 void CheckIfGameIsLost()
 {
+    if (GameStateIsTransition(&gameState)) 
+        return;
     if (GetNumPlayerControlledObjs(&players[0]) == 0 && gameState == GAMESTATE_INGAME)
     {
         SetGameStateToEndscreen();
@@ -200,11 +210,11 @@ void DrawTransition(float dt)
 }
 bool GameStateIsTransition(GameState* g)
 {
-    return (*g == GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER || *g == GAMESTATE_TRANSITION_TO_CHOOSING_UNITS || *g == GAMESTATE_TRANSITION_TO_INGAME || *g == GAMESTATE_TRANSITION_TO_END);
+    return *g != transitioningTo;//(*g == GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER || *g == GAMESTATE_TRANSITION_TO_CHOOSING_UNITS || *g == GAMESTATE_TRANSITION_TO_INGAME || *g == GAMESTATE_TRANSITION_TO_END);
 }
 void SetGameStateToEndscreen()
 {
-    gameState = GAMESTATE_TRANSITION_TO_END;
+    transitioningTo = GAMESTATE_END;
     transitionTimer = 0;    
 
 }
