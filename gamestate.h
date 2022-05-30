@@ -40,6 +40,7 @@ Encounter* encounterGoingTo;
 void StartCombat();
 void InitGameState();
 void SetGameStateToChoosingParty();
+void SetGameStateToChoosingEncounter();
 void Quit();
 void CheckIfGameIsLost();
 void CheckIfGameIsWon();

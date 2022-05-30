@@ -11,6 +11,7 @@
 #include "colors.h"
 #include "helperfuncs.h"
 #include "math.h"
+#include "ui.h"
 void StartCombat()
 {
     if (combatStarted)
@@ -40,6 +41,13 @@ void SetGameStateToInGame(GameObject** list, int numObjectsToAdd, Encounter* e)
     encounterGoingTo = e;
 
 }
+void SetGameStateToChoosingEncounter()
+{
+    //gameState = GAMESTATE_INGAME;
+    gameState = GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER;
+    transitionTimer = 0;
+
+}
 void FinishTransition()
 {
     if (gameState == GAMESTATE_TRANSITION_TO_INGAME)
@@ -60,6 +68,9 @@ void FinishTransition()
     if (gameState == GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER)
     {
         gameState = GAMESTATE_CHOOSING_ENCOUNTER;
+        ui.currentPanel = NULL;
+        ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
+
     }
     if (gameState == GAMESTATE_TRANSITION_TO_CHOOSING_UNITS)
     {
@@ -83,7 +94,8 @@ void SetGameStateToChoosingParty()
             xPos+=GetWidth(&prefabs[i]);
         }   
     }
-    gameState = GAMESTATE_CHOOSING_UNITS;
+    gameState = GAMESTATE_TRANSITION_TO_CHOOSING_UNITS;
+    transitionTimer = 0;
 
 }
 void Quit()

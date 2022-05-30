@@ -141,13 +141,13 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_S
     {
         if (GetButton(&ui.mainMenuPanel,"Return"))
         {
-            ui.currentPanel = NULL;
+            //ui.currentPanel = NULL;
             if (gameState == GAMESTATE_MAIN_MENU)
             {
-                gameState = GAMESTATE_CHOOSING_ENCOUNTER;
+                SetGameStateToChoosingEncounter();
+                //gameState = GAMESTATE_CHOOSING_ENCOUNTER;
                 StopMusic();
                 combatStarted = false;
-                ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
             }
         }
         if (GetButton(&ui.mainMenuPanel,"Options"))

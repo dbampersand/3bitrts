@@ -79,7 +79,6 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     GetControlGroup(keyState);
     UpdateDamageNumbers(dt);
     UpdatePlayerObjectInteractions(keyState,keyStateLastFrame,mouseState);
-    UpdateTransition(dt);
     for (int i = 0; i < numObjects; i++)
     {
         UpdateObject(&objects[i],dt);
@@ -99,10 +98,12 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     al_grab_mouse(display);
     al_set_target_bitmap(SCREEN);
     
-    if (gameState == GAMESTATE_CHOOSING_ENCOUNTER)
+    if (gameState == GAMESTATE_CHOOSING_ENCOUNTER || gameState == GAMESTATE_TRANSITION_TO_CHOOSING_UNITS)
     {
         DrawLevelSelect(mouseState,mouseStateLastFrame);
         DrawMouse(mouseState, NULL);
+        DrawTransition(dt);
+
         return;
     }
 
@@ -161,15 +162,14 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     {
         DrawHeldAbility(mouseState);
     }
-    if (gameState == GAMESTATE_MAIN_MENU)
+    if (gameState == GAMESTATE_MAIN_MENU || (gameState == GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER))
     {
         al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
     }
-    if (gameState != GAMESTATE_MAIN_MENU)
+    if (gameState != GAMESTATE_MAIN_MENU && gameState != GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER)
         DrawUI(keyState, keyStateLastFrame, mouseState);
     DrawMenus(mouseState);
     DrawAnimationEffects();
-    DrawTransition(dt);
 
     GameObject* mousedOver = GetMousedOver(mouseState);
     if (gameState == GAMESTATE_CHOOSING_UNITS || gameState == GAMESTATE_TRANSITION_TO_INGAME) 
@@ -180,8 +180,8 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
         if (GetButtonIsClicked(&ui.choosingUnits_Back))
         {
-            gameState = GAMESTATE_CHOOSING_ENCOUNTER;
-            ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
+            SetGameStateToChoosingEncounter();
+            //gameState = GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER;
         }
 
         if (GetButtonIsClicked(&ui.choosingUnits_GO) && numUnitsInRect==encounters[selectedEncounterIndex]->numUnitsToSelect)
@@ -219,7 +219,9 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     DrawMenus(mouseState);
     DrawMouse(mouseState, mousedOver);
     players[0].clickedThisFrame = NULL;
-    
+
+
+    DrawTransition(dt);
 }
 
 void DrawMainMenu()
@@ -282,6 +284,8 @@ int main(int argc, char* args[])
                 StopMusic();
             }
             UpdateMusic(1/(float)_TARGET_FPS);
+
+            UpdateTransition(1/(float)_TARGET_FPS);
 
             if (!ui.currentPanel)
                 Update(1/(float)_TARGET_FPS,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
