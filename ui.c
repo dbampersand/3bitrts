@@ -1553,7 +1553,7 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
 
     al_draw_text(ui.font,ENEMY,16,70,0,"Wyrm");
     Sprite* sEnemy = &sprites[currEncounterRunning->spriteIndex];
-    DrawSprite(sEnemy,170,91,0,ENEMY,false);
+    DrawSprite(sEnemy,17,91,0,ENEMY,false);
 
     al_draw_text(ui.font,ENEMY,90,89,0,"Augment 3");
     al_draw_text(ui.font,ENEMY,90,111,0,"+20%% Damage");
