@@ -1552,6 +1552,9 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
     al_draw_line(17,52,239,52,FRIENDLY,1);
 
     al_draw_text(ui.font,ENEMY,16,70,0,"Wyrm");
+    Sprite* sEnemy = &sprites[currEncounterRunning->spriteIndex];
+    DrawSprite(sEnemy,170,91,0,ENEMY,false);
+
     al_draw_text(ui.font,ENEMY,90,89,0,"Augment 3");
     al_draw_text(ui.font,ENEMY,90,111,0,"+20%% Damage");
     al_draw_text(ui.font,ENEMY,185,111,0,"+15%% HP");
@@ -1567,8 +1570,15 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
 
     DrawUIElement(&ui.endScreen_Back,16,224,mouseState,true,BG);
     DrawUIElement(&ui.endScreen_Retry,136,224,mouseState,true,BG);
-
-
+    
+    int x = 86;
+    int y = 139;
+    for (int i = 0; i < encounterGoingTo->numUnitsToSelect; i++)
+    {
+        Sprite* s = &sprites[toSpawn[i]->spriteIndex];
+        DrawSprite(s,x,y,0,FRIENDLY,false);
+        x += GetWidth(toSpawn[i])+5;
+    }
     if (GetButtonIsClicked(&ui.endScreen_Back))
     {
         transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;

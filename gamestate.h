@@ -34,6 +34,7 @@ typedef struct Encounter Encounter;
 
 GameState transitioningTo;
 float transitionTimer;
+
 GameObject** toSpawn;
 
 Encounter* encounterGoingTo;

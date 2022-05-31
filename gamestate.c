@@ -28,11 +28,11 @@ void InitGameState()
 }
 void SetGameStateToInGame(GameObject** list, int numObjectsToAdd, Encounter* e)
 {
-    //gameState = GAMESTATE_INGAME;
     transitioningTo = GAMESTATE_INGAME;
     transitionTimer = 0;
 
-
+    if (toSpawn)
+        free(toSpawn);
     toSpawn = calloc(e->numUnitsToSelect,sizeof(GameObject*));
     for (int i = 0; i < e->numUnitsToSelect; i++)
     {
@@ -66,7 +66,7 @@ void FinishTransition()
             AddGameobject(toSpawn[i],80+xPos,180);   
             xPos += GetWidth(toSpawn[i]);
         }
-        free(toSpawn);
+        //free(toSpawn);
 
     }
     if (transitioningTo == GAMESTATE_CHOOSING_ENCOUNTER)
@@ -87,6 +87,8 @@ void FinishTransition()
     {
         gameState = GAMESTATE_END;
         transitioningTo = GAMESTATE_END;
+        StopMusic();
+        SetMap(&maps[0]);
 
     }
 }
@@ -120,8 +122,8 @@ void CheckIfGameIsWon()
     {
         SetGameStateToEndscreen();
         //gameState = GAMESTATE_CHOOSING_ENCOUNTER;
-        StopMusic();
-        SetMap(&maps[0]);
+        //StopMusic();
+        //SetMap(&maps[0]);
     }
 
 }

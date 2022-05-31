@@ -67,6 +67,7 @@ void init()
     SetMap(&maps[0]);
     LoadPrefabs("assets/friendly");
 
+    toSpawn = NULL;
 
 }
 
