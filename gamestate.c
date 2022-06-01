@@ -46,8 +46,6 @@ void SetGameStateToChoosingEncounter()
     //gameState = GAMESTATE_INGAME;
     transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
     transitionTimer = 0;
-    
-
 }
 void FinishTransition()
 {
