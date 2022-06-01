@@ -796,6 +796,10 @@ void KillObj(GameObject* g)
             g->abilities[i].description = NULL;
         }
     }
+    if (g->channelledAbility)
+    {
+        
+    }
 }   
 
 void LoadFolderPrefabs(const char* dirPath, char* name)
@@ -1667,39 +1671,42 @@ void UpdateChannellingdObj(GameObject* g, float dt)
 float ang = 0;
 void DrawChannelHint(GameObject* g)
 {
-
-    if (ObjIsChannelling(g) && g->channelledAbility)
+    if (IsActive(g))
     {
-        Ability* a  = g->channelledAbility;
-        float x; float y; GetCentre(g,&x,&y);
-        float x2; float y2;
-        ALLEGRO_COLOR col = GetPlayerOwnedBy(g) == 0 ? FRIENDLY : ENEMY;
-        if (g->channelled_target)
-        {
-            GetCentre(g->channelled_target,&x2,&y2);
-        }
-        else
-        {
-            x2 = g->channelled_x;
-            x2 = g->channelled_y;
-        }
-        if (a->targetingHint == HINT_LINE)
-        {
-            al_draw_line(x,y,x2,y2,col,1);
-        }
-        if (a->targetingHint == HINT_CIRCLE)
-        {
-            al_draw_circle(x2,y2,a->hintRadius,col,1);
-        }
-        if (a->targetingHint == HINT_CONE)
-        {
-            float angle;
-            angle = atan2(y2-y,x2-x);
-            float length = dist(x,y,x2,y2);
-            DrawCone(x,y,RadToDeg(angle),90,a->hintRadius,ENEMY);   
-        }
+        if (ObjIsChannelling(g) && g->channelledAbility)
+            {
+                Ability* a  = g->channelledAbility;
+                float x; float y; GetCentre(g,&x,&y);
+                float x2; float y2;
+                ALLEGRO_COLOR col = GetPlayerOwnedBy(g) == 0 ? FRIENDLY : ENEMY;
+                if (g->channelled_target)
+                {
+                    GetCentre(g->channelled_target,&x2,&y2);
+                }
+                else
+                {
+                    x2 = g->channelled_x;
+                    x2 = g->channelled_y;
+                }
+                if (a->targetingHint == HINT_LINE)
+                {
+                    al_draw_line(x,y,x2,y2,col,1);
+                }
+                if (a->targetingHint == HINT_CIRCLE)
+                {
+                    al_draw_circle(x2,y2,a->hintRadius,col,1);
+                }
+                if (a->targetingHint == HINT_CONE)
+                {
+                    float angle;
+                    angle = atan2(y2-y,x2-x);
+                    float length = dist(x,y,x2,y2);
+                    DrawCone(x,y,RadToDeg(angle),90,a->hintRadius,ENEMY);   
+                }
 
+            }
     }
+   
 }
 
 void RemoveAllGameObjects()
