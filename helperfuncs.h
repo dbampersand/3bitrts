@@ -37,3 +37,4 @@ float magnitude(float* x, float* y);
 void RotatePointF(float* x, float* y, float cx, float cy, float angle);
 int NumDigits(int i);
 float clamp(float f, float min, float max);
+float Towards(float f, float to, float maxDist);

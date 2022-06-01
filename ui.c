@@ -931,9 +931,84 @@ void InitUI()
     InitFonts();
 
     ui.currentPanel = &ui.mainMenuPanel;
-    ui.panelShownPercent=1.0f;
+    ui.panelShownPercent = 1.0f;
     ui.animatePanel = UI_ANIMATE_STATIC;
 
+
+    for (int i = 0; i < NUMGAMESTATES; i++)
+    {
+        Widgets_States[i] = calloc(NUMSPRITESTATESTOALLOC,sizeof(Widget));
+        numSprites_States[i] = 0;
+    }
+    int gear32 = LoadSprite("assets/ui/gear32x32.png",false);
+    int gear64 = LoadSprite("assets/ui/gear64x64.png",false);
+
+    int x = -5;
+    for (int i = 0; i < _SCREEN_SIZE/32; i++)
+    {   
+        CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x,0,DRAWORDER_AFTERUI,0);
+        CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x+16,18,DRAWORDER_AFTERUI,0);
+
+        CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x,_SCREEN_SIZE-32,DRAWORDER_AFTERUI,0);
+        CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x+16,_SCREEN_SIZE-50,DRAWORDER_AFTERUI,0);
+
+        x+=31;
+    }
+
+}
+void UpdateWidget(Widget* w, float dt)
+{
+    w->x = Towards(w->x,w->desiredX,w->velocity*dt);
+    w->y = Towards(w->y,w->desiredY,w->velocity*dt);
+    w->rotation += w->rotationSpeed*dt; 
+
+    if (gameState == GAMESTATE_MAIN_MENU)
+    {
+        w->rotationSpeed = (sqrt(transitionTimer)*sqrt(transitionTimer)) * 1000 * dt;
+    }
+}
+
+void UpdateWidgets(float dt)
+{
+    for (int i = 0; i < NUMGAMESTATES; i++)
+    {
+        for (int j = 0; j < numSprites_States[i]; j++)
+        {
+            Widget* w = &Widgets_States[i][j];
+            UpdateWidget(w,dt);
+        }
+    }
+}
+void CreateWidget(GameState gameStateToAttach, Sprite* spr, int x, int y, Widget_DrawOrder drawOrder, int id)
+{
+    Widget s = {0};
+    s.spriteIndex = spr - sprites;
+    s.drawOrder = drawOrder;
+    s.x = x;
+    s.y = y;
+    s.desiredX = x;
+    s.desiredY = y;
+    s.id = id;
+    if ((numSprites_States[gameStateToAttach] + 1) % NUMSPRITESTATESTOALLOC == 0)
+    {
+        int reallocTo = ceil(numSprites_States[gameStateToAttach] + NUMSPRITESTATESTOALLOC)/(float)NUMSPRITESTATESTOALLOC+1;
+        Widgets_States[gameStateToAttach] = realloc(Widgets_States[gameStateToAttach],NUMSPRITESTATESTOALLOC * reallocTo*sizeof(Widget));
+    }
+    Widgets_States[gameStateToAttach][numSprites_States[gameStateToAttach]] = s;
+    numSprites_States[gameStateToAttach]++;
+}
+void DrawWidgets(GameState currentState, Widget_DrawOrder drawOrderToDraw)
+{
+    int numWidgets = numSprites_States[currentState];
+    for (int i = 0; i < numWidgets; i++)
+    {
+        Widget* u = &Widgets_States[currentState][i];
+        if (u->drawOrder == drawOrderToDraw)
+        {
+            Sprite* s = &sprites[u->spriteIndex];
+            DrawSprite(s,u->x,u->y,u->rotation,FRIENDLY,false);
+        }
+    }
 }
 void InitFonts()
 {

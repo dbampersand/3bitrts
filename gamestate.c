@@ -46,6 +46,7 @@ void SetGameStateToChoosingEncounter()
     //gameState = GAMESTATE_INGAME;
     transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
     transitionTimer = 0;
+    
 
 }
 void FinishTransition()
@@ -120,10 +121,8 @@ void CheckIfGameIsWon()
 
     if (GetNumPlayerControlledObjs(&players[1]) == 0 && gameState == GAMESTATE_INGAME)
     {
+        gameWon = true;
         SetGameStateToEndscreen();
-        //gameState = GAMESTATE_CHOOSING_ENCOUNTER;
-        //StopMusic();
-        //SetMap(&maps[0]);
     }
 
 }
@@ -133,9 +132,9 @@ void CheckIfGameIsLost()
         return;
     if (GetNumPlayerControlledObjs(&players[0]) == 0 && gameState == GAMESTATE_INGAME)
     {
+        gameWon = false;
         SetGameStateToEndscreen();
         StopMusic();
-
     }
 }
 void UpdateTransition(float dt)

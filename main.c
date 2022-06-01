@@ -91,6 +91,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
     UpdateParticles(dt);
     ProcessAnimationEffects(dt);
+    UpdateWidgets(dt);
 }
 
 void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
@@ -109,6 +110,9 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     }
 
     DrawMap();
+    
+    
+    DrawWidgets(gameState, DRAWORDER_BEFOREUI);
     DrawAttacks(dt);
 
     if (gameState == GAMESTATE_CHOOSING_UNITS)
@@ -223,6 +227,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     }
 
     DrawMenus(mouseState);
+    DrawWidgets(gameState, DRAWORDER_AFTERUI);
     DrawMouse(mouseState, mousedOver);
     players[0].clickedThisFrame = NULL;
 
@@ -293,7 +298,7 @@ int main(int argc, char* args[])
 
             UpdateTransition(1/(float)_TARGET_FPS);
 
-            if (!ui.currentPanel)
+            //if (!ui.currentPanel)
                 Update(1/(float)_TARGET_FPS,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
             UpdateInterface(1/(float)_TARGET_FPS,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
             if (gameState == GAMESTATE_EXIT)

@@ -42,3 +42,4 @@ int numEncountersAlloced;
 Encounter* currEncounterRunning;
 
 int selectedEncounterIndex;
+bool gameWon;

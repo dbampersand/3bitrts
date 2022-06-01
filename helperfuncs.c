@@ -284,3 +284,24 @@ int NumDigits(int i)
         return 1;
     return (int)ceil(log10(i))+1;
 }
+float Towards(float f, float to, float maxDist)
+{
+    if (f == to)
+        return f;
+    f += maxDist;
+    if (to > 0)
+    {
+        if (f > maxDist)
+        {
+            f = maxDist;
+        }
+    }
+    else
+    {
+        if (f < maxDist)
+        {
+            f = maxDist;
+        }
+    }
+    return f;
+}

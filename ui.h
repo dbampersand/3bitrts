@@ -3,7 +3,7 @@
 #include "sprite.h"
 #include "rect.h"
 #include "stdbool.h"
-
+#include "gamestate.h"
 //error printf colour
 #define COL_ERR  "\x1B[31m"
 
@@ -109,6 +109,11 @@ typedef enum UI_AnimState
     UI_ANIMATE_IN,
     UI_ANIMATE_OUT
 } UI_AnimState;
+typedef enum Widget_DrawOrder
+{
+    DRAWORDER_BEFOREUI,
+    DRAWORDER_AFTERUI,
+} Widget_DrawOrder;
 typedef struct UI
 {
     int panel_sprite_index;
@@ -153,11 +158,27 @@ typedef struct UI
 
 } UI;   
  
+typedef struct Widget
+{
+    int spriteIndex;
+    float rotation;
+    float rotationSpeed;
+    Widget_DrawOrder drawOrder;
+    int x; int y;
+    int desiredX; int desiredY;
+    int id;
+    float velocity;
+} Widget;
+Widget* Widgets_States[NUMGAMESTATES];
+int numSprites_States[NUMGAMESTATES];
+#define NUMSPRITESTATESTOALLOC 16
+
 UI ui;
 
 #define UI_PADDING 5
 typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE;
 typedef struct Ability Ability;
+void CreateWidget(GameState gameStateToAttach, Sprite* spr, int x, int y, Widget_DrawOrder drawOrder,int id);
 void DrawMouse(ALLEGRO_MOUSE_STATE* mouseState, GameObject* mousedOver);
 void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState);
 void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
@@ -197,3 +218,6 @@ void SetOptions();
 void SetUITextStr(UI_Text* t, char* str);
 void DrawUnitChoiceUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
+void DrawWidgets(GameState currentState, Widget_DrawOrder drawOrderToDraw);
+void UpdateWidgets(float dt);
+void UpdateWidget(Widget* w, float dt);
