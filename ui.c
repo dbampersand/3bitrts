@@ -459,7 +459,8 @@ void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int
     u.elementType = ELEMENT_BUTTON;
     u.x = x;
     u.enabled = true;
-
+    u.sound_clickDown_Index = ui.uiClickedSound_Index;
+    u.sound_clickUp_Index = ui.uiClickedUpSound_Index;
     AddElement(p,&u);
 }
 void UpdateSlider(Slider* s, int x, int y, int w, int h, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
@@ -544,6 +545,9 @@ void InitButton(UIElement* u, char* name, char* description, int x, int y, int w
     u->elementType = ELEMENT_BUTTON;
     u->x = x;
     u->y = y;
+    u->sound_clickDown_Index = ui.uiClickedSound_Index;
+    u->sound_clickUp_Index = ui.uiClickedUpSound_Index;
+
 }
 void ChangeButtonText(Button* b, char* newstr)
 {
@@ -1028,6 +1032,10 @@ bool GetButton(Panel* p, char* name)
         if (strcasecmp(u->name,name)==0)
         {
             Button* b = (Button*)u->data;
+            if (b->activated)
+            {
+                PlaySound(&sounds[u->sound_clickDown_Index],0.5f);
+            }
             return (b->activated);
         }
     }
@@ -1074,6 +1082,10 @@ void UpdateButton(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState,
         Rect r = (Rect){rX,rY,u->w,u->h};
         if (PointInRect(mouseState->x,mouseState->y,r))
         {
+            if (!b->clicked)
+            {
+                PlaySound(&sounds[u->sound_clickUp_Index],0.5f);
+            }
             b->clicked = true;
         }
     }
@@ -1473,6 +1485,13 @@ bool GetButtonIsClicked(UIElement* u)
     if (u->elementType == ELEMENT_BUTTON)
     {
         Button* b = (Button*)(u->data);
+        if (b->activated)
+        {
+            if (u->sound_clickDown_Index)
+            {
+                PlaySound(&sounds[u->sound_clickDown_Index],0.5f);
+            }
+        }
         return b->activated;
     }
     return false;

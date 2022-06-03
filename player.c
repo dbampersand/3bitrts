@@ -45,7 +45,7 @@ void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STAT
     {
         if (players[0].selection[players[0].indexSelectedUnit]->abilities[index].cdTimer <= 0)
         {
-            PlaySound(ui.uiClickedSound);
+            PlaySound(&sounds[ui.uiClickedSound_Index],0.5f);
             players[0].abilityHeld = NULL;
             currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
             if (currGameObjRunning)

@@ -79,6 +79,9 @@ typedef struct UIElement
     UIElement_Align alignment;
     int x; int y;
     bool enabled;
+    int sound_clickDown_Index;
+    int sound_clickUp_Index;
+
 } UIElement;
 
 typedef struct Panel
@@ -150,7 +153,9 @@ typedef struct UI
     UIElement choosingUnits_Back;
     UIElement choosingUnits_GO;
 
-    Sound* uiClickedSound;
+    int uiClickedSound_Index;
+    int uiClickedUpSound_Index;
+
 
     UIElement endScreen_Back;
     UIElement endScreen_Retry;

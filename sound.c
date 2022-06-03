@@ -18,9 +18,17 @@ void InitSound()
     {
         sounds = calloc(NUMSOUNDSTOPREALLOC,sizeof(Sound));
         numSoundsAllocated = NUMSOUNDSTOPREALLOC;
-        numSounds = 0;
+        numSounds = 1;
+
+        //null sound
+        sounds[0].path = calloc(1,sizeof(char));
+        sounds[0].sample = NULL;
     }
-    ui.uiClickedSound = LoadSound("assets/audio/ui_click.wav");
+        
+    ui.uiClickedSound_Index = LoadSound("assets/audio/click.wav") - sounds;
+    ui.uiClickedUpSound_Index = LoadSound("assets/audio/click_up.wav") - sounds;
+
+
     musicMixer1 = al_create_mixer(44100, ALLEGRO_AUDIO_DEPTH_FLOAT32, ALLEGRO_CHANNEL_CONF_2);
     musicMixer2 = al_create_mixer(44100, ALLEGRO_AUDIO_DEPTH_FLOAT32, ALLEGRO_CHANNEL_CONF_2);
     musicVoice1 = al_create_voice(44100, ALLEGRO_AUDIO_DEPTH_INT16, ALLEGRO_CHANNEL_CONF_2);
@@ -28,6 +36,8 @@ void InitSound()
 
     al_attach_mixer_to_voice(musicMixer1, musicVoice1);
     al_attach_mixer_to_voice(musicMixer2, musicVoice2);
+
+    sfxVolume = 1;
    
 
 }
@@ -43,10 +53,14 @@ Sound* LoadSound(char* path)
 
     for (int i = 0; i < numSounds; i++)
     {
-        if (strcmp(sounds[i].path,path)==0)
+        if (sounds[i].path)
         {
-            return &sounds[i];
+            if (strcmp(sounds[i].path,path)==0)
+            {
+                return &sounds[i];
+            }
         }
+        
     }
 
     if (numSounds >= numSoundsAllocated)
@@ -62,9 +76,9 @@ Sound* LoadSound(char* path)
     return &sounds[numSounds-1];
 }
 
-void PlaySound(Sound* s)
+void PlaySound(Sound* s, float relativeVolume)
 {
-    al_play_sample(s->sample, 1.0f, 0, 1.0f, ALLEGRO_PLAYMODE_ONCE, NULL);
+    al_play_sample(s->sample, sfxVolume * relativeVolume, 0, 1.0f, ALLEGRO_PLAYMODE_ONCE, NULL);
 }
 void StopMusic()
 {

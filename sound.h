@@ -17,7 +17,7 @@ typedef enum MusicState {
 MusicState musicState;
 void InitSound();
 Sound* LoadSound();
-void PlaySound(Sound* s);
+void PlaySound(Sound* s, float relativeVolume);
 void PlayMusic(const char* path);
 void UpdateMusic(float dt);
 void PlayEncounterMusic();
@@ -44,3 +44,5 @@ char* musicPath;
 Sound* sounds;
 int numSoundsAllocated;
 int numSounds;
+
+float sfxVolume;
