@@ -5,6 +5,7 @@
 #include "luafuncs.h"
 #include "sound.h"
 
+
 void RemoveIndexFromSelection(Player* p, int index)
 {
     for (int i = index; i < MAXUNITSSELECTED-1; i++)
@@ -45,7 +46,7 @@ void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STAT
     {
         if (players[0].selection[players[0].indexSelectedUnit]->abilities[index].cdTimer <= 0)
         {
-            PlaySound(&sounds[ui.uiClickedSound_Index],0.5f);
+            PlaySound(&sounds[ability_UI_click_sound],0.5f);
             players[0].abilityHeld = NULL;
             currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
             if (currGameObjRunning)
@@ -68,8 +69,13 @@ void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STAT
 
     if (!al_key_down(keyState,ALLEGRO_KEY_ESCAPE) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_ESCAPE) )
     {
+        if (players[0].abilityHeld)
+        {
+            PlaySound(&sounds[ability_UI_click_up_sound],0.5f);
+        }
         players[0].abilityHeld = NULL;
         players[0].amoveSelected = false;
     }
+
 
 }

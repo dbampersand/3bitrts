@@ -1,7 +1,7 @@
 #pragma once
 
 #include <allegro5/allegro_audio.h>
-
+typedef int SoundIndex; 
 typedef struct Sound
 {
     ALLEGRO_SAMPLE* sample;
@@ -16,7 +16,7 @@ typedef enum MusicState {
 }MusicState;
 MusicState musicState;
 void InitSound();
-Sound* LoadSound();
+int LoadSound();
 void PlaySound(Sound* s, float relativeVolume);
 void PlayMusic(const char* path);
 void UpdateMusic(float dt);

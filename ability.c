@@ -15,8 +15,14 @@
 #include "video.h"
 #include "ui.h"
 #include "colors.h"
+#include "sound.h"
 
-
+void InitAbilities()
+{
+    ability_UI_click_sound = LoadSound("assets/audio/ability_down.wav");
+    ability_UI_click_up_sound = LoadSound("assets/audio/ability_up.wav");
+    
+}
 void DrawHeldAbility(ALLEGRO_MOUSE_STATE* mouseState)
 {
     float cx; float cy;

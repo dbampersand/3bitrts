@@ -120,6 +120,9 @@ typedef struct GameObject
     float summonTime;
     float summonMax;
 
+    int* attackSoundIndices;
+    int numAttackSounds;    
+
 } GameObject;
 
 

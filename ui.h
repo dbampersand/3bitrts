@@ -4,6 +4,7 @@
 #include "rect.h"
 #include "stdbool.h"
 #include "gamestate.h"
+#include "sound.h"
 //error printf colour
 #define COL_ERR  "\x1B[31m"
 
@@ -79,8 +80,8 @@ typedef struct UIElement
     UIElement_Align alignment;
     int x; int y;
     bool enabled;
-    int sound_clickDown_Index;
-    int sound_clickUp_Index;
+    SoundIndex sound_clickDown_Index;
+    SoundIndex sound_clickUp_Index;
 
 } UIElement;
 

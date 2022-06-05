@@ -58,6 +58,7 @@ void init()
 
     init_lua();
     InitAttacks();
+    InitAbilities();
     InitParticles();
     InitUI();
     

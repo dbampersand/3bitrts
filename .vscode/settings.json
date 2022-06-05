@@ -20,6 +20,7 @@
         "gamestate.h": "c",
         "limits.h": "c",
         "math.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "allegro.h": "c"
     }
 }

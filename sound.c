@@ -25,8 +25,8 @@ void InitSound()
         sounds[0].sample = NULL;
     }
         
-    ui.uiClickedSound_Index = LoadSound("assets/audio/click.wav") - sounds;
-    ui.uiClickedUpSound_Index = LoadSound("assets/audio/click_up.wav") - sounds;
+    ui.uiClickedSound_Index = LoadSound("assets/audio/click.wav");
+    ui.uiClickedUpSound_Index = LoadSound("assets/audio/click_up.wav");
 
 
     musicMixer1 = al_create_mixer(44100, ALLEGRO_AUDIO_DEPTH_FLOAT32, ALLEGRO_CHANNEL_CONF_2);
@@ -38,11 +38,9 @@ void InitSound()
     al_attach_mixer_to_voice(musicMixer2, musicVoice2);
 
     sfxVolume = 1;
-   
-
 }
 
-Sound* LoadSound(char* path)
+int LoadSound(char* path)
 {
     if (!sounds)
     {
@@ -57,7 +55,7 @@ Sound* LoadSound(char* path)
         {
             if (strcmp(sounds[i].path,path)==0)
             {
-                return &sounds[i];
+                return i;
             }
         }
         
@@ -73,7 +71,7 @@ Sound* LoadSound(char* path)
     sounds[numSounds].path = path;
     numSounds++;
 
-    return &sounds[numSounds-1];
+    return numSounds-1;
 }
 
 void PlaySound(Sound* s, float relativeVolume)
@@ -86,6 +84,7 @@ void StopMusic()
         al_destroy_audio_stream(music);
     if (musicFadingTo)
         al_destroy_audio_stream(musicFadingTo);
+
     music = NULL;
     musicFadingTo = NULL;
     musicVolMixer1 = 0;

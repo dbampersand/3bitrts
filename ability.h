@@ -1,6 +1,7 @@
 #pragma once
 
 #include "stdbool.h"
+#include "sound.h"
 
 typedef struct GameObject GameObject;
 
@@ -58,6 +59,11 @@ int numAbilities;
 int numAbilitiesAllocated; 
 
 
+SoundIndex ability_UI_click_sound;
+SoundIndex ability_UI_click_up_sound;
+
+
+
 typedef struct lua_State lua_State;
 typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE;
 typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE;
@@ -75,3 +81,4 @@ int GetAbilityIndexClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_ST
 void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyState);
 void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void DrawHeldAbility(ALLEGRO_MOUSE_STATE* mouseState);
+void InitAbilities();
