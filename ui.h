@@ -125,6 +125,7 @@ typedef struct UI
     int cursorCastingIndex;
     int cursorAttackIndex;
     int cursorFriendlyIndex;
+    
     ALLEGRO_FONT* font;
     ALLEGRO_FONT* boldFont;
     ALLEGRO_FONT* tinyFont;

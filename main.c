@@ -27,6 +27,7 @@
 #include "gamestate.h"
 #include "damagenumber.h"
 #include "sound.h"
+#include "loadscreen.h"
 
 
 
@@ -61,7 +62,7 @@ void init()
     InitAbilities();
     InitParticles();
     InitUI();
-    
+    InitLoadscreen("assets/ui/fullstartscreen.png");
     LoadEncounters("assets/encounters",luaState);
 
     Map* m = LoadMap("assets/ui/map_unitselect.lua");  
@@ -100,7 +101,6 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     al_hide_mouse_cursor(display);
     al_grab_mouse(display);
     al_set_target_bitmap(SCREEN);
-    
     if (gameState == GAMESTATE_CHOOSING_ENCOUNTER)
     {
         DrawLevelSelect(mouseState,mouseStateLastFrame);
@@ -232,6 +232,10 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     DrawMouse(mouseState, mousedOver);
     players[0].clickedThisFrame = NULL;
 
+    if (gameState == GAMESTATE_LOAD_SCREEN)
+    {
+        DrawLoadscreen();
+    }
 
     DrawTransition(dt);
 }

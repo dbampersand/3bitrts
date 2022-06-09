@@ -1,14 +1,15 @@
 #pragma once
 
 #include <stdbool.h>
-#define NUMGAMESTATES 6
+#define NUMGAMESTATES 7
 typedef enum GameState {
-    GAMESTATE_MAIN_MENU = 0,
-    GAMESTATE_CHOOSING_ENCOUNTER = 1,
-    GAMESTATE_CHOOSING_UNITS = 2,
-    GAMESTATE_INGAME = 3,
-    GAMESTATE_END = 4,
-    GAMESTATE_EXIT = 5
+    GAMESTATE_LOAD_SCREEN = 1,
+    GAMESTATE_MAIN_MENU = 2,
+    GAMESTATE_CHOOSING_ENCOUNTER = 3,
+    GAMESTATE_CHOOSING_UNITS = 4,
+    GAMESTATE_INGAME = 5,
+    GAMESTATE_END = 6,
+    GAMESTATE_EXIT = 7
 } GameState;
 GameState gameState;
 
@@ -39,11 +40,14 @@ GameObject** toSpawn;
 
 Encounter* encounterGoingTo;
 
+
 void StartCombat();
 void InitGameState();
 void SetGameStateToChoosingParty();
 void SetGameStateToChoosingEncounter();
 void SetGameStateToEndscreen();
+void SetGameStateToInMenu();
+
 
 void Quit();
 void CheckIfGameIsLost();

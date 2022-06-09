@@ -12,6 +12,7 @@
 #include "helperfuncs.h"
 #include "math.h"
 #include "ui.h"
+
 void StartCombat()
 {
     if (combatStarted)
@@ -23,7 +24,8 @@ void StartCombat()
 }
 void InitGameState()
 {
-    gameState = GAMESTATE_MAIN_MENU;
+    gameState = GAMESTATE_LOAD_SCREEN;
+    transitioningTo = gameState;
 
 }
 void SetGameStateToInGame(GameObject** list, int numObjectsToAdd, Encounter* e)
@@ -49,6 +51,11 @@ void SetGameStateToChoosingEncounter()
 }
 void FinishTransition()
 {
+    if (transitioningTo == GAMESTATE_MAIN_MENU)
+    {
+        gameState = GAMESTATE_MAIN_MENU;
+        transitioningTo = GAMESTATE_MAIN_MENU;
+    }
     if (transitioningTo == GAMESTATE_INGAME)
     {
         gameState = GAMESTATE_INGAME;
@@ -135,6 +142,7 @@ void CheckIfGameIsLost()
         StopMusic();
     }
 }
+
 void UpdateTransition(float dt)
 {
     if (GameStateIsTransition(&gameState))
@@ -216,4 +224,13 @@ void SetGameStateToEndscreen()
     transitioningTo = GAMESTATE_END;
     transitionTimer = 0;    
 
+}
+void SetGameStateToInMenu()
+{
+    transitioningTo = GAMESTATE_MAIN_MENU;
+    transitionTimer = 0;    
+}
+void DrawStartScreen()
+{
+    
 }

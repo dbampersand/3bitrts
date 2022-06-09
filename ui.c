@@ -20,7 +20,7 @@
 #include "helperfuncs.h"
 #include "sound.h"
 #include "luafuncs.h"
-
+#include "loadscreen.h"
 void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
     if (mouseStateLastFrame->buttons & 1)
@@ -1220,6 +1220,12 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
         UIElement* u = GetUIElement(&ui.videoOptionsPanel,"RenderScale-");
         u->enabled = true;
     }
+
+    if (gameState == GAMESTATE_LOAD_SCREEN)
+    {
+        UpdateLoadscreen(dt,keyState,mouseState);
+    }
+
 
 }
 void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive, ALLEGRO_COLOR bgColor)

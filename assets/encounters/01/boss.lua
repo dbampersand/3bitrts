@@ -51,7 +51,7 @@ function update(dt)
     end
 
     if (GetHP() <= 200) then
-        CastAbility(5,0);
+        CastAbility(4,0);
     end
     --if (j != nil)
      --   CastAbility(0,{ddasd});

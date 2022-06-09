@@ -9,6 +9,16 @@
 #include "gameobject.h"
 #include "colors.h"
 
+
+int GetWidthSprite(Sprite* s)
+{
+    return al_get_bitmap_width(s->sprite);
+}
+int GetHeightSprite(Sprite* s)
+{
+    return al_get_bitmap_height(s->sprite);
+}
+
 //loads a sprite, and also generates an inverse sprite for selection
 void GenerateInvertedSprite(Sprite* s)
 {

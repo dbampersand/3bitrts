@@ -26,3 +26,5 @@ void DrawSprite(Sprite* sprite, int x, int y, float angle, ALLEGRO_COLOR tint, b
 void GenerateInvertedSprite(Sprite* s);
 void DrawSpriteRegion(Sprite* s, float sx, float sy, float sw, float sh, float dx, float dy, ALLEGRO_COLOR tint, bool invert);
 void InitSprites();
+int GetHeightSprite(Sprite* s);
+int GetWidthSprite(Sprite* s);
