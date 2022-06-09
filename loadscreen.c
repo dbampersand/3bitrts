@@ -79,7 +79,10 @@ void DrawLoadscreen()
 
 }
 
-
+void FinishLoadScreen()
+{
+    SetGameStateToInMenu();
+}
 void UpdateLoadscreen(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState)
 {
 
@@ -116,7 +119,7 @@ void UpdateLoadscreen(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_
     {
         if (mouseState->buttons & 1 || mouseState->buttons & 2)
         {
-            SetGameStateToInMenu();
+            FinishLoadScreen();
         }
     }
 

@@ -257,6 +257,7 @@ int main(int argc, char* args[])
 
     al_register_event_source(queue, al_get_display_event_source(display));
    al_register_event_source(queue, al_get_timer_event_source(_FPS_TIMER));
+   al_register_event_source(queue, al_get_keyboard_event_source());
 
 
    ALLEGRO_KEYBOARD_STATE keyStateLastFrame;
@@ -273,7 +274,13 @@ int main(int argc, char* args[])
         ALLEGRO_EVENT event;
         al_wait_for_event(queue, &event);
 
-
+        if (gameState == GAMESTATE_LOAD_SCREEN)
+        {
+            if (event.type == ALLEGRO_EVENT_KEY_DOWN)
+            {
+                FinishLoadScreen();
+            }
+        }
         if (event.type == ALLEGRO_EVENT_TIMER) {
             
             int displayW = al_get_display_width(display);

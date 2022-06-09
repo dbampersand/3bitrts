@@ -39,4 +39,5 @@ float Transition_EaseInOutQuad(float timer);
 void DrawLoadscreen();
 void UpdateLoadscreen(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState);
 void SetLoadscreen(char* path, float transitionInTime, float moveTime, float pauseTime, float textInTime, float textHoldTime);
+void FinishLoadScreen();
 
