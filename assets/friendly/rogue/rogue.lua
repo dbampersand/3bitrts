@@ -1,3 +1,5 @@
+local maxHP = 200;
+
 function setup()
     SetSprite("assets/friendly/rogue/rogue.png");
     AddAbility("assets/friendly/rogue/shiv.lua",0)    
@@ -11,6 +13,7 @@ function setup()
 
     SetDamage(5);
     SetRange(1)
+    SetMaxHP(maxHP,true);
 
     SetObjType(TYPE_MELEEDPS);
     IsPlayerChoosable(true);

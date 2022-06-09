@@ -1,4 +1,4 @@
-local maxHP = 10
+local maxHP = 400
 
 function setup()
     SetSprite("assets/enemies/wyrm.png");

@@ -3,7 +3,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetDescription("Shield\n\nGives 50 shield")
     SetAbilityCooldown(15);
-    
+    SetMaxHP(400,true);
 end
 
 function casted()

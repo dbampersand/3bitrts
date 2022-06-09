@@ -1,3 +1,5 @@
+local maxHP = 150;
+
 function setup()
     SetSprite("assets/friendly/priest/priest.png");
     AddAbility("assets/friendly/priest/smite.lua",0)    
@@ -11,6 +13,8 @@ function setup()
 
     SetDamage(5);
     SetRange(100)
+    SetMaxHP(maxHP,true)
+
 
     SetObjType(TYPE_HEALER);
     IsPlayerChoosable(true);
