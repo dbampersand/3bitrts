@@ -21,6 +21,7 @@
         "limits.h": "c",
         "math.h": "c",
         "string.h": "c",
-        "allegro.h": "c"
+        "allegro.h": "c",
+        "cmath": "c"
     }
 }

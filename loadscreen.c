@@ -72,7 +72,7 @@ void DrawLoadscreen()
         al_draw_filled_rectangle(x+2,y+2,x+LOADSCREEN_TEXTBOXW-4,y+LOADSCREEN_TEXTBOXH-4,BG);
         al_draw_rectangle(x+2,y+2,x+LOADSCREEN_TEXTBOXW-4,y+LOADSCREEN_TEXTBOXH-4,FRIENDLY,1);
 
-        al_draw_text(ui.boldFont,FRIENDLY,x+LOADSCREEN_TEXTBOXW/2.0f,y+LOADSCREEN_TEXTBOXH/4.0f,ALLEGRO_ALIGN_CENTRE,"MON SGAIL");
+        al_draw_text(ui.boldFont,FRIENDLY,x+LOADSCREEN_TEXTBOXW/2.0f,y+LOADSCREEN_TEXTBOXH/4.0f,ALLEGRO_ALIGN_CENTRE,"MON IOCHDAR");
         al_draw_text(ui.font,FRIENDLY,x+LOADSCREEN_TEXTBOXW/2.0f,y+LOADSCREEN_TEXTBOXH/2.0f,ALLEGRO_ALIGN_CENTRE,"Press any key to continue.");
     
     }

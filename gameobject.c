@@ -1255,6 +1255,21 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
 
     
 }
+void DrawArrow(int cx, int cy, int targetx, int targety, float angle, ALLEGRO_COLOR color)
+{
+    int arrowangle = 215;
+
+    al_draw_line(cx,cy,targetx,targety,color,1);
+    Point rotated = (Point){cx-targetx,cy-targety};
+    float rx = rotated.x * cos(DegToRad(arrowangle)) - rotated.y * sin(DegToRad(arrowangle)) + cx;
+    float ry = rotated.x * sin(DegToRad(arrowangle)) + rotated.y * cos(DegToRad(arrowangle)) + cy;
+    float r2x = rotated.x * cos(DegToRad(-arrowangle)) - rotated.y * sin(DegToRad(-arrowangle)) + cx;
+    float r2y = rotated.x * sin(DegToRad(-arrowangle)) + rotated.y * cos(DegToRad(-arrowangle)) + cy;
+
+    al_draw_line(cx,cy,rx,ry,color,1);
+    al_draw_line(cx,cy,r2x,r2y,color,1);
+
+}
 void DrawGameObj(GameObject* g, bool forceInverse)
 {
     if (!(g->properties & OBJ_ACTIVE))
@@ -1283,6 +1298,38 @@ void DrawGameObj(GameObject* g, bool forceInverse)
             DrawHealthBar(g,c);
         else if (*gameOptions.displayHealthBar == OPTION_HPBAR_NEVER && (!IsOwnedByPlayer(g)))
             DrawHealthBar(g,c);
+    }
+    if ((g->queue[0].commandType == COMMAND_ATTACK || g->queue[0].commandType == COMMAND_CAST) && g->queue[0].target)
+    {
+        Point c1; GetCentre(g,&c1.x,&c1.y);
+        Point c2; GetCentre(g->queue[0].target,&c2.x,&c2.y);
+
+        float headingX = c1.x - c2.x;
+        float headingY = c1.y - c2.y;
+        Normalize(&headingX,&headingY);
+        
+        int offsetX; int offsetY;
+        c1.x = c1.x - (headingX * (GetWidth(g)+1));
+        c1.y = c1.y - (headingY * (GetHeight(g)+1));
+        c2.x = c1.x + (headingX * 5);
+        c2.y = c1.y + (headingY * 5);
+
+
+        DrawArrow(c1.x,c1.y,c2.x,c2.y,atan2(headingY,headingX),c);
+    }
+    if (g->queue[0].commandType == COMMAND_MOVE || g->queue[0].commandType == COMMAND_ATTACKMOVE)
+    {
+        Point c1; GetCentre(g,&c1.x,&c1.y);
+        Point c2; c2.x = g->queue[0].x+GetWidth(g)/2.0f; c2.y = g->queue[0].y+GetHeight(g)/2.0f;
+
+        float headingX = c1.x - c2.x;
+        float headingY = c1.y - c2.y;
+
+        Normalize(&headingX,&headingY);
+        float circleCenterX = c1.x - (headingX * (GetWidth(g)+3));
+        float circleCenterY = c1.y - (headingY * (GetHeight(g)+3));
+        
+        al_draw_filled_circle(circleCenterX,circleCenterY,2,c);
     }
     
 }
