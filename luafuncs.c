@@ -919,8 +919,19 @@ int L_SetMaxHP(lua_State* l)
     bool heal = lua_toboolean(l,2);
 
     currGameObjRunning->maxHP = hp;
+
+    //commenting this out for now as generating a heal event probably isn't what we want
+        //if (heal)
+            //  Heal(currGameObjRunning,hp);
+    //instead just do it manually
     if (heal)
-        Heal(currGameObjRunning,hp);
+    {
+        currGameObjRunning->health += hp;
+        if (currGameObjRunning->health > currGameObjRunning->maxHP)
+        {
+            currGameObjRunning->health = currGameObjRunning->maxHP;
+        }
+    }
     return 0;
 }
 int L_SetObjTargetPosition(lua_State* l)
@@ -1284,6 +1295,12 @@ int L_DealDamage(lua_State* l)
     int dmg = lua_tonumber(l,2);
     Damage(currGameObjRunning,&objects[objIndex],dmg);
     return 1;
+}
+int L_ClearCommandQueue(lua_State* l)
+{
+    GameObject* g = &objects[(int)lua_tonumber(l,1)];
+    ClearCommandQueue(g);
+    return 0;
 }
 int L_SetObjectPush(lua_State* l)
 {   
@@ -1682,5 +1699,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetTransitioningTo);
     lua_setglobal(luaState, "GetTransitioningTo");
+
+    lua_pushcfunction(luaState, L_ClearCommandQueue);
+    lua_setglobal(luaState, "ClearCommandQueue");
 
 }

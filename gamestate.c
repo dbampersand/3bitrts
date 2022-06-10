@@ -26,6 +26,7 @@ void InitGameState()
 {
     gameState = GAMESTATE_LOAD_SCREEN;
     transitioningTo = gameState;
+    memset(&gameStats,0,sizeof(GameState));
 
 }
 void SetGameStateToInGame(GameObject** list, int numObjectsToAdd, Encounter* e)
@@ -60,8 +61,10 @@ void FinishTransition()
     {
         gameState = GAMESTATE_INGAME;
         transitioningTo = GAMESTATE_INGAME;
+    
 
         RemoveAllGameObjects();
+
         SetMap(LoadMap(encounterGoingTo->mapPath));
 
         int xPos = 0; 
@@ -72,6 +75,8 @@ void FinishTransition()
             AddGameobject(toSpawn[i],80+xPos,180);   
             xPos += GetWidth(toSpawn[i]);
         }
+        memset(&gameStats,0,sizeof(GameState));
+
         //free(toSpawn);
 
     }
@@ -126,7 +131,7 @@ void CheckIfGameIsWon()
 
     if (GetNumPlayerControlledObjs(&players[1]) == 0 && gameState == GAMESTATE_INGAME)
     {
-        gameWon = true;
+        gameStats.gameWon = true;
         SetGameStateToEndscreen();
     }
 
@@ -137,7 +142,7 @@ void CheckIfGameIsLost()
         return;
     if (GetNumPlayerControlledObjs(&players[0]) == 0 && gameState == GAMESTATE_INGAME)
     {
-        gameWon = false;
+        gameStats.gameWon = false;
         SetGameStateToEndscreen();
         StopMusic();
     }

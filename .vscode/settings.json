@@ -22,6 +22,7 @@
         "math.h": "c",
         "string.h": "c",
         "allegro.h": "c",
-        "cmath": "c"
+        "cmath": "c",
+        "animationeffect.h": "c"
     }
 }

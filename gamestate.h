@@ -2,6 +2,8 @@
 
 #include <stdbool.h>
 #define NUMGAMESTATES 7
+
+
 typedef enum GameState {
     GAMESTATE_LOAD_SCREEN = 1,
     GAMESTATE_MAIN_MENU = 2,
@@ -27,7 +29,15 @@ typedef struct GameOptions
     Option_HealthBar* displayHealthBar; 
 } GameOptions;
 GameOptions gameOptions;
+typedef struct GameStats
+{
+    int damageDone;
+    int healingDone;
+    bool gameWon;
+    float timeTaken;
+}GameStats;
 
+GameStats gameStats;
 bool combatStarted;
 ALLEGRO_EVENT_QUEUE* queue;
 typedef struct GameObject GameObject;

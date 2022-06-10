@@ -11,6 +11,7 @@ function update(dt)
     if (GetTime() % 10 == 0) then
         SetHP(9999);
     end
+    ClearCommandQueue(GetObjRef());
 end
 
 function kill()

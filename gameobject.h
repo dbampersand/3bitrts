@@ -45,7 +45,7 @@ typedef struct Player Player;
 #define MAX_EFFECTS 12
 #define MAX_QUEUED_CMD 8
 #define MAX_ABILITIES 8
-
+#define FLASH_TIMER 0.1
 typedef struct GameObject
 {    
     struct GameObject* prefab;
@@ -122,6 +122,8 @@ typedef struct GameObject
 
     int* attackSoundIndices;
     int numAttackSounds;    
+
+    float flashTimer;
 
 } GameObject;
 

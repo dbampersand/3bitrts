@@ -178,6 +178,7 @@ typedef struct Widget
 } Widget;
 Widget* Widgets_States[NUMGAMESTATES];
 int numSprites_States[NUMGAMESTATES];
+
 #define NUMSPRITESTATESTOALLOC 16
 
 UI ui;

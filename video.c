@@ -23,6 +23,7 @@ void InitVideo()
 
     int resX = 256*_RENDERSIZE;
     int resY = 256*_RENDERSIZE;
+
     SCREEN = al_create_bitmap(256,256);
     backbuffer = al_get_backbuffer(display);
     _FRAMES = 0;

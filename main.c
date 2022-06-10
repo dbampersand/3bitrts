@@ -94,6 +94,11 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     UpdateParticles(dt);
     ProcessAnimationEffects(dt);
     UpdateWidgets(dt);
+
+    if (gameState == GAMESTATE_INGAME)
+    {
+        gameStats.timeTaken += dt;
+    }
 }
 
 void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)

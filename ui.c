@@ -1642,27 +1642,42 @@ void SetOptions()
 
         free(newText);
     }
-
 }
 void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
+    char* buffer = calloc(1,sizeof(char));
+
     al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
-    al_draw_text(ui.font,FRIENDLY,20,18,0,"Defeat");
+    al_draw_text(ui.font,FRIENDLY,20,18,0,gameStats.gameWon == true ? "Victory" : "Defeat");
     al_draw_line(20,30,56,30,FRIENDLY,1);
     al_draw_line(17,52,239,52,FRIENDLY,1);
 
-    al_draw_text(ui.font,ENEMY,16,70,0,"Wyrm");
+    //Write the boss name and sprite
+    al_draw_text(ui.font,ENEMY,16,70,0,currEncounterRunning->name);
     Sprite* sEnemy = &sprites[currEncounterRunning->spriteIndex];
     DrawSprite(sEnemy,17,91,0,ENEMY,false);
 
+    //Write augment level and augment changes
     al_draw_text(ui.font,ENEMY,90,89,0,"Augment 3");
     al_draw_text(ui.font,ENEMY,90,111,0,"+20%% Damage");
     al_draw_text(ui.font,ENEMY,185,111,0,"+15%% HP");
     al_draw_text(ui.font,ENEMY,90,124,0,"Random damaging pools");
 
-    al_draw_text(ui.font,FRIENDLY,17,173,0,"Time: 2:30");
-    al_draw_text(ui.font,FRIENDLY,17,184,0,"Damage dealt: 200");
-    al_draw_text(ui.font,FRIENDLY,17,196,0,"Healing done: 100");
+    //Write time taken
+    int hours = floor(gameStats.timeTaken/(60.0f*60.0f));
+    int minutes = floor(gameStats.timeTaken/(60.0f));    
+    int seconds = floor(gameStats.timeTaken);    
+    buffer = realloc(buffer,(strlen("Time: ")+log10(pow(2,sizeof(hours)*8+1))*3+4)*sizeof(char));
+    sprintf(buffer,"Time: %i:%i:%i",hours,minutes,seconds);
+    al_draw_text(ui.font,FRIENDLY,17,173,0,buffer);
+
+    buffer = realloc(buffer,(strlen("Damage dealt: ")+log10(pow(2,sizeof(gameStats.damageDone)*8))+3)*sizeof(char));
+    sprintf(buffer,"Damage dealt: %i",gameStats.damageDone);
+    al_draw_text(ui.font,FRIENDLY,17,184,0,buffer);
+
+    buffer = realloc(buffer,(strlen("Healing done: ")+log10(pow(2,sizeof(gameStats.healingDone)*8))+3) * sizeof(char));
+    sprintf(buffer,"Healing done: %i",gameStats.healingDone);
+    al_draw_text(ui.font,FRIENDLY,17,196,0,buffer);
 
 
     UpdateButton(16,224,&ui.endScreen_Back,mouseState,mouseStateLastFrame);
@@ -1687,5 +1702,5 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
     {
         transitioningTo = GAMESTATE_INGAME;
     }
-
+    free(buffer);
 }
