@@ -7,7 +7,8 @@
 
 void AddThreat(GameObject* source, GameObject* target, int damage)
 {
-    StartCombat();
+    if (damage > 0)
+        StartCombat();
     Threat* next = &target->threatList;
 
     if (!next->obj)

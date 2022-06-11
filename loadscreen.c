@@ -8,7 +8,6 @@
 #include "allegro5/allegro_ttf.h"
 #include "allegro5/allegro.h"
 #include "ui.h"
-
 void InitLoadscreen(char* initialPath)
 {
     SetLoadscreen(initialPath,1,3.5,0,2,3);
@@ -81,7 +80,10 @@ void DrawLoadscreen()
 
 void FinishLoadScreen()
 {
-    SetGameStateToInMenu();
+    if (gameState == GAMESTATE_LOAD_SCREEN)
+        SetGameStateToInMenu();
+    if (gameState == GAMESTATE_LOAD_ENCOUNTER)
+        SetGameStateToInGame();
 }
 void UpdateLoadscreen(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState)
 {

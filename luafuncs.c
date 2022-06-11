@@ -1074,6 +1074,11 @@ int L_GetTransitioningTo(lua_State* l)
     lua_pushnumber(l,transitioningTo);
     return 1;
 }
+int L_SetEncounterLoadScreen(lua_State* l)
+{
+    currEncounterRunning->loadScreen_spriteIndex = LoadSprite(lua_tostring(l,1),false);
+    return 0;
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -1702,5 +1707,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_ClearCommandQueue);
     lua_setglobal(luaState, "ClearCommandQueue");
+
+    lua_pushcfunction(luaState, L_SetEncounterLoadScreen);
+    lua_setglobal(luaState, "SetEncounterLoadScreen");
 
 }

@@ -12,6 +12,7 @@
 #include "helperfuncs.h"
 #include "math.h"
 #include "ui.h"
+#include "loadscreen.h"
 
 void StartCombat()
 {
@@ -29,19 +30,26 @@ void InitGameState()
     memset(&gameStats,0,sizeof(GameState));
 
 }
-void SetGameStateToInGame(GameObject** list, int numObjectsToAdd, Encounter* e)
+void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Encounter* e)
 {
-    transitioningTo = GAMESTATE_INGAME;
+    transitioningTo = GAMESTATE_LOAD_ENCOUNTER;
     transitionTimer = 0;
+    SetLoadscreen(sprites[currEncounterRunning->loadScreen_spriteIndex].path,1,1,1,1,1);
 
     if (toSpawn)
-        free(toSpawn);
+            free(toSpawn);
     toSpawn = calloc(e->numUnitsToSelect,sizeof(GameObject*));
     for (int i = 0; i < e->numUnitsToSelect; i++)
     {
         toSpawn[i] = list[i];
     }
     encounterGoingTo = e;
+}
+void SetGameStateToInGame()
+{
+    transitioningTo = GAMESTATE_INGAME;
+    transitionTimer = 0;
+
 
 }
 void SetGameStateToChoosingEncounter()
@@ -89,6 +97,12 @@ void FinishTransition()
         ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
 
     }
+    if (transitioningTo == GAMESTATE_LOAD_ENCOUNTER)
+    {
+        gameState = GAMESTATE_LOAD_ENCOUNTER;
+        transitioningTo = GAMESTATE_LOAD_ENCOUNTER;
+    }
+
     if (transitioningTo == GAMESTATE_CHOOSING_UNITS)
     {
         gameState = GAMESTATE_CHOOSING_UNITS;

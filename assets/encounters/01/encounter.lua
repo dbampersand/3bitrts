@@ -13,4 +13,5 @@ function setup()
     SetEncounterMusic("assets/audio/first_boss.wav");
     EncounterSetNumUnitsToSelect(2);
 
+    SetEncounterLoadScreen("assets/encounters/01/loadscreen.png")
 end

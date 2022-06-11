@@ -220,7 +220,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
                     }
                 }
             }
-            SetGameStateToInGame(list,foundIndex,e); 
+            SetGameStateToLoadingEncounter(list,foundIndex,e);//SetGameStateToInGame(list,foundIndex,e); 
             free(list);
             
         }
@@ -237,7 +237,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     DrawMouse(mouseState, mousedOver);
     players[0].clickedThisFrame = NULL;
 
-    if (gameState == GAMESTATE_LOAD_SCREEN)
+    if (gameState == GAMESTATE_LOAD_SCREEN || gameState == GAMESTATE_LOAD_ENCOUNTER) 
     {
         DrawLoadscreen();
     }
@@ -279,7 +279,7 @@ int main(int argc, char* args[])
         ALLEGRO_EVENT event;
         al_wait_for_event(queue, &event);
 
-        if (gameState == GAMESTATE_LOAD_SCREEN)
+        if (gameState == GAMESTATE_LOAD_SCREEN || gameState == GAMESTATE_LOAD_ENCOUNTER)
         {
             if (event.type == ALLEGRO_EVENT_KEY_DOWN)
             {

@@ -1221,7 +1221,7 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
         u->enabled = true;
     }
 
-    if (gameState == GAMESTATE_LOAD_SCREEN)
+    if (gameState == GAMESTATE_LOAD_SCREEN || gameState == GAMESTATE_LOAD_ENCOUNTER)
     {
         UpdateLoadscreen(dt,keyState,mouseState);
     }
@@ -1666,7 +1666,7 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
     //Write time taken
     int hours = floor(gameStats.timeTaken/(60.0f*60.0f));
     int minutes = floor(gameStats.timeTaken/(60.0f));    
-    int seconds = floor(gameStats.timeTaken);    
+    int seconds = floor(gameStats.timeTaken); 
     buffer = realloc(buffer,(strlen("Time: ")+log10(pow(2,sizeof(hours)*8+1))*3+4)*sizeof(char));
     sprintf(buffer,"Time: %i:%i:%i",hours,minutes,seconds);
     al_draw_text(ui.font,FRIENDLY,17,173,0,buffer);

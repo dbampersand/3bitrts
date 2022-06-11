@@ -31,6 +31,8 @@ typedef struct Encounter
     int numUnitsToSelect;
     char* musicPath;
     Encounter_Difficulty difficulty;
+    
+    int loadScreen_spriteIndex; 
 } Encounter;
 
 void LoadEncounter(char* dirPath,lua_State* l);

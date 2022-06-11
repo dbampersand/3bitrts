@@ -9,9 +9,10 @@ typedef enum GameState {
     GAMESTATE_MAIN_MENU = 2,
     GAMESTATE_CHOOSING_ENCOUNTER = 3,
     GAMESTATE_CHOOSING_UNITS = 4,
-    GAMESTATE_INGAME = 5,
-    GAMESTATE_END = 6,
-    GAMESTATE_EXIT = 7
+    GAMESTATE_LOAD_ENCOUNTER = 5,
+    GAMESTATE_INGAME = 6,
+    GAMESTATE_END = 7,
+    GAMESTATE_EXIT = 8
 } GameState;
 GameState gameState;
 
@@ -57,12 +58,13 @@ void SetGameStateToChoosingParty();
 void SetGameStateToChoosingEncounter();
 void SetGameStateToEndscreen();
 void SetGameStateToInMenu();
+void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Encounter* e);
 
 
 void Quit();
 void CheckIfGameIsLost();
 void CheckIfGameIsWon();
-void SetGameStateToInGame(GameObject** list, int numObjectsToAdd, Encounter* e);
+void SetGameStateToInGame();
 void UpdateTransition(float dt);
 void DrawTransition(float dt);
 void FinishTransition();
