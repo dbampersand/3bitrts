@@ -57,6 +57,13 @@ int L_PlayMusic(lua_State* l)
     }
     return 0;
 }
+int L_SetEncounterName(lua_State* l)
+{
+    const char* name = lua_tostring(l,1);
+    currEncounterRunning->name = calloc(strlen(name)+1,sizeof(char));
+    strcpy(currEncounterRunning->name,name);
+    return 0;
+}
 int L_SetEncounterMusic(lua_State* l)
 {
     const char* path = lua_tostring(l,1);
@@ -1710,5 +1717,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetEncounterLoadScreen);
     lua_setglobal(luaState, "SetEncounterLoadScreen");
+
+    lua_pushcfunction(luaState, L_SetEncounterName);
+    lua_setglobal(luaState, "SetEncounterName");
 
 }

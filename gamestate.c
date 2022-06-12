@@ -13,7 +13,11 @@
 #include "math.h"
 #include "ui.h"
 #include "loadscreen.h"
-
+void TransitionTo(GameState state)
+{
+    transitioningTo = state;
+    transitionTimer = 0;
+}
 void StartCombat()
 {
     if (combatStarted)
@@ -32,9 +36,11 @@ void InitGameState()
 }
 void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Encounter* e)
 {
-    transitioningTo = GAMESTATE_LOAD_ENCOUNTER;
-    transitionTimer = 0;
-    SetLoadscreen(sprites[currEncounterRunning->loadScreen_spriteIndex].path,1,1,1,1,1);
+    //transitioningTo = GAMESTATE_LOAD_ENCOUNTER;
+    //transitionTimer = 0;
+    TransitionTo(GAMESTATE_LOAD_ENCOUNTER);
+
+    SetLoadscreen(sprites[currEncounterRunning->loadScreen_spriteIndex].path,1,1,1,1,1,e->name,"Press any key to begin.");
 
     if (toSpawn)
             free(toSpawn);
@@ -47,16 +53,20 @@ void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Enco
 }
 void SetGameStateToInGame()
 {
-    transitioningTo = GAMESTATE_INGAME;
-    transitionTimer = 0;
+    //transitioningTo = GAMESTATE_INGAME;
+    //transitionTimer = 0;
+    TransitionTo(GAMESTATE_INGAME);
+
 
 
 }
 void SetGameStateToChoosingEncounter()
 {
     //gameState = GAMESTATE_INGAME;
-    transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
-    transitionTimer = 0;
+    //transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
+    //transitionTimer = 0;
+    TransitionTo(GAMESTATE_CHOOSING_ENCOUNTER);
+
 }
 void FinishTransition()
 {
@@ -130,8 +140,10 @@ void SetGameStateToChoosingParty()
             xPos+=GetWidth(&prefabs[i]);
         }   
     }
-    transitioningTo = GAMESTATE_CHOOSING_UNITS;
-    transitionTimer = 0;
+    //transitioningTo = GAMESTATE_CHOOSING_UNITS;
+    //transitionTimer = 0;
+    TransitionTo(GAMESTATE_CHOOSING_UNITS);
+    
 
 }
 void Quit()
@@ -240,14 +252,17 @@ bool GameStateIsTransition(GameState* g)
 }
 void SetGameStateToEndscreen()
 {
-    transitioningTo = GAMESTATE_END;
-    transitionTimer = 0;    
+    //transitioningTo = GAMESTATE_END;
+    //transitionTimer = 0;    
+    TransitionTo(GAMESTATE_END);
 
 }
 void SetGameStateToInMenu()
 {
-    transitioningTo = GAMESTATE_MAIN_MENU;
-    transitionTimer = 0;    
+    //transitioningTo = GAMESTATE_MAIN_MENU;
+    //transitionTimer = 0;    
+    TransitionTo(GAMESTATE_MAIN_MENU);
+
 }
 void DrawStartScreen()
 {

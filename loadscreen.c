@@ -10,7 +10,8 @@
 #include "ui.h"
 void InitLoadscreen(char* initialPath)
 {
-    SetLoadscreen(initialPath,1,3.5,0,2,3);
+    memset(&loadScreen,0,sizeof(LoadScreen));
+    SetLoadscreen(initialPath,1,3.5,0,2,3,GAME_NAME,"Press any key to continue.");
 }
 float Transition_EaseOutCirc(float timer) {
     return sqrt(1 - pow(timer - 1, 2));
@@ -35,8 +36,13 @@ float Transition_EaseInOutQuad(float timer)
     }
     return percent;
 }
-void SetLoadscreen(char* path, float transitionInTime, float moveTime, float pauseTime, float textInTime, float textHoldTime)
+void SetLoadscreen(char* path, float transitionInTime, float moveTime, float pauseTime, float textInTime, float textHoldTime, char* header, char* description)
 {
+    if (loadScreen.header)
+        free(loadScreen.header);
+    if (loadScreen.description)
+        free(loadScreen.description);
+
     memset(&loadScreen,0,sizeof(LoadScreen));
     loadScreen.spriteIndex = LoadSprite(path,false);
     loadScreen.state = LOADSCREEN_TRANSITON_IN;
@@ -50,6 +56,16 @@ void SetLoadscreen(char* path, float transitionInTime, float moveTime, float pau
     loadScreen.y = -GetHeightSprite(&sprites[loadScreen.spriteIndex]) + _SCREEN_SIZE;
     loadScreen.transition = Transition_EaseInOutQuad;
     loadScreen.textBoxTransition = Transition_EaseOutQuad;
+    if (header)
+    {
+        loadScreen.header = calloc(strlen(header)+1,sizeof(char));
+        strcpy(loadScreen.header,header);
+    }
+    if (description)
+    {
+        loadScreen.description = calloc(strlen(description)+1,sizeof(char));
+        strcpy(loadScreen.description,description);
+    }
 }
 void DrawLoadscreen()
 {
@@ -71,8 +87,8 @@ void DrawLoadscreen()
         al_draw_filled_rectangle(x+2,y+2,x+LOADSCREEN_TEXTBOXW-4,y+LOADSCREEN_TEXTBOXH-4,BG);
         al_draw_rectangle(x+2,y+2,x+LOADSCREEN_TEXTBOXW-4,y+LOADSCREEN_TEXTBOXH-4,FRIENDLY,1);
 
-        al_draw_text(ui.boldFont,FRIENDLY,x+LOADSCREEN_TEXTBOXW/2.0f,y+LOADSCREEN_TEXTBOXH/4.0f,ALLEGRO_ALIGN_CENTRE,"MON IOCHDAR");
-        al_draw_text(ui.font,FRIENDLY,x+LOADSCREEN_TEXTBOXW/2.0f,y+LOADSCREEN_TEXTBOXH/2.0f,ALLEGRO_ALIGN_CENTRE,"Press any key to continue.");
+        al_draw_text(ui.boldFont,FRIENDLY,x+LOADSCREEN_TEXTBOXW/2.0f,y+LOADSCREEN_TEXTBOXH/4.0f,ALLEGRO_ALIGN_CENTRE,loadScreen.header);
+        al_draw_text(ui.font,FRIENDLY,x+LOADSCREEN_TEXTBOXW/2.0f,y+LOADSCREEN_TEXTBOXH/2.0f,ALLEGRO_ALIGN_CENTRE,loadScreen.description);
     
     }
 

@@ -1,6 +1,7 @@
 function setup()
     SetEncounterSprite("assets/enemies/wyrm.png");
     SetEncounterDescription("The wyrm.")
+    SetEncounterName("Wyrm");
 
     AddEncounterAbility("assets/enemies/wyrm_boss/ability_bite.lua",0,0);
     AddEncounterAbility("assets/enemies/wyrm_boss/ability_firebreath.lua",1,0);
