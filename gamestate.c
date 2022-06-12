@@ -15,6 +15,8 @@
 #include "loadscreen.h"
 void TransitionTo(GameState state)
 {
+    if (transitioningTo == state)
+        return;
     transitioningTo = state;
     transitionTimer = 0;
 }
