@@ -65,8 +65,10 @@ ALLEGRO_MOUSE_STATE GetMouseClamped()
     {
         mouse.x = _SCREEN_SIZE - MOUSECURSORSIZE;
 
-        //This function is giving very weird results
-        //al_set_mouse_xy(display, x-MOUSECURSORSIZE*_RENDERSIZE, beforeY);
+        //This function is giving very weird results on mac
+        #if defined _WIN32 || defined __linux__
+            al_set_mouse_xy(display, (_SCREEN_SIZE*_RENDERSIZE)-MOUSECURSORSIZE*_RENDERSIZE, beforeY);
+        #endif
     }
     if (mouse.y > (_SCREEN_SIZE-MOUSECURSORSIZE))
     {

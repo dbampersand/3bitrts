@@ -28,12 +28,8 @@ void PreprocessMap(Map* map)
           
         ALLEGRO_COLOR pixel = al_get_pixel(sprite, x, y);
         if (pixel.a) {
-    
             int index = GetIndex(_MAPSIZE/_GRAIN,x/_GRAIN,y/_GRAIN);
-            fflush(stdout);
-
             map->collision[index] = true;
-
         }
       }
    }
