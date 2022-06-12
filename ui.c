@@ -95,8 +95,16 @@ void DrawUnitChoiceUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         UpdateButton(109,194,&ui.choosingUnits_GO,mouseState,mouseStateLastFrame);
 
 
-        DrawUIElement(&ui.choosingUnits_Back,45,194,mouseState,true,BG);
-        DrawUIElement(&ui.choosingUnits_GO,109,194,mouseState,numUnitsInRect==e->numUnitsToSelect,BG);
+        if (numUnitsInRect==e->numUnitsToSelect)
+        {
+            ui.choosingUnits_GO.enabled = true;
+        }
+        else
+        {
+            ui.choosingUnits_GO.enabled = false;
+        }
+        DrawUIElement(&ui.choosingUnits_Back,45,194,mouseState,BG);
+        DrawUIElement(&ui.choosingUnits_GO,109,194,mouseState,BG);
 
 
         if (numUnitsInRect != e->numUnitsToSelect)
@@ -404,9 +412,23 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     UpdateButton(80,224,&ui.encounter_ButtonConfirm,mouseState,mouseStateLastFrame);
     UpdateButton(192,224,&ui.encounter_ButtonRight,mouseState,mouseStateLastFrame);
 
-    DrawUIElement(&ui.encounter_ButtonLeft,16,224,mouseState,selectedEncounterIndex>0,BG);
-    DrawUIElement(&ui.encounter_ButtonConfirm,80,224,mouseState,true,BG);
-    DrawUIElement(&ui.encounter_ButtonRight,192,224,mouseState,selectedEncounterIndex+1<numEncounters,BG);
+    if (selectedEncounterIndex>0)
+    {
+        ui.encounter_ButtonLeft.enabled = true;
+    }
+    else {
+        ui.encounter_ButtonLeft.enabled = false;
+    }
+    if (selectedEncounterIndex+1 < numEncounters)
+    {
+        ui.encounter_ButtonRight.enabled = true;
+    }
+    else {
+        ui.encounter_ButtonRight.enabled = false;
+    }
+    DrawUIElement(&ui.encounter_ButtonLeft,16,224,mouseState,BG);
+    DrawUIElement(&ui.encounter_ButtonConfirm,80,224,mouseState,BG);
+    DrawUIElement(&ui.encounter_ButtonRight,192,224,mouseState,BG);
 
     if (GetButtonIsClicked(&ui.encounter_ButtonLeft))
     {
@@ -547,6 +569,7 @@ void InitButton(UIElement* u, char* name, char* description, int x, int y, int w
     u->y = y;
     u->sound_clickDown_Index = ui.uiClickedSound_Index;
     u->sound_clickUp_Index = ui.uiClickedUpSound_Index;
+    u->enabled = true;
 
 }
 void ChangeButtonText(Button* b, char* newstr)
@@ -1029,14 +1052,17 @@ bool GetButton(Panel* p, char* name)
     for (int i = 0; i < p->numElements; i++)
     {
         UIElement* u = &p->elements[i];
-        if (strcasecmp(u->name,name)==0)
+        //if (u->enabled)
         {
-            Button* b = (Button*)u->data;
-            if (b->activated)
+            if (strcasecmp(u->name,name)==0)
             {
-                PlaySound(&sounds[u->sound_clickDown_Index],0.5f);
+                Button* b = (Button*)u->data;
+                if (b->activated)
+                {
+                    PlaySound(&sounds[u->sound_clickDown_Index],0.5f);
+                }
+                return (b->activated);
             }
-            return (b->activated);
         }
     }
     return false;
@@ -1273,11 +1299,11 @@ void UIDrawText(UIElement* u, int x, int y)
 
 
 }
-void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive, ALLEGRO_COLOR bgColor)
+void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_COLOR bgColor)
 {
     if (u->elementType == ELEMENT_BUTTON)
     {
-        DrawButton(u,x,y,mouseState,isActive,bgColor);
+        DrawButton(u,x,y,mouseState,u->enabled,bgColor);
     }
     if (u->elementType == ELEMENT_TEXT)
     {
@@ -1285,15 +1311,15 @@ void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, 
     }
     if (u->elementType == ELEMENT_SLIDER)
     {
-        DrawSlider(u,x,y,mouseState,isActive,bgColor);
+        DrawSlider(u,x,y,mouseState,u->enabled,bgColor);
     }
     if (u->elementType == ELEMENT_CHECKBOX)
     {
-        DrawCheckbox((Checkbox*)u->data,x,y,u->w,u->h,isActive,mouseState,bgColor);
+        DrawCheckbox((Checkbox*)u->data,x,y,u->w,u->h,u->enabled,mouseState,bgColor);
     }
     if (u->elementType == ELEMENT_PULLDOWN)
     {
-        DrawPullDownMenu((Pulldown*)u->data,x,y,u->w,u->h,isActive,mouseState,bgColor);
+        DrawPullDownMenu((Pulldown*)u->data,x,y,u->w,u->h,u->enabled,mouseState,bgColor);
     }
 
 
@@ -1397,7 +1423,7 @@ void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
         UIElement* u = ((UIElement*)&p->elements[i]);
         int x; int y;
         GetUILocation(p, u, &x, &y);
-        DrawUIElement(u,x,y,mouseState,u->enabled,BG);
+        DrawUIElement(u,x,y,mouseState,BG);
 
     }
     if (p->tabs)
@@ -1488,17 +1514,20 @@ void LoadCursorSprite(UI* ui, int* index, char* path)
 }
 bool GetButtonIsClicked(UIElement* u)
 {
-    if (u->elementType == ELEMENT_BUTTON)
+    if (u->enabled)
     {
-        Button* b = (Button*)(u->data);
-        if (b->activated)
+        if (u->elementType == ELEMENT_BUTTON)
         {
-            if (u->sound_clickDown_Index)
+            Button* b = (Button*)(u->data);
+            if (b->activated)
             {
-                PlaySound(&sounds[u->sound_clickDown_Index],0.5f);
+                if (u->sound_clickDown_Index)
+                {
+                    PlaySound(&sounds[u->sound_clickDown_Index],0.5f);
+                }
             }
+            return b->activated;
         }
-        return b->activated;
     }
     return false;
 }
@@ -1683,8 +1712,8 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
     UpdateButton(16,224,&ui.endScreen_Back,mouseState,mouseStateLastFrame);
     UpdateButton(136,224,&ui.endScreen_Retry,mouseState,mouseStateLastFrame);
 
-    DrawUIElement(&ui.endScreen_Back,16,224,mouseState,true,BG);
-    DrawUIElement(&ui.endScreen_Retry,136,224,mouseState,true,BG);
+    DrawUIElement(&ui.endScreen_Back,16,224,mouseState,BG);
+    DrawUIElement(&ui.endScreen_Retry,136,224,mouseState,BG);
     
     int x = 86;
     int y = 139;
