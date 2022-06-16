@@ -28,7 +28,7 @@
 #include "damagenumber.h"
 #include "sound.h"
 #include "loadscreen.h"
-
+#include "settings.h"
 
 
 int _TARGET_FPS = 60;
@@ -45,6 +45,8 @@ void init()
     al_install_mouse();
     al_install_keyboard();
     al_install_audio();
+    
+    InitSettings("config.cfg");
 
     InitGameState();
     InitSound();
@@ -70,6 +72,8 @@ void init()
     LoadPrefabs("assets/friendly");
 
     toSpawn = NULL;
+
+    atexit(EndSettings);
 
 }
 
@@ -272,8 +276,12 @@ int main(int argc, char* args[])
 
     //PlayMusic("assets/audio/first_boss.wav");
 
+
+    fflush(stdout);
+
     while (gameState != GAMESTATE_EXIT) {
         //al_set_mouse_xy(display, 128,128);
+
 
         
         ALLEGRO_EVENT event;
@@ -332,6 +340,7 @@ int main(int argc, char* args[])
             fflush(stdout);
         }
     }
+    WriteSettingsFile("config.cfg");
     return 1;
 }
 

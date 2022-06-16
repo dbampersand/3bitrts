@@ -21,6 +21,7 @@
 #include "sound.h"
 #include "luafuncs.h"
 #include "loadscreen.h"
+#include "settings.h"
 void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
     if (mouseStateLastFrame->buttons & 1)
@@ -507,7 +508,7 @@ void UpdateSlider(Slider* s, int x, int y, int w, int h, ALLEGRO_MOUSE_STATE* mo
             v = 1;
         if (v<0)
             v = 0;
-        s->value = v;
+        *s->value = v;
     }
 }
 Panel CreatePanel(int x, int y, int w, int h, int padding)
@@ -619,7 +620,7 @@ void DrawSlider(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, boo
 {
     Slider* s = (Slider*)u->data;
     al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
-    float w = u->w * s->value;
+    float w = u->w * *s->value;
     al_draw_filled_rectangle(x,y,x+w,y+u->h,FRIENDLY);
 }
 void UpdateCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
@@ -689,7 +690,7 @@ void AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool activate
     u.enabled = true;
     AddElement(p,&u);
 }
-void AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled)
+void AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled, float* v)
 {
     Slider* s = calloc(1,sizeof(Slider));
     UIElement u = {0};
@@ -698,7 +699,8 @@ void AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled)
     u.w = w;
     u.h = h;
     u.enabled = true;
-    s->value = filled;
+    s->value = v;
+    *v = filled;
     u.name = name;
     u.data = (void*)s;
     u.elementType = ELEMENT_SLIDER;
@@ -889,7 +891,7 @@ void InitUI()
 
     ui.audioOptionsPanel = CreatePanel(48,48,160,112,15);
     AddText(&ui.audioOptionsPanel,33,41,"Tag_MasterVolume","Master Volume");
-    AddSlider(&ui.audioOptionsPanel,34,52,110,10,"MasterVolume",0.35f);
+    AddSlider(&ui.audioOptionsPanel,34,52,110,10,"MasterVolume",currSettings.masterVolume,&currSettings.masterVolume);
 
 
     ui.accessibilityOptionsPanel = CreatePanel(48,48,160,112,15);

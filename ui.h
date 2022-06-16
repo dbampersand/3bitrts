@@ -56,7 +56,7 @@ typedef struct Pulldown
 typedef struct Slider
 {
     bool clicked; 
-    float value;
+    float* value;
 }Slider;
 typedef struct Checkbox
 {

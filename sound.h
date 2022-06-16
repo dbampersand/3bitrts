@@ -44,5 +44,3 @@ char* musicPath;
 Sound* sounds;
 int numSoundsAllocated;
 int numSounds;
-
-float sfxVolume;

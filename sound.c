@@ -8,6 +8,7 @@
 #include "helperfuncs.h"
 #include "gamestate.h"
 #include "encounter.h"
+#include "settings.h"
 
 void InitSound()
 {
@@ -37,7 +38,6 @@ void InitSound()
     al_attach_mixer_to_voice(musicMixer1, musicVoice1);
     al_attach_mixer_to_voice(musicMixer2, musicVoice2);
 
-    sfxVolume = 1;
 }
 
 int LoadSound(char* path)
@@ -76,7 +76,7 @@ int LoadSound(char* path)
 
 void PlaySound(Sound* s, float relativeVolume)
 {
-    al_play_sample(s->sample, sfxVolume * relativeVolume, 0, 1.0f, ALLEGRO_PLAYMODE_ONCE, NULL);
+    al_play_sample(s->sample, currSettings.masterVolume * relativeVolume, 0, 1.0f, ALLEGRO_PLAYMODE_ONCE, NULL);
 }
 void StopMusic()
 {
