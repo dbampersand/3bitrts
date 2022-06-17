@@ -25,6 +25,7 @@
 #include "damagenumber.h"
 #include "gamestate.h"
 #include "particle.h"
+#include "settings.h"
 
 GameObject* GetMousedOver(ALLEGRO_MOUSE_STATE* mouseState)
 {
@@ -1299,11 +1300,11 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     {
         DrawRoundedRect(selectRect, c);
 
-        if (*gameOptions.displayHealthBar == OPTION_HPBAR_ALWAYS)
+        if (currSettings.displayHealthBar == OPTION_HPBAR_ALWAYS)
             DrawHealthBar(g,c);
-        else if (*gameOptions.displayHealthBar == OPTION_HPBAR_SELECTED && (IsOwnedByPlayer(g) && IsSelected(g)))
+        else if (currSettings.displayHealthBar == OPTION_HPBAR_SELECTED && (IsOwnedByPlayer(g) && IsSelected(g)))
             DrawHealthBar(g,c);
-        else if (*gameOptions.displayHealthBar == OPTION_HPBAR_NEVER && (!IsOwnedByPlayer(g)))
+        else if (currSettings.displayHealthBar == OPTION_HPBAR_NEVER && (!IsOwnedByPlayer(g)))
             DrawHealthBar(g,c);
     }
 

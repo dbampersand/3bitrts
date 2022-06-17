@@ -61,7 +61,7 @@ typedef struct Slider
 typedef struct Checkbox
 {
     bool clicked; 
-    bool activated;
+    bool* activated;
 }Checkbox;
 typedef struct Button
 {

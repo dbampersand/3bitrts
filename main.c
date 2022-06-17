@@ -57,7 +57,7 @@ void init()
     InitMaps();
     InitAnimationEffects();
 
-    memset(&gameOptions,0,sizeof(GameOptions));
+    //memset(&gameOptions,0,sizeof(GameOptions));
 
     init_lua();
     InitAttacks();
@@ -170,7 +170,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     if (players[0].selecting)
         DrawMouseSelectBox(GetMouseClamped());
         
-    if (*gameOptions.particlesEnabled)    
+    if (currSettings.particlesEnabled)    
         DrawParticles();
 
     if (players[0].abilityHeld)

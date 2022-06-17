@@ -24,12 +24,6 @@ typedef enum Option_HealthBar
 }Option_HealthBar;
 
 typedef struct ALLEGRO_EVENT_QUEUE ALLEGRO_EVENT_QUEUE;
-typedef struct GameOptions
-{
-    bool* particlesEnabled;
-    Option_HealthBar* displayHealthBar; 
-} GameOptions;
-GameOptions gameOptions;
 typedef struct GameStats
 {
     int damageDone;

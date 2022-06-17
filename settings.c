@@ -31,8 +31,8 @@ void WriteSettingsFile(char* path)
     {
         char* str = calloc(4096,sizeof(char));
         if (!str) return;
-        sprintf(str,"renderscale %i;\nparticlesEnabled %i;\ndisplayHealthBar %i;\nvolume %f;\n",
-        *currSettings.renderScale,
+        sprintf(str,"renderscale %i;\nparticles_enabled %i;\ndisplay_health_bar %i;\nvolume %f;\n",
+        *   currSettings.renderScale,
         currSettings.particlesEnabled == true ? 1 : 0,
         currSettings.displayHealthBar,
 
@@ -115,6 +115,19 @@ bool LoadSettingsFile(char* path)
             {
                 currSettings.masterVolume =  masterVol;
             }
+            float particlesEnabled  = FindToken(str,"particles_enabled");
+            if (particlesEnabled >= 0)
+            {
+                currSettings.particlesEnabled = (int)particlesEnabled;
+            }
+            
+            float displayHealthBar  = FindToken(str,"display_health_bar");
+            if (displayHealthBar >= 0)
+            {
+                currSettings.displayHealthBar =  (Option_HealthBar)displayHealthBar;
+            }
+
+
 
             free(str);
             return true;

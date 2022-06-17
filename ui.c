@@ -642,7 +642,7 @@ void UpdateCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive, ALLE
         {
             if (PointInRect(mouseState->x,mouseState->y,r))
             {
-                c->activated = !c->activated;
+                *c->activated = !(*c->activated);
             }
         }
     }
@@ -655,7 +655,7 @@ void UpdateCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive, ALLE
 void DrawCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive,ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_COLOR bgColor)
 {
     Rect checkbox = (Rect){x,y,w,h};
-    if (c->activated && isActive)
+    if (*c->activated && isActive)
     {
         al_draw_filled_rectangle(x,y,x+w,y+h,FRIENDLY);
         al_draw_rectangle(x,y,w,y+h,BG,1);
@@ -682,7 +682,7 @@ void AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool activate
     u.y = y;
     u.w = w;
     u.h = h;
-    c->activated = activated;
+    //*c->activated = activated;
     u.name = name;
     u.data = (void*)c;
     u.enabled = true;
@@ -940,10 +940,11 @@ void InitUI()
     ui.currentPanel = NULL;
 
     Checkbox* particles = (Checkbox*)GetUIElement(&ui.videoOptionsPanel,"EnableParticles")->data;
-    gameOptions.particlesEnabled = &particles->activated;
+    particles->activated = &currSettings.particlesEnabled;
+    //currSettings.particlesEnabled = &particles->activated;
 
     Pulldown* healthbar = (Pulldown*)GetUIElement(&ui.videoOptionsPanel,"HealthBarDisplay")->data;
-    gameOptions.displayHealthBar = (Option_HealthBar*)&healthbar->selectedIndex;
+    currSettings.displayHealthBar = healthbar->selectedIndex;
 
     ui.panel_sprite_index = LoadSprite("assets/ui/ui.png",false);
 
@@ -1151,6 +1152,8 @@ void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLE
     if (u->elementType == ELEMENT_CHECKBOX)
     {
         UpdateCheckbox((Checkbox*)u->data, x,  y, u->w,u->h,true,mouseState, mouseStateLastFrame);
+        Checkbox* c = (Checkbox*)u->data;
+        bool b = *c->activated;
     }
     if (u->elementType == ELEMENT_PULLDOWN)
     {
