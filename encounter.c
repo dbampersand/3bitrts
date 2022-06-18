@@ -85,7 +85,7 @@ int sortEncounters(const void* a, const void* b)
     Encounter* e =  *(Encounter**)a;
     Encounter* e2 = *(Encounter**)b;
 
-       return ( e->difficulty - e2->difficulty);
+    return ( e->difficulty - e2->difficulty);
 }
 void LoadEncounters(char* dirPath, lua_State* l)
 {

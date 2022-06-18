@@ -125,6 +125,9 @@ typedef struct UI
     int cursorCastingIndex;
     int cursorAttackIndex;
     int cursorFriendlyIndex;
+
+    int augmentIconIndex;
+
     
     ALLEGRO_FONT* font;
     ALLEGRO_FONT* boldFont;
@@ -161,6 +164,8 @@ typedef struct UI
 
     UIElement endScreen_Back;
     UIElement endScreen_Retry;
+
+
 
 
 } UI;   

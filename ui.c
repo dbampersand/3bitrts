@@ -371,8 +371,30 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
 {
     Encounter* e = encounters[selectedEncounterIndex];
 
+    char* augmentStr = calloc(NumDigits(e->augment)+1,sizeof(char));
+    sprintf(augmentStr,"%i",e->augment);
+
     al_draw_text(ui.font,FRIENDLY,16,18,0,"Augment");
-    al_draw_text(ui.font,FRIENDLY,84,18,0,"3");
+    al_draw_text(ui.font,FRIENDLY,84,18,0,augmentStr);
+
+    int augmentX = 96;
+    e->maxaugment = 4;
+    for (int i = 0; i < e->maxaugment+1; i++)
+    {
+        Rect drawRect = (Rect){augmentX,20,GetWidthSprite(&sprites[ui.augmentIconIndex]),GetHeightSprite(&sprites[ui.augmentIconIndex])};
+        DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0,i <= e->augment ? FRIENDLY : GROUND,false);
+        augmentX += drawRect.w+3;
+
+        if (mouseStateLastFrame->buttons & 1 && !(mouseState->buttons & 1))
+        {
+            if (PointInRect(mouseState->x,mouseState->y,drawRect))
+            {
+                e->augment = i;
+            }
+        }
+    }
+
+    free(augmentStr);
 
     al_draw_line(10,73,246,73,FRIENDLY,1);
     
@@ -868,6 +890,8 @@ UIElement* GetUIElement(Panel* p, char* name)
 }
 void InitUI()
 {
+    ui.augmentIconIndex = LoadSprite("assets/ui/augment.png",false);
+
     ui.mainMenuPanel = CreatePanel(48,48,160,112,15);
     AddButton(&ui.mainMenuPanel,"Return","Return",33,17,96,16);
     AddButton(&ui.mainMenuPanel,"Options","Options",33,49,96,16);

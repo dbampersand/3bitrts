@@ -17,11 +17,6 @@ function setup()
 
     SetObjType(TYPE_MELEEDPS);
     IsPlayerChoosable(true);
-
-
-
-
-
 end
 
 function update(dt)

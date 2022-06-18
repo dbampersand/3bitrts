@@ -33,6 +33,9 @@ typedef struct Encounter
     Encounter_Difficulty difficulty;
     
     int loadScreen_spriteIndex; 
+
+    int augment;
+    int maxaugment;
 } Encounter;
 
 void LoadEncounter(char* dirPath,lua_State* l);
