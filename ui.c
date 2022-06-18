@@ -22,6 +22,7 @@
 #include "luafuncs.h"
 #include "loadscreen.h"
 #include "settings.h"
+#include "augment.h"
 void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
     if (mouseStateLastFrame->buttons & 1)
@@ -376,6 +377,27 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
 
     al_draw_text(ui.font,FRIENDLY,16,18,0,"Augment");
     al_draw_text(ui.font,FRIENDLY,84,18,0,augmentStr);
+
+    int amtDamagePercent = GetAugmentDamageBonus(100,e->augment);
+    char* dmgString = calloc(1 + NumDigits(amtDamagePercent) + 1 +strlen("Damage ") + 1,sizeof(char));
+    sprintf(dmgString,"+%i%% Damage",amtDamagePercent);
+    al_draw_text(ui.tinyFont,FRIENDLY,16,40,0,dmgString);
+
+
+    int amtHealthPercent = GetAugmentHealthBonus(100,e->augment);
+    char* healthString = calloc(1 + NumDigits(amtHealthPercent) + 1 +strlen("HP ") + 1,sizeof(char));
+    sprintf(healthString,"+%i%% HP",amtHealthPercent);
+    al_draw_text(ui.tinyFont,FRIENDLY,92,40,0,healthString);
+
+    int amtAbilityPercent = GetAugmentAbilityDamage(100,e->augment);
+    char* abilityDmg = calloc(1 + NumDigits(amtAbilityPercent) + 1 +strlen("Ability Damage ") + 1,sizeof(char));
+    sprintf(abilityDmg,"+%i%% Ability Damage",amtAbilityPercent);
+    al_draw_text(ui.tinyFont,FRIENDLY,138,40,0,abilityDmg);
+
+
+    free(dmgString);
+    free(healthString);
+
 
     int augmentX = 96;
     e->maxaugment = 4;

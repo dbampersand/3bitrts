@@ -2,39 +2,46 @@
 
 #include "gameobject.h"
 #include "shield.h"
+#include "augment.h"
+#include "encounter.h"
 
 bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
 {
+    float value = e->value;
+    if (!IsOwnedByPlayer(from))
+    {
+        if (currEncounterRunning)
+            value += GetAugmentAbilityDamage(value,currEncounterRunning->augment);
+    }
     int sign = 1; 
     if (remove) sign = -1;
     if (e->effectType == EFFECT_MAXHP)
     {
-        ModifyMaxHP(target,e->value*sign);
+        ModifyMaxHP(target,value*sign);
     }
     if (e->effectType == EFFECT_HURT)
     {
-        return Damage(from,target,e->value*sign);
-
+        return Damage(from,target,value*sign);
     }
     if (e->effectType == EFFECT_HEAL)
     {
-        Heal(target,e->value*sign);
+        Heal(target,value*sign);
     }
     if (e->effectType ==  EFFECT_THREAT)
     {
-        AddThreat(from,target,e->value*sign);
+        AddThreat(from,target,value*sign);
     }
     if (e->effectType == EFFECT_SPEED)
     {
-        AddSpeed(target,e->value*sign);
+        AddSpeed(target,value*sign);
     }
     if (e->effectType == EFFECT_SHIELD)
     {
-        AttachShield(target,e->duration,e->value*sign);
+        AttachShield(target,e->duration,value*sign);
     }
     if (e->effectType == EFFECT_DAMAGE)
     {
-        AddDamage(target,e->value*sign);
+        AddDamage(target,value*sign);
     }
     if (e->effectType == EFFECT_INVULN)
     {

@@ -15,6 +15,7 @@
 #include "sprite.h"
 #include "sound.h"
 #include "gamestate.h"
+#include "augment.h"
 
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);
@@ -41,7 +42,7 @@ static void dumpstack (lua_State* l) {
 }
 int L_SetHP(lua_State* l)
 {
-    currGameObjRunning->health = lua_tonumber(l,1);
+    currGameObjRunning->health = lua_tonumber(l,1) + GetAugmentHealthBonus(lua_tonumber(l,1),currEncounterRunning->augment);
     if (currGameObjRunning->health > currGameObjRunning->maxHP)
     {
         currGameObjRunning->health = currGameObjRunning->maxHP;
@@ -548,7 +549,7 @@ int L_SetAbilityRange(lua_State* l)
 int L_SetDamage(lua_State* l)
 {
     float damage = lua_tonumber(l,1);
-    currGameObjRunning->baseDamage = damage;
+    currGameObjRunning->baseDamage = damage + GetAugmentDamageBonus(damage,currEncounterRunning->augment);
     return 0;
 }
 int L_AddAttackSprite(lua_State* l)
