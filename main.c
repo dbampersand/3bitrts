@@ -75,12 +75,17 @@ void init()
 
     atexit(EndSettings);
 
+    for (int i = 0; i < numEncounters; i++)
+    {
+        SetEncounterRandAugments(encounters[i]);
+    }
 }
 
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
     lua_settop(luaState,0);
     CheckSelected(mouseState,mouseStateLastFrame, keyState);
+    ProcessAugments(currEncounterRunning->augments,dt);
     UpdateAttacks(dt);
     SetControlGroups(keyState);
     GetControlGroup(keyState);

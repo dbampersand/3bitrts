@@ -45,7 +45,7 @@ function update(dt)
         targ3 = {};
         targ3["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_TANK)
         CastAbility(3,2,{targ3});
-
+§
 
 
     end

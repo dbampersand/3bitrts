@@ -393,6 +393,23 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     char* abilityDmg = calloc(1 + NumDigits(amtAbilityPercent) + 1 +strlen("Ability Damage ") + 1,sizeof(char));
     sprintf(abilityDmg,"+%i%% Ability Damage",amtAbilityPercent);
     al_draw_text(ui.tinyFont,FRIENDLY,138,40,0,abilityDmg);
+    
+
+    int row = 52;
+    int column = 16;
+    for (int i = 0; i < MAX_AUGMENTS; i++)
+    {
+        Augment* a = &currEncounterRunning->augments[i];
+        char* description = GetAugmentDescription(a->augment);
+        al_draw_text(ui.tinyFont,FRIENDLY,column,row,0,description);
+
+        column += al_get_text_width(ui.tinyFont,description)+5;
+        if (i >= MAX_AUGMENTS/3-1)
+        {
+            row += al_get_font_line_height(ui.tinyFont)+2;
+            column = 16;
+        }
+    }
 
 
     free(dmgString);
@@ -412,6 +429,7 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
             if (PointInRect(mouseState->x,mouseState->y,drawRect))
             {
                 e->augment = i;
+                SetEncounterRandAugments(currEncounterRunning);
             }
         }
     }

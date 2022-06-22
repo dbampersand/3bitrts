@@ -669,6 +669,11 @@ int L_CreateCircularProjectiles(lua_State* l)
     }
     return 0;
 }
+int L_SetMoveSpeed(lua_State* l)
+{
+    SetMoveSpeed(currGameObjRunning,lua_tonumber(l,1));
+    return 0;
+}
 int L_CreateProjectile(lua_State* l)
 {
     const float x = lua_tonumber(l,1);
@@ -1722,4 +1727,6 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_SetEncounterName);
     lua_setglobal(luaState, "SetEncounterName");
 
+    lua_pushcfunction(luaState, L_SetMoveSpeed);
+    lua_setglobal(luaState, "SetMoveSpeed");
 }

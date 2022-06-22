@@ -98,6 +98,10 @@ void ProcessEffects(GameObject* g, float dt)
 void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
 {
     if (!e) return;
+    if (HasAugment(currEncounterRunning,AUGMENT_BAD_EFFECT_TIME))
+    {
+        Augment_ChangeEffectTime(e,currEncounterRunning->augment);
+    }
     if (e->trigger == TRIGGER_INSTANT)
     {
         ProcessEffect(e,from,target,false);

@@ -559,7 +559,6 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     memset(found->abilities,0,sizeof(Ability)*4);
     memset(currGameObjRunning,0,sizeof(GameObject));
     currGameObjRunning->threatMultiplier = 1;
-    currGameObjRunning->speed = 5;
     currGameObjRunning->health = 100;
     currGameObjRunning->maxHP = 100;
     currGameObjRunning->range = 1;
@@ -570,7 +569,8 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     currGameObjRunning->path = prefab->path;
     currGameObjRunning->name = prefab->name;
     currGameObjRunning->lua_buffer = prefab->lua_buffer; 
-    currGameObjRunning->speed = 50;
+    SetMoveSpeed(currGameObjRunning,50);
+    //currGameObjRunning->speed = 50;
 
     currGameObjRunning->position.x = x;
     currGameObjRunning->position.y = y;
@@ -775,6 +775,11 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
 void KillObj(GameObject* g)
 {
     if (!g) return;
+    if (HasAugment(currEncounterRunning,AUGMENT_BAD_DEATHINCDMG))
+    {
+        if (!IsOwnedByPlayer(g))
+            Bad_AugmentDeathAddDamage(g, currEncounterRunning->augment);
+    }
     g->properties &= ~OBJ_ACTIVE;
     g->spriteIndex = 0;
     DeleteThreatList(g);
@@ -1403,6 +1408,18 @@ Rect GetObjRect(GameObject* g)
     Rect r = (Rect){g->position.x,g->position.y,al_get_bitmap_width(sprites[g->spriteIndex].sprite),al_get_bitmap_height(sprites[g->spriteIndex].sprite)};
     return r;
 }
+void SetMoveSpeed(GameObject* g, float value)
+{
+    if (IsOwnedByPlayer(g))
+    {
+        if (HasAugment(currEncounterRunning,AUGMENT_GOOD_MOVESPEED))
+        {
+            value += Good_GetAugmentMoveSpeed(value,currEncounterRunning->augment);
+        }
+    }
+    g->speed = value;
+}
+
 bool Damage(GameObject* source, GameObject* g, float value)
 {
     if (!g) return false;
@@ -1411,8 +1428,17 @@ bool Damage(GameObject* source, GameObject* g, float value)
     {
         return false;
     }
+    if (HasAugment(currEncounterRunning,AUGMENT_NEUTRAL_TOTALDAMAGE))
+    {
+        value += Neutral_GetAugmentAbilityDamage(value,currEncounterRunning->augment);
+    }
     if (IsOwnedByPlayer(source))
     {
+        if (HasAugment(currEncounterRunning,AUGMENT_GOOD_DAMAGE))
+        {
+            value += Neutral_GetAugmentAbilityDamage(value,currEncounterRunning->augment);
+        }
+
         gameStats.damageDone += value;
     }
     value = DamageShields(g,value);
@@ -1429,8 +1455,17 @@ bool Damage(GameObject* source, GameObject* g, float value)
 void Heal(GameObject* g, float value)
 {
     if (!g) return;
+    if (HasAugment(currEncounterRunning,AUGMENT_NEUTRAL_TOTALHEAL))
+    {
+        value += Neutral_GetAugmentAbilityHeal(value,currEncounterRunning->augment);
+    }
+
     if (IsOwnedByPlayer(g))
     {
+        if (HasAugment(currEncounterRunning,AUGMENT_GOOD_HEALS))
+        {
+            value += Good_GetAugmentAbilityHeal(value,currEncounterRunning->augment);
+        }
         gameStats.healingDone += value;
     }
 

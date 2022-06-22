@@ -2,6 +2,7 @@
 
 #include "ability.h"
 #include "limits.h"
+#include "augment.h"
 
 typedef struct Sprite Sprite;
 typedef struct lua_State lua_State;
@@ -36,6 +37,9 @@ typedef struct Encounter
 
     int augment;
     int maxaugment;
+
+    Augment augments[MAX_AUGMENTS];
+
 } Encounter;
 
 void LoadEncounter(char* dirPath,lua_State* l);
