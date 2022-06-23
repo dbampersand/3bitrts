@@ -19,8 +19,7 @@
 #include "shield.h"
 #include "player.h"
 #include "ui.h"
-
-
+#include "augment.h"
 #include "encounter.h"
 #include "damagenumber.h"
 #include "gamestate.h"
@@ -1416,6 +1415,14 @@ void SetMoveSpeed(GameObject* g, float value)
         {
             value += Good_GetAugmentMoveSpeed(value,currEncounterRunning->augment);
         }
+    }
+    else
+    {
+        if (HasAugment(currEncounterRunning,AUGMENT_BAD_MOVESPEED))
+        {
+            value += Bad_GetAugmentMoveSpeed(value,currEncounterRunning->augment);
+        }
+
     }
     g->speed = value;
 }

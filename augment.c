@@ -43,6 +43,11 @@ float Good_GetAugmentMoveSpeed(float movespeed, int augmentlevel)
 {
     return movespeed*(5/(float)augmentlevel);
 }
+float Bad_GetAugmentMoveSpeed(float movespeed, int augmentlevel)
+{
+    return movespeed*(5/(float)augmentlevel);
+}
+
 int GetNumBadAugments(int augmentLevel)
 {
     if (augmentLevel <= 2)
@@ -237,6 +242,8 @@ void SetEncounterRandAugments(Encounter* e)
 }
 char* GetAugmentDescription(AUGMENT_TYPES aug)
 {
+
+    //BAD EFFECTS
     if (aug == AUGMENT_BAD_EFFECT_TIME)
     {
         return "Enemy effects last longer";
@@ -249,6 +256,12 @@ char* GetAugmentDescription(AUGMENT_TYPES aug)
     {
         return "Death adds bonus damage to nearby units";
     }
+    if (aug == AUGMENT_BAD_MOVESPEED)
+    {
+        return "Adds move speed";
+    }
+
+    //NEUTRAL EFFECTS
     if (aug == AUGMENT_NEUTRAL_TOTALHEAL)
     {
         return "All healing increased";
@@ -258,6 +271,7 @@ char* GetAugmentDescription(AUGMENT_TYPES aug)
         return "All damage increased";
     }
 
+    //GOOD EFFECTS
     if (aug == AUGMENT_GOOD_HEALS)
     {
         return "Your healing increased";
@@ -284,13 +298,7 @@ char* GetAugmentDescription(AUGMENT_TYPES aug)
     {
         return "Neutral divider (Bug)";
     }
-    return "";
-
-
-
-
-
-
+    return "No Text (bug)";
 }
 void Bad_AugmentDeathAddDamage(GameObject* g, int augmentLevel)
 {
@@ -303,4 +311,21 @@ void Bad_AugmentDeathAddDamage(GameObject* g, int augmentLevel)
                 AddDamage(g2,10 * augmentLevel);
         }
     }
+}
+
+ALLEGRO_COLOR* GetAugmentDescriptionColor(Augment* a)
+{
+    if (a->friendliness == AUGMENT_GOOD)
+    {
+        return &FRIENDLY;
+    }
+        if (a->friendliness == AUGMENT_NEUTRAL)
+    {
+        return &BG;
+    }
+        if (a->friendliness == AUGMENT_BAD)
+    {
+        return &ENEMY;
+    }
+    return NULL;
 }

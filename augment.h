@@ -9,6 +9,7 @@ typedef enum AUGMENT_TYPES
     AUGMENT_BAD_EFFECT_TIME,        //Augment_ChangeEffectTime
     AUGMENT_BAD_RANDOMDMGPOOLS,     //Augment_RandomDmgPool
     AUGMENT_BAD_DEATHINCDMG,        //Bad_AugmentDeathAddDamage
+    AUGMENT_BAD_MOVESPEED,             //Bad_GetAugmentMoveSpeed
 
     AUGMENT_NEUTRAL_DIVIDER,                //None
 
@@ -26,7 +27,7 @@ typedef enum AUGMENT_TYPES
     
 } AUGMENT_TYPES;
 
-#define MAX_AUGMENTS 6
+#define MAX_AUGMENTS 4
 typedef enum AUGMENT_BUFF_TYPE
 {
     AUGMENT_GOOD,
@@ -44,11 +45,8 @@ typedef struct Augment
 typedef struct Effect Effect;
 typedef struct Encounter Encounter; 
 typedef struct GameObject GameObject;
+typedef struct ALLEGRO_COLOR ALLEGRO_COLOR;
 
-float GetAugmentDamageBonus(int damage,int augmentLevel);
-float GetAugmentHealthBonus(int health, int augmentLevel);
-float GetAugmentAbilityDamage(int damage, int augmentLevel);
-float GetAugmentMultiplier(int augmentLevel);
 
 int GetNumBadAugments(int augmentLevel);
 int GetNumGoodAugments(int augmentLevel);
@@ -62,9 +60,21 @@ void ProcessAugments(Augment* a, float dt);
 void Augment_ChangeEffectTime(Effect* e, int augmentLevel);
 void Augment_RandomDmgPool(Augment* a, int augmentLevel);
 char* GetAugmentDescription(AUGMENT_TYPES aug);
+
 float Neutral_GetAugmentAbilityDamage(int damage, int augmentlevel);
 float Neutral_GetAugmentAbilityHeal(int damage, int augmentlevel);
+
 float Good_GetAugmentAbilityHeal(int heal, int augmentlevel);
 float Good_GetAugmentAbilityDamage(int damage, int augmentlevel);
 float Good_GetAugmentMoveSpeed(float movespeed, int augmentlevel);
+
+float Bad_GetAugmentMoveSpeed(float movespeed, int augmentlevel);
 void Bad_AugmentDeathAddDamage(GameObject* g, int augmentLevel);
+
+float GetAugmentDamageBonus(int damage,int augmentLevel);
+float GetAugmentHealthBonus(int health, int augmentLevel);
+float GetAugmentAbilityDamage(int damage, int augmentLevel);
+float GetAugmentMultiplier(int augmentLevel);
+
+
+ALLEGRO_COLOR* GetAugmentDescriptionColor(Augment* a);

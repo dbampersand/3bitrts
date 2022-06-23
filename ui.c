@@ -401,10 +401,12 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     {
         Augment* a = &currEncounterRunning->augments[i];
         char* description = GetAugmentDescription(a->augment);
-        al_draw_text(ui.tinyFont,FRIENDLY,column,row,0,description);
+        ALLEGRO_COLOR* color = GetAugmentDescriptionColor(a);
+
+        al_draw_text(ui.tinyFont,*color,column,row,0,description);
 
         column += al_get_text_width(ui.tinyFont,description)+5;
-        if (i >= MAX_AUGMENTS/3-1)
+        if (i >= MAX_AUGMENTS/2-1)
         {
             row += al_get_font_line_height(ui.tinyFont)+2;
             column = 16;
