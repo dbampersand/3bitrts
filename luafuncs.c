@@ -893,6 +893,7 @@ int L_CreateAOE(lua_State* l)
         effects[i-1] = e;
     }       
 
+/*
     Attack a = {0};
     a.x = x;
     a.y = y;
@@ -913,9 +914,9 @@ int L_CreateAOE(lua_State* l)
     a.attackType = ATTACK_AOE;
     a.tickrate = tickrate;
     a.color = color;
-    a.dither = dither;
-
-    Attack* ref = AddAttack(&a);
+    a.dither = dither;*/
+    Attack* ref = CreateAoE(x,y, (char*)effectPortrait, radius, tickrate, duration, shouldCallback,  properties,  color,  dither,  len, effects);
+    //Attack* ref = AddAttack(&a);
 
     lua_pushnumber(l,ref - attacks);
     return 1;

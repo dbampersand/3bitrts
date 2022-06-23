@@ -420,17 +420,19 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
 
     int augmentX = 96;
     e->maxaugment = 4;
+    if (e->augment <= 0)
+        e->augment = 1; 
     for (int i = 0; i < e->maxaugment+1; i++)
     {
         Rect drawRect = (Rect){augmentX,20,GetWidthSprite(&sprites[ui.augmentIconIndex]),GetHeightSprite(&sprites[ui.augmentIconIndex])};
-        DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0,i <= e->augment ? FRIENDLY : GROUND,false);
+        DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0,i < e->augment ? FRIENDLY : GROUND,false);
         augmentX += drawRect.w+3;
 
         if (mouseStateLastFrame->buttons & 1 && !(mouseState->buttons & 1))
         {
             if (PointInRect(mouseState->x,mouseState->y,drawRect))
             {
-                e->augment = i;
+                e->augment = i+1;
                 SetEncounterRandAugments(currEncounterRunning);
             }
         }

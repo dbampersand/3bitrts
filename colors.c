@@ -29,6 +29,29 @@ ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy)
         return DAMAGE;
     return BG;
 }
+bool AlColIsEq(ALLEGRO_COLOR c, ALLEGRO_COLOR c2)
+{
+    return (c.r == c2.r && c.g == c2.g && c.b == c2.b && c.a == c2.a);
+}
+Color ALColorToCol(ALLEGRO_COLOR c)
+{
+    if (AlColIsEq(c,BG))
+        return COLOR_BG;
+    if (AlColIsEq(c,FRIENDLY))
+        return COLOR_FRIENDLY;
+    if (AlColIsEq(c,ENEMY))
+        return COLOR_ENEMY;
+    if (AlColIsEq(c,GROUND))
+        return COLOR_GROUND;
+    if (AlColIsEq(c,POISON))
+        return COLOR_POISON;
+    if (AlColIsEq(c,HEAL))
+        return COLOR_HEAL;
+    if (AlColIsEq(c,DAMAGE))
+        return COLOR_DAMAGE;
+    
+    return COLOR_DEFAULT;
+}
 void InitColors()
 {
     BG = al_map_rgba(40,32,36,255);

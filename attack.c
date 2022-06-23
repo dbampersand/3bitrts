@@ -24,6 +24,34 @@ void InitAttacks()
     }
     memset(attacks,0,sizeof(Attack)*MAX_ATTACKS);
 }
+Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float tickrate, float duration, bool shouldCallback, int properties, int color, int dither, int numEffects, Effect* effects)
+{
+    Attack a = {0};
+    a.x = x;
+    a.y = y;
+    a.targx = x;
+    a.targy = y;
+    a.radius = 0;
+    a.easing = 0.1f;
+    a.targetRadius = radius;
+    a.effects = calloc(numEffects,sizeof(Effect));
+    memcpy(a.effects,effects,sizeof(Effect)*numEffects);
+    a.numEffects = numEffects;
+    a.ownedBy = currGameObjRunning;
+    a.properties = properties;
+    a.cameFrom = currAbilityRunning;
+    a.ownedBy = currGameObjRunning;
+    a.shouldCallback = shouldCallback;
+    a.duration = duration;
+    a.attackType = ATTACK_AOE;
+    a.tickrate = tickrate;
+    a.color = color;
+    a.dither = dither;
+
+    Attack* ref = AddAttack(&a);
+    return ref;
+
+}
 
 Attack* AddAttack(Attack* a)
 {
@@ -221,7 +249,7 @@ void UpdateAttack(Attack* a, float dt)
 {
     if (!(a->properties & ATTACK_ACTIVE))
         return;
-    if (a->cameFrom->castType != ABILITY_TOGGLE)
+    if (a->cameFrom && a->cameFrom->castType != ABILITY_TOGGLE)
     {
         a->duration -= dt;
     }

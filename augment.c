@@ -6,6 +6,7 @@
 #include "colors.h"
 #include "gameobject.h"
 #include "helperfuncs.h"
+#include "attack.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,11 +42,11 @@ float Good_GetAugmentAbilityDamage(int damage, int augmentlevel)
 }
 float Good_GetAugmentMoveSpeed(float movespeed, int augmentlevel)
 {
-    return movespeed*(5/(float)augmentlevel);
+    return movespeed*(0.1f/(float)augmentlevel);
 }
 float Bad_GetAugmentMoveSpeed(float movespeed, int augmentlevel)
 {
-    return movespeed*(5/(float)augmentlevel);
+    return movespeed*(0.1f/(float)augmentlevel);
 }
 
 int GetNumBadAugments(int augmentLevel)
@@ -82,22 +83,22 @@ Augment GetRandomAugment(AUGMENT_BUFF_TYPE augType, Encounter* e)
     int min; int max;
     if (augType == AUGMENT_GOOD)
     {
-        min = AUGMENT_GOOD_DIVIDER+1;
+        min = AUGMENT_GOOD_DIVIDER;
         max = AUGMENT_ALL;
     }
     else if (augType == AUGMENT_BAD)
     {
-        min = AUGMENT_NULL+1;
+        min = AUGMENT_NULL;
          max = AUGMENT_NEUTRAL_DIVIDER;
     }
     else if (augType == AUGMENT_NEUTRAL)
     {
-         min = AUGMENT_NEUTRAL_DIVIDER+1;
+         min = AUGMENT_NEUTRAL_DIVIDER;
          max = AUGMENT_GOOD_DIVIDER;
     }
     else
     {
-       Augment a = {0};
+        Augment a = {0};
         a.augment = AUGMENT_NULL;
         a.friendliness = AUGMENT_NEUTRAL;
         return a;
@@ -260,6 +261,10 @@ char* GetAugmentDescription(AUGMENT_TYPES aug)
     {
         return "Adds move speed";
     }
+    if (aug == AUGMENT_BAD_ENEMY_EXPLODES)
+    {
+        return "Enemies explode on death";
+    }
 
     //NEUTRAL EFFECTS
     if (aug == AUGMENT_NEUTRAL_TOTALHEAL)
@@ -328,4 +333,22 @@ ALLEGRO_COLOR* GetAugmentDescriptionColor(Augment* a)
         return &ENEMY;
     }
     return NULL;
+}
+void Bad_EnemyExplodes(GameObject* g, int augmentLevel)
+{
+    float x; float y; 
+    GetCentre(g,&x,&y);
+    Effect e;
+    e.trigger = TRIGGER_TIMER;
+    e.effectType = EFFECT_DAMAGE;
+    e.from = NULL;
+    e.value = augmentLevel * 30;
+    e.numTriggers = 1;
+    e.timer = 0;
+    e.duration = 0;
+    e.tickTime = 0;
+    e.enabled = false;
+    e.spriteIndex_Portrait = 0;
+
+    CreateAoE(x,y, NULL, 10, 1, 1, false, ATTACK_HITS_FRIENDLIES, ALColorToCol(ENEMY), DITHER_VERTICAL_EIGTH, 1, &e);
 }

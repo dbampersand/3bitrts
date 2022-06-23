@@ -65,3 +65,4 @@ void DrawAttacks(float dt);
 void UpdateAttacks(float dt);
 void UpdateAttack(Attack* a, float dt);
 void ApplyAttack(Attack* a, GameObject* target);
+Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float tickrate, float duration, bool shouldCallback, int properties, int color, int dither, int numEffects, Effect* effects);

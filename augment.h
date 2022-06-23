@@ -9,18 +9,19 @@ typedef enum AUGMENT_TYPES
     AUGMENT_BAD_EFFECT_TIME,        //Augment_ChangeEffectTime
     AUGMENT_BAD_RANDOMDMGPOOLS,     //Augment_RandomDmgPool
     AUGMENT_BAD_DEATHINCDMG,        //Bad_AugmentDeathAddDamage
-    AUGMENT_BAD_MOVESPEED,             //Bad_GetAugmentMoveSpeed
+    AUGMENT_BAD_MOVESPEED,          //Bad_GetAugmentMoveSpeed
+    AUGMENT_BAD_ENEMY_EXPLODES,     //Bad_EnemyExplodes
 
     AUGMENT_NEUTRAL_DIVIDER,                //None
 
     AUGMENT_NEUTRAL_TOTALHEAL,      //Neutral_GetAugmentAbilityHeal
-    AUGMENT_NEUTRAL_TOTALDAMAGE,    // Neutral_GetAugmentAbilityDamage
+    AUGMENT_NEUTRAL_TOTALDAMAGE,    //Neutral_GetAugmentAbilityDamage
 
     AUGMENT_GOOD_DIVIDER,                   //None
 
     AUGMENT_GOOD_HEALS,             //Good_GetAugmentAbilityHeal
-    AUGMENT_GOOD_DAMAGE,             //Good_GetAugmentAbilityDamage
-    AUGMENT_GOOD_MOVESPEED,             //Good_GetAugmentMoveSpeed
+    AUGMENT_GOOD_DAMAGE,            //Good_GetAugmentAbilityDamage
+    AUGMENT_GOOD_MOVESPEED,         //Good_GetAugmentMoveSpeed
 
 
     AUGMENT_ALL                             //None
@@ -70,6 +71,8 @@ float Good_GetAugmentMoveSpeed(float movespeed, int augmentlevel);
 
 float Bad_GetAugmentMoveSpeed(float movespeed, int augmentlevel);
 void Bad_AugmentDeathAddDamage(GameObject* g, int augmentLevel);
+void Bad_EnemyExplodes(GameObject* g, int augmentLevel);
+
 
 float GetAugmentDamageBonus(int damage,int augmentLevel);
 float GetAugmentHealthBonus(int health, int augmentLevel);

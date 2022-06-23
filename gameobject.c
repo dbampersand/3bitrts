@@ -675,7 +675,7 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
     }
     if (luaL_loadbuffer(l, g->lua_buffer,strlen(g->lua_buffer),NULL) || lua_pcall(l, 0, 0, 0))
      {
-         printf("%s\n\n---\nCan't load lua file:\n %s\n---\n\n\n",COL_ERR,lua_tostring(l,-1));
+         printf("%s\n\n---\nCan't load lua file:\n %s Filename: %s\n---\n\n\n",COL_ERR,lua_tostring(l,-1),filename);
          fflush(stdout);
      }
      else
@@ -771,14 +771,32 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
      }
      free(cpy);
 }
-void KillObj(GameObject* g)
+void KillObj(GameObject* g, bool trigger)
 {
     if (!g) return;
-    if (HasAugment(currEncounterRunning,AUGMENT_BAD_DEATHINCDMG))
+    if (trigger)
     {
         if (!IsOwnedByPlayer(g))
-            Bad_AugmentDeathAddDamage(g, currEncounterRunning->augment);
+        {
+            if (!ObjIsDecoration(g))
+            {
+                if (HasAugment(currEncounterRunning,AUGMENT_BAD_DEATHINCDMG))
+                {
+                    Bad_AugmentDeathAddDamage(g, currEncounterRunning->augment);
+                }
+                if (HasAugment(currEncounterRunning,AUGMENT_BAD_ENEMY_EXPLODES))
+                {
+                    Bad_AugmentDeathAddDamage(g, currEncounterRunning->augment);
+                }
+                if (HasAugment(currEncounterRunning,AUGMENT_BAD_ENEMY_EXPLODES) && GetPlayerOwnedBy(g) == 1)
+                {
+                    Bad_EnemyExplodes(g,currEncounterRunning->augment);
+                }
+            }
+
+        }
     }
+
     g->properties &= ~OBJ_ACTIVE;
     g->spriteIndex = 0;
     DeleteThreatList(g);
@@ -911,6 +929,7 @@ void SetSelected(GameObject* g, bool select)
 }
 bool IsOwnedByPlayer(GameObject* g)
 {
+    if (!g) return false;
     return (g->properties & OBJ_OWNED_BY) == 0;
 }
 int GetPlayerOwnedBy(GameObject* g)
@@ -1454,7 +1473,7 @@ bool Damage(GameObject* source, GameObject* g, float value)
     AddDamageNumber((int)value,g->position.x+(rand()%(int)GetWidth(g)*1.1f),g->position.y+(rand()%(int)GetHeight(g)*1.1f),source);
     if (g->health <= 0)
     {
-        KillObj(g);
+        KillObj(g,true);
         return true;
     }
     return false;
@@ -1819,7 +1838,7 @@ void RemoveAllGameObjects()
 {
     for (int i = 0; i < MAX_OBJS; i++)
     {
-        KillObj(&objects[i]);
+        KillObj(&objects[i],false);
 
     }
 }

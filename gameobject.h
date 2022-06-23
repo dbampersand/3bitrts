@@ -188,7 +188,7 @@ void Teleport(GameObject* g, float x, float y);
 void GetOffsetCenter(GameObject* g, float* x, float* y);
 float GetDistCentre(GameObject* g1, GameObject* g2);
 void GetCentre(GameObject* g, float* x, float* y);
-void KillObj(GameObject* g);
+void KillObj(GameObject* g, bool trigger);
 bool IsActive(GameObject* g);
 void DoAI(GameObject* g);
 
