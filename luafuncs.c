@@ -16,6 +16,7 @@
 #include "sound.h"
 #include "gamestate.h"
 #include "augment.h"
+#include "ui.h"
 
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);
@@ -921,6 +922,24 @@ int L_CreateAOE(lua_State* l)
     lua_pushnumber(l,ref - attacks);
     return 1;
 }
+int L_PushMessage(lua_State* l)
+{
+    gameState = GAMESTATE_IN_CHATBOX;
+    chatbox.showing = true;
+    const char* msg = lua_tostring(l,1);
+    if (msg)
+    {
+        numChatboxLines++;
+        if (!chatboxLines)
+        {
+            chatboxLines = calloc(1,sizeof(char*));
+        }
+        chatboxLines = realloc(chatboxLines,numChatboxLines*sizeof(char*));
+        chatboxLines[numChatboxLines-1] = calloc(strlen(msg),sizeof(char));
+        strcpy(chatboxLines[numChatboxLines-1],msg);
+    }
+    return 1;
+}
 int L_RemoveAttack(lua_State* l)
 {
     int atk = lua_tonumber(l,1);
@@ -1730,4 +1749,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetMoveSpeed);
     lua_setglobal(luaState, "SetMoveSpeed");
+
+    lua_pushcfunction(luaState, L_PushMessage);
+    lua_setglobal(luaState, "PushMessage");
+
+
 }

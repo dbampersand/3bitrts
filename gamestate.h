@@ -11,8 +11,9 @@ typedef enum GameState {
     GAMESTATE_CHOOSING_UNITS = 4,
     GAMESTATE_LOAD_ENCOUNTER = 5,
     GAMESTATE_INGAME = 6,
-    GAMESTATE_END = 7,
-    GAMESTATE_EXIT = 8
+    GAMESTATE_IN_CHATBOX = 7,
+    GAMESTATE_END = 8,
+    GAMESTATE_EXIT = 9
 } GameState;
 GameState gameState;
 
@@ -63,3 +64,5 @@ void UpdateTransition(float dt);
 void DrawTransition(float dt);
 void FinishTransition();
 bool GameStateIsTransition(GameState* g);
+bool GameIsPaused();
+bool GameIsIngame();

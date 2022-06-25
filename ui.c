@@ -23,6 +23,33 @@
 #include "loadscreen.h"
 #include "settings.h"
 #include "augment.h"
+
+void DrawUIChatbox()
+{
+    if (chatbox.text)
+        DrawDescriptionBox(chatbox.text,5,ui.font,ui.boldFont,chatbox.x,chatbox.y,256,80,FRIENDLY);
+
+}
+void EndChatbox()
+{
+    for (int i = 0; i < numChatboxLines; i++)
+    {
+        free(chatboxLines[i]);
+    }
+    free(chatboxLines);
+    chatboxLines = NULL;
+    numChatboxLines = 0;
+    gameState = GAMESTATE_INGAME;
+    chatbox.showing = false;
+    chatbox.text = NULL;
+}
+void Chatbox_NextLine()
+{
+    currentChatLine++;  
+    if (currentChatLine >= numChatboxLines)
+        EndChatbox();
+    chatbox.text = chatboxLines[currentChatLine];
+}
 void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
     if (mouseStateLastFrame->buttons & 1)
@@ -169,6 +196,24 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_S
             Quit();
         }
     }
+    if (ui.currentPanel == &ui.pauseMenuPanel)
+    {
+        if (GetButton(&ui.pauseMenuPanel,"Return"))
+        {
+            ChangeUIPanel(NULL);
+        }
+        if (GetButton(&ui.pauseMenuPanel,"Options"))
+        {
+            ChangeUIPanel(&ui.videoOptionsPanel);
+        }
+        if (GetButton(&ui.pauseMenuPanel,"Exit"))
+        {
+            gameStats.gameWon = false;
+            SetGameStateToEndscreen();
+            StopMusic();
+        }
+
+    }
     SetOptions();
 }
 
@@ -177,6 +222,7 @@ void ChangeUIPanel(Panel* to)
     ui.animatePanel = true;
     ui.changingTo = to;
     ui.animatePanel = UI_ANIMATE_OUT;
+
 }
 void DrawHealthUIElement(GameObject* selected)
 {
@@ -366,6 +412,12 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         DrawEffectPortrait(209,241,&selected->effects[9],FRIENDLY);
         DrawEffectPortrait(225,241,&selected->effects[10],FRIENDLY);
         DrawEffectPortrait(241,241,&selected->effects[11],FRIENDLY);
+
+
+        if (chatbox.showing)
+        {
+            DrawUIChatbox();
+        }
     }
 }
 void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
@@ -936,10 +988,18 @@ void InitUI()
 {
     ui.augmentIconIndex = LoadSprite("assets/ui/augment.png",false);
 
-    ui.mainMenuPanel = CreatePanel(48,48,160,112,15);
+    ui.mainMenuPanel = CreatePanel(48,48,160,144,15);
     AddButton(&ui.mainMenuPanel,"Return","Return",33,17,96,16);
-    AddButton(&ui.mainMenuPanel,"Options","Options",33,49,96,16);
-    AddButton(&ui.mainMenuPanel,"Exit","Exit Game",33,81,96,16);
+    AddButton(&ui.mainMenuPanel,"Tutorial","Tutorial",33,33+16,96,16);
+    AddButton(&ui.mainMenuPanel,"Options","Options",33,81,96,16);
+    AddButton(&ui.mainMenuPanel,"Exit","Exit Game",33,113,96,16);
+
+    ui.pauseMenuPanel = CreatePanel(48,48,160,144,15);
+    AddButton(&ui.pauseMenuPanel,"Return","Return",33,17,96,16);
+    AddButton(&ui.pauseMenuPanel,"Options","Options",33,49,96,16);
+    AddButton(&ui.pauseMenuPanel,"Exit","Exit Game",33,81,96,16);
+
+
 
     ui.videoOptionsPanel = CreatePanel(48,48,160,112,15);
     AddText(&ui.videoOptionsPanel,33,41,"Tag_RenderScale","RenderScale");
@@ -1052,6 +1112,9 @@ void InitUI()
 
         x+=31;
     }
+    memset(&chatbox,0,sizeof(Chatbox));
+    chatbox.y = 256 - 80;
+    chatbox.x = 0;
 
 }
 void UpdateWidget(Widget* w, float dt)
@@ -1242,9 +1305,21 @@ void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE*
     UpdateScrollbar(p,mouseState,mouseStateLastFrame);
 
 }
-
 void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, float dt)
 {
+    //todo: refactor this to be automatic? 
+    if (GameIsIngame())
+    {
+        ui.videoOptionsPanel.back = &ui.pauseMenuPanel;
+        ui.audioOptionsPanel.back = &ui.pauseMenuPanel;
+        ui.accessibilityOptionsPanel.back = &ui.pauseMenuPanel;
+    }
+    else
+    {
+        ui.videoOptionsPanel.back = &ui.mainMenuPanel;
+        ui.audioOptionsPanel.back = &ui.mainMenuPanel;
+        ui.accessibilityOptionsPanel.back = &ui.mainMenuPanel;
+    }
     if (ui.currentPanel)
     {
         UpdateTabButtons(ui.currentPanel, mouseState,mouseStateLastFrame);
@@ -1259,14 +1334,12 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
         }
         else
         {
-            ChangeUIPanel(&ui.mainMenuPanel);
-
-           // ui.currentPanel = &ui.mainMenuPanel;
+            ChangeUIPanel(&ui.pauseMenuPanel);
         }
     }
     if (ui.animatePanel != UI_ANIMATE_STATIC)
     {
-        if (ui.changingTo)
+        //if (ui.changingTo)
         {
             if (ui.animatePanel == UI_ANIMATE_IN)
             {

@@ -27,13 +27,20 @@ typedef struct Scrollbar
     float percent;
     bool clicked;
 } Scrollbar;
+typedef struct Chatbox
+{
+    char* text;
+    bool showing;
+    int x; int y;
+} Chatbox;
 typedef enum UIElement_Type
 {
     ELEMENT_BUTTON,
     ELEMENT_SLIDER,
     ELEMENT_CHECKBOX,
     ELEMENT_TEXT,
-    ELEMENT_PULLDOWN
+    ELEMENT_PULLDOWN,
+    //ELEMENT_CHATBOX
 
 } UIElement_Type;
 typedef enum UIElement_Align
@@ -140,6 +147,7 @@ typedef struct UI
 
     Panel* currentPanel;
     Panel mainMenuPanel;
+    Panel pauseMenuPanel;
     Panel videoOptionsPanel;
     Panel audioOptionsPanel;
     Panel accessibilityOptionsPanel;
@@ -185,12 +193,21 @@ Widget* Widgets_States[NUMGAMESTATES];
 int numSprites_States[NUMGAMESTATES];
 
 #define NUMSPRITESTATESTOALLOC 16
+char** chatboxLines;
+int numChatboxLines;
+int currentChatLine;
 
+Chatbox chatbox;
 UI ui;
 
 #define UI_PADDING 5
 typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE;
 typedef struct Ability Ability;
+
+void Chatbox_NextLine();
+void EndChatbox();
+void DrawUIChatbox();
+
 void CreateWidget(GameState gameStateToAttach, Sprite* spr, int x, int y, Widget_DrawOrder drawOrder,int id);
 void DrawMouse(ALLEGRO_MOUSE_STATE* mouseState, GameObject* mousedOver);
 void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState);

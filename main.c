@@ -83,31 +83,37 @@ void init()
 
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
-    lua_settop(luaState,0);
-    CheckSelected(mouseState,mouseStateLastFrame, keyState);
-    ProcessAugments(currEncounterRunning->augments,dt);
-    UpdateAttacks(dt);
-    SetControlGroups(keyState);
-    GetControlGroup(keyState);
-    UpdateDamageNumbers(dt);
-    UpdatePlayerObjectInteractions(keyState,keyStateLastFrame,mouseState);
-    for (int i = 0; i < numObjects; i++)
+    if (!GameIsPaused())
     {
-        UpdateObject(&objects[i],dt);
+
+
+        lua_settop(luaState,0);
+        CheckSelected(mouseState,mouseStateLastFrame, keyState);
+        ProcessAugments(currEncounterRunning->augments,dt);
+        UpdateAttacks(dt);
+        SetControlGroups(keyState);
+        GetControlGroup(keyState);
+        UpdateDamageNumbers(dt);
+        UpdatePlayerObjectInteractions(keyState,keyStateLastFrame,mouseState);
+        for (int i = 0; i < numObjects; i++)
+        {
+            UpdateObject(&objects[i],dt);
+        }
+        UpdateAbilityInteractions(keyState, keyStateLastFrame,mouseState,mouseStateLastFrame);
+
+        CheckIfGameIsLost();
+        CheckIfGameIsWon();
+
+
+        if (gameState == GAMESTATE_INGAME)
+        {
+            gameStats.timeTaken += dt;
+        }
     }
-    UpdateAbilityInteractions(keyState, keyStateLastFrame,mouseState,mouseStateLastFrame);
-
-    CheckIfGameIsLost();
-    CheckIfGameIsWon();
-
     UpdateParticles(dt);
     ProcessAnimationEffects(dt);
     UpdateWidgets(dt);
 
-    if (gameState == GAMESTATE_INGAME)
-    {
-        gameStats.timeTaken += dt;
-    }
 }
 
 void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
