@@ -18,7 +18,6 @@ function casted(x,y,obj,headingx,headingy)
     for i=0, #objsHit do
 
         if (GetOwnedBy(objsHit[i]) ~= GetOwnedBy(GetObjRef())) then
-            Print("gg" ..  objsHit[i]);
             ApplyEffect(objsHit[i],{f1});
         end
     end

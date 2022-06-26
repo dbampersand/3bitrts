@@ -6,7 +6,15 @@ function setup()
 
 end
 
-function update(dt)
+local shownIntro = false
+
+function update()
+    if shownIntro == false then
+        PushMessage("gg")
+        PushMessage("asdasf")
+        shownIntro = true;
+
+    end
 end
 
 function kill()

@@ -925,6 +925,7 @@ int L_CreateAOE(lua_State* l)
 int L_PushMessage(lua_State* l)
 {
     gameState = GAMESTATE_IN_CHATBOX;
+    transitioningTo = GAMESTATE_IN_CHATBOX;
     chatbox.showing = true;
     const char* msg = lua_tostring(l,1);
     if (msg)
@@ -933,12 +934,14 @@ int L_PushMessage(lua_State* l)
         if (!chatboxLines)
         {
             chatboxLines = calloc(1,sizeof(char*));
+            numChatboxLines = 1;
         }
         chatboxLines = realloc(chatboxLines,numChatboxLines*sizeof(char*));
-        chatboxLines[numChatboxLines-1] = calloc(strlen(msg),sizeof(char));
+        chatboxLines[numChatboxLines-1] = calloc(strlen(msg)+1,sizeof(char));
         strcpy(chatboxLines[numChatboxLines-1],msg);
+        chatbox.text = chatboxLines[0];
     }
-    return 1;
+    return 0;
 }
 int L_RemoveAttack(lua_State* l)
 {
@@ -1056,21 +1059,12 @@ int L_CreateObject(lua_State* l)
         GameObject* prefab = LoadPrefab(l_path);
         g = AddGameobject(prefab,x,y);
         SetOwnedBy(g, PLAYER);
-        if (IsOwnedByPlayer(g))
-        {
-            printf("gg\n");
-        }
 
     }
     else
     {
         g = AddGameobject(g,x,y);
         SetOwnedBy(g, PLAYER);
-        if (IsOwnedByPlayer(g))
-        {
-            printf("gg\n");
-        }
-
     }
     g->summonTime = summonTime;
     g->summonMax = summonTime;

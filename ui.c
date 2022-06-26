@@ -27,7 +27,9 @@
 void DrawUIChatbox()
 {
     if (chatbox.text)
+    {
         DrawDescriptionBox(chatbox.text,5,ui.font,ui.boldFont,chatbox.x,chatbox.y,256,80,FRIENDLY);
+    }
 
 }
 void EndChatbox()
@@ -40,14 +42,19 @@ void EndChatbox()
     chatboxLines = NULL;
     numChatboxLines = 0;
     gameState = GAMESTATE_INGAME;
+    transitioningTo = GAMESTATE_INGAME;
     chatbox.showing = false;
     chatbox.text = NULL;
 }
 void Chatbox_NextLine()
 {
-    currentChatLine++;  
+    currentChatLine++; 
+
     if (currentChatLine >= numChatboxLines)
+    {
         EndChatbox();
+        return;
+    }
     chatbox.text = chatboxLines[currentChatLine];
 }
 void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
@@ -427,11 +434,12 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         DrawEffectPortrait(241,241,&selected->effects[11],FRIENDLY);
 
 
-        if (chatbox.showing)
-        {
-            DrawUIChatbox();
-        }
     }
+    if (chatbox.showing)
+    {
+        DrawUIChatbox();
+    }
+
 }
 void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
@@ -1128,6 +1136,9 @@ void InitUI()
         x+=31;
     }
     memset(&chatbox,0,sizeof(Chatbox));
+    chatboxLines = NULL;
+    numChatboxLines = 0;
+    currentChatLine = 0;
     chatbox.y = 256 - 80;
     chatbox.x = 0;
 

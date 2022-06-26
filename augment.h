@@ -61,6 +61,7 @@ void ProcessAugments(Augment* a, float dt);
 void Augment_ChangeEffectTime(Effect* e, int augmentLevel);
 void Augment_RandomDmgPool(Augment* a, int augmentLevel);
 char* GetAugmentDescription(AUGMENT_TYPES aug);
+void ClearAugments(Encounter* e);
 
 float Neutral_GetAugmentAbilityDamage(int damage, int augmentlevel);
 float Neutral_GetAugmentAbilityHeal(int damage, int augmentlevel);

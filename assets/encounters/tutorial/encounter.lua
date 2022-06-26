@@ -10,3 +10,7 @@ function setup()
 
     RemoveFromEncountersList();
 end
+
+function update()
+
+end

@@ -26,7 +26,10 @@ typedef struct Encounter
     int spriteIndex;
     char* description;
     char* lua_buffer;
+
     int luafunc_setup;
+    int luafunc_update;
+
 
     char* mapPath;
     int numUnitsToSelect;
@@ -49,6 +52,7 @@ void LoadEncounters(char* dirPath,lua_State* l);
 void NextEncounter();
 void PreviousEncounter();
 Encounter* GetEncounterByName(char* name);
+void UpdateEncounter();
 
 Encounter** encounters;
 int numEncounters;

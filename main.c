@@ -75,9 +75,10 @@ void init()
 
     atexit(EndSettings);
 
+
     for (int i = 0; i < numEncounters; i++)
     {
-        SetEncounterRandAugments(encounters[i]);
+        //SetEncounterRandAugments(encounters[i]);
     }
 }
 
@@ -89,6 +90,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
 
         lua_settop(luaState,0);
+        UpdateEncounter();
         CheckSelected(mouseState,mouseStateLastFrame, keyState);
         ProcessAugments(currEncounterRunning->augments,dt);
         UpdateAttacks(dt);
@@ -194,7 +196,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
     }
     if (gameState != GAMESTATE_MAIN_MENU)
-        DrawUI(keyState, keyStateLastFrame, mouseState);
+         DrawUI(keyState, keyStateLastFrame, mouseState);
     DrawMenus(mouseState);
     DrawAnimationEffects();
 
@@ -304,10 +306,17 @@ int main(int argc, char* args[])
             if (event.type == ALLEGRO_EVENT_KEY_DOWN)
             {
                 FinishLoadScreen();
+            }
+        }
+        if (gameState == GAMESTATE_IN_CHATBOX)
+        {
+            if (event.type == ALLEGRO_EVENT_KEY_DOWN)
+            {
                 if (chatbox.showing)
                 {
                     Chatbox_NextLine(); 
                 }
+
             }
         }
         if (event.type == ALLEGRO_EVENT_TIMER) {

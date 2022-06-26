@@ -7,6 +7,7 @@
 #include "helperfuncs.h"
 #include "luafuncs.h"
 #include "gameobject.h"
+#include "map.h"
 
 void LoadEncounter(char* dirPath, lua_State* l)
 {
@@ -47,7 +48,15 @@ void LoadEncounter(char* dirPath, lua_State* l)
 
                             lua_rawgeti(l,LUA_REGISTRYINDEX,funcIndex);
                             lua_pcall(l,0,0,0);
-                        }
+
+                            if (CheckFuncExists("update",e->lua_buffer))
+                            {
+                                lua_getglobal(l, "update");
+                                funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+                                e->luafunc_update = funcIndex;
+                            }
+
+                                            }
                     }
                 }   
             }
@@ -58,6 +67,8 @@ void LoadEncounter(char* dirPath, lua_State* l)
         numEncountersAlloced++;
         encounters = realloc(encounters,numEncountersAlloced*sizeof(Encounter*));
     }
+    e->augment = 1;
+    ClearAugments(e);
     encounters[numEncounters] = e;
     numEncounters++;
 
@@ -184,4 +195,12 @@ Encounter* GetEncounterByName(char* name)
         }
     }
     return NULL;
+}
+void UpdateEncounter()
+{
+    if (currEncounterRunning)
+    {
+        CallLuaFunc(currEncounterRunning->luafunc_update);
+        UpdateMap(currMap);
+    }
 }
