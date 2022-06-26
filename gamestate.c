@@ -47,7 +47,7 @@ void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Enco
     if (toSpawn)
             free(toSpawn);
     toSpawn = calloc(e->numUnitsToSelect,sizeof(GameObject*));
-    for (int i = 0; i < e->numUnitsToSelect; i++)
+    for (int i = 0; i < numObjectsToAdd; i++)
     {
         toSpawn[i] = list[i];
     }
@@ -282,5 +282,7 @@ bool GameIsIngame()
 
 void GoTutorial()
 {
-
+    currEncounterRunning = GetEncounterByName("Tutorial");
+    SetGameStateToLoadingEncounter(NULL,0,currEncounterRunning);
+    ChangeUIPanel(NULL);
 }

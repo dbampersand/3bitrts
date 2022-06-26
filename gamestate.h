@@ -67,3 +67,5 @@ void FinishTransition();
 bool GameStateIsTransition(GameState* g);
 bool GameIsPaused();
 bool GameIsIngame();
+
+void GoTutorial();

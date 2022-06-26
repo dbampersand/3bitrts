@@ -35,8 +35,8 @@ typedef enum GAMEOBJ_TYPE_HINT
 
 typedef enum OBJ_FRIENDLINESS
 {
-    TYPE_ENEMY=0,
-    TYPE_FRIENDLY=1
+    TYPE_FRIENDLY=0,
+    TYPE_ENEMY=1
 }OBJ_FRIENDLINESS;
 
 typedef struct Shield Shield;
@@ -163,7 +163,7 @@ bool IsSelected(GameObject* g);
 void SetSelected(GameObject* g, bool select);
 
 bool IsOwnedByPlayer(GameObject* g);
-void SetOwnedBy(GameObject* g, bool i);
+void SetOwnedBy(GameObject* g, int i);
 void Move(GameObject* g, float delta);
 
 void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col);

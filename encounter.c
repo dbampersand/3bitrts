@@ -170,3 +170,18 @@ void PreviousEncounter()
     }
 
 }
+Encounter* GetEncounterByName(char* name)
+{
+    for (int i = 0; i < numEncounters; i++)
+    {
+        Encounter* e = encounters[i];
+        if (e->name)
+        {
+            if (strcmp(e->name,name)==0)
+            {
+                return e;
+            }
+        }
+    }
+    return NULL;
+}

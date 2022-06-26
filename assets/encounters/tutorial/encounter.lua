@@ -1,7 +1,7 @@
 function setup()
     --SetEncounterSprite();
     --SetEncounterDescription("Tutorial.")
-    --SetEncounterName("Tutorial");
+    SetEncounterName("Tutorial");
 
     SetEncounterMapPath("assets/encounters/tutorial/map.lua");
     SetEncounterDifficulty(DIFFICULTY_EASY);

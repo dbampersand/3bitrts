@@ -936,9 +936,9 @@ int GetPlayerOwnedBy(GameObject* g)
 {
     return (g->properties & OBJ_OWNED_BY) > 0 ? 1 : 0;
 }
-void SetOwnedBy(GameObject* g, bool i)
+void SetOwnedBy(GameObject* g, int i)
 {
-    if (i == false)
+    if (i == TYPE_FRIENDLY)
     {
         g->properties &= ~OBJ_OWNED_BY;
     }

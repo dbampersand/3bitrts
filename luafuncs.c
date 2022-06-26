@@ -1040,9 +1040,6 @@ int L_CreateObject(lua_State* l)
     const int y = lua_tonumber(l,3);
     int PLAYER = lua_tonumber(l,4);
     float summonTime = lua_tonumber(l,5);
-    if (!lua_isnumber(l,PLAYER)) 
-        PLAYER = 1;
-
 
     bool prefabFound = false;
     for (int i = 0; i < numPrefabs; i++)
@@ -1059,14 +1056,21 @@ int L_CreateObject(lua_State* l)
         GameObject* prefab = LoadPrefab(l_path);
         g = AddGameobject(prefab,x,y);
         SetOwnedBy(g, PLAYER);
+        if (IsOwnedByPlayer(g))
+        {
+            printf("gg\n");
+        }
 
     }
     else
     {
         g = AddGameobject(g,x,y);
-
-
         SetOwnedBy(g, PLAYER);
+        if (IsOwnedByPlayer(g))
+        {
+            printf("gg\n");
+        }
+
     }
     g->summonTime = summonTime;
     g->summonMax = summonTime;

@@ -1882,9 +1882,12 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
     if (encounterGoingTo)
     for (int i = 0; i < encounterGoingTo->numUnitsToSelect; i++)
     {
-        Sprite* s = &sprites[toSpawn[i]->spriteIndex];
-        DrawSprite(s,x,y,0,FRIENDLY,false);
-        x += GetWidth(toSpawn[i])+5;
+        if (toSpawn[i])
+        {
+            Sprite* s = &sprites[toSpawn[i]->spriteIndex];
+            DrawSprite(s,x,y,0,FRIENDLY,false);
+            x += GetWidth(toSpawn[i])+5;
+        }
     }
     if (GetButtonIsClicked(&ui.endScreen_Back))
     {

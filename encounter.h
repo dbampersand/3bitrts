@@ -48,6 +48,8 @@ void LoadEncounter(char* dirPath,lua_State* l);
 void LoadEncounters(char* dirPath,lua_State* l);
 void NextEncounter();
 void PreviousEncounter();
+Encounter* GetEncounterByName(char* name);
+
 Encounter** encounters;
 int numEncounters;
 int numEncountersAlloced;
