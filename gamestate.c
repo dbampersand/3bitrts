@@ -76,6 +76,8 @@ void FinishTransition()
     {
         gameState = GAMESTATE_MAIN_MENU;
         transitioningTo = GAMESTATE_MAIN_MENU;
+        ChangeUIPanel(&ui.mainMenuPanel);
+
     }
     if (transitioningTo == GAMESTATE_INGAME)
     {
@@ -106,7 +108,7 @@ void FinishTransition()
         transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
 
         ui.currentPanel = NULL;
-        ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
+        //ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
 
     }
     if (transitioningTo == GAMESTATE_LOAD_ENCOUNTER)
@@ -264,7 +266,6 @@ void SetGameStateToInMenu()
     //transitioningTo = GAMESTATE_MAIN_MENU;
     //transitionTimer = 0;    
     TransitionTo(GAMESTATE_MAIN_MENU);
-
 }
 void DrawStartScreen()
 {
@@ -277,4 +278,9 @@ bool GameIsPaused()
 bool GameIsIngame()
 {
     return (gameState == GAMESTATE_CHOOSING_UNITS || gameState == GAMESTATE_INGAME || gameState == GAMESTATE_IN_CHATBOX);
+}
+
+void GoTutorial()
+{
+
 }

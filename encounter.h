@@ -40,11 +40,14 @@ typedef struct Encounter
 
     Augment augments[MAX_AUGMENTS];
 
+    bool encounterShouldBeSkipped;
+
 } Encounter;
 
 void LoadEncounter(char* dirPath,lua_State* l);
 void LoadEncounters(char* dirPath,lua_State* l);
-
+void NextEncounter();
+void PreviousEncounter();
 Encounter** encounters;
 int numEncounters;
 int numEncountersAlloced;

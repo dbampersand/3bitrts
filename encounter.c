@@ -87,6 +87,7 @@ int sortEncounters(const void* a, const void* b)
 
     return ( e->difficulty - e2->difficulty);
 }
+
 void LoadEncounters(char* dirPath, lua_State* l)
 {
     numEncountersAlloced=0;
@@ -134,4 +135,38 @@ void LoadEncounters(char* dirPath, lua_State* l)
         closedir(d);
     }
     qsort(encounters,numEncounters,sizeof(Encounter*),sortEncounters);
+
+    if (encounters[0]->encounterShouldBeSkipped)
+    {
+        NextEncounter();
+    }
+}
+void NextEncounter()
+{
+    if (numEncounters == 0)
+        return;
+
+    selectedEncounterIndex++;
+    selectedEncounterIndex = (selectedEncounterIndex) % (numEncounters);
+    while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped)
+    {
+        selectedEncounterIndex++;
+        selectedEncounterIndex = (selectedEncounterIndex) % (numEncounters);
+    }
+
+}
+void PreviousEncounter()
+{
+    if (numEncounters == 0)
+        return;
+
+    selectedEncounterIndex--;
+    selectedEncounterIndex = (selectedEncounterIndex) % (numEncounters-1);
+    while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped)
+    {
+        selectedEncounterIndex--;
+        if (selectedEncounterIndex < 0)
+            selectedEncounterIndex = numEncounters-1;
+    }
+
 }

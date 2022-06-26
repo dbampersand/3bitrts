@@ -187,6 +187,10 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_S
                 combatStarted = false;
             }
         }
+        if (GetButton(&ui.mainMenuPanel,"Tutorial"))
+        {
+            GoTutorial();
+        }
         if (GetButton(&ui.mainMenuPanel,"Options"))
         {
             ChangeUIPanel(&ui.videoOptionsPanel);
@@ -209,7 +213,14 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_S
         if (GetButton(&ui.pauseMenuPanel,"Exit"))
         {
             gameStats.gameWon = false;
-            SetGameStateToEndscreen();
+            if (gameState == GAMESTATE_CHOOSING_UNITS)
+            {
+                SetGameStateToInMenu();
+            }
+            else
+            {
+                SetGameStateToEndscreen();
+            }
             StopMusic();
         }
 
@@ -219,6 +230,8 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_S
 
 void ChangeUIPanel(Panel* to)
 {
+    if (ui.currentPanel == to)
+        return;
     ui.animatePanel = true;
     ui.changingTo = to;
     ui.animatePanel = UI_ANIMATE_OUT;
@@ -533,17 +546,17 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
 
     if (selectedEncounterIndex>0)
     {
-        ui.encounter_ButtonLeft.enabled = true;
+       // ui.encounter_ButtonLeft.enabled = true;
     }
     else {
-        ui.encounter_ButtonLeft.enabled = false;
+        //ui.encounter_ButtonLeft.enabled = false;
     }
     if (selectedEncounterIndex+1 < numEncounters)
     {
-        ui.encounter_ButtonRight.enabled = true;
+        //ui.encounter_ButtonRight.enabled = true;
     }
     else {
-        ui.encounter_ButtonRight.enabled = false;
+       // ui.encounter_ButtonRight.enabled = false;
     }
     DrawUIElement(&ui.encounter_ButtonLeft,16,224,mouseState,BG);
     DrawUIElement(&ui.encounter_ButtonConfirm,80,224,mouseState,BG);
@@ -551,7 +564,8 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
 
     if (GetButtonIsClicked(&ui.encounter_ButtonLeft))
     {
-        selectedEncounterIndex--;
+        PreviousEncounter();
+        //selectedEncounterIndex--;
         if (selectedEncounterIndex < 0)
             selectedEncounterIndex = 0;
     }
@@ -562,7 +576,8 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     }
     if (GetButtonIsClicked(&ui.encounter_ButtonRight))
     {
-        selectedEncounterIndex++;
+        //selectedEncounterIndex++;
+        NextEncounter();
         if (selectedEncounterIndex >= numEncounters)
             selectedEncounterIndex = numEncounters-1;
 
@@ -1093,7 +1108,7 @@ void InitUI()
     ui.animatePanel = UI_ANIMATE_STATIC;
 
 
-    for (int i = 0; i < NUMGAMESTATES; i++)
+    for (int i = 0; i < NUMGAMESTATES-1; i++)
     {
         Widgets_States[i] = calloc(NUMSPRITESTATESTOALLOC,sizeof(Widget));
         numSprites_States[i] = 0;
@@ -1131,7 +1146,7 @@ void UpdateWidget(Widget* w, float dt)
 
 void UpdateWidgets(float dt)
 {
-    for (int i = 0; i < NUMGAMESTATES; i++)
+    for (int i = 0; i < NUMGAMESTATES-1; i++)
     {
         for (int j = 0; j < numSprites_States[i]; j++)
         {
@@ -1307,8 +1322,9 @@ void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE*
 }
 void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, float dt)
 {
-    //todo: refactor this to be automatic? 
-    if (GameIsIngame())
+
+    //todo: refactor this to be automatic
+    if (GameIsIngame()) 
     {
         ui.videoOptionsPanel.back = &ui.pauseMenuPanel;
         ui.audioOptionsPanel.back = &ui.pauseMenuPanel;
@@ -1863,6 +1879,7 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
     
     int x = 86;
     int y = 139;
+    if (encounterGoingTo)
     for (int i = 0; i < encounterGoingTo->numUnitsToSelect; i++)
     {
         Sprite* s = &sprites[toSpawn[i]->spriteIndex];

@@ -83,6 +83,7 @@ void init()
 
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
+
     if (!GameIsPaused())
     {
 
@@ -214,7 +215,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         {
             combatStarted = false;
 
-            ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
+            //ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
 
             Encounter* e = encounters[selectedEncounterIndex];
             currEncounterRunning = e;
@@ -303,6 +304,10 @@ int main(int argc, char* args[])
             if (event.type == ALLEGRO_EVENT_KEY_DOWN)
             {
                 FinishLoadScreen();
+                if (chatbox.showing)
+                {
+                    Chatbox_NextLine(); 
+                }
             }
         }
         if (event.type == ALLEGRO_EVENT_TIMER) {

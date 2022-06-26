@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stdbool.h>
-#define NUMGAMESTATES 7
 
 
 typedef enum GameState {
@@ -13,7 +12,9 @@ typedef enum GameState {
     GAMESTATE_INGAME = 6,
     GAMESTATE_IN_CHATBOX = 7,
     GAMESTATE_END = 8,
-    GAMESTATE_EXIT = 9
+    GAMESTATE_EXIT = 9,
+
+    NUMGAMESTATES = 10
 } GameState;
 GameState gameState;
 

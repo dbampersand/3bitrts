@@ -189,8 +189,8 @@ typedef struct Widget
     int id;
     float velocity;
 } Widget;
-Widget* Widgets_States[NUMGAMESTATES];
-int numSprites_States[NUMGAMESTATES];
+Widget* Widgets_States[NUMGAMESTATES-1];
+int numSprites_States[NUMGAMESTATES-1];
 
 #define NUMSPRITESTATESTOALLOC 16
 char** chatboxLines;

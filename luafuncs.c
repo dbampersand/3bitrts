@@ -1485,6 +1485,11 @@ int L_AbilitySetPortrait(lua_State* l)
     currAbilityRunning->spriteIndex_Portrait = LoadSprite(lua_tostring(l,-1),true);
     return 1;   
 }
+int L_RemoveFromEncountersList(lua_State* l)
+{
+    currEncounterRunning->encounterShouldBeSkipped = true;
+    return 0;
+}
 int L_SetEncounterMapPath(lua_State* l)
 {
     const char* str = lua_tostring(l,1);
@@ -1752,6 +1757,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_PushMessage);
     lua_setglobal(luaState, "PushMessage");
+
+    lua_pushcfunction(luaState, L_RemoveFromEncountersList);
+    lua_setglobal(luaState, "RemoveFromEncountersList");
 
 
 }
