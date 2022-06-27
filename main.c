@@ -270,7 +270,6 @@ void DrawMainMenu()
 }
 int main(int argc, char* args[])
 {
-
     init();
 
     ALLEGRO_TIMER* _FPS_TIMER = al_create_timer(1.0f / (double)_TARGET_FPS);
@@ -312,8 +311,9 @@ int main(int argc, char* args[])
         {
             if (event.type == ALLEGRO_EVENT_KEY_DOWN)
             {
-                if (chatbox.showing)
+                if (chatboxes)
                 {
+                    if (chatboxShowing && !chatboxShowing->isBlocking)
                     Chatbox_NextLine(); 
                 }
 

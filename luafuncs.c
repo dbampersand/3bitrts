@@ -17,6 +17,7 @@
 #include "gamestate.h"
 #include "augment.h"
 #include "ui.h"
+#include "player.h"
 
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);
@@ -210,6 +211,11 @@ void LoadLuaFile(const char* filename, GameObject* g)
     {
         g->lua_buffer = readFile(filename);
      }
+}
+int L_GetNumberOfUnitsSelected(lua_State* l)
+{
+    lua_pushnumber(l,players[0].numUnitsSelected);
+    return 1;
 }
 int L_EncounterSetNumUnitsToSelect(lua_State* l)
 {
@@ -922,25 +928,59 @@ int L_CreateAOE(lua_State* l)
     lua_pushnumber(l,ref - attacks);
     return 1;
 }
+int L_GetCurrentMessage(lua_State* l)
+{
+    if (chatboxes)
+    {
+        if (chatboxShowing)
+        {
+            lua_pushstring(l,chatboxShowing->text);
+        }
+        else
+        {
+            lua_pushstring(l,"");
+        }
+    }
+    else
+    {
+        lua_pushstring(l,"");
+    }
+    return 1;
+}
+int L_PopMessage(lua_State* l)
+{
+    Chatbox_NextLine();
+    return 0;
+}
+int L_ClearMessages(lua_State* l)
+{
+    EndChatbox();
+    return 0;
+}
 int L_PushMessage(lua_State* l)
 {
     gameState = GAMESTATE_IN_CHATBOX;
     transitioningTo = GAMESTATE_IN_CHATBOX;
-    chatbox.showing = true;
     const char* msg = lua_tostring(l,1);
     if (msg)
     {
-        numChatboxLines++;
-        if (!chatboxLines)
+        numChatboxes++;
+        if (!chatboxes)
         {
-            chatboxLines = calloc(1,sizeof(char*));
-            numChatboxLines = 1;
+            chatboxes = calloc(1,sizeof(Chatbox));
+            numChatboxes = 1;
         }
-        chatboxLines = realloc(chatboxLines,numChatboxLines*sizeof(char*));
-        chatboxLines[numChatboxLines-1] = calloc(strlen(msg)+1,sizeof(char));
-        strcpy(chatboxLines[numChatboxLines-1],msg);
-        chatbox.text = chatboxLines[0];
+        chatboxes = realloc(chatboxes,numChatboxes*sizeof(Chatbox));
+        chatboxes[numChatboxes-1].text  = calloc(strlen(msg)+1,sizeof(char));
+        strcpy(chatboxes[numChatboxes-1].text,msg);
     }
+    chatboxes[numChatboxes-1].x = lua_tonumber(l,2);
+    chatboxes[numChatboxes-1].y = lua_tonumber(l,3);
+    chatboxes[numChatboxes-1].w = lua_tonumber(l,4);
+    chatboxes[numChatboxes-1].h = lua_tonumber(l,5);
+    chatboxes[numChatboxes-1].isBlocking = lua_toboolean(l,6);
+
+    chatboxShowing = &chatboxes[0];
     return 0;
 }
 int L_RemoveAttack(lua_State* l)
@@ -1299,6 +1339,16 @@ void SetGlobals(lua_State* l)
     lua_setglobal(l,"GAMESTATE_INGAME");
     lua_pushinteger(l,GAMESTATE_EXIT);
     lua_setglobal(l,"GAMESTATE_EXIT");
+
+    lua_pushinteger(l,DIALOGUE_H);
+    lua_setglobal(l,"DIALOGUE_H");
+    lua_pushinteger(l,DIALOGUE_W);
+    lua_setglobal(l,"DIALOGUE_W");
+    lua_pushinteger(l,DIALOGUE_X);
+    lua_setglobal(l,"DIALOGUE_X");
+    lua_pushinteger(l,DIALOGUE_Y);
+    lua_setglobal(l,"DIALOGUE_Y");
+
 
 }
 int L_ApplyEffect(lua_State* l)
@@ -1758,6 +1808,18 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_RemoveFromEncountersList);
     lua_setglobal(luaState, "RemoveFromEncountersList");
+
+    lua_pushcfunction(luaState, L_GetCurrentMessage);
+    lua_setglobal(luaState, "GetCurrentMessage");
+
+    lua_pushcfunction(luaState, L_PopMessage);
+    lua_setglobal(luaState, "PopMessage");
+
+    lua_pushcfunction(luaState, L_ClearMessages);
+    lua_setglobal(luaState, "ClearMessages");
+
+    lua_pushcfunction(luaState, L_GetNumberOfUnitsSelected);
+    lua_setglobal(luaState, "GetNumberOfUnitsSelected");
 
 
 }

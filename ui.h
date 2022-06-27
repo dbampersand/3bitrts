@@ -8,6 +8,11 @@
 //error printf colour
 #define COL_ERR  "\x1B[31m"
 
+#define DIALOGUE_H 80
+#define DIALOGUE_W _SCREEN_SIZE
+#define DIALOGUE_X 0 
+#define DIALOGUE_Y _SCREEN_SIZE - DIALOGUE_H
+
 typedef struct ALLEGRO_FONT ALLEGRO_FONT;
 typedef struct Effect Effect;
 typedef struct Sound Sound;
@@ -30,8 +35,8 @@ typedef struct Scrollbar
 typedef struct Chatbox
 {
     char* text;
-    bool showing;
-    int x; int y;
+    int x; int y; int w; int h;
+    bool isBlocking;
 } Chatbox;
 typedef enum UIElement_Type
 {
@@ -193,11 +198,11 @@ Widget* Widgets_States[NUMGAMESTATES-1];
 int numSprites_States[NUMGAMESTATES-1];
 
 #define NUMSPRITESTATESTOALLOC 16
-char** chatboxLines;
-int numChatboxLines;
-int currentChatLine;
+Chatbox* chatboxes;
+int numChatboxes;
 
-Chatbox chatbox;
+Chatbox* chatboxShowing;
+
 UI ui;
 
 #define UI_PADDING 5

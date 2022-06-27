@@ -26,36 +26,47 @@
 
 void DrawUIChatbox()
 {
-    if (chatbox.text)
+    if (chatboxes)
     {
-        DrawDescriptionBox(chatbox.text,5,ui.font,ui.boldFont,chatbox.x,chatbox.y,256,80,FRIENDLY);
+        Chatbox* c = chatboxShowing;
+        if (c && c->text)
+        {
+            DrawDescriptionBox(c->text,5,ui.font,ui.boldFont,c->x,c->y,c->w,c->h,FRIENDLY);
+        }
     }
-
 }
 void EndChatbox()
 {
-    for (int i = 0; i < numChatboxLines; i++)
+    for (int i = 0; i < numChatboxes; i++)
     {
-        free(chatboxLines[i]);
+        free(chatboxes[i].text);
     }
-    free(chatboxLines);
-    chatboxLines = NULL;
-    numChatboxLines = 0;
+    free(chatboxes);
+    chatboxes = NULL;
+    chatboxShowing = NULL;
+    numChatboxes = 0;
     gameState = GAMESTATE_INGAME;
     transitioningTo = GAMESTATE_INGAME;
-    chatbox.showing = false;
-    chatbox.text = NULL;
 }
 void Chatbox_NextLine()
 {
-    currentChatLine++; 
+    chatboxShowing = &chatboxes[(chatboxShowing-chatboxes)+1];
 
-    if (currentChatLine >= numChatboxLines)
+    if ((chatboxShowing-chatboxes) >= numChatboxes)
     {
         EndChatbox();
         return;
     }
-    chatbox.text = chatboxLines[currentChatLine];
+    if (chatboxShowing->isBlocking)
+    {
+        gameState = GAMESTATE_INGAME;
+        transitioningTo = GAMESTATE_INGAME;
+    }
+    else
+    {
+        gameState = GAMESTATE_IN_CHATBOX;
+        transitioningTo = GAMESTATE_IN_CHATBOX;
+    }
 }
 void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
@@ -435,7 +446,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
 
 
     }
-    if (chatbox.showing)
+    if (chatboxes)
     {
         DrawUIChatbox();
     }
@@ -1135,13 +1146,8 @@ void InitUI()
 
         x+=31;
     }
-    memset(&chatbox,0,sizeof(Chatbox));
-    chatboxLines = NULL;
-    numChatboxLines = 0;
-    currentChatLine = 0;
-    chatbox.y = 256 - 80;
-    chatbox.x = 0;
-
+    chatboxes = NULL;
+    numChatboxes = 0;
 }
 void UpdateWidget(Widget* w, float dt)
 {

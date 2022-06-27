@@ -149,11 +149,6 @@ void SetGameStateToChoosingParty()
             }   
         }
     }
-
-    //transitioningTo = GAMESTATE_CHOOSING_UNITS;
-    //transitionTimer = 0;
-    
-
 }
 void Quit()
 {
