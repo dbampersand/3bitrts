@@ -13,12 +13,13 @@
 #include "math.h"
 #include "ui.h"
 #include "loadscreen.h"
-void TransitionTo(GameState state)
+bool TransitionTo(GameState state)
 {
     if (transitioningTo == state)
-        return;
+        return false;
     transitioningTo = state;
     transitionTimer = 0;
+    return true;
 }
 void StartCombat()
 {
@@ -133,20 +134,24 @@ void FinishTransition()
 }
 void SetGameStateToChoosingParty()
 {
-    RemoveAllGameObjects();
-    SetMap(&maps[0]);
-    int xPos = 100;
-    for (int i = 0; i < numPrefabs; i++)
+    
+    if (TransitionTo(GAMESTATE_CHOOSING_UNITS))
     {
-        if (prefabs[i].playerChoosable == true)
+        RemoveAllGameObjects();
+        SetMap(&maps[0]);
+        int xPos = 100;
+        for (int i = 0; i < numPrefabs; i++)
         {
-            AddGameobject(&prefabs[i],xPos,150);
-            xPos+=GetWidth(&prefabs[i]);
-        }   
+            if (prefabs[i].playerChoosable == true)
+            {
+                AddGameobject(&prefabs[i],xPos,150);
+                xPos+=GetWidth(&prefabs[i]);
+            }   
+        }
     }
+
     //transitioningTo = GAMESTATE_CHOOSING_UNITS;
     //transitionTimer = 0;
-    TransitionTo(GAMESTATE_CHOOSING_UNITS);
     
 
 }

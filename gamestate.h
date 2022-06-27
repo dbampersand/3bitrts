@@ -47,6 +47,7 @@ GameObject** toSpawn;
 
 Encounter* encounterGoingTo;
 
+bool TransitionTo(GameState state);
 
 void StartCombat();
 void InitGameState();
