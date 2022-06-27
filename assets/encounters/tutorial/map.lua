@@ -9,17 +9,30 @@ end
 local shownIntro = false
 local descriptionBox = 0
 
+local unitSelected = false
+local moved = false
+
+local selectString1 = "To select a unit, left click and drag a box around the unit.";
+local selectString2 = "Click and drag over the unit.";
+
+local moveString = "Right click anywhere to move."
+
 function update()
     if shownIntro == false then
-        PushMessage("To select a unit, left click and drag a box around the unit.",0,110,256,0,false);
-        PushMessage("Click and drag here!",80,110,40,50,true);
+        PushMessage(selectString1,0,110,256,0,false);
+        PushMessage(selectString2,80,110,40,50,true);
 
         shownIntro = true;
     end
-    if (GetCurrentMessage() == "Click and drag over the unit.") then
+    if (unitSelected == false and GetCurrentMessage() == selectString2) then
         if (GetNumberOfUnitsSelected() > 0) then
+            unitSelected = true
             ClearMessages();
+            PushMessage(moveString,80,110,40,50)
+
         end
+    end
+    if (moved == false and GetCurrentMessage() == moveString) then
         
     end
 end
