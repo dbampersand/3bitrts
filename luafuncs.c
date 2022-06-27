@@ -928,6 +928,23 @@ int L_CreateAOE(lua_State* l)
     lua_pushnumber(l,ref - attacks);
     return 1;
 }
+int L_SetAutoWin(lua_State* l)
+{
+    bool b = lua_toboolean(l,1);
+    currEncounterRunning->automaticWinCheck = b;
+    return 0;
+}
+int L_Win(lua_State* l)
+{
+    WinGame();
+    return 0;
+}
+int L_Lose(lua_State* l)
+{
+    LoseGame();
+    return 0;
+}
+
 int L_GetCurrentMessage(lua_State* l)
 {
     if (chatboxes)
@@ -978,9 +995,21 @@ int L_PushMessage(lua_State* l)
     chatboxes[numChatboxes-1].y = lua_tonumber(l,3);
     chatboxes[numChatboxes-1].w = lua_tonumber(l,4);
     chatboxes[numChatboxes-1].h = lua_tonumber(l,5);
-    chatboxes[numChatboxes-1].isBlocking = lua_toboolean(l,6);
+    chatboxes[numChatboxes-1].allowsInteraction = lua_toboolean(l,6);
 
     chatboxShowing = &chatboxes[0];
+
+    if (chatboxShowing->allowsInteraction)
+    {
+        gameState = GAMESTATE_INGAME;
+        transitioningTo = GAMESTATE_INGAME;
+    }
+    else
+    {
+        gameState = GAMESTATE_IN_CHATBOX;
+        transitioningTo = GAMESTATE_IN_CHATBOX;
+    }
+
     return 0;
 }
 int L_RemoveAttack(lua_State* l)
@@ -1108,6 +1137,29 @@ int L_CreateObject(lua_State* l)
     }
     g->summonTime = summonTime;
     g->summonMax = summonTime;
+
+    lua_pushnumber(l,g-objects);
+    return 1;
+}
+int L_GetUnitCommandList(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    GameObject* g = &objects[index];
+    lua_newtable(l);
+    for (int i = 0; i < MAX_QUEUED_CMD; i++)
+    {
+        lua_pushnumber(l,i);
+        lua_pushnumber(l,g->queue[i].commandType);
+        lua_settable(l,-3);
+    }
+    return 1;    
+}
+
+int L_GetUnitCurrentCommand(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    GameObject* g = &objects[index];
+    lua_pushnumber(l,g->queue[0].commandType);
     return 1;
 }
 int L_AbilitySetCastType(lua_State* l)
@@ -1348,6 +1400,19 @@ void SetGlobals(lua_State* l)
     lua_setglobal(l,"DIALOGUE_X");
     lua_pushinteger(l,DIALOGUE_Y);
     lua_setglobal(l,"DIALOGUE_Y");
+
+    lua_pushinteger(l,COMMAND_NONE);
+    lua_setglobal(l,"COMMAND_NONE");
+    lua_pushinteger(l,COMMAND_MOVE);
+    lua_setglobal(l,"COMMAND_MOVE");
+    lua_pushinteger(l,COMMAND_ATTACK);
+    lua_setglobal(l,"COMMAND_ATTACK");
+    lua_pushinteger(l,COMMAND_CAST);
+    lua_setglobal(l,"COMMAND_CAST");
+    lua_pushinteger(l,COMMAND_STOP);
+    lua_setglobal(l,"COMMAND_STOP");
+    lua_pushinteger(l,COMMAND_ATTACKMOVE);
+    lua_setglobal(l,"COMMAND_ATTACKMOVE");
 
 
 }
@@ -1820,6 +1885,21 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetNumberOfUnitsSelected);
     lua_setglobal(luaState, "GetNumberOfUnitsSelected");
+
+    lua_pushcfunction(luaState, L_GetUnitCommandList);
+    lua_setglobal(luaState, "GetUnitCommandList");
+    
+    lua_pushcfunction(luaState, L_GetUnitCurrentCommand);
+    lua_setglobal(luaState, "GetUnitCurrentCommand");
+
+    lua_pushcfunction(luaState, L_SetAutoWin);
+    lua_setglobal(luaState, "SetAutoWin");
+
+    lua_pushcfunction(luaState, L_Win);
+    lua_setglobal(luaState, "Win");
+
+    lua_pushcfunction(luaState, L_Lose);
+    lua_setglobal(luaState, "Lose");
 
 
 }

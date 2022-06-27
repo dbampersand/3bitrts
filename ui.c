@@ -57,7 +57,7 @@ void Chatbox_NextLine()
         EndChatbox();
         return;
     }
-    if (chatboxShowing->isBlocking)
+    if (chatboxShowing->allowsInteraction)
     {
         gameState = GAMESTATE_INGAME;
         transitioningTo = GAMESTATE_INGAME;

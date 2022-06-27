@@ -36,7 +36,7 @@ typedef struct Chatbox
 {
     char* text;
     int x; int y; int w; int h;
-    bool isBlocking;
+    bool allowsInteraction;
 } Chatbox;
 typedef enum UIElement_Type
 {

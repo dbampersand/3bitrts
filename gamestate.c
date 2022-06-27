@@ -154,27 +154,40 @@ void Quit()
 {
     gameState = GAMESTATE_EXIT;
 }
+void WinGame()
+{
+    gameStats.gameWon = true;
+    SetGameStateToEndscreen();
+}
+void LoseGame()
+{
+    gameStats.gameWon = false;
+    SetGameStateToEndscreen();
+    StopMusic();
+}
 void CheckIfGameIsWon()
 {
+    if (!currEncounterRunning->automaticWinCheck)
+        return;
+
     if (GameStateIsTransition(&gameState)) 
         return;
 
     if (GetNumPlayerControlledObjs(&players[1]) == 0 && gameState == GAMESTATE_INGAME)
     {
-        gameStats.gameWon = true;
-        SetGameStateToEndscreen();
+        WinGame();
     }
 
 }
 void CheckIfGameIsLost()
 {
+    if (!currEncounterRunning->automaticWinCheck)
+        return;
     if (GameStateIsTransition(&gameState)) 
         return;
     if (GetNumPlayerControlledObjs(&players[0]) == 0 && gameState == GAMESTATE_INGAME)
     {
-        gameStats.gameWon = false;
-        SetGameStateToEndscreen();
-        StopMusic();
+        LoseGame();
     }
 }
 

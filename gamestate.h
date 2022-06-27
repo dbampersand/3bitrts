@@ -70,3 +70,6 @@ bool GameIsPaused();
 bool GameIsIngame();
 
 void GoTutorial();
+void WinGame();
+void LoseGame();
+

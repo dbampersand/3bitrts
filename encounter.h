@@ -45,6 +45,8 @@ typedef struct Encounter
 
     bool encounterShouldBeSkipped;
 
+    bool automaticWinCheck;
+
 } Encounter;
 
 void LoadEncounter(char* dirPath,lua_State* l);

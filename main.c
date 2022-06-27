@@ -313,8 +313,8 @@ int main(int argc, char* args[])
             {
                 if (chatboxes)
                 {
-                    if (chatboxShowing && !chatboxShowing->isBlocking)
-                    Chatbox_NextLine(); 
+                    if (chatboxShowing && !chatboxShowing->allowsInteraction)
+                        Chatbox_NextLine(); 
                 }
 
             }
