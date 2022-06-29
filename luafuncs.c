@@ -1263,6 +1263,16 @@ int L_SetEncounterLoadScreen(lua_State* l)
     currEncounterRunning->loadScreen_spriteIndex = LoadSprite(lua_tostring(l,1),false);
     return 0;
 }
+int L_KillObj(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    bool triggerEffects = lua_toboolean(l,2);
+    if (index >= 0 && index < MAX_OBJS)
+    {
+        KillObj(&objects[index],triggerEffects);
+    }
+    return 0;
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -1271,6 +1281,10 @@ void SetGlobals(lua_State* l)
 
     lua_pushinteger(l,1);
     lua_setglobal(l,"ENEMY");
+
+    lua_pushinteger(l,_SCREEN_SIZE);
+    lua_setglobal(l,"SCREEN_SIZE");
+
 
     lua_pushinteger(l,TRIGGER_TIMER);
     lua_setglobal(l,"TRIGGER_TIMER");
@@ -1474,6 +1488,7 @@ void SetGlobals(lua_State* l)
     lua_setglobal(l,"COMMAND_STOP");
     lua_pushinteger(l,COMMAND_ATTACKMOVE);
     lua_setglobal(l,"COMMAND_ATTACKMOVE");
+
 
 
 }
@@ -2004,5 +2019,7 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_GetH);
     lua_setglobal(luaState, "GetH");
 
+    lua_pushcfunction(luaState, L_KillObj);
+    lua_setglobal(luaState, "KillObj");
 
 }

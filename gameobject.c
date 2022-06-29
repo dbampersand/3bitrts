@@ -1518,7 +1518,6 @@ void ModifyMaxHP(GameObject* g, float value)
     if (!g) return;
     g->maxHP += value;
 }   
-//TODO: R E F A C T O R THIS FUNCTION
 void Teleport(GameObject* g, float x, float y)
 {
     if (!g) return;
