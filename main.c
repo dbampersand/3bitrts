@@ -240,9 +240,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             }
             SetGameStateToLoadingEncounter(list,foundIndex,e);//SetGameStateToInGame(list,foundIndex,e); 
             free(list);
-            
         }
-
     }
     DrawDamageNumbers();
     if (gameState == GAMESTATE_END)

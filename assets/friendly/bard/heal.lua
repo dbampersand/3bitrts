@@ -1,7 +1,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/bard/icon_shield.png");
     AbilitySetCastType(ABILITY_TARGET_ALL);
-    SetAbilityCooldown(5);
+    SetCooldown(5);
     SetAbilityRange(40);
 end
 

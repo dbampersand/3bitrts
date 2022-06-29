@@ -1,6 +1,6 @@
 function setup()
     SetAbilityRange(2)
-    SetAbilityCooldown(25)
+    SetCooldown(25)
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_fire.png");
     SetDescription("[b]Fire\n\nLights the ground on fire, dealing damage in a aoe.")
 

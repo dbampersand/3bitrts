@@ -2,7 +2,7 @@ function setup()
     AbilitySetCastType(ABILITY_TOGGLE);
 
     SetAbilityRange(20)
-    SetAbilityCooldown(10);
+    SetCooldown(10);
     AbilitySetPortrait("assets/friendly/bard/icon_aoe_heal.png");
     SetDescription("Song of Healing\n\nProvides healing in a radius.")
 

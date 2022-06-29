@@ -1,7 +1,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/warrior/icon_taunt.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
-    SetAbilityCooldown(5);
+    SetCooldown(5);
     SetAbilityRange(40);
 
     SetDescription("Taunt\n\nTaunts the target, causing it to attack you for 10 seconds.")

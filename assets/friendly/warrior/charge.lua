@@ -4,7 +4,7 @@ function setup()
     
 
     SetAbilityRange(60)
-    SetAbilityCooldown(10);
+    SetCooldown(10);
     SetDescription("Charge\n\nCharges the target, dealing 20 damage.")
 
 end

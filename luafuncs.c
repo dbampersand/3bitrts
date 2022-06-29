@@ -18,6 +18,7 @@
 #include "augment.h"
 #include "ui.h"
 #include "player.h"
+#include "shield.h"
 
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);
@@ -724,12 +725,49 @@ int L_CreateProjectile(lua_State* l)
 
     return 1;
 }
-int L_SetAbilityCooldown(lua_State* l)
+//used when called from *by the ability itself*
+int L_SetCooldown(lua_State* l)
 {
     const float cd = lua_tonumber(l,1);
     currAbilityRunning->cooldown = cd;
     return 0;
 }
+int L_SetCooldownTimer(lua_State* l)
+{
+    const float cd = lua_tonumber(l,1);
+    currAbilityRunning->cdTimer = cd;
+    return 0;
+}
+//used when called outside the ability
+int L_SetAbilityCooldown(lua_State* l)
+{
+    int gameObjIndex = lua_tonumber(l,1);
+    int abilityObjIndex = lua_tonumber(l,2);
+    int cd = lua_tonumber(l,3);
+
+    GameObject* g = &objects[gameObjIndex];
+    Ability* a = &g->abilities[abilityObjIndex];
+    a->cooldown = cd;
+
+    return 0;
+}
+int L_SetAbilityCooldownTimer(lua_State* l)
+{
+    int gameObjIndex = lua_tonumber(l,1);
+    int abilityObjIndex = lua_tonumber(l,2);
+    int cd = lua_tonumber(l,3);
+
+    GameObject* g = &objects[gameObjIndex];
+    Ability* a = &g->abilities[abilityObjIndex];
+    a->cdTimer = cd;
+
+    if (a->cdTimer > a->cooldown)
+        a->cdTimer = a->cooldown;
+    return 0;
+}
+
+
+
 int L_UntoggleOthers(lua_State* l)
 {
     int index = currAbilityRunning-currGameObjRunning->abilities;
@@ -974,6 +1012,20 @@ int L_ClearMessages(lua_State* l)
     EndChatbox();
     return 0;
 }
+int L_GetShield(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index >= 0 && index < MAX_OBJS) 
+    {
+        int shield = GetTotalShield(&objects[index]);
+        lua_pushnumber(l,shield);
+    }
+    else
+    {
+        lua_pushnumber(l,0);
+    }
+    return 1;
+}
 int L_PushMessage(lua_State* l)
 {
     gameState = GAMESTATE_IN_CHATBOX;
@@ -990,26 +1042,35 @@ int L_PushMessage(lua_State* l)
         chatboxes = realloc(chatboxes,numChatboxes*sizeof(Chatbox));
         chatboxes[numChatboxes-1].text  = calloc(strlen(msg)+1,sizeof(char));
         strcpy(chatboxes[numChatboxes-1].text,msg);
-    }
-    chatboxes[numChatboxes-1].x = lua_tonumber(l,2);
-    chatboxes[numChatboxes-1].y = lua_tonumber(l,3);
-    chatboxes[numChatboxes-1].w = lua_tonumber(l,4);
-    chatboxes[numChatboxes-1].h = lua_tonumber(l,5);
-    chatboxes[numChatboxes-1].allowsInteraction = lua_toboolean(l,6);
 
-    chatboxShowing = &chatboxes[0];
+        chatboxes[numChatboxes-1].x = lua_tonumber(l,2);
+        chatboxes[numChatboxes-1].y = lua_tonumber(l,3);
+        chatboxes[numChatboxes-1].w = lua_tonumber(l,4);
+        chatboxes[numChatboxes-1].h = lua_tonumber(l,5);
+        chatboxes[numChatboxes-1].allowsInteraction = lua_toboolean(l,6);
 
-    if (chatboxShowing->allowsInteraction)
-    {
-        gameState = GAMESTATE_INGAME;
-        transitioningTo = GAMESTATE_INGAME;
+        chatboxShowing = &chatboxes[0];
+
+        if (chatboxShowing->allowsInteraction)
+        {
+            gameState = GAMESTATE_INGAME;
+            transitioningTo = GAMESTATE_INGAME;
+        }
+        else
+        {
+            gameState = GAMESTATE_IN_CHATBOX;
+            transitioningTo = GAMESTATE_IN_CHATBOX;
+        }
     }
+
     else
     {
-        gameState = GAMESTATE_IN_CHATBOX;
-        transitioningTo = GAMESTATE_IN_CHATBOX;
+        if (chatboxShowing->allowsInteraction)
+        {
+            gameState = GAMESTATE_INGAME;
+            transitioningTo = GAMESTATE_INGAME;
+        }
     }
-
     return 0;
 }
 int L_RemoveAttack(lua_State* l)
@@ -1615,6 +1676,33 @@ int L_SetEncounterDifficulty(lua_State* l)
     currEncounterRunning->difficulty = lua_tonumber(l,1);
     return 0;
 }
+int L_GetW(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index >= 0 && index < MAX_OBJS)
+    {
+        lua_pushnumber(l,GetWidth(&objects[index]));
+    }
+    else    
+    {
+        lua_pushnumber(l,0);
+    }
+    return 1;
+}
+int L_GetH(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index >= 0 && index < MAX_OBJS)
+    {
+        lua_pushnumber(l,GetHeight(&objects[index]));
+    }
+    else    
+    {
+        lua_pushnumber(l,0);
+    }
+    return 1;
+}
+
 void SetLuaFuncs()
 {
     SetGlobals(luaState);
@@ -1701,8 +1789,8 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_SetAbilityRange);
     lua_setglobal(luaState, "SetAbilityRange");
 
-    lua_pushcfunction(luaState, L_SetAbilityCooldown);
-    lua_setglobal(luaState, "SetAbilityCooldown");
+    lua_pushcfunction(luaState, L_SetCooldown);
+    lua_setglobal(luaState, "SetCooldown");
 
     lua_pushcfunction(luaState, L_AbilitySetCastType);
     lua_setglobal(luaState, "AbilitySetCastType");
@@ -1900,6 +1988,21 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_Lose);
     lua_setglobal(luaState, "Lose");
+
+    lua_pushcfunction(luaState, L_SetAbilityCooldownTimer);
+    lua_setglobal(luaState, "SetAbilityCooldownTimer");
+
+    lua_pushcfunction(luaState, L_SetAbilityCooldown);
+    lua_setglobal(luaState, "SetAbilityCooldown");
+
+    lua_pushcfunction(luaState, L_GetShield);
+    lua_setglobal(luaState, "GetShield");
+
+    lua_pushcfunction(luaState, L_GetW);
+    lua_setglobal(luaState, "GetW");
+
+    lua_pushcfunction(luaState, L_GetH);
+    lua_setglobal(luaState, "GetH");
 
 
 }

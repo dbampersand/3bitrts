@@ -555,9 +555,19 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     
     *found = *prefab;
     currGameObjRunning = found; 
+    found->properties |= OBJ_ACTIVE;
+
+
     memset(found->abilities,0,sizeof(Ability)*4);
     memset(currGameObjRunning,0,sizeof(GameObject));
+
+    currGameObjRunning->lua_buffer = prefab->lua_buffer; 
+    currGameObjRunning->path = prefab->path;
+    currGameObjRunning->name = prefab->name;
     currGameObjRunning->threatMultiplier = 1;
+
+    currGameObjRunning->range = 1;
+    currGameObjRunning->objType = TYPE_ALL;
     currGameObjRunning->health = 100;
     currGameObjRunning->maxHP = 100;
     currGameObjRunning->range = 1;
@@ -565,23 +575,22 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     currGameObjRunning->mana = 50;
     currGameObjRunning->maxMana = 100;
     currGameObjRunning->aggroRadius = 25;
-    currGameObjRunning->path = prefab->path;
-    currGameObjRunning->name = prefab->name;
-    currGameObjRunning->lua_buffer = prefab->lua_buffer; 
     SetMoveSpeed(currGameObjRunning,50);
     //currGameObjRunning->speed = 50;
 
-    currGameObjRunning->position.x = x;
-    currGameObjRunning->position.y = y;
+    loadLuaGameObj(luaState, found->path, found); 
+    found->properties |= OBJ_ACTIVE;
+
+
+    currGameObjRunning->position.x = 0;
+    currGameObjRunning->position.y = 0;
+
+    Teleport(currGameObjRunning,x,y);
     currGameObjRunning->targetPosition.x = x;
     currGameObjRunning->targetPosition.y = y;
 
 
-    found->range = 1;
-    found->objType = TYPE_ALL;
 
-    loadLuaGameObj(luaState, found->path, found); 
-    found->properties |= OBJ_ACTIVE;
     found->attackSpeed = 1;
     found->mana = 50;
     found->maxMana = 100;
@@ -1513,6 +1522,10 @@ void ModifyMaxHP(GameObject* g, float value)
 void Teleport(GameObject* g, float x, float y)
 {
     if (!g) return;
+
+    float dx = g->position.x - x;
+    float dy = g->position.y - y;
+
     float beforeX = g->position.x;
     float beforeY = g->position.y;
 
@@ -1525,106 +1538,17 @@ void Teleport(GameObject* g, float x, float y)
 
     GameObject* g2 = GetCollidedWith(g);
 
-    g->position.x = beforeX;
-    g->position.y = beforeY;
-
-
     float centreX; float centreY;
     GetCentre(g, &centreX, &centreY);
 
-    //if we have collided with a gameobject
-    if (g2)
-    {
-        float slope = (beforeY - y) / (beforeX - x);
-        typedef struct line { 
-            float x; float y; float x2; float y2;
-        } line; 
-        int w = al_get_bitmap_width(sprites[g2->spriteIndex].sprite); int h =  al_get_bitmap_height(sprites[g2->spriteIndex].sprite); 
-        line VTop = {g2->position.x,g2->position.y,g2->position.x + w,g2->position.y}; 
-        line VRight = {g2->position.x + w, g2->position.y, g2->position.x + w, g2->position.y + h}; 
-        line VBottom = {g2->position.x, g2->position.y + h, g2->position.x + w, g2->position.y + h}; 
-        line VLeft = {g2->position.x,g2->position.y,g2->position.x,g2->position.y+h}; 
 
-        float outX; float outY; 
-        float closestX = FLT_MAX; float closestY = FLT_MAX;
-        float closestDist = FLT_MAX;
-        if (GetLineIntersection(centreX,centreY,x,y,VTop.x,VTop.y,VTop.x2,VTop.y2,&outX,&outY))
-        {
-            closestX = outX;
-            closestY = outY;
-            closestDist = dist(centreX,centreY,outX,outY);
-        }
-        if (GetLineIntersection(centreX,centreY,x,y,VRight.x,VRight.y,VRight.x2,VRight.y2,&outX,&outY))
-        {
-            float distance = dist(centreX,centreY,outX,outY);
-            if (distance <= closestDist)
-            {
-                closestX = outX;
-                closestY = outY;
-                closestDist = distance;
-            }
-        }
-        if (GetLineIntersection(centreX,centreY,x,y,VBottom.x,VBottom.y,VBottom.x2,VBottom.y2,&outX,&outY))
-        {
-            float distance = dist(centreX,centreY,outX,outY);
-            if (distance <= closestDist)
-            {
-                closestX = outX;
-                closestY = outY;
-                closestDist = distance;
-            }
-        }
-        if (GetLineIntersection(centreX,centreY,x,y,VLeft.x,VLeft.y,VLeft.x2,VLeft.y2,&outX,&outY))
-        {
-            float distance = dist(centreX,centreY,outX,outY);
-            if (distance <= closestDist)
-            {
-                closestX = outX;
-                closestY = outY;
-                closestDist = distance;
-            }
-        }
-        float w2; float h2;
-        GetOffsetCenter(g,&w2,&h2);
-        if (closestX != FLT_MAX && closestY != FLT_MAX)
-        {
-            if (g->position.x < g2->position.x)
-            {
-                g->position.x = closestX - w2;
-            }
-            else
-            {
-                g->position.x = closestX;
-            }
+    CheckCollisions(g,true, -dx, false);
+    CheckCollisions(g,false, -dy, false);
 
-            if (g->position.y < g2->position.y)
-            {
-                g->position.y = closestY - h2;
-            }
-            else
-            {
-                g->position.y = closestY;
-            }
-        }
-    }
-    else
-    {
-        g->position.x = x - cX/2;
-        g->position.y = y - cY/2;
+    CheckCollisionsWorld(g,true, false);
+    //CheckCollisionsWorld(g,false, false);
 
-    }
-    GetCentre(g, &centreX, &centreY);
 
-    int indexMid = GetIndex(_MAPSIZE/_GRAIN, floor((centreX) / (float)_GRAIN), floor((centreY) / (float)_GRAIN));
-    if (indexMid >= 0 && indexMid < _MAPSIZE/_GRAIN*_MAPSIZE/_GRAIN)
-    {
-        if (currMap->collision[indexMid] == false)
-        {
-            g->position.x = beforeX;
-            g->position.y = beforeY;
-        }
-
-    }
     
 }
 void GetOffsetCenter(GameObject* g, float* x, float* y)

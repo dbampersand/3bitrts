@@ -6,7 +6,7 @@ function setup()
     AbilitySetPortrait("assets/friendly/bard/icon_aoe_speed.png");
     AbilitySetCastType(ABILITY_TOGGLE);
     SetAbilityRange(duration * speed)
-    SetAbilityCooldown(10)
+    SetCooldown(10)
     SetDescription("Song of Speed\n\nProvides speed in a radius.")
 end
 function casted()

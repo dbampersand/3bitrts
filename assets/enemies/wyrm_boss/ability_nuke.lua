@@ -1,6 +1,6 @@
 function setup()
     SetAbilityRange(2)
-    SetAbilityCooldown(10)
+    SetCooldown(10)
     SetAbilityHint(HINT_CIRCLE,30);
     AbilitySetCastType(ABILITY_POINT);
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_nuke.png");

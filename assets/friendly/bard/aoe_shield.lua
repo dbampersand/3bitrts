@@ -7,7 +7,7 @@ function setup()
     AbilitySetPortrait("assets/friendly/bard/icon_aoe_shield.png");
     AbilitySetCastType(ABILITY_TOGGLE);
     SetAbilityRange(duration * speed)
-    SetAbilityCooldown(10)
+    SetCooldown(10)
     SetDescription("Song of Shielding\n\nProvides shielding in a radius.")
     
 end

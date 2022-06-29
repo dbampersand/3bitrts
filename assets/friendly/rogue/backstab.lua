@@ -4,7 +4,7 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(10)
     SetDescription("Backstab\n\nHits the target for major damage and causes a bleed effect.")
-    SetAbilityCooldown(30);
+    SetCooldown(30);
 end
 function casted(x,y,obj,headingx,headingy)
     f1 = {};

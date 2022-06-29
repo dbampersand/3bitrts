@@ -2,7 +2,7 @@ function setup()
     AbilitySetCastType(ABILITY_TOGGLE);
 
     SetAbilityRange(20)
-    SetAbilityCooldown(0);
+    SetCooldown(0);
 
 end
 
