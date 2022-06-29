@@ -476,7 +476,7 @@ int L_GetThreatRank(lua_State* l)
     lua_newtable(l);
     for (int i = 0; i < j; i++)
     {
-        lua_pushnumber(l,i);
+        lua_pushnumber(l,i+1);
         lua_pushnumber(l,objects-next->obj);
 
         lua_settable(l,-3);
@@ -1209,7 +1209,7 @@ int L_GetUnitCommandList(lua_State* l)
     lua_newtable(l);
     for (int i = 0; i < MAX_QUEUED_CMD; i++)
     {
-        lua_pushnumber(l,i);
+        lua_pushnumber(l,i+1);
         lua_pushnumber(l,g->queue[i].commandType);
         lua_settable(l,-3);
     }
@@ -1272,6 +1272,23 @@ int L_KillObj(lua_State* l)
         KillObj(&objects[index],triggerEffects);
     }
     return 0;
+}
+int L_GetControlGroup(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    index = clamp(index,0,10);
+    lua_newtable(l);
+    for (int i = 0; i < MAXUNITSSELECTED; i++)
+    {
+        GameObject* g = players[0].controlGroups[index][i];
+        if (g)
+        {
+            lua_pushnumber(l,i+1);
+            lua_pushnumber(l,g-objects);
+            lua_settable(l,-3);
+        }
+    }
+    return 1;
 }
 void SetGlobals(lua_State* l)
 {
@@ -1541,6 +1558,19 @@ int L_SetObjectPush(lua_State* l)
 int L_IsInCombat(lua_State* l)
 {
     lua_pushboolean(l,IsInCombat(currGameObjRunning));
+    return 1;
+}
+int L_IsAlive(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index >= 0 && index < MAX_OBJS)
+    {
+        lua_pushboolean(l,IsActive(&objects[index]));
+    }
+    else
+    {
+        lua_pushboolean(l,false);
+    }
     return 1;
 }
 int L_CastAbility(lua_State* l)
@@ -2021,5 +2051,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_KillObj);
     lua_setglobal(luaState, "KillObj");
+
+    lua_pushcfunction(luaState, L_IsAlive);
+    lua_setglobal(luaState, "IsAlive");
+
+    lua_pushcfunction(luaState, L_GetControlGroup);
+    lua_setglobal(luaState, "GetControlGroup");
 
 }

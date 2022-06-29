@@ -16,7 +16,7 @@ function update(dt)
     j = GetThreatRank()
 
     target = {};
-    target["target"] = j[0];
+    target["target"] = j[1];
     
     
 

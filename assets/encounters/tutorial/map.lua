@@ -1,5 +1,6 @@
 local warrior = 0
 local trainingdummy = 0
+local doll = 0
 
 local shownIntro = false
 local descriptionBox = 0
@@ -12,6 +13,10 @@ local abilityCasted2 = false
 local abilityCasted3 = false
 
 local selectedBoth = false
+
+local killedMob = false
+
+local ctrlGroupSet = false
 
 
 local selectString1 = "To select a unit, left click and drag a box around the unit.";
@@ -34,9 +39,19 @@ local abilityString7 = "Use your fourth ability (R) and click on the ground to c
 local abilityString8 = "You can view what your abilities do by mousing over them on the interface."
 local abilityString9 = "Select both units by holding left click and dragging around them."
 
-local selectedHealerString = "This is a priest class; a basic healer."
+local selectedHealerString = "This is a priest class, a basic healer."
 local selectedHealerString2 = "When selected, you can switch between the active units by pressing tab."
 local selectedHealerString3 = "Defeat the enemy to continue."
+
+local controlGroupMessage = "You can assign control groups to your units to make controlling them easier."
+local controlGroupMessage2 = "Holding control, press a number key to assign a group."
+local controlGroupMessage3 = "Select a different group of units and assign a second group, holding control and pressing a number key."
+local controlGroupMessage4 = "Recall the group you set by pressing the number key without holding control."
+
+
+
+
+
 
 local textbox = {};
 
@@ -49,8 +64,8 @@ function setup()
 
     textbox.x = 10;
     textbox.w = SCREEN_SIZE - textbox.x*2;
-    textbox.y = 40;
-    textbox.h = 80;
+    textbox.y = 10;
+    textbox.h = 40;
 
 end
 
@@ -150,9 +165,31 @@ function update()
             PushMessage(selectedHealerString2,textbox.x,textbox.y,textbox.w,textbox.h,false);
             PushMessage(selectedHealerString3,textbox.x,textbox.y,textbox.w,textbox.h,true);
             KillObj(trainingdummy);
-            CreateObject("assets/encounters/tutorial/boss/doll.lua",128,128,TYPE_ENEMY);
+            doll = CreateObject("assets/encounters/tutorial/boss/doll.lua",128,128,TYPE_ENEMY);
         end
     end
+
+    if (selectedBoth == true and killedMob == false and IsAlive(doll) == false) then
+        killedMob = true
+        ClearMessages()
+        PushMessage(controlGroupMessage,textbox.x,textbox.y,textbox.w,textbox.h,false);
+        PushMessage(controlGroupMessage2,textbox.x,textbox.y,textbox.w,textbox.h,true);
+    end
+    local hasSet = false
+    if (killedMob == true and ctrlGroupSet == false) then
+        for i=0,10 do
+            local ctrlgroup = GetControlGroup(i);
+            if #ctrlgroup > 0 then
+                hasSet = true;
+            end
+        end
+    end
+
+    if (ctrlGroupSet == false and hasSet == true) then
+        ctrlGroupSet = true;
+        ClearMessages()
+    end
+
 
 
 
