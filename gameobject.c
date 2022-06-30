@@ -943,6 +943,8 @@ bool IsOwnedByPlayer(GameObject* g)
 }
 int GetPlayerOwnedBy(GameObject* g)
 {
+    if (!g) 
+        return -1;
     return (g->properties & OBJ_OWNED_BY) > 0 ? 1 : 0;
 }
 void SetOwnedBy(GameObject* g, int i)
@@ -1542,9 +1544,13 @@ void Teleport(GameObject* g, float x, float y)
 
 
     CheckCollisions(g,true, -dx, false);
-    CheckCollisions(g,false, -dy, false);
+    CheckCollisions(g,false, -dy, false);   
 
     CheckCollisionsWorld(g,true, false);
+
+    g->targetPosition.x = g->position.x;
+    g->targetPosition.y = g->position.y;
+
     //CheckCollisionsWorld(g,false, false);
 
 

@@ -102,6 +102,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         {
             UpdateObject(&objects[i],dt);
         }
+        currGameObjRunning = NULL;
         UpdateAbilityInteractions(keyState, keyStateLastFrame,mouseState,mouseStateLastFrame);
 
         CheckIfGameIsLost();
@@ -116,7 +117,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     UpdateParticles(dt);
     ProcessAnimationEffects(dt);
     UpdateWidgets(dt);
-
+    UpdateChatbox(dt);
 }
 
 void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
@@ -285,6 +286,10 @@ int main(int argc, char* args[])
    ALLEGRO_MOUSE_STATE mouseStateLastFrame;
     mouseStateLastFrame = GetMouseClamped();
 
+    ALLEGRO_MOUSE_STATE mouseState;
+    ALLEGRO_KEYBOARD_STATE keyState;
+
+
     //PlayMusic("assets/audio/first_boss.wav");
 
 
@@ -307,7 +312,9 @@ int main(int argc, char* args[])
         }
         if (gameState == GAMESTATE_IN_CHATBOX)
         {
-            if (event.type == ALLEGRO_EVENT_KEY_DOWN)
+            mouseState = GetMouseClamped();
+
+            if (event.type == ALLEGRO_EVENT_KEY_DOWN || (mouseState.buttons & 1 && !(mouseStateLastFrame.buttons & 1)))
             {
                 if (chatboxes)
                 {
@@ -325,10 +332,9 @@ int main(int argc, char* args[])
             int drawposx = displayW/2 - (_RENDERSIZE*256)/2; 
             int drawposy = displayH/2 - (_RENDERSIZE*256)/2;
 
-            ALLEGRO_MOUSE_STATE mouseState;
-            ALLEGRO_KEYBOARD_STATE keyState;
 
             al_get_keyboard_state(&keyState);
+            keyStateLua = &keyState;
             mouseState = GetMouseClamped();
             
             al_set_target_bitmap(backbuffer);

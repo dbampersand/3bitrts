@@ -18,6 +18,10 @@ local killedMob = false
 
 local ctrlGroupSet = false
 
+local ctrlGroupRecalled = false
+
+
+
 
 local selectString1 = "To select a unit, left click and drag a box around the unit.";
 local selectString2 = "Click and drag over the unit.";
@@ -48,6 +52,8 @@ local controlGroupMessage2 = "Holding control, press a number key to assign a gr
 local controlGroupMessage3 = "Select a different group of units and assign a second group, holding control and pressing a number key."
 local controlGroupMessage4 = "Recall the group you set by pressing the number key without holding control."
 
+local attackString = "The circle represents an area of affect attack on your unit."
+local attackString2 = "Move out of it before it damages you too much!"
 
 
 
@@ -82,6 +88,14 @@ function update()
 
 
     if shownIntro == false then
+        PushMessage("asdasda",textbox.x,textbox.y,textbox.w,textbox.h,false);
+        PushMessage("sfadfasfsfa",textbox.x,textbox.y,textbox.w,textbox.h,false);
+        PushMessage("Vzxvzvx",textbox.x,textbox.y,textbox.w,textbox.h,false);
+        PushMessage("wreqweqw",textbox.x,textbox.y,textbox.w,textbox.h,false);
+        PushMessage("gkmvkwds",textbox.x,textbox.y,textbox.w,textbox.h,false);
+        PushMessage("elfowec",textbox.x,textbox.y,textbox.w,textbox.h,false);
+        PushMessage("dewrveiro",textbox.x,textbox.y,textbox.w,textbox.h,false);
+
         PushMessage(selectString1,textbox.x,textbox.y,textbox.w,textbox.h,false);
         PushMessage(selectString2,textbox.x,textbox.y,textbox.w,textbox.h,true);
 
@@ -186,16 +200,34 @@ function update()
     end
 
     if (ctrlGroupSet == false and hasSet == true) then
-        ctrlGroupSet = true;
-        ClearMessages()
+        if not ((GetKey(KEY_1)) or GetKey(KEY_2)  or GetKey(KEY_3)  or GetKey(KEY_4)  or GetKey(KEY_5)  or GetKey(KEY_6)  or GetKey(KEY_7) or GetKey(KEY_8) or GetKey(KEY_9) or GetKey(KEY_0)) then
+            ctrlGroupSet = true;
+            ClearMessages()
+            PushMessage(controlGroupMessage3,textbox.x,textbox.y,textbox.w,textbox.h,false);
+            PushMessage(controlGroupMessage4,textbox.x,textbox.y,textbox.w,textbox.h,true);
+        end
     end
 
+    if (ctrlGroupRecalled == false and ctrlGroupSet == true) then
+        if (GetKey(KEY_1)) or GetKey(KEY_2)  or GetKey(KEY_3)  or GetKey(KEY_4)  or GetKey(KEY_5)  or GetKey(KEY_6)  or GetKey(KEY_7) or GetKey(KEY_8) or GetKey(KEY_9) or GetKey(KEY_0) then
+            ctrlGroupRecalled = true
+            ClearMessages();
 
+            f1 = {};
+            f1["trigger"] = TRIGGER_TIMER;
+            f1["type"] = EFFECT_HURT;
+            --f1["numTriggers"] = 5
+            f1["value"] = 10;
+            f1["duration"] = 1;
+            f1["triggersPerSecond"] = 1
+        
+            CreateAOE(GetX(warrior),GetY(warrior),"", 30, 1, 999999, false, ATTACK_HITS_FRIENDLIES, COLOR_DAMAGE, DITHER_HALF, {f1})
+            PushMessage(attackString,textbox.x,textbox.y,textbox.w,textbox.h,false);
+            PushMessage(attackString2,textbox.x,textbox.y,textbox.w,textbox.h,true);
+            
+        end
 
-
-
-
-
+    end
 end
 
 function kill()

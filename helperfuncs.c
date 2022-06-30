@@ -284,7 +284,13 @@ int NumDigits(int i)
 {
     if (i == 0)
         return 1;
-    return (int)ceil(log10(i))+1;
+    int negative = 0; //add 1 more to the count
+    if (i < 0)
+    {
+        negative = 1;
+        i = -i;
+    }
+    return (int)ceil(log10(i)) + 1 + negative;
 }
 float Towards(float f, float to, float maxDist)
 {

@@ -46,7 +46,7 @@ void DrawOutlinedRect_Dithered(Rect* r, ALLEGRO_COLOR color)
 {
     if (!r) return;
     
-    for (int y = r->y+2; y < r->y+r->h; y++)
+    for (int y = r->y; y < r->y+r->h; y++)
     {
         if (y%2==0)
         {
@@ -55,7 +55,7 @@ void DrawOutlinedRect_Dithered(Rect* r, ALLEGRO_COLOR color)
         }
 
     }
-    for (int x = r->x; x < r->x+r->w+1; x++)
+    for (int x = r->x; x < r->x+r->w; x++)
     {
         if (x%2==1)
         {

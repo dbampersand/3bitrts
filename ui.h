@@ -35,8 +35,12 @@ typedef struct Scrollbar
 typedef struct Chatbox
 {
     char* text;
+    char* displayingUpTo;
+
     int x; int y; int w; int h;
     bool allowsInteraction;
+
+    float charTimer;
 } Chatbox;
 typedef enum UIElement_Type
 {
@@ -217,12 +221,13 @@ void CreateWidget(GameState gameStateToAttach, Sprite* spr, int x, int y, Widget
 void DrawMouse(ALLEGRO_MOUSE_STATE* mouseState, GameObject* mousedOver);
 void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState);
 void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
+void UpdateChatbox(float dt);
 void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState);
 bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, ALLEGRO_MOUSE_STATE* mouseState);
 void DrawCursor(ALLEGRO_MOUSE_STATE* mouseState, int index, bool clicked);
 void LoadCursorSprite(UI* ui, int* index, char* path);
-void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, ALLEGRO_FONT* bold,    int x, int y, int wTextbox, int minH, ALLEGRO_COLOR color);
+void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, ALLEGRO_FONT* bold, int x, int y, int wTextbox, int minH, ALLEGRO_COLOR color, bool dither);
 int GetDescriptionBoxH(char* description, int wTextbox, ALLEGRO_FONT* f, int padding);
 bool IsInsideUI(int x, int y);
 int GetAbilityClicked(ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouseStateLastFrame);

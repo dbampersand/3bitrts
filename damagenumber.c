@@ -52,11 +52,11 @@ void AddDamageNumber(int damage, int x, int y, GameObject* source)
     if (damage == 0)
     {
         return;
-        str = calloc(2,sizeof(char));
+       // str = calloc(2,sizeof(char));
     }
     else
     {
-        str = calloc((int)ceil(log10(damage))+2,sizeof(char));
+        str = calloc(NumDigits(damage)+2,sizeof(char));
     }
 
     sprintf(str,"%i",damage);

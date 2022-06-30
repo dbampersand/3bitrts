@@ -1041,6 +1041,8 @@ int L_PushMessage(lua_State* l)
         }
         chatboxes = realloc(chatboxes,numChatboxes*sizeof(Chatbox));
         chatboxes[numChatboxes-1].text  = calloc(strlen(msg)+1,sizeof(char));
+        chatboxes[numChatboxes-1].displayingUpTo  = calloc(strlen(msg)+1,sizeof(char));
+        chatboxes[numChatboxes-1].charTimer = 0;
         strcpy(chatboxes[numChatboxes-1].text,msg);
 
         chatboxes[numChatboxes-1].x = lua_tonumber(l,2);
@@ -1048,7 +1050,10 @@ int L_PushMessage(lua_State* l)
         chatboxes[numChatboxes-1].w = lua_tonumber(l,4);
         chatboxes[numChatboxes-1].h = lua_tonumber(l,5);
         chatboxes[numChatboxes-1].allowsInteraction = lua_toboolean(l,6);
-
+        if (chatboxes[numChatboxes-1].allowsInteraction)
+        {
+            strcpy(chatboxes[numChatboxes-1].displayingUpTo,msg);
+        }
         chatboxShowing = &chatboxes[0];
 
         if (chatboxShowing->allowsInteraction)
@@ -1293,6 +1298,9 @@ int L_GetControlGroup(lua_State* l)
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
+
+    SetLuaKeyEnums(l);
+
     lua_pushinteger(l,0);
     lua_setglobal(l,"PLAYER");
 
@@ -1747,7 +1755,108 @@ int L_GetH(lua_State* l)
     }
     return 1;
 }
+int L_GetKey(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    
+    if (al_key_down(keyStateLua,index))
+    {
+        lua_pushboolean(l,true);
+    }
+    else
+    {
+        lua_pushboolean(l,false);
+    }
+    return 1;
+}
+void SetLuaKeyEnums(lua_State* l)
+{
+    lua_pushinteger(l,ALLEGRO_KEY_LSHIFT);
+    lua_setglobal(l,"KEY_LSHIFT");
 
+    lua_pushinteger(l,ALLEGRO_KEY_LCTRL);
+    lua_setglobal(l,"KEY_LCTRL");
+
+    lua_pushinteger(l,ALLEGRO_KEY_Q);
+    lua_setglobal(l,"KEY_Q");
+    lua_pushinteger(l,ALLEGRO_KEY_W);
+    lua_setglobal(l,"KEY_W");
+    lua_pushinteger(l,ALLEGRO_KEY_E);
+    lua_setglobal(l,"KEY_E");
+    lua_pushinteger(l,ALLEGRO_KEY_R);
+    lua_setglobal(l,"KEY_R");
+    lua_pushinteger(l,ALLEGRO_KEY_T);
+    lua_setglobal(l,"KEY_T");
+    lua_pushinteger(l,ALLEGRO_KEY_Y);
+    lua_setglobal(l,"KEY_Y");
+    lua_pushinteger(l,ALLEGRO_KEY_U);
+    lua_setglobal(l,"KEY_U");
+    lua_pushinteger(l,ALLEGRO_KEY_I);
+    lua_setglobal(l,"KEY_I");
+    lua_pushinteger(l,ALLEGRO_KEY_O);
+    lua_setglobal(l,"KEY_O");
+    lua_pushinteger(l,ALLEGRO_KEY_P);
+    lua_setglobal(l,"KEY_P");
+    lua_pushinteger(l,ALLEGRO_KEY_A);
+    lua_setglobal(l,"KEY_A");
+    lua_pushinteger(l,ALLEGRO_KEY_S);
+    lua_setglobal(l,"KEY_S");
+    lua_pushinteger(l,ALLEGRO_KEY_D);
+    lua_setglobal(l,"KEY_D");
+    lua_pushinteger(l,ALLEGRO_KEY_F);
+    lua_setglobal(l,"KEY_F");
+    lua_pushinteger(l,ALLEGRO_KEY_G);
+    lua_setglobal(l,"KEY_G");
+    lua_pushinteger(l,ALLEGRO_KEY_H);
+    lua_setglobal(l,"KEY_H");
+    lua_pushinteger(l,ALLEGRO_KEY_J);
+    lua_setglobal(l,"KEY_J");
+    lua_pushinteger(l,ALLEGRO_KEY_K);
+    lua_setglobal(l,"KEY_K");
+    lua_pushinteger(l,ALLEGRO_KEY_L);
+    lua_setglobal(l,"KEY_L");
+    lua_pushinteger(l,ALLEGRO_KEY_Z);
+    lua_setglobal(l,"KEY_Z");
+    lua_pushinteger(l,ALLEGRO_KEY_X);
+    lua_setglobal(l,"KEY_X");
+    lua_pushinteger(l,ALLEGRO_KEY_C);
+    lua_setglobal(l,"KEY_C");
+    lua_pushinteger(l,ALLEGRO_KEY_V);
+    lua_setglobal(l,"KEY_V");
+    lua_pushinteger(l,ALLEGRO_KEY_B);
+    lua_setglobal(l,"KEY_B");
+    lua_pushinteger(l,ALLEGRO_KEY_N);
+    lua_setglobal(l,"KEY_N");
+    lua_pushinteger(l,ALLEGRO_KEY_M);
+    lua_setglobal(l,"KEY_M");
+
+    lua_pushinteger(l,ALLEGRO_KEY_1);
+    lua_setglobal(l,"KEY_1");
+    lua_pushinteger(l,ALLEGRO_KEY_2);
+    lua_setglobal(l,"KEY_2");
+    lua_pushinteger(l,ALLEGRO_KEY_3);
+    lua_setglobal(l,"KEY_3");
+    lua_pushinteger(l,ALLEGRO_KEY_4);
+    lua_setglobal(l,"KEY_4");
+    lua_pushinteger(l,ALLEGRO_KEY_5);
+    lua_setglobal(l,"KEY_5");
+    lua_pushinteger(l,ALLEGRO_KEY_6);
+    lua_setglobal(l,"KEY_6");
+    lua_pushinteger(l,ALLEGRO_KEY_7);
+    lua_setglobal(l,"KEY_7");
+    lua_pushinteger(l,ALLEGRO_KEY_8);
+    lua_setglobal(l,"KEY_8");
+    lua_pushinteger(l,ALLEGRO_KEY_9);
+    lua_setglobal(l,"KEY_9");
+    lua_pushinteger(l,ALLEGRO_KEY_0);
+    lua_setglobal(l,"KEY_0");
+
+
+
+
+
+
+}
 void SetLuaFuncs()
 {
     SetGlobals(luaState);
@@ -2057,5 +2166,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetControlGroup);
     lua_setglobal(luaState, "GetControlGroup");
+
+    lua_pushcfunction(luaState, L_GetKey);
+    lua_setglobal(luaState, "GetKey");
+
 
 }

@@ -309,20 +309,36 @@ void UpdateAttack(Attack* a, float dt)
                 int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
                 int objOwnedBy = GetPlayerOwnedBy(&objects[i]);
 
-                if (objOwnedBy == abilityOwnedBy)
+                if (a->ownedBy)
                 {
-                    continue;
+                    if (objOwnedBy == abilityOwnedBy)
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    if (objOwnedBy == TYPE_FRIENDLY)
+                        continue;
                 }
             }
             else if (a->properties & ATTACK_HITS_FRIENDLIES)
             {
                 int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
                 int objOwnedBy = GetPlayerOwnedBy(&objects[i]);
-
-                if (objOwnedBy != abilityOwnedBy)
+                if (a->ownedBy)
                 {
-                    continue;
+                    if (objOwnedBy != abilityOwnedBy)
+                    {
+                        continue;
+                    }
                 }
+                else
+                {
+                    if (objOwnedBy == TYPE_ENEMY)
+                        continue;
+                }
+
             }
            // if (a->ownedBy == &objects[i])
              //   continue;

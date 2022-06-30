@@ -31,7 +31,25 @@ void DrawUIChatbox()
         Chatbox* c = chatboxShowing;
         if (c && c->text)
         {
-            DrawDescriptionBox(c->text,5,ui.font,ui.boldFont,c->x,c->y,c->w,c->h,FRIENDLY);
+            
+            DrawDescriptionBox(c->displayingUpTo,5,ui.font,ui.boldFont,c->x,c->y,c->w,c->h,FRIENDLY,c->allowsInteraction);
+        }
+    }
+}
+void UpdateChatbox(float dt)
+{
+    Chatbox* c = chatboxShowing;
+    if (c)
+    {
+        if (c->text && c->displayingUpTo)
+        {
+             chatboxes[numChatboxes-1].charTimer += dt*10.0f;
+             if (chatboxes[numChatboxes-1].charTimer >= 1.0f)
+             {
+                chatboxes[numChatboxes-1].charTimer = 0;
+                int index = strlen(c->displayingUpTo);
+                c->displayingUpTo[index] = c->text[index];
+             }
         }
     }
 }
@@ -40,6 +58,7 @@ void EndChatbox()
     for (int i = 0; i < numChatboxes; i++)
     {
         free(chatboxes[i].text);
+        free(chatboxes[i].displayingUpTo);
     }
     free(chatboxes);
     chatboxes = NULL;
@@ -50,23 +69,31 @@ void EndChatbox()
 }
 void Chatbox_NextLine()
 {
-    chatboxShowing = &chatboxes[(chatboxShowing-chatboxes)+1];
+    if (strlen(chatboxShowing->displayingUpTo) == strlen(chatboxShowing->text))
+    {
+        chatboxShowing = &chatboxes[(chatboxShowing-chatboxes)+1];
 
-    if ((chatboxShowing-chatboxes) >= numChatboxes)
-    {
-        EndChatbox();
-        return;
-    }
-    if (chatboxShowing->allowsInteraction)
-    {
-        gameState = GAMESTATE_INGAME;
-        transitioningTo = GAMESTATE_INGAME;
+        if ((chatboxShowing-chatboxes) >= numChatboxes)
+        {
+            EndChatbox();
+            return; 
+        }
+        if (chatboxShowing->allowsInteraction)
+        {
+            gameState = GAMESTATE_INGAME;
+            transitioningTo = GAMESTATE_INGAME;
+        }
+        else
+        {
+            gameState = GAMESTATE_IN_CHATBOX;
+            transitioningTo = GAMESTATE_IN_CHATBOX;
+        }
     }
     else
     {
-        gameState = GAMESTATE_IN_CHATBOX;
-        transitioningTo = GAMESTATE_IN_CHATBOX;
+        strcpy(chatboxShowing->displayingUpTo,chatboxShowing->text);
     }
+
 }
 void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
@@ -244,6 +271,7 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_S
 
     }
     SetOptions();
+
 }
 
 void ChangeUIPanel(Panel* to)
@@ -392,7 +420,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                 int h = GetDescriptionBoxH(selected->abilities[0].description,100,ui.font,UI_PADDING);
                 int x = 33 + ceil(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[0].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY);
+                DrawDescriptionBox(selected->abilities[0].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
             }
 
         }
@@ -403,7 +431,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                 int h = GetDescriptionBoxH(selected->abilities[1].description,100,ui.font,UI_PADDING);
                 int x = 65 + ceil(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[1].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY);
+                DrawDescriptionBox(selected->abilities[1].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
             }
 
         }
@@ -414,7 +442,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                 int h = GetDescriptionBoxH(selected->abilities[2].description,100,ui.font,UI_PADDING);
                 int x = 97 + ceil(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[2].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY);
+                DrawDescriptionBox(selected->abilities[2].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
 
             }
 
@@ -426,7 +454,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                 int h = GetDescriptionBoxH(selected->abilities[3].description,100,ui.font,UI_PADDING);
                 int x = 129 + ceil(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[3].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY);
+                DrawDescriptionBox(selected->abilities[3].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
             }
 
         }
@@ -551,7 +579,7 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     }
     if (descriptionToDraw)
     {
-        DrawDescriptionBox(descriptionToDraw,2,ui.font,ui.boldFont,16,170,224,41,ENEMY);
+        DrawDescriptionBox(descriptionToDraw,2,ui.font,ui.boldFont,16,170,224,41,ENEMY,true);
 
     }
     ui.panelShownPercent=1.0f;
@@ -1774,7 +1802,7 @@ int GetDescriptionBoxH(char* description, int wTextbox, ALLEGRO_FONT* f, int pad
 
     return height;
 }
-void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, ALLEGRO_FONT* bold, int x, int y, int wTextbox, int minH, ALLEGRO_COLOR color)
+void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, ALLEGRO_FONT* bold, int x, int y, int wTextbox, int minH, ALLEGRO_COLOR color, bool dither)
 {
     if (!description) return;
     int w;  
@@ -1797,8 +1825,14 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, ALLEGRO
     r.y-=padding;
     r.w+=padding;
     r.h+=padding;
-    DrawOutlinedRect_Dithered(&r,color);
+    if (dither)
+        DrawOutlinedRect_Dithered(&r,color);
+    else
+    {
+       // al_draw_rectangle(r.x+1,r.y+1,r.w+padding,r.h+padding,color,1);
+        al_draw_rectangle(r.x+1,r.y,r.x+r.w+1,r.y+r.h,color,1);
     
+    }
     void* extra = malloc(sizeof(Text));
     memcpy(extra,&(Text){.f=f,.bold=bold,.x=x,.y=y,.color=color,.lineHeight=lineHeight},sizeof(Text));
     
