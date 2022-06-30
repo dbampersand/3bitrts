@@ -69,7 +69,9 @@ typedef struct GameObject
     int numShields;
     
     float mana;
+    float manaRegen;
     float maxMana;
+
     unsigned int spriteIndex;
     unsigned int selectedSpriteIndex;
 
@@ -183,6 +185,8 @@ void SetMoveSpeed(GameObject* g, float value);
 void AddSpeed(GameObject* g, float value);
 void AddDamage(GameObject* g, float value);
 void ModifyMaxHP(GameObject* g, float value);
+void AddMana(GameObject* g, float mana);
+
 
 void Teleport(GameObject* g, float x, float y);
 void GetOffsetCenter(GameObject* g, float* x, float* y);

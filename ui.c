@@ -390,7 +390,8 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
     {
         keydown = false;
     }
-    DrawSpriteRegion(s,0,0,w,h,r.x,r.y,FRIENDLY,keydown);
+    ALLEGRO_COLOR* col = (ObjectHasManaToCast(selected,a) && !AbilityIsOnCooldown(a)) ? &FRIENDLY : &GROUND;
+    DrawSpriteRegion(s,0,0,w,h,r.x,r.y,*col,keydown);
 
     if (PointInRect(mouseState->x,mouseState->y,r))
     {

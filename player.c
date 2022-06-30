@@ -52,16 +52,19 @@ void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STAT
             if (currGameObjRunning)
             {
                 currAbilityRunning = &players[0].selection[players[0].indexSelectedUnit]->abilities[index];
-
-                if (currAbilityRunning->castType == ABILITY_INSTANT || currAbilityRunning->castType == ABILITY_TOGGLE)
+                if (players[0].selection[players[0].indexSelectedUnit]->mana >= GetManaCost(currAbilityRunning))
                 {
-                    if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
-                        ClearCommandQueue(currGameObjRunning);
-                    CastCommand(currGameObjRunning,NULL,currAbilityRunning,mouseState->x,mouseState->y);
-                }
-                else
-                {
-                    players[0].abilityHeld = currAbilityRunning;
+                    if (currAbilityRunning->castType == ABILITY_INSTANT || currAbilityRunning->castType == ABILITY_TOGGLE)
+                    {
+                        if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                            ClearCommandQueue(currGameObjRunning);
+                        CastCommand(currGameObjRunning,NULL,currAbilityRunning,mouseState->x,mouseState->y);
+                    }
+                    else
+                    {
+                        
+                        players[0].abilityHeld = currAbilityRunning;
+                    }
                 }
             }
         }

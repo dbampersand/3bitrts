@@ -1106,6 +1106,13 @@ int L_RemoveAttack(lua_State* l)
     RemoveAttack(atk);
     return 0;
 }
+int L_SetMaxMana(lua_State* l)
+{
+    float mana = lua_tonumber(l,1);
+    currGameObjRunning->maxMana = mana;
+    return 0;
+
+}
 int L_SetMaxHP(lua_State* l)
 {
     float hp = lua_tonumber(l,1);
@@ -1317,6 +1324,23 @@ int L_GetControlGroup(lua_State* l)
     }
     return 1;
 }
+int L_SetManaCost(lua_State* l)
+{
+    if (currAbilityRunning)
+    {
+        currAbilityRunning->manaCost = lua_tonumber(l,1);
+    }
+    return 0;
+}
+int L_SetManaRegen(lua_State* l)
+{
+    if (currGameObjRunning)
+    {
+        currGameObjRunning->manaRegen = lua_tonumber(l,1);
+    }
+    return 0;
+}
+    
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -2194,5 +2218,15 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetNumEffects);
     lua_setglobal(luaState, "GetNumEffects");
+
+    lua_pushcfunction(luaState, L_SetManaCost);
+    lua_setglobal(luaState, "SetManaCost");
+
+    lua_pushcfunction(luaState, L_SetManaRegen);
+    lua_setglobal(luaState, "SetManaRegen");
+
+    lua_pushcfunction(luaState, L_SetMaxMana);
+    lua_setglobal(luaState, "SetMaxMana");
+
 
 }

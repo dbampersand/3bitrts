@@ -4,6 +4,7 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
     SetAbilityRange(120)
     SetDescription("Greater Heal\n\nA large, but inefficient heal.")
+    SetManaCost(70)
     
 end
 function casted(x,y,obj,headingx,headingy)

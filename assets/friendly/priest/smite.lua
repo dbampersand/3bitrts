@@ -5,6 +5,8 @@ function setup()
     SetAbilityRange(60)
     SetDescription("Smite\n\nHits the target for minor damage.")
     SetCooldown(10);
+    SetManaCost(20)
+
 end
 function casted(x,y,obj,headingx,headingy)
     f1 = {};

@@ -41,6 +41,9 @@ typedef struct Ability
     int spriteIndex_Portrait;
     float cooldown;
     float cdTimer;
+    
+    float manaCost;
+
     ABILITY_CAST_TYPE castType;
 
     bool toggled;
@@ -72,6 +75,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a);
 Ability CloneAbilityPrefab(Ability* prefab, lua_State* l);
 Ability* AddAbility(const char* path);
 void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, float headingy, GameObject* target);
+float GetManaCost(Ability* a);
 bool AbilityIsInitialised(Ability* a);
 void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled);
 bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, float y);
@@ -82,3 +86,6 @@ void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE*
 void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void DrawHeldAbility(ALLEGRO_MOUSE_STATE* mouseState);
 void InitAbilities();
+
+bool ObjectHasManaToCast(GameObject* g, Ability* a); 
+bool AbilityIsOnCooldown(Ability* a);

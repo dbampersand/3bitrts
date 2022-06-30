@@ -83,6 +83,19 @@ void ProcessAttackMoveMouseCommand(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYB
         }
     }
 }
+void AddMana(GameObject* g, float mana)
+{
+    g->mana += mana;
+    if (g->mana < 0)
+        g->mana = 0;
+    if (g->mana > g->maxMana)
+        g->mana = g->maxMana;
+}
+void UpdateMana(GameObject* g, float dt)
+{
+    float mana = g->manaRegen * dt;
+    AddMana(g,mana);
+}
 void UpdateObject(GameObject* g, float dt)
 {
     currGameObjRunning = g;
@@ -95,6 +108,8 @@ void UpdateObject(GameObject* g, float dt)
             lua_pcall(luaState,1,0,0);
         }
     }
+    UpdateMana(g, dt);
+    
     g->flashTimer -= dt;
     if (g->flashTimer < 0)
         g->flashTimer = 0;
@@ -575,6 +590,8 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     currGameObjRunning->mana = 50;
     currGameObjRunning->maxMana = 100;
     currGameObjRunning->aggroRadius = 25;
+    currGameObjRunning->manaRegen = 1;
+
     SetMoveSpeed(currGameObjRunning,50);
     //currGameObjRunning->speed = 50;
 

@@ -276,7 +276,13 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
 {
     if (a->cdTimer > 0)
         return;
-    
+    if (g)
+    {
+        if (!ObjectHasManaToCast(g,a))
+        {
+            return;
+        }
+    }
     if (target && (a->castType & ABILITY_TARGET_ALL || a->castType & ABILITY_TARGET_ENEMY || a->castType & ABILITY_TARGET_FRIENDLY))
     {
         bool ownedByG = IsOwnedByPlayer(g);
@@ -353,7 +359,13 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
     {
         a->toggled = !a->toggled;
     }
+    AddMana(g,-GetManaCost(a));
 
+}
+//TODO: things that affect mana cost change this value
+float GetManaCost(Ability* a)
+{
+    return a->manaCost;
 }
 bool AbilityIsInitialised(Ability* a)
 {
@@ -398,7 +410,6 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
 {
     if (a->cdTimer > 0)
         return false;
-
     if (a->castType == ABILITY_INSTANT || a->castType == ABILITY_TOGGLE)
     {
         return true;
@@ -440,6 +451,14 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
         }
     }
     return true;
+}
+bool AbilityIsOnCooldown(Ability* a)
+{
+    return a->cdTimer > 0;
+}
+bool ObjectHasManaToCast(GameObject* g, Ability* a)
+{
+    return (g->mana >= GetManaCost(a));
 }
 bool AbilityIsCastImmediately(Ability* a)
 {

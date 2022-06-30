@@ -4,6 +4,7 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
     SetAbilityRange(60)
     SetDescription("Shield\n\nShields the target from damage.")
+    SetManaCost(30)
 end
 function casted(x,y,obj,headingx,headingy)
     f1 = {};
