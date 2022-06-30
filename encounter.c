@@ -197,11 +197,15 @@ Encounter* GetEncounterByName(char* name)
     }
     return NULL;
 }
-void UpdateEncounter()
+void UpdateEncounter(float dt)
 {
     if (currEncounterRunning)
     {
-        CallLuaFunc(currEncounterRunning->luafunc_update);
-        UpdateMap(currMap);
+        //CallLuaFunc(currEncounterRunning->luafunc_update);
+        lua_rawgeti(luaState,LUA_REGISTRYINDEX,currEncounterRunning->luafunc_update);
+        lua_pushnumber(luaState,dt);
+        lua_pcall(luaState,1,0,0);
+
+        UpdateMap(currMap,dt);
     }
 }

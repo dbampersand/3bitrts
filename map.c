@@ -143,8 +143,14 @@ void DrawMap()
 {
     DrawSprite(&sprites[currMap->spriteIndex],0,0,0,GROUND,false);
 }
-void UpdateMap(Map* m)
+void UpdateMap(Map* m, float dt)
 {
     if (m)
-        CallLuaFunc(m->luafunc_update);
+    {
+        //CallLuaFunc(m->luafunc_update);
+        lua_rawgeti(luaState,LUA_REGISTRYINDEX,m->luafunc_update);
+        lua_pushnumber(luaState,dt);
+        lua_pcall(luaState,1,0,0);
+
+    }
 }

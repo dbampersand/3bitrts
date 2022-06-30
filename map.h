@@ -29,4 +29,4 @@ Map* LoadMap(char* path);
 void SetMap(Map* m);
 void InitMaps();
 void DrawMap();
-void UpdateMap(Map* m);
+void UpdateMap(Map* m, float dt);

@@ -909,6 +909,28 @@ int L_CreateCone(lua_State* l)
 
     return 1;
 }
+int L_GetNumEffects(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index >= 0 && index < MAX_OBJS)
+    {
+        GameObject* g = &objects[index];
+        int numEffects = 0;
+        for (int i = 0; i < MAX_EFFECTS; i++)
+        {
+            if (g->effects[i].enabled)
+            {
+                numEffects++;
+            }
+        }
+        lua_pushnumber(l,numEffects);
+    }
+    else
+    {
+        lua_pushnumber(l,-1);
+    }
+    return 1;
+}
 int L_CreateAOE(lua_State* l)
 {
     //read from table of effects
@@ -2170,5 +2192,7 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_GetKey);
     lua_setglobal(luaState, "GetKey");
 
+    lua_pushcfunction(luaState, L_GetNumEffects);
+    lua_setglobal(luaState, "GetNumEffects");
 
 }

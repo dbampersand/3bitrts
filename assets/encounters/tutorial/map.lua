@@ -22,7 +22,6 @@ local ctrlGroupRecalled = false
 
 
 
-
 local selectString1 = "To select a unit, left click and drag a box around the unit.";
 local selectString2 = "Click and drag over the unit.";
 
@@ -56,6 +55,7 @@ local attackString = "The circle represents an area of affect attack on your uni
 local attackString2 = "Move out of it before it damages you too much!"
 
 
+local dotTimer = 0
 
 
 
@@ -79,7 +79,7 @@ end
 
 
 
-function update()
+function update(dt)
     SetAbilityCooldownTimer(warrior,0,60);
     SetAbilityCooldownTimer(warrior,1,60);
     SetAbilityCooldownTimer(warrior,2,60);
@@ -227,6 +227,12 @@ function update()
             
         end
 
+    end
+    if (GetCurrentMessage() == attackString2) then
+        dotTimer = dotTimer + dt;
+        if (GetNumEffects(warrior) == 0 and dotTimer > 2) then
+            Win();
+        end
     end
 end
 

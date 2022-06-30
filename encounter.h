@@ -54,7 +54,7 @@ void LoadEncounters(char* dirPath,lua_State* l);
 void NextEncounter();
 void PreviousEncounter();
 Encounter* GetEncounterByName(char* name);
-void UpdateEncounter();
+void UpdateEncounter(float dt);
 
 Encounter** encounters;
 int numEncounters;

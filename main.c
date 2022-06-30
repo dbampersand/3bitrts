@@ -90,7 +90,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
 
         lua_settop(luaState,0);
-        UpdateEncounter();
+        UpdateEncounter(dt);
         CheckSelected(mouseState,mouseStateLastFrame, keyState);
         ProcessAugments(currEncounterRunning->augments,dt);
         UpdateAttacks(dt);
