@@ -1328,7 +1328,7 @@ int L_SetManaCost(lua_State* l)
 {
     if (currAbilityRunning)
     {
-        currAbilityRunning->manaCost = lua_tonumber(l,1);
+        SetManaCost(currAbilityRunning, lua_tonumber(l,1));
     }
     return 0;
 }
@@ -1336,11 +1336,19 @@ int L_SetManaRegen(lua_State* l)
 {
     if (currGameObjRunning)
     {
-        currGameObjRunning->manaRegen = lua_tonumber(l,1);
+        SetManaRegen(currGameObjRunning, lua_tonumber(l,1));
     }
     return 0;
 }
-    
+int L_SetHPRegen(lua_State* l)
+{
+    if (currGameObjRunning)
+    {
+        SetHPRegen(currGameObjRunning, lua_tonumber(l,1));
+    }
+    return 0;
+
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 

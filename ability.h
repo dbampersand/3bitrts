@@ -71,6 +71,8 @@ typedef struct lua_State lua_State;
 typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE;
 typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE;
 
+void SetManaCost(Ability* a, float mana);
+
 void LoadAbility(const char* path, lua_State* l, Ability* a);
 Ability CloneAbilityPrefab(Ability* prefab, lua_State* l);
 Ability* AddAbility(const char* path);

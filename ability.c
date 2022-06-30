@@ -452,6 +452,10 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
     }
     return true;
 }
+void SetManaCost(Ability* a, float mana)
+{
+    a->manaCost = mana;
+}
 bool AbilityIsOnCooldown(Ability* a)
 {
     return a->cdTimer > 0;

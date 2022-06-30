@@ -96,6 +96,20 @@ void UpdateMana(GameObject* g, float dt)
     float mana = g->manaRegen * dt;
     AddMana(g,mana);
 }
+void UpdateHPRegen(GameObject* g, float dt)
+{
+    float health = g->healthRegen * dt;
+    Heal(g,health);
+}
+void SetHPRegen (GameObject* g, float regen)
+{
+    g->healthRegen = regen;
+}
+void SetManaRegen(GameObject* g, float regen)
+{
+    g->manaRegen = regen;
+}
+
 void UpdateObject(GameObject* g, float dt)
 {
     currGameObjRunning = g;
@@ -109,6 +123,7 @@ void UpdateObject(GameObject* g, float dt)
         }
     }
     UpdateMana(g, dt);
+    UpdateHPRegen(g, dt);
     
     g->flashTimer -= dt;
     if (g->flashTimer < 0)
@@ -583,16 +598,21 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
 
     currGameObjRunning->range = 1;
     currGameObjRunning->objType = TYPE_ALL;
+
     currGameObjRunning->health = 100;
     currGameObjRunning->maxHP = 100;
+
     currGameObjRunning->range = 1;
     currGameObjRunning->attackSpeed = 1;
+
     currGameObjRunning->mana = 50;
     currGameObjRunning->maxMana = 100;
-    currGameObjRunning->aggroRadius = 25;
     currGameObjRunning->manaRegen = 1;
 
+    currGameObjRunning->aggroRadius = 25;
+
     SetMoveSpeed(currGameObjRunning,50);
+    SetHPRegen(currGameObjRunning,1);
     //currGameObjRunning->speed = 50;
 
     loadLuaGameObj(luaState, found->path, found); 
