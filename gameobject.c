@@ -101,7 +101,7 @@ void UpdateHPRegen(GameObject* g, float dt)
     float health = g->healthRegen * dt;
     Heal(g,health);
 }
-void SetHPRegen (GameObject* g, float regen)
+void SetHPRegen(GameObject* g, float regen)
 {
     g->healthRegen = regen;
 }
@@ -619,12 +619,10 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     found->properties |= OBJ_ACTIVE;
 
 
-    currGameObjRunning->position.x = 0;
-    currGameObjRunning->position.y = 0;
+    currGameObjRunning->position.x = _SCREEN_SIZE/2.0f;
+    currGameObjRunning->position.y = _SCREEN_SIZE/2.0f;
 
     Teleport(currGameObjRunning,x,y);
-    currGameObjRunning->targetPosition.x = x;
-    currGameObjRunning->targetPosition.y = y;
 
 
 
@@ -1571,8 +1569,6 @@ void Teleport(GameObject* g, float x, float y)
     GetOffsetCenter(g,&cX,&cY);
     g->position.x = x - cX/2;
     g->position.y = y - cY/2;
-    g->targetPosition.x = g->position.x;
-    g->targetPosition.y = g->position.y;
 
     GameObject* g2 = GetCollidedWith(g);
 
@@ -1585,8 +1581,8 @@ void Teleport(GameObject* g, float x, float y)
 
     CheckCollisionsWorld(g,true, false);
 
-    g->targetPosition.x = g->position.x;
-    g->targetPosition.y = g->position.y;
+    g->targetPosition.x = g->position.x - cX/2.0f;
+    g->targetPosition.y = g->position.y - cY/2.0f;
 
     //CheckCollisionsWorld(g,false, false);
 

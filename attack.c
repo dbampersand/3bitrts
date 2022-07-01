@@ -91,7 +91,13 @@ void RemoveAttack(int attackindex)
     }
 
 }
-
+void RemoveAllAttacks()
+{
+    for (int i = 0; i < MAX_ATTACKS; i++)
+    {
+        RemoveAttack(i);
+    }
+}
 void ApplyAttack(Attack* a, GameObject* target)
 {
     bool apply = true;

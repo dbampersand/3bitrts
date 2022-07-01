@@ -13,6 +13,7 @@
 #include "math.h"
 #include "ui.h"
 #include "loadscreen.h"
+#include "attack.h"
 bool TransitionTo(GameState state)
 {
     if (transitioningTo == state)
@@ -35,6 +36,7 @@ void InitGameState()
     gameState = GAMESTATE_LOAD_SCREEN;
     transitioningTo = gameState;
     memset(&gameStats,0,sizeof(GameState));
+    pathToNextMap = NULL;
 
 }
 void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Encounter* e)
@@ -114,6 +116,7 @@ void FinishTransition()
     }
     if (transitioningTo == GAMESTATE_LOAD_ENCOUNTER)
     {
+        RemoveAllAttacks();
         gameState = GAMESTATE_LOAD_ENCOUNTER;
         transitioningTo = GAMESTATE_LOAD_ENCOUNTER;
     }
@@ -131,6 +134,39 @@ void FinishTransition()
         SetMap(&maps[0]);
 
     }
+    if (transitioningTo == GAMESTATE_CHANGE_MAP)
+    {
+        gameState = GAMESTATE_INGAME;
+        transitioningTo = GAMESTATE_INGAME;
+
+        int xPos = 80;
+        for (int i = 0; i < MAX_OBJS; i++)
+        {
+            objects[i].position.x = xPos;
+            objects[i].position.y = 180;
+            objects[i].targetPosition.x = xPos;
+            objects[i].targetPosition.y = 180;
+
+            if (IsActive(&objects[i]) && IsOwnedByPlayer(&objects[i]))
+                xPos += GetWidth(&objects[i]);
+        }
+        RemoveAllAttacks();
+        SetMap(LoadMap(pathToNextMap));
+
+        free(pathToNextMap);
+        pathToNextMap = NULL;
+    }
+    
+}
+void SetGameStateToChangingMap(const char* mapPath)
+{
+    TransitionTo(GAMESTATE_CHANGE_MAP);
+
+    if (pathToNextMap)
+        free(pathToNextMap);
+    pathToNextMap = calloc(strlen(mapPath)+1,sizeof(char));
+    strcpy(pathToNextMap,mapPath);
+
 }
 void SetGameStateToChoosingParty()
 {

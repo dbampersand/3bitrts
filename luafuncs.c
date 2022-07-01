@@ -682,6 +682,24 @@ int L_SetMoveSpeed(lua_State* l)
     SetMoveSpeed(currGameObjRunning,lua_tonumber(l,1));
     return 0;
 }
+int L_NumObjectsOwnedByPlayer(lua_State* l)
+{
+    int player = lua_tonumber(l,1);
+    int numObjs = 0;
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        GameObject* g = &objects[i];
+        if (IsActive(g))
+        {
+            if (GetPlayerOwnedBy(&objects[i]) == player)
+            {
+                numObjs++;
+            }
+        }
+    }
+    lua_pushnumber(l,numObjs);
+    return 1;
+}
 int L_CreateProjectile(lua_State* l)
 {
     const float x = lua_tonumber(l,1);
@@ -1349,6 +1367,7 @@ int L_SetHPRegen(lua_State* l)
     return 0;
 
 }
+
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -1704,6 +1723,12 @@ int L_SetAbilityHint(lua_State* l)
     {
         currAbilityRunning->hintRadius = lua_tonumber(l,2);
     }
+    return 0;
+}
+int L_ChangeMap(lua_State* l)
+{
+    const char* path = lua_tostring(l,1);
+    SetGameStateToChangingMap(path);
     return 0;
 }
 int L_AddAbility(lua_State* l)
@@ -2235,6 +2260,12 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetMaxMana);
     lua_setglobal(luaState, "SetMaxMana");
+
+    lua_pushcfunction(luaState, L_NumObjectsOwnedByPlayer);
+    lua_setglobal(luaState, "NumObjectsOwnedByPlayer");
+
+    lua_pushcfunction(luaState, L_ChangeMap);
+    lua_setglobal(luaState, "ChangeMap");
 
 
 }

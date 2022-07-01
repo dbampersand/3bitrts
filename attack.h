@@ -60,6 +60,7 @@ int attack_top;
 Attack* AddAttack(Attack* a);
 void InitAttacks();
 void RemoveAttack(int attackindex);
+void RemoveAllAttacks();
 void DrawAttack(Attack* a, float dt);
 void DrawAttacks(float dt);
 void UpdateAttacks(float dt);

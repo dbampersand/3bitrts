@@ -9,12 +9,13 @@ typedef enum GameState {
     GAMESTATE_CHOOSING_ENCOUNTER = 3,
     GAMESTATE_CHOOSING_UNITS = 4,
     GAMESTATE_LOAD_ENCOUNTER = 5,
-    GAMESTATE_INGAME = 6,
-    GAMESTATE_IN_CHATBOX = 7,
-    GAMESTATE_END = 8,
-    GAMESTATE_EXIT = 9,
+    GAMESTATE_CHANGE_MAP = 6,
+    GAMESTATE_INGAME = 7,
+    GAMESTATE_IN_CHATBOX = 8,
+    GAMESTATE_END = 9,
+    GAMESTATE_EXIT = 10,
 
-    NUMGAMESTATES = 10
+    NUMGAMESTATES = 11
 } GameState;
 GameState gameState;
 
@@ -46,6 +47,7 @@ float transitionTimer;
 GameObject** toSpawn;
 
 Encounter* encounterGoingTo;
+char* pathToNextMap;
 
 bool TransitionTo(GameState state);
 
@@ -56,6 +58,7 @@ void SetGameStateToChoosingEncounter();
 void SetGameStateToEndscreen();
 void SetGameStateToInMenu();
 void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Encounter* e);
+void SetGameStateToChangingMap(const char* mapPath);
 
 
 void Quit();
