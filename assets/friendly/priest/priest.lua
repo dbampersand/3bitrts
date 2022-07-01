@@ -14,7 +14,7 @@ function setup()
     SetDamage(5);
     SetRange(100)
     SetMaxHP(maxHP,true)
-    SetManaRegen(5);
+    SetManaRegen(15);
 
     SetObjType(TYPE_HEALER);
     IsPlayerChoosable(true);

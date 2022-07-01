@@ -258,6 +258,7 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_S
         if (GetButton(&ui.pauseMenuPanel,"Exit"))
         {
             gameStats.gameWon = false;
+            ChangeUIPanel(NULL);
             if (gameState == GAMESTATE_CHOOSING_UNITS)
             {
                 SetGameStateToInMenu();
@@ -1389,14 +1390,18 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
 
     if (!al_key_down(keyState,ALLEGRO_KEY_P) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_P))
     {
-        if (ui.currentPanel)
+        if (GameIsIngame())
         {
-            ChangeUIPanel(NULL);
-            //ui.currentPanel = NULL;
-        }
-        else
-        {
-            ChangeUIPanel(&ui.pauseMenuPanel);
+
+            if (ui.currentPanel)
+            {
+                ChangeUIPanel(NULL);
+                //ui.currentPanel = NULL;
+            }
+            else
+            {
+                    ChangeUIPanel(&ui.pauseMenuPanel);
+            }
         }
     }
     if (ui.animatePanel != UI_ANIMATE_STATIC)

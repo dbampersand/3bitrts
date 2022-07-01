@@ -1515,7 +1515,8 @@ bool Damage(GameObject* source, GameObject* g, float value)
     }
     value = DamageShields(g,value);
     g->health -= value;
-    g->flashTimer = FLASH_TIMER;
+    if (value > 0)
+        g->flashTimer = FLASH_TIMER;
     AddDamageNumber((int)value,g->position.x+(rand()%(int)GetWidth(g)*1.1f),g->position.y+(rand()%(int)GetHeight(g)*1.1f),source);
     if (g->health <= 0)
     {
