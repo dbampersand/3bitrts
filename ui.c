@@ -1180,7 +1180,7 @@ void InitUI()
     CreateWidget(GAMESTATE_MAIN_MENU,&sprites[edge],0,0,0.5,0.5,DRAWORDER_AFTERUI,0,NULL);
 
     CreateWidget(GAMESTATE_MAIN_MENU,&sprites[block],157,93,0.5,0.5,DRAWORDER_AFTERUI,0,NULL);
-    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[lantern],165,103,0.46,0.033,DRAWORDER_AFTERUI,0,UpdateLanternWidget);
+    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[lantern],155,100,0.46,0.033,DRAWORDER_AFTERUI,0,UpdateLanternWidget);
 
     CreateWidget(GAMESTATE_MAIN_MENU,&sprites[name],29,38,0.5,0.5,DRAWORDER_AFTERUI,0,NULL);
 

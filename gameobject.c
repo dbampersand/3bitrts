@@ -414,7 +414,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
             for (int i = 0; i < numObjects; i++)
             {
                 GameObject* obj = &objects[i];
-                if (!IsOwnedByPlayer(obj) || !IsActive(obj))
+                if (!IsOwnedByPlayer(obj) || !IsActive(obj) || ObjIsDecoration(obj))
                     continue;
                 Sprite* sp = &sprites[obj->spriteIndex];
                 int j = al_get_bitmap_width(sp->sprite);
