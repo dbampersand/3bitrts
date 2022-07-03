@@ -18,7 +18,7 @@ void InitVideo()
 
     _RENDERSIZE = _MIN(monitor.x2,monitor.y2)/256 -1;
     background_screen = al_create_bitmap(monitor.x2,monitor.y2);
-    //al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
+    al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
     display = al_create_display(monitor.x2,monitor.y2);
 
     int resX = 256*_RENDERSIZE;

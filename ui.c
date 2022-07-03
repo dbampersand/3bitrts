@@ -355,7 +355,7 @@ bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MO
         shouldInvert = true;
     }
 
-    DrawSprite(s,x,y,0,color,shouldInvert);
+    DrawSprite(s,x,y,0.5f,0.5f,0,color,shouldInvert);
 
     if (shouldInvert)
         return true;
@@ -366,7 +366,7 @@ void DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c)
 {
     if (e->spriteIndex_Portrait > 0 && e->enabled)
     {
-        DrawSprite(&sprites[e->spriteIndex_Portrait],x,y,0,FRIENDLY,false);
+        DrawSprite(&sprites[e->spriteIndex_Portrait],x,y,0.5f,0.5f,0,FRIENDLY,false);
     }
 }
 bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, ALLEGRO_MOUSE_STATE* mouseState)
@@ -406,7 +406,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
     
     Sprite* s = &sprites[ui.panel_sprite_index];
     if (!s) return;
-    DrawSprite(s,1,UI_START_Y+1,0,FRIENDLY,false);
+    DrawSprite(s,1,UI_START_Y+1,0.5f,0.5f,0,FRIENDLY,false);
 
     GameObject* selected = players[0].selection[players[0].indexSelectedUnit];
     if (selected)
@@ -539,7 +539,7 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     for (int i = 0; i < e->maxaugment+1; i++)
     {
         Rect drawRect = (Rect){augmentX,20,GetWidthSprite(&sprites[ui.augmentIconIndex]),GetHeightSprite(&sprites[ui.augmentIconIndex])};
-        DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0,i < e->augment ? FRIENDLY : GROUND,false);
+        DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0.5f,0.5f,0,i < e->augment ? FRIENDLY : GROUND,false);
         augmentX += drawRect.w+3;
 
         if (mouseStateLastFrame->buttons & 1 && !(mouseState->buttons & 1))
@@ -557,7 +557,7 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     al_draw_line(10,73,246,73,FRIENDLY,1);
     
     al_draw_text(ui.font,FRIENDLY,16,81,0,"Wyrm");
-    DrawSprite(&sprites[e->spriteIndex],17,102,0,ENEMY,false);
+    DrawSprite(&sprites[e->spriteIndex],17,102,0.5f,0.5f,0,ENEMY,false);
 
     Ability* mousedOver = NULL;
     mousedOver = DrawAbility(&e->abilities[0], 96, 80, ENEMY, mouseState) == true ? &e->abilities[0] : mousedOver;
@@ -693,7 +693,7 @@ void UpdateSlider(Slider* s, int x, int y, int w, int h, ALLEGRO_MOUSE_STATE* mo
         *s->value = v;
     }
 }
-Panel CreatePanel(int x, int y, int w, int h, int padding)
+Panel CreatePanel(int x, int y, int w, int h, int padding, bool showBorder)
 {
     Panel p = {0};
     p.x = x;
@@ -701,6 +701,7 @@ Panel CreatePanel(int x, int y, int w, int h, int padding)
     p.w = w;
     p.h = h;
     p.padding = padding;
+    p.showBorder = showBorder;
     return p;
 }
 void TabGroup(int numPanels, ...)
@@ -1036,6 +1037,11 @@ void SetUITextStr(UI_Text* t, char* str)
     t->str = calloc(strlen(str)+1,sizeof(char));
     strcpy(t->str,str);
 }
+void UpdateLanternWidget(Widget* self, float dt)
+{
+    self->timer += dt;
+    self->rotation = sin(self->timer) * 0.1f;
+}
 UIElement* GetUIElement(Panel* p, char* name)
 {
     for (int i = 0; i < p->numElements; i++)
@@ -1052,20 +1058,21 @@ void InitUI()
 {
     ui.augmentIconIndex = LoadSprite("assets/ui/augment.png",false);
 
-    ui.mainMenuPanel = CreatePanel(48,48,160,144,15);
-    AddButton(&ui.mainMenuPanel,"Return","Return",33,17,96,16);
-    AddButton(&ui.mainMenuPanel,"Tutorial","Tutorial",33,33+16,96,16);
-    AddButton(&ui.mainMenuPanel,"Options","Options",33,81,96,16);
-    AddButton(&ui.mainMenuPanel,"Exit","Exit Game",33,113,96,16);
+    //ui.mainMenuPanel = CreatePanel(29,97,144,15,UI_PADDING,false);
+    ui.mainMenuPanel = CreatePanel(29,80,160,144,15,false);
+    AddButton(&ui.mainMenuPanel,"Return","Return",0,17,96,16);
+    AddButton(&ui.mainMenuPanel,"Tutorial","Tutorial",0,33+16,96,16);
+    AddButton(&ui.mainMenuPanel,"Options","Options",0,81,96,16);
+    AddButton(&ui.mainMenuPanel,"Exit","Exit Game",0,113,96,16);
 
-    ui.pauseMenuPanel = CreatePanel(48,48,160,144,15);
+    ui.pauseMenuPanel = CreatePanel(48,48,160,144,15,true);
     AddButton(&ui.pauseMenuPanel,"Return","Return",33,17,96,16);
     AddButton(&ui.pauseMenuPanel,"Options","Options",33,49,96,16);
     AddButton(&ui.pauseMenuPanel,"Exit","Exit Game",33,81,96,16);
 
 
 
-    ui.videoOptionsPanel = CreatePanel(48,48,160,112,15);
+    ui.videoOptionsPanel = CreatePanel(48,48,160,112,15,true);
     AddText(&ui.videoOptionsPanel,33,41,"Tag_RenderScale","RenderScale");
     AddText(&ui.videoOptionsPanel,132,43,"RenderScale","2x");
     
@@ -1081,18 +1088,18 @@ void InitUI()
     AddText(&ui.videoOptionsPanel,33,105,"Display\nHealth Bar","Display\nHealth Bar");
     AddPulldownMenu(&ui.videoOptionsPanel,97,108,48,13,"HealthBarDisplay",0,3,"Always","Selected","Never");
 
-    ui.audioOptionsPanel = CreatePanel(48,48,160,112,15);
+    ui.audioOptionsPanel = CreatePanel(48,48,160,112,15,true);
     AddText(&ui.audioOptionsPanel,33,41,"Tag_MasterVolume","Master Volume");
     AddSlider(&ui.audioOptionsPanel,34,52,110,10,"MasterVolume",currSettings.masterVolume,&currSettings.masterVolume);
 
 
-    ui.accessibilityOptionsPanel = CreatePanel(48,48,160,112,15);
+    ui.accessibilityOptionsPanel = CreatePanel(48,48,160,112,15,true);
     //AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 132,29,96,16);
     //AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",132,29,96,16);
     TabGroup(3,&ui.videoOptionsPanel,&ui.audioOptionsPanel,&ui.accessibilityOptionsPanel);
 
 
-    ui.encounter_scroll = CreatePanel(16,224,224,16,0);
+    ui.encounter_scroll = CreatePanel(16,224,224,16,0,true);
     InitButton(&ui.encounter_ButtonLeft,"<","<",0,224,48,16,0);
     InitButton(&ui.encounter_ButtonConfirm,"Select Party","Select Party",0,224,96,16,0);
     InitButton(&ui.encounter_ButtonRight,">",">",0,224,48,16,0);
@@ -1165,14 +1172,28 @@ void InitUI()
     int gear32 = LoadSprite("assets/ui/gear32x32.png",false);
     int gear64 = LoadSprite("assets/ui/gear64x64.png",false);
 
+    int lantern = LoadSprite("assets/ui/mainmenu/lantern.png",false);
+    int name = LoadSprite("assets/ui/mainmenu/name.png",false);
+    int block = LoadSprite("assets/ui/mainmenu/block.png",false);
+    int edge = LoadSprite("assets/ui/mainmenu/mainmenuedges.png",false);
+
+    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[edge],0,0,0.5,0.5,DRAWORDER_AFTERUI,0,NULL);
+
+    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[block],157,93,0.5,0.5,DRAWORDER_AFTERUI,0,NULL);
+    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[lantern],165,103,0.46,0.033,DRAWORDER_AFTERUI,0,UpdateLanternWidget);
+
+    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[name],29,38,0.5,0.5,DRAWORDER_AFTERUI,0,NULL);
+
     int x = -5;
+
     for (int i = 0; i < _SCREEN_SIZE/32; i++)
     {   
-        CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x,0,DRAWORDER_AFTERUI,0);
-        CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x+16,18,DRAWORDER_AFTERUI,0);
 
-        CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x,_SCREEN_SIZE-32,DRAWORDER_AFTERUI,0);
-        CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x+16,_SCREEN_SIZE-50,DRAWORDER_AFTERUI,0);
+        //CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x,0,DRAWORDER_AFTERUI,0);
+        //CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x+16,18,DRAWORDER_AFTERUI,0);
+
+        //CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x,_SCREEN_SIZE-32,DRAWORDER_AFTERUI,0);
+        //CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x+16,_SCREEN_SIZE-50,DRAWORDER_AFTERUI,0);
 
         x+=31;
     }
@@ -1185,9 +1206,15 @@ void UpdateWidget(Widget* w, float dt)
     w->y = Towards(w->y,w->desiredY,w->velocity*dt);
     w->rotation += w->rotationSpeed*dt; 
 
+    if (w->updateFunc)
+    {
+        w->updateFunc(w,dt);
+    }
+
     if (gameState == GAMESTATE_MAIN_MENU)
     {
-        w->rotationSpeed = (sqrt(transitionTimer)*sqrt(transitionTimer)) * 1000 * dt;
+        float amt = transitionTimer * rand()/(float)RAND_MAX;
+        //w->rotationSpeed = (sqrt(amt)*sqrt(amt)) * 1000 * dt;
     }
 }
 
@@ -1202,7 +1229,7 @@ void UpdateWidgets(float dt)
         }
     }
 }
-void CreateWidget(GameState gameStateToAttach, Sprite* spr, int x, int y, Widget_DrawOrder drawOrder, int id)
+Widget* CreateWidget(GameState gameStateToAttach, Sprite* spr, int x, int y, float originX, float originY, Widget_DrawOrder drawOrder, int id, void* func)
 {
     Widget s = {0};
     s.spriteIndex = spr - sprites;
@@ -1212,6 +1239,11 @@ void CreateWidget(GameState gameStateToAttach, Sprite* spr, int x, int y, Widget
     s.desiredX = x;
     s.desiredY = y;
     s.id = id;
+    s.originX = originX;
+    s.originY = originY;
+    s.updateFunc = func;
+    s.timer = 0;
+
     if ((numSprites_States[gameStateToAttach] + 1) % NUMSPRITESTATESTOALLOC == 0)
     {
         int reallocTo = ceil(numSprites_States[gameStateToAttach] + NUMSPRITESTATESTOALLOC)/(float)NUMSPRITESTATESTOALLOC+1;
@@ -1219,6 +1251,7 @@ void CreateWidget(GameState gameStateToAttach, Sprite* spr, int x, int y, Widget
     }
     Widgets_States[gameStateToAttach][numSprites_States[gameStateToAttach]] = s;
     numSprites_States[gameStateToAttach]++;
+    return &Widgets_States[gameStateToAttach][numSprites_States[gameStateToAttach]-1];
 }
 void DrawWidgets(GameState currentState, Widget_DrawOrder drawOrderToDraw)
 {
@@ -1229,7 +1262,7 @@ void DrawWidgets(GameState currentState, Widget_DrawOrder drawOrderToDraw)
         if (u->drawOrder == drawOrderToDraw)
         {
             Sprite* s = &sprites[u->spriteIndex];
-            DrawSprite(s,u->x,u->y,u->rotation,FRIENDLY,false);
+            DrawSprite(s,u->x,u->y,u->originX,u->originY,u->rotation,FRIENDLY,false);
         }
     }
 }
@@ -1498,7 +1531,7 @@ void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, boo
     }
     if (b->spriteIndex)
     {
-        DrawSprite(&sprites[b->spriteIndex],x,y,0,FRIENDLY,false);
+        DrawSprite(&sprites[b->spriteIndex],x,y,0.5f,0.5f,0,FRIENDLY,false);
     }
 
 }
@@ -1619,7 +1652,8 @@ void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
     al_set_clipping_rectangle(p->x-1,p->y,p->w+1,p->h*ui.panelShownPercent+1);
 
     al_draw_filled_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,BG);
-    al_draw_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,FRIENDLY,1);
+    if (p->showBorder)
+        al_draw_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,FRIENDLY,1);
 
     al_set_clipping_rectangle(p->x-1,p->y,p->w,p->h*ui.panelShownPercent);
 
@@ -1749,14 +1783,14 @@ void DrawCursor(ALLEGRO_MOUSE_STATE* mouseState, int index, bool clicked)
 {
     if (mouseState->buttons & 1 || mouseState->buttons & 2)
     {
-        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0,FRIENDLY,true);
-        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0,BG,false);
+        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0.5f,0.5f,0,FRIENDLY,true);
+        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0.5f,0.5f,0,BG,false);
 
     }
     else
     {
-        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0,BG,true);
-        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0,FRIENDLY,false);
+        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0.5f,0.5f,0,BG,true);
+        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0.5f,0.5f,0,FRIENDLY,false);
     }
 
 
@@ -1903,7 +1937,7 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
     //Write the boss name and sprite
     al_draw_text(ui.font,ENEMY,16,70,0,currEncounterRunning->name);
     Sprite* sEnemy = &sprites[currEncounterRunning->spriteIndex];
-    DrawSprite(sEnemy,17,91,0,ENEMY,false);
+    DrawSprite(sEnemy,17,91,0.5f,0.5f,0,ENEMY,false);
 
     //Write augment level and augment changes
     al_draw_text(ui.font,ENEMY,90,89,0,"Augment 3");
@@ -1942,7 +1976,7 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
         if (toSpawn[i])
         {
             Sprite* s = &sprites[toSpawn[i]->spriteIndex];
-            DrawSprite(s,x,y,0,FRIENDLY,false);
+            DrawSprite(s,x,y,0.5f,0.5f,0,FRIENDLY,false);
             x += GetWidth(toSpawn[i])+5;
         }
     }

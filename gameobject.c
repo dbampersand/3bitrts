@@ -1358,7 +1358,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     Sprite* s = &sprites[g->spriteIndex];
     bool isReversed = IsSelected(g) || forceInverse;
     isReversed = g->flashTimer > 0 ? !isReversed : isReversed;
-    DrawSprite(s,g->position.x,g->position.y,g->angle,c, isReversed);
+    DrawSprite(s,g->position.x,g->position.y,0.5f,0.5f,g->angle,c, isReversed);
    
     Rect selectRect;
     selectRect.w = al_get_bitmap_width(s->sprite);

@@ -121,6 +121,8 @@ typedef struct Panel
     float scrollPercent;
     bool scrollbarClicked;
 
+    bool showBorder;
+
 } Panel;
 #define SCROLLBARW 6;
 typedef enum UI_AnimState
@@ -195,8 +197,12 @@ typedef struct Widget
     Widget_DrawOrder drawOrder;
     int x; int y;
     int desiredX; int desiredY;
+    float originX; float originY;
     int id;
     float velocity;
+
+    float timer; 
+    void (*updateFunc)(struct Widget* self, float dt);
 } Widget;
 Widget* Widgets_States[NUMGAMESTATES-1];
 int numSprites_States[NUMGAMESTATES-1];
@@ -217,7 +223,10 @@ void Chatbox_NextLine();
 void EndChatbox();
 void DrawUIChatbox();
 
-void CreateWidget(GameState gameStateToAttach, Sprite* spr, int x, int y, Widget_DrawOrder drawOrder,int id);
+void UpdateLanternWidget(Widget* self, float dt);
+
+Panel CreatePanel(int x, int y, int w, int h, int padding, bool showBorder);
+Widget* CreateWidget(GameState gameStateToAttach, Sprite* spr, int x, int y, float originX, float originY, Widget_DrawOrder drawOrder, int id, void* func);
 void DrawMouse(ALLEGRO_MOUSE_STATE* mouseState, GameObject* mousedOver);
 void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState);
 void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);

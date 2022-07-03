@@ -446,7 +446,7 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
         {
             if (ownedByG != ownedByTarget)
             {
-                return false;
+                return false;   
             }
         }
     }

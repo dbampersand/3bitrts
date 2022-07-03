@@ -88,14 +88,6 @@ function update(dt)
 
 
     if shownIntro == false then
-        PushMessage("asdasda",textbox.x,textbox.y,textbox.w,textbox.h,false);
-        PushMessage("sfadfasfsfa",textbox.x,textbox.y,textbox.w,textbox.h,false);
-        PushMessage("Vzxvzvx",textbox.x,textbox.y,textbox.w,textbox.h,false);
-        PushMessage("wreqweqw",textbox.x,textbox.y,textbox.w,textbox.h,false);
-        PushMessage("gkmvkwds",textbox.x,textbox.y,textbox.w,textbox.h,false);
-        PushMessage("elfowec",textbox.x,textbox.y,textbox.w,textbox.h,false);
-        PushMessage("dewrveiro",textbox.x,textbox.y,textbox.w,textbox.h,false);
-
         PushMessage(selectString1,textbox.x,textbox.y,textbox.w,textbox.h,false);
         PushMessage(selectString2,textbox.x,textbox.y,textbox.w,textbox.h,true);
 
