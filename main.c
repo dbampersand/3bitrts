@@ -29,6 +29,7 @@
 #include "sound.h"
 #include "loadscreen.h"
 #include "settings.h"
+#include "replay.h"
 
 
 int _TARGET_FPS = 60;
@@ -358,7 +359,11 @@ int main(int argc, char* args[])
             if (gameState == GAMESTATE_EXIT)
                 break;
             Render(1/(float)_TARGET_FPS, &mouseState, &mouseStateLastFrame, &keyState, &keyStateLastFrame);
-
+            if (al_key_down(&keyState,ALLEGRO_KEY_U))
+                SaveFrame(SCREEN);
+            if (al_key_down(&keyState,ALLEGRO_KEY_I))
+                LoadFrame(SCREEN);
+                
             al_set_target_bitmap(backbuffer);
             al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE, drawposx, drawposy,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
             al_flip_display();

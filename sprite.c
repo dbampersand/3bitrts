@@ -69,6 +69,33 @@ void GenerateInvertedSprite(Sprite* s)
     s->inverseSprite = newSprite;
 
 }
+void SetSpriteToWhite(ALLEGRO_BITMAP* s)
+{
+    if (s)
+    {
+        al_lock_bitmap(s,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+        int w = al_get_bitmap_width(s);
+        int h = al_get_bitmap_height(s);
+        
+        ALLEGRO_BITMAP* before = al_get_target_bitmap();
+        al_set_target_bitmap(s);
+
+        ALLEGRO_COLOR white = al_map_rgba(255,255,255,255);
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                if (al_get_pixel(s,x,y).a > 0.5f)
+                {
+                    al_put_pixel(x,y,white);
+                }
+            }
+        }
+        al_unlock_bitmap(s);
+
+        al_set_target_bitmap(before);
+    }
+}
 
 unsigned int LoadSprite(const char* path, bool needsInverted)
 {
@@ -105,6 +132,7 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
 
     if (sprite)
     {
+        SetSpriteToWhite(sprite);
         Sprite loadedSprite;
         loadedSprite.sprite = sprite;
         loadedSprite.path = calloc(strlen(path)+1,sizeof(char));
