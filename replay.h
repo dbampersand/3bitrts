@@ -5,13 +5,16 @@
 
 typedef struct ReplayFrame
 {
+    char* compressedData;
+    int dataLen;
 }ReplayFrame;
 
 typedef struct Replay
 {
-    void* data;
+    ReplayFrame* frames;
     int numFrames;
-    long long position;
+    int framePlayPosition;
+
 }Replay;
 
 Replay replay;
@@ -20,8 +23,10 @@ typedef struct ALLEGRO_BITMAP ALLEGRO_BITMAP;
 
 void InitReplay();
 void NewReplay();
-void SaveFrame(ALLEGRO_BITMAP* screen);
-void LoadFrame(ALLEGRO_BITMAP* screen);
+ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen);
+void LoadFrame(ALLEGRO_BITMAP* screen, ReplayFrame* frame);
+void RecordReplay(ALLEGRO_BITMAP* screen);
+void PlayReplay(ALLEGRO_BITMAP* screen);
 
-char* frameTest;
-int frameTestSize;
+void ReplayToDisk(Replay* r);
+

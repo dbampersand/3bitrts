@@ -359,10 +359,18 @@ int main(int argc, char* args[])
             if (gameState == GAMESTATE_EXIT)
                 break;
             Render(1/(float)_TARGET_FPS, &mouseState, &mouseStateLastFrame, &keyState, &keyStateLastFrame);
-            if (al_key_down(&keyState,ALLEGRO_KEY_U))
-                SaveFrame(SCREEN);
+            if (gameState == GAMESTATE_INGAME)
+                RecordReplay(SCREEN);
+
+            if (al_key_down(&keyState,ALLEGRO_KEY_I) && !al_key_down(&keyStateLastFrame,ALLEGRO_KEY_I))
+                replay.framePlayPosition = 0;
+
+            if (al_key_down(&keyState,ALLEGRO_KEY_M) && !al_key_down(&keyStateLastFrame,ALLEGRO_KEY_M))
+                ReplayToDisk(&replay);
+
+
             if (al_key_down(&keyState,ALLEGRO_KEY_I))
-                LoadFrame(SCREEN);
+                PlayReplay(SCREEN);
                 
             al_set_target_bitmap(backbuffer);
             al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE, drawposx, drawposy,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
