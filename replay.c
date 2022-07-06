@@ -1,4 +1,6 @@
 #include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "zlib.h"
 
@@ -7,8 +9,6 @@
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_primitives.h"
 #include "colors.h"
-
-
 #define CHUNK 16384
 #if defined(MSDOS) || defined(OS2) || defined(WIN32) || defined(__CYGWIN__)
 #  include <fcntl.h>
@@ -272,6 +272,91 @@ void zerr(int ret)
     case Z_VERSION_ERROR:
         fputs("zlib version mismatch!\n", stderr);
     }
+}
+void RemoveReplay(Replay* r)
+{
+    if (!r) return;
+    if (r->frames)
+    {
+        for (int i = 0; i < r->numFrames; i++)
+        {
+            ReplayFrame* rf = &r->frames[i];
+            if (rf->compressedData)
+                free(rf->compressedData);
+        }
+        free(r->frames);
+    }
+    memset(r,0,sizeof(Replay));
+}
+bool LoadReplay(char* path)
+{
+    FILE* f = fopen(path, "rb");
+    if (f)
+    {
+        remove("replays/temp");
+        FILE* temp = fopen("replays/temp","wb+");
+        if (temp)
+        {
+            Replay* r = &replay;
+
+            RemoveReplay(r);
+            inf(f,temp);
+            fclose(temp);
+            temp = fopen("replays/temp","rb");
+            fseek(temp, 0, SEEK_END);
+            int numBytes = ftell(temp);
+            rewind(temp);
+
+            char* repBuffer = calloc(numBytes,sizeof(char));
+            fread(repBuffer, 1, numBytes, temp);
+            char header[3];
+            int byteCount = 3;
+            if (numBytes >= byteCount)
+            {
+                if (strncmp(repBuffer,"REP",3) != 0)
+                {
+                    return false;
+                }
+            }
+            byteCount += sizeof(r->numFrames);
+            if (numBytes >= byteCount)
+            {
+                memcpy(&replay.numFrames,&repBuffer[byteCount-sizeof(r->numFrames)],sizeof(r->numFrames));
+            }
+            r->frames = malloc(r->numFrames*sizeof(ReplayFrame));
+            for (int i = 0; i < r->numFrames; i++)
+            {
+                ReplayFrame* rf = &r->frames[i];
+                byteCount += sizeof(rf->dataLen);
+                if (numBytes >= byteCount)
+                {
+                    memcpy(&rf->dataLen,&repBuffer[byteCount-sizeof(rf->dataLen)],sizeof(rf->dataLen));
+                }
+                else
+                {
+                    return false;
+                }
+
+                byteCount += rf->dataLen;
+                if (numBytes >= rf->dataLen)
+                {
+                    rf->compressedData = calloc(rf->dataLen+1,sizeof(char));
+                    memcpy(rf->compressedData,&repBuffer[byteCount-rf->dataLen],sizeof(char) * rf->dataLen);
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            remove("replays/temp");
+        }
+    }
+    else
+        return false;
+
+    return true;
+    
 }
 void ReplayToDisk(Replay* r)
 {

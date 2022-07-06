@@ -296,6 +296,12 @@ int main(int argc, char* args[])
 
     fflush(stdout);
 
+    if (LoadReplay("replays/20220706_022622"))
+    {
+        printf("Load OK");
+    }
+
+
     while (gameState != GAMESTATE_EXIT) {
         //al_set_mouse_xy(display, 128,128);
 

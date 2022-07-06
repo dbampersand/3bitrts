@@ -1,19 +1,20 @@
 #pragma once
-
+#include <stdint.h>
+#include <stdbool.h>
 //100mb
 #define REPLAY_PREALLOC 1048576 
 
 typedef struct ReplayFrame
 {
     char* compressedData;
-    int dataLen;
+    uint16_t dataLen;
 }ReplayFrame;
 
 typedef struct Replay
 {
     ReplayFrame* frames;
-    int numFrames;
-    int framePlayPosition;
+    uint16_t numFrames;
+    uint16_t framePlayPosition;
 
 }Replay;
 
@@ -30,3 +31,4 @@ void PlayReplay(ALLEGRO_BITMAP* screen);
 
 void ReplayToDisk(Replay* r);
 
+bool LoadReplay(char* path);
