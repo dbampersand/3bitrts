@@ -88,8 +88,6 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
     if (!GameIsPaused())
     {
-
-
         lua_settop(luaState,0);
         UpdateEncounter(dt);
         CheckSelected(mouseState,mouseStateLastFrame, keyState);

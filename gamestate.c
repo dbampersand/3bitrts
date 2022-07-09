@@ -242,7 +242,14 @@ void UpdateTransition(float dt)
 {
     if (GameStateIsTransition(&gameState))
     {
-        transitionTimer += dt * 0.8f;
+        if (transitionTimer < 0.4f)
+        {
+            transitionTimer += dt * 3;
+        }
+        else
+        {
+            transitionTimer += dt * 0.8f;
+        }
 
         if (transitionTimer >= 1.0f)
         {
