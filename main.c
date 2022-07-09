@@ -79,7 +79,7 @@ void init()
 
     for (int i = 0; i < numEncounters; i++)
     {
-        //SetEncounterRandAugments(encounters[i]);
+        SetEncounterRandAugments(encounters[i]);
     }
 }
 

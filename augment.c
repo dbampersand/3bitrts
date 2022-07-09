@@ -64,9 +64,9 @@ int GetNumBadAugments(int augmentLevel)
 int GetNumGoodAugments(int augmentLevel)
 {
     if (augmentLevel <= 2)
-        return 3;
-    if (augmentLevel <= 4)
         return 2;
+    if (augmentLevel <= 4)
+        return 3;
     return 1;
 
 }
@@ -228,17 +228,36 @@ void SetEncounterRandAugments(Encounter* e)
     ClearAugments(e);
 
     int index = 0;
-    for (; index < GetNumGoodAugments(e->augment); index++)
+    for (; index < GetNumGoodAugments(e->augment);)
     {
-        if (index < MAX_AUGMENTS)
+        if (index <= MAX_AUGMENTS)
+        {
             e->augments[index] = GetRandomAugment(AUGMENT_GOOD,e);
+            index++;
+        }
+        else break;
     }
     int numGood = index;
-    for (; index < numGood+GetNumBadAugments(e->augment); index++)
+    for (; index < numGood+GetNumBadAugments(e->augment);)
     {
-        if (index < MAX_AUGMENTS)
+        if (index <= MAX_AUGMENTS)
+        {
             e->augments[index] = GetRandomAugment(AUGMENT_BAD,e);
+            index++;
+        }
+        else break;
     }
+    int numNeutrals = MAX_AUGMENTS - (index);
+    for (int i = 0; i < numNeutrals; i++)
+    {
+        if (index <= MAX_AUGMENTS)
+        {
+            e->augments[index] = GetRandomAugment(AUGMENT_NEUTRAL,e);
+            index++;
+        }
+        else break;
+    }
+
 
 }
 char* GetAugmentDescription(AUGMENT_TYPES aug)
@@ -289,11 +308,16 @@ char* GetAugmentDescription(AUGMENT_TYPES aug)
     {
         return "Your movespeed increased";
     }
+        if (aug == AUGMENT_GOOD_SHIELD)
+    {
+        return "Provides a shield. **unimplemented**";
+    }
+
 
 
     if (aug == AUGMENT_GOOD_DIVIDER)
     {
-        return "Good effecr divider (Bug)";
+        return "Good effect divider (Bug)";
     }
     if (aug == AUGMENT_ALL)
     {
@@ -326,7 +350,7 @@ ALLEGRO_COLOR* GetAugmentDescriptionColor(Augment* a)
     }
         if (a->friendliness == AUGMENT_NEUTRAL)
     {
-        return &BG;
+        return &GROUND;
     }
         if (a->friendliness == AUGMENT_BAD)
     {

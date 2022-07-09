@@ -22,6 +22,7 @@ typedef enum AUGMENT_TYPES
     AUGMENT_GOOD_HEALS,             //Good_GetAugmentAbilityHeal
     AUGMENT_GOOD_DAMAGE,            //Good_GetAugmentAbilityDamage
     AUGMENT_GOOD_MOVESPEED,         //Good_GetAugmentMoveSpeed
+    AUGMENT_GOOD_SHIELD,         //Good_GetAugmentMoveSpeed
 
 
     AUGMENT_ALL                             //None

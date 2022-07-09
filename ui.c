@@ -593,7 +593,7 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
         al_draw_text(ui.tinyFont,*color,column,row,0,description);
 
         column += al_get_text_width(ui.tinyFont,description)+5;
-        if (i >= MAX_AUGMENTS/2-1)
+        if (i+1 == MAX_AUGMENTS/2)
         {
             row += al_get_font_line_height(ui.tinyFont)+2;
             column = 16;
