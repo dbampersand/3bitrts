@@ -114,6 +114,12 @@ void FinishTransition()
         //ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
 
     }
+    if (transitioningTo == GAMESTATE_WATCHING_REPLAY)
+    {
+        gameState = GAMESTATE_WATCHING_REPLAY;
+        transitioningTo = GAMESTATE_WATCHING_REPLAY;
+
+    }
     if (transitioningTo == GAMESTATE_LOAD_ENCOUNTER)
     {
         RemoveAllAttacks();
@@ -157,6 +163,11 @@ void FinishTransition()
         pathToNextMap = NULL;
     }
     
+}
+void SetGameStateToWatchingReplay()
+{
+    TransitionTo(GAMESTATE_WATCHING_REPLAY);
+    ChangeUIPanel(NULL);
 }
 void SetGameStateToChangingMap(const char* mapPath)
 {

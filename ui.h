@@ -162,7 +162,8 @@ typedef struct UI
     Panel videoOptionsPanel;
     Panel audioOptionsPanel;
     Panel accessibilityOptionsPanel;
-    
+    Panel loadReplayPanel;
+
     UI_AnimState animatePanel;
     Panel* changingTo;
     
@@ -218,6 +219,7 @@ UI ui;
 #define UI_PADDING 5
 typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE;
 typedef struct Ability Ability;
+typedef struct Replay Replay;
 
 void Chatbox_NextLine();
 void EndChatbox();
@@ -270,3 +272,7 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
 void DrawWidgets(GameState currentState, Widget_DrawOrder drawOrderToDraw);
 void UpdateWidgets(float dt);
 void UpdateWidget(Widget* w, float dt);
+void ClearPanelElements(Panel* p);
+void GenerateFileListButtons(char* path, Panel* p);
+void DrawReplayUI(Replay* r, ALLEGRO_MOUSE_STATE* mouseState);
+void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive, ALLEGRO_COLOR bgColor);

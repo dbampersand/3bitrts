@@ -37,12 +37,13 @@ void NewReplay()
 }
 void LoadFrame(ALLEGRO_BITMAP* screen, ReplayFrame* frame)
 {
+    if (!frame) return;
     int x=0; int y=0;
     al_lock_bitmap(screen,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_WRITEONLY);
-    for (int i = 0; i <  frame->dataLen; i += (sizeof(uint16_t)+sizeof(char)))
+    for (int i = 0; i < frame->dataLen; i += (sizeof(uint16_t)+sizeof(char)))
     {
         uint16_t size; 
-        memcpy(&size,& frame->compressedData[i],sizeof(uint16_t));
+        memcpy(&size,&frame->compressedData[i],sizeof(uint16_t));
         char c = frame->compressedData[i+sizeof(uint16_t)];
 
         while (size > 0)
@@ -77,11 +78,19 @@ void RecordReplay(ALLEGRO_BITMAP* screen)
 }
 void PlayReplay(ALLEGRO_BITMAP* screen)
 {
-    LoadFrame(screen,&replay.frames[replay.framePlayPosition]);
-    replay.framePlayPosition++;
+    //replay.framePlayPosition++;
     if (replay.framePlayPosition >= replay.numFrames)
     {
         replay.framePlayPosition = 0;
+    }
+    LoadFrame(screen,&replay.frames[replay.framePlayPosition]);
+    for (int i = 0; i < NUM_SOUNDS_TO_SAVE; i++)
+    {
+        Sound* s = &replay.frames[replay.framePlayPosition].soundsPlayedThisFrame[i];
+        if (s->path)
+        {
+            PlaySound(&replay.frames[replay.framePlayPosition].soundsPlayedThisFrame[i],1.0f);
+        }
     }
 
 }
@@ -319,7 +328,7 @@ bool LoadReplay(char* path)
                 }
             }
             byteCount += sizeof(r->numFrames);
-            if (numBytes >= byteCount)
+            if (numBytes>= byteCount)
             {
                 memcpy(&replay.numFrames,&repBuffer[byteCount-sizeof(r->numFrames)],sizeof(r->numFrames));
             }
@@ -327,6 +336,7 @@ bool LoadReplay(char* path)
             for (int i = 0; i < r->numFrames; i++)
             {
                 ReplayFrame* rf = &r->frames[i];
+                memset(rf,0,sizeof(ReplayFrame));
                 byteCount += sizeof(rf->dataLen);
                 if (numBytes >= byteCount)
                 {
@@ -336,8 +346,8 @@ bool LoadReplay(char* path)
                 {
                     return false;
                 }
-
                 byteCount += rf->dataLen;
+
                 if (numBytes >= rf->dataLen)
                 {
                     rf->compressedData = calloc(rf->dataLen+1,sizeof(char));
@@ -347,6 +357,47 @@ bool LoadReplay(char* path)
                 {
                     return false;
                 }
+
+                byteCount += sizeof(char);
+                char soundLen;
+                if (numBytes >= byteCount)  
+                {
+                    memcpy(&soundLen,&repBuffer[byteCount-sizeof(char)],sizeof(char));
+                }
+                else
+                {
+                    return false;
+                }
+
+                int index = 0;
+                for (int i = 0; i < soundLen; i++)
+                {
+                    uint32_t pathLen;
+                    byteCount +=sizeof(pathLen);
+                    if (numBytes >= byteCount)
+                    {
+                        memcpy(&pathLen,&repBuffer[byteCount-sizeof(pathLen)],sizeof(pathLen));
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    byteCount += pathLen;
+                    if (numBytes >= byteCount)
+                    {
+                        Sound* s = &rf->soundsPlayedThisFrame[index++];
+                        s->path = calloc(pathLen+1,sizeof(char));
+                        
+                        memcpy(s->path,&repBuffer[byteCount-pathLen],sizeof(char) * pathLen);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                }
+
+
 
             }
             remove("replays/temp");
@@ -365,9 +416,9 @@ void ReplayToDisk(Replay* r)
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
 
-    size_t buffsiz = snprintf(NULL,0, "replays/%d%02d%02d_%02d%02d%02d_", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    size_t buffsiz = snprintf(NULL,0, "replays/%d%02d%02d_%02d%02d%02d_.rep", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
     char* filename = calloc(buffsiz+1,sizeof(char));
-    sprintf(filename,"replays/%d%02d%02d_%02d%02d%02d_", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    sprintf(filename,"replays/%d%02d%02d_%02d%02d%02d_.rep", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
     FILE* f = fopen(filename, "wb+");
     char* header = "REP";
@@ -379,6 +430,26 @@ void ReplayToDisk(Replay* r)
         ReplayFrame* rf = &r->frames[i];
         fwrite(&rf->dataLen,sizeof(rf->dataLen),1,f);
         fwrite(rf->compressedData,sizeof(char),rf->dataLen,f);
+        
+        char numSounds = 0;
+        for (int i = 0; i < NUM_SOUNDS_TO_SAVE; i++)
+        {
+            if (rf->soundsPlayedThisFrame[i].path)
+            {
+                numSounds++;
+            }
+        }
+        fwrite(&numSounds,sizeof(numSounds),1,f);
+        for (int i = 0; i < NUM_SOUNDS_TO_SAVE; i++)
+        {
+            if (rf->soundsPlayedThisFrame[i].path)
+            {
+                uint32_t len = strlen(rf->soundsPlayedThisFrame[i].path);
+                fwrite(&len,sizeof(len),1,f);
+                fwrite(rf->soundsPlayedThisFrame[i].path,sizeof(char),len,f);
+            }
+        }
+
     }
     fclose(f);
 
@@ -386,7 +457,7 @@ void ReplayToDisk(Replay* r)
     f = fopen(filename, "rb");
 
     char* compressedFilename = calloc(buffsiz+1,sizeof(char));
-    sprintf(compressedFilename,"replays/%d%02d%02d_%02d%02d%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    sprintf(compressedFilename,"replays/%d%02d%02d_%02d%02d%02d.rep", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
     FILE* compressed = fopen(compressedFilename, "wb+");
 
     SET_BINARY_MODE(f);

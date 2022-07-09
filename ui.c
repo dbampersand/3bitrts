@@ -23,6 +23,8 @@
 #include "loadscreen.h"
 #include "settings.h"
 #include "augment.h"
+#include "dirent.h"
+#include "replay.h"
 
 void DrawUIChatbox()
 {
@@ -216,11 +218,44 @@ void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState)
    
 }
 
+void DrawReplayUI(Replay* r, ALLEGRO_MOUSE_STATE* mouseState)
+{
+    al_draw_filled_rectangle(3,2,252,16,BG);
+    al_draw_rectangle(3,2,252,16,BG,1);
+    
+    float percent = r->framePlayPosition / r->numFrames;
+    int w = 222 * percent;
+    al_draw_rectangle(8,5,222,13,FRIENDLY,1);
+    al_draw_filled_rectangle(8,5,8+w,13,BG);
+
+    DrawButton(&replayPlayButton,replayPlayButton.x,replayPlayButton.y,mouseState,true,BG);
+    if (r->playing)
+    {
+        al_draw_rectangle(225,5,234,13,FRIENDLY,1);
+        al_draw_rectangle(228,7,228,11,FRIENDLY,1);
+        al_draw_rectangle(231,7,231,11,FRIENDLY,1);
+    }
+    else
+    {
+        al_draw_rectangle(225,5,234,13,FRIENDLY,1);
+        al_draw_line(227,7,232,9,FRIENDLY,1);
+        al_draw_line(227,11,232,9,FRIENDLY,1);
+        al_draw_line(227,11,227,11,FRIENDLY,1);
+    }
+
+}
+
 void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
     UpdateUI(keyState,mouseState,keyStateLastFrame,mouseStateLastFrame,dt);
     if (ui.currentPanel == &ui.mainMenuPanel)
     {
+        if (GetButton(&ui.mainMenuPanel,"Load Replay"))
+        {
+            ChangeUIPanel(&ui.loadReplayPanel);       
+            ClearPanelElements(&ui.loadReplayPanel);
+            GenerateFileListButtons("replays/",&ui.loadReplayPanel);
+        }
         if (GetButton(&ui.mainMenuPanel,"Return"))
         {
             //ui.currentPanel = NULL;
@@ -270,6 +305,28 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_S
             StopMusic();
         }
 
+    }
+    if (ui.currentPanel == &ui.loadReplayPanel)
+    {
+        for (int i = 0 ; i < ui.loadReplayPanel.numElements; i++)
+        {
+            UIElement* u = &ui.loadReplayPanel.elements[i];
+            Button* b = (Button*)u->data;
+
+            //int x; int y;
+           // GetUILocation(&ui.loadReplayPanel,u,&x,&y);
+
+           // UpdateButton(x,y,u,mouseState,mouseStateLastFrame);
+            if (GetButtonIsClicked(u))
+            {
+               // gameState = GAMESTATE_WATCHING_REPLAY;
+                SetGameStateToWatchingReplay();
+                char* path = calloc(snprintf(NULL,0,"replays/%s",u->name)+1,sizeof(char));
+                sprintf(path,"replays/%s",u->name);
+                LoadReplay(path);
+                free(path); 
+            }   
+        }
     }
     SetOptions();
 
@@ -660,7 +717,8 @@ void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int
     u.w = w;
     u.h = h;
     u.y = y;
-    u.name = name;
+    u.name = calloc(strlen(name)+1,sizeof(char));
+    strcpy(u.name,name);
     u.elementType = ELEMENT_BUTTON;
     u.x = x;
     u.enabled = true;
@@ -747,7 +805,8 @@ void InitButton(UIElement* u, char* name, char* description, int x, int y, int w
     u->data = (void*)b;
     u->w = w;
     u->h = h;
-    u->name = name;
+    u->name = calloc(strlen(name)+1,sizeof(char));
+    strcpy(u->name,name);
     u->elementType = ELEMENT_BUTTON;
     u->x = x;
     u->y = y;
@@ -781,7 +840,8 @@ void AddText(Panel* p,int x, int y, char* name, char* description)
     u.x = x; 
     u.y = y;
     u.elementType = ELEMENT_TEXT;
-    u.name = name;
+    u.name = calloc(strlen(name)+1,sizeof(char));
+    strcpy(u.name,name);
     AddElement(p,&u);
 }
 Button* GetButtonB(Panel* p, char* name)
@@ -867,6 +927,8 @@ void AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool activate
     u.h = h;
     //*c->activated = activated;
     u.name = name;
+    u.name = calloc(strlen(name)+1,sizeof(char));
+    strcpy(u.name,name);
     u.data = (void*)c;
     u.enabled = true;
     u.elementType = ELEMENT_CHECKBOX;
@@ -884,7 +946,8 @@ void AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled, f
     u.enabled = true;
     s->value = v;
     *v = filled;
-    u.name = name;
+    u.name = calloc(strlen(name)+1,sizeof(char));
+    strcpy(u.name,name);
     u.data = (void*)s;
     u.elementType = ELEMENT_SLIDER;
     AddElement(p,&u);
@@ -907,7 +970,8 @@ void AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int s
     u.w = w;
     u.h = h;
     u.enabled = true;
-    u.name = name;
+    u.name = calloc(strlen(name)+1,sizeof(char));
+    strcpy(u.name,name);
 
     
     Pulldown* p = calloc(1,sizeof(Pulldown));
@@ -1054,16 +1118,103 @@ UIElement* GetUIElement(Panel* p, char* name)
     }
     return NULL;
 }
+void DeleteUIElement(UIElement* u)
+{
+    if (u->elementType == ELEMENT_BUTTON)
+    {
+        Button* b = (Button*)u->data;
+        if (b->description) free(b->description);
+    }
+    if (u->elementType == ELEMENT_SLIDER)
+    {
+    }
+    if (u->elementType == ELEMENT_CHECKBOX)
+    {
+        
+    }
+    if (u->elementType == ELEMENT_TEXT)
+    {
+        
+    }
+    if (u->elementType == ELEMENT_PULLDOWN)
+    {
+        Pulldown* p = (Pulldown*)u->data;
+        if (p->elements)
+        {
+            for (int i = 0; i < p->numElements; i++)
+            {
+                free(p->elements[i]);
+            }
+            free(p->elements);
+        }
+    }
+    if (u->name)
+        free(u->name);
+    if (u->data)
+        free(u->data);
+
+}
+void ClearPanelElements(Panel* p)
+{
+    for (int i = 0; i < p->numElements; i++)
+    {
+        DeleteUIElement(&p->elements[i]);
+    }
+    free(p->elements);
+    p->elements = NULL;
+    p->numElements = 0;
+}
+void GenerateFileListButtons(char* path, Panel* p)
+{
+      DIR *d;
+    struct dirent *dir;
+    d = opendir(path);
+    int yPos = 0;
+    int xPos = 16;
+    int w = 96;
+    int h = 8;
+    int padding = 2;
+
+    int index = 0;
+
+    if (d)
+    {
+        while ((dir = readdir(d)) != NULL) {
+            if (strcmp(dir->d_name,".rep") >= 1)
+            {
+                char* name = calloc(strlen(dir->d_name)+1,sizeof(char));
+                char* description = calloc(strlen(dir->d_name)+1,sizeof(char));
+                int numChars = strlen(dir->d_name) <= 14 ? strlen(dir->d_name) : 14;
+                strcpy(name,dir->d_name);
+                memcpy(description,dir->d_name,numChars);
+
+                AddButton(p,name,description,xPos,yPos+(index*(padding+h)),w,h);
+
+                index++;
+                free(name);
+                free(description);
+            }
+        }
+        closedir(d);
+    }
+}
 void InitUI()
 {
     ui.augmentIconIndex = LoadSprite("assets/ui/augment.png",false);
 
     //ui.mainMenuPanel = CreatePanel(29,97,144,15,UI_PADDING,false);
+    int padding = 8;
     ui.mainMenuPanel = CreatePanel(29,80,160,144,15,false);
-    AddButton(&ui.mainMenuPanel,"Return","Return",0,17,96,16);
-    AddButton(&ui.mainMenuPanel,"Tutorial","Tutorial",0,33+16,96,16);
-    AddButton(&ui.mainMenuPanel,"Options","Options",0,81,96,16);
-    AddButton(&ui.mainMenuPanel,"Exit","Exit Game",0,113,96,16);
+    AddButton(&ui.mainMenuPanel,"Return","Return",0,16,96,16);
+    AddButton(&ui.mainMenuPanel,"Tutorial","Tutorial",0,32+(padding),96,16);
+    AddButton(&ui.mainMenuPanel,"Load Replay","Load Replay",0,48+(padding*2),96,16);
+    AddButton(&ui.mainMenuPanel,"Options","Options",0,64+(padding*3),96,16);
+    AddButton(&ui.mainMenuPanel,"Exit","Exit Game",0,80+(padding*4),96,16);
+
+    ui.loadReplayPanel = CreatePanel(29,80,160,144,15,true);
+    InitButton(&ui.loadReplayPanel.backButton, "Back", "", 0,0, 14,14, LoadSprite("assets/ui/back_tab_icon.png", true));
+    ui.loadReplayPanel.back = &ui.mainMenuPanel;
+    InitButton(&replayPlayButton,"Play","",225,5,10,9,0);
 
     ui.pauseMenuPanel = CreatePanel(48,48,160,144,15,true);
     AddButton(&ui.pauseMenuPanel,"Return","Return",33,17,96,16);
@@ -1177,12 +1328,12 @@ void InitUI()
     int block = LoadSprite("assets/ui/mainmenu/block.png",false);
     int edge = LoadSprite("assets/ui/mainmenu/mainmenuedges.png",false);
 
-    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[edge],0,0,0.5,0.5,DRAWORDER_AFTERUI,0,NULL);
+    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[edge],0,0,0.5,0.5,DRAWORDER_BEFOREUI,0,NULL);
 
-    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[block],157,93,0.5,0.5,DRAWORDER_AFTERUI,0,NULL);
-    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[lantern],155,100,0.46,0.033,DRAWORDER_AFTERUI,0,UpdateLanternWidget);
+    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[block],157,93,0.5,0.5,DRAWORDER_BEFOREUI,0,NULL);
+    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[lantern],155,100,0.46,0.033,DRAWORDER_BEFOREUI,0,UpdateLanternWidget);
 
-    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[name],29,38,0.5,0.5,DRAWORDER_AFTERUI,0,NULL);
+    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[name],29,38,0.5,0.5,DRAWORDER_BEFOREUI,0,NULL);
 
     int x = -5;
 
@@ -1303,7 +1454,7 @@ void UpdateTabButtons(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_S
 
     if (p->backButton.data)
     {
-        Button* b = (Button*)p->backButton.data;
+            Button* b = (Button*)p->backButton.data;
 
         UpdateButton(x,y,&p->backButton,mouseState,mouseStateLastFrame);
         if (b->activated)
@@ -1624,10 +1775,9 @@ void DrawPanelTabs(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
 {
     int y = p->y; 
     int x = p->x;
-
     if (p->backButton.data)
     {
-        DrawButton(&p->backButton,x,y,mouseState,true,BG);
+       // DrawButton(&p->backButton,x,y,mouseState,true,BG);
         y+=p->backButton.h;
     }
     for (int i = 0; i < p->numTabs; i++)
@@ -1650,15 +1800,24 @@ void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
 {
 
     al_set_clipping_rectangle(p->x-1,p->y,p->w+1,p->h*ui.panelShownPercent+1);
-
-    al_draw_filled_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,BG);
     if (p->showBorder)
+    {
+        al_draw_filled_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,BG);
         al_draw_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,FRIENDLY,1);
+    }
+
 
     al_set_clipping_rectangle(p->x-1,p->y,p->w,p->h*ui.panelShownPercent);
 
 
+
     int currX=p->x+p->padding; int currY=p->y+p->padding; 
+    if (p->backButton.data)
+    {
+        DrawButton(&p->backButton,p->x,p->y,mouseState,true,BG);
+        currY+=p->backButton.h;
+    }
+
     for (int i = 0; i < p->numTabs; i++)
     {
         int x = p->x+p->padding;

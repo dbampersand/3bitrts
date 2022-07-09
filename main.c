@@ -114,6 +114,10 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         {
             gameStats.timeTaken += dt;
         }
+        if (gameState == GAMESTATE_WATCHING_REPLAY)
+        {
+            replay.framePlayPosition++;
+        }
     }
     UpdateParticles(dt);
     ProcessAnimationEffects(dt);
@@ -138,7 +142,6 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     DrawMap();
     
     
-    DrawWidgets(gameState, DRAWORDER_BEFOREUI);
     DrawAttacks(dt);
 
     if (gameState == GAMESTATE_CHOOSING_UNITS)
@@ -197,8 +200,11 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     {
         al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
     }
+    DrawWidgets(gameState, DRAWORDER_BEFOREUI);
+
     if (gameState != GAMESTATE_MAIN_MENU)
          DrawUI(keyState, keyStateLastFrame, mouseState);
+
     DrawMenus(mouseState);
     DrawAnimationEffects();
 
@@ -249,6 +255,11 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     {
         DrawEndScreen(mouseState,mouseStateLastFrame);
     }
+    if (gameState == GAMESTATE_WATCHING_REPLAY)
+    {
+        PlayReplay(al_get_target_bitmap());
+        DrawReplayUI(&replay,mouseState);
+    }
 
     DrawMenus(mouseState);
     DrawWidgets(gameState, DRAWORDER_AFTERUI);
@@ -259,6 +270,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     {
         DrawLoadscreen();
     }
+
 
     DrawTransition(dt);
 }
@@ -305,7 +317,6 @@ int main(int argc, char* args[])
     while (gameState != GAMESTATE_EXIT) {
         //al_set_mouse_xy(display, 128,128);
 
-
         
         ALLEGRO_EVENT event;
         al_wait_for_event(queue, &event);
@@ -333,6 +344,8 @@ int main(int argc, char* args[])
         }
         if (event.type == ALLEGRO_EVENT_TIMER) {
             
+            ResetSoundsThisFrame();
+
             int displayW = al_get_display_width(display);
             int displayH = al_get_display_height(display);
 

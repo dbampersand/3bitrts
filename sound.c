@@ -9,7 +9,7 @@
 #include "gamestate.h"
 #include "encounter.h"
 #include "settings.h"
-
+#include "replay.h"
 void InitSound()
 {
     al_init_acodec_addon();
@@ -38,8 +38,13 @@ void InitSound()
     al_attach_mixer_to_voice(musicMixer1, musicVoice1);
     al_attach_mixer_to_voice(musicMixer2, musicVoice2);
 
-}
 
+}
+void ResetSoundsThisFrame()
+{
+    //memset(soundsPlayedThisFrame,0,NUM_SOUNDS_TO_SAVE*sizeof(Sound));
+    soundPlayedThisFramePosition = 0;
+}
 int LoadSound(char* path)
 {
     if (!sounds)
@@ -76,6 +81,23 @@ int LoadSound(char* path)
 
 void PlaySound(Sound* s, float relativeVolume)
 {
+    if (!s->sample)
+    {
+        if (s->path)
+        {
+            int i = LoadSound(s->path);
+            *s = sounds[i];
+        }   
+    }
+    if (gameState == GAMESTATE_INGAME && soundPlayedThisFramePosition < NUM_SOUNDS_TO_SAVE)
+    {
+        if (replay.frames)
+        {
+            replay.frames[replay.numFrames-1].soundsPlayedThisFrame[soundPlayedThisFramePosition] = *s;
+            soundPlayedThisFramePosition++;
+        }
+    }
+
     al_play_sample(s->sample, currSettings.masterVolume * relativeVolume, 0, 1.0f, ALLEGRO_PLAYMODE_ONCE, NULL);
 }
 void StopMusic()

@@ -22,6 +22,8 @@ void PlayMusic(const char* path);
 void UpdateMusic(float dt);
 void PlayEncounterMusic();
 void StopMusic();
+void ResetSoundsThisFrame();
+
 
 
 #define RESERVED_SAMPLES 16
@@ -44,3 +46,4 @@ char* musicPath;
 Sound* sounds;
 int numSoundsAllocated;
 int numSounds;
+
