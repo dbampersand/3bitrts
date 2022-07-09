@@ -116,7 +116,8 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         }
         if (gameState == GAMESTATE_WATCHING_REPLAY)
         {
-            replay.framePlayPosition++;
+            if (replay.playing)
+                replay.framePlayPosition++;
         }
     }
     UpdateParticles(dt);
@@ -258,7 +259,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     if (gameState == GAMESTATE_WATCHING_REPLAY)
     {
         PlayReplay(al_get_target_bitmap());
-        DrawReplayUI(&replay,mouseState);
+        DrawReplayUI(&replay,mouseState,mouseStateLastFrame);
     }
 
     DrawMenus(mouseState);

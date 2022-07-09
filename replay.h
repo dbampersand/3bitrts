@@ -6,6 +6,7 @@
 //100mb
 #define REPLAY_PREALLOC 1048576 
 #define NUM_SOUNDS_TO_SAVE 32
+#define REP_UI_PLAY_SCRUBBER_SIZE 215
 
 //for saving in replay
 int soundPlayedThisFramePosition;
@@ -23,6 +24,7 @@ typedef struct Replay
     uint16_t numFrames;
     uint16_t framePlayPosition;
     bool playing;
+
 
 }Replay;
 

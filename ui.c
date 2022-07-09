@@ -218,29 +218,45 @@ void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState)
    
 }
 
-void DrawReplayUI(Replay* r, ALLEGRO_MOUSE_STATE* mouseState)
+void DrawReplayUI(Replay* r, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
     al_draw_filled_rectangle(3,2,252,16,BG);
     al_draw_rectangle(3,2,252,16,BG,1);
     
-    float percent = r->framePlayPosition / r->numFrames;
-    int w = 222 * percent;
+    float percent = r->framePlayPosition / (float)r->numFrames;
+    int w = REP_UI_PLAY_SCRUBBER_SIZE * percent;
+    if (percent > 1) percent = 1;
+
+    Rect fullPlayBar = (Rect){8,5,REP_UI_PLAY_SCRUBBER_SIZE,13};
+    Rect position = (Rect){fullPlayBar.x,fullPlayBar.y,w,fullPlayBar.h};
+    if (PointInRect(mouseState->x,mouseState->y,fullPlayBar))
+    {
+        if (mouseState->buttons & 1 && !(mouseStateLastFrame->buttons & 1))
+        {
+            float changedPercent = (mouseState->x-5) / (float)REP_UI_PLAY_SCRUBBER_SIZE;
+            changedPercent = clamp(changedPercent,0,1);
+            r->framePlayPosition = changedPercent * r->numFrames;
+            position.w = fullPlayBar.w * changedPercent;
+        }
+    }
+
     al_draw_rectangle(8,5,222,13,FRIENDLY,1);
-    al_draw_filled_rectangle(8,5,8+w,13,BG);
+    al_draw_filled_rectangle(position.x,position.y,position.x+position.w,position.h,FRIENDLY);
 
     DrawButton(&replayPlayButton,replayPlayButton.x,replayPlayButton.y,mouseState,true,BG);
-    if (r->playing)
+    UpdateButton(replayPlayButton.x,replayPlayButton.y,&replayPlayButton,mouseState,mouseStateLastFrame);
+
+    if (GetButtonIsClicked(&replayPlayButton))
     {
-        al_draw_rectangle(225,5,234,13,FRIENDLY,1);
-        al_draw_rectangle(228,7,228,11,FRIENDLY,1);
-        al_draw_rectangle(231,7,231,11,FRIENDLY,1);
-    }
-    else
-    {
-        al_draw_rectangle(225,5,234,13,FRIENDLY,1);
-        al_draw_line(227,7,232,9,FRIENDLY,1);
-        al_draw_line(227,11,232,9,FRIENDLY,1);
-        al_draw_line(227,11,227,11,FRIENDLY,1);
+        replay.playing = !replay.playing;
+        if (replay.playing)
+        {
+            ChangeButtonImage(&replayPlayButton,LoadSprite("assets/ui/button_pause.png",true));
+        }
+        else
+        {
+            ChangeButtonImage(&replayPlayButton,LoadSprite("assets/ui/button_play.png",true));
+        }
     }
 
 }
@@ -1198,6 +1214,14 @@ void GenerateFileListButtons(char* path, Panel* p)
         closedir(d);
     }
 }
+void ChangeButtonImage(UIElement* u, int spriteIndex)
+{
+    if (u->elementType == ELEMENT_BUTTON)
+    {
+        Button* b = (Button*)u->data;
+        b->spriteIndex = spriteIndex;
+    }
+}
 void InitUI()
 {
     ui.augmentIconIndex = LoadSprite("assets/ui/augment.png",false);
@@ -1215,6 +1239,7 @@ void InitUI()
     InitButton(&ui.loadReplayPanel.backButton, "Back", "", 0,0, 14,14, LoadSprite("assets/ui/back_tab_icon.png", true));
     ui.loadReplayPanel.back = &ui.mainMenuPanel;
     InitButton(&replayPlayButton,"Play","",225,5,10,9,0);
+    ChangeButtonImage(&replayPlayButton,LoadSprite("assets/ui/button_pause.png",true));
 
     ui.pauseMenuPanel = CreatePanel(48,48,160,144,15,true);
     AddButton(&ui.pauseMenuPanel,"Return","Return",33,17,96,16);

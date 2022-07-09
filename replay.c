@@ -27,6 +27,7 @@ void InitReplay()
 {
     replay.frames = NULL;
     replay.numFrames = 0;
+    replay.playing = true;
 }
 void NewReplay()
 {
@@ -81,7 +82,9 @@ void PlayReplay(ALLEGRO_BITMAP* screen)
     //replay.framePlayPosition++;
     if (replay.framePlayPosition >= replay.numFrames)
     {
-        replay.framePlayPosition = 0;
+        //replay.framePlayPosition = 0;
+        replay.playing = false;
+        replay.framePlayPosition = replay.numFrames-1;
     }
     LoadFrame(screen,&replay.frames[replay.framePlayPosition]);
     for (int i = 0; i < NUM_SOUNDS_TO_SAVE; i++)
@@ -406,6 +409,7 @@ bool LoadReplay(char* path)
     else
         return false;
 
+    replay.playing = true;
     return true;
     
 }
