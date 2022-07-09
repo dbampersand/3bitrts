@@ -231,7 +231,7 @@ void DrawReplayUI(Replay* r, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STAT
     Rect position = (Rect){fullPlayBar.x,fullPlayBar.y,w,fullPlayBar.h};
     if (PointInRect(mouseState->x,mouseState->y,fullPlayBar))
     {
-        if (mouseState->buttons & 1 && !(mouseStateLastFrame->buttons & 1))
+        if (mouseState->buttons & 1)
         {
             float changedPercent = (mouseState->x-5) / (float)REP_UI_PLAY_SCRUBBER_SIZE;
             changedPercent = clamp(changedPercent,0,1);
