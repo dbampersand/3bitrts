@@ -1299,8 +1299,9 @@ void InitUI()
 
 
     //endScreen
-    InitButton(&ui.endScreen_Back,"Back","Back",16,224,104,16,0);
-    InitButton(&ui.endScreen_Retry,"Retry","Retry",136,224,104,16,0);
+    InitButton(&ui.endScreen_Back,"Back","Back",10,224,72,16,0);
+    InitButton(&ui.endScreen_Retry,"Retry","Retry",91,224,72,16,0);
+    InitButton(&ui.endScreen_SaveReplay,"Save Replay","Save Replay",172,224,72,16,0);
 
 
     ui.videoOptionsPanel.back = &ui.mainMenuPanel;
@@ -2146,11 +2147,13 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
     al_draw_text(ui.font,FRIENDLY,17,196,0,buffer);
 
 
-    UpdateButton(16,224,&ui.endScreen_Back,mouseState,mouseStateLastFrame);
-    UpdateButton(136,224,&ui.endScreen_Retry,mouseState,mouseStateLastFrame);
+    UpdateButton(ui.endScreen_Back.x,ui.endScreen_Back.y,&ui.endScreen_Back,mouseState,mouseStateLastFrame);
+    UpdateButton(ui.endScreen_Retry.x,ui.endScreen_Retry.y,&ui.endScreen_Retry,mouseState,mouseStateLastFrame);
+    UpdateButton(ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,&ui.endScreen_SaveReplay,mouseState,mouseStateLastFrame);
 
-    DrawUIElement(&ui.endScreen_Back,16,224,mouseState,BG);
-    DrawUIElement(&ui.endScreen_Retry,136,224,mouseState,BG);
+    DrawUIElement(&ui.endScreen_Back,ui.endScreen_Back.x,ui.endScreen_Back.y,mouseState,BG);
+    DrawUIElement(&ui.endScreen_Retry,ui.endScreen_Retry.x,ui.endScreen_Retry.y,mouseState,BG);
+    DrawUIElement(&ui.endScreen_SaveReplay,ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,mouseState,BG);
     
     int x = 86;
     int y = 139;
@@ -2167,10 +2170,19 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
     if (GetButtonIsClicked(&ui.endScreen_Back))
     {
         transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
+        RemoveReplay(&replay);
     }
     if (GetButtonIsClicked(&ui.endScreen_Retry))
     {
         transitioningTo = GAMESTATE_INGAME;
+        RemoveReplay(&replay);
     }
+    if (GetButtonIsClicked(&ui.endScreen_SaveReplay))
+    {
+        ReplayToDisk(&replay);
+        ui.endScreen_SaveReplay.enabled = false;
+        RemoveReplay(&replay);
+    }
+
     free(buffer);
 }

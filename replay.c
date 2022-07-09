@@ -72,7 +72,7 @@ void RecordReplay(ALLEGRO_BITMAP* screen)
     else
     {
         replay.numFrames = 1;
-        replay.frames = malloc(replay.numFrames*sizeof(ReplayFrame));
+        replay.frames = calloc(replay.numFrames,sizeof(ReplayFrame));
     }
     replay.frames[replay.numFrames-1] = rf;
 
@@ -335,7 +335,7 @@ bool LoadReplay(char* path)
             {
                 memcpy(&replay.numFrames,&repBuffer[byteCount-sizeof(r->numFrames)],sizeof(r->numFrames));
             }
-            r->frames = malloc(r->numFrames*sizeof(ReplayFrame));
+            r->frames = calloc(r->numFrames,sizeof(ReplayFrame));
             for (int i = 0; i < r->numFrames; i++)
             {
                 ReplayFrame* rf = &r->frames[i];
@@ -389,9 +389,12 @@ bool LoadReplay(char* path)
                     if (numBytes >= byteCount)
                     {
                         Sound* s = &rf->soundsPlayedThisFrame[index++];
-                        s->path = calloc(pathLen+1,sizeof(char));
+                        char* soundPath = calloc(pathLen+1,sizeof(char));
                         
-                        memcpy(s->path,&repBuffer[byteCount-pathLen],sizeof(char) * pathLen);
+                        memcpy(soundPath,&repBuffer[byteCount-pathLen],sizeof(char) * pathLen);
+
+                        *s = sounds[LoadSound(soundPath)];
+                        free(soundPath);
                     }
                     else
                     {

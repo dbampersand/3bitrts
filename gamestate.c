@@ -319,7 +319,7 @@ void SetGameStateToEndscreen()
     //transitioningTo = GAMESTATE_END;
     //transitionTimer = 0;    
     TransitionTo(GAMESTATE_END);
-
+    ui.endScreen_Retry.enabled = true;
 }
 void SetGameStateToInMenu()
 {

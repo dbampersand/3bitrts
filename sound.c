@@ -52,7 +52,10 @@ int LoadSound(char* path)
         sounds = calloc(NUMSOUNDSTOPREALLOC,sizeof(Sound));
         numSoundsAllocated = NUMSOUNDSTOPREALLOC;
         numSounds = 0;
-    }
+    }    
+    if (strlen(path) <= 0)
+        return 0;
+
 
     for (int i = 0; i < numSounds; i++)
     {
@@ -73,7 +76,8 @@ int LoadSound(char* path)
     }
 
     sounds[numSounds].sample = al_load_sample(path);
-    sounds[numSounds].path = path;
+    sounds[numSounds].path = calloc(strlen(path)+1,sizeof(char));
+    strcpy(sounds[numSounds].path,path);
     numSounds++;
 
     return numSounds-1;
@@ -86,7 +90,7 @@ void PlaySound(Sound* s, float relativeVolume)
         if (s->path)
         {
             int i = LoadSound(s->path);
-            *s = sounds[i];
+            s->sample = sounds[i].sample;
         }   
     }
     if (gameState == GAMESTATE_INGAME && soundPlayedThisFramePosition < NUM_SOUNDS_TO_SAVE)

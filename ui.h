@@ -184,6 +184,7 @@ typedef struct UI
 
     UIElement endScreen_Back;
     UIElement endScreen_Retry;
+    UIElement endScreen_SaveReplay;
 
 
 

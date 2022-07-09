@@ -43,4 +43,5 @@ void PlayReplay(ALLEGRO_BITMAP* screen);
 void ReplayToDisk(Replay* r);
 
 bool LoadReplay(char* path);
+void RemoveReplay(Replay* r);
 
