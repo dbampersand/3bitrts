@@ -963,16 +963,17 @@ int L_CreateAOE(lua_State* l)
     const int properties = lua_tonumber(l,8);
     const int color = lua_tonumber(l,9);
     const int dither = lua_tonumber(l,10);
+    const bool isSoak = lua_toboolean(l,11);
+    const int target = lua_tonumber(l,12);
 
 
-
-    size_t len =  lua_rawlen(l,11);
+    size_t len =  lua_rawlen(l,13);
     Effect effects[len];    
     memset(effects,0,sizeof(Effect)*len);
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 11, i);
+        e = GetEffectFromTable(l, 13, i);
         e.from = currGameObjRunning;
         lua_remove(l,-1);
         effects[i-1] = e;
@@ -1000,7 +1001,17 @@ int L_CreateAOE(lua_State* l)
     a.tickrate = tickrate;
     a.color = color;
     a.dither = dither;*/
-    Attack* ref = CreateAoE(x,y, (char*)effectPortrait, radius, tickrate, duration, shouldCallback,  properties,  color,  dither,  len, effects);
+    GameObject* targ =NULL;
+    if (target >= 0 && target < MAX_OBJS)
+    {
+        targ = &objects[target];
+    }
+
+    Attack* ref = CreateAoE(x,y, (char*)effectPortrait, radius, tickrate, duration, shouldCallback,  properties,  color,  dither,  len, effects, targ);
+    if (isSoak)
+    {
+        ref->properties |= ATTACK_SOAK;
+    }
     //Attack* ref = AddAttack(&a);
 
     lua_pushnumber(l,ref - attacks);

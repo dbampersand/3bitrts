@@ -69,7 +69,7 @@ void SetLoadscreen(char* path, float transitionInTime, float moveTime, float pau
 }
 void DrawLoadscreen()
 {
-        al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+    al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
 
     DrawSprite(&sprites[loadScreen.spriteIndex],loadScreen.x,loadScreen.y,0.5f,0.5f,0,FRIENDLY,false);
 

@@ -16,7 +16,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["duration"] = 1;
     f1["portrait"] = "assets/enemies/wyrm_boss/ability_fire_effect_portrait"
 
-    CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HALF, {f1})
+    CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HALF,false,-1, {f1})
     return true; 
 end
 

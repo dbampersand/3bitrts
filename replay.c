@@ -97,6 +97,7 @@ void PlayReplay(ALLEGRO_BITMAP* screen)
     }
 
 }
+//TODO: Every 10mb or so serialize this to disk
 ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
 {
    // if (!frameTest)
@@ -156,7 +157,7 @@ ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
     rf.dataLen = RLEPosition;
    al_unlock_bitmap(screen);
    int newSize;
-
+   rf.compressedData = realloc(rf.compressedData,rf.dataLen*sizeof(char));
     //RLECompressArray(colors,toGetTo,frameTest,&newSize);
     return rf;
 }

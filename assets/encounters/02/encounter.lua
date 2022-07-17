@@ -11,4 +11,6 @@ function setup()
     SetEncounterMapPath("assets/encounters/02/map.lua");
     SetEncounterDifficulty(DIFFICULTY_MEDIUM);
     EncounterSetNumUnitsToSelect(4);
+    SetEncounterLoadScreen("assets/encounters/02/loadscreen.png")
+
 end

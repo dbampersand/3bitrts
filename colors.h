@@ -21,7 +21,9 @@ typedef enum DITHER_PATTERN
 
     DITHER_STAR_HALF,
     DITHER_STAR_QUARTER,
-    DITHER_STAR_EIGTH
+    DITHER_STAR_EIGTH,
+
+    DITHER_
 
 } DITHER_PATTERN;
 typedef enum Color

@@ -24,7 +24,7 @@ void InitAttacks()
     }
     memset(attacks,0,sizeof(Attack)*MAX_ATTACKS);
 }
-Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float tickrate, float duration, bool shouldCallback, int properties, int color, int dither, int numEffects, Effect* effects)
+Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float tickrate, float duration, bool shouldCallback, int properties, int color, int dither, int numEffects, Effect* effects, GameObject* target)
 {
     Attack a = {0};
     a.x = x;
@@ -47,6 +47,7 @@ Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float ti
     a.tickrate = tickrate;
     a.color = color;
     a.dither = dither;
+    a.target = target;
 
     Attack* ref = AddAttack(&a);
     return ref;
@@ -89,6 +90,74 @@ void RemoveAttack(int attackindex)
         free(a->effects);
         a->effects = NULL;
     }
+
+}
+bool AttackIsSoak(Attack* a)
+{
+    return a->properties & ATTACK_SOAK;
+}
+int NumUnitsInsideAttack(Attack* a)
+{
+    int numObjects = 0;
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        GameObject* g = &objects[i];
+        if (IsActive(g))
+        {
+            Rect r = GetObjRect(&objects[i]);
+            if (CircleInRect(a->x,a->y,a->radius,r))
+            {   
+                int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
+
+                if (a->properties & ATTACK_HITS_ENEMIES)
+                {
+                    int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
+                    int objOwnedBy = GetPlayerOwnedBy(&objects[i]);
+
+                    if (a->ownedBy)
+                    {
+                        if (objOwnedBy != abilityOwnedBy)
+                        {
+                            numObjects++;
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (objOwnedBy == TYPE_FRIENDLY)
+                        {
+                            numObjects++;
+                            continue;
+                        }
+                    }
+                }
+                else if (a->properties & ATTACK_HITS_FRIENDLIES)
+                {
+                    int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
+                    int objOwnedBy = GetPlayerOwnedBy(&objects[i]);
+                    if (a->ownedBy)
+                    {
+                        if (objOwnedBy == abilityOwnedBy)
+                        {
+                            numObjects++;
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (objOwnedBy == TYPE_ENEMY)
+                        {
+                            numObjects++;
+                            continue;
+                        }
+                    }
+
+                }
+            }
+        }
+
+    }
+    return numObjects;
 
 }
 void RemoveAllAttacks()
@@ -276,11 +345,17 @@ void UpdateAttack(Attack* a, float dt)
             a->radius = a->targetRadius;
         }
     }
+
     a->radius = a->easing*a->easing*a->easing * (a->targetRadius);
     if (a->easing >= 1)
         a->radius = a->targetRadius;
     a->easing += dt*2.5f;
     a->timer += dt;
+
+    Attack* copied = NULL;
+    Attack copy = *a;
+
+    bool isSoak = false;
 
     currAttackRunning = a;
     if (a->target ) 
@@ -303,6 +378,22 @@ void UpdateAttack(Attack* a, float dt)
                 RemoveAttack(a-attacks);
                 return;
             }
+        }
+
+        if (AttackIsSoak(a))
+        {
+            isSoak = true;
+            int numUnits = NumUnitsInsideAttack(a);
+            printf("%i\n",numUnits);
+            copy.effects = calloc(a->numEffects,sizeof(Effect));
+            for (int i = 0; i < a->numEffects; i++)
+            {
+                copy.effects[i] = a->effects[i];
+                if (numUnits > 0)
+                    copy.effects[i].value /= numUnits;
+            }
+            copied = &copy;
+
         }
 
 
@@ -349,14 +440,24 @@ void UpdateAttack(Attack* a, float dt)
            // if (a->ownedBy == &objects[i])
              //   continue;
             Rect r = GetObjRect(&objects[i]);
-            if (a->attackType == ATTACK_AOE || a->attackType ==ATTACK_PROJECTILE_TARGETED || a->attackType ==   ATTACK_PROJECTILE_POINT ||a->attackType == ATTACK_PROJECTILE_ANGLE)
+            if (a->attackType == ATTACK_AOE || a->attackType == ATTACK_PROJECTILE_TARGETED || a->attackType ==   ATTACK_PROJECTILE_POINT ||a->attackType == ATTACK_PROJECTILE_ANGLE)
             {
                 if (CircleInRect(a->x,a->y,a->radius,r))
                 {   
-                    ApplyAttack(a,&objects[i]);
+                    if (isSoak)
+                        ApplyAttack(copied,&objects[i]);
+                    else
+                        ApplyAttack(a,&objects[i]);
+
                     if (a->attackType != ATTACK_AOE && a->attackType != ATTACK_CONE)
                     {  
                         RemoveAttack(a-attacks);
+
+                        //We had to copy to a new attack 
+                        if (isSoak)
+                        {
+                            free(copied->effects);
+                        }
                         return;
                     }
                 }
@@ -399,6 +500,10 @@ void UpdateAttack(Attack* a, float dt)
 
         lua_pcall(luaState,5,0,0);
 
+    }
+    if (isSoak)
+    {
+        free(copied->effects);
     }
     if (a->x < 0 || a->y < 0 || a->x > 255 || a->y > 255 || a->duration < 0)
     {

@@ -213,7 +213,7 @@ function update(dt)
             f1["duration"] = 1;
             f1["triggersPerSecond"] = 1
         
-            CreateAOE(GetX(warrior),GetY(warrior),"", 30, 1, 999999, false, ATTACK_HITS_FRIENDLIES, COLOR_DAMAGE, DITHER_HALF, {f1})
+            CreateAOE(GetX(warrior),GetY(warrior),"", 30, 1, 999999, false, ATTACK_HITS_FRIENDLIES, COLOR_DAMAGE, DITHER_HALF,false,-1, {f1})
             PushMessage(attackString,textbox.x,textbox.y,textbox.w,textbox.h,false);
             PushMessage(attackString2,textbox.x,textbox.y,textbox.w,textbox.h,true);
             

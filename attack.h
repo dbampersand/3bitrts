@@ -15,7 +15,7 @@ typedef enum ATTACK_TYPE
     ATTACK_PROJECTILE_POINT,
     ATTACK_PROJECTILE_ANGLE,
     ATTACK_MELEE,
-    ATTACK_CONE
+    ATTACK_CONE,
 } ATTACK_TYPE;
 
 typedef enum ATTACK_PROPERTIES
@@ -23,6 +23,7 @@ typedef enum ATTACK_PROPERTIES
     ATTACK_ACTIVE = 1,
     ATTACK_HITS_ENEMIES = 2,
     ATTACK_HITS_FRIENDLIES = 4,
+    ATTACK_SOAK = 8
 } ATTACK_PROPERTIES;
 
 typedef struct Attack
@@ -35,7 +36,7 @@ typedef struct Attack
     Effect* effects;    
     int numEffects;
     ATTACK_TYPE attackType;
-    char properties;
+    ATTACK_PROPERTIES properties;
     GameObject* ownedBy;
     float speed;    
 
@@ -66,4 +67,6 @@ void DrawAttacks(float dt);
 void UpdateAttacks(float dt);
 void UpdateAttack(Attack* a, float dt);
 void ApplyAttack(Attack* a, GameObject* target);
-Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float tickrate, float duration, bool shouldCallback, int properties, int color, int dither, int numEffects, Effect* effects);
+Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float tickrate, float duration, bool shouldCallback, int properties, int color, int dither, int numEffects, Effect* effects, GameObject* target);
+bool AttackIsSoak(Attack* a);
+int NumUnitsInsideAttack(Attack* a);

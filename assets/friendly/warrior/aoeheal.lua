@@ -19,7 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     --f1["duration"] = 10;
     f1["triggersPerSecond"] = 1
 
-    aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_HALF, {f1})
+    aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_HALF,false, -1, {f1})
 
     return true; 
 end
