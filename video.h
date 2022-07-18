@@ -8,6 +8,8 @@
 #endif
 unsigned long long _FRAMES;
 
+#define _TARGET_FPS 60
+
 ALLEGRO_BITMAP* backbuffer;
 ALLEGRO_BITMAP* SCREEN;
 ALLEGRO_BITMAP* background_screen;

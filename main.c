@@ -32,7 +32,6 @@
 #include "replay.h"
 
 
-int _TARGET_FPS = 60;
 
 void init()
 {

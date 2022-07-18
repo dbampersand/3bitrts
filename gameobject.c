@@ -1330,7 +1330,8 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
 
     
 }
-void DrawArrow(int cx, int cy, int targetx, int targety, float angle, ALLEGRO_COLOR color)
+
+void DrawArrow(int cx, int cy, int targetx, int targety, ALLEGRO_COLOR color)
 {
     int arrowangle = 215;
 
@@ -1392,7 +1393,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
         c2.x = c1.x + (headingX * 5);
         c2.y = c1.y + (headingY * 5);
 
-        DrawArrow(c1.x,c1.y,c2.x,c2.y,atan2(headingY,headingX),c);
+        DrawArrow(c1.x,c1.y,c2.x,c2.y,c);
     }
     if (g->queue[0].commandType == COMMAND_MOVE || g->queue[0].commandType == COMMAND_ATTACKMOVE)
     {

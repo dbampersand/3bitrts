@@ -298,6 +298,22 @@ void DrawAttack(Attack* a, float dt)
     {
         al_draw_circle(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)),1);
         draw_circle_dithered(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)),a->dither);
+        if (AttackIsSoak(a))
+        {
+            float move = ((_FRAMES)%10)/4;
+            float x = a->x;// - a->radius*1/(float)(_FRAMES%(_TARGET_FPS/2));
+            float y = a->y - a->radius - 10 - move;// - a->radius*1/(float)(FRAMES%(TARGET_FPS/2));
+            float endX = a->x;
+            float endY = a->y - a->radius - 5 - move;
+            for (int i = 0; i < 4; i++)
+            {
+               RotatePointF(&x,&y,a->x,a->y,DegToRad(90));
+                RotatePointF(&endX,&endY,a->x,a->y,DegToRad(90));
+
+                DrawArrow(endX,endY,x,y,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)));
+
+            }
+        }
     }
     else if (a->attackType == ATTACK_CONE)
     {
