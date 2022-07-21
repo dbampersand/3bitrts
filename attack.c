@@ -24,9 +24,10 @@ void InitAttacks()
     }
     memset(attacks,0,sizeof(Attack)*MAX_ATTACKS);
 }
-Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float tickrate, float duration, bool shouldCallback, int properties, int color, int dither, int numEffects, Effect* effects, GameObject* target)
+Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float tickrate, float duration, bool shouldCallback, int properties, int color, int dither, int numEffects, Effect* effects, GameObject* target, GameObject* from)
 {
     Attack a = {0};
+    a.ownedBy = from;
     a.x = x;
     a.y = y;
     a.targx = x;
@@ -300,14 +301,17 @@ void DrawAttack(Attack* a, float dt)
         draw_circle_dithered(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)),a->dither);
         if (AttackIsSoak(a))
         {
-            float move = ((_FRAMES)%10)/4;
-            float x = a->x;// - a->radius*1/(float)(_FRAMES%(_TARGET_FPS/2));
-            float y = a->y - a->radius - 10 - move;// - a->radius*1/(float)(FRAMES%(TARGET_FPS/2));
+            float move = ((_FRAMES)%10)/4.0f;
+            float x = a->x;
+            float y = a->y - a->radius - 10 - move;
             float endX = a->x;
             float endY = a->y - a->radius - 5 - move;
+            RotatePointF(&x,&y,a->x,a->y,DegToRad(45));
+            RotatePointF(&endX,&endY,a->x,a->y,DegToRad(45));
+
             for (int i = 0; i < 4; i++)
             {
-               RotatePointF(&x,&y,a->x,a->y,DegToRad(90));
+                RotatePointF(&x,&y,a->x,a->y,DegToRad(90));
                 RotatePointF(&endX,&endY,a->x,a->y,DegToRad(90));
 
                 DrawArrow(endX,endY,x,y,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)));
@@ -512,9 +516,11 @@ void UpdateAttack(Attack* a, float dt)
         lua_pushnumber(luaState,a->timer);    
         lua_pushinteger(luaState,currGameObjRunning-objects);
         lua_pushinteger(luaState,a->target - objects);
+        lua_pushinteger(luaState,dt);
 
 
-        lua_pcall(luaState,5,0,0);
+
+        lua_pcall(luaState,6,0,0);
 
     }
     if (isSoak)
@@ -523,6 +529,23 @@ void UpdateAttack(Attack* a, float dt)
     }
     if (a->x < 0 || a->y < 0 || a->x > 255 || a->y > 255 || a->duration < 0)
     {
+        if (a->shouldCallback)
+        {
+            currAbilityRunning = a->cameFrom;
+            currGameObjRunning = a->ownedBy;
+            currAttackRunning = a;
+
+            lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_ontimeout);
+
+            lua_pushnumber(luaState,a->x);
+            lua_pushnumber(luaState,a->y);
+            lua_pushinteger(luaState,currGameObjRunning-objects);
+            lua_pushnumber(luaState,dt);    
+            lua_pushinteger(luaState,a->target - objects);
+
+            lua_pcall(luaState,5,0,0);
+
+        }
         RemoveAttack(a-attacks);
         return;
     }

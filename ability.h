@@ -34,6 +34,7 @@ typedef struct Ability
     int luafunc_onhit;
     int luafunc_tick;
     int luafunc_untoggle;
+    int luafunc_ontimeout;
 
     float range;
     //float length;

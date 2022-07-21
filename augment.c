@@ -374,5 +374,5 @@ void Bad_EnemyExplodes(GameObject* g, int augmentLevel)
     e.enabled = false;
     e.spriteIndex_Portrait = 0;
 
-    CreateAoE(x,y, NULL, 10, 3, 1,false, ATTACK_HITS_FRIENDLIES, ALColorToCol(ENEMY), DITHER_VERTICAL_EIGTH, 1, &e, NULL);
+    CreateAoE(x,y, NULL, 10, 3, 1,false, ATTACK_HITS_FRIENDLIES, ALColorToCol(ENEMY), DITHER_VERTICAL_EIGTH, 1, &e, NULL, NULL);
 }

@@ -122,6 +122,15 @@ void UpdateObject(GameObject* g, float dt)
             lua_pcall(luaState,1,0,0);
         }
     }
+    if (g->deathTimerActivated)
+    {
+        g->deathTimer -= dt;
+        if (g->deathTimer <= 0)
+        {
+            KillObj(g,true);
+            return;
+        }
+    }
     UpdateMana(g, dt);
     UpdateHPRegen(g, dt);
     
@@ -1514,11 +1523,12 @@ bool Damage(GameObject* source, GameObject* g, float value)
 
         gameStats.damageDone += value;
     }
+    AddDamageNumber((int)value,g->position.x+(rand()%(int)GetWidth(g)*1.1f),g->position.y+(rand()%(int)GetHeight(g)*1.1f),source);
+
     value = DamageShields(g,value);
     g->health -= value;
     if (value > 0)
         g->flashTimer = FLASH_TIMER;
-    AddDamageNumber((int)value,g->position.x+(rand()%(int)GetWidth(g)*1.1f),g->position.y+(rand()%(int)GetHeight(g)*1.1f),source);
     if (g->health <= 0)
     {
         KillObj(g,true);

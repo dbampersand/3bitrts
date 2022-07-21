@@ -198,7 +198,55 @@ int L_GetRandomUnit(lua_State* l)
          lua_pushnumber(l,randObj-objects);
 
     }
-    else
+    //There are no objects tagged - pick a random object that follows the friendliness
+    else 
+    {
+        for (int i = 0; i < MAX_OBJS; i++)
+        {
+            GameObject* g = &objects[i];
+            if (IsActive(g))
+            {
+                if (friend == TYPE_ENEMY)
+                {
+                    if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(currGameObjRunning))
+                    {
+                        list[numObjs] = g;
+                        numObjs++;
+                    }
+                }
+                if (friend == TYPE_FRIENDLY)
+                {
+                    if (GetPlayerOwnedBy(g) == GetPlayerOwnedBy(currGameObjRunning))
+                    {
+                        list[numObjs] = g;
+                        numObjs++;
+                    }
+                }
+
+            }
+        }
+        GameObject* randObj = list[rand()%numObjs];
+        lua_pushnumber(l,randObj-objects);
+
+    }
+    //there are no objects with the friendliness specified so let's just pick a completely random object
+    if (numObjs <= 0)
+    {
+        for (int i = 0; i < MAX_OBJS; i++)
+        {
+            GameObject* g = &objects[i];
+            if (IsActive(g))
+            {
+                list[numObjs] = g;
+                numObjs++;
+            }
+        }
+        GameObject* randObj = list[rand()%numObjs];
+        lua_pushnumber(l,randObj-objects);
+
+    }
+    //if we still have no objects
+    if (numObjs <= 0)
     {
          lua_pushnumber(l,-1);
     }
@@ -1001,13 +1049,13 @@ int L_CreateAOE(lua_State* l)
     a.tickrate = tickrate;
     a.color = color;
     a.dither = dither;*/
-    GameObject* targ =NULL;
+    GameObject* targ = NULL;
     if (target >= 0 && target < MAX_OBJS)
     {
         targ = &objects[target];
     }
 
-    Attack* ref = CreateAoE(x,y, (char*)effectPortrait, radius, tickrate, duration, shouldCallback,  properties,  color,  dither,  len, effects, targ);
+    Attack* ref = CreateAoE(x,y, (char*)effectPortrait, radius, tickrate, duration, shouldCallback,  properties,  color,  dither,  len, effects, targ, currGameObjRunning);
     if (isSoak)
     {
         ref->properties |= ATTACK_SOAK;
@@ -1668,14 +1716,18 @@ int L_IsAlive(lua_State* l)
 int L_CastAbility(lua_State* l)
 {
     if (ObjIsChannelling(currGameObjRunning))
-        return 0;
-
+    {
+        lua_pushnumber(l,-1);
+        return 1;
+    }
     int index = lua_tonumber(l,1);
         
     if (index < 0)
         index = 0;
-    if (index > 3) 
-        index = 3;
+    if (index >= MAX_ABILITIES) 
+        index = MAX_ABILITIES-1;
+    if (!currGameObjRunning->abilities[index].path)
+        return 0;
 
     if (currGameObjRunning->abilities[index].cdTimer > 0.001f)
     {
@@ -1747,10 +1799,11 @@ int L_AddAbility(lua_State* l)
     const char* path = lua_tostring(l,1);
     int index = lua_tonumber(l,2);
     if (index < 0) index = 0; 
-    if (index > 3) index = 3;
+    if (index >= MAX_ABILITIES) index = MAX_ABILITIES-1;
 
     Ability* prefab = AddAbility(path); 
     currGameObjRunning->abilities[index] = CloneAbilityPrefab(prefab,l);
+    lua_pushnumber(l,index);
     return 1;
 }
 int L_MoveAttack(lua_State* l)
@@ -1859,6 +1912,42 @@ int L_GetKey(lua_State* l)
     }
     return 1;
 }
+int L_SetLifetime(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    float time = lua_tonumber(l,2);
+    if (index >= 0 && index < MAX_OBJS)
+    {
+        GameObject* g = &objects[index];
+        g->deathTimerActivated = time >= 0;
+        g->deathTimer = time;
+    }
+    return 0;
+}
+int L_CopyObject(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    int x = lua_tonumber(l,2);
+    int y = lua_tonumber(l,3);
+
+    GameObject* g = NULL;
+
+    if (index >= 0 && index < MAX_OBJS)
+    {
+        g = &objects[index]; 
+    }
+    if (g)
+    {
+        GameObject* g2 = AddGameobject(g,x,y);
+        for (int i = 0; i < MAX_ABILITIES; i++)
+        {
+            g2->abilities[i].cdTimer = g->abilities[i].cdTimer;
+        }
+    }
+    lua_pushnumber(l,g-objects);
+    return 1;
+}
+
 void SetLuaKeyEnums(lua_State* l)
 {
     lua_pushinteger(l,ALLEGRO_KEY_LSHIFT);
@@ -2277,6 +2366,14 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_ChangeMap);
     lua_setglobal(luaState, "ChangeMap");
+
+
+    lua_pushcfunction(luaState, L_CopyObject);
+    lua_setglobal(luaState, "CopyObject");
+
+
+    lua_pushcfunction(luaState, L_SetLifetime);
+    lua_setglobal(luaState, "SetLifetime");
 
 
 }

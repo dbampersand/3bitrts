@@ -245,6 +245,16 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         else
             a->luafunc_onhit = -1;
 
+        if (CheckFuncExists("ontimeout",a->luabuffer))
+        {
+            lua_getglobal(l, "ontimeout");
+            funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+            a->luafunc_ontimeout = funcIndex;
+
+        }
+        else
+            a->luafunc_ontimeout = -1;
+
         if (CheckFuncExists("abilitytick",a->luabuffer))
         {
             lua_getglobal(l, "abilitytick");
@@ -314,6 +324,11 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
     }
     currAbilityRunning = a; 
     currGameObjRunning = g; 
+
+    //This is so that, if we copy an object, it can't copy again by casting the same ability
+    float cooldownBefore = a->cdTimer;
+    a->cdTimer = a->cooldown;
+
     if ((a->castType != ABILITY_TOGGLE) || (a->castType == ABILITY_TOGGLE && !a->toggled))
     {
         lua_rawgeti(luaState, LUA_REGISTRYINDEX, a->luafunc_casted);
@@ -334,6 +349,10 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         {
             a->cdTimer = a->cooldown;
         }
+        else
+        {
+            a->cdTimer = cooldownBefore;
+        }
     }
     else if (a->castType == ABILITY_TOGGLE && a->toggled)
     {
@@ -352,6 +371,11 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         {
             a->cdTimer = a->cooldown;
         }
+        else
+        {
+            a->cdTimer = cooldownBefore;
+        }
+
     }
 
 

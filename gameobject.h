@@ -42,7 +42,7 @@ typedef enum OBJ_FRIENDLINESS
 typedef struct Shield Shield;
 typedef struct lua_State lua_State;
 typedef struct Player Player;
-#define MAX_EFFECTS 12
+#define MAX_EFFECTS 32
 #define MAX_QUEUED_CMD 8
 #define MAX_ABILITIES 8
 #define FLASH_TIMER 0.1
@@ -127,6 +127,9 @@ typedef struct GameObject
     int numAttackSounds;    
 
     float flashTimer;
+
+    bool deathTimerActivated;
+    float deathTimer;
 
 } GameObject;
 
