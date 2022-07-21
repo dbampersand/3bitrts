@@ -151,7 +151,7 @@ void UpdateObject(GameObject* g, float dt)
     currGameObjRunning->attackTimer -= dt;
     if (currGameObjRunning->attackTimer < 0)
         currGameObjRunning->attackTimer = 0;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < MAX_ABILITIES; i++)
     {
         currGameObjRunning->abilities[i].cdTimer -= dt;
         if (currGameObjRunning->abilities[i].cdTimer < 0)
@@ -865,7 +865,7 @@ void KillObj(GameObject* g, bool trigger)
     }
     RemoveObjFromSelection(g);
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < MAX_ABILITIES; i++)
     {
         if (g->abilities[i].toggled)
         {

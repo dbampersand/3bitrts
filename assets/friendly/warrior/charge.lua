@@ -58,6 +58,6 @@ end
 
 function abilitytick(x, y, durationLeft, obj, target)
 
-    --MoveAttack(GetX(obj),GetY(obj));
+    --MoveAttack(GetAttackRef(),GetX(obj),GetY(obj));
 
 end

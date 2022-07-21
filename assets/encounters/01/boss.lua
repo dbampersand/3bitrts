@@ -30,15 +30,17 @@ end
 
 function update(dt)
 
-    local bombtarg = {}
-    bombtarg["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_HEALER)
-
-    CastAbility(bomb,0,{bombtarg});
-    do return end;
     decisionTime = decisionTime + dt;
     if (decisionTime < makeChoice) then
         do return end
     end
+    decisionTime = 0;
+
+    local bombtarg = {}
+    bombtarg["target"] = GetRandomUnit(TYPE_ENEMY,Bor(TYPE_HEALER,TYPE_RANGEDDPS))
+
+    CastAbility(bomb,0.1,{bombtarg});
+    do return end;
 
     j = GetThreatRank()
 
@@ -64,12 +66,12 @@ function update(dt)
             aoeTarget = GetRandomUnit(TYPE_ENEMY,TYPE_HEALER)
             targ1 = {};
             targ1["target"] = aoeTarget;
-            CastAbility(fire,0,{targ1});
+            CastAbility(fire,0.1,{targ1});
         end
         
         targ2 = {}
         targ2["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL);
-        CastAbility(nuke,0,{targ2});
+        CastAbility(nuke,0.1,{targ2});
 
         targ3 = {};
         targ3["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_TANK)
@@ -79,8 +81,8 @@ function update(dt)
     end
 
     if (GetHP() <= maxHP/2) then
-        CastAbility(summonAdd,0);
-        decisionTime = 1;
+        CastAbility(summonAdd,0.1);
+        makeChoice = 1;
         if (enraged == false) then
             SetDamage(30);
             SetSpeed(30)

@@ -259,11 +259,11 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         {
             lua_getglobal(l, "abilitytick");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
-            a->luafunc_tick = funcIndex;
+            a->luafunc_abilitytick = funcIndex;
 
         }
         else
-            a->luafunc_tick = -1;
+            a->luafunc_abilitytick = -1;
 
         if (CheckFuncExists("untoggle",a->luabuffer))
         {

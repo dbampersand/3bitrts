@@ -36,6 +36,6 @@ end
 function abilitytick(x, y, durationLeft, obj, target)
     Print("g: " .. g);
 
-    MoveAttack(GetX(obj),GetY(obj));
+    MoveAttack(GetAttackRef(),GetX(obj),GetY(obj));
 
 end

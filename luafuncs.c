@@ -136,6 +136,11 @@ int L_SetAttackPosition(lua_State* l)
 
     return 0;
 }
+int L_GetAttackRef(lua_State* l)
+{
+    lua_pushnumber(l,currAttackRunning-attacks);
+    return 1;
+}   
 int L_GetThisObj(lua_State* l)
 {
     lua_pushnumber(l,currGameObjRunning-objects);
@@ -837,7 +842,7 @@ int L_SetAbilityCooldownTimer(lua_State* l)
 int L_UntoggleOthers(lua_State* l)
 {
     int index = currAbilityRunning-currGameObjRunning->abilities;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < MAX_ABILITIES; i++)
     {
         if (index == i) continue;
         ToggleAbility(&currGameObjRunning->abilities[i],currGameObjRunning,false);
@@ -1726,8 +1731,6 @@ int L_CastAbility(lua_State* l)
         index = 0;
     if (index >= MAX_ABILITIES) 
         index = MAX_ABILITIES-1;
-    if (!currGameObjRunning->abilities[index].path)
-        return 0;
 
     if (currGameObjRunning->abilities[index].cdTimer > 0.001f)
     {
@@ -1808,10 +1811,12 @@ int L_AddAbility(lua_State* l)
 }
 int L_MoveAttack(lua_State* l)
 {
+    int index = lua_tonumber(l,1);
     if (currAttackRunning)
     {
-        int x = lua_tonumber(l,1);
-        int y = lua_tonumber(l,2);
+
+        int x = lua_tonumber(l,2);
+        int y = lua_tonumber(l,3);
         currAttackRunning->x = x;
         currAttackRunning->y = y;
     }
@@ -1820,7 +1825,7 @@ int L_MoveAttack(lua_State* l)
 int L_Bor(lua_State* l)
 {
     int i = lua_tonumber(l,1);
-    int j = lua_tonumber(l,j);
+    int j = lua_tonumber(l,2);
     int result = i | j;
     lua_pushnumber(l,result);
     return 1;
@@ -1828,7 +1833,7 @@ int L_Bor(lua_State* l)
 int L_Band(lua_State* l)
 {
     int i = lua_tonumber(l,1);
-    int j = lua_tonumber(l,j);
+    int j = lua_tonumber(l,2);
     int result = i & j;
     lua_pushnumber(l,result);
     return 1;
@@ -1836,7 +1841,7 @@ int L_Band(lua_State* l)
 int L_Bxor(lua_State* l)
 {
     int i = lua_tonumber(l,1);
-    int j = lua_tonumber(l,j);
+    int j = lua_tonumber(l,2);
     int result = i ^ j;
     lua_pushnumber(l,result);
     return 1;
@@ -2375,5 +2380,7 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_SetLifetime);
     lua_setglobal(luaState, "SetLifetime");
 
+    lua_pushcfunction(luaState, L_GetAttackRef);
+    lua_setglobal(luaState, "GetAttackRef");
 
 }

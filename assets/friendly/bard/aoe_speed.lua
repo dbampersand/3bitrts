@@ -33,6 +33,6 @@ function onhit(x,y,objhit)
 end
 
 function abilitytick(x, y, durationLeft)
-    MoveAttack(GetX(obj),GetY(obj));
+    MoveAttack(GetAttackRef(),GetX(obj),GetY(obj));
     
 end

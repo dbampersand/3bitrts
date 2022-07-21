@@ -509,7 +509,7 @@ void UpdateAttack(Attack* a, float dt)
         currGameObjRunning = a->ownedBy;
         currAttackRunning = a;
 
-        lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_tick);
+        lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_abilitytick);
 
         lua_pushnumber(luaState,a->x + a->radius/2.0f);
         lua_pushnumber(luaState,a->y + a->radius/2.0f);
@@ -517,10 +517,9 @@ void UpdateAttack(Attack* a, float dt)
         lua_pushinteger(luaState,currGameObjRunning-objects);
         lua_pushinteger(luaState,a->target - objects);
         lua_pushinteger(luaState,dt);
+        lua_pushinteger(luaState,a-attacks);
 
-
-
-        lua_pcall(luaState,6,0,0);
+        lua_pcall(luaState,7,0,0);
 
     }
     if (isSoak)
