@@ -1,3 +1,6 @@
+local maxHP = 250;
+
+
 function setup()
     SetSprite("assets/friendly/bard/bard.png");
     AddAbility("assets/friendly/bard/aoe_speed.lua",0)    
@@ -11,6 +14,8 @@ function setup()
 
     SetDamage(5);
     SetRange(30);
+    SetMaxHP(maxHP,true);
+
 
     SetObjType(Bor(TYPE_HEALER,TYPE_UTILITY));
     IsPlayerChoosable(true);

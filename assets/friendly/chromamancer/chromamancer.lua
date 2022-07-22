@@ -1,3 +1,6 @@
+local maxHP = 350;
+
+
 function setup()
     SetSprite("assets/friendly/chromamancer/chronomancer.png");
     
@@ -11,9 +14,10 @@ function setup()
     AddAttackSprite("assets/ui/slash_fx.png",32,32,0.05);   
 
     SetDamage(5);
-
+    SetRange(40)
+    SetMaxHP(maxHP,true);
     SetObjType(TYPE_HEALER)
-    SetThreatMultiplier(5);
+    SetThreatMultiplier(1);
     IsPlayerChoosable(true);
 
 end

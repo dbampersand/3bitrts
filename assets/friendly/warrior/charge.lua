@@ -4,7 +4,7 @@ function setup()
     
 
     SetAbilityRange(60)
-    SetCooldown(10);
+    SetCooldown(20);
     SetDescription("Charge\n\nCharges the target, dealing 20 damage.")
 
 end
@@ -20,7 +20,6 @@ function casted(x,y,obj,headingx,headingy)
     --f1["numTriggers"] = 5
     f1["value"] = 20;  
     --f1["duration"] = 10;
-    f1["triggersPerSecond"] = 1
     
     f2 = {};
     f2["trigger"] = TRIGGER_INSTANT;

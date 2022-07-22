@@ -1824,31 +1824,31 @@ int L_MoveAttack(lua_State* l)
 }
 int L_Bor(lua_State* l)
 {
-    int i = lua_tonumber(l,1);
-    int j = lua_tonumber(l,2);
+    int i = lua_tointeger(l,1);
+    int j = lua_tointeger(l,2);
     int result = i | j;
     lua_pushnumber(l,result);
     return 1;
 }
 int L_Band(lua_State* l)
 {
-    int i = lua_tonumber(l,1);
-    int j = lua_tonumber(l,2);
+    int i = lua_tointeger(l,1);
+    int j = lua_tointeger(l,2);
     int result = i & j;
     lua_pushnumber(l,result);
     return 1;
 }
 int L_Bxor(lua_State* l)
 {
-    int i = lua_tonumber(l,1);
-    int j = lua_tonumber(l,2);
+    int i = lua_tointeger(l,1);
+    int j = lua_tointeger(l,2);
     int result = i ^ j;
     lua_pushnumber(l,result);
     return 1;
 }
 int L_Bnot(lua_State* l)
 {
-    int i = lua_tonumber(l,1);
+    int i = lua_tointeger(l,1);
     int result = ~i;
     lua_pushnumber(l,result);
     return 1;

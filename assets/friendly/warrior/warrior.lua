@@ -15,6 +15,8 @@ function setup()
     SetThreatMultiplier(5);
     IsPlayerChoosable(true);
 
+    SetMaxHP(1000,true);
+
 
 end
 

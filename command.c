@@ -147,7 +147,13 @@ void DoCommands(GameObject* g)
                 }
             }
             return;
-        }
+    }
+    else
+    {
+        g->targetPosition.x = c->x;
+        g->targetPosition.y = c->y;
+
+    }
     }
     if (c->commandType == COMMAND_ATTACKMOVE)
     {

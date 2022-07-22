@@ -1,4 +1,4 @@
-local maxHP = 200;
+local maxHP = 300;
 
 function setup()
     SetSprite("assets/friendly/rogue/rogue.png");
@@ -11,7 +11,7 @@ function setup()
     AddAttackSprite("assets/ui/slash_fx2.png",16,16,0.05);
     AddAttackSprite("assets/ui/slash_fx.png",32,32,0.05);   
 
-    SetDamage(5);
+    SetDamage(15);
     SetRange(1)
     SetMaxHP(maxHP,true);
 

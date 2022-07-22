@@ -1,4 +1,4 @@
-local maxHP = 400
+local maxHP = 1000
 
 local bite = 0
 local fire = 0
@@ -8,7 +8,7 @@ local summonAdd = 0
 local bomb = 0
 
 local decisionTime = 0
-local makeChoice = 3
+local makeChoice = 5
 
 local enraged = false
 
@@ -22,7 +22,7 @@ function setup()
     summonAdd = AddAbility("assets/enemies/wyrm_boss/ability_summon_adds.lua",4)    
     bomb = AddAbility("assets/enemies/wyrm_boss/ability_bomb.lua",5);    
 
-    SetDamage(10);
+    SetDamage(50);
     SetMaxHP(maxHP,true)
     SetSpeed(10)
     SetObjectPush(true);
@@ -37,10 +37,9 @@ function update(dt)
     decisionTime = 0;
 
     local bombtarg = {}
-    bombtarg["target"] = GetRandomUnit(TYPE_ENEMY,Bor(TYPE_HEALER,TYPE_RANGEDDPS))
+    bombtarg["target"] = GetRandomUnit(TYPE_ENEMY,Bor(Bor(TYPE_HEALER,TYPE_RANGEDDPS),TYPE_MELEEDPS))
 
     CastAbility(bomb,0.1,{bombtarg});
-    do return end;
 
     j = GetThreatRank()
 
@@ -55,7 +54,7 @@ function update(dt)
             inCombat = true;
 
         end
-        --CastAbility(0,target);
+        CastAbility(0,target);
 
         targ0 = {};
         targ0["target"] = GetHighestThreat();

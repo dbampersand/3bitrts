@@ -1,4 +1,4 @@
-local maxHP = 150;
+local maxHP = 250;
 
 function setup()
     SetSprite("assets/friendly/priest/priest.png");
