@@ -15,14 +15,14 @@ function casted(x,y,obj,headingx,headingy)
     f1["trigger"] = TRIGGER_TIMER;
     f1["type"] = EFFECT_HURT;
     f1["triggersPerSecond"] = 5
-    f1["value"] = 10;  
+    f1["value"] = 2.5;  
     f1["duration"] = 10;
     f1["portrait"] = "assets/enemies/wyrm_boss/ability_bite_effect_portrait.png"
     
     f2 = {};
     f2["trigger"] = TRIGGER_INSTANT;
     f2["type"] = EFFECT_HURT;
-    f2["value"] = 200;
+    f2["value"] = 100;
 
     ApplyEffect(obj,{f1,f2});
     return true; 

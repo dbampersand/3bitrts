@@ -16,7 +16,10 @@ function setup()
     SetMaxHP(maxHP,true);
 
     SetObjType(TYPE_MELEEDPS);
+
     IsPlayerChoosable(true);
+    SetCategory(TYPE_MELEEDPS);
+
 end
 
 function update(dt)

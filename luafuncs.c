@@ -1191,7 +1191,13 @@ int L_RemoveAttack(lua_State* l)
 int L_SetMaxMana(lua_State* l)
 {
     float mana = lua_tonumber(l,1);
+    bool shouldAdd = lua_toboolean(l,2);
+
     currGameObjRunning->maxMana = mana;
+    if (shouldAdd)
+    {
+        AddMana(currGameObjRunning,mana);
+    }
     return 0;
 
 }
@@ -1405,6 +1411,12 @@ int L_GetControlGroup(lua_State* l)
         }
     }
     return 1;
+}
+int L_SetCategory(lua_State* l)
+{
+    GAMEOBJ_TYPE_HINT category = lua_tointeger(l,1);
+    currGameObjRunning->category =  category; 
+    return 0;
 }
 int L_SetManaCost(lua_State* l)
 {
@@ -2382,5 +2394,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetAttackRef);
     lua_setglobal(luaState, "GetAttackRef");
+
+    lua_pushcfunction(luaState, L_SetCategory);
+    lua_setglobal(luaState, "SetCategory");
 
 }

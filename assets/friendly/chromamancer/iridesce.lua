@@ -2,7 +2,8 @@ function setup()
     AbilitySetPortrait("assets/friendly/chromamancer/icon_iridesce.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
     SetDescription("Iridesce\n\nShields target and heals over time.")
-    SetCooldown(8);
+    SetCooldown(0.5);
+    SetManaCost(20)
 end
 
 function casted(x,y,obj,headingx,headingy)
@@ -16,10 +17,10 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 200;  
     f1["duration"] = 10;
 
-    f2 = {};
+    f2 = {};    
     f2["trigger"] = TRIGGER_TIMER;
     f2["type"] = EFFECT_HEAL;
-    f2["value"] = 10;  
+    f2["value"] = 20;  
     f2["duration"] = 10;
     f2["triggersPerSecond"] = 1;
 

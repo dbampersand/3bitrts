@@ -10,7 +10,7 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_SHIELD
-    f1["value"] = 50;  
+    f1["value"] = 400;  
     f1["duration"]  = 10
 
     ApplyEffect(obj,{f1})

@@ -104,56 +104,55 @@ void DoCommands(GameObject* g)
     }
     if (c->commandType == COMMAND_CAST)
     {
-        if (c->target)
-        {
-            if (AbilityShouldBeCastOnTarget(c->ability))
-                g->targObj = c->target;
-        }
-
-        if (AbilityCanBeCast(c->ability,g,c->target,c->x,c->y))
-        {
-            CastAbility(g,c->ability,c->x,c->y,c->x-g->position.x,c->y-g->position.y,c->target);
-            if (g->queue[1].commandType == COMMAND_NONE)
+            if (c->target)
             {
-                if (c->target)
-                {
-                    if (IsOwnedByPlayer(g) != IsOwnedByPlayer(c->target))
-                    {
-                        g->queue[0].commandType = COMMAND_ATTACK;
-                        g->queue[0].ability = NULL; 
+                if (AbilityShouldBeCastOnTarget(c->ability))
+                    g->targObj = c->target;
+            }
 
+            if (AbilityCanBeCast(c->ability,g,c->target,c->x,c->y))
+            {
+                CastAbility(g,c->ability,c->x,c->y,c->x-g->position.x,c->y-g->position.y,c->target);
+                if (g->queue[1].commandType == COMMAND_NONE)
+                {
+                    if (c->target)
+                    {
+                        if (IsOwnedByPlayer(g) != IsOwnedByPlayer(c->target))
+                        {
+                            g->queue[0].commandType = COMMAND_ATTACK;
+                            g->queue[0].ability = NULL; 
+
+                        }
+                        else
+                            NextCommand(g);
                     }
                     else
-                        NextCommand(g);
-                }
-                else
-                {
-                    NextCommand(g);
-                }
-            }
-            else
-            {
-                if (c->target)
-                {
-
-                    if (IsOwnedByPlayer(g) != IsOwnedByPlayer(c->target))
                     {
-                         NextCommand(g);
+                        NextCommand(g);
                     }
                 }
                 else
                 {
-                    NextCommand(g);
-                }
-            }
-            return;
-    }
-    else
-    {
-        g->targetPosition.x = c->x;
-        g->targetPosition.y = c->y;
+                    if (c->target)
+                    {
 
-    }
+                        if (IsOwnedByPlayer(g) != IsOwnedByPlayer(c->target))
+                        {
+                            NextCommand(g);
+                        }
+                    }
+                    else
+                    {
+                        NextCommand(g);
+                    }
+                }
+                return;
+        }
+        else
+        {
+            g->targetPosition.x = c->x;
+            g->targetPosition.y = c->y;
+        }
     }
     if (c->commandType == COMMAND_ATTACKMOVE)
     {

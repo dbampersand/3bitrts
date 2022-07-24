@@ -106,6 +106,8 @@ typedef struct GameObject
     float invulnerableTime;
 
     GAMEOBJ_TYPE_HINT objType;
+    GAMEOBJ_TYPE_HINT category;
+
 
     float channellingTime;
     float channellingTotal;  

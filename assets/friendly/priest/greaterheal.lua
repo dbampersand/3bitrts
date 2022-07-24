@@ -4,14 +4,14 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
     SetAbilityRange(120)
     SetDescription("Greater Heal\n\nA large, but inefficient heal.")
-    SetManaCost(70)
+    SetManaCost(55)
     
 end
 function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HEAL
-    f1["value"] = 60;  
+    f1["value"] = 200;  
 
     ApplyEffect(obj,{f1})
     return true;

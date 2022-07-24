@@ -19,6 +19,8 @@ function setup()
     SetObjType(TYPE_HEALER);
     IsPlayerChoosable(true);
 
+    SetCategory(TYPE_HEALER);
+
 
 
 

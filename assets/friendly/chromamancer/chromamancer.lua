@@ -1,5 +1,5 @@
 local maxHP = 350;
-
+local maxMana = 150
 
 function setup()
     SetSprite("assets/friendly/chromamancer/chronomancer.png");
@@ -15,10 +15,16 @@ function setup()
 
     SetDamage(5);
     SetRange(40)
+
+    SetManaRegen(15);
+    SetMaxMana(maxMana,true)
     SetMaxHP(maxHP,true);
+    
     SetObjType(TYPE_HEALER)
     SetThreatMultiplier(1);
+
     IsPlayerChoosable(true);
+    SetCategory(TYPE_HEALER);
 
 end
 

@@ -14,6 +14,7 @@ function setup()
     SetObjType(TYPE_TANK)
     SetThreatMultiplier(5);
     IsPlayerChoosable(true);
+    SetCategory(TYPE_TANK);
 
     SetMaxHP(1000,true);
 

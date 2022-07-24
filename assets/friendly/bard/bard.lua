@@ -18,7 +18,10 @@ function setup()
 
 
     SetObjType(Bor(TYPE_HEALER,TYPE_UTILITY));
+
     IsPlayerChoosable(true);
+    SetCategory(TYPE_UTILITY);
+
     
 end
 
