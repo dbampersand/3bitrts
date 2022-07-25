@@ -1281,11 +1281,11 @@ void Move(GameObject* g, float delta)
         }
         float dX = (moveX / dist * g->speed) * delta;
         float dY = (moveY / dist * g->speed) * delta;
-        float mDist = sqrt(dX * dX + dY * dY);
+        double mDist = sqrt(dX * dX + dY * dY);
         if (dist <= mDist)
         {
-            dX = g->position.x-xtarg;
-            dY = g->position.y-ytarg;
+            dX = xtarg - g->position.x;
+            dY = ytarg - g->position.y;
 
             g->position.x=xtarg;
             g->position.y=ytarg;
@@ -1295,6 +1295,9 @@ void Move(GameObject* g, float delta)
             CheckCollisions(g,true, dX,ObjectCanPush(g));
             CheckCollisionsWorld(g,true, dX);
 
+            g->targetPosition.x = xtarg;
+            g->targetPosition.y = ytarg;
+            
             return;
         }
 

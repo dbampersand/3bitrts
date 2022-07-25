@@ -14,7 +14,7 @@ function setup()
 
     SetDamage(5);
     SetRange(30);
-    SetMaxHP(maxHP,true);
+    SetMaxHP(maxHP,true);   
 
 
     SetObjType(Bor(TYPE_HEALER,TYPE_UTILITY));

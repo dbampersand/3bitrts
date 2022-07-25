@@ -13,6 +13,7 @@ function setup()
 
     SetDamage(15);
     SetRange(1)
+    SetSpeed(9999999)
     SetMaxHP(maxHP,true);
 
     SetObjType(TYPE_MELEEDPS);
