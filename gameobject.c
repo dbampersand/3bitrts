@@ -1031,7 +1031,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     if (objectCanPush)
                     {
                         float v = g2->position.x;
-                        g2->position.x = g->position.x + GetWidth(g);
+                        g2->position.x = g->position.x + GetWidth(g) + 1;
                         v -= g2->position.x;
                         if (g2->position.x <0)
                         {
@@ -1052,7 +1052,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
 
                     }
                     else
-                        g->position.x = g2->position.x - al_get_bitmap_width(s->sprite);;
+                        g->position.x = g2->position.x - al_get_bitmap_width(s2->sprite);
 
                 }
             }
@@ -1064,7 +1064,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     if (objectCanPush)
                     {
                         float v = g2->position.x;
-                        g2->position.x = g->position.x - GetWidth(g2);
+                        g2->position.x = g->position.x - GetWidth(g2) - 1;
                         v -= g2->position.x;
                         if (g2->position.x <0)
                         {
@@ -1100,7 +1100,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     if (objectCanPush)
                     {
                         float v = g2->position.y;
-                        g2->position.y = g->position.y + GetHeight(g);
+                        g2->position.y = g->position.y + GetHeight(g) + 1;
                         v -= g2->position.y;
                         float v2 = g2->position.y;
                         if (g2->position.y <0)
@@ -1130,7 +1130,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     if (objectCanPush)
                     {
                         float v = g2->position.y;
-                        g2->position.y = g->position.y - GetHeight(g2);
+                        g2->position.y = g->position.y - GetHeight(g2) - 1;
                         v -= g2->position.y;
                         float v2 = g2->position.y;
                         if (g2->position.y <0)
@@ -1286,12 +1286,12 @@ void Move(GameObject* g, float delta)
         {
             dX = xtarg - g->position.x;
             dY = ytarg - g->position.y;
-
-            g->position.x=xtarg;
+            
             g->position.y=ytarg;
-
             CheckCollisions(g,false, dY,ObjectCanPush(g));
             CheckCollisionsWorld(g,false, dY);
+            g->position.x=xtarg;
+
             CheckCollisions(g,true, dX,ObjectCanPush(g));
             CheckCollisionsWorld(g,true, dX);
 
@@ -1327,7 +1327,7 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
     r.w = al_get_bitmap_width(s->sprite);
     r.h = 2;
 
-    al_draw_rectangle(r.x,r.y,r.x+r.w,r.y+r.h,col,1);
+    al_draw_rectangle((int)r.x,(int)r.y,(int)r.x+r.w,(int)r.y+r.h,col,1);
 
     float percent = (g->health) / (float)g->maxHP;
 
@@ -1337,8 +1337,8 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
     int numPixels = percent * r.w;
     int numPixelsShield = percentShield*r.w;
     
-    al_draw_filled_rectangle(r.x,r.y,r.x+numPixels,r.y+r.h,col);
-    al_draw_filled_rectangle(r.x,r.y-5,r.x+numPixelsShield,(r.y-5)+r.h-1,col);
+    al_draw_filled_rectangle((int)r.x,(int)r.y,(int)(r.x+numPixels),(int)(r.y+r.h),col);
+    al_draw_filled_rectangle((int)r.x,(int)r.y-5,(int)(r.x+numPixelsShield),(int)((r.y-5)+r.h-1),col);
 
     
 }

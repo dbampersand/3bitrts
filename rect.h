@@ -5,7 +5,7 @@
 
 typedef struct Rect 
 {
-    int x; int y; int w; int h;
+    float x; float y; int w; int h;
 } Rect;
 
 bool CheckIntersect(Rect r1, Rect r2);

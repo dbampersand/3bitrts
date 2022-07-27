@@ -13,14 +13,15 @@ function setup()
 
     SetDamage(15);
     SetRange(1)
-    SetSpeed(9999999)
+    SetSpeed(60)
     SetMaxHP(maxHP,true);
 
     SetObjType(TYPE_MELEEDPS);
 
     IsPlayerChoosable(true);
     SetCategory(TYPE_MELEEDPS);
-
+    
+    SetObjectPush(true);
 end
 
 function update(dt)

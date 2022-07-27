@@ -266,8 +266,8 @@ float RadToDeg(float rad)
 float CircleRectDist(int cx, int cy, float radius, Rect r)
 {
     Point cd;
-    cd.x = abs(cx - r.x);
-    cd.y = abs(cy - r.y);
+    cd.x = fabsf(cx - r.x);
+    cd.y = fabsf(cy - r.y);
 
     if (cd.x > (r.w/2.0f + radius)) { return false; }
     if (cd.y > (r.h/2.0f + radius)) { return false; }

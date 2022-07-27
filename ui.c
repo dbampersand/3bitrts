@@ -1040,7 +1040,11 @@ void UpdatePulldownMenu(Pulldown* p, int x, int y, int w, int h, ALLEGRO_MOUSE_S
 void DrawPullDownMenu(Pulldown* p, int x, int y, int w, int h, bool isActive, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_COLOR bgColor)
 {
     Rect clip;
-    al_get_clipping_rectangle(&clip.x,&clip.y,&clip.w,&clip.h);
+    int clipX; int clipY;
+    al_get_clipping_rectangle(&clipX,&clipY,&clip.w,&clip.h);
+    clip.x = clipX;
+    clip.y = clipY;
+
     Rect r = (Rect){x,y,w,h};
     if (p->clicked && isActive)
     {
