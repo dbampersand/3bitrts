@@ -1007,20 +1007,22 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
     if (!g)
     if (dV == 0) return;
     Sprite* s = &sprites[g->spriteIndex];
-    Rect rG = (Rect){g->position.x,g->position.y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)};
+    Rect rG = (Rect){g->position.x,g->position.y,GetWidth(g),GetHeight(g)};
     for (int i = 0; i < numObjects; i++)
     {
         GameObject* g2 = &objects[i];
-        if (g2 == g || !IsActive(g2)) 
+        if (!IsActive(g2) || g2 == g) 
             continue;
         Sprite* s2 = &sprites[g2->spriteIndex];
-        Rect r2 = (Rect){g2->position.x,g2->position.y,al_get_bitmap_width(s2->sprite),al_get_bitmap_height(s2->sprite)};
+        Rect r2 = (Rect){g2->position.x,g2->position.y,GetWidth(g2),GetHeight(g2)};
 
         if (!CheckIntersect(rG,r2))
         {
             continue;
         }
-
+        //TODO: investigate *why* this extra value is needed
+        //precision error or is there a round going on somewhere??
+        #define extra 0.6f
         if (x)
         {
             if (dV > 0)
@@ -1031,7 +1033,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     if (objectCanPush)
                     {
                         float v = g2->position.x;
-                        g2->position.x = g->position.x + GetWidth(g) + 1;
+                        g2->position.x = g->position.x + GetWidth(g) + extra;
                         v -= g2->position.x;
                         if (g2->position.x <0)
                         {
@@ -1039,7 +1041,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             g2->position.x=0;
                         }
                         if (g2->position.x + GetWidth(g2) > _MAPSIZE)
-                        {
+                        {   
                             g2->position.x = _MAPSIZE - GetWidth(g2);
                             v = 1;
                         }
@@ -1052,7 +1054,10 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
 
                     }
                     else
+                    {
                         g->position.x = g2->position.x - al_get_bitmap_width(s2->sprite);
+                        rG.x = g->position.x;
+                    }
 
                 }
             }
@@ -1064,9 +1069,10 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     if (objectCanPush)
                     {
                         float v = g2->position.x;
-                        g2->position.x = g->position.x - GetWidth(g2) - 1;
+                        g2->position.x = g->position.x - GetWidth(g2) - extra;
+
                         v -= g2->position.x;
-                        if (g2->position.x <0)
+                        if (g2->position.x < 0)
                         {
                             v = -1;
                             g2->position.x=0;
@@ -1082,10 +1088,13 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         v2 -= g2->position.x;
 
                         CheckCollisionsWorld(g2,true,-v2);
-
+                       
                     }
                     else
+                    {
                         g->position.x = g2->position.x+al_get_bitmap_width(s2->sprite); 
+                        rG.x = g->position.x;
+                    }
                 }
             }
         }
@@ -1100,7 +1109,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     if (objectCanPush)
                     {
                         float v = g2->position.y;
-                        g2->position.y = g->position.y + GetHeight(g) + 1;
+                        g2->position.y = g->position.y + GetHeight(g) + extra;
                         v -= g2->position.y;
                         float v2 = g2->position.y;
                         if (g2->position.y <0)
@@ -1115,13 +1124,12 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         }
 
                         CheckCollisions(g2,false,-v,true);
-                        v2 -= g2->position.y;
-                         
-                        CheckCollisionsWorld(g2,false,-v2);
+                        CheckCollisionsWorld(g2,false,-v);
                     }
                     else
                     {
                         g->position.y = g2->position.y - al_get_bitmap_height(s->sprite);
+                        rG.y = g->position.y;
                     }
                 }
                 else if (dV < 0)
@@ -1130,7 +1138,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     if (objectCanPush)
                     {
                         float v = g2->position.y;
-                        g2->position.y = g->position.y - GetHeight(g2) - 1;
+                        g2->position.y = g->position.y - GetHeight(g2) - extra;
                         v -= g2->position.y;
                         float v2 = g2->position.y;
                         if (g2->position.y <0)
@@ -1153,7 +1161,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     else
                     {
                         g->position.y = g2->position.y + al_get_bitmap_height(s2->sprite);
-
+                        rG.y = g->position.y;
                     }
                 }
             }
@@ -1191,15 +1199,35 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
 
     if (posX < 0 || posX+w > _MAPSIZE)
     {
-        if (posX < 0) g->position.x = 0;
-        if (posX+w > _MAPSIZE) g->position.x = _MAPSIZE-w;
+        if (posX < 0) 
+        {
+            g->position.x = 0;
+            CheckCollisions(g,true,1,true);
+
+        }
+        if (posX+w > _MAPSIZE) 
+        {
+            g->position.x = _MAPSIZE-w;
+            CheckCollisions(g,true,-1,true);
+
+        }
         return;
 
     }
     if (posY < 0 || posY+h > _MAPSIZE)
     {
-        if (posY < 0) g->position.y = 0;
-        if (posY+h > _MAPSIZE) g->position.y = _MAPSIZE-h;
+        if (posY < 0)
+        {
+            g->position.y = 0;
+            CheckCollisions(g,false,1,true);
+
+        } 
+        if (posY+h > _MAPSIZE)
+        {
+            g->position.y = _MAPSIZE-h;
+            CheckCollisions(g,false,-1,true);
+        } 
+
         return;
     }
 
@@ -1217,6 +1245,8 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             if (currMap->collision[indexLeft] == false)
             {
                 g->position.x = ((indexLeft/(_MAPSIZE/_GRAIN))*_GRAIN)+_GRAIN;
+                CheckCollisions(g,true,-dV,true);
+
             }
         }
         if (dV > 0)
@@ -1224,6 +1254,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             if (currMap->collision[indexRight] == false)
             {
                 g->position.x = (indexRight/(_MAPSIZE/_GRAIN))*_GRAIN - w;
+                CheckCollisions(g,true,-dV,true);
             }
         }
 
@@ -1236,6 +1267,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             {
                 int yCoord = (indexTop%(_MAPSIZE/_GRAIN)+1)*_GRAIN;
                 g->position.y = yCoord;
+                CheckCollisions(g,false,-dV,true);
             }
 
         }
@@ -1245,6 +1277,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             {
                 int yCoord = (indexBottom%(_MAPSIZE/_GRAIN))*_GRAIN - h;
                 g->position.y = yCoord;
+                CheckCollisions(g,false,-dV,true);
             }
         }
     }
@@ -1738,11 +1771,11 @@ void UnsetAll()
         SetSelected(&objects[i], false);
     }
 }
-float GetWidth(GameObject* g)
+int GetWidth(GameObject* g)
 {
     return al_get_bitmap_width(sprites[g->spriteIndex].sprite);
 }
-float GetHeight(GameObject* g)
+int GetHeight(GameObject* g)
 {
     return al_get_bitmap_height(sprites[g->spriteIndex].sprite);
 }

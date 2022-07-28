@@ -213,8 +213,8 @@ GameObject* GetCollidedWith(GameObject* g);
 GameObject* GetClicked(float x, float y);
 void UnsetAll();
 void MakeInvulnerable(GameObject* g, float time);
-float GetWidth(GameObject* g);
-float GetHeight(GameObject* g);
+int GetWidth(GameObject* g);
+int GetHeight(GameObject* g);
 
 bool ObjectCanPush(GameObject* g);
 bool IsInCombat(GameObject* g);
