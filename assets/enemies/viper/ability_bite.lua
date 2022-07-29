@@ -13,9 +13,9 @@ function casted(x,y,obj,headingx,headingy)
     local f1 = {};
     f1["trigger"] = TRIGGER_TIMER;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 5;
+    f1["value"] = 2;
     f1["triggersPerSecond"] = 5;  
-    f1["duration"] = 5;
+    f1["duration"] = 40;
 
     ApplyEffect(obj,{f1});
     return true; 
