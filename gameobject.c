@@ -1022,6 +1022,8 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
         }
         //TODO: investigate *why* this extra value is needed
         //precision error or is there a round going on somewhere??
+        //without it, it isn't pushed far enough
+        //with it, there can be some weirdness with vibrating units
         #define extra 0.6f
         if (x)
         {

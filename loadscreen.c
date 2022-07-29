@@ -8,6 +8,7 @@
 #include "allegro5/allegro_ttf.h"
 #include "allegro5/allegro.h"
 #include "ui.h"
+
 void InitLoadscreen(char* initialPath)
 {
     memset(&loadScreen,0,sizeof(LoadScreen));

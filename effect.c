@@ -7,7 +7,7 @@
 
 bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
 {
-    float value = e->value;
+     float value = e->value;
     if (!IsOwnedByPlayer(from))
     {
         if (currEncounterRunning)
@@ -47,8 +47,30 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         MakeInvulnerable(target,e->duration*sign);
     }
+    if (e->effectType == EFFECT_CURE)
+    {
+        for (int i = 0; i < e->value; i++)
+        {
+            CureEffect(target,e->value);
+        }
+    }
+
     return false;
 
+}
+void CureEffect(GameObject* g, int numEffects)
+{
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        Effect* e = &g->effects[i];
+        if (GetPlayerOwnedBy(e->from) != GetPlayerOwnedBy(g))
+        {
+            RemoveEffect(e,g);
+            numEffects--;
+            if (numEffects <= 0)
+                return;
+        }
+    }
 }
 void RemoveEffect(Effect* e, GameObject* from)
 {

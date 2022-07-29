@@ -530,7 +530,7 @@ int L_GetThreatRank(lua_State* l)
     for (int i = 0; i < j; i++)
     {
         lua_pushnumber(l,i+1);
-        lua_pushnumber(l,objects-next->obj);
+        lua_pushnumber(l,next->obj-objects);
 
         lua_settable(l,-3);
         next = next->next;
@@ -1503,6 +1503,9 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,EFFECT_INVULN);
     lua_setglobal(l,"EFFECT_INVULN");
 
+    lua_pushinteger(l,EFFECT_CURE);
+    lua_setglobal(l,"EFFECT_CURE");
+
 
     lua_pushinteger(l,ABILITY_INSTANT);
     lua_setglobal(l,"ABILITY_INSTANT");
@@ -1782,6 +1785,7 @@ int L_CastAbility(lua_State* l)
     }
     else
     {
+        GameObject* g = &objects[obj];
         CastAbility(currGameObjRunning,&currGameObjRunning->abilities[index],x,y,headingx,headingy,&objects[obj]);
 
     }

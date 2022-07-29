@@ -24,7 +24,8 @@ typedef enum EFFECT_TYPE
     EFFECT_SPEED = 6,
     EFFECT_SHIELD = 7,
     EFFECT_DAMAGE = 8,
-    EFFECT_INVULN = 9
+    EFFECT_INVULN = 9,
+    EFFECT_CURE = 10
 } EFFECT_TYPE;
 
 typedef struct Effect
@@ -49,3 +50,6 @@ typedef struct Effect
 void ApplyEffect(Effect* e, GameObject* from, GameObject* target);
 void ProcessEffects(GameObject* g, float dt);
 bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove);
+void CureEffect(GameObject* g, int numEffects);
+void RemoveEffect(Effect* e, GameObject* from);
+
