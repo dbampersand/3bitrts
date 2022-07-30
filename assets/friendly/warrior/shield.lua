@@ -3,7 +3,6 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetDescription("Shield\n\nGives 50 shield")
     SetCooldown(15);
-    SetMaxHP(400,true);
 end
 
 function casted()
@@ -14,7 +13,7 @@ function casted()
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_SHIELD;
-    f1["value"] = 50;  
+    f1["value"] = 600;  
     f1["duration"] = 10;  
     ApplyEffect(GetThisObj(),{f1});
 

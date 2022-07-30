@@ -280,8 +280,13 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
 }
 bool AbilityShouldBeCastOnTarget(Ability* a)
 {
-    return ((a->castType & ABILITY_TARGET_FRIENDLY) || (a->castType & ABILITY_TARGET_ENEMY) || (a->castType & ABILITY_TARGET_ALL));
+    return ((a->castType & ABILITY_TARGET_FRIENDLY) | (a->castType & ABILITY_TARGET_ENEMY) | (a->castType & ABILITY_TARGET_ALL));
 }
+bool AbilityCanBeCastOnGround(Ability* a)
+{
+    return (a->castType & (ABILITY_POINT|ABILITY_ANGLE));
+}
+
 void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, float headingy, GameObject* target)
 {
     if (a->cdTimer > 0)
@@ -316,7 +321,7 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         if (GetDist(g,target) > a->range)
             return;
     }
-    if (target == NULL && AbilityShouldBeCastOnTarget(a))
+    if (target == NULL && AbilityShouldBeCastOnTarget(a) && !AbilityCanBeCastOnGround(a))
         return;
 
     if (target != g)
@@ -329,7 +334,7 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
     float cooldownBefore = a->cdTimer;
     a->cdTimer = a->cooldown;
 
-    if ((a->castType != ABILITY_TOGGLE) || (a->castType == ABILITY_TOGGLE && !a->toggled))
+    if ((a->castType != ABILITY_TOGGLE) || (a->castType == ABILITY_TOGGLE && !a->toggled) || AbilityCanBeCastOnGround(a))
     {
         lua_rawgeti(luaState, LUA_REGISTRYINDEX, a->luafunc_casted);
         
@@ -434,15 +439,15 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
 {
     if (a->cdTimer > 0)
         return false;
-    if (a->castType == ABILITY_INSTANT || a->castType == ABILITY_TOGGLE)
+    if (a->castType & ABILITY_INSTANT || a->castType & ABILITY_TOGGLE)
     {
         return true;
     }
-    if (a->castType == ABILITY_ANGLE)
+    if (a->castType & ABILITY_ANGLE)
     {
         return true;        
     }
-    if (a->castType == ABILITY_POINT)
+    if (a->castType & ABILITY_POINT)
     {
         if (dist(g->position.x,g->position.y,x,y) <= a->range)
             return true;

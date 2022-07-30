@@ -64,7 +64,7 @@ int numAbilitiesAllocated;
 
 
 SoundIndex ability_UI_click_sound;
-SoundIndex ability_UI_click_up_sound;
+SoundIndex ability_UI_click_up_sound;   
 
 
 
@@ -92,3 +92,4 @@ void InitAbilities();
 
 bool ObjectHasManaToCast(GameObject* g, Ability* a); 
 bool AbilityIsOnCooldown(Ability* a);
+bool AbilityCanBeCastOnGround(Ability* a);
