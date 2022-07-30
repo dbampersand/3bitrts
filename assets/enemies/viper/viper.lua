@@ -13,7 +13,6 @@ function update(dt)
     local threatlist = GetThreatRank();
     local target = {};
     target["target"] = threatlist[1];
-    Print(target["target"])
     if (target["target"] ~= nil) then
         CastAbility(0,0,{target});
     end

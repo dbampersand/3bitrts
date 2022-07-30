@@ -1024,7 +1024,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
         //precision error or is there a round going on somewhere??
         //without it, it isn't pushed far enough
         //with it, there can be some weirdness with vibrating units
-        #define extra 0.6f
+        #define extra 1.0f
         if (x)
         {
             if (dV > 0)
@@ -1051,8 +1051,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         float v2 = g2->position.x;
                         CheckCollisions(g2,true,-v,true);
                         v2 -= g2->position.x;
-
-                        CheckCollisionsWorld(g2,true,-v2);
+                        CheckCollisionsWorld(g2,true,1);
 
                     }
                     else
@@ -1089,7 +1088,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         CheckCollisions(g2,true,-v,true);
                         v2 -= g2->position.x;
 
-                        CheckCollisionsWorld(g2,true,-v2);
+                        CheckCollisionsWorld(g2,true,-1);
                        
                     }
                     else
@@ -1119,14 +1118,15 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             v = 1;
                             g2->position.y=0;
                         }
-                        if (g2->position.y + GetHeight(g2) > UI_START_Y)
+                        if (ObjectIsInUI(g2))
                         {
                             g2->position.y = UI_START_Y - GetHeight(g2);
                             v = 1;
                         }
 
                         CheckCollisions(g2,false,-v,true);
-                        CheckCollisionsWorld(g2,false,-v);
+                        v2 -= g2->position.y;
+                        CheckCollisionsWorld(g2,false,-1);
                     }
                     else
                     {
@@ -1148,7 +1148,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             v = -1;
                             g2->position.y=0;
                         }
-                        if (g2->position.y + GetHeight(g2) > UI_START_Y)
+                        if (ObjectIsInUI(g2))
                         {
                             g2->position.y = UI_START_Y - GetHeight(g2);
                             v = 1;
@@ -1156,9 +1156,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
 
                         CheckCollisions(g2,false,-v,true);
                         v2 -= g2->position.y;
-                        float v3 = g2->position.y;
-                        CheckCollisionsWorld(g2,false,-v2);
-                        v3 -= g2->position.y;
+                        CheckCollisionsWorld(g2,false,1);
                     }
                     else
                     {
@@ -1191,10 +1189,24 @@ GameObject* GetCollidedWith(GameObject* g)
     return NULL;
 
 }
+bool ObjectIsInUI(GameObject* g)
+{
+    if (g->position.y + GetHeight(g) > UI_START_Y)
+    {
+        return true;
+    }
+    return false;
+
+}
 void CheckCollisionsWorld(GameObject* g, bool x, float dV)
 {
         int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
     int h = al_get_bitmap_height(sprites[g->spriteIndex].sprite);
+    
+    if (ObjectIsInUI(g))
+    {
+        g->position.y = UI_START_Y - GetHeight(g);
+    }
 
     float posX = g->position.x;
     float posY = g->position.y;
@@ -1246,8 +1258,9 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
         {
             if (currMap->collision[indexLeft] == false)
             {
+               // printf("gg");
                 g->position.x = ((indexLeft/(_MAPSIZE/_GRAIN))*_GRAIN)+_GRAIN;
-                CheckCollisions(g,true,-dV,true);
+                CheckCollisions(g,true,1,true);
 
             }
         }

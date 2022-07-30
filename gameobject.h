@@ -234,3 +234,4 @@ bool ObjIsDecoration(GameObject* g);
 void SetInvincible(GameObject* g, bool b);
 bool ObjIsInvincible(GameObject* g);
 void DrawArrow(int cx, int cy, int targetx, int targety, ALLEGRO_COLOR color);
+bool ObjectIsInUI(GameObject* g);
