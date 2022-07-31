@@ -1410,6 +1410,24 @@ void DrawArrow(int cx, int cy, int targetx, int targety, ALLEGRO_COLOR color)
     al_draw_line(cx,cy,r2x,r2y,color,1);
 
 }
+void DrawObjShadow(GameObject* g)
+{
+    int x = g->position.x;
+    int y = g->position.y;
+    int w = GetWidth(g);
+    int h = GetHeight(g);
+
+    al_draw_line(x+w+1,y+1,x+w+1,y+h,BG,1);
+    al_draw_line(x,y+h+1,x+w-1,y+h+1,BG,1);
+    al_draw_pixel(x+w-1,y+h,BG);
+}
+void DrawObjShadows()
+{
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        DrawObjShadow(&objects[i]);
+    }
+}
 void DrawGameObj(GameObject* g, bool forceInverse)
 {
     if (!(g->properties & OBJ_ACTIVE))
@@ -1419,6 +1437,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
     if (ObjIsDecoration(g))
         c = BG;
+    
         
     Sprite* s = &sprites[g->spriteIndex];
     bool isReversed = IsSelected(g) || forceInverse;

@@ -171,6 +171,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             }
         }
     }
+    DrawObjShadows();
     for (int i = 0; i < numObjects; i++)
     {
         DrawChannelHint(&objects[i]);

@@ -2,8 +2,8 @@ local timer = 0
 
 function setup()
     SetMapSprite("assets/encounters/01/map_1.png")
-    CreateObject("assets/enemies/viper/viper.lua",89,32,TYPE_ENEMY);
-    CreateObject("assets/enemies/viper/viper.lua",100,32,TYPE_ENEMY);
+    CreateObject("assets/enemies/viper/viper.lua",112,32,TYPE_ENEMY);
+    CreateObject("assets/enemies/viper/viper.lua",144,32,TYPE_ENEMY);
    
     SetAutoWin(false);
 end
@@ -20,7 +20,7 @@ function update(dt)
         f1["type"] = EFFECT_CURE;
         f1["value"] = 1;
         timer = 0
-        CreateAOE(RandRange(72,160),RandRange(32,215),"",20,0.25,10,false,ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_VERTICAL_HALF,false,-1,{f1});
+        CreateAOE(RandRange(72,160),RandRange(32,215),"",20,0.25,5,false,ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_VERTICAL_HALF,false,-1,{f1});
     end
 
 end
