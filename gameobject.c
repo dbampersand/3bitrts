@@ -1020,11 +1020,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
         {
             continue;
         }
-        //TODO: investigate *why* this extra value is needed
-        //precision error or is there a round going on somewhere??
-        //without it, it isn't pushed far enough
-        //with it, there can be some weirdness with vibrating units
-        #define extra 1.0f
         if (x)
         {
             if (dV > 0)
@@ -1035,7 +1030,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     if (objectCanPush)
                     {
                         float v = g2->position.x;
-                        g2->position.x = g->position.x + GetWidth(g) + extra;
+                        g2->position.x = g->position.x + GetWidth(g);
                         v -= g2->position.x;
                         if (g2->position.x <0)
                         {
@@ -1070,7 +1065,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     if (objectCanPush)
                     {
                         float v = g2->position.x;
-                        g2->position.x = g->position.x - GetWidth(g2) - extra;
+                        g2->position.x = g->position.x - GetWidth(g2);
 
                         v -= g2->position.x;
                         if (g2->position.x < 0)
@@ -1110,7 +1105,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     if (objectCanPush)
                     {
                         float v = g2->position.y;
-                        g2->position.y = g->position.y + GetHeight(g) + extra;
+                        g2->position.y = g->position.y + GetHeight(g);
                         v -= g2->position.y;
                         float v2 = g2->position.y;
                         if (g2->position.y <0)
@@ -1126,7 +1121,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
 
                         CheckCollisions(g2,false,-v,true);
                         v2 -= g2->position.y;
-                        CheckCollisionsWorld(g2,false,-1);
+                        CheckCollisionsWorld(g2,false,-v);
                     }
                     else
                     {
@@ -1140,7 +1135,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     if (objectCanPush)
                     {
                         float v = g2->position.y;
-                        g2->position.y = g->position.y - GetHeight(g2) - extra;
+                        g2->position.y = g->position.y - GetHeight(g2);
                         v -= g2->position.y;
                         float v2 = g2->position.y;
                         if (g2->position.y <0)
@@ -1151,12 +1146,12 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         if (ObjectIsInUI(g2))
                         {
                             g2->position.y = UI_START_Y - GetHeight(g2);
-                            v = 1;
+                            v2 = -1;
                         }
 
                         CheckCollisions(g2,false,-v,true);
                         v2 -= g2->position.y;
-                        CheckCollisionsWorld(g2,false,1);
+                        CheckCollisionsWorld(g2,false,-v);
                     }
                     else
                     {
@@ -1321,14 +1316,23 @@ void Move(GameObject* g, float delta)
         float moveY = ytarg - g->position.y;
 
         float dist = sqrt(moveX*moveX+moveY*moveY);
+
+        float dX = (moveX / dist * g->speed) * delta;
+        float dY = (moveY / dist * g->speed) * delta;
+
         if (dist <= DIST_DELTA)
         {
             g->position.x = xtarg;
+            CheckCollisions(g,true, dX,ObjectCanPush(g));
+            CheckCollisionsWorld(g,true, dX);
+
             g->position.y = ytarg;
+            CheckCollisions(g,false, dY,ObjectCanPush(g));
+            CheckCollisionsWorld(g,false, dY);
+
+
             return;
         }
-        float dX = (moveX / dist * g->speed) * delta;
-        float dY = (moveY / dist * g->speed) * delta;
         double mDist = sqrt(dX * dX + dY * dY);
         if (dist <= mDist)
         {
