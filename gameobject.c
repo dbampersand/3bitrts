@@ -1425,19 +1425,20 @@ void DrawObjShadows()
 {
     for (int i = 0; i < MAX_OBJS; i++)
     {
-        DrawObjShadow(&objects[i]);
+        if (IsActive(&objects[i]) && !ObjIsDecoration(&objects[i]))
+            DrawObjShadow(&objects[i]);
     }
 }
 void DrawGameObj(GameObject* g, bool forceInverse)
 {
     if (!(g->properties & OBJ_ACTIVE))
         return;
-
+    
     bool b = IsOwnedByPlayer(g);
     ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
     if (ObjIsDecoration(g))
         c = BG;
-    
+    RedrawMapSegmentUnderObj(g);
         
     Sprite* s = &sprites[g->spriteIndex];
     bool isReversed = IsSelected(g) || forceInverse;

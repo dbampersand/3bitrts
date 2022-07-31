@@ -5,7 +5,7 @@
 #define _GRAIN 4
 typedef struct Sprite Sprite; 
 #define _MAPSIZE 256
-
+typedef struct GameObject GameObject;
 
 typedef struct Map 
 {   
@@ -30,3 +30,4 @@ void SetMap(Map* m);
 void InitMaps();
 void DrawMap();
 void UpdateMap(Map* m, float dt);
+void RedrawMapSegmentUnderObj(GameObject* g);
