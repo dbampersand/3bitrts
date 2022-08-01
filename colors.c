@@ -55,7 +55,7 @@ Color ALColorToCol(ALLEGRO_COLOR c)
 void InitColors()
 {
     BG = al_map_rgba(24,5,26,255);
-    GROUND = al_map_rgba(84,83,172,255);
+    GROUND = al_map_rgba(92,92,189,255);
 
     ENEMY = al_map_rgba(95,247,247,255);
     FRIENDLY = al_map_rgba(255,255,255,255);
