@@ -21,7 +21,7 @@ function casted()
     f1["duration"] = 1      ;
     f1["triggersPerSecond"] = 1
 
-    aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_DAMAGE,DITHER_HALF, false,-1,{f1})
+    aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_DAMAGE,DITHER_HALF, false,-1,{f1})
     return true;
 end
 function untoggle()
@@ -34,7 +34,8 @@ end
 function onhit(x,y,objhit)
 end
 
-function abilitytick(x, y, durationLeft)
-    MoveAttack(GetAttackRef(),GetX(obj),GetY(obj));
-    
+
+function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
+    Print(parent);
+    MoveAttack(aoe,GetX(parent),GetY(parent));
 end

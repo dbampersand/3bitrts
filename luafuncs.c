@@ -665,7 +665,6 @@ void CreateProjectile(lua_State* l, float x, float y, const char* portrait, int 
     memcpy(a.effects,effects,sizeof(Effect)*len);
     a.numEffects = len;
     a.attackType = attackType;
-    a.ownedBy = currGameObjRunning;
     a.properties = properties;
 
     a.speed = speed;
@@ -966,7 +965,6 @@ int L_CreateCone(lua_State* l)
     a.ownedBy = currGameObjRunning;
     a.properties = properties;
     a.cameFrom = currAbilityRunning;
-    a.ownedBy = currGameObjRunning;
     a.shouldCallback = shouldCallback;
     a.duration = duration;
     a.attackType = ATTACK_CONE;
@@ -1828,13 +1826,17 @@ int L_AddAbility(lua_State* l)
 int L_MoveAttack(lua_State* l)
 {
     int index = lua_tonumber(l,1);
-    if (currAttackRunning)
+    if (index >= 0 && index < MAX_ATTACKS)
     {
+        Attack* a = &attacks[index];
+        if (a)
+        {
 
-        int x = lua_tonumber(l,2);
-        int y = lua_tonumber(l,3);
-        currAttackRunning->x = x;
-        currAttackRunning->y = y;
+            int x = lua_tonumber(l,2);
+            int y = lua_tonumber(l,3);
+            a->x = x;
+            a->y = y;
+        }
     }
     return 0;
 }

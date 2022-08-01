@@ -38,10 +38,9 @@ Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float ti
     a.effects = calloc(numEffects,sizeof(Effect));
     memcpy(a.effects,effects,sizeof(Effect)*numEffects);
     a.numEffects = numEffects;
-    a.ownedBy = currGameObjRunning;
+    //a.ownedBy = currGameObjRunning;
     a.properties = properties;
     a.cameFrom = currAbilityRunning;
-    a.ownedBy = currGameObjRunning;
     a.shouldCallback = shouldCallback;
     a.duration = duration;
     a.attackType = ATTACK_AOE;
@@ -514,19 +513,22 @@ void UpdateAttack(Attack* a, float dt)
     {
         currAbilityRunning = a->cameFrom;
         currGameObjRunning = a->ownedBy;
-        currAttackRunning = a;
+        //currAttackRunning = a;
+        
+        if (currAbilityRunning)
+        {
+            lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_abilitytick);
 
-        lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_abilitytick);
+            lua_pushnumber(luaState,a->x + a->radius/2.0f);
+            lua_pushnumber(luaState,a->y + a->radius/2.0f);
+            lua_pushnumber(luaState,a->timer);    
+            lua_pushinteger(luaState,currGameObjRunning-objects);
+            lua_pushinteger(luaState,a->target - objects);
+            lua_pushinteger(luaState,dt);
+            lua_pushinteger(luaState,a-attacks);
 
-        lua_pushnumber(luaState,a->x + a->radius/2.0f);
-        lua_pushnumber(luaState,a->y + a->radius/2.0f);
-        lua_pushnumber(luaState,a->timer);    
-        lua_pushinteger(luaState,currGameObjRunning-objects);
-        lua_pushinteger(luaState,a->target - objects);
-        lua_pushinteger(luaState,dt);
-        lua_pushinteger(luaState,a-attacks);
-
-        lua_pcall(luaState,7,0,0);
+            lua_pcall(luaState,7,0,0);
+        }
 
     }
     if (isSoak)

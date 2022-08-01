@@ -39,7 +39,7 @@ typedef struct Attack
     ATTACK_PROPERTIES properties;
     GameObject* ownedBy;
     float speed;    
-
+    
     bool shouldCallback;
     float duration;
     float tickrate;

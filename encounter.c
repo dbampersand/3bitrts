@@ -199,6 +199,10 @@ Encounter* GetEncounterByName(char* name)
 }
 void UpdateEncounter(float dt)
 {
+    currGameObjRunning = NULL;
+    currAbilityRunning = NULL;
+    currAttackRunning = NULL;
+
     if (currEncounterRunning)
     {
         //CallLuaFunc(currEncounterRunning->luafunc_update);
