@@ -344,7 +344,14 @@ void UpdateAttack(Attack* a, float dt)
 {
     if (!(a->properties & ATTACK_ACTIVE))
         return;
-    if (a->cameFrom && a->cameFrom->castType != ABILITY_TOGGLE)
+    if (a->cameFrom)
+    {
+        if (a->cameFrom->castType != ABILITY_TOGGLE)
+        {
+            a->duration -= dt;
+        }
+    }
+    else
     {
         a->duration -= dt;
     }
