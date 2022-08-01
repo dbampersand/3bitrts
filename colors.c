@@ -54,15 +54,15 @@ Color ALColorToCol(ALLEGRO_COLOR c)
 }
 void InitColors()
 {
-    BG = al_map_rgba(40,32,36,255);
-    GROUND = al_map_rgba(115,119,148,255);
+    BG = al_map_rgba(24,5,26,255);
+    GROUND = al_map_rgba(84,83,172,255);
 
-    ENEMY = al_map_rgba(60,255,255,255);
+    ENEMY = al_map_rgba(95,247,247,255);
     FRIENDLY = al_map_rgba(255,255,255,255);
 
-    WHITE = al_map_rgba(255,255,255,255);
+    WHITE = al_map_rgba(242,246,255,255);
   
-    HEAL = al_map_rgba(92,204,12,255);
-    POISON = al_map_rgba(195,94,241,255);
-    DAMAGE = al_map_rgba(248,100,100,255);
+    HEAL = al_map_rgba(119,249,26,255);
+    POISON = al_map_rgba(237,66,229,255);
+    DAMAGE = al_map_rgba(250,95,95,255);
 }
