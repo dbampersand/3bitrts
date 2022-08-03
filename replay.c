@@ -118,7 +118,6 @@ void SerializeSection(Replay* r, bool finished)
 
         //fwrite overwrites
         char* z = "\0";
-        //  fwrite(z,1,3,tempFile);
         fwrite(&z,sizeof(char),1,tempFile);
         fwrite(&z,sizeof(char),1,tempFile);
         fwrite(&z,sizeof(char),1,tempFile);
@@ -181,7 +180,6 @@ void SerializeSection(Replay* r, bool finished)
    
 
 }
-//TODO: Every 10mb or so serialize this to disk
 ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
 {
    // if (!frameTest)

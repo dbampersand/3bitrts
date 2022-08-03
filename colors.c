@@ -1,5 +1,6 @@
 #include "colors.h"
 
+//todo: change this to a lookup table
 ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy)
 {
     if (c ==  COLOR_DEFAULT)
@@ -33,6 +34,7 @@ bool AlColIsEq(ALLEGRO_COLOR c, ALLEGRO_COLOR c2)
 {
     return (c.r == c2.r && c.g == c2.g && c.b == c2.b && c.a == c2.a);
 }
+//todo: change this to a lookup table
 Color ALColorToCol(ALLEGRO_COLOR c)
 {
     if (AlColIsEq(c,BG))
@@ -58,9 +60,9 @@ void InitColors()
     GROUND = al_map_rgba(92,92,189,255);
 
     ENEMY = al_map_rgba(95,247,247,255);
-    FRIENDLY = al_map_rgba(255,255,255,255);
+    FRIENDLY = al_map_rgba(242,246,255,255);
 
-    WHITE = al_map_rgba(242,246,255,255);
+    WHITE = al_map_rgba(255,255,255,255);
   
     HEAL = al_map_rgba(119,249,26,255);
     POISON = al_map_rgba(237,66,229,255);

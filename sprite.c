@@ -30,7 +30,7 @@ void GenerateInvertedSprite(Sprite* s)
 
     ALLEGRO_BITMAP* newSprite = al_create_bitmap(w,h);
 
-    ALLEGRO_COLOR white = FRIENDLY;
+    ALLEGRO_COLOR white = al_map_rgba(255,255,255,255);//FRIENDLY;
     ALLEGRO_COLOR transparent = al_map_rgba(0,0,0,0);
 
     ALLEGRO_BITMAP* before = al_get_target_bitmap();
