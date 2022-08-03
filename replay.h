@@ -3,13 +3,27 @@
 #include <stdbool.h>
 #include "ui.h"
 #include "sound.h"
-//100mb
-#define REPLAY_PREALLOC 1048576 
+
+#define REPLAY_PREALLOC 39321600
+//10 seconds worth @ 60fps 
+#define FRAMES_PREALLOC 60 * 10
+
 #define NUM_SOUNDS_TO_SAVE 32
 #define REP_UI_PLAY_SCRUBBER_SIZE 215
 
+const char* REPLAY_HEADER;
+
+
+long bufferPosition;
+char* replayBuffer;
+
+
 //for saving in replay
 int soundPlayedThisFramePosition;
+//num frames before flushing to disk
+#define TEMP_REPLAY_NAME "CURRREP"
+FILE* tempFile;
+
 
 typedef struct ReplayFrame
 {
@@ -21,11 +35,11 @@ typedef struct ReplayFrame
 typedef struct Replay
 {
     ReplayFrame* frames;
-    uint16_t numFrames;
-    uint16_t framePlayPosition;
+    uint32_t numFrames;
+    uint32_t framePlayPosition;
     bool playing;
 
-
+    uint32_t totalFrames;
 }Replay;
 
 Replay replay;
@@ -44,4 +58,5 @@ void ReplayToDisk(Replay* r);
 
 bool LoadReplay(char* path);
 void RemoveReplay(Replay* r);
+void SerializeSection(Replay* r, bool finished);
 

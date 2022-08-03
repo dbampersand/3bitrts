@@ -36,6 +36,5 @@ end
 
 
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
-    Print(parent);
     MoveAttack(aoe,GetX(parent),GetY(parent));
 end

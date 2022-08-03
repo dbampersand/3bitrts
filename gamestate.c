@@ -14,6 +14,7 @@
 #include "ui.h"
 #include "loadscreen.h"
 #include "attack.h"
+#include "replay.h"
 bool TransitionTo(GameState state)
 {
     if (transitioningTo == state)
@@ -499,6 +500,7 @@ void SetGameStateToEndscreen()
 {
     //transitioningTo = GAMESTATE_END;
     //transitionTimer = 0;    
+    SerializeSection(&replay,true);
     TransitionTo(GAMESTATE_END);
     ui.endScreen_Retry.enabled = true;
 }

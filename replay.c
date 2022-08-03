@@ -17,6 +17,7 @@
 #else
 #  define SET_BINARY_MODE(file)
 #endif
+const char* REPLAY_HEADER = "REP";
 
 //FORMAT:
 //uint32_t number of bytes in the current frame
@@ -28,12 +29,20 @@ void InitReplay()
     replay.frames = NULL;
     replay.numFrames = 0;
     replay.playing = true;
+    replayBuffer = malloc(REPLAY_PREALLOC*sizeof(char));
+    replay.frames = calloc(FRAMES_PREALLOC,sizeof(ReplayFrame));
+    
+    remove("replays/" TEMP_REPLAY_NAME);
+
 }
 void NewReplay()
 {
+    bufferPosition = 0; 
+    if (!replayBuffer)
+        replayBuffer = malloc(REPLAY_PREALLOC*sizeof(char));
 
     if (!replay.frames)
-        replay.frames = malloc(1*sizeof(char));
+        replay.frames = malloc(FRAMES_PREALLOC*sizeof(ReplayFrame));
     replay.numFrames = 0;
 }
 void LoadFrame(ALLEGRO_BITMAP* screen, ReplayFrame* frame)
@@ -44,10 +53,10 @@ void LoadFrame(ALLEGRO_BITMAP* screen, ReplayFrame* frame)
     for (int i = 0; i < frame->dataLen; i += (sizeof(uint16_t)+sizeof(char)))
     {
         uint16_t size; 
-        memcpy(&size,&frame->compressedData[i],sizeof(uint16_t));
+         memcpy(&size,&frame->compressedData[i],sizeof(uint16_t));
         char c = frame->compressedData[i+sizeof(uint16_t)];
 
-        while (size > 0)
+            while (size > 0)
         {
             al_draw_pixel(x,y,GetColor(c,0));
             x++;
@@ -67,13 +76,13 @@ void RecordReplay(ALLEGRO_BITMAP* screen)
     //create new frame
     ReplayFrame rf = SaveFrame(screen);
     replay.numFrames++;
-    if (replay.frames)
-        replay.frames = realloc(replay.frames,replay.numFrames*sizeof(ReplayFrame));
-    else
-    {
-        replay.numFrames = 1;
-        replay.frames = calloc(replay.numFrames,sizeof(ReplayFrame));
-    }
+    //if (replay.frames)
+      //  replay.frames = realloc(replay.frames,replay.numFrames*sizeof(ReplayFrame));
+    //else
+    //{
+   //     replay.numFrames = 1;
+    //    replay.frames = calloc(replay.numFrames,sizeof(ReplayFrame));
+    //}
     replay.frames[replay.numFrames-1] = rf;
 
 }
@@ -86,6 +95,7 @@ void PlayReplay(ALLEGRO_BITMAP* screen)
         replay.playing = false;
         replay.framePlayPosition = replay.numFrames-1;
     }
+    printf("frame%i\n",replay.framePlayPosition);
     LoadFrame(screen,&replay.frames[replay.framePlayPosition]);
     for (int i = 0; i < NUM_SOUNDS_TO_SAVE; i++)
     {
@@ -95,6 +105,80 @@ void PlayReplay(ALLEGRO_BITMAP* screen)
             PlaySound(&replay.frames[replay.framePlayPosition].soundsPlayedThisFrame[i],1.0f);
         }
     }
+}
+void SerializeSection(Replay* r, bool finished)
+{
+   r->totalFrames += r->numFrames;
+
+    bool firstWrite = false;
+   if (!tempFile)
+   {
+        remove("replays/" TEMP_REPLAY_NAME);
+        tempFile = fopen("replays/" TEMP_REPLAY_NAME , "wb+");
+
+        //fwrite overwrites
+        char* z = "\0";
+        //  fwrite(z,1,3,tempFile);
+        fwrite(&z,sizeof(char),1,tempFile);
+        fwrite(&z,sizeof(char),1,tempFile);
+        fwrite(&z,sizeof(char),1,tempFile);
+
+        fwrite(&z,sizeof(char),1,tempFile);
+        fwrite(&z,sizeof(char),1,tempFile);
+        fwrite(&z,sizeof(char),1,tempFile);
+        fwrite(&z,sizeof(char),1,tempFile);
+
+
+   } 
+
+   for (int i = 0; i < r->numFrames; i++)
+   {
+        ReplayFrame* rf = &r->frames[i];
+        fwrite(&rf->dataLen, sizeof(rf->dataLen),1,tempFile);
+        fwrite(rf->compressedData,sizeof(char),rf->dataLen,tempFile);
+        char numSounds = 0;
+        for (int i = 0; i < NUM_SOUNDS_TO_SAVE; i++)
+        {
+            if (rf->soundsPlayedThisFrame[i].path)
+            {
+                numSounds++;
+            }
+        }
+        fwrite(&numSounds,sizeof(numSounds),1,tempFile);
+        for (int i = 0; i < NUM_SOUNDS_TO_SAVE; i++)
+        {
+            if (rf->soundsPlayedThisFrame[i].path)
+            {
+                uint16_t len = strlen(rf->soundsPlayedThisFrame[i].path);
+                fwrite(&len,sizeof(len),1,tempFile);
+                fwrite(rf->soundsPlayedThisFrame[i].path,sizeof(char),len,tempFile);
+            }
+        }
+
+   }
+
+   if (finished)
+   {
+        //fclose(tempFile);
+        //tempFile = fopen("replays/" TEMP_REPLAY_NAME , "r+b");
+        rewind(tempFile);
+
+        char* header = "REP";
+        fwrite(header,sizeof(char),strlen(header),tempFile);
+
+        fwrite(&r->totalFrames,sizeof(r->totalFrames),1,tempFile);
+        fclose(tempFile);
+        tempFile = NULL;
+        return;
+
+   }
+   r->numFrames=0;
+   r->framePlayPosition=0;
+
+   bufferPosition = 0;
+
+
+   
 
 }
 //TODO: Every 10mb or so serialize this to disk
@@ -104,8 +188,12 @@ ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
     //{
     //    frameTest = malloc(_SCREEN_SIZE * _SCREEN_SIZE*(sizeof(char)+sizeof(uint16_t)));
    // }
+   if (replay.numFrames >= FRAMES_PREALLOC || bufferPosition + _SCREEN_SIZE*_SCREEN_SIZE*sizeof(char) +  sizeof(uint32_t) + (sizeof(ReplayFrame)-sizeof(char*)) >= REPLAY_PREALLOC)
+   {
+        SerializeSection(&replay,false);
+   }
     ReplayFrame rf = {0};
-    rf.compressedData =  malloc(_SCREEN_SIZE * _SCREEN_SIZE*(sizeof(char)+sizeof(uint16_t)));
+    rf.compressedData =  &replayBuffer[bufferPosition];//malloc(_SCREEN_SIZE * _SCREEN_SIZE*(sizeof(char)+sizeof(uint16_t)));
     int toGetTo = _SCREEN_SIZE * _SCREEN_SIZE;
     int count = 0;
     ALLEGRO_LOCKED_REGION* region = al_lock_bitmap(screen,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READONLY);
@@ -157,7 +245,8 @@ ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
     rf.dataLen = RLEPosition;
    al_unlock_bitmap(screen);
    int newSize;
-   rf.compressedData = realloc(rf.compressedData,rf.dataLen*sizeof(char));
+   bufferPosition += RLEPosition;
+   //rf.compressedData = realloc(rf.compressedData,rf.dataLen*sizeof(char));
     //RLECompressArray(colors,toGetTo,frameTest,&newSize);
     return rf;
 }
@@ -294,11 +383,13 @@ void RemoveReplay(Replay* r)
         for (int i = 0; i < r->numFrames; i++)
         {
             ReplayFrame* rf = &r->frames[i];
-            if (rf->compressedData)
-                free(rf->compressedData);
+           // if (rf->compressedData)
+             //   free(rf->compressedData);
         }
         free(r->frames);
     }
+    free(replayBuffer);
+    replayBuffer = NULL;
     memset(r,0,sizeof(Replay));
 }
 bool LoadReplay(char* path)
@@ -312,7 +403,7 @@ bool LoadReplay(char* path)
         {
             Replay* r = &replay;
 
-            RemoveReplay(r);
+            RemoveReplay(r);    
             inf(f,temp);
             fclose(temp);
             temp = fopen("replays/temp","rb");
@@ -322,6 +413,12 @@ bool LoadReplay(char* path)
 
             char* repBuffer = calloc(numBytes,sizeof(char));
             fread(repBuffer, 1, numBytes, temp);
+            
+            if (replayBuffer)
+                replayBuffer = realloc(replayBuffer,numBytes*sizeof(char));
+            else
+                replayBuffer = calloc(numBytes,sizeof(char));
+
             char header[3];
             int byteCount = 3;
             if (numBytes >= byteCount)
@@ -331,14 +428,20 @@ bool LoadReplay(char* path)
                     return false;
                 }
             }
-            byteCount += sizeof(r->numFrames);
-            if (numBytes>= byteCount)
+            byteCount += sizeof(r->totalFrames);
+            if (numBytes >= byteCount)
             {
-                memcpy(&replay.numFrames,&repBuffer[byteCount-sizeof(r->numFrames)],sizeof(r->numFrames));
+                memcpy(&replay.totalFrames,&repBuffer[byteCount-sizeof(r->totalFrames)],sizeof(r->totalFrames));
+                replay.numFrames = replay.totalFrames;
             }
-            r->frames = calloc(r->numFrames,sizeof(ReplayFrame));
-            for (int i = 0; i < r->numFrames; i++)
+            r->frames = calloc(r->totalFrames,sizeof(ReplayFrame));
+            
+            memcpy(replayBuffer,repBuffer,sizeof(char) * (numBytes));
+
+            int position = 7;
+            for (int i = 0; i < r->totalFrames; i++)
             {
+
                 ReplayFrame* rf = &r->frames[i];
                 memset(rf,0,sizeof(ReplayFrame));
                 byteCount += sizeof(rf->dataLen);
@@ -354,8 +457,8 @@ bool LoadReplay(char* path)
 
                 if (numBytes >= rf->dataLen)
                 {
-                    rf->compressedData = calloc(rf->dataLen+1,sizeof(char));
-                    memcpy(rf->compressedData,&repBuffer[byteCount-rf->dataLen],sizeof(char) * rf->dataLen);
+                    rf->compressedData = &replayBuffer[byteCount-rf->dataLen];//calloc(rf->dataLen+1,sizeof(char));
+                    position += rf->dataLen;
                 }
                 else
                 {
@@ -376,8 +479,8 @@ bool LoadReplay(char* path)
                 int index = 0;
                 for (int i = 0; i < soundLen; i++)
                 {
-                    uint32_t pathLen;
-                    byteCount +=sizeof(pathLen);
+                    uint16_t pathLen;
+                    byteCount += sizeof(pathLen);
                     if (numBytes >= byteCount)
                     {
                         memcpy(&pathLen,&repBuffer[byteCount-sizeof(pathLen)],sizeof(pathLen));
@@ -402,6 +505,7 @@ bool LoadReplay(char* path)
                         return false;
                     }
 
+
                 }
 
 
@@ -420,6 +524,7 @@ bool LoadReplay(char* path)
 void ReplayToDisk(Replay* r)
 {
     //zlib to compress
+    r->framePlayPosition = 0;
     
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
@@ -428,11 +533,10 @@ void ReplayToDisk(Replay* r)
     char* filename = calloc(buffsiz+1,sizeof(char));
     sprintf(filename,"replays/%d%02d%02d_%02d%02d%02d_.rep", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
-    FILE* f = fopen(filename, "wb+");
-    char* header = "REP";
-    fwrite(header,sizeof(char),strlen(header),f);
-    fwrite(&r->numFrames,sizeof(r->numFrames),1,f);
-
+   // FILE* f = fopen(filename, "wb+");
+    //fwrite(header,sizeof(char),strlen(header),f);
+    //fwrite(&r->numFrames,sizeof(r->totalFrames),1,f);
+        /*
     for (int i = 0; i < r->numFrames; i++)
     {
         ReplayFrame* rf = &r->frames[i];
@@ -460,9 +564,9 @@ void ReplayToDisk(Replay* r)
 
     }
     fclose(f);
+    */
 
-
-    f = fopen(filename, "rb");
+    FILE* f = fopen("replays/" TEMP_REPLAY_NAME, "rb");
 
     char* compressedFilename = calloc(buffsiz+1,sizeof(char));
     sprintf(compressedFilename,"replays/%d%02d%02d_%02d%02d%02d.rep", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);

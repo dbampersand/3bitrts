@@ -95,7 +95,6 @@ void PlaySound(Sound* s, float relativeVolume)
     }
     if (gameState == GAMESTATE_INGAME && soundPlayedThisFramePosition < NUM_SOUNDS_TO_SAVE)
     {
-        if (replay.frames)
         {
             replay.frames[replay.numFrames-1].soundsPlayedThisFrame[soundPlayedThisFramePosition] = *s;
             soundPlayedThisFramePosition++;

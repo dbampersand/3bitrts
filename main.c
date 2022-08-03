@@ -80,6 +80,7 @@ void init()
     {
         SetEncounterRandAugments(encounters[i]);
     }
+    InitReplay();
 }
 
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
@@ -307,10 +308,6 @@ int main(int argc, char* args[])
 
     fflush(stdout);
 
-    if (LoadReplay("replays/20220706_022622"))
-    {
-        printf("Load OK");
-    }
 
 
     while (gameState != GAMESTATE_EXIT) {
