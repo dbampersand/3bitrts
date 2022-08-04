@@ -106,6 +106,7 @@ void PlayReplay(ALLEGRO_BITMAP* screen)
         }
     }
 }
+//TODO: look into compressing this or appending it to an already compressed file
 void SerializeSection(Replay* r, bool finished)
 {
    r->totalFrames += r->numFrames;
@@ -583,4 +584,7 @@ void ReplayToDisk(Replay* r)
 
     free(filename);
     free(compressedFilename);
+
+    remove("replays/" TEMP_REPLAY_NAME);
+
 }

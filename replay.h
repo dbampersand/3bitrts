@@ -60,3 +60,5 @@ bool LoadReplay(char* path);
 void RemoveReplay(Replay* r);
 void SerializeSection(Replay* r, bool finished);
 
+int def(FILE *source, FILE *dest, int level);
+void zerr(int ret);
