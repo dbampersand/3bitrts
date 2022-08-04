@@ -85,7 +85,8 @@ void SetSpriteToWhite(ALLEGRO_BITMAP* s)
         {
             for (int x = 0; x < w; x++)
             {
-                if (al_get_pixel(s,x,y).a > 0.5f)
+                ALLEGRO_COLOR pixel = al_get_pixel(s,x,y);
+                if (pixel.a > 0.5f && pixel.g > 0.5f && pixel.b > 0.5f && pixel.g > 0.5f)
                 {
                     al_put_pixel(x,y,white);
                 }
@@ -96,7 +97,33 @@ void SetSpriteToWhite(ALLEGRO_BITMAP* s)
         al_set_target_bitmap(before);
     }
 }
+Sprite* NewSprite(int w, int h)
+{
+    if (!sprites)
+    {
+        sprites = calloc(2,sizeof(Sprite));
+        sprites[0].path = "";
+        numSprites=1;
+        maxSprites=2;
 
+        //dodge a lot of crashes by setting the 0th sprite to a zeroed bitmap
+        sprites[0].sprite = al_create_bitmap(0,0);
+        sprites[0].inverseSprite = al_create_bitmap(0,0);
+
+    }
+
+    if (numSprites+1 > maxSprites)
+    {
+        maxSprites+=32;
+        sprites = realloc(sprites,maxSprites*sizeof(Sprite));
+    }
+    ALLEGRO_BITMAP* b = al_create_bitmap(w,h);
+
+    Sprite* s = &sprites[numSprites];
+    s->sprite = b;
+    numSprites++;
+    return s;
+}
 unsigned int LoadSprite(const char* path, bool needsInverted)
 {
     if (!sprites)

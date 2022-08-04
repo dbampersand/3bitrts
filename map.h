@@ -12,6 +12,8 @@ typedef struct Map
     bool collision[_MAPSIZE*_MAPSIZE/_GRAIN];
     char* path;
     unsigned int spriteIndex;
+    unsigned int secondLayerSpriteIndex;
+
 
     int luafunc_update;
     int luafunc_setup;

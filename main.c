@@ -380,8 +380,6 @@ int main(int argc, char* args[])
             if (al_key_down(&keyState,ALLEGRO_KEY_I) && !al_key_down(&keyStateLastFrame,ALLEGRO_KEY_I))
                 replay.framePlayPosition = 0;
 
-            if (al_key_down(&keyState,ALLEGRO_KEY_M) && !al_key_down(&keyStateLastFrame,ALLEGRO_KEY_M))
-                ReplayToDisk(&replay);
 
 
             if (al_key_down(&keyState,ALLEGRO_KEY_I))

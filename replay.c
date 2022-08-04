@@ -95,7 +95,6 @@ void PlayReplay(ALLEGRO_BITMAP* screen)
         replay.playing = false;
         replay.framePlayPosition = replay.numFrames-1;
     }
-    printf("frame%i\n",replay.framePlayPosition);
     LoadFrame(screen,&replay.frames[replay.framePlayPosition]);
     for (int i = 0; i < NUM_SOUNDS_TO_SAVE; i++)
     {
@@ -202,7 +201,7 @@ ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
     int RLEPosition = 0;
     while (count < toGetTo)
     {
-        //can be made faster by reading directly?
+        //TODO: can be made faster by reading directly?
         ALLEGRO_COLOR pixel = al_get_pixel(screen,x,y);
         // al_unmap_rgb(pixels[count],&r,&g,&b);
         char pix = ALColorToCol(pixel);
@@ -232,7 +231,7 @@ ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
                 memcpy(&rf.compressedData[RLEPosition],&amt,sizeof(uint16_t));
                 RLEPosition += sizeof(uint16_t);
                 memcpy(&rf.compressedData[RLEPosition],&pix,sizeof(char));
-                RLEPosition+= sizeof(char);
+                RLEPosition += sizeof(char);
                 break;
             }
             x2++;

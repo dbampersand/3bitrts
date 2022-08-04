@@ -28,3 +28,4 @@ void DrawSpriteRegion(Sprite* s, float sx, float sy, float sw, float sh, float d
 void InitSprites();
 int GetHeightSprite(Sprite* s);
 int GetWidthSprite(Sprite* s);
+Sprite* NewSprite(int w, int h);

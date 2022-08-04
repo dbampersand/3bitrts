@@ -71,16 +71,18 @@ void InitColors()
     HEAL = al_map_rgba(119,249,26,255);
     POISON = al_map_rgba(237,66,229,255);
     DAMAGE = al_map_rgba(250,95,95,255);
-
+    GROUND_DARK = al_map_rgba(68,37,106,255);
 
     ALColorLookup[COLOR_BG] = &BG;
     ALColorLookup[COLOR_GROUND] = &GROUND;
+    ALColorLookup[COLOR_GROUND_DARK] = &GROUND_DARK;
     ALColorLookup[COLOR_ENEMY] = &ENEMY;
     ALColorLookup[COLOR_FRIENDLY] = &FRIENDLY;
     ALColorLookup[COLOR_WHITE] = &WHITE;
     ALColorLookup[COLOR_HEAL] = &HEAL;
     ALColorLookup[COLOR_POISON] = &POISON;
     ALColorLookup[COLOR_DAMAGE] = &DAMAGE;
+    
 
     for (int i = 1; i < COLOR_ALL-1; i++)
     {

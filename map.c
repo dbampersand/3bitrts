@@ -22,19 +22,36 @@ void PreprocessMap(Map* map)
     al_lock_bitmap(sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
 
     al_set_target_bitmap(sprite);
+    float bgThreshhold = 0.6f;
 
    for (int y = 0; y < h; y++) {
       for (int x = 0; x < w; x++) {
           
         ALLEGRO_COLOR pixel = al_get_pixel(sprite, x, y);
-        if (pixel.a) {
+
+        if (pixel.a && pixel.r > bgThreshhold && pixel.g > bgThreshhold && pixel.b > bgThreshhold) {
             int index = GetIndex(_MAPSIZE/_GRAIN,x/_GRAIN,y/_GRAIN);
             map->collision[index] = true;
         }
       }
    }
+    Sprite* secondLayer = NewSprite(w,h);
+    secondLayer-> path = sprites[map->spriteIndex].path;
+    map->secondLayerSpriteIndex = secondLayer - sprites;
+   al_set_target_bitmap(secondLayer->sprite);
+   al_lock_bitmap(secondLayer->sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_WRITEONLY);
+    for (int y = 0; y < h; y++) {
+      for (int x = 0; x < w; x++) {
+        ALLEGRO_COLOR pixel = al_get_pixel(sprite, x, y);
+        if (pixel.a && pixel.r <= bgThreshhold && pixel.g <= bgThreshhold && pixel.b <= bgThreshhold) {
+            al_draw_pixel(x,y,WHITE);
+        }
+        }
+    }
+   al_unlock_bitmap(secondLayer->sprite);
    al_unlock_bitmap(sprite);
 }
+
 void loadLuaGameMap(lua_State* l, const char* filename, Map* m) 
 {
     char* cpy = calloc(strlen(filename)+1,sizeof(char));
@@ -142,6 +159,8 @@ void InitMaps()
 void DrawMap()
 {
     DrawSprite(&sprites[currMap->spriteIndex],0,0,0.5f,0.5f,0,GROUND,false);
+    DrawSprite(&sprites[currMap->secondLayerSpriteIndex],0,0,0.5f,0.5f,0,GROUND_DARK,false);
+
 }
 void UpdateMap(Map* m, float dt)
 {
@@ -165,4 +184,6 @@ void RedrawMapSegmentUnderObj(GameObject* g)
 
 
     DrawSpriteRegion(&sprites[currMap->spriteIndex],x,y,w,h,x,y,GROUND,false);
+    DrawSpriteRegion(&sprites[currMap->secondLayerSpriteIndex],x,y,w,h,x,y,GROUND_DARK,false);
+
 }
