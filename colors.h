@@ -35,7 +35,10 @@ typedef enum Color
     COLOR_GROUND,
     COLOR_POISON,
     COLOR_HEAL,
-    COLOR_DAMAGE
+    COLOR_DAMAGE,
+    COLOR_WHITE,
+
+    COLOR_ALL //used to get the number of elements in enum
 } Color;
 
 ALLEGRO_COLOR BG;
@@ -47,6 +50,10 @@ ALLEGRO_COLOR WHITE;
 ALLEGRO_COLOR POISON;
 ALLEGRO_COLOR HEAL;
 ALLEGRO_COLOR DAMAGE;
+
+ALLEGRO_COLOR* ALColorLookup[COLOR_ALL];
+Color ColorHashTable[256];
+
 
 ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy);
 Color ALColorToCol(ALLEGRO_COLOR c);

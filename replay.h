@@ -35,7 +35,7 @@ typedef struct ReplayFrame
 typedef struct Replay
 {
     ReplayFrame* frames;
-    uint32_t numFrames;
+    uint32_t numFrames; 
     uint32_t framePlayPosition;
     bool playing;
 

@@ -4,5 +4,7 @@ replays/*
 *.vscode
 .vscode/*
 *.json
+*.gcda
+*.gcno
 game.dSYM/Contents
 game

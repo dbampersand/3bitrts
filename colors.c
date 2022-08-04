@@ -1,6 +1,5 @@
 #include "colors.h"
 
-//todo: change this to a lookup table
 ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy)
 {
     if (c ==  COLOR_DEFAULT)
@@ -14,6 +13,9 @@ ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy)
             return ENEMY;
         }
     }
+    return *ALColorLookup[c];
+
+/*
     if (c == COLOR_BG)
         return BG;
     if (c == COLOR_FRIENDLY)
@@ -28,16 +30,18 @@ ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy)
         return HEAL;
     if (c == COLOR_DAMAGE)
         return DAMAGE;
-    return BG;
+    return BG;*/
 }
 bool AlColIsEq(ALLEGRO_COLOR c, ALLEGRO_COLOR c2)
 {
     return (c.r == c2.r && c.g == c2.g && c.b == c2.b && c.a == c2.a);
 }
-//todo: change this to a lookup table
+
 Color ALColorToCol(ALLEGRO_COLOR c)
 {
-    if (AlColIsEq(c,BG))
+    char hash = (int)c.r ^ (int)c.g ^ (int)c.b ^ (int)c.a;
+    return ColorHashTable[hash];
+    /*if (AlColIsEq(c,BG))
         return COLOR_BG;
     if (AlColIsEq(c,FRIENDLY))
         return COLOR_FRIENDLY;
@@ -52,7 +56,7 @@ Color ALColorToCol(ALLEGRO_COLOR c)
     if (AlColIsEq(c,DAMAGE))
         return COLOR_DAMAGE;
     
-    return COLOR_DEFAULT;
+    return COLOR_DEFAULT;*/
 }
 void InitColors()
 {
@@ -67,4 +71,26 @@ void InitColors()
     HEAL = al_map_rgba(119,249,26,255);
     POISON = al_map_rgba(237,66,229,255);
     DAMAGE = al_map_rgba(250,95,95,255);
+
+
+    ALColorLookup[COLOR_BG] = &BG;
+    ALColorLookup[COLOR_GROUND] = &GROUND;
+    ALColorLookup[COLOR_ENEMY] = &ENEMY;
+    ALColorLookup[COLOR_FRIENDLY] = &FRIENDLY;
+    ALColorLookup[COLOR_WHITE] = &WHITE;
+    ALColorLookup[COLOR_HEAL] = &HEAL;
+    ALColorLookup[COLOR_POISON] = &POISON;
+    ALColorLookup[COLOR_DAMAGE] = &DAMAGE;
+
+    for (int i = 1; i < COLOR_ALL-1; i++)
+    {
+        ALLEGRO_COLOR c = *ALColorLookup[i];
+        char hash = (int)c.r ^ (int)c.g ^ (int)c.b ^ (int)c.a;
+
+        ColorHashTable[hash] = i;
+    }
+
+
+
+
 }

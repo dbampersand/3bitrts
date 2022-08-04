@@ -2175,6 +2175,7 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
     {
         transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
         RemoveReplay(&replay);
+        
     }
     if (GetButtonIsClicked(&ui.endScreen_Retry))
     {
