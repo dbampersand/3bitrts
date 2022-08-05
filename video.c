@@ -29,10 +29,12 @@ void InitVideo()
     _FRAMES = 0;
 
 }
-void DrawRoundedRect(Rect r, ALLEGRO_COLOR color)
+void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)
 {
     int x = r.x; int y = r.y; int w = r.w; int h = r.h;
 
+    if (filled)
+        al_draw_filled_rectangle(x,y,x+w-1,y+h,color);
     //horizontals
     al_draw_line(x,y,x+w-1,y,color,1);
     al_draw_line(x,y+h,x+w-1,y+h,color,1);

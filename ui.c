@@ -2173,7 +2173,8 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
     }
     if (GetButtonIsClicked(&ui.endScreen_Back))
     {
-        transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
+        SetGameStateToChoosingEncounter();
+        //transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
         RemoveReplay(&replay);
         
     }
@@ -2187,6 +2188,7 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
         ReplayToDisk(&replay);
         ui.endScreen_SaveReplay.enabled = false;
         RemoveReplay(&replay);
+
     }
 
     free(buffer);

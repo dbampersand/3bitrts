@@ -234,13 +234,17 @@ void UpdateObject(GameObject* g, float dt)
             if (currGameObjRunning->attackTimer <= 0)
             {
                 AttackTarget(currGameObjRunning);
-                currGameObjRunning->attackTimer = currGameObjRunning->attackSpeed;
-                GameObject* g = currGameObjRunning; GameObject* g2 = g->targObj;
-                float angle = (atan2(g2->position.y-g->position.y,g2->position.x-g->position.x));
-                
-                currGameObjRunning->offset.x = cos(angle);
-                currGameObjRunning->offset.y = sin(angle);
+                if (currGameObjRunning->targObj)
+                {
+                     currGameObjRunning->attackTimer = currGameObjRunning->attackSpeed;
+                    GameObject* g = currGameObjRunning; GameObject* g2 = g->targObj;
+                    float angle = (atan2(g2->position.y-g->position.y,g2->position.x-g->position.x));
+                    
+                    currGameObjRunning->offset.x = cos(angle);
+                    currGameObjRunning->offset.y = sin(angle);
 
+                }
+                
             }
 
         }
@@ -1426,9 +1430,13 @@ void DrawObjShadow(GameObject* g)
     int w = GetWidth(g);
     int h = GetHeight(g);
 
-    al_draw_line(x+w+1,y+1,x+w+1,y+h,BG,1);
-    al_draw_line(x,y+h+1,x+w-1,y+h+1,BG,1);
-    al_draw_pixel(x+w-1,y+h,BG);
+    int lineW = (floor(w/16.0f));
+    int lineH = (floor(h/16.0f));
+
+    lineW = lineW == 0 ? 1 : lineW;
+    lineH = lineH == 0 ? 1 : lineH;
+    Rect r = (Rect){x+1,y+1,w+lineW-1,h+lineH-1};
+    DrawRoundedRect(r,BG,true);
 }
 void DrawObjShadows()
 {
@@ -1463,7 +1471,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     selectRect.y =y;
     if (!ObjIsInvincible(g))
     {
-        DrawRoundedRect(selectRect, c);
+        DrawRoundedRect(selectRect, c,false);
 
         if (currSettings.displayHealthBar == OPTION_HPBAR_ALWAYS)
             DrawHealthBar(g,c);

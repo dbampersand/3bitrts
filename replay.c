@@ -44,6 +44,9 @@ void NewReplay()
     if (!replay.frames)
         replay.frames = malloc(FRAMES_PREALLOC*sizeof(ReplayFrame));
     replay.numFrames = 0;
+    replay.framePlayPosition = 0;
+    replay.playing = false;
+    replay.totalFrames = 0;
 }
 void LoadFrame(ALLEGRO_BITMAP* screen, ReplayFrame* frame)
 {

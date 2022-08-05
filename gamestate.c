@@ -87,20 +87,21 @@ void FinishTransition()
     {
         gameState = GAMESTATE_INGAME;
         transitioningTo = GAMESTATE_INGAME;
-    
+        NewReplay();
 
         RemoveAllGameObjects();
 
         SetMap(LoadMap(encounterGoingTo->mapPath));
 
         int xPos = 0; 
-        for (int i = 0; i < encounterGoingTo->numUnitsToSelect; i++)
-        {
-            if (toSpawn[i] == NULL)
-                continue;
-            AddGameobject(toSpawn[i],80+xPos,180);   
-            xPos += GetWidth(toSpawn[i]);
-        }
+        if (toSpawn)
+            for (int i = 0; i < encounterGoingTo->numUnitsToSelect; i++)
+            {
+                if (toSpawn[i] == NULL)
+                    continue;
+                AddGameobject(toSpawn[i],80+xPos,180);   
+                xPos += GetWidth(toSpawn[i]);
+            }
         memset(&gameStats,0,sizeof(GameState));
 
         //free(toSpawn);
@@ -126,6 +127,10 @@ void FinishTransition()
         RemoveAllAttacks();
         gameState = GAMESTATE_LOAD_ENCOUNTER;
         transitioningTo = GAMESTATE_LOAD_ENCOUNTER;
+        //if (toSpawn)
+         //   free(toSpawn);
+       // toSpawn = NULL;
+
     }
 
     if (transitioningTo == GAMESTATE_CHOOSING_UNITS)

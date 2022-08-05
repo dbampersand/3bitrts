@@ -15,7 +15,7 @@ ALLEGRO_BITMAP* SCREEN;
 ALLEGRO_BITMAP* background_screen;
 ALLEGRO_DISPLAY* display;
 
-void DrawRoundedRect(Rect r, ALLEGRO_COLOR color);
+void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled);
 void DrawOutlinedRect_Dithered(Rect* r, ALLEGRO_COLOR color);
 void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR color);
 void GetConeVertices(int cx, int cy, int* x1, int* y1, int* x2, int* y2, float angle, float radius, int length);
