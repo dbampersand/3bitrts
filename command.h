@@ -1,4 +1,5 @@
 #pragma once
+#include "colors.h"
 
 typedef enum QueueCommand
 {
@@ -12,6 +13,8 @@ typedef enum QueueCommand
 
 typedef struct GameObject GameObject;
 typedef struct Ability Ability; 
+
+
 typedef struct Command
 {
     QueueCommand commandType;
@@ -19,6 +22,9 @@ typedef struct Command
     Ability* ability;
     float x; float y;
 } Command;
+
+Color queueCommandColors[COMMAND_ATTACKMOVE+1];
+
 
 void AddCommand(GameObject* g, Command c);
 void MoveCommand(GameObject* g, float x, float y);
@@ -30,3 +36,4 @@ void NextCommand(GameObject* g);
 void AddCommand(GameObject* g, Command c);
 void ClearCommandQueue(GameObject* g);
 void AttackMoveCommand(GameObject* g, float x, float y);
+void DrawCommandQueue(GameObject* g);

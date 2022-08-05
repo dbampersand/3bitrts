@@ -493,10 +493,10 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                     {
                         SetAttackingObj(players[0].selection[i],NULL);
                     }
-
-                    for (int i = 0; i < numObjects; i++)
+                    for (int i = 0; i < MAXUNITSSELECTED; i++)
                     {
-                        GameObject* g = &objects[i];
+                    
+                        GameObject* g = players[0].selection[i];
                         if (!IsActive(g))
                             continue;
                         if (IsSelected(g))
@@ -505,7 +505,22 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                             int h = al_get_bitmap_height(sprites[g->spriteIndex].sprite);
                                 if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
                                     ClearCommandQueue(g);
-                            MoveCommand(g,mouseState->x-w/2,mouseState->y-h/2);
+                            bool found = false;
+                            for (int i = 0; i < MAX_OBJS; i++)
+                            {
+                                GameObject* g2 = &objects[i];
+                                if (g == g2) continue;
+
+                                Rect r = GetObjRect(g2);
+                                if (PointInRect(mouseState->x,mouseState->y,r))
+                                {
+                                    found = true;
+                                    AttackCommand(g,g2);
+                                    break;
+                                }
+                            }
+                            if (!found)
+                                MoveCommand(g,mouseState->x-w/2,mouseState->y-h/2);
                         
                         }
                         Sprite* s = &sprites[g->spriteIndex];
@@ -523,6 +538,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                             }
                             break;
                         }
+
                     }
         }
     

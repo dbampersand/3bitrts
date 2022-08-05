@@ -140,6 +140,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
     DrawMap();
     
+    DrawCommandQueue(players[0].selection[players[0].indexSelectedUnit]);
     
     DrawAttacks(dt);
 

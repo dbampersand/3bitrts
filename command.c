@@ -3,6 +3,69 @@
 #include "gameobject.h"
 #include "helperfuncs.h"
 #include "ability.h"
+#include "allegro5/allegro.h"
+#include "allegro5/allegro_primitives.h"
+#include "colors.h"
+
+void DrawCommand(Command* c, int x, int y)
+{
+    if (c->commandType == COMMAND_NONE)
+        return;
+    if (c->commandType == COMMAND_MOVE)
+        al_draw_rectangle(x-2,y-2,x+2,y+2,GetColor(queueCommandColors[COMMAND_MOVE],0),1);
+    if (c->commandType == COMMAND_ATTACK || c->commandType == COMMAND_ATTACKMOVE)
+        al_draw_triangle(x-2,y-2,x+2,y+2,x,y-2,GetColor(queueCommandColors[c->commandType],0),1);
+    if (c->commandType == COMMAND_CAST)
+        al_draw_circle(x,y,2,GetColor(queueCommandColors[COMMAND_CAST],0),1);
+    if (c->commandType == COMMAND_STOP)
+        al_draw_filled_rectangle(x-2,y-2,x+2,y+2,GetColor(queueCommandColors[COMMAND_MOVE],0));
+        
+    
+        
+
+}
+void DrawCommandQueue(GameObject* g)
+{
+    if (!g) return;
+    if (g->queue[0].commandType == COMMAND_NONE)
+        return;
+    float cx; float cy;
+    GetCentre(g,&cx,&cy);
+
+    float firstX = g->queue[0].x;
+    float firstY = g->queue[0].y; 
+
+    if (g->queue[0].target)
+        GetCentre(g->queue[0].target,&firstX,&firstY);
+
+
+    DrawCommand(&g->queue[0],firstX,firstY);
+    al_draw_line(firstX,firstY,cx,cy,GetColor(queueCommandColors[g->queue[0].commandType],0),1);
+
+    for (int i = 1; i < MAX_QUEUED_CMD; i++)
+    {
+        Command* thisCmd = &g->queue[i];
+        Command* nextCmd = &g->queue[i+1];
+        Command* prevCmd = &g->queue[i-1];
+
+        if (thisCmd->commandType == COMMAND_NONE)
+            return;
+
+        float tX = thisCmd->x; float tY = thisCmd->y;
+        float pX = prevCmd->x; float pY = prevCmd->y;
+        if (prevCmd->target)
+        {
+            GetCentre(prevCmd->target,&pX,&pY);
+        }
+        if (thisCmd->target)
+        {
+            GetCentre(thisCmd->target,&tX,&tY);
+        }
+        if (thisCmd->commandType != COMMAND_NONE)
+            al_draw_line(tX,tY,pX,pY,GetColor(queueCommandColors[thisCmd->commandType],0),1);
+        DrawCommand(thisCmd,tX,tY);
+    }
+}
 
 void AddCommand(GameObject* g, Command c)
 {

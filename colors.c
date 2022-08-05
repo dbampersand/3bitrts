@@ -1,5 +1,5 @@
 #include "colors.h"
-
+#include "command.h"
 ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy)
 {
     if (c >= COLOR_ALL)
@@ -104,6 +104,16 @@ void InitColors()
         }
         ColorHashTable[hash] = i;
     }
+
+
+    queueCommandColors[COMMAND_NONE] = COLOR_BG;
+    queueCommandColors[COMMAND_MOVE] = COLOR_FRIENDLY;
+    queueCommandColors[COMMAND_ATTACK] = COLOR_DAMAGE;
+    queueCommandColors[COMMAND_CAST] = COLOR_GROUND_DARK;
+    queueCommandColors[COMMAND_STOP] = COLOR_FRIENDLY;
+    queueCommandColors[COMMAND_ATTACKMOVE] = COLOR_DAMAGE;
+
+
 
 
 

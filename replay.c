@@ -9,6 +9,10 @@
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_primitives.h"
 #include "colors.h"
+
+const char* REPLAY_HEADER = "REP";
+
+//zlib defines
 #define CHUNK 16384
 #if defined(MSDOS) || defined(OS2) || defined(WIN32) || defined(__CYGWIN__)
 #  include <fcntl.h>
@@ -17,7 +21,7 @@
 #else
 #  define SET_BINARY_MODE(file)
 #endif
-const char* REPLAY_HEADER = "REP";
+
 
 //FORMAT:
 //uint32_t number of bytes in the current frame
