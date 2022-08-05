@@ -32,8 +32,8 @@ void DrawCommandQueue(GameObject* g)
     float cx; float cy;
     GetCentre(g,&cx,&cy);
 
-    float firstX = g->queue[0].x;
-    float firstY = g->queue[0].y; 
+    float firstX = g->queue[0].x + GetWidth(g)/2;
+    float firstY = g->queue[0].y + GetHeight(g)/2; 
 
     if (g->queue[0].target)
         GetCentre(g->queue[0].target,&firstX,&firstY);
@@ -51,8 +51,8 @@ void DrawCommandQueue(GameObject* g)
         if (thisCmd->commandType == COMMAND_NONE)
             return;
 
-        float tX = thisCmd->x; float tY = thisCmd->y;
-        float pX = prevCmd->x; float pY = prevCmd->y;
+        float tX = thisCmd->x + GetWidth(g)/2; float tY = thisCmd->y+ GetHeight(g)/2;
+        float pX = prevCmd->x + GetWidth(g)/2; float pY = prevCmd->y + GetHeight(g)/2;
         if (prevCmd->target)
         {
             GetCentre(prevCmd->target,&pX,&pY);
