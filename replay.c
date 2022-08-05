@@ -56,10 +56,10 @@ void LoadFrame(ALLEGRO_BITMAP* screen, ReplayFrame* frame)
     for (int i = 0; i < frame->dataLen; i += (sizeof(uint16_t)+sizeof(char)))
     {
         uint16_t size; 
-         memcpy(&size,&frame->compressedData[i],sizeof(uint16_t));
+        memcpy(&size,&frame->compressedData[i],sizeof(uint16_t));
         char c = frame->compressedData[i+sizeof(uint16_t)];
 
-            while (size > 0)
+        while (size > 0)
         {
             al_draw_pixel(x,y,GetColor(c,0));
             x++;

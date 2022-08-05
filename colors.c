@@ -2,6 +2,9 @@
 
 ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy)
 {
+    if (c >= COLOR_ALL)
+        return BG;
+
     if (c ==  COLOR_DEFAULT)
     {
         if (objectOwnedBy == 0)
@@ -39,7 +42,7 @@ bool AlColIsEq(ALLEGRO_COLOR c, ALLEGRO_COLOR c2)
 
 Color ALColorToCol(ALLEGRO_COLOR c)
 {
-    char hash = (int)c.r ^ (int)c.g ^ (int)c.b ^ (int)c.a;
+    unsigned char hash = HashColor(c);//(int)c.r ^ (int)c.g ^ (int)c.b ^ (int)c.a;
     return ColorHashTable[hash];
     /*if (AlColIsEq(c,BG))
         return COLOR_BG;
@@ -57,6 +60,11 @@ Color ALColorToCol(ALLEGRO_COLOR c)
         return COLOR_DAMAGE;
     
     return COLOR_DEFAULT;*/
+}
+unsigned char HashColor(ALLEGRO_COLOR c)
+{
+    return (unsigned char)((int)(c.r*255) ^ (int)(c.g*255) ^ (int)(c.b*255) ^ (int)(c.a*255));
+
 }
 void InitColors()
 {
@@ -82,13 +90,18 @@ void InitColors()
     ALColorLookup[COLOR_HEAL] = &HEAL;
     ALColorLookup[COLOR_POISON] = &POISON;
     ALColorLookup[COLOR_DAMAGE] = &DAMAGE;
+
+    memset(ColorHashTable,0,256*sizeof(ColorHashTable[0]));
     
 
-    for (int i = 1; i < COLOR_ALL-1; i++)
+    for (int i = 1; i < COLOR_ALL; i++)
     {
         ALLEGRO_COLOR c = *ALColorLookup[i];
-        char hash = (int)c.r ^ (int)c.g ^ (int)c.b ^ (int)c.a;
-
+        unsigned char hash = HashColor(c);
+        if (ColorHashTable[hash])
+        {
+            printf("HASH COLLISION");
+        }
         ColorHashTable[hash] = i;
     }
 

@@ -116,7 +116,7 @@ void FinishTransition()
         //ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
 
     }
-    if (transitioningTo == GAMESTATE_WATCHING_REPLAY)
+        if (transitioningTo == GAMESTATE_WATCHING_REPLAY)
     {
         gameState = GAMESTATE_WATCHING_REPLAY;
         transitioningTo = GAMESTATE_WATCHING_REPLAY;
@@ -508,6 +508,8 @@ void SetGameStateToEndscreen()
     SerializeSection(&replay,true);
     TransitionTo(GAMESTATE_END);
     ui.endScreen_Retry.enabled = true;
+    ui.endScreen_SaveReplay.enabled = true;
+
 }
 void SetGameStateToInMenu()
 {
