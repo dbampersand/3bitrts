@@ -61,6 +61,7 @@ typedef struct GameObject
     Command queue[MAX_QUEUED_CMD];
 
     Point position;
+    Point offset; //offset for drawing the 'attack animation'
     float angle;
 
     float health;
@@ -132,6 +133,7 @@ typedef struct GameObject
 
     bool deathTimerActivated;
     float deathTimer;
+
 
 } GameObject;
 

@@ -113,6 +113,9 @@ void SetManaRegen(GameObject* g, float regen)
 void UpdateObject(GameObject* g, float dt)
 {
     currGameObjRunning = g;
+    currGameObjRunning->offset.x = Towards(currGameObjRunning->offset.x,0,dt*2);
+    currGameObjRunning->offset.y = Towards(currGameObjRunning->offset.y,0,dt*2);
+
     if (ObjIsDecoration(g))
     {
         if (currGameObjRunning->properties & OBJ_ACTIVE)
@@ -232,6 +235,12 @@ void UpdateObject(GameObject* g, float dt)
             {
                 AttackTarget(currGameObjRunning);
                 currGameObjRunning->attackTimer = currGameObjRunning->attackSpeed;
+                GameObject* g = currGameObjRunning; GameObject* g2 = g->targObj;
+                float angle = (atan2(g2->position.y-g->position.y,g2->position.x-g->position.x));
+                
+                currGameObjRunning->offset.x = cos(angle);
+                currGameObjRunning->offset.y = sin(angle);
+
             }
 
         }
@@ -1374,8 +1383,8 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
     int padding = 4;
 
     Rect r;
-    r.x = g->position.x;
-    r.y = g->position.y - padding;
+    r.x = g->position.x + g->offset.x;
+    r.y = g->position.y - padding + g->offset.y;
     r.w = al_get_bitmap_width(s->sprite);
     r.h = 2;
 
@@ -1412,8 +1421,8 @@ void DrawArrow(int cx, int cy, int targetx, int targety, ALLEGRO_COLOR color)
 }
 void DrawObjShadow(GameObject* g)
 {
-    int x = g->position.x;
-    int y = g->position.y;
+    int x = g->position.x + g->offset.x;
+    int y = g->position.y + g->offset.y;
     int w = GetWidth(g);
     int h = GetHeight(g);
 
@@ -1443,13 +1452,15 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     Sprite* s = &sprites[g->spriteIndex];
     bool isReversed = IsSelected(g) || forceInverse;
     isReversed = g->flashTimer > 0 ? !isReversed : isReversed;
-    DrawSprite(s,g->position.x,g->position.y,0.5f,0.5f,g->angle,c, isReversed);
+
+    float x = g->position.x + g->offset.x; float y = g->position.y + g->offset.y;
+    DrawSprite(s,x,y,0.5f,0.5f,g->angle,c, isReversed);
    
     Rect selectRect;
     selectRect.w = al_get_bitmap_width(s->sprite);
     selectRect.h = al_get_bitmap_height(s->sprite);
-    selectRect.x = g->position.x;
-    selectRect.y = g->position.y;
+    selectRect.x = x;
+    selectRect.y =y;
     if (!ObjIsInvincible(g))
     {
         DrawRoundedRect(selectRect, c);

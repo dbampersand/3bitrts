@@ -294,23 +294,11 @@ int NumDigits(int i)
 }
 float Towards(float f, float to, float maxDist)
 {
-    if (f == to)
-        return f;
-    f += maxDist;
-    if (to > 0)
-    {
-        if (f > maxDist)
-        {
-            f = maxDist;
-        }
-    }
-    else
-    {
-        if (f < maxDist)
-        {
-            f = maxDist;
-        }
-    }
-    return f;
+    if (f < to)
+        return _MIN(f+maxDist, to);
+    else if (f > to)
+        return _MAX(f-maxDist, to);
+
+    return(to);
 }
 

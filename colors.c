@@ -71,7 +71,7 @@ void InitColors()
     HEAL = al_map_rgba(119,249,26,255);
     POISON = al_map_rgba(237,66,229,255);
     DAMAGE = al_map_rgba(250,95,95,255);
-    GROUND_DARK = al_map_rgba(68,37,106,255);
+    GROUND_DARK = al_map_rgba(43,30,94,255);
 
     ALColorLookup[COLOR_BG] = &BG;
     ALColorLookup[COLOR_GROUND] = &GROUND;
