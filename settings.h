@@ -9,11 +9,14 @@ typedef struct Settings
     unsigned int* renderScale;
     bool particlesEnabled;
     Option_HealthBar displayHealthBar;
-
+    bool displayTimer;
+    
     //AUDIO OPTIONS
     float masterVolume;
 
     //ACCESSIBILITY OPTIONS
+
+    //
 
 } Settings;
 

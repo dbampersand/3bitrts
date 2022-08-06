@@ -26,6 +26,22 @@
 #include "dirent.h"
 #include "replay.h"
 
+void DrawTimer(bool enabled)
+{   
+    if (enabled)
+    {
+        int hours = floor(gameStats.timeTaken/(60.0f*60.0f));
+        int minutes = floor(gameStats.timeTaken/(60.0f));    
+        int seconds = floor(gameStats.timeTaken); 
+
+        size_t buffsiz = snprintf(NULL, 0, "%i:%i",minutes,seconds);
+        char* buff = calloc(buffsiz+1,sizeof(char));
+        sprintf(buff,"%i:%i",minutes,seconds);
+        al_draw_text(ui.font,FRIENDLY,255-10,10,ALLEGRO_ALIGN_RIGHT,buff);
+    }
+
+}
+
 void DrawUIChatbox()
 {
     if (chatboxes)
@@ -933,7 +949,7 @@ void DrawCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive,ALLEGRO
 
     }
 }
-void AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool activated)
+void AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool* activated)
 {
     Checkbox* c = calloc(1,sizeof(Checkbox));
     UIElement u = {0};
@@ -941,7 +957,7 @@ void AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool activate
     u.y = y;
     u.w = w;
     u.h = h;
-    //*c->activated = activated;
+    c->activated = activated;
     u.name = name;
     u.name = calloc(strlen(name)+1,sizeof(char));
     strcpy(u.name,name);
@@ -949,6 +965,7 @@ void AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool activate
     u.enabled = true;
     u.elementType = ELEMENT_CHECKBOX;
     u.enabled = true;
+    
     AddElement(p,&u);
 }
 void AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled, float* v)
@@ -1264,9 +1281,12 @@ void InitUI()
     AddButton(&ui.videoOptionsPanel,"RenderScale+","+",132,29,11,11);
     AddButton(&ui.videoOptionsPanel,"RenderScale-","-",132,53,11,11);
     AddText(&ui.videoOptionsPanel,33,73,"Tag_Particles","Particles");
-    AddCheckbox(&ui.videoOptionsPanel,131,72,13,13,"EnableParticles",true);
+    AddCheckbox(&ui.videoOptionsPanel,131,72,13,13,"EnableParticles",&currSettings.particlesEnabled);
     AddText(&ui.videoOptionsPanel,33,105,"Display\nHealth Bar","Display\nHealth Bar");
     AddPulldownMenu(&ui.videoOptionsPanel,97,108,48,13,"HealthBarDisplay",0,3,"Always","Selected","Never");
+    AddText(&ui.videoOptionsPanel,33,132,"Display Timer","Display Timer");
+    AddCheckbox(&ui.videoOptionsPanel,132,132,11,11,"DisplayTimerButton",&currSettings.displayTimer);
+
 
     ui.audioOptionsPanel = CreatePanel(48,48,160,112,15,true);
     AddText(&ui.audioOptionsPanel,33,41,"Tag_MasterVolume","Master Volume");
@@ -1319,8 +1339,9 @@ void InitUI()
     
     ui.currentPanel = NULL;
 
-    Checkbox* particles = (Checkbox*)GetUIElement(&ui.videoOptionsPanel,"EnableParticles")->data;
-    particles->activated = &currSettings.particlesEnabled;
+   // Checkbox* particles = (Checkbox*)GetUIElement(&ui.videoOptionsPanel,"EnableParticles")->data;
+    //particles->activated = &currSettings.particlesEnabled;
+
     //currSettings.particlesEnabled = &particles->activated;
 
     Pulldown* healthbar = (Pulldown*)GetUIElement(&ui.videoOptionsPanel,"HealthBarDisplay")->data;
@@ -1560,7 +1581,7 @@ void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLE
     {
         UpdateCheckbox((Checkbox*)u->data, x,  y, u->w,u->h,true,mouseState, mouseStateLastFrame);
         Checkbox* c = (Checkbox*)u->data;
-        bool b = *c->activated;
+       // bool b = *c->activated;
     }
     if (u->elementType == ELEMENT_PULLDOWN)
     {

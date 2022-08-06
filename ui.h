@@ -186,7 +186,7 @@ typedef struct UI
     UIElement endScreen_Retry;
     UIElement endScreen_SaveReplay;
 
-
+    
 
 
 } UI;   
@@ -278,3 +278,4 @@ void GenerateFileListButtons(char* path, Panel* p);
 void DrawReplayUI(Replay* r, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive, ALLEGRO_COLOR bgColor);
 void ChangeButtonImage(UIElement* u, int spriteIndex);
+void DrawTimer(bool enabled);

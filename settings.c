@@ -20,6 +20,8 @@ void SetDefaultSettings(Settings* setting)
     setting->particlesEnabled = true;
     setting->displayHealthBar = OPTION_HPBAR_ALWAYS;
     setting->masterVolume = 1.0f;
+    setting->displayTimer = false;
+
 }
 void EndSettings()
 {
@@ -31,12 +33,13 @@ void WriteSettingsFile(char* path)
     {
         char* str = calloc(4096,sizeof(char));
         if (!str) return;
-        sprintf(str,"renderscale %i;\nparticles_enabled %i;\ndisplay_health_bar %i;\nvolume %f;\n",
+        sprintf(str,"renderscale %i;\nparticles_enabled %i;\ndisplay_health_bar %i;\nvolume %f;\ndisplay_timer %i;\n",
         *   currSettings.renderScale,
         currSettings.particlesEnabled == true ? 1 : 0,
         currSettings.displayHealthBar,
 
-        currSettings.masterVolume
+        currSettings.masterVolume,
+        currSettings.displayTimer ? 1 : 0
         );
 
         ALLEGRO_FILE* file = al_fopen(path,"w+");
@@ -125,6 +128,15 @@ bool LoadSettingsFile(char* path)
             if (displayHealthBar >= 0)
             {
                 currSettings.displayHealthBar =  (Option_HealthBar)displayHealthBar;
+            }
+
+            float displayTimer  = FindToken(str,"display_timer");
+            if (displayTimer >= 0)
+            {
+                if (displayTimer <= 0.001f)
+                    currSettings.displayTimer = false;
+                else
+                    currSettings.displayTimer = true;
             }
 
 

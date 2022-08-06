@@ -61,6 +61,7 @@ void DrawCommandQueue(GameObject* g)
         {
             GetCentre(thisCmd->target,&tX,&tY);
         }
+        
         if (thisCmd->commandType != COMMAND_NONE)
             al_draw_line(tX,tY,pX,pY,GetColor(queueCommandColors[thisCmd->commandType],0),1);
         DrawCommand(thisCmd,tX,tY);
