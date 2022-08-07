@@ -275,6 +275,8 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
 
     DrawTransition(dt);
+    //al_draw_text(ui.font,FRIENDLY,20,18,0,gameStats.gameWon == true ? "Victory" : "Defeat");
+
 }
 
 void DrawMainMenu()

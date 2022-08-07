@@ -1594,6 +1594,8 @@ void DrawMapHighlight(GameObject* g, int lightSize)
 
 
      }
+    al_unlock_bitmap(sprites[currMap->spriteIndex].sprite);
+
 
 }
 void SetAttackingObj(GameObject* g, GameObject* target)

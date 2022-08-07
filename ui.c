@@ -2140,6 +2140,7 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
     char* buffer = calloc(1,sizeof(char));
 
     al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+
     al_draw_text(ui.font,FRIENDLY,20,18,0,gameStats.gameWon == true ? "Victory" : "Defeat");
     al_draw_line(20,30,56,30,FRIENDLY,1);
     al_draw_line(17,52,239,52,FRIENDLY,1);
