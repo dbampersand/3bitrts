@@ -1471,6 +1471,11 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
     if (ObjIsDecoration(g))
         c = BG;
+    if (IsOwnedByPlayer(g))
+    {
+        DrawMapHighlight(g,30);
+    }
+
     RedrawMapSegmentUnderObj(g);
         
     Sprite* s = &sprites[g->spriteIndex];
@@ -1529,6 +1534,67 @@ void DrawGameObj(GameObject* g, bool forceInverse)
         al_draw_filled_circle(circleCenterX,circleCenterY,2,c);
     }
     
+}
+void DrawMapHighlight(GameObject* g, int lightSize)
+{
+    //Use circle algorithm to get the points to end at
+    //Then calculate the angle between gCX and gCY and that point
+    //Then go from g to that point
+    float cx; float cy;
+    GetCentre(g,&cx,&cy);
+    int r = lightSize;
+    int x = -r;
+    int y = 0;
+    int err = 2-2*r;
+
+    al_lock_bitmap(sprites[currMap->spriteIndex].sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+    while (x <= 0)
+    {
+
+        Point points[4];
+        points[0].x = cx-x;  points[0].y = cy+y;
+        points[1].x = cx-y;  points[1].y = cy-x;
+        points[2].x = cx+x;  points[2].y = cy-y; 
+        points[3].x = cx+y;  points[3].y = cy+x; 
+
+        for (int i = 0; i < 4; i++)
+        {
+            float angle = PointsToAngleRad(cx,cy,points[i].x,points[i].y);
+            float moveX = cos(angle);
+            float moveY = sin(angle);
+            int steps = 0;
+            float mX = cx;
+            float mY = cy;
+
+            while (steps < lightSize)
+            {
+                mX += moveX;
+                mY += moveY;
+                ALLEGRO_COLOR col = al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
+                if (col.a <= 0.001f)
+                {
+                    al_draw_pixel(mX - moveX,mY - moveY,EDGE_HIGHLIGHT);
+                    break;
+                }
+                steps++;
+            }
+        } 
+      r = err;
+      if (r <= y) 
+      {
+        y++;
+        err += y * 2 + 1;       
+
+      }
+      if (r > x || err > y) 
+      {
+        x++;
+        err += x * 2 + 1;
+      }
+
+
+     }
+
 }
 void SetAttackingObj(GameObject* g, GameObject* target)
 {

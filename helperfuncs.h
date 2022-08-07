@@ -38,3 +38,4 @@ void RotatePointF(float* x, float* y, float cx, float cy, float angle);
 int NumDigits(int i);
 float clamp(float f, float min, float max);
 float Towards(float f, float to, float maxDist);
+float PointsToAngleRad(float x1, float y1, float x2, float y2);

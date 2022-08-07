@@ -80,6 +80,8 @@ void InitColors()
     POISON = al_map_rgba(237,66,229,255);
     DAMAGE = al_map_rgba(250,95,95,255);
     GROUND_DARK = al_map_rgba(43,30,94,255);
+    EDGE_HIGHLIGHT = al_map_rgba(106,106,212,255);
+
 
     ALColorLookup[COLOR_BG] = &BG;
     ALColorLookup[COLOR_GROUND] = &GROUND;
@@ -90,6 +92,8 @@ void InitColors()
     ALColorLookup[COLOR_HEAL] = &HEAL;
     ALColorLookup[COLOR_POISON] = &POISON;
     ALColorLookup[COLOR_DAMAGE] = &DAMAGE;
+    ALColorLookup[COLOR_EDGE_HIGHLIGHT] = &EDGE_HIGHLIGHT;
+
 
     memset(ColorHashTable,0,256*sizeof(ColorHashTable[0]));
     
