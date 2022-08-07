@@ -470,8 +470,8 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                     else
                     {
                         SetSelected(obj,true);
-                        players[0].selection[players[0].numUnitsSelected] = obj;
-                        players[0].numUnitsSelected++;
+                        //players[0].selection[players[0].numUnitsSelected] = obj;
+                        //players[0].numUnitsSelected++;
 
                     }
                     if (hasSelected) 
@@ -1003,11 +1003,15 @@ void SetSelected(GameObject* g, bool select)
     if (select)
     {
         g->properties |= OBJ_SELECTED;
+        players[0].selection[players[0].numUnitsSelected] = g;
+        players[0].numUnitsSelected++;
     }
     else
     {
         g->properties &= ~OBJ_SELECTED;
     }
+
+
 }
 bool IsOwnedByPlayer(GameObject* g)
 {
