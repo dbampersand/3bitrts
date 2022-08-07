@@ -1109,6 +1109,13 @@ void UpdateScrollbar(Panel* p, ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STA
 {
     int w = SCROLLBARW;
     Rect scrollbar = (Rect){p->x+p->w-w,p->y,w,p->h};
+    if (mouseState->z != mouseStateLastFrame->z)
+    {
+        float v = mouseState->z - mouseStateLastFrame->z;
+        p->scrollPercent -= v/6.0f;
+        p->scrollPercent = clamp(p->scrollPercent,0,1);
+    }
+
     if (mouseState->buttons & 1 && !(mouseStateLastFrame->buttons & 1))
     {
         if (PointInRect(mouseState->x,mouseState->y,scrollbar))
