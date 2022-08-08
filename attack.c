@@ -343,6 +343,7 @@ void UpdateAttack(Attack* a, float dt)
 {
     if (!(a->properties & ATTACK_ACTIVE))
         return;
+
     if (a->cameFrom)
     {
         if (a->cameFrom->castType != ABILITY_TOGGLE)
@@ -539,6 +540,7 @@ void UpdateAttack(Attack* a, float dt)
     {
         if (a->shouldCallback)
         {
+            
             currAbilityRunning = a->cameFrom;
             currGameObjRunning = a->ownedBy;
             currAttackRunning = a;

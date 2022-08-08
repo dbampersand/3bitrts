@@ -8,10 +8,12 @@
 //error printf colour
 #define COL_ERR  "\x1B[31m"
 
-#define DIALOGUE_H 80
-#define DIALOGUE_W _SCREEN_SIZE
-#define DIALOGUE_X 0 
-#define DIALOGUE_Y _SCREEN_SIZE - DIALOGUE_H
+#define DIALOGUE_X 10 
+#define DIALOGUE_W _SCREEN_SIZE - DIALOGUE_X*2
+#define DIALOGUE_H 40
+#define DIALOGUE_Y 10
+
+
 
 typedef struct ALLEGRO_FONT ALLEGRO_FONT;
 typedef struct Effect Effect;

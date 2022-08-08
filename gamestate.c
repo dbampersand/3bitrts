@@ -113,6 +113,8 @@ void FinishTransition()
         transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
 
         ui.currentPanel = NULL;
+        RemoveAllAttacks();
+
         //ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
 
     }

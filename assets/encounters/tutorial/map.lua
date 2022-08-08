@@ -68,10 +68,10 @@ function setup()
     warrior = CreateObject("assets/friendly/warrior/warrior.lua",128,170,TYPE_FRIENDLY);
     SetAutoWin(false);
 
-    textbox.x = 10;
-    textbox.w = SCREEN_SIZE - textbox.x*2;
-    textbox.y = 10;
-    textbox.h = 40;
+    textbox.x = DIALOGUE_X;
+    textbox.w = DIALOGUE_W;
+    textbox.y = DIALOGUE_Y;
+    textbox.h = DIALOGUE_H;
 
 end
 

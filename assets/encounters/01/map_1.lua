@@ -6,6 +6,7 @@ function setup()
     CreateObject("assets/enemies/viper/viper.lua",144,32,TYPE_ENEMY);
    
     SetAutoWin(false);
+    
 end
 
 function update(dt)

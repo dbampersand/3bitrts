@@ -1664,6 +1664,18 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,COMMAND_ATTACKMOVE);
     lua_setglobal(l,"COMMAND_ATTACKMOVE");
 
+    lua_pushinteger(l,DIALOGUE_X);
+    lua_setglobal(l,"DIALOGUE_X");
+    lua_pushinteger(l,DIALOGUE_Y);
+    lua_setglobal(l,"DIALOGUE_Y");
+    lua_pushinteger(l,DIALOGUE_W);
+    lua_setglobal(l,"DIALOGUE_W");
+    lua_pushinteger(l,DIALOGUE_H);
+    lua_setglobal(l,"DIALOGUE_H");
+
+
+
+
 
 
 }

@@ -3,7 +3,7 @@ local radius = 30
 
 function setup()
     SetAbilityRange(256)
-    SetCooldown(8);
+    SetCooldown(30);
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_bomb.png");
     SetDescription("[b]Bomb\n\nDeals damage over time after " .. delay .. " seconds")
 
@@ -30,7 +30,7 @@ function ontimeout(x,y,obj,dt,target)
         f1["value"] = 2;  
         f1["duration"] = 10;
         f1["portrait"] = "assets/enemies/wyrm_boss/ability_bite_effect_portrait.png"
-        CreateAOE(x, y, "", radius, 1, 120, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_VERTICAL_QUARTER, false, target, {f1})
+        CreateAOE(x, y, "", radius, 1, 15, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_VERTICAL_QUARTER, false, target, {f1})
        
 
         atk = -1;
