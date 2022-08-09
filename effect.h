@@ -56,4 +56,4 @@ void ProcessEffects(GameObject* g, float dt);
 bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove);
 void CureEffect(GameObject* g, int numEffects);
 void RemoveEffect(Effect* e, GameObject* from);
-
+bool EffectIsEnabled(Effect* e);

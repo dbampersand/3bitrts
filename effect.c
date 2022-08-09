@@ -72,6 +72,10 @@ void CureEffect(GameObject* g, int numEffects)
         }
     }
 }
+bool EffectIsEnabled(Effect* e)
+{
+    return e->enabled;
+}
 void RemoveEffect(Effect* e, GameObject* from)
 {
     if (e->canStack)
