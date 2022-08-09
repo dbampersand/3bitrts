@@ -1466,6 +1466,17 @@ void DrawObjShadows()
             DrawObjShadow(&objects[i]);
     }
 }
+void DrawMapHighlights()
+{
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        GameObject* g = &objects[i];
+        if (IsActive(g) && IsOwnedByPlayer(g))
+        {
+            DrawMapHighlight(g,30);
+        }
+    }
+}
 void DrawGameObj(GameObject* g, bool forceInverse)
 {
     if (!(g->properties & OBJ_ACTIVE))
@@ -1475,10 +1486,6 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
     if (ObjIsDecoration(g))
         c = BG;
-    if (IsOwnedByPlayer(g))
-    {
-        DrawMapHighlight(g,30);
-    }
 
     RedrawMapSegmentUnderObj(g);
         

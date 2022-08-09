@@ -243,7 +243,7 @@ void DrawReplayUI(Replay* r, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STAT
     int w = REP_UI_PLAY_SCRUBBER_SIZE * percent;
     if (percent > 1) percent = 1;
 
-    Rect fullPlayBar = (Rect){8,5,REP_UI_PLAY_SCRUBBER_SIZE,13};
+    Rect fullPlayBar = (Rect){19,5,REP_UI_PLAY_SCRUBBER_SIZE,13};
     Rect position = (Rect){fullPlayBar.x,fullPlayBar.y,w,fullPlayBar.h};
     if (PointInRect(mouseState->x,mouseState->y,fullPlayBar))
     {
@@ -256,7 +256,7 @@ void DrawReplayUI(Replay* r, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STAT
         }
     }
 
-    al_draw_rectangle(8,5,222,13,FRIENDLY,1);
+    al_draw_rectangle(19,5,222,13,FRIENDLY,1);
     al_draw_filled_rectangle(position.x,position.y,position.x+position.w,position.h,FRIENDLY);
 
     DrawButton(&replayPlayButton,replayPlayButton.x,replayPlayButton.y,mouseState,true,BG);
@@ -274,6 +274,14 @@ void DrawReplayUI(Replay* r, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STAT
             ChangeButtonImage(&replayPlayButton,LoadSprite("assets/ui/button_play.png",true));
         }
     }
+    DrawButton(&replayBackButton,replayBackButton.x,replayBackButton.y,mouseState,true,BG);
+    UpdateButton(replayBackButton.x,replayBackButton.y,&replayBackButton,mouseState,mouseStateLastFrame);
+    if (GetButtonIsClicked(&replayBackButton))
+    {
+        SetGameStateToInMenu();
+
+    }
+
 
 }
 
@@ -1280,6 +1288,8 @@ void InitUI()
     ui.loadReplayPanel.back = &ui.mainMenuPanel;
     InitButton(&replayPlayButton,"Play","",225,5,10,9,0);
     ChangeButtonImage(&replayPlayButton,LoadSprite("assets/ui/button_pause.png",true));
+    InitButton(&replayBackButton,"","",8,5,9,9,0);
+    ChangeButtonImage(&replayBackButton,LoadSprite("assets/ui/replay_back.png",true));
 
     ui.pauseMenuPanel = CreatePanel(48,48,160,144,15,true);
     AddButton(&ui.pauseMenuPanel,"Return","Return",33,17,96,16);

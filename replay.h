@@ -9,7 +9,7 @@
 #define FRAMES_PREALLOC 60 * 10
 
 #define NUM_SOUNDS_TO_SAVE 32
-#define REP_UI_PLAY_SCRUBBER_SIZE 215
+#define REP_UI_PLAY_SCRUBBER_SIZE 204   
 
 const char* REPLAY_HEADER;
 
@@ -44,6 +44,8 @@ typedef struct Replay
 
 Replay replay;
 UIElement replayPlayButton; 
+UIElement replayBackButton; 
+
 
 typedef struct ALLEGRO_BITMAP ALLEGRO_BITMAP;
 

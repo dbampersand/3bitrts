@@ -239,3 +239,4 @@ void DrawArrow(int cx, int cy, int targetx, int targety, ALLEGRO_COLOR color);
 bool ObjectIsInUI(GameObject* g);
 void DrawObjShadows();
 void DrawMapHighlight(GameObject* g, int lightSize);
+void DrawMapHighlights();

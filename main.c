@@ -174,6 +174,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         }
     }
     DrawObjShadows();
+    DrawMapHighlights();
     for (int i = 0; i < numObjects; i++)
     {
         DrawChannelHint(&objects[i]);
@@ -380,14 +381,6 @@ int main(int argc, char* args[])
             if (gameState == GAMESTATE_INGAME)
                 RecordReplay(SCREEN);
 
-            if (al_key_down(&keyState,ALLEGRO_KEY_I) && !al_key_down(&keyStateLastFrame,ALLEGRO_KEY_I))
-                replay.framePlayPosition = 0;
-
-
-
-            if (al_key_down(&keyState,ALLEGRO_KEY_I))
-                PlayReplay(SCREEN);
-                
             al_set_target_bitmap(backbuffer);
             al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE, drawposx, drawposy,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
             al_flip_display();

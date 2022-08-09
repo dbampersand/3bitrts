@@ -81,7 +81,7 @@ void FinishTransition()
         gameState = GAMESTATE_MAIN_MENU;
         transitioningTo = GAMESTATE_MAIN_MENU;
         ChangeUIPanel(&ui.mainMenuPanel);
-
+        RemoveReplay(&replay);
     }
     if (transitioningTo == GAMESTATE_INGAME)
     {

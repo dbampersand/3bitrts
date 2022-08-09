@@ -393,7 +393,8 @@ void RemoveReplay(Replay* r)
         }
         free(r->frames);
     }
-    free(replayBuffer);
+    if (replayBuffer)
+        free(replayBuffer);
     replayBuffer = NULL;
     memset(r,0,sizeof(Replay));
     remove("replays/" TEMP_REPLAY_NAME);
