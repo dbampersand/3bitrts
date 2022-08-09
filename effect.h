@@ -33,6 +33,9 @@ typedef struct Effect
     EFFECT_TRIGGER trigger;
     EFFECT_TYPE effectType;
     GameObject* from;
+    char* name;
+    bool canStack;
+    int stacks;
     float value;
 
     float numTriggers;

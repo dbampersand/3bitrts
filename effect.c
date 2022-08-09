@@ -74,11 +74,20 @@ void CureEffect(GameObject* g, int numEffects)
 }
 void RemoveEffect(Effect* e, GameObject* from)
 {
+    if (e->canStack)
+    {
+        e->stacks--;
+        if (e->stacks > 0)
+            return;
+    }
     e->enabled = false;
     if (e->trigger == TRIGGER_CONST)
     {
         ProcessEffect(e,e->from,from,true);
     }
+    if (e->name)
+        free(e->name);
+    e->name = NULL;
 
 }
 void ProcessEffects(GameObject* g, float dt)
@@ -124,6 +133,7 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
     {
         Augment_ChangeEffectTime(e,currEncounterRunning->augment);
     }
+
     if (e->trigger == TRIGGER_INSTANT)
     {
         ProcessEffect(e,from,target,false);
@@ -132,10 +142,28 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
     {
         for (int i = 0; i < MAX_EFFECTS; i++)
         {
+            if (e->canStack)
+            {
+                Effect* e2 = &target->effects[i];
+                if (e2->enabled && e2->name && e->name)
+                {
+                    if (strcmp(e->name,e2->name)==0)
+                    {
+                        e2->value += e->value;
+                        e2->duration = e->duration;
+                        e2->stacks++;
+                        return;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < MAX_EFFECTS; i++)
+        {
             if (target->effects[i].enabled == false)
             {
                 target->effects[i] = *e;
                 target->effects[i].enabled = true;
+                target->effects[i].stacks = 1;
                 if (e->trigger == TRIGGER_CONST)
                 {
                     //processeffect returns true if the object died

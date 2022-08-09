@@ -456,6 +456,18 @@ void DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c)
     if (e->spriteIndex_Portrait > 0 && e->enabled)
     {
         DrawSprite(&sprites[e->spriteIndex_Portrait],x,y,0.5f,0.5f,0,FRIENDLY,false);
+        if (e->canStack)
+        {
+            if (e->stacks > 1)
+            {
+                size_t buffsize = snprintf(NULL, 0, "%i", e->stacks);
+                char* stacks = calloc(buffsize+1,sizeof(char));
+                sprintf(stacks,"%i",e->stacks);
+                al_draw_filled_rectangle(x,y,x+al_get_text_width(ui.tinyFont,stacks),y+al_get_font_line_height(ui.tinyFont),BG);
+                al_draw_text(ui.tinyFont,DAMAGE,x+1,y+1,ALLEGRO_ALIGN_LEFT,stacks);
+                free(stacks);
+            }
+        }
     }
 }
 bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, ALLEGRO_MOUSE_STATE* mouseState)
@@ -2144,7 +2156,7 @@ void SetOptions()
 }
 void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
-    char* buffer = calloc(1,sizeof(char));
+        char* buffer = calloc(1,sizeof(char));
 
     al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
 
@@ -2195,9 +2207,12 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
     {
         if (toSpawn[i])
         {
-            Sprite* s = &sprites[toSpawn[i]->spriteIndex];
-            DrawSprite(s,x,y,0.5f,0.5f,0,FRIENDLY,false);
-            x += GetWidth(toSpawn[i])+5;
+            if (toSpawn[i]->spriteIndex >= 0 && toSpawn[i]->spriteIndex < numSprites)
+            {
+                Sprite* s = &sprites[toSpawn[i]->spriteIndex];
+                DrawSprite(s,x,y,0.5f,0.5f,0,FRIENDLY,false);
+                x += GetWidth(toSpawn[i])+5;
+            }
         }
     }
     if (GetButtonIsClicked(&ui.endScreen_Back))

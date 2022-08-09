@@ -12,6 +12,8 @@ function casted(x,y,obj,headingx,headingy)
     end
 
     f1 = {};
+    f1["name"] = "Bite"
+    f1["canStack"] = true;
     f1["trigger"] = TRIGGER_TIMER;
     f1["type"] = EFFECT_HURT;
     f1["triggersPerSecond"] = 2

@@ -483,6 +483,22 @@ float GetTableField(lua_State* l, int tableIndex, const char* name, bool* isAFie
     return 0;
 
 }
+bool GetTableField_Bool(lua_State* l, int tableIndex, const char* name, bool* isAField)
+{
+    lua_getfield(l,tableIndex,name);
+    if (!lua_isnil(l,-1))
+    {
+        float j = lua_toboolean(l,-1);
+        lua_remove(l,-1);
+        *isAField = true; 
+        return j;
+    }
+    *isAField = false; 
+    lua_remove(l,-1);
+    return 0;
+
+}
+
 const char* GetTableField_Str(lua_State* l, int tableIndex, const char* name, bool* isAField)
 {
     lua_getfield(l,tableIndex,name);
@@ -557,12 +573,21 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
     if (isField && portrait)
     {
         e.spriteIndex_Portrait = LoadSprite(portrait,false);
-
     }
     else
     {
         e.spriteIndex_Portrait = 0;
     }
+    const char* name = GetTableField_Str(l,-1,"name",&isField);
+    if (name)
+    {
+        e.name = calloc(strlen(name)+1,sizeof(char));
+        strcpy(e.name,name);
+    }
+    else
+        e.name = NULL;
+    e.canStack = (bool)GetTableField_Bool(l,-1,"canStack",&isField);
+    e.stacks = 0;
     e.timer = 0;
     e.numTriggers = e.duration * triggersPerSecond;
     if (e.numTriggers == 0) 
