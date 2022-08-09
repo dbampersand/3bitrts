@@ -265,7 +265,7 @@ bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MO
 void InitButton(UIElement* u, char* name, char* description, int x, int y, int w, int h, int sprite);
 void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h);
 bool GetButtonIsClicked(UIElement* u);
-void DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c);
+bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c,ALLEGRO_MOUSE_STATE* mouseState);
 void UpdateTabButtons(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
 void ChangeButtonText(Button* b, char* newstr);
 bool cb(int line_num, const char *line, int size, void *extra);

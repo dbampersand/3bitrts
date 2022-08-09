@@ -87,6 +87,9 @@ void RemoveEffect(Effect* e, GameObject* from)
     }
     if (e->name)
         free(e->name);
+    if (e->description)
+        free(e->description);
+    e->description = NULL;
     e->name = NULL;
 
 }

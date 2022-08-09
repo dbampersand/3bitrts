@@ -586,6 +586,16 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
     }
     else
         e.name = NULL;
+    const char* description = GetTableField_Str(l,-1,"description",&isField);
+    if (description)
+    {
+        e.description = calloc(strlen(description)+1,sizeof(char));
+        strcpy(e.description,description);
+    }
+    else
+        e.description = NULL;
+
+
     e.canStack = (bool)GetTableField_Bool(l,-1,"canStack",&isField);
     e.stacks = 0;
     e.timer = 0;

@@ -54,7 +54,8 @@ function update(dt)
             inCombat = true;
 
         end
-        CastAbility(0,target);
+        print(target["target"]);
+        CastAbility(0,0,{target});
 
         targ0 = {};
         targ0["target"] = GetHighestThreat();

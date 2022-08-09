@@ -459,11 +459,14 @@ bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MO
     else
         return false;
 }
-void DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c)
+bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c, ALLEGRO_MOUSE_STATE* mouseState)
 {
-    if (e->spriteIndex_Portrait > 0 && e->enabled)
+    if (e->enabled)
     {
-        DrawSprite(&sprites[e->spriteIndex_Portrait],x,y,0.5f,0.5f,0,FRIENDLY,false);
+        if (e->spriteIndex_Portrait > 0)
+            DrawSprite(&sprites[e->spriteIndex_Portrait],x,y,0.5f,0.5f,0,FRIENDLY,false);
+        else
+            al_draw_filled_rectangle(x,y,x+13,y+13,FRIENDLY);
         if (e->canStack)
         {
             if (e->stacks > 1)
@@ -477,6 +480,12 @@ void DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c)
             }
         }
     }
+    Rect r = (Rect){x,y,16,16};
+    if (PointInRect(mouseState->x,mouseState->y,r))
+    {
+        return true;
+    }
+    return false;
 }
 bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, ALLEGRO_MOUSE_STATE* mouseState)
 {
@@ -569,21 +578,35 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        DrawEffectPortrait(162,223,&selected->effects[0],FRIENDLY);
-        DrawEffectPortrait(178,223,&selected->effects[1],FRIENDLY);
-        DrawEffectPortrait(194,223,&selected->effects[2],FRIENDLY);
-        DrawEffectPortrait(209,223,&selected->effects[3],FRIENDLY);
-        DrawEffectPortrait(225,223,&selected->effects[4],FRIENDLY);
-        DrawEffectPortrait(241,223,&selected->effects[5],FRIENDLY);
+        Effect* mousedOver = NULL; 
+        mousedOver = DrawEffectPortrait(162,223,&selected->effects[0],FRIENDLY,mouseState) == true ? &selected->effects[0] : mousedOver;
+        mousedOver = DrawEffectPortrait(178,223,&selected->effects[1],FRIENDLY,mouseState)== true ? &selected->effects[1] : mousedOver;
+        mousedOver = DrawEffectPortrait(194,223,&selected->effects[2],FRIENDLY,mouseState)== true ? &selected->effects[2] : mousedOver;
+        mousedOver = DrawEffectPortrait(209,223,&selected->effects[3],FRIENDLY,mouseState)== true ? &selected->effects[3] : mousedOver;
+        mousedOver = DrawEffectPortrait(225,223,&selected->effects[4],FRIENDLY,mouseState)== true ? &selected->effects[4] : mousedOver;
+        mousedOver = DrawEffectPortrait(241,223,&selected->effects[5],FRIENDLY,mouseState)== true ? &selected->effects[5] : mousedOver;
 
-        DrawEffectPortrait(162,241,&selected->effects[6],FRIENDLY);
-        DrawEffectPortrait(178,241,&selected->effects[7],FRIENDLY);
-        DrawEffectPortrait(194,241,&selected->effects[8],FRIENDLY);
-        DrawEffectPortrait(209,241,&selected->effects[9],FRIENDLY);
-        DrawEffectPortrait(225,241,&selected->effects[10],FRIENDLY);
-        DrawEffectPortrait(241,241,&selected->effects[11],FRIENDLY);
+        mousedOver = DrawEffectPortrait(162,241,&selected->effects[6],FRIENDLY,mouseState)== true ? &selected->effects[6] : mousedOver;
+        mousedOver = DrawEffectPortrait(178,241,&selected->effects[7],FRIENDLY,mouseState)== true ? &selected->effects[7] : mousedOver;
+        mousedOver = DrawEffectPortrait(194,241,&selected->effects[8],FRIENDLY,mouseState)== true ? &selected->effects[8] : mousedOver;
+        mousedOver = DrawEffectPortrait(209,241,&selected->effects[9],FRIENDLY,mouseState)== true ? &selected->effects[9] : mousedOver;
+        mousedOver = DrawEffectPortrait(225,241,&selected->effects[10],FRIENDLY,mouseState)== true ? &selected->effects[10] : mousedOver;
+        mousedOver = DrawEffectPortrait(241,241,&selected->effects[11],FRIENDLY,mouseState)== true ? &selected->effects[11] : mousedOver;
 
+        if (mousedOver)
+        {
+            size_t buffsize;
+            char null = '\0';
+            char* name = mousedOver->name != NULL? mousedOver->name : &null;
+            char* description = mousedOver->description != NULL ? mousedOver->description : &null;
 
+            buffsize = snprintf(NULL,0,"%s\n\n%s",name,description);
+            char* concatted = calloc(buffsize+1,sizeof(char));
+            sprintf(concatted,"%s\n\n%s",name,description);
+            DrawDescriptionBox(concatted,2,ui.font,ui.boldFont,16,170,224,41,ENEMY,true);
+            free(concatted);
+
+        }
     }
     if (chatboxes)
     {

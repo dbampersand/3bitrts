@@ -34,6 +34,7 @@ typedef struct Effect
     EFFECT_TYPE effectType;
     GameObject* from;
     char* name;
+    char* description;
     bool canStack;
     int stacks;
     float value;

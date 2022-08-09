@@ -19,10 +19,12 @@ function casted(x,y,obj,headingx,headingy)
 
     f2 = {};    
     f2["trigger"] = TRIGGER_TIMER;
-    f2["type"] = EFFECT_HEAL;
+    f2["type"] = EFFECT_HEAL;   
     f2["value"] = 20;  
     f2["duration"] = 10;
     f2["triggersPerSecond"] = 1;
+    f2["name"] = "Iridesce";
+    f2["description"] = "Every second, adds 20 shield to the target."
 
 
 
