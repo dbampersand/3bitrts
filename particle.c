@@ -22,13 +22,12 @@ void AddMouseRandomParticles(ALLEGRO_MOUSE_STATE mouseState, int numParticles)
     for (int i = 0; i < numParticles; i++)
         AddParticle(mouseState.x,mouseState.y,2,2,RandRange(-M_PI,M_PI),true);
 }
-void AddParticle(float x, float y, short lifetime, float speed, float angle, bool colour)
+void AddParticle(float x, float y, short lifetime, float speed, float angle, Color colour)
 {
     particle_x[PARTICLES_TOP] = x;
     particle_y[PARTICLES_TOP] = y;
     particle_lifetime[PARTICLES_TOP] = lifetime - RandRange(0,lifetime/2.0f);
-    if (colour)
-        particle_properties[PARTICLES_TOP] |= PARTICLE_COLOR; 
+    particle_colors[PARTICLES_TOP] = colour;
     particle_properties[PARTICLES_TOP] |= PARTICLE_ENABLED;
     particle_dir[PARTICLES_TOP] = angle;
     particle_speed[PARTICLES_TOP] = speed;
@@ -55,8 +54,15 @@ void DrawParticles()
     {
         if (particle_properties[i] & PARTICLE_ENABLED)
         {
-            ALLEGRO_COLOR col = (particle_properties[i] & PARTICLE_COLOR) ? FRIENDLY : ENEMY;
+            ALLEGRO_COLOR col = GetColor(particle_colors[i],0);
             al_draw_pixel(particle_x[i],particle_y[i],col);
         }
     }
+}
+void RandParticleAroundEdgeOfCircle(float cx, float cy, float r, short lifetime, float maxspeed, Color col)
+{
+    float angle = RandRange(-2*M_PI,2*M_PI);
+    float x = cx + cos(angle)*r;
+    float y = cy + sin(angle)*r;
+    AddParticle(x,y,RandRange(1,lifetime),RandRange(maxspeed/2.0f,maxspeed),RadToDeg(angle),col);
 }

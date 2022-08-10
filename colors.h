@@ -1,6 +1,7 @@
 #pragma once
 
 #include "allegro5/allegro.h"
+#include "effect.h"
 
 typedef enum DITHER_PATTERN
 {
@@ -59,6 +60,7 @@ ALLEGRO_COLOR DAMAGE;
 
 ALLEGRO_COLOR* ALColorLookup[COLOR_ALL];
 Color ColorHashTable[256];
+Color EffectColors[EFFECT_ALL];
 
 
 ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy);
@@ -66,3 +68,4 @@ Color ALColorToCol(ALLEGRO_COLOR c);
 void InitColors();
 bool AlColIsEq(ALLEGRO_COLOR c, ALLEGRO_COLOR c2);
 unsigned char HashColor(ALLEGRO_COLOR c);
+Color GetEffectColor(Effect* e);

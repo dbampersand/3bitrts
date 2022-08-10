@@ -13,6 +13,7 @@
 #include "luafuncs.h"
 #include "ability.h"
 #include "video.h"
+#include "particle.h"
 
 int attack_top = 0;
 
@@ -339,10 +340,21 @@ void DrawAttack(Attack* a, float dt)
 
     }
 }
+bool AttackIsAOE(Attack* a)
+{
+    return (a->attackType == ATTACK_AOE);
+}
 void UpdateAttack(Attack* a, float dt)
 {
     if (!(a->properties & ATTACK_ACTIVE))
         return;
+    if (AttackIsAOE(a))
+    {
+        if (_FRAMES%(int)(_TARGET_FPS/AOE_PARTICLES_PER_SECOND) == 0)
+        {
+            RandParticleAroundEdgeOfCircle(a->x,a->y,a->radius,3,1,a->color);
+        }
+    }
 
     if (a->cameFrom)
     {

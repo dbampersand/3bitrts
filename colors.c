@@ -117,9 +117,22 @@ void InitColors()
     queueCommandColors[COMMAND_STOP] = COLOR_FRIENDLY;
     queueCommandColors[COMMAND_ATTACKMOVE] = COLOR_DAMAGE;
 
+    EffectColors[EFFECT_NONE] = COLOR_BG;
+    EffectColors[EFFECT_MAXHP] = COLOR_HEAL;
+    EffectColors[EFFECT_HURT] = COLOR_DAMAGE;
+    EffectColors[EFFECT_HEAL] = COLOR_HEAL;
+    EffectColors[EFFECT_POSITION] = COLOR_GROUND_DARK;
+    EffectColors[EFFECT_THREAT] = COLOR_FRIENDLY;
+    EffectColors[EFFECT_SPEED] = COLOR_FRIENDLY;
+    EffectColors[EFFECT_SHIELD] = COLOR_HEAL;
+    EffectColors[EFFECT_DAMAGE] = COLOR_DAMAGE;
+    EffectColors[EFFECT_INVULN] = COLOR_HEAL;
+    EffectColors[EFFECT_CURE] = COLOR_HEAL;
 
+}
 
-
-
-
+Color GetEffectColor(Effect* e)
+{
+    if (!e) return COLOR_DEFAULT;
+    return EffectColors[e->effectType];
 }

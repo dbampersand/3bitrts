@@ -25,7 +25,8 @@ typedef enum EFFECT_TYPE
     EFFECT_SHIELD = 7,
     EFFECT_DAMAGE = 8,
     EFFECT_INVULN = 9,
-    EFFECT_CURE = 10
+    EFFECT_CURE = 10,
+    EFFECT_ALL
 } EFFECT_TYPE;
 
 typedef struct Effect
