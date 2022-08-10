@@ -27,7 +27,6 @@ function casted(x,y,obj,headingx,headingy)
     f2["description"] = "Every second, adds 20 shield to the target."
 
 
-
     ApplyEffect(obj,{f1,f2});
 
     return true;

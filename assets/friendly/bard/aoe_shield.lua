@@ -18,8 +18,10 @@ function casted()
     f1["type"] = EFFECT_SHIELD;
     --f1["numTriggers"] = 5
     f1["value"] = 10;
-    f1["duration"] = 10;
+    f1["duration"] = 1.5;
     f1["triggersPerSecond"] = 1
+    f1["name"] = "Song of Shielding"
+    f1["overwrites"] = true;
 
     aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_DAMAGE,DITHER_STAR_HALF, false, -1, {f1})
     return true;

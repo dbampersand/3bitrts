@@ -11,15 +11,17 @@ end
 local aoe = -1;
 local g = 5;
 function casted(x,y,obj,headingx,headingy)
+    UntoggleOthers();
 
-    
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HEAL;
     --f1["numTriggers"] = 5
     f1["value"] = 2;  
-    --f1["duration"] = 10;
+    f1["duration"] = 1.5;
     f1["triggersPerSecond"] = 1
+    f1["name"] = "Song of Healing"
+
 
     aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_HALF,false,-1, {f1})
 

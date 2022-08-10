@@ -88,9 +88,14 @@ void RemoveAttack(int attackindex)
     freeAttacks[attack_top] = attackindex;
     if (a->effects)
     {
+        for (int i = 0; i < a->numEffects; i++)
+        {
+            RemoveEffect(&a->effects[i],NULL);
+        }
         free(a->effects);
         a->effects = NULL;
     }
+
 
 }
 bool AttackIsSoak(Attack* a)

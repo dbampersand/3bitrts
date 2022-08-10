@@ -595,8 +595,8 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
     else
         e.description = NULL;
 
-
     e.canStack = (bool)GetTableField_Bool(l,-1,"canStack",&isField);
+    e.overwrites = (bool)GetTableField_Bool(l,-1,"overwrites",&isField);
     e.stacks = 0;
     e.timer = 0;
     e.numTriggers = e.duration * triggersPerSecond;

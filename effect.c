@@ -78,6 +78,11 @@ bool EffectIsEnabled(Effect* e)
 }
 void RemoveEffect(Effect* e, GameObject* from)
 {
+    if (e->trigger == TRIGGER_CONST && from)
+    {
+        ProcessEffect(e,e->from,from,true);
+    }
+
     if (e->canStack)
     {
         e->stacks--;
@@ -85,10 +90,6 @@ void RemoveEffect(Effect* e, GameObject* from)
             return;
     }
     e->enabled = false;
-    if (e->trigger == TRIGGER_CONST)
-    {
-        ProcessEffect(e,e->from,from,true);
-    }
     if (e->name)
         free(e->name);
     if (e->description)
@@ -133,9 +134,31 @@ void ProcessEffects(GameObject* g, float dt)
         }
     }
 }
+Effect CopyEffect(Effect* e)
+{
+    Effect e2 = *e;
+    if (e->name)
+    {
+        e2.name = calloc(strlen(e->name)+1,sizeof(char));
+        strcpy(e2.name,e->name);
+    }
+    if (e->description)
+    {
+        e2.description = calloc(strlen(e->description)+1,sizeof(char));
+        strcpy(e2.description,e->description);
+    }
+    return e2;
+
+}
 void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
 {
     if (!e) return;
+    //make a copy of the effect as otherwise we're using the same pointers for name/desc as the Attack
+    //which causes a crash when freed
+    //not an elegant solution but it works
+    Effect e2 = CopyEffect(e);
+    e = &e2;
+    
     if (HasAugment(currEncounterRunning,AUGMENT_BAD_EFFECT_TIME))
     {
         Augment_ChangeEffectTime(e,currEncounterRunning->augment);
@@ -159,6 +182,27 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
                         e2->value += e->value;
                         e2->duration = e->duration;
                         e2->stacks++;
+                        return;
+                    }
+                }
+            }
+        }
+
+        bool found = false;
+        for (int i = 0; i < MAX_EFFECTS; i++)
+        {
+            if (e->overwrites)
+            {
+                Effect* e2 = &target->effects[i];
+                
+                if (e->enabled && e->name && e2->name)
+                {
+                    if (strcmp(e->name,e2->name) == 0)
+                    {
+                        char* name = e2->name;
+                        char* desc = e2->description;
+
+                        memcpy(e2,e,sizeof(Effect));
                         return;
                     }
                 }

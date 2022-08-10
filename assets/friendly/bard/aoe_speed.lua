@@ -16,10 +16,12 @@ function casted()
     f1["type"] = EFFECT_SPEED;
     --f1["numTriggers"] = 5
     f1["value"] = 400;
-    f1["duration"] = 1  ;
+    f1["duration"] = 1.5;
     f1["triggersPerSecond"] = 1
+    f1["name"] = "Song of Speed"
+    f1["overwrites"] = true
 
-    aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_DEFAULT,DITHER_HALF,true, -1, {f1})
+    aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_DEFAULT,DITHER_HALF,false, -1, {f1})
     return true;
 end
 function untoggle()

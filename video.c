@@ -42,9 +42,6 @@ void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)
     //verticals
     al_draw_line(x,y+1,x,y+h,color,1);
     al_draw_line(x+h,y+1,x+h,y+h,color,1);
-
-
-
 }
 void DrawOutlinedRect_Dithered(Rect* r, ALLEGRO_COLOR color)
 {
@@ -85,10 +82,6 @@ void DrawOutlinedRect_Dithered(Rect* r, ALLEGRO_COLOR color)
     al_draw_pixel(r->x+r->w,r->y+r->h,color);
     al_draw_pixel(r->x+r->w-1,r->y+r->h,color);
     al_draw_pixel(r->x+r->w,r->y+r->h-1,color);
-
-
-
-    //}
 }
 int GetBarycentricCoord(int x0, int y0, int x1, int y1, int pX, int pY)
 {

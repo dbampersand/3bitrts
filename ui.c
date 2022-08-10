@@ -1679,15 +1679,15 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
     {
         if (GameIsIngame())
         {
-
             if (ui.currentPanel)
             {
                 ChangeUIPanel(NULL);
+                WriteSettingsFile("config.cfg");
                 //ui.currentPanel = NULL;
             }
             else
             {
-                    ChangeUIPanel(&ui.pauseMenuPanel);
+                ChangeUIPanel(&ui.pauseMenuPanel);
             }
         }
     }

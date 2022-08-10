@@ -49,6 +49,7 @@ typedef struct Effect
 
     int spriteIndex_Portrait;
 
+    bool overwrites;
     
 } Effect;
 
