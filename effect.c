@@ -219,10 +219,12 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
                 {
                     //processeffect returns true if the object died
                     if (ProcessEffect(e,from,target,false))
-                        break;
+                        return;
                 }
-                break;
+                return;
             }
         }
     }
+    //if we get here then we haven't applied it to anything
+    RemoveEffect(e,target);
 }

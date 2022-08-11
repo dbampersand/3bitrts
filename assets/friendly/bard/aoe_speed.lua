@@ -21,7 +21,7 @@ function casted()
     f1["name"] = "Song of Speed"
     f1["overwrites"] = true
 
-    aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_DEFAULT,DITHER_HALF,false, -1, {f1})
+    aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_DEFAULT,DITHER_HALF,true, -1, {f1})
     return true;
 end
 function untoggle()
