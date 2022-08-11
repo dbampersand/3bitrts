@@ -1462,11 +1462,11 @@ void DrawObjShadow(GameObject* g)
     int w = GetWidth(g);
     int h = GetHeight(g);
 
-    int lineW = (floor(w/16.0f));
-    int lineH = (floor(h/16.0f));
+    int lineW = (ceil(w/16.0f));
+    int lineH = (ceil(h/16.0f));
 
-    lineW = lineW == 0 ? 1 : lineW;
-    lineH = lineH == 0 ? 1 : lineH;
+    lineW = lineW == 0 ? 2 : lineW;
+    lineH = lineH == 0 ? 2 : lineH;
     Rect r = (Rect){x+1,y+1,w+lineW-1,h+lineH-1};
     DrawRoundedRect(r,BG,true);
 }

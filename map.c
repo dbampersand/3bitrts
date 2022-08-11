@@ -177,8 +177,8 @@ void UpdateMap(Map* m, float dt)
 //This is for drawing over the shadows
 void RedrawMapSegmentUnderObj(GameObject* g)
 {
-    int x = g->position.x;
-    int y = g->position.y;
+    int x = g->position.x + g->offset.x;
+    int y = g->position.y + g->offset.y;
     int w = GetWidth(g);
     int h = GetHeight(g);
 
