@@ -302,7 +302,8 @@ void DrawAttack(Attack* a, float dt)
 {
     if (a->attackType == ATTACK_AOE)
     {
-        al_draw_circle(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)),1);
+        if (a->dither == DITHER_NONE || a->properties &  ATTACK_DRAW_CIRCLE)
+            al_draw_circle(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)),1);
         draw_circle_dithered(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)),a->dither);
         if (AttackIsSoak(a))
         {

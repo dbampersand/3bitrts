@@ -537,24 +537,36 @@ int L_AbilityIsOnCooldown(lua_State* l)
     lua_pushboolean(l,true);
     return 1;
 }
+int SortThreat(const void* a, const void* b)
+{
+    return (*(int*)a - *(int*)b);
+}
 
 int L_GetThreatRank(lua_State* l)
 {
     int j = GetNumThreats(&currGameObjRunning->threatList);
     Threat* next = &currGameObjRunning->threatList;
     lua_newtable(l);
+    
+    int* threats = calloc(j,sizeof(int));
+    for (int i = 0; i < j; i++)
+    {
+        int threat = next->obj - objects;
+        threats[i] = next->obj-objects;
+        next = next->next;
+
+        if (!next)
+            break;
+    }
+    qsort(threats,j,sizeof(threats[0]),SortThreat);
     for (int i = 0; i < j; i++)
     {
         lua_pushnumber(l,i+1);
-        lua_pushnumber(l,next->obj-objects);
+        lua_pushnumber(l,threats[i]);
 
         lua_settable(l,-3);
-        next = next->next;
-
-        if (!next) 
-            break;
     }
-
+    free(threats);
     return 1; 
 }
 
@@ -1035,6 +1047,22 @@ int L_GetNumEffects(lua_State* l)
     }
     return 1;
 }
+int L_SetAttackCircle(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index >= 0 && index < MAX_ATTACKS)
+    {
+        Attack* a = &attacks[index];
+        bool circle = lua_toboolean(l,2);
+        if (circle)
+        {
+            a->properties |= ATTACK_DRAW_CIRCLE;
+        }
+        else
+            a->properties &= !(ATTACK_PROPERTIES)ATTACK_DRAW_CIRCLE;
+    }
+    return 0;
+}
 int L_CreateAOE(lua_State* l)
 {
     //read from table of effects
@@ -1427,6 +1455,21 @@ int L_KillObj(lua_State* l)
         KillObj(&objects[index],triggerEffects);
     }
     return 0;
+}
+int L_GetObjectName(lua_State* l)
+{
+    int index = lua_tointeger(l,1);
+    if (index >= 0 && index < MAX_OBJS)
+    {
+        GameObject* g = &objects[index];
+        if (g->name)
+        {
+            lua_pushstring(l,g->name);
+            return 1;
+        }
+    }
+    lua_pushstring(l,"");
+    return 1;
 }
 int L_GetControlGroup(lua_State* l)
 {
@@ -2450,5 +2493,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetCategory);
     lua_setglobal(luaState, "SetCategory");
+
+    lua_pushcfunction(luaState, L_SetAttackCircle);
+    lua_setglobal(luaState, "SetAttackCircle");
+
+    lua_pushcfunction(luaState, L_GetObjectName);
+    lua_setglobal(luaState, "GetObjectName");
 
 }
