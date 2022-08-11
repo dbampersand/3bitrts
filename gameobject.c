@@ -1041,6 +1041,8 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
         return;
     if (dV == 0) return;
     Sprite* s = &sprites[g->spriteIndex];
+    if (ObjIsDecoration(g)) 
+        dV = -dV;
 
     for (int i = 0; i < numObjects; i++)
     {
@@ -1052,8 +1054,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
         Sprite* s2 = &sprites[g2->spriteIndex];
         Rect r2 = (Rect){g2->position.x,g2->position.y,GetWidth(g2),GetHeight(g2)};
         //Decoration objects are always static
-        if (ObjIsDecoration(g)) 
-            dV = -dV;
         if (!CheckIntersect(rG,r2))
         {
             continue;
