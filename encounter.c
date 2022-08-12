@@ -68,10 +68,16 @@ void LoadEncounter(char* dirPath, lua_State* l)
         numEncountersAlloced++;
         encounters = realloc(encounters,numEncountersAlloced*sizeof(Encounter*));
     }
+
+    InitButton(&e->encounter_ButtonLeft,"<","<",0,224,48,16,0);
+    InitButton(&e->encounter_ButtonConfirm,"Select Party","Select Party",0,224,96,16,0);
+    InitButton(&e->encounter_ButtonRight,">",">",0,224,48,16,0);
+
     e->augment = 1;
     ClearAugments(e);
     encounters[numEncounters] = e;
     numEncounters++;
+
 
 }
 bool FileIsInFolder(char* dirPath, char* fileName)
@@ -96,12 +102,16 @@ int sortEncounters(const void* a, const void* b)
 {
     Encounter* e =  *(Encounter**)a;
     Encounter* e2 = *(Encounter**)b;
-
+    if (e->encounterShouldBeSkipped) return 1;
     return ( e->difficulty - e2->difficulty);
 }
 
 void LoadEncounters(char* dirPath, lua_State* l)
 {
+
+    encounterOffset = 0;
+    encounterMoveTo = 0;
+    
     numEncountersAlloced=0;
     numEncounters=0;
     encounters = NULL;
@@ -155,10 +165,30 @@ void LoadEncounters(char* dirPath, lua_State* l)
 }
 void NextEncounter()
 {
+
     if (numEncounters == 0)
         return;
 
     selectedEncounterIndex++;
+
+    if (selectedEncounterIndex < numEncounters)
+    {
+        Encounter* e = encounters[selectedEncounterIndex];
+        if (e->encounterShouldBeSkipped)
+        {
+            selectedEncounterIndex--;
+
+            return;    
+        }
+    }
+    else
+    {
+        selectedEncounterIndex--;
+        return;
+    }
+        encounterMoveTo += _SCREEN_SIZE;
+    encounterMoveTimer = 0;
+
     selectedEncounterIndex = (selectedEncounterIndex) % (numEncounters);
     while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped)
     {
@@ -173,6 +203,24 @@ void PreviousEncounter()
         return;
 
     selectedEncounterIndex--;
+
+    if (selectedEncounterIndex >= 0)
+    {
+        Encounter* e = encounters[selectedEncounterIndex];
+        if (e->encounterShouldBeSkipped)
+        {
+            selectedEncounterIndex++;
+            return;    
+        }
+    }
+    else
+    {
+        selectedEncounterIndex++;
+        return;
+    }
+    encounterMoveTo -= _SCREEN_SIZE;
+    encounterMoveTimer = 0;
+
     selectedEncounterIndex = (selectedEncounterIndex) % (numEncounters-1);
     while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped)
     {

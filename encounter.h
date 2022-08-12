@@ -3,6 +3,7 @@
 #include "ability.h"
 #include "limits.h"
 #include "augment.h"
+#include "ui.h"
 
 typedef struct Sprite Sprite;
 typedef struct lua_State lua_State;
@@ -47,6 +48,11 @@ typedef struct Encounter
 
     bool automaticWinCheck;
 
+
+    UIElement encounter_ButtonLeft;
+    UIElement encounter_ButtonConfirm;
+    UIElement encounter_ButtonRight;
+
 } Encounter;
 
 void LoadEncounter(char* dirPath,lua_State* l);
@@ -59,6 +65,14 @@ void UpdateEncounter(float dt);
 Encounter** encounters;
 int numEncounters;
 int numEncountersAlloced;
+
+bool encounterTransitioning;
+float encounterMoveTimer;
+float encounterSelectOffset;
+
+float encounterOffset;
+float encounterMoveTo;
+
 Encounter* currEncounterRunning;
 
 int selectedEncounterIndex;

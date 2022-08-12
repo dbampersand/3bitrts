@@ -124,6 +124,10 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     UpdateWidgets(dt);
     UpdateChatbox(dt);
 }
+float easeOutQuint(float x) {
+    if (x > 1) return 1;
+    return 1 - pow(1 - x, 5);
+}
 
 void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
@@ -132,7 +136,9 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     al_set_target_bitmap(SCREEN);
     if (gameState == GAMESTATE_CHOOSING_ENCOUNTER)
     {
-        DrawLevelSelect(mouseState,mouseStateLastFrame);
+        DrawAllLevelSelects(mouseState,mouseStateLastFrame);
+        encounterMoveTimer += dt;
+        encounterOffset = Towards(encounterOffset,encounterMoveTo,easeOutQuint(encounterMoveTimer)*_SCREEN_SIZE/8.0f);
         DrawMouse(mouseState, NULL);
         DrawTransition(dt);
 

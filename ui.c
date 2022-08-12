@@ -614,31 +614,39 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
     }
 
 }
-void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+void DrawAllLevelSelects(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
-    Encounter* e = encounters[selectedEncounterIndex];
+    for (int i = 0; i < numEncounters; i++)
+    {
+        int offset =  _SCREEN_SIZE*i - encounterOffset;//i*_SCREEN_SIZE - selectedEncounterIndex*_SCREEN_SIZE;
+        DrawLevelSelect(mouseState,mouseStateLastFrame,i,offset);
+    }
+}
+void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, int index, int offsetX)
+{
+    Encounter* e = encounters[index];
 
     char* augmentStr = calloc(NumDigits(e->augment)+1,sizeof(char));
     sprintf(augmentStr,"%i",e->augment);
 
-    al_draw_text(ui.font,FRIENDLY,16,18,0,"Augment");
-    al_draw_text(ui.font,FRIENDLY,84,18,0,augmentStr);
+    al_draw_text(ui.font,FRIENDLY,16+offsetX,18,0,"Augment");
+    al_draw_text(ui.font,FRIENDLY,84+offsetX,18,0,augmentStr);
 
     int amtDamagePercent = GetAugmentDamageBonus(100,e->augment);
     char* dmgString = calloc(1 + NumDigits(amtDamagePercent) + 1 +strlen("Damage ") + 1,sizeof(char));
     sprintf(dmgString,"+%i%% Damage",amtDamagePercent);
-    al_draw_text(ui.tinyFont,FRIENDLY,16,40,0,dmgString);
+    al_draw_text(ui.tinyFont,FRIENDLY,16+offsetX,40,0,dmgString);
 
 
     int amtHealthPercent = GetAugmentHealthBonus(100,e->augment);
     char* healthString = calloc(1 + NumDigits(amtHealthPercent) + 1 +strlen("HP ") + 1,sizeof(char));
     sprintf(healthString,"+%i%% HP",amtHealthPercent);
-    al_draw_text(ui.tinyFont,FRIENDLY,92,40,0,healthString);
+    al_draw_text(ui.tinyFont,FRIENDLY,92+offsetX,40,0,healthString);
 
     int amtAbilityPercent = GetAugmentAbilityDamage(100,e->augment);
     char* abilityDmg = calloc(1 + NumDigits(amtAbilityPercent) + 1 +strlen("Ability Damage ") + 1,sizeof(char));
     sprintf(abilityDmg,"+%i%% Ability Damage",amtAbilityPercent);
-    al_draw_text(ui.tinyFont,FRIENDLY,138,40,0,abilityDmg);
+    al_draw_text(ui.tinyFont,FRIENDLY,138+offsetX,40,0,abilityDmg);
     
 
     int row = 52;
@@ -649,7 +657,7 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
         char* description = GetAugmentDescription(a->augment);
         ALLEGRO_COLOR* color = GetAugmentDescriptionColor(a);
 
-        al_draw_text(ui.tinyFont,*color,column,row,0,description);
+        al_draw_text(ui.tinyFont,*color,column+offsetX,row,0,description);
 
         column += al_get_text_width(ui.tinyFont,description)+5;
         if (i+1 == MAX_AUGMENTS/2)
@@ -670,7 +678,7 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
         e->augment = 1; 
     for (int i = 0; i < e->maxaugment+1; i++)
     {
-        Rect drawRect = (Rect){augmentX,20,GetWidthSprite(&sprites[ui.augmentIconIndex]),GetHeightSprite(&sprites[ui.augmentIconIndex])};
+        Rect drawRect = (Rect){augmentX+offsetX,20,GetWidthSprite(&sprites[ui.augmentIconIndex]),GetHeightSprite(&sprites[ui.augmentIconIndex])};
         DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0.5f,0.5f,0,i < e->augment ? FRIENDLY : GROUND,false);
         augmentX += drawRect.w+3;
 
@@ -686,20 +694,20 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
 
     free(augmentStr);
 
-    al_draw_line(10,73,246,73,FRIENDLY,1);
+    al_draw_line(10+offsetX,73,246,73,FRIENDLY,1);
     
-    al_draw_text(ui.font,FRIENDLY,16,81,0,"Wyrm");
-    DrawSprite(&sprites[e->spriteIndex],17,102,0.5f,0.5f,0,ENEMY,false);
+    al_draw_text(ui.font,FRIENDLY,16+offsetX,81,0,"Wyrm");
+    DrawSprite(&sprites[e->spriteIndex],17+offsetX,102,0.5f,0.5f,0,ENEMY,false);
 
     Ability* mousedOver = NULL;
-    mousedOver = DrawAbility(&e->abilities[0], 96, 80, ENEMY, mouseState) == true ? &e->abilities[0] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[1], 136, 80, ENEMY, mouseState) == true ? &e->abilities[1] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[2], 175, 80, ENEMY, mouseState) == true ? &e->abilities[2] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[3], 214, 80, ENEMY, mouseState) == true ? &e->abilities[3] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[4], 96, 134, ENEMY, mouseState) == true ? &e->abilities[4] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[5], 136, 134, ENEMY, mouseState) == true ? &e->abilities[5] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[6], 175, 134, ENEMY, mouseState) == true ? &e->abilities[6] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[7], 214, 134, ENEMY, mouseState) == true ? &e->abilities[7] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[0], 96+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[0] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[1], 136+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[1] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[2], 175+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[2] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[3], 214+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[3] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[4], 96+offsetX, 134, ENEMY, mouseState) == true ? &e->abilities[4] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[5], 136+offsetX, 134, ENEMY, mouseState) == true ? &e->abilities[5] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[6], 175+offsetX, 134, ENEMY, mouseState) == true ? &e->abilities[6] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[7], 214+offsetX, 134, ENEMY, mouseState) == true ? &e->abilities[7] : mousedOver;
 
 
     char* descriptionToDraw;
@@ -713,7 +721,7 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     }
     if (descriptionToDraw)
     {
-        DrawDescriptionBox(descriptionToDraw,2,ui.font,ui.boldFont,16,170,224,41,ENEMY,true);
+        DrawDescriptionBox(descriptionToDraw,2,ui.font,ui.boldFont,16+offsetX,170,224,41,ENEMY,true);
 
     }
     ui.panelShownPercent=1.0f;
@@ -721,41 +729,45 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
 
 
 
-    UpdateButton(16,224,&ui.encounter_ButtonLeft,mouseState,mouseStateLastFrame);
-    UpdateButton(80,224,&ui.encounter_ButtonConfirm,mouseState,mouseStateLastFrame);
-    UpdateButton(192,224,&ui.encounter_ButtonRight,mouseState,mouseStateLastFrame);
+    UpdateButton(16+offsetX,224,&e->encounter_ButtonLeft,mouseState,mouseStateLastFrame);
+    UpdateButton(80+offsetX,224,&e->encounter_ButtonConfirm,mouseState,mouseStateLastFrame);
+    UpdateButton(192+offsetX,224,&e->encounter_ButtonRight,mouseState,mouseStateLastFrame);
 
-    if (selectedEncounterIndex>0)
+    if (index > 0)
     {
-       // ui.encounter_ButtonLeft.enabled = true;
+        e->encounter_ButtonLeft.enabled = true;
     }
     else {
-        //ui.encounter_ButtonLeft.enabled = false;
+        e->encounter_ButtonLeft.enabled = false;
     }
-    if (selectedEncounterIndex+1 < numEncounters)
+    if (index+1 < numEncounters)
     {
-        //ui.encounter_ButtonRight.enabled = true;
+        e->encounter_ButtonRight.enabled = true;
+        if (encounters[index+1]->encounterShouldBeSkipped)
+                e->encounter_ButtonRight.enabled = false;
     }
     else {
-       // ui.encounter_ButtonRight.enabled = false;
+        e->encounter_ButtonRight.enabled = false;
     }
-    DrawUIElement(&ui.encounter_ButtonLeft,16,224,mouseState,BG);
-    DrawUIElement(&ui.encounter_ButtonConfirm,80,224,mouseState,BG);
-    DrawUIElement(&ui.encounter_ButtonRight,192,224,mouseState,BG);
 
-    if (GetButtonIsClicked(&ui.encounter_ButtonLeft))
+    DrawUIElement(&e->encounter_ButtonLeft,16+offsetX,224,mouseState,BG);
+    DrawUIElement(&e->encounter_ButtonConfirm,80+offsetX,224,mouseState,BG);
+    DrawUIElement(&e->encounter_ButtonRight,192+offsetX,224,mouseState,BG);
+
+
+    if (GetButtonIsClicked(&e->encounter_ButtonLeft))
     {
         PreviousEncounter();
         //selectedEncounterIndex--;
         if (selectedEncounterIndex < 0)
             selectedEncounterIndex = 0;
     }
-    if (GetButtonIsClicked(&ui.encounter_ButtonConfirm))
+    if (GetButtonIsClicked(&e->encounter_ButtonConfirm))
     {
         //gameState = GAMESTATE_CHOOSING_UNITS;
         SetGameStateToChoosingParty();
     }
-    if (GetButtonIsClicked(&ui.encounter_ButtonRight))
+    if (GetButtonIsClicked(&e->encounter_ButtonRight))
     {
         //selectedEncounterIndex++;
         NextEncounter();
@@ -1352,9 +1364,9 @@ void InitUI()
 
 
     ui.encounter_scroll = CreatePanel(16,224,224,16,0,true);
-    InitButton(&ui.encounter_ButtonLeft,"<","<",0,224,48,16,0);
-    InitButton(&ui.encounter_ButtonConfirm,"Select Party","Select Party",0,224,96,16,0);
-    InitButton(&ui.encounter_ButtonRight,">",">",0,224,48,16,0);
+   // InitButton(&ui.encounter_ButtonLeft,"<","<",0,224,48,16,0);
+    //InitButton(&ui.encounter_ButtonConfirm,"Select Party","Select Party",0,224,96,16,0);
+    //InitButton(&ui.encounter_ButtonRight,">",">",0,224,48,16,0);
 
     InitButton(&ui.choosingUnits_Back,"Back","Back",45,194,48,16,0);
     InitButton(&ui.choosingUnits_GO,"Adventure","Adventure",109,194,96,16,0);

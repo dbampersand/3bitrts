@@ -173,9 +173,9 @@ typedef struct UI
 
     //Encounter selection
     Panel encounter_scroll; 
-    UIElement encounter_ButtonLeft;
-    UIElement encounter_ButtonConfirm;
-    UIElement encounter_ButtonRight;
+    //UIElement encounter_ButtonLeft;
+    //UIElement encounter_ButtonConfirm;
+    //UIElement encounter_ButtonRight;
 
     UIElement choosingUnits_Back;
     UIElement choosingUnits_GO;
@@ -259,7 +259,8 @@ bool GetButton(Panel* p, char* name);
 Button* GetButtonB(Panel* p, char* name);
 void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_COLOR bgColor); 
 void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState);
-void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
+void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, int index, int offsetX);
+void DrawAllLevelSelects();
 void ChangeUIPanel(Panel* to);
 bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MOUSE_STATE* mouse);
 void InitButton(UIElement* u, char* name, char* description, int x, int y, int w, int h, int sprite);
