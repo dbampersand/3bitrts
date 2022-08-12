@@ -66,10 +66,7 @@ Encounter** encounters;
 int numEncounters;
 int numEncountersAlloced;
 
-bool encounterTransitioning;
 float encounterMoveTimer;
-float encounterSelectOffset;
-
 float encounterOffset;
 float encounterMoveTo;
 

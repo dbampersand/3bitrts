@@ -137,7 +137,7 @@ void LoadEncounters(char* dirPath, lua_State* l)
                 }
                 free(dirConcat);
             }
-        }
+        }   
         rewinddir(d);
     }
     encounters = calloc(numEncountersAlloced,sizeof(Encounter*));

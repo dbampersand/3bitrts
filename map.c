@@ -13,10 +13,12 @@
 
 void PreprocessMap(Map* map)
 {
+    ALLEGRO_BITMAP* before = al_get_target_bitmap();
+
     memset(&map->collision,0,_MAPSIZE*_MAPSIZE/_GRAIN);
     int w; int h; 
     ALLEGRO_BITMAP* sprite = sprites[map->spriteIndex].sprite;
-    w = al_get_bitmap_width(sprite);
+     w = al_get_bitmap_width(sprite);
     h = al_get_bitmap_height(sprite);
 
     al_lock_bitmap(sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
@@ -35,8 +37,9 @@ void PreprocessMap(Map* map)
         }
       }
    }
+
     Sprite* secondLayer = NewSprite(w,h);
-    secondLayer-> path = sprites[map->spriteIndex].path;
+    secondLayer-> path = calloc(1,sizeof(char));    
     map->secondLayerSpriteIndex = secondLayer - sprites;
    al_set_target_bitmap(secondLayer->sprite);
    al_lock_bitmap(secondLayer->sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_WRITEONLY);
@@ -50,6 +53,10 @@ void PreprocessMap(Map* map)
     }
    al_unlock_bitmap(secondLayer->sprite);
    al_unlock_bitmap(sprite);
+
+   al_set_target_bitmap(before);
+
+
 }
 
 void loadLuaGameMap(lua_State* l, const char* filename, Map* m) 

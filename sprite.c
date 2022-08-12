@@ -118,6 +118,12 @@ Sprite* NewSprite(int w, int h)
         sprites = realloc(sprites,maxSprites*sizeof(Sprite));
     }
     ALLEGRO_BITMAP* b = al_create_bitmap(w,h);
+    ALLEGRO_BITMAP* before = al_get_target_bitmap();
+    al_set_target_bitmap(b);
+    al_clear_to_color(al_map_rgba(0,0,0,0));
+    al_set_target_bitmap(before);
+
+
 
     Sprite* s = &sprites[numSprites];
     s->sprite = b;
