@@ -1,4 +1,5 @@
 #pragma once
+
 #include "point.h"
 
 #define MAX_LOADSCREEN_STATES 5

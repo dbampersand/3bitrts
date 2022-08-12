@@ -321,6 +321,20 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         if (GetDist(g,target) > a->range)
             return;
     }
+    if (g)
+    {
+        float tx = x; float ty = y;
+        if (target)
+        {
+            GetCentre(target,&tx,&ty);
+        }
+        float cx; float cy;
+        GetCentre(g,&cx,&cy);
+        float distance = dist(cx,cy,tx,ty);
+        if (distance > a->range)
+            return;
+
+    }
     if (target == NULL && AbilityShouldBeCastOnTarget(a) && !AbilityCanBeCastOnGround(a))
         return;
 

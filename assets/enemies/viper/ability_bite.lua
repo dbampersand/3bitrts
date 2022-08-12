@@ -1,6 +1,6 @@
 function setup()
 
-    SetAbilityRange(2)
+    SetAbilityRange(30)
     --AbilitySetCastType(ABILITY_CONE);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(20); 

@@ -1873,9 +1873,12 @@ int L_CastAbility(lua_State* l)
     }
     else
     {
-        GameObject* g = &objects[obj];
-        CastAbility(currGameObjRunning,&currGameObjRunning->abilities[index],x,y,headingx,headingy,&objects[obj]);
+        GameObject* g = NULL;
+        if (obj >= 0 && obj < MAX_OBJS)
+            g = &objects[obj];
 
+        CastAbility(currGameObjRunning,&currGameObjRunning->abilities[index],x,y,headingx,headingy,g);
+        
     }
     return 1;
 }
