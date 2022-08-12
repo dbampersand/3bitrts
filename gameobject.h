@@ -76,6 +76,7 @@ typedef struct GameObject
 
     unsigned int spriteIndex;
     unsigned int selectedSpriteIndex;
+    unsigned int channelingSpriteIndex;
 
     int luafunc_update;
     int luafunc_setup;

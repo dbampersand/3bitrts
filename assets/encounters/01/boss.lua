@@ -8,13 +8,14 @@ local summonAdd = 0
 local bomb = 0
 
 local decisionTime = 0
-local makeChoice = 5
+local makeChoice = 3
 
 local enraged = false
 
 local inCombat = false;
 function setup()
-    SetSprite("assets/enemies/wyrm.png");
+    SetSprite("assets/enemies/wyrm_boss/wyrm.png");
+    SetChannelingSprite("assets/enemies/wyrm_boss/wyrm_channeling.png");
     bite = AddAbility("assets/enemies/wyrm_boss/ability_bite.lua",0)   
     fire = AddAbility("assets/enemies/wyrm_boss/ability_fire.lua",1)    
     nuke = AddAbility("assets/enemies/wyrm_boss/ability_nuke.lua",2)    
@@ -36,10 +37,6 @@ function update(dt)
     end
     decisionTime = 0;
 
-    local bombtarg = {}
-    bombtarg["target"] = GetRandomUnit(TYPE_ENEMY,Bor(Bor(TYPE_HEALER,TYPE_RANGEDDPS),TYPE_MELEEDPS))
-
-    CastAbility(bomb,0.1,{bombtarg});
 
     j = GetThreatRank()
 
@@ -54,28 +51,32 @@ function update(dt)
             inCombat = true;
 
         end
-        print(target["target"]);
-        CastAbility(0,0,{target});
+
+        local bombtarg = {}
+        bombtarg["target"] = GetRandomUnit(TYPE_ENEMY,Bor(Bor(TYPE_HEALER,TYPE_RANGEDDPS),TYPE_MELEEDPS))
+    
+        --CastAbility(bomb,0.1,{bombtarg});
+    
 
         targ0 = {};
         targ0["target"] = GetHighestThreat();
-        CastAbility(bite,4,{targ0});
+        CastAbility(bite,1,{targ0});
 
         if (AbilityIsOnCooldown(GetObjRef(),1) == false) then
 
             aoeTarget = GetRandomUnit(TYPE_ENEMY,TYPE_HEALER)
             targ1 = {};
             targ1["target"] = aoeTarget;
-            CastAbility(fire,0.1,{targ1});
+            --CastAbility(fire,0.1,{targ1});
         end
         
         targ2 = {}
         targ2["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL);
-        CastAbility(nuke,0.1,{targ2});
+       -- CastAbility(nuke,0.1,{targ2});
 
         targ3 = {};
         targ3["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_TANK)
-        CastAbility(firebreath,4,{targ3});
+        --CastAbility(firebreath,4,{targ3});
 
 
     end

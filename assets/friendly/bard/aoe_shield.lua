@@ -24,6 +24,8 @@ function casted()
     f1["overwrites"] = true;
 
     aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_DAMAGE,DITHER_STAR_HALF, false, -1, {f1})
+    SetAttackCircle(aoe,true);
+   
     return true;
 end
 function untoggle()

@@ -21,7 +21,9 @@ function update(dt)
         f1["type"] = EFFECT_CURE;
         f1["value"] = 1;
         timer = 0
-        CreateAOE(RandRange(72,160),RandRange(32,215),"",20,0.25,5,false,ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_VERTICAL_HALF,false,-1,{f1});
+        local aoe = CreateAOE(RandRange(72,160),RandRange(32,215),"",20,0.25,5,false,ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_VERTICAL_HALF,false,-1,{f1});
+        SetAttackCircle(aoe,true);
+
     end
 
 end

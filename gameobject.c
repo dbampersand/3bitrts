@@ -881,6 +881,8 @@ void KillObj(GameObject* g, bool trigger)
 
     g->properties &= ~OBJ_ACTIVE;
     g->spriteIndex = 0;
+    g->channelingSpriteIndex = 0;
+
     DeleteThreatList(g);
     if (g->shields)
     {
@@ -1501,7 +1503,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
 
     RedrawMapSegmentUnderObj(g);
         
-    Sprite* s = &sprites[g->spriteIndex];
+    Sprite* s = ObjIsChannelling(g) ? &sprites[g->channelingSpriteIndex] :  &sprites[g->spriteIndex];
     bool isReversed = IsSelected(g) || forceInverse;
     isReversed = g->flashTimer > 0 ? !isReversed : isReversed;
 

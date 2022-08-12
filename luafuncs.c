@@ -1414,6 +1414,8 @@ int L_AbilitySetCastType(lua_State* l)
 int L_SetSprite(lua_State* l)
 {
     currGameObjRunning->spriteIndex = LoadSprite(lua_tostring(l,-1),true);
+    if (currGameObjRunning->channelingSpriteIndex == 0)
+        currGameObjRunning->channelingSpriteIndex = currGameObjRunning->spriteIndex;
     return 0;
 }
 int L_SetMapSprite(lua_State* l)
@@ -1470,6 +1472,11 @@ int L_GetObjectName(lua_State* l)
     }
     lua_pushstring(l,"");
     return 1;
+}
+int L_SetChannelingSprite(lua_State* l)
+{
+    currGameObjRunning->channelingSpriteIndex = LoadSprite(lua_tostring(l,-1),true);
+    return 0;
 }
 int L_GetControlGroup(lua_State* l)
 {
@@ -2502,5 +2509,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetObjectName);
     lua_setglobal(luaState, "GetObjectName");
+
+    lua_pushcfunction(luaState, L_SetChannelingSprite);
+    lua_setglobal(luaState, "SetChannelingSprite");
 
 }

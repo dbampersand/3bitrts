@@ -24,7 +24,7 @@ function casted(x,y,obj,headingx,headingy)
 
 
     aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_HALF,false,-1, {f1})
-
+    SetAttackCircle(aoe,true);
     return true; 
 end
 
@@ -40,10 +40,6 @@ function onhit(x,y,objhit)
 end
 
 function abilitytick(x, y, durationLeft, obj, target)
-    Print(aoe);
-    --Print(g);
-
-
     MoveAttack(GetAttackRef(),GetX(obj),GetY(obj));
 
 end

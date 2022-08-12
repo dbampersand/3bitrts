@@ -329,8 +329,10 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
             GetCentre(target,&tx,&ty);
         }
         float cx; float cy;
-        GetCentre(g,&cx,&cy);
+        GetCentre(g,&cx,&cy); 
         float distance = dist(cx,cy,tx,ty);
+        if (target)
+            distance = RectDist(g,target);
         if (distance > a->range)
             return;
 

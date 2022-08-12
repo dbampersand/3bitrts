@@ -1,5 +1,5 @@
 function setup()
-    SetEncounterSprite("assets/enemies/wyrm.png");
+    SetEncounterSprite("assets/enemies/wyrm_boss/wyrm.png");
     SetEncounterDescription("The wyrm.")
     SetEncounterName("Wyrm");
 
