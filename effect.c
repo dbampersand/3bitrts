@@ -90,6 +90,14 @@ void RemoveEffect(Effect* e, GameObject* from)
             return;
     }
     e->enabled = false;
+    if (from)
+    {
+        for (int i = e - from->effects; i < MAX_EFFECTS-1; i++)
+        {
+            from->effects[i] = from->effects[i+1];
+        }
+
+    }
     if (e->name)
         free(e->name);
     if (e->description)
