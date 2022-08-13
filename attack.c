@@ -302,9 +302,21 @@ void DrawAttack(Attack* a, float dt)
 {
     if (a->attackType == ATTACK_AOE)
     {
+        Color c = a->color;
+        float timeleft = a->duration;
+        if (timeleft < 4.0f && timeleft >= 0.1f)
+        {
+            int coef = (_TARGET_FPS*2) - (1/timeleft * (_TARGET_FPS/1.5f));
+            coef = coef > (_TARGET_FPS/14) ? coef : _TARGET_FPS/14;
+            if (_FRAMES % (coef) >= 0 && _FRAMES % (coef) < 6)
+            {
+                c = COLOR_GROUND_DARK;
+            }
+        }
+
         if (a->dither == DITHER_NONE || a->properties &  ATTACK_DRAW_CIRCLE)
-            al_draw_circle(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)),1);
-        draw_circle_dithered(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)),a->dither);
+            al_draw_circle(a->x,a->y,a->radius,GetColor(c,GetPlayerOwnedBy(a->ownedBy)),1);
+        draw_circle_dithered(a->x,a->y,a->radius,GetColor(c,GetPlayerOwnedBy(a->ownedBy)),a->dither);
         if (AttackIsSoak(a))
         {
             float move = ((_FRAMES)%10)/4.0f;
@@ -320,7 +332,7 @@ void DrawAttack(Attack* a, float dt)
                 RotatePointF(&x,&y,a->x,a->y,DegToRad(90));
                 RotatePointF(&endX,&endY,a->x,a->y,DegToRad(90));
 
-                DrawArrow(endX,endY,x,y,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)));
+                DrawArrow(endX,endY,x,y,GetColor(c,GetPlayerOwnedBy(a->ownedBy)));
 
             }
         }

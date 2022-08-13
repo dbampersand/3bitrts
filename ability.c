@@ -321,7 +321,7 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         if (GetDist(g,target) > a->range)
             return;
     }
-    if (g && (!(a->castType & ABILITY_INSTANT) && !(a->castType & ABILITY_TOGGLE)))
+    if (g && (!(a->castType & ABILITY_INSTANT) &&  !(a->castType & ABILITY_TOGGLE)))
     {
         float tx = x; float ty = y;
         if (target)
