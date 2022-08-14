@@ -1486,6 +1486,8 @@ void DrawObjShadows()
 }
 void DrawMapHighlights()
 {
+    al_lock_bitmap(sprites[currMap->spriteIndex].sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+
     for (int i = 0; i < MAX_OBJS; i++)
     {
         GameObject* g = &objects[i];
@@ -1494,6 +1496,8 @@ void DrawMapHighlights()
             DrawMapHighlight(g,30);
         }
     }
+    al_unlock_bitmap(sprites[currMap->spriteIndex].sprite);
+
 }
 void DrawGameObj(GameObject* g, bool forceInverse)
 {
@@ -1594,7 +1598,6 @@ void DrawMapHighlight(GameObject* g, int lightSize)
     int y = 0;
     int err = 2-2*r;
 
-    al_lock_bitmap(sprites[currMap->spriteIndex].sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
     while (x <= 0)
     {
 
@@ -1641,7 +1644,6 @@ void DrawMapHighlight(GameObject* g, int lightSize)
 
 
      }
-    al_unlock_bitmap(sprites[currMap->spriteIndex].sprite);
 
 
 }
