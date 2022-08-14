@@ -1379,7 +1379,7 @@ int L_CreateObject(lua_State* l)
         g = AddGameobject(g,x,y);
         SetOwnedBy(g, PLAYER);
     }
-    g->summonTime = summonTime;
+    g->summonTime = 0;
     g->summonMax = summonTime;
 
     lua_pushnumber(l,g-objects);

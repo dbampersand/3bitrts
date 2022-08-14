@@ -162,7 +162,7 @@ bool LineIntersectsObj(GameObject* g, float xLine, float yLine, float x2Line, fl
 
     return false;
 }
-//note: taken from https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+//note: based on code from https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
 bool GetLineIntersection(float p0_x, float p0_y, float p1_x, float p1_y, float p2_x, float p2_y, float p3_x, float p3_y, float* out_x, float* out_y)
 {
     float s1_x, s1_y, s2_x, s2_y;
@@ -308,4 +308,16 @@ float PointsToAngleRad(float x1, float y1, float x2, float y2)
     float dx = x2 - x1;
     float dy = y2 - y1;
     return atan2(dy, dx); 
+}
+//based on https://easings.net/#easeInOutCubic
+float EaseInOutCubic(float f)
+{
+    if (f < 0.5f)
+    {
+        return 4 * f * f * f;
+    }
+    else
+    {
+        return  1 - pow(-2 * f + 2, 3) / 2.0f;
+    }
 }

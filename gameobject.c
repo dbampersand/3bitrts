@@ -116,6 +116,10 @@ void UpdateObject(GameObject* g, float dt)
     currGameObjRunning->offset.x = Towards(currGameObjRunning->offset.x,0,dt*2);
     currGameObjRunning->offset.y = Towards(currGameObjRunning->offset.y,0,dt*2);
 
+    g->summonTime += dt;
+    if (g->summonTime < g->summonMax)
+        return;
+
     if (ObjIsDecoration(g))
     {
         if (currGameObjRunning->properties & OBJ_ACTIVE)
@@ -1508,13 +1512,31 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     isReversed = g->flashTimer > 0 ? !isReversed : isReversed;
 
     float x = g->position.x + g->offset.x; float y = g->position.y + g->offset.y;
-    DrawSprite(s,x,y,0.5f,0.5f,g->angle,c, isReversed);
-   
+    
+    float percent = g->summonTime / g->summonMax;
+    percent = clamp(percent,0,1);
+
+    if (g->summonTime < g->summonMax)
+        percent = EaseInOutCubic(percent);  
+
+
     Rect selectRect;
     selectRect.w = al_get_bitmap_width(s->sprite);
-    selectRect.h = al_get_bitmap_height(s->sprite);
+    selectRect.h = al_get_bitmap_height(s->sprite) * percent;
     selectRect.x = x;
-    selectRect.y =y;
+    selectRect.y = y + (al_get_bitmap_height(s->sprite) - selectRect.h);
+
+    if (g->summonTime < g->summonMax)
+    {
+        float sx = 0;
+        float sy = GetHeight(g) - GetHeight(g)*percent;
+        float sw = GetWidth(g);
+        float sh = GetHeight(g) * percent;
+        DrawSpriteRegion(s,sx,sy,sw,sh,x,(y+GetHeight(g))-GetHeight(g)*percent,GetColor(COLOR_GROUND_DARK,GetPlayerOwnedBy(g)),false);
+    }
+    else
+        DrawSprite(s,x,y,0.5f,0.5f,g->angle,c, isReversed);
+    
     if (!ObjIsInvincible(g))
     {
         DrawRoundedRect(selectRect, c,false);

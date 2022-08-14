@@ -308,7 +308,7 @@ void DrawAttack(Attack* a, float dt)
         {
             int coef = (_TARGET_FPS*2) - (1/timeleft * (_TARGET_FPS/1.5f));
             coef = coef > (_TARGET_FPS/14) ? coef : _TARGET_FPS/14;
-            if (_FRAMES % (coef) >= 0 && _FRAMES % (coef) < 6)
+            if (_FRAMES % (coef) >= 0 && _FRAMES % (coef) < _TARGET_FPS/10)
             {
                 c = COLOR_GROUND_DARK;
             }
