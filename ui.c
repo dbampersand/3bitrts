@@ -113,13 +113,16 @@ void Chatbox_NextLine()
     }
 
 }
-void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseStateLastFrame)
 {
-    if (mouseStateLastFrame->buttons & 1)
+    ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
+
+    if (mouseStateLastFrame.buttons & 1)
     if (currGameObjRunning)
     {
         players[0].amoveSelected = false;
-        int index = GetAbilityClicked(mouseState,mouseStateLastFrame);
+        int index = GetAbilityClicked(&mouseState,&mouseStateLastFrame);
         if (index != -1)
         {
             Ability* a = &currGameObjRunning->abilities[index];
@@ -502,8 +505,9 @@ bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c, ALLEGRO_MOUSE_
     }
     return false;
 }
-bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, ALLEGRO_MOUSE_STATE* mouseState)
+bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, ALLEGRO_MOUSE_STATE mouseState)
 {
+    ToScreenSpaceI(&mouseState.x,&mouseState.y);
     if (selected->abilities[index].spriteIndex_Portrait <= 0) 
         return false;
     if (heldAbility == &selected->abilities[index])
@@ -527,7 +531,7 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
     ALLEGRO_COLOR* col = (ObjectHasManaToCast(selected,a) && !AbilityIsOnCooldown(a)) ? &FRIENDLY : &GROUND;
     DrawSpriteRegion(s,0,0,w,h,r.x,r.y,*col,keydown);
 
-    if (PointInRect(mouseState->x,mouseState->y,r))
+    if (PointInRect(mouseState.x,mouseState.y,r))
     {
         return true;
     }
@@ -548,7 +552,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         DrawManaUIElement(selected);
         Ability* heldAbility = players[0].abilityHeld;
         
-        if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0),al_key_down(keyState,ALLEGRO_KEY_Q),mouseState))
+        if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0),al_key_down(keyState,ALLEGRO_KEY_Q),*mouseState))
         {
             if (selected->abilities[0].description)
             {
@@ -559,7 +563,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        if (DrawAbilityPortraits(selected,heldAbility,1,GetAbilityPortraitRect(1),al_key_down(keyState,ALLEGRO_KEY_W),mouseState))
+        if (DrawAbilityPortraits(selected,heldAbility,1,GetAbilityPortraitRect(1),al_key_down(keyState,ALLEGRO_KEY_W),*mouseState))
         {
             if (selected->abilities[1].description)
             {
@@ -570,7 +574,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        if (DrawAbilityPortraits(selected,heldAbility,2,GetAbilityPortraitRect(2),al_key_down(keyState,ALLEGRO_KEY_E),mouseState))
+        if (DrawAbilityPortraits(selected,heldAbility,2,GetAbilityPortraitRect(2),al_key_down(keyState,ALLEGRO_KEY_E),*mouseState))
         {
             if (selected->abilities[2].description)
             {
@@ -582,7 +586,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        if (DrawAbilityPortraits(selected,heldAbility,3,GetAbilityPortraitRect(3),al_key_down(keyState,ALLEGRO_KEY_R),mouseState))
+        if (DrawAbilityPortraits(selected,heldAbility,3,GetAbilityPortraitRect(3),al_key_down(keyState,ALLEGRO_KEY_R),*mouseState))
         {
             if (selected->abilities[3].description)
             {

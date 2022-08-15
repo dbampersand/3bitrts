@@ -1573,7 +1573,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
         c2.x = c1.x + (headingX * 5);
         c2.y = c1.y + (headingY * 5);
 
-        DrawArrow(c1.x,c1.y,c2.x,c2.y,c);
+        DrawArrow(ToScreenSpace_X(c1.x),ToScreenSpace_Y(c1.y),ToScreenSpace_X(c2.x),ToScreenSpace_Y(c2.y),c);
     }
     if (g->queue[0].commandType == COMMAND_MOVE || g->queue[0].commandType == COMMAND_ATTACKMOVE)
     {
@@ -1587,7 +1587,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
         float circleCenterX = c1.x - (headingX * (GetWidth(g)+3));
         float circleCenterY = c1.y - (headingY * (GetHeight(g)+3));
         
-        al_draw_filled_circle(circleCenterX,circleCenterY,2,c);
+        al_draw_filled_circle(ToScreenSpace_X(circleCenterX),ToScreenSpace_Y(circleCenterY),2,c);
     }
     
 }

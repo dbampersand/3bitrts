@@ -63,15 +63,16 @@ void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD
         currAbilityRunning = players[0].abilityHeld;
         if (IsInsideUI(mouseState->x,mouseState->y))
         {
-            GetAbilityClickedInsideUI(mouseState,mouseStateLastFrame);
+            GetAbilityClickedInsideUI(*mouseState,*mouseStateLastFrame);
         }
         else
         {
             ProcessAttackMoveMouseCommand(mouseState, keyState);
             CastAbilityOnMouse(mouseState, keyState);
+            players[0].abilityHeld = NULL;
+
         }
         currAbilityRunning = NULL;
-        players[0].abilityHeld = NULL;
     }
 
     if (!(mouseState->buttons & 2) && (mouseStateLastFrame->buttons & 2))
