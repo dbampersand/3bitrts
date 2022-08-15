@@ -14,6 +14,7 @@
 #include "ability.h"
 #include "video.h"
 #include "particle.h"
+#include "player.h"
 
 int attack_top = 0;
 
@@ -315,13 +316,14 @@ void DrawAttack(Attack* a, float dt)
         }
 
         if (a->dither == DITHER_NONE || a->properties &  ATTACK_DRAW_CIRCLE)
-            al_draw_circle(a->x,a->y,a->radius,GetColor(c,GetPlayerOwnedBy(a->ownedBy)),1);
-        draw_circle_dithered(a->x,a->y,a->radius,GetColor(c,GetPlayerOwnedBy(a->ownedBy)),a->dither);
+            al_draw_circle(ToScreenSpace_X(a->x),ToScreenSpace_Y(a->y),a->radius,GetColor(c,GetPlayerOwnedBy(a->ownedBy)),1);
+        draw_circle_dithered(ToScreenSpace_X(a->x),ToScreenSpace_Y(a->y),a->radius,GetColor(c,GetPlayerOwnedBy(a->ownedBy)),a->dither);
         if (AttackIsSoak(a))
         {
             float move = ((_FRAMES)%10)/4.0f;
             float x = a->x;
             float y = a->y - a->radius - 10 - move;
+
             float endX = a->x;
             float endY = a->y - a->radius - 5 - move;
             RotatePointF(&x,&y,a->x,a->y,DegToRad(45));
@@ -331,8 +333,8 @@ void DrawAttack(Attack* a, float dt)
             {
                 RotatePointF(&x,&y,a->x,a->y,DegToRad(90));
                 RotatePointF(&endX,&endY,a->x,a->y,DegToRad(90));
-
-                DrawArrow(endX,endY,x,y,GetColor(c,GetPlayerOwnedBy(a->ownedBy)));
+                
+                DrawArrow(ToScreenSpace_X(endX),ToScreenSpace_Y(endY),ToScreenSpace_X(x),ToScreenSpace_Y(y),GetColor(c,GetPlayerOwnedBy(a->ownedBy)));
 
             }
         }
@@ -349,12 +351,12 @@ void DrawAttack(Attack* a, float dt)
             al_draw_pixel(x2,y2,POISON);
         }
         float angle = RadToDeg(atan2(y2-a->y,x2-a->x));
-        DrawCone(a->x,a->y,angle,a->radius,a->range,FRIENDLY);
+        DrawCone(ToScreenSpace_X(a->x),ToScreenSpace_Y(a->y),angle,a->radius,a->range,FRIENDLY);
     }
     else
     {
-        al_draw_filled_circle(a->x,a->y,a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)));
-        al_draw_filled_circle(a->x+2,a->y+2,a->radius,BG);
+        al_draw_filled_circle(ToScreenSpace_X(a->x),ToScreenSpace_Y(a->y),a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)));
+        al_draw_filled_circle(ToScreenSpace_X(a->x+2),ToScreenSpace_Y(a->y+2),a->radius,BG);
 
     }
 }

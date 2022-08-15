@@ -3,6 +3,7 @@
 #include "sprite.h"
 #include "colors.h"
 #include "gameobject.h"
+#include "player.h"
 
 void AddAnimationEffect_Prefab(AnimationEffect* animEffect, bool ownedBy, int x, int y)
 {
@@ -141,12 +142,13 @@ void DrawAnimationEffects()
     for (int i = 0; i < MAX_ANIMATIONEFFECTS; i++)
     {
         AnimationEffect* a = &animationEffects[i];
-
         if (a->properties & ANIMATION_EFFECT_ENABLED)
             DrawAnimationEffect(&animationEffects[i]);
     }
 }
 void DrawAnimationEffect(AnimationEffect* a)
 {
-    DrawSpriteRegion(&sprites[a->sprite_index],a->rect.x,a->rect.y,a->rect.w,a->rect.h,a->x,a->y,a->properties & ANIMATION_EFFECT_OWNED_BY ? ENEMY : FRIENDLY, false);
+    int x = a->x; int y = a->y; 
+    ToScreenSpaceI(&x,&y);
+    DrawSpriteRegion(&sprites[a->sprite_index],a->rect.x,a->rect.y,a->rect.w,a->rect.h,x,y,a->properties & ANIMATION_EFFECT_OWNED_BY ? ENEMY : FRIENDLY, false);
 }

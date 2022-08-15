@@ -10,6 +10,7 @@
 #include "video.h"
 #include "gamestate.h"
 #include "colors.h"
+#include "player.h"
 
 float clamp(float f, float min, float max)
 {
@@ -63,13 +64,16 @@ ALLEGRO_MOUSE_STATE GetMouseClamped()
 
     if (mouse.x + MOUSECURSORSIZE > (_SCREEN_SIZE))
     {
-        mouse.x = _SCREEN_SIZE - MOUSECURSORSIZE;
+        //mouse.x = _SCREEN_SIZE - MOUSECURSORSIZE;
 
         //This function is giving very weird results on mac
         #if defined _WIN32 || defined __linux__
             al_set_mouse_xy(display, (_SCREEN_SIZE*_RENDERSIZE)-MOUSECURSORSIZE*_RENDERSIZE, beforeY);
         #endif
     }
+    ToWorldSpaceI(&mouse.x,&mouse.y);
+
+    /*
     if (mouse.y > (_SCREEN_SIZE-MOUSECURSORSIZE))
     {
         mouse.y = 255 - MOUSECURSORSIZE;
@@ -77,7 +81,7 @@ ALLEGRO_MOUSE_STATE GetMouseClamped()
     if (mouse.x < 0)
         mouse.x = 0;
    if (mouse.y < 0)
-        mouse.y = 0;
+        mouse.y = 0;*/
 
     return mouse;
     

@@ -10,6 +10,7 @@
 #include "luafuncs.h"
 #include "helperfuncs.h"
 #include "colors.h"
+#include "player.h"
 
 void PreprocessMap(Map* map)
 {
@@ -165,8 +166,11 @@ void InitMaps()
 }
 void DrawMap()
 {
-    DrawSprite(&sprites[currMap->spriteIndex],0,0,0.5f,0.5f,0,GROUND,false);
-    DrawSprite(&sprites[currMap->secondLayerSpriteIndex],0,0,0.5f,0.5f,0,GROUND_DARK,false);
+    int x = -players[0].cameraPos.x;
+    int y = -players[0].cameraPos.y;
+
+    DrawSprite(&sprites[currMap->spriteIndex],x,y,0.5f,0.5f,0,GROUND,false);
+    DrawSprite(&sprites[currMap->secondLayerSpriteIndex],x,y,0.5f,0.5f,0,GROUND_DARK,false);
 
 }
 void UpdateMap(Map* m, float dt)
@@ -184,12 +188,14 @@ void UpdateMap(Map* m, float dt)
 //This is for drawing over the shadows
 void RedrawMapSegmentUnderObj(GameObject* g)
 {
-    int x = g->position.x + g->offset.x;
-    int y = g->position.y + g->offset.y;
+    float x = g->position.x + g->offset.x;
+    float y = g->position.y + g->offset.y;
     int w = GetWidth(g);
     int h = GetHeight(g);
+    float sx = x; float sy = y;
+    ToScreenSpace(&sx,&sy);
 
-    DrawSpriteRegion(&sprites[currMap->spriteIndex],x,y,w,h,x,y,GROUND,false);
-    DrawSpriteRegion(&sprites[currMap->secondLayerSpriteIndex],x,y,w,h,x,y,GROUND_DARK,false);
+    DrawSpriteRegion(&sprites[currMap->spriteIndex],x,y,w,h,sx,sy,GROUND,false);
+    DrawSpriteRegion(&sprites[currMap->secondLayerSpriteIndex],x,y,w,h,sx,sy,GROUND_DARK,false);
 
 }

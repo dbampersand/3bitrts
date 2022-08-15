@@ -26,7 +26,7 @@ void InitVideo()
 
     SCREEN = al_create_bitmap(256,256);
     backbuffer = al_get_backbuffer(display);
-    _FRAMES = 0;
+    _FRAMES = 0;    
 
 }
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)

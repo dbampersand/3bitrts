@@ -87,8 +87,19 @@ void init()
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
 
+
     if (!GameIsPaused())
     {
+        if (al_key_down(keyState,ALLEGRO_KEY_RIGHT))
+        {
+            players[0].cameraPos.x += dt * 30;
+        }
+
+        if (al_key_down(keyState,ALLEGRO_KEY_LEFT))
+        {
+            players[0].cameraPos.x -= dt * 30;
+        }
+
         lua_settop(luaState,0);
         UpdateEncounter(dt);
         CheckSelected(mouseState,mouseStateLastFrame, keyState);

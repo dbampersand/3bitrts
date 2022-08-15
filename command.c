@@ -6,6 +6,7 @@
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_primitives.h"
 #include "colors.h"
+#include "player.h"
 
 void DrawCommand(Command* c, int x, int y)
 {
@@ -31,12 +32,14 @@ void DrawCommandQueue(GameObject* g)
         return;
     float cx; float cy;
     GetCentre(g,&cx,&cy);
+    ToScreenSpace(&cx,&cy);
 
     float firstX = g->queue[0].x + GetWidth(g)/2;
     float firstY = g->queue[0].y + GetHeight(g)/2; 
 
     if (g->queue[0].target)
         GetCentre(g->queue[0].target,&firstX,&firstY);
+    ToScreenSpace(&firstX,&firstY);
 
 
     DrawCommand(&g->queue[0],firstX,firstY);
@@ -53,6 +56,8 @@ void DrawCommandQueue(GameObject* g)
 
         float tX = thisCmd->x + GetWidth(g)/2; float tY = thisCmd->y+ GetHeight(g)/2;
         float pX = prevCmd->x + GetWidth(g)/2; float pY = prevCmd->y + GetHeight(g)/2;
+
+
         if (prevCmd->target)
         {
             GetCentre(prevCmd->target,&pX,&pY);
@@ -61,6 +66,10 @@ void DrawCommandQueue(GameObject* g)
         {
             GetCentre(thisCmd->target,&tX,&tY);
         }
+
+        ToScreenSpace(&tX,&tY);
+        ToScreenSpace(&pX,&pY);
+
         
         if (thisCmd->commandType != COMMAND_NONE)
             al_draw_line(tX,tY,pX,pY,GetColor(queueCommandColors[thisCmd->commandType],0),1);

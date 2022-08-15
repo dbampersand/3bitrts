@@ -17,7 +17,7 @@ typedef struct AnimationEffect
     int currIndex;
     float timer;
     float cd;
-    unsigned char x; unsigned char y;
+    int x; int y;
     GameObject* attachedTo;
     char properties;
     int numFrames;

@@ -4,6 +4,7 @@
 
 #include "colors.h" 
 #include "helperfuncs.h"
+#include "player.h"
 
 void UpdateParticles(float dt)
 {
@@ -55,7 +56,7 @@ void DrawParticles()
         if (particle_properties[i] & PARTICLE_ENABLED)
         {
             ALLEGRO_COLOR col = GetColor(particle_colors[i],0);
-            al_draw_pixel(particle_x[i],particle_y[i],col);
+            al_draw_pixel(ToScreenSpace_X(particle_x[i]),ToScreenSpace_Y(particle_y[i]),col);
         }
     }
 }

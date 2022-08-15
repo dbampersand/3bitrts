@@ -85,3 +85,44 @@ void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STAT
 
 
 }
+void ToScreenSpace(float* x,float* y)
+{
+    *x -= players[0].cameraPos.x;
+    *y -= players[0].cameraPos.y;
+}
+void ToScreenSpaceI(int* x,int* y)
+{
+    *x -= players[0].cameraPos.x;
+    *y -= players[0].cameraPos.y;
+}
+void ToWorldSpace(float* x,float* y)
+{
+    *x += players[0].cameraPos.x;
+    *y += players[0].cameraPos.y;
+
+}
+void ToWorldSpaceI(int* x,int* y)
+{
+    *x += players[0].cameraPos.x;
+    *y += players[0].cameraPos.y;
+
+}
+float ToWorldSpace_X(float x)
+{
+   return x + players[0].cameraPos.x;
+}
+
+float ToWorldSpace_Y(float y)
+{
+    return y + players[0].cameraPos.y;
+}
+
+
+float ToScreenSpace_X(float x)
+{
+   return x - players[0].cameraPos.x;
+}
+float ToScreenSpace_Y(float y)
+{
+    return y - players[0].cameraPos.y;
+}

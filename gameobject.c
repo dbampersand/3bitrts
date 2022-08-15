@@ -416,6 +416,7 @@ void SetCtrlGroup(int index, GameObject** list, int numUnitsSelected)
 
 void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState)
 {
+
     if (!(mouseLastFrame->buttons & 1)  && (mouseState->buttons & 1) && !players[0].abilityHeld)
     {
         AddMouseRandomParticles(*mouseState, 3);
@@ -1429,6 +1430,7 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
     r.y = g->position.y - padding + g->offset.y;
     r.w = al_get_bitmap_width(s->sprite);
     r.h = 2;
+    ToScreenSpace(&r.x,&r.y);
 
     al_draw_rectangle((int)r.x,(int)r.y,(int)r.x+r.w,(int)r.y+r.h,col,1);
 
@@ -1463,10 +1465,11 @@ void DrawArrow(int cx, int cy, int targetx, int targety, ALLEGRO_COLOR color)
 }
 void DrawObjShadow(GameObject* g)
 {
-    int x = g->position.x + g->offset.x;
-    int y = g->position.y + g->offset.y;
+    float x = g->position.x + g->offset.x;
+    float y = g->position.y + g->offset.y;
     int w = GetWidth(g);
     int h = GetHeight(g);
+    ToScreenSpace(&x,&y);
 
     int lineW = (ceil(w/16.0f));
     int lineH = (ceil(h/16.0f));
@@ -1515,7 +1518,9 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     bool isReversed = IsSelected(g) || forceInverse;
     isReversed = g->flashTimer > 0 ? !isReversed : isReversed;
 
-    float x = g->position.x + g->offset.x; float y = g->position.y + g->offset.y;
+    float x = g->position.x + g->offset.x; 
+    float y = g->position.y + g->offset.y;
+    ToScreenSpace(&x,&y);
     
     float percent = g->summonTime / g->summonMax;
     percent = clamp(percent,0,1);
@@ -1544,7 +1549,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     if (!ObjIsInvincible(g))
     {
         DrawRoundedRect(selectRect, c,false);
-
+        
         if (currSettings.displayHealthBar == OPTION_HPBAR_ALWAYS)
             DrawHealthBar(g,c);
         else if (currSettings.displayHealthBar == OPTION_HPBAR_SELECTED && (IsOwnedByPlayer(g) && IsSelected(g)))
@@ -1593,6 +1598,7 @@ void DrawMapHighlight(GameObject* g, int lightSize)
     //Then go from g to that point
     float cx; float cy;
     GetCentre(g,&cx,&cy);
+    //ToScreenSpace(&cx,&cy);
     int r = lightSize;
     int x = -r;
     int y = 0;
@@ -1606,7 +1612,7 @@ void DrawMapHighlight(GameObject* g, int lightSize)
         points[1].x = cx-y;  points[1].y = cy-x;
         points[2].x = cx+x;  points[2].y = cy-y; 
         points[3].x = cx+y;  points[3].y = cy+x; 
-
+       
         for (int i = 0; i < 4; i++)
         {
             float angle = PointsToAngleRad(cx,cy,points[i].x,points[i].y);
@@ -1620,10 +1626,14 @@ void DrawMapHighlight(GameObject* g, int lightSize)
             {
                 mX += moveX;
                 mY += moveY;
-                ALLEGRO_COLOR col = al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
+                ALLEGRO_COLOR col = al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
                 if (col.a <= 0.001f)
                 {
-                    al_draw_pixel(mX - moveX,mY - moveY,EDGE_HIGHLIGHT);
+                float screenSpaceX = mX; float screenSpaceY = mY;
+
+                    ToScreenSpace(&screenSpaceX,&screenSpaceY);
+
+                    al_draw_pixel(screenSpaceX - moveX,screenSpaceY - moveY,EDGE_HIGHLIGHT);
                     break;
                 }
                 steps++;
