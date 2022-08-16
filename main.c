@@ -90,15 +90,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
 
     if (!GameIsPaused())
     {
-        if (al_key_down(keyState,ALLEGRO_KEY_RIGHT))
-        {
-            players[0].cameraPos.x += dt * 30;
-        }
-
-        if (al_key_down(keyState,ALLEGRO_KEY_LEFT))
-        {
-            players[0].cameraPos.x -= dt * 30;
-        }
+        MoveCamera(*mouseState,keyState,dt);
 
         lua_settop(luaState,0);
         UpdateEncounter(dt);

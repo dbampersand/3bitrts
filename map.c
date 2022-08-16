@@ -199,3 +199,11 @@ void RedrawMapSegmentUnderObj(GameObject* g)
     DrawSpriteRegion(&sprites[currMap->secondLayerSpriteIndex],x,y,w,h,sx,sy,GROUND_DARK,false);
 
 }
+int GetMapWidth()
+{
+    return GetWidthSprite(&sprites[currMap->spriteIndex]);
+}
+int GetMapHeight()
+{
+    return GetHeightSprite(&sprites[currMap->spriteIndex]);
+}

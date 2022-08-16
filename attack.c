@@ -335,7 +335,6 @@ void DrawAttack(Attack* a, float dt)
                 RotatePointF(&endX,&endY,a->x,a->y,DegToRad(90));
                 
                 DrawArrow(ToScreenSpace_X(endX),ToScreenSpace_Y(endY),ToScreenSpace_X(x),ToScreenSpace_Y(y),GetColor(c,GetPlayerOwnedBy(a->ownedBy)));
-
             }
         }
     }

@@ -4,8 +4,9 @@
 #include "ui.h"
 #include "luafuncs.h"
 #include "sound.h"
+#include "map.h"
 
-
+float cameraSpeed = 100;
 void RemoveIndexFromSelection(Player* p, int index)
 {
     for (int i = index; i < MAXUNITSSELECTED-1; i++)
@@ -125,4 +126,49 @@ float ToScreenSpace_X(float x)
 float ToScreenSpace_Y(float y)
 {
     return y - players[0].cameraPos.y;
+}
+void MoveCam(float x, float y)
+{
+    players[0].cameraPos.x = x;
+    players[0].cameraPos.y = y;
+    
+    if (x < 0)
+        players[0].cameraPos.x = 0;
+    if (y < 0)
+        players[0].cameraPos.y = 0;
+    if (x + _SCREEN_SIZE > GetMapWidth())
+    {
+        players[0].cameraPos.x = GetMapWidth() - _SCREEN_SIZE;
+    }
+    if (y + _SCREEN_SIZE > GetMapHeight())
+    {
+        players[0].cameraPos.y = GetMapHeight() - _SCREEN_SIZE;
+
+    }
+
+}
+void MoveCamera(ALLEGRO_MOUSE_STATE mouseState,ALLEGRO_KEYBOARD_STATE* keyState, float dt)
+{
+    ToScreenSpaceI(&mouseState.x, &mouseState.y);
+    
+    if (mouseState.x < SCREEN_EDGE || al_key_down(keyState,ALLEGRO_KEY_LEFT))
+    {
+        MoveCam(players[0].cameraPos.x - (cameraSpeed*dt),players[0].cameraPos.y);
+    }
+
+    if (mouseState.x > _SCREEN_SIZE - SCREEN_EDGE || al_key_down(keyState,ALLEGRO_KEY_RIGHT))
+    {
+        MoveCam(players[0].cameraPos.x + (cameraSpeed*dt),players[0].cameraPos.y);
+    }
+
+    if (mouseState.y < SCREEN_EDGE  || al_key_down(keyState,ALLEGRO_KEY_UP))
+    {
+        MoveCam(players[0].cameraPos.x,players[0].cameraPos.y - (cameraSpeed*dt));
+    }
+
+    if (mouseState.y > _SCREEN_SIZE - SCREEN_EDGE  || al_key_down(keyState,ALLEGRO_KEY_DOWN))
+    {
+        MoveCam(players[0].cameraPos.x,players[0].cameraPos.y + (cameraSpeed*dt));
+    }
+
 }

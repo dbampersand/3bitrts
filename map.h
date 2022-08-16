@@ -33,3 +33,5 @@ void InitMaps();
 void DrawMap();
 void UpdateMap(Map* m, float dt);
 void RedrawMapSegmentUnderObj(GameObject* g);
+int GetMapWidth();
+int GetMapHeight();

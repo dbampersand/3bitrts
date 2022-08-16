@@ -33,6 +33,9 @@ Player* players;
 typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE;
 typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE; 
 
+//The point (16, SCREEN_SIZE-16, 16, SCREEN_SIZE-16) at which the camera starts to pan
+#define SCREEN_EDGE 16
+float cameraSpeed;
 
 void RemoveFromSelection(Player* p, int index);
 void RemoveGameObjectFromSelection(Player* p, GameObject* g);
@@ -47,3 +50,4 @@ float ToWorldSpace_X(float x);
 float ToWorldSpace_Y(float y);
 float ToScreenSpace_X(float x);
 float ToScreenSpace_Y(float y);
+void MoveCamera(ALLEGRO_MOUSE_STATE mouseState,ALLEGRO_KEYBOARD_STATE* keyState, float dt);

@@ -185,10 +185,9 @@ void DrawUnitChoiceUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
        // al_draw_rotated_bitmap(wheel,41/2,41/2,50,50,DegToRad(angle),0);
         
         Rect selectedUnitsR = (Rect){60,146,180,41};
-        ToScreenSpace(&selectedUnitsR.x,&selectedUnitsR.y);
         Encounter* e = encounters[selectedEncounterIndex];
-
         int numUnitsInRect = GetNumObjectsInRect(&selectedUnitsR);
+        ToScreenSpace(&selectedUnitsR.x,&selectedUnitsR.y);
 
         UpdateButton(45,194,&ui.choosingUnits_Back,*mouseState,*mouseStateLastFrame);
         UpdateButton(109,194,&ui.choosingUnits_GO,*mouseState,*mouseStateLastFrame);
@@ -208,7 +207,6 @@ void DrawUnitChoiceUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
         if (numUnitsInRect != e->numUnitsToSelect)
         {
-
             DrawOutlinedRect_Dithered(&selectedUnitsR,FRIENDLY);
         }
         else if (numUnitsInRect == e->numUnitsToSelect)
