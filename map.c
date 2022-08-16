@@ -14,6 +14,8 @@
 
 void PreprocessMap(Map* map)
 {
+    if (map->collision)
+        free(map->collision);
     ALLEGRO_BITMAP* before = al_get_target_bitmap();
 
     ALLEGRO_BITMAP* sprite = sprites[map->spriteIndex].sprite;

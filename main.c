@@ -31,6 +31,7 @@
 #include "settings.h"
 #include "replay.h"
 #include "fixed.h"
+#include "minimap.h"
 
 
 
@@ -286,7 +287,10 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
 
     DrawTransition(dt);
-
+    if (al_key_down(keyState,ALLEGRO_KEY_BACKQUOTE))
+    {
+        DrawMinimap();
+    }
     
 }
 

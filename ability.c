@@ -56,6 +56,8 @@ void DrawHeldAbility(ALLEGRO_MOUSE_STATE* mouseState)
 }
 void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE mouseState,ALLEGRO_MOUSE_STATE mouseStateLastFrame)
 {
+    if (transitioningTo != gameState)
+        return;
     CheckAbilityClicked(keyState,keyStateLastFrame, &mouseState);
     if (mouseState.buttons & 1) 
     {

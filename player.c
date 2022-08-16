@@ -171,3 +171,11 @@ void MoveCamera(ALLEGRO_MOUSE_STATE mouseState,ALLEGRO_KEYBOARD_STATE* keyState,
     }
 
 }
+void ClearSelection()
+{
+    for (int i = 0; i < players[0].numUnitsSelected; i++)
+    {
+        players[0].selection[i] = NULL;
+    }
+
+}

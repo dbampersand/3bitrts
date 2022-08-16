@@ -104,6 +104,7 @@ void FinishTransition()
             }
         memset(&gameStats,0,sizeof(GameState));
 
+        ClearSelection();
         //free(toSpawn);
 
     }
@@ -114,7 +115,7 @@ void FinishTransition()
 
         ui.currentPanel = NULL;
         RemoveAllAttacks();
-
+        ClearSelection();
         //ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
 
     }
@@ -169,6 +170,8 @@ void FinishTransition()
 
         free(pathToNextMap);
         pathToNextMap = NULL;
+        ClearSelection();
+
     }
     
 }

@@ -51,3 +51,4 @@ float ToWorldSpace_Y(float y);
 float ToScreenSpace_X(float x);
 float ToScreenSpace_Y(float y);
 void MoveCamera(ALLEGRO_MOUSE_STATE mouseState,ALLEGRO_KEYBOARD_STATE* keyState, float dt);
+void ClearSelection();

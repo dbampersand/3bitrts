@@ -454,10 +454,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                         for (int j = 0; j < numObjects; j++)
                         {
                             SetSelected(&objects[j],false);
-                            for (int i = 0; i < players[0].numUnitsSelected; i++)
-                            {
-                                players[0].selection[i] = NULL;
-                            }
+                            ClearSelection();
                             players[0].numUnitsSelected = 0;
                         }
                         hasSelected = true;
