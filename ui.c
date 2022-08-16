@@ -223,7 +223,7 @@ void DrawUnitChoiceUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 }
 void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState)
 {
-    Vector2 endSelection = (Vector2){mouseState.x,mouseState.y};
+    Point endSelection = (Point){mouseState.x,mouseState.y};
     Rect r;
     ALLEGRO_KEYBOARD_STATE keyState;
     al_get_keyboard_state(&keyState);

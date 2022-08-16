@@ -11,7 +11,7 @@ typedef struct Player
 { 
     bool aicontrolled;
     bool selecting;
-    Vector2 selectionStart;
+    Point selectionStart;
     #define MAXUNITSSELECTED 12 //hell yeaaa bw
     GameObject* selection[MAXUNITSSELECTED];
     int indexSelectedUnit;

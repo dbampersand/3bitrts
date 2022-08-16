@@ -421,7 +421,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
     {
         AddMouseRandomParticles(*mouseState, 3);
         players[0].selecting = true;
-        players[0].selectionStart = (Vector2){mouseState->x,mouseState->y};
+        players[0].selectionStart = (Point){mouseState->x,mouseState->y};
     }
     if (players[0].selecting)
     {
@@ -430,7 +430,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
     {
         if (players[0].selecting)
         {
-            Vector2 endSelection = (Vector2){mouseState->x,mouseState->y};
+            Point endSelection = (Point){mouseState->x,mouseState->y};
             Rect r;
             r.x = _MIN(endSelection.x,players[0].selectionStart.x);
             r.y = _MIN(endSelection.y,players[0].selectionStart.y);
