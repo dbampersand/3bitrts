@@ -143,7 +143,6 @@ void MoveCam(float x, float y)
     if (y + _SCREEN_SIZE > GetMapHeight())
     {
         players[0].cameraPos.y = GetMapHeight() - _SCREEN_SIZE;
-
     }
 
 }

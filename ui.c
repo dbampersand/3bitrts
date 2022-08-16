@@ -2192,7 +2192,8 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, ALLEGRO
 }
 bool IsInsideUI(int x, int y)
 {
-    if (y >= UI_START_Y)
+
+    if (y >= GetMapHeight() - (_SCREEN_SIZE-UI_START_Y))
         return true;
     return false;
 }

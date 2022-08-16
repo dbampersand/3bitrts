@@ -54,28 +54,28 @@ void DrawHeldAbility(ALLEGRO_MOUSE_STATE* mouseState)
     al_draw_line(mouseState->x+2,mouseState->y+2,cxHeld,cyHeld,FRIENDLY,1);
 
 }
-void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE mouseState,ALLEGRO_MOUSE_STATE mouseStateLastFrame)
 {
-    CheckAbilityClicked(keyState,keyStateLastFrame, mouseState);
-    if (mouseState->buttons & 1) 
+    CheckAbilityClicked(keyState,keyStateLastFrame, &mouseState);
+    if (mouseState.buttons & 1) 
     {
         currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
         currAbilityRunning = players[0].abilityHeld;
-        if (IsInsideUI(mouseState->x,mouseState->y))
+        if (IsInsideUI(mouseState.x,mouseState.y))
         {
-            GetAbilityClickedInsideUI(*mouseState,*mouseStateLastFrame);
+            GetAbilityClickedInsideUI(mouseState,mouseStateLastFrame);
         }
         else
         {
-            ProcessAttackMoveMouseCommand(mouseState, keyState);
-            CastAbilityOnMouse(mouseState, keyState);
+            ProcessAttackMoveMouseCommand(&mouseState, keyState);
+            CastAbilityOnMouse(&mouseState, keyState);
             players[0].abilityHeld = NULL;
 
         }
         currAbilityRunning = NULL;
     }
 
-    if (!(mouseState->buttons & 2) && (mouseStateLastFrame->buttons & 2))
+    if (!(mouseState.buttons & 2) && (mouseStateLastFrame.buttons & 2))
     {
         currAbilityRunning = NULL;
         players[0].abilityHeld = NULL;

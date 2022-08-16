@@ -106,7 +106,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
             UpdateObject(&objects[i],dt);
         }
         currGameObjRunning = NULL;
-        UpdateAbilityInteractions(keyState, keyStateLastFrame,mouseState,mouseStateLastFrame);
+        UpdateAbilityInteractions(keyState, keyStateLastFrame,*mouseState,*mouseStateLastFrame);
 
         CheckIfGameIsLost();
         CheckIfGameIsWon();

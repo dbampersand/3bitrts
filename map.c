@@ -16,11 +16,12 @@ void PreprocessMap(Map* map)
 {
     ALLEGRO_BITMAP* before = al_get_target_bitmap();
 
-    memset(&map->collision,0,_MAPSIZE*_MAPSIZE/_GRAIN);
-    int w; int h; 
     ALLEGRO_BITMAP* sprite = sprites[map->spriteIndex].sprite;
-     w = al_get_bitmap_width(sprite);
-    h = al_get_bitmap_height(sprite);
+    int w = al_get_bitmap_width(sprite);
+    int h = al_get_bitmap_height(sprite);
+
+    map->collision = calloc(w*h/_GRAIN,sizeof(bool));
+    //memset(&map->collision,0,w*h/_GRAIN);
 
     al_lock_bitmap(sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
 
@@ -33,7 +34,7 @@ void PreprocessMap(Map* map)
         ALLEGRO_COLOR pixel = al_get_pixel(sprite, x, y);
 
         if (pixel.a && pixel.r > bgThreshhold && pixel.g > bgThreshhold && pixel.b > bgThreshhold) {
-            int index = GetIndex(_MAPSIZE/_GRAIN,x/_GRAIN,y/_GRAIN);
+            int index = GetIndex(h/_GRAIN,x/_GRAIN,y/_GRAIN);
             map->collision[index] = true;
         }
       }

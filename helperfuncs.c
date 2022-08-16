@@ -27,9 +27,13 @@ bool CircleInRect(float cx, float cy, float rad, Rect r)
    return (dx * dx + dy * dy) <= rad * rad;
 }
 
-int GetIndex(int h, int x, int y)
+int GetIndex(int w, int x, int y)
 {
-    return (h*x)+y;
+    return (x*w)+y;
+}
+Point IndexToPoint(int h, int index)
+{
+    return (Point){.x = index/h, .y = index%h};
 }
 bool MoveTo(float* x, float* y, float toX, float toY, float speed, float delta)
 {

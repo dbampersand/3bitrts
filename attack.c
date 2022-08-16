@@ -268,7 +268,7 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
             for (int x = cX-radius; x < cX+radius; x++)
             {
                 if (PointInCircle(x,y,cX,cY,radius))
-                {
+                {   
                     al_draw_pixel(x,y,color);
                 }
             }

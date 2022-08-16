@@ -1081,9 +1081,9 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             {
                                 g2->position.x=0;
                             }
-                            if (g2->position.x + GetWidth(g2) > _MAPSIZE)
+                            if (g2->position.x + GetWidth(g2) > GetMapWidth())
                             {   
-                                g2->position.x = _MAPSIZE - GetWidth(g2);
+                                g2->position.x = GetMapWidth() - GetWidth(g2);
                             }
                         }
                         CheckCollisions(g2,true,1,objectCanPush);
@@ -1117,9 +1117,9 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             {
                                 g2->position.x=0;
                             }
-                            if (g2->position.x + GetWidth(g2) > _MAPSIZE)
+                            if (g2->position.x + GetWidth(g2) > GetMapWidth())
                             {
-                                g2->position.x = _MAPSIZE - GetWidth(g2);
+                                g2->position.x = GetMapWidth() - GetWidth(g2);
                             }
                         }
                         CheckCollisions(g2,true,-1,objectCanPush);
@@ -1236,7 +1236,7 @@ GameObject* GetCollidedWith(GameObject* g)
 }
 bool ObjectIsInUI(GameObject* g)
 {
-    if (g->position.y + GetHeight(g) > UI_START_Y)
+    if (g->position.y > GetMapHeight() - (_SCREEN_SIZE-UI_START_Y))
     {
         return true;
     }
@@ -1258,7 +1258,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
     float posX = g->position.x;
     float posY = g->position.y;
 
-    if (posX < 0 || posX+w > _MAPSIZE)
+    if (posX < 0 || posX+w > GetMapWidth())
     {
         if (posX < 0) 
         {
@@ -1266,16 +1266,16 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             CheckCollisions(g,true,1,true);
 
         }
-        if (posX+w > _MAPSIZE) 
+        if (posX+w > GetMapWidth()) 
         {
-            g->position.x = _MAPSIZE-w;
+            g->position.x = GetMapWidth()-w;
             CheckCollisions(g,true,-1,true);
 
         }
         return;
 
     }
-    if (posY < 0 || posY+h > _MAPSIZE)
+    if (posY < 0 || posY+h > GetMapHeight())
     {
         if (posY < 0)
         {
@@ -1283,9 +1283,9 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             CheckCollisions(g,false,1,true);
 
         } 
-        if (posY+h > _MAPSIZE)
+        if (posY+h >  GetMapHeight())
         {
-            g->position.y = _MAPSIZE-h;
+            g->position.y =  GetMapHeight()-h;
             CheckCollisions(g,false,-1,true);
         } 
 
@@ -1294,10 +1294,10 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
 
     if (dV == 0) return;
     
-    int indexTop = GetIndex(_MAPSIZE/_GRAIN, floor(posX/ (float)_GRAIN), floor(posY / (float)_GRAIN));
-    int indexRight = GetIndex(_MAPSIZE/_GRAIN, floor((posX+w) / (float)_GRAIN), floor((posY) / (float)_GRAIN));
-    int indexBottom = GetIndex(_MAPSIZE/_GRAIN, floor((posX) / (float)_GRAIN), floor((posY+h) / (float)_GRAIN));
-    int indexLeft = GetIndex(_MAPSIZE/_GRAIN, floor((posX) / (float)_GRAIN), floor((posY) / (float)_GRAIN));
+    int indexTop = GetIndex( GetMapHeight()/_GRAIN, floor(posX/ (float)_GRAIN), floor(posY / (float)_GRAIN));
+    int indexRight = GetIndex(GetMapHeight()/_GRAIN, floor((posX+w) / (float)_GRAIN), floor((posY) / (float)_GRAIN));
+    int indexBottom = GetIndex(GetMapHeight()/_GRAIN, floor((posX) / (float)_GRAIN), floor((posY+h) / (float)_GRAIN));
+    int indexLeft = GetIndex(GetMapHeight()/_GRAIN, floor((posX) / (float)_GRAIN), floor((posY) / (float)_GRAIN));
 
     if (x)
     {
@@ -1306,7 +1306,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             if (currMap->collision[indexLeft] == false)
             {
                // printf("gg");
-                g->position.x = ((indexLeft/(_MAPSIZE/_GRAIN))*_GRAIN)+_GRAIN;
+                g->position.x = IndexToPoint(GetMapHeight()/_GRAIN,indexLeft).x*_GRAIN + _GRAIN;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
                 CheckCollisions(g,true,1,true);
 
             }
@@ -1315,7 +1315,9 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
         {
             if (currMap->collision[indexRight] == false)
             {
-                g->position.x = (indexRight/(_MAPSIZE/_GRAIN))*_GRAIN - w;
+                //g->position.x = (indexRight/(GetMapHeight()/_GRAIN))*_GRAIN - w;
+                g->position.x = IndexToPoint(GetMapHeight()/_GRAIN,indexRight).x*_GRAIN - w;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
+                
                 CheckCollisions(g,true,-dV,true);
             }
         }
@@ -1327,8 +1329,10 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
         {
             if (currMap->collision[indexTop] == false)
             {
-                int yCoord = (indexTop%(_MAPSIZE/_GRAIN)+1)*_GRAIN;
-                g->position.y = yCoord;
+                //int yCoord = (indexTop%(GetMapHeight()/_GRAIN)+1)*_GRAIN;
+                g->position.y = IndexToPoint(GetMapHeight()/_GRAIN,indexTop).y*_GRAIN + _GRAIN;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
+                
+               // g->position.y = yCoord;
                 CheckCollisions(g,false,-dV,true);
             }
 
@@ -1337,8 +1341,10 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
         {
             if (currMap->collision[indexBottom] == false)
             {
-                int yCoord = (indexBottom%(_MAPSIZE/_GRAIN))*_GRAIN - h;
-                g->position.y = yCoord;
+                //int yCoord = (indexBottom%(GetMapHeight()/_GRAIN))*_GRAIN - h;
+                //g->position.y = yCoord;
+                g->position.y = IndexToPoint(GetMapHeight()/_GRAIN,indexBottom).y*_GRAIN - h;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
+
                 CheckCollisions(g,false,-dV,true);
             }
         }
@@ -1806,6 +1812,8 @@ void ModifyMaxHP(GameObject* g, float value)
 }   
 void Teleport(GameObject* g, float x, float y)
 {
+    if (!currMap->collision)
+        return;
     if (!g) return;
 
     float dx = x - g->position.x;
@@ -1836,12 +1844,12 @@ void Teleport(GameObject* g, float x, float y)
 
     //step back until we find a spot where the object can stand
     if (nrmX != 0 && nrmY != 0)
-        while (xn >= 0  && yn >= 0 && xn+w < _MAPSIZE && yn+h < _MAPSIZE)
+        while (xn >= 0  && yn >= 0 && xn+w < GetMapWidth() && yn+h < GetMapHeight())
         {
-            int indexTop = GetIndex(_MAPSIZE/_GRAIN, floor(xn/ (float)_GRAIN), floor(yn / (float)_GRAIN));
-            int indexRight = GetIndex(_MAPSIZE/_GRAIN, floor((xn+w) / (float)_GRAIN), floor((yn) / (float)_GRAIN));
-            int indexBottom = GetIndex(_MAPSIZE/_GRAIN, floor((xn) / (float)_GRAIN), floor((yn+h) / (float)_GRAIN));
-            int indexLeft = GetIndex(_MAPSIZE/_GRAIN, floor((xn) / (float)_GRAIN), floor((yn) / (float)_GRAIN));
+            int indexTop = GetIndex(GetMapHeight()/_GRAIN, floor(xn/ (float)_GRAIN), floor(yn / (float)_GRAIN));
+            int indexRight = GetIndex(GetMapHeight()/_GRAIN, floor((xn+w) / (float)_GRAIN), floor((yn) / (float)_GRAIN));
+            int indexBottom = GetIndex(GetMapHeight()/_GRAIN, floor((xn) / (float)_GRAIN), floor((yn+h) / (float)_GRAIN));
+            int indexLeft = GetIndex(GetMapHeight()/_GRAIN, floor((xn) / (float)_GRAIN), floor((yn) / (float)_GRAIN));
             if (currMap->collision[indexLeft] && currMap->collision[indexRight] && currMap->collision[indexTop] && currMap->collision[indexBottom] )
             {
                 g->position.x = xn;

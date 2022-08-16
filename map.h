@@ -9,7 +9,7 @@ typedef struct GameObject GameObject;
 
 typedef struct Map 
 {   
-    bool collision[_MAPSIZE*_MAPSIZE/_GRAIN];
+    bool* collision;//[_MAPSIZE*_MAPSIZE/_GRAIN];
     char* path;
     unsigned int spriteIndex;
     unsigned int secondLayerSpriteIndex;
