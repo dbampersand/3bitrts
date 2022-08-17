@@ -1864,12 +1864,15 @@ void Teleport(GameObject* g, float x, float y)
     g->targetPosition.y = g->position.y - cY/2.0f;
 
     //CheckCollisionsWorld(g,false, false);
-
-
-    
 }
 void GetOffsetCenter(GameObject* g, float* x, float* y)
 {
+    if (!g) 
+    {
+        *x = 0;
+        *y = 0;
+        return;
+    }
     if (g->spriteIndex > 0)
     {
         *x = al_get_bitmap_width(sprites[g->spriteIndex].sprite);

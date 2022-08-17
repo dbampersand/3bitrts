@@ -2,7 +2,6 @@
 
 #include "rect.h"
 
-#include "vector2.h"
 #include "helperfuncs.h"
 
 bool CheckIntersect(Rect r1, Rect r2)

@@ -2070,6 +2070,16 @@ int L_CopyObject(lua_State* l)
     lua_pushnumber(l,g-objects);
     return 1;
 }
+int L_SetSpawnPoint(lua_State* l)
+{
+    int x = lua_tonumber(l,1);
+    int y = lua_tonumber(l,2);
+
+    currEncounterRunning->spawnPoint.x = x;
+    currEncounterRunning->spawnPoint.y = y;
+
+    return 0;
+}
 
 void SetLuaKeyEnums(lua_State* l)
 {
@@ -2512,5 +2522,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetChannelingSprite);
     lua_setglobal(luaState, "SetChannelingSprite");
+
+    lua_pushcfunction(luaState, L_SetSpawnPoint);
+    lua_setglobal(luaState, "SetSpawnPoint");
 
 }

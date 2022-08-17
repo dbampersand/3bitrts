@@ -6,6 +6,7 @@ function setup()
     CreateObject("assets/enemies/viper/viper.lua",144,32,TYPE_ENEMY,2);
    
     SetAutoWin(false);
+    SetSpawnPoint(80,800)
     
 end
 

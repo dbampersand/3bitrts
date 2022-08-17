@@ -127,6 +127,12 @@ float ToScreenSpace_Y(float y)
 {
     return y - players[0].cameraPos.y;
 }
+void FocusCameraOnPos(float x, float y)
+{
+    float dx =x- players[0].cameraPos.x - _SCREEN_SIZE/2;
+    float dy = y-players[0].cameraPos.y - _SCREEN_SIZE/2;
+    MoveCam(dx,dy);
+}
 void MoveCam(float x, float y)
 {
     players[0].cameraPos.x = x;

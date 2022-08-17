@@ -93,15 +93,25 @@ void FinishTransition()
 
         SetMap(LoadMap(encounterGoingTo->mapPath));
 
-        int xPos = 0; 
+        int xPos = encounterGoingTo->spawnPoint.x;
+        int yPos = encounterGoingTo->spawnPoint.y;
+
+        Point camPos = (Point){0,0};
+         
         if (toSpawn)
             for (int i = 0; i < encounterGoingTo->numUnitsToSelect; i++)
             {
                 if (toSpawn[i] == NULL)
                     continue;
-                AddGameobject(toSpawn[i],80+xPos,180);   
+                AddGameobject(toSpawn[i],xPos,yPos);   
                 xPos += GetWidth(toSpawn[i]);
+                if (i == encounterGoingTo->numUnitsToSelect/2)
+                {
+                    camPos.x = xPos;
+                    camPos.y = yPos;
+                }
             }
+        FocusCameraOnPos(camPos.x,camPos.y);
         memset(&gameStats,0,sizeof(GameState));
 
         ClearSelection();

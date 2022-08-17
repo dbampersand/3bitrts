@@ -1,6 +1,5 @@
 #pragma once
 
-#include "vector2.h"
 #include "stdbool.h"
 #include "point.h"
 
@@ -50,5 +49,7 @@ float ToWorldSpace_X(float x);
 float ToWorldSpace_Y(float y);
 float ToScreenSpace_X(float x);
 float ToScreenSpace_Y(float y);
+void FocusCameraOnPos(float x, float y);
 void MoveCamera(ALLEGRO_MOUSE_STATE mouseState,ALLEGRO_KEYBOARD_STATE* keyState, float dt);
+void MoveCam(float x, float y);
 void ClearSelection();

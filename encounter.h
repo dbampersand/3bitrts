@@ -4,6 +4,7 @@
 #include "limits.h"
 #include "augment.h"
 #include "ui.h"
+#include "point.h"
 
 typedef struct Sprite Sprite;
 typedef struct lua_State lua_State;
@@ -47,6 +48,8 @@ typedef struct Encounter
     bool encounterShouldBeSkipped;
 
     bool automaticWinCheck;
+
+    Point spawnPoint;
 
 
     UIElement encounter_ButtonLeft;

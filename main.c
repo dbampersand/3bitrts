@@ -13,7 +13,6 @@
 #include "luafuncs.h"
 #include "sprite.h"
 #include "helperfuncs.h"
-#include "vector2.h"
 #include "rect.h"
 #include "player.h"
 #include "colors.h"
