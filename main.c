@@ -274,6 +274,13 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         DrawReplayUI(&replay,mouseState,mouseStateLastFrame);
     }
 
+    if (al_key_down(keyState,ALLEGRO_KEY_BACKQUOTE))
+    {
+        DrawMinimap(*mouseState);
+    }
+    
+
+
     DrawMenus(mouseState);
     DrawWidgets(gameState, DRAWORDER_AFTERUI);
     DrawMouse(mouseState, mousedOver);
@@ -287,11 +294,6 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
 
     DrawTransition(dt);
-    if (al_key_down(keyState,ALLEGRO_KEY_BACKQUOTE))
-    {
-        DrawMinimap();
-    }
-    
 }
 
 void DrawMainMenu()

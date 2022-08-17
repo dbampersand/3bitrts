@@ -1,3 +1,7 @@
+#pragma once
+
+#include "allegro5/allegro.h"
+
 typedef struct Minimap
 {
 
@@ -5,4 +9,4 @@ typedef struct Minimap
 
 Minimap minimap;
 
-void DrawMinimap();
+void DrawMinimap(ALLEGRO_MOUSE_STATE mouseState);
