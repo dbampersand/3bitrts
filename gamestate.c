@@ -93,8 +93,8 @@ void FinishTransition()
 
         SetMap(LoadMap(encounterGoingTo->mapPath));
 
-        int xPos = encounterGoingTo->spawnPoint.x;
-        int yPos = encounterGoingTo->spawnPoint.y;
+        int xPos = currMap->spawnPoint.x;
+        int yPos = currMap->spawnPoint.y;
 
         Point camPos = (Point){0,0};
          
@@ -164,19 +164,34 @@ void FinishTransition()
         gameState = GAMESTATE_INGAME;
         transitioningTo = GAMESTATE_INGAME;
 
-        int xPos = 80;
+        SetMap(LoadMap(pathToNextMap));
+
+        int xPos = currMap->spawnPoint.x;
+        int yPos = currMap->spawnPoint.y;
+
+        Point camPos = (Point){0,0};
+
         for (int i = 0; i < MAX_OBJS; i++)
         {
-            objects[i].position.x = xPos;
-            objects[i].position.y = 180;
-            objects[i].targetPosition.x = xPos;
-            objects[i].targetPosition.y = 180;
-
             if (IsActive(&objects[i]) && IsOwnedByPlayer(&objects[i]))
-                xPos += GetWidth(&objects[i]);
+            {
+                objects[i].position.x = xPos;
+                objects[i].position.y = yPos;
+                objects[i].targetPosition.x = xPos;
+                objects[i].targetPosition.y = yPos;
+
+                    xPos += GetWidth(&objects[i]);
+                if (i == encounterGoingTo->numUnitsToSelect/2)
+                {
+                    camPos.x = xPos;
+                    camPos.y = yPos;    
+                }
+            }
+
         }
+        FocusCameraOnPos(camPos.x,camPos.y);
+
         RemoveAllAttacks();
-        SetMap(LoadMap(pathToNextMap));
 
         free(pathToNextMap);
         pathToNextMap = NULL;

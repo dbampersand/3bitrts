@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include "point.h"
 
 #define _GRAIN 4
 typedef struct Sprite Sprite; 
@@ -14,6 +15,8 @@ typedef struct Map
     unsigned int spriteIndex;
     unsigned int secondLayerSpriteIndex;
 
+
+    Point spawnPoint;
 
     int luafunc_update;
     int luafunc_setup;

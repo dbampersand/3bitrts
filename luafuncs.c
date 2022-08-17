@@ -1369,7 +1369,7 @@ int L_CreateObject(lua_State* l)
     } 
     if (!prefabFound)
     {
-        GameObject* prefab = LoadPrefab(l_path);
+           GameObject* prefab = LoadPrefab(l_path);
         g = AddGameobject(prefab,x,y);
         SetOwnedBy(g, PLAYER);
 
@@ -2076,8 +2076,8 @@ int L_SetSpawnPoint(lua_State* l)
     int x = lua_tonumber(l,1);
     int y = lua_tonumber(l,2);
 
-    currEncounterRunning->spawnPoint.x = x;
-    currEncounterRunning->spawnPoint.y = y;
+    currMap->spawnPoint.x = x;
+    currMap->spawnPoint.y = y;
 
     return 0;
 }

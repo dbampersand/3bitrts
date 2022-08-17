@@ -16,7 +16,6 @@ void LoadEncounter(char* dirPath, lua_State* l)
     d = opendir(dirPath);
 
     Encounter* e = calloc(1,sizeof(Encounter));
-    e->spawnPoint.x = 80; e->spawnPoint.y = 180;
     e->numUnitsToSelect = 4;
     e->automaticWinCheck = true;
 

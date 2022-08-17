@@ -181,7 +181,10 @@ void ClearSelection()
 {
     for (int i = 0; i < players[0].numUnitsSelected; i++)
     {
+        SetSelected(players[0].selection[i],false);
+
         players[0].selection[i] = NULL;
     }
+    players[0].numUnitsSelected = 0;
 
 }

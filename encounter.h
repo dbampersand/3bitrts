@@ -49,9 +49,6 @@ typedef struct Encounter
 
     bool automaticWinCheck;
 
-    Point spawnPoint;
-
-
     UIElement encounter_ButtonLeft;
     UIElement encounter_ButtonConfirm;
     UIElement encounter_ButtonRight;

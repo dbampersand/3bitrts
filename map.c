@@ -14,7 +14,7 @@
 
 void PreprocessMap(Map* map)
 {
-    if (map->collision)
+        if (map->collision)
         free(map->collision);
     ALLEGRO_BITMAP* before = al_get_target_bitmap();
 
@@ -144,6 +144,8 @@ Map* LoadMap(char* path)
 {
   Map m;
   memset(&m,0,sizeof(Map));
+  m.spawnPoint.x = 80;
+  m.spawnPoint.y = 180;
   loadLuaGameMap(luaState,path,&m);
   
   numMaps++;
@@ -158,6 +160,9 @@ Map* LoadMap(char* path)
 
 void SetMap(Map* m)
 {
+    if (m->collision)
+        free(m->collision);
+    m->collision = NULL;
     currMap = m;
     CallLuaFunc(m->luafunc_setup);
     //PreprocessMap(m);
