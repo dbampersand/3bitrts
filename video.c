@@ -31,7 +31,7 @@ void InitVideo()
 }
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)
 {
-    int x = r.x; int y = r.y; int w = r.w; int h = r.h;
+    float x = r.x; float y = r.y; float w = r.w; float h = r.h;
 
     if (filled)
         al_draw_filled_rectangle(x,y,x+w-1,y+h+1,color);

@@ -1,7 +1,7 @@
 function setup()
     SetMapSprite("assets/encounters/01/map.png")
-    CreateObject("assets/encounters/01/boss.lua",0,0,TYPE_ENEMY);
-    SetAutoWin(false);
+    CreateObject("assets/encounters/01/boss.lua",SCREEN_SIZE/2-32,0,TYPE_ENEMY);
+    SetAutoWin(true);
 
 end
 local timer = 0;

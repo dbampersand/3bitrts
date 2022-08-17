@@ -46,6 +46,7 @@ typedef struct Player Player;
 #define MAX_QUEUED_CMD 8
 #define MAX_ABILITIES 8
 #define FLASH_TIMER 0.1
+#define HEALTHBAR_HEIGHT 2
 typedef struct GameObject
 {    
     struct GameObject* prefab;
@@ -241,3 +242,4 @@ bool ObjectIsInUI(GameObject* g);
 void DrawObjShadows();
 void DrawMapHighlight(GameObject* g, int lightSize);
 void DrawMapHighlights();
+float GetSummonPercent(GameObject* g);

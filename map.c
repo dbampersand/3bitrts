@@ -3,6 +3,8 @@
 #include "allegro5/allegro_font.h"
 #include "allegro5/allegro_image.h"
 
+#include <math.h>
+
 #include "map.h"
 
 #include "sprite.h"
@@ -196,10 +198,13 @@ void UpdateMap(Map* m, float dt)
 //This is for drawing over the shadows
 void RedrawMapSegmentUnderObj(GameObject* g)
 {
+    float percent = GetSummonPercent(g);  
+    float realY = g->position.y + g->offset.y;
+
     float x = g->position.x + g->offset.x;
-    float y = g->position.y + g->offset.y;
+    float y = realY + ceil(GetHeight(g) * (1-percent));
     int w = GetWidth(g);
-    int h = GetHeight(g);
+    int h = floor(GetHeight(g) * percent);
     float sx = x; float sy = y;
     ToScreenSpace(&sx,&sy);
 

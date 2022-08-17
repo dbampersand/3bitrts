@@ -1423,16 +1423,26 @@ bool ObjectCanPush(GameObject* g)
 {
     return (g->properties & OBJ_CAN_PUSH);
 }
+float GetSummonPercent(GameObject* g)
+{
+    float summPercent = g->summonTime / g->summonMax;
+    summPercent = clamp(summPercent,0,1);
+    if (g->summonTime < g->summonMax)
+        summPercent = EaseInOutCubic(summPercent);  
+    return summPercent;
+
+}
 void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
 {
+    float summPercent = GetSummonPercent(g);
     Sprite* s = &sprites[g->spriteIndex];
-    int padding = 4;
+    int padding = HEALTHBAR_HEIGHT * 2;
 
     Rect r;
-    r.x = g->position.x + g->offset.x;
-    r.y = g->position.y - padding + g->offset.y;
+    r.h = HEALTHBAR_HEIGHT * summPercent;
     r.w = al_get_bitmap_width(s->sprite);
-    r.h = 2;
+    r.x = g->position.x + g->offset.x;
+    r.y = g->position.y - padding + g->offset.y + (HEALTHBAR_HEIGHT * (1-summPercent));
     ToScreenSpace(&r.x,&r.y);
 
     al_draw_rectangle((int)r.x,(int)r.y,(int)r.x+r.w,(int)r.y+r.h,col,1);
@@ -1468,10 +1478,11 @@ void DrawArrow(int cx, int cy, int targetx, int targety, ALLEGRO_COLOR color)
 }
 void DrawObjShadow(GameObject* g)
 {
-    float x = g->position.x + g->offset.x;
-    float y = g->position.y + g->offset.y;
+    float percent = GetSummonPercent(g); 
     int w = GetWidth(g);
-    int h = GetHeight(g);
+    int h = ceil(GetHeight(g) * percent); 
+    float x = g->position.x + g->offset.x;
+    float y = g->position.y + g->offset.y + ceil(GetHeight(g)*(1-percent));
     ToScreenSpace(&x,&y);
 
     int lineW = (ceil(w/16.0f));
@@ -1525,26 +1536,23 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     float y = g->position.y + g->offset.y;
     ToScreenSpace(&x,&y);
     
-    float percent = g->summonTime / g->summonMax;
-    percent = clamp(percent,0,1);
-
-    if (g->summonTime < g->summonMax)
-        percent = EaseInOutCubic(percent);  
+    float percent = GetSummonPercent(g);  
 
 
     Rect selectRect;
     selectRect.w = al_get_bitmap_width(s->sprite);
-    selectRect.h = al_get_bitmap_height(s->sprite) * percent;
+    selectRect.h = ceil(al_get_bitmap_height(s->sprite) * percent);
     selectRect.x = x;
-    selectRect.y = y + (al_get_bitmap_height(s->sprite) - selectRect.h);
+    selectRect.y = floor(y + (al_get_bitmap_height(s->sprite) - selectRect.h));
 
     if (g->summonTime < g->summonMax)
     {
         float sx = 0;
-        float sy = GetHeight(g) - GetHeight(g)*percent;
+        float sy = GetHeight(g) - (GetHeight(g)*percent);
         float sw = GetWidth(g);
-        float sh = GetHeight(g) * percent;
-        DrawSpriteRegion(s,sx,sy,sw,sh,x,(y+GetHeight(g))-GetHeight(g)*percent,GetColor(COLOR_GROUND_DARK,GetPlayerOwnedBy(g)),false);
+        float sh = (GetHeight(g) * percent);
+        c = GROUND_DARK;
+        DrawSpriteRegion(s,sx,sy,sw,sh,x,(y+sy),GetColor(COLOR_GROUND_DARK,GetPlayerOwnedBy(g)),false);
     }
     else
         DrawSprite(s,x,y,0.5f,0.5f,g->angle,c, isReversed);

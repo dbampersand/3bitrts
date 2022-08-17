@@ -87,7 +87,7 @@ void init()
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
 
-
+    
     if (!GameIsPaused())
     {
         MoveCamera(*mouseState,keyState,dt);
@@ -131,6 +131,7 @@ float easeOutQuint(float x) {
     if (x > 1) return 1;
     return 1 - pow(1 - x, 5);
 }
+float aefesfsd = 0;
 
 void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
