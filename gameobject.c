@@ -1860,8 +1860,8 @@ void Teleport(GameObject* g, float x, float y)
         }
 
 
-    g->targetPosition.x = g->position.x - cX/2.0f;
-    g->targetPosition.y = g->position.y - cY/2.0f;
+    g->targetPosition.x = g->position.x;// - cX/2.0f;
+    g->targetPosition.y = g->position.y;// - cY/2.0f;
 
     //CheckCollisionsWorld(g,false, false);
 }

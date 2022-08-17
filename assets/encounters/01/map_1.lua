@@ -2,8 +2,8 @@ local timer = 0
 
 function setup()
     SetMapSprite("assets/encounters/01/map_1.png")
-    CreateObject("assets/enemies/viper/viper.lua",130,419,TYPE_ENEMY,2);
-    CreateObject("assets/enemies/viper/viper.lua",146,419,TYPE_ENEMY,2);
+    CreateObject("assets/enemies/viper/viper.lua",130,340,TYPE_ENEMY,2);
+    CreateObject("assets/enemies/viper/viper.lua",146,340,TYPE_ENEMY,2);
    
     SetAutoWin(false);
     SetSpawnPoint(120,460)
