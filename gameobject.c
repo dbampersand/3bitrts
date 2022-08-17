@@ -1813,8 +1813,8 @@ void Teleport(GameObject* g, float x, float y)
         return;
     if (!g) return;
 
-    float dx = x - g->position.x;
-    float dy = y - g->position.y;
+    float dx = x - g->position.x > 0 ? 1 : -1;
+    float dy = y - g->position.y > 0 ? 1 : -1;
 
     float beforeX = g->position.x;
     float beforeY = g->position.y;

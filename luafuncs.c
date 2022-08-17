@@ -1421,6 +1421,7 @@ int L_SetSprite(lua_State* l)
 int L_SetMapSprite(lua_State* l)
 {
     currMap->spriteIndex = LoadSprite(lua_tostring(l,-1),false);
+    PreprocessMap(currMap);
     return 0;
 }
 int L_SetAbilityTargetHint(lua_State* l)

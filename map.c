@@ -160,7 +160,7 @@ void SetMap(Map* m)
 {
     currMap = m;
     CallLuaFunc(m->luafunc_setup);
-    PreprocessMap(m);
+    //PreprocessMap(m);
 
 }
 void InitMaps()
