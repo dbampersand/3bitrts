@@ -10,6 +10,7 @@
 #include "ui.h"
 #include "colors.h"
 #include "gameobject.h"
+#include "player.h"
 
 void InitDamageNumbers()
 {
@@ -26,7 +27,9 @@ void DrawDamageNumbers()
             unsigned char r; unsigned char g; unsigned char b;
             al_unmap_rgb(*d->color,&r,&g,&b);
             ALLEGRO_COLOR color = al_premul_rgba(r,g,b,d->fade*255.0f);
-            al_draw_text(ui.tinyFont,color,d->pos.x,d->pos.y,ALLEGRO_ALIGN_CENTER,d->text);
+            int x = d->pos.x; int y = d->pos.y;
+            ToScreenSpaceI(&x,&y);
+            al_draw_text(ui.tinyFont,color,x,y,ALLEGRO_ALIGN_CENTER,d->text);
         }
     }
 }
