@@ -1097,7 +1097,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
 
                         if (!ObjIsDecoration(g))
                         {
-                                g->position.x = g2->position.x - al_get_bitmap_width(s2->sprite);
+                            g->position.x = (g2->position.x - al_get_bitmap_width(s->sprite));
                             CheckCollisions(g2,true,1,objectCanPush);
                             CheckCollisionsWorld(g2,true,1);
                         }

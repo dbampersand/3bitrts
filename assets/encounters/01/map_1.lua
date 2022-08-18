@@ -10,7 +10,7 @@ function setup()
     CreateObject("assets/decor/curebox.lua",136,260,TYPE_ENEMY,2);
 
 
-    CreateObject("assets/enemies/caduceus/caduceus.lua",180,55,TYPE_ENEMY,0);
+    CreateObject("assets/enemies/caduceus/caduceus.lua",156,48,TYPE_ENEMY,0);
 
     SetAutoWin(false);
     SetSpawnPoint(120,460)
