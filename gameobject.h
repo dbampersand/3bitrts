@@ -36,7 +36,8 @@ typedef enum GAMEOBJ_TYPE_HINT
 typedef enum OBJ_FRIENDLINESS
 {
     TYPE_FRIENDLY=0,
-    TYPE_ENEMY=1
+    TYPE_ENEMY=1,
+    TYPE_DECORATION = 2
 }OBJ_FRIENDLINESS;
 
 typedef struct Shield Shield;

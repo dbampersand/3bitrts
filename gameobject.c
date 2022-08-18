@@ -1026,7 +1026,9 @@ int GetPlayerOwnedBy(GameObject* g)
 {
     if (!g) 
         return -1;
-    return (g->properties & OBJ_OWNED_BY) > 0 ? 1 : 0;
+    if (ObjIsDecoration(g))
+        return TYPE_DECORATION;
+    return (g->properties & OBJ_OWNED_BY) > 0 ? TYPE_ENEMY : TYPE_FRIENDLY;
 }
 void SetOwnedBy(GameObject* g, int i)
 {

@@ -8,6 +8,7 @@
 #include "allegro5/allegro_primitives.h"
 #include "player.h"
 #include "allegro5/allegro.h"
+#include "gameobject.h"
 
 void DrawMinimap(ALLEGRO_MOUSE_STATE mouseState)
 {
@@ -22,6 +23,27 @@ void DrawMinimap(ALLEGRO_MOUSE_STATE mouseState)
     al_draw_filled_rectangle(x,y,x+w*scale,y+h*scale,BG);
     al_draw_tinted_scaled_bitmap(s->sprite,GROUND,0,0,w,h,x,y,w*scale,h*scale,0);
     al_draw_rectangle(x,y,x+w*scale,y+h*scale,FRIENDLY,1);
+
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        GameObject* g = &objects[i];
+        if (IsActive(g))
+        {
+            float gX = x + (g->position.x * scale);
+            float gY = y + (g->position.y * scale);
+            float gW = GetWidth(g) * scale;
+            float gH = GetHeight(g) * scale;
+            gW = gW < 1 ? 1 : gW;
+            gH = gH < 1 ? 1 : gH; 
+
+
+            ALLEGRO_COLOR c = GetColor(COLOR_DEFAULT,GetPlayerOwnedBy(g));
+            
+            al_draw_rectangle(gX,gY, gX+gW, gY+gH,c,1);
+
+        }
+
+    }
 
     float xScreen = players[0].cameraPos.x;
     float yScreen = players[0].cameraPos.y;

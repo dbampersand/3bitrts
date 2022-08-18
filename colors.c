@@ -1,5 +1,6 @@
 #include "colors.h"
 #include "command.h"
+#include "gameobject.h"
 ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy)
 {
     if (c >= COLOR_ALL)
@@ -7,14 +8,16 @@ ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy)
 
     if (c ==  COLOR_DEFAULT)
     {
-        if (objectOwnedBy == 0)
+        if (objectOwnedBy == TYPE_FRIENDLY)
         {
             return FRIENDLY;
         }
-        if (objectOwnedBy == 1)
+        if (objectOwnedBy == TYPE_ENEMY)
         {
             return ENEMY;
         }
+        if (objectOwnedBy == TYPE_DECORATION)
+            return BG;
     }
     return *ALColorLookup[c];
 

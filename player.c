@@ -36,7 +36,7 @@ void RemoveGameObjectFromSelection(Player* p, GameObject* g)
 }
 void InitPlayers()
 {
-    players = calloc(2,sizeof(GameObject));
+    players = calloc(3,sizeof(Player));
 }
 void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState)
 {
@@ -134,7 +134,7 @@ void FocusCameraOnPos(float x, float y)
 
     MoveCam(dx,dy);
 }
-void MoveCam(float x, float y)
+void MoveCam(float x, float y)  
 {
     players[0].cameraPos.x = x;
     players[0].cameraPos.y = y;
