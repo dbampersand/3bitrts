@@ -459,6 +459,9 @@ void UpdateAttack(Attack* a, float dt)
 
         for (int i = 0; i < numObjects; i++)
         {
+            if (!IsActive(&objects[i]))
+                continue;
+
             int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
 
             if (a->properties & ATTACK_HITS_ENEMIES)
@@ -466,9 +469,9 @@ void UpdateAttack(Attack* a, float dt)
                 int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
                 int objOwnedBy = GetPlayerOwnedBy(&objects[i]);
 
-                if (a->ownedBy)
+                if (a->ownedBy && (!ObjIsDecoration(a->ownedBy)))
                 {
-                    if (objOwnedBy == abilityOwnedBy)
+                    if (objOwnedBy)
                     {
                         continue;
                     }
@@ -483,7 +486,7 @@ void UpdateAttack(Attack* a, float dt)
             {
                 int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
                 int objOwnedBy = GetPlayerOwnedBy(&objects[i]);
-                if (a->ownedBy)
+                if (a->ownedBy && (!ObjIsDecoration(a->ownedBy)))
                 {
                     if (objOwnedBy != abilityOwnedBy)
                     {
