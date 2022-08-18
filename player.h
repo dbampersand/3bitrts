@@ -32,8 +32,8 @@ Player* players;
 typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE;
 typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE; 
 
-//The point (16, SCREEN_SIZE-16, 16, SCREEN_SIZE-16) at which the camera starts to pan
-#define SCREEN_EDGE 16
+//The point (8, SCREEN_SIZE-8, 8, SCREEN_SIZE-8) at which the camera starts to pan
+#define SCREEN_EDGE 8
 float cameraSpeed;
 
 void RemoveFromSelection(Player* p, int index);

@@ -279,7 +279,7 @@ void SetGameStateToChoosingParty()
 
         for (int i = 0; i < numPrefabs; i++)
         {
-            GameObject* g = &prefabs[i];
+            GameObject* g = prefabs[i];
             
             if (g->playerChoosable == true)
             {

@@ -201,10 +201,10 @@ void RedrawMapSegmentUnderObj(GameObject* g)
     float percent = GetSummonPercent(g);  
     float realY = g->position.y + g->offset.y;
 
-    float x = g->position.x + g->offset.x;
-    float y = realY + ceil(GetHeight(g) * (1-percent));
+    int x = g->position.x + g->offset.x;
+    int y = realY + (GetHeight(g) * (1-percent));
     int w = GetWidth(g);
-    int h = floor(GetHeight(g) * percent);
+    int h = (GetHeight(g) * percent);
     float sx = x; float sy = y;
     ToScreenSpace(&sx,&sy);
 

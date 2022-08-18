@@ -1360,9 +1360,9 @@ int L_CreateObject(lua_State* l)
     bool prefabFound = false;
     for (int i = 0; i < numPrefabs; i++)
     {
-        if (strcasecmp(prefabs[i].path,l_path) == 0)
+        if (strcasecmp(prefabs[i]->path,l_path) == 0)
         {
-            g = &prefabs[i];
+            g = prefabs[i];
             prefabFound = true;
             break;
         }
@@ -2081,6 +2081,29 @@ int L_SetSpawnPoint(lua_State* l)
 
     return 0;
 }
+int L_RotatePoint(lua_State* l)
+{
+    float x = lua_tonumber(l,1);
+    float y = lua_tonumber(l,2);
+
+    float cx = lua_tonumber(l,3);
+    float cy = lua_tonumber(l,4);
+
+    float angle = lua_tonumber(l,5);
+
+
+    RotatePointF(&x,&y,cx,cy,angle);
+    lua_newtable(l);
+    lua_pushstring(l,"x");
+    lua_pushnumber(l,x);
+    lua_settable(l,-3);
+
+    lua_pushstring(l,"y");
+    lua_pushnumber(l,y);
+    lua_settable(l,-3);
+
+    return 1;
+}
 
 void SetLuaKeyEnums(lua_State* l)
 {
@@ -2526,5 +2549,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetSpawnPoint);
     lua_setglobal(luaState, "SetSpawnPoint");
+
+    lua_pushcfunction(luaState, L_RotatePoint);
+    lua_setglobal(luaState, "RotatePoint");
 
 }

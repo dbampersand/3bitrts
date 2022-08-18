@@ -216,6 +216,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
     else
     {
         Ability* before = currAbilityRunning;
+        a->castType = ABILITY_INSTANT;
         a->cooldown = 1;
         int funcIndex;
         if (CheckFuncExists("setup",a->luabuffer))

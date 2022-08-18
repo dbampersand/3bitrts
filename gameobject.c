@@ -278,7 +278,7 @@ void InitObjects()
     }
 
 
-    prefabs = calloc(1,sizeof(GameObject));
+    prefabs = calloc(1,sizeof(GameObject*));
     numPrefabs = 0;
     numPrefabsAllocated = 1;
 }
@@ -858,6 +858,11 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
 void KillObj(GameObject* g, bool trigger)
 {
     if (!g) return;
+    GameObject* before = currGameObjRunning;
+    currGameObjRunning = g;
+    CallLuaFunc(g->luafunc_kill);
+    currGameObjRunning = before;
+
     if (trigger)
     {
         if (!IsOwnedByPlayer(g))
@@ -954,24 +959,23 @@ GameObject* LoadPrefab(const char* path)
 {
     for (int i = 0; i < numPrefabs; i++)
     {
-        if (strcasecmp(prefabs[i].path,path)==0)
+        if (strcasecmp(prefabs[i]->path,path)==0)
         {
-            return &prefabs[i];
+            return prefabs[i];
         }
     }
-    GameObject g;
-    memset(&g,0,sizeof(GameObject));
-    loadLuaGameObj(luaState,path,&g);
+    GameObject* g = calloc(1,sizeof(GameObject));
+    loadLuaGameObj(luaState,path,g);
 
     if (numPrefabs  >= numPrefabsAllocated)
     {
         numPrefabsAllocated += BUFFER_PREALLOC_AMT;
-        prefabs = realloc(prefabs,(numPrefabsAllocated)*sizeof(GameObject));
+        prefabs = realloc(prefabs,(numPrefabsAllocated)*sizeof(GameObject*));
     }
     prefabs[numPrefabs] = g;
     numPrefabs++;
 
-    return &prefabs[numPrefabs-1];
+    return prefabs[numPrefabs-1];
 }
 void MakeInvulnerable(GameObject* g, float time)
 {
@@ -1483,9 +1487,9 @@ void DrawObjShadow(GameObject* g)
     float percent = GetSummonPercent(g); 
     int w = GetWidth(g);
     int h = ceil(GetHeight(g) * percent); 
-    float x = g->position.x + g->offset.x;
-    float y = g->position.y + g->offset.y + ceil(GetHeight(g)*(1-percent));
-    ToScreenSpace(&x,&y);
+    int x = g->position.x + g->offset.x;
+    int y = g->position.y + g->offset.y + ceil(GetHeight(g)*(1-percent));
+    ToScreenSpaceI(&x,&y);
 
     int lineW = (ceil(w/16.0f));
     int lineH = (ceil(h/16.0f));
@@ -1543,14 +1547,14 @@ void DrawGameObj(GameObject* g, bool forceInverse)
 
     Rect selectRect;
     selectRect.w = al_get_bitmap_width(s->sprite);
-    selectRect.h = ceil(al_get_bitmap_height(s->sprite) * percent);
+    selectRect.h = (al_get_bitmap_height(s->sprite) * percent);
     selectRect.x = x;
-    selectRect.y = floor(y + (al_get_bitmap_height(s->sprite) - selectRect.h));
+    selectRect.y = (y + (al_get_bitmap_height(s->sprite) - selectRect.h));
 
     if (g->summonTime < g->summonMax)
     {
         float sx = 0;
-        float sy = GetHeight(g) - (GetHeight(g)*percent);
+        float sy = (GetHeight(g) - (GetHeight(g)*percent));
         float sw = GetWidth(g);
         float sh = (GetHeight(g) * percent);
         c = GROUND_DARK;

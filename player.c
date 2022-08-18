@@ -6,7 +6,7 @@
 #include "sound.h"
 #include "map.h"
 
-float cameraSpeed = 100;
+float cameraSpeed = 200;
 void RemoveIndexFromSelection(Player* p, int index)
 {
     for (int i = index; i < MAXUNITSSELECTED-1; i++)

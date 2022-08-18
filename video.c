@@ -31,7 +31,7 @@ void InitVideo()
 }
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)
 {
-    float x = r.x; float y = r.y; float w = r.w; float h = r.h;
+    int x = r.x; int y = r.y; int w = r.w; int h = r.h;
 
     if (filled)
         al_draw_filled_rectangle(x,y,x+w-1,y+h+1,color);
@@ -40,7 +40,7 @@ void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)
     al_draw_line(x, y+h, x+w-1, y+h, color,1);
 
     //verticals
-    al_draw_line(x, y+1,x, y+h, color,1);
+    al_draw_line(x, y+1, x, y+h, color,1);
     al_draw_line(x + w, y+1, x+w, y+h, color,1);
 }
 void DrawOutlinedRect_Dithered(Rect* r, ALLEGRO_COLOR color)

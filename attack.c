@@ -15,6 +15,7 @@
 #include "video.h"
 #include "particle.h"
 #include "player.h"
+#include "map.h"
 
 int attack_top = 0;
 
@@ -568,7 +569,7 @@ void UpdateAttack(Attack* a, float dt)
     {
         free(copied->effects);
     }
-    if (a->x < 0 || a->y < 0 || a->x > 255 || a->y > 255 || a->duration < 0)
+    if (a->x < 0 || a->y < 0 || a->x > GetMapWidth() || a->y > GetMapHeight() || a->duration < 0)
     {
         if (a->shouldCallback)
         {
