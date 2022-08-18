@@ -621,7 +621,7 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
 
     return e;
 }
-int L_GetWidthOf(lua_State* l)
+int L_GetWidth(lua_State* l)
 {
     int index = lua_tonumber(l,1);
     if (index >= 0 && index < MAX_OBJS)
@@ -635,7 +635,7 @@ int L_GetWidthOf(lua_State* l)
     }
     return 1;
 }
-int L_GetHeightOf(lua_State* l)
+int L_GetHeight(lua_State* l)
 {
     int index = lua_tonumber(l,1);
     if (index >= 0 && index < MAX_OBJS)
@@ -1369,7 +1369,7 @@ int L_CreateObject(lua_State* l)
     } 
     if (!prefabFound)
     {
-           GameObject* prefab = LoadPrefab(l_path);
+        GameObject* prefab = LoadPrefab(l_path);
         g = AddGameobject(prefab,x,y);
         SetOwnedBy(g, PLAYER);
 
@@ -2092,7 +2092,7 @@ int L_RotatePoint(lua_State* l)
     float angle = lua_tonumber(l,5);
 
 
-    RotatePointF(&x,&y,cx,cy,angle);
+    RotatePointF(&x,&y,cx,cy,DegToRad(angle));
     lua_newtable(l);
     lua_pushstring(l,"x");
     lua_pushnumber(l,x);
@@ -2246,11 +2246,11 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_SetObjPosition);
     lua_setglobal(luaState, "SetObjPosition");
 
-    lua_pushcfunction(luaState, L_GetWidthOf);
-    lua_setglobal(luaState, "GetWidthOf");
+    lua_pushcfunction(luaState, L_GetWidth);
+    lua_setglobal(luaState, "GetWidth");
 
-    lua_pushcfunction(luaState, L_GetHeightOf);
-    lua_setglobal(luaState, "GetHeightOf");
+    lua_pushcfunction(luaState, L_GetHeight);
+    lua_setglobal(luaState, "GetHeight");
 
     lua_pushcfunction(luaState, L_SetObjTargetPosition);
     lua_setglobal(luaState, "SetObjTargetPosition");

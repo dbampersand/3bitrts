@@ -1835,8 +1835,8 @@ void Teleport(GameObject* g, float x, float y)
 
     float cX; float cY;
     GetOffsetCenter(g,&cX,&cY);
-    g->position.x = x;// - cX/2;
-    g->position.y = y;// - cY/2;
+    g->position.x = x - cX/2;
+    g->position.y = y - cY/2;
 
 
 
@@ -1875,11 +1875,11 @@ void Teleport(GameObject* g, float x, float y)
         }
 
 
-    g->targetPosition.x = g->position.x;// - cX/2.0f;
-    g->targetPosition.y = g->position.y;// - cY/2.0f;
 
     CheckCollisions(g,true, dx, false);
     CheckCollisions(g,false, dy, false);   
+    g->targetPosition.x = g->position.x;// - cX/2.0f;
+    g->targetPosition.y = g->position.y;// - cY/2.0f;
 
 
 }

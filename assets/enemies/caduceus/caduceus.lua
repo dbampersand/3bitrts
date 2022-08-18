@@ -9,9 +9,13 @@ function setup()
 end
 
 function update(dt)
-    if (IsInCombat() == true) then
-        CastAbility(0,0,{});
-    end
+    --if (IsInCombat() == true) then
+        local cx = GetX(GetObjRef())
+        local cy = GetY(GetObjRef())
+
+
+        CastAbility(0,0,{{x=cx,y=cy}});
+    --end
 end
 
 function kill()

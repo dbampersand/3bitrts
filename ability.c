@@ -360,7 +360,8 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         
         float cx; float cy;
         GetCentre(g, &cx,&cy);
-        ClampToRadius(&x,&y,cx,cy,a->range);
+        if (a->castType != ABILITY_INSTANT)
+            ClampToRadius(&x,&y,cx,cy,a->range);
 
         lua_pushinteger(luaState,x);
         lua_pushinteger(luaState,y);    

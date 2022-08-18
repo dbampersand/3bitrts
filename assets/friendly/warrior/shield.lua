@@ -22,8 +22,8 @@ end
 
 function onhit(x,y,objhit)
     objRef = GetObjRef();
-    SetObjPosition(GetObjRef(),x-GetWidthOf(objRef)/2,y-GetHeightOf(objRef)/2);
-    SetObjTargetPosition(GetObjRef(),x-GetWidthOf(objRef)/2,y-GetHeightOf(objRef)/2);
+    SetObjPosition(GetObjRef(),x-GetWidth(objRef)/2,y-GetHeight(objRef)/2);
+    SetObjTargetPosition(GetObjRef(),x-GetWidth(objRef)/2,y-GetHeight(objRef)/2);
 end
 
 function abilitytick(x, y, durationLeft)
