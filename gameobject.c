@@ -1939,7 +1939,11 @@ void DoAI(GameObject* g)
                         for (int j = 0; j < MAX_OBJS; j++)
                         {
                             if ((g->properties & OBJ_OWNED_BY) == (objects[j].properties & OBJ_OWNED_BY))
-                                AddThreat(&objects[i],&objects[j],0);
+                            {
+                                if (GetDist(&objects[i],&objects[j]) < objects[j].aggroRadius)
+                                    AddThreat(&objects[i],&objects[j],0);
+                                
+                            }
                         }
                         AddThreat(&objects[i],g, 0);
                     }
