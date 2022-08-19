@@ -649,7 +649,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     currGameObjRunning->maxMana = 100;
     currGameObjRunning->manaRegen = 1;
 
-    currGameObjRunning->aggroRadius = 25;
+    currGameObjRunning->aggroRadius = 50;
 
     SetMoveSpeed(currGameObjRunning,50);
     SetHPRegen(currGameObjRunning,1);

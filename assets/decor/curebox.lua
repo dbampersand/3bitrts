@@ -1,4 +1,4 @@
-local maxHP = 100
+local maxHP = 20
 
 function setup()
     SetSprite("assets/decor/curebox.png");

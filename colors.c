@@ -72,7 +72,7 @@ unsigned char HashColor(ALLEGRO_COLOR c)
 void InitColors()
 {
     BG = al_map_rgba(24,5,26,255);
-    GROUND = al_map_rgba(92,92,189,255);
+    GROUND = al_map_rgba(73,73,202,255);
 
     ENEMY = al_map_rgba(95,247,247,255);
     FRIENDLY = al_map_rgba(242,246,255,255);

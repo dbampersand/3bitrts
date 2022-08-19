@@ -114,6 +114,17 @@ void FinishTransition()
         FocusCameraOnPos(camPos.x,camPos.y);
         memset(&gameStats,0,sizeof(GameState));
 
+
+        for (int i = 0; i < MAX_OBJS; i++)
+        {
+            if (IsActive(&objects[i]))
+            {
+                CureAll(&objects[i]);
+            }   
+        }
+
+        RemoveAllAttacks();
+
         ClearSelection();
         //free(toSpawn);
 
@@ -192,6 +203,13 @@ void FinishTransition()
         FocusCameraOnPos(camPos.x,camPos.y);
 
         RemoveAllAttacks();
+        for (int i = 0; i < MAX_OBJS; i++)
+        {
+            if (IsActive(&objects[i]))
+            {
+                CureAll(&objects[i]);
+            }   
+        }
 
         free(pathToNextMap);
         pathToNextMap = NULL;

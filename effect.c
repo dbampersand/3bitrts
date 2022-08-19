@@ -75,6 +75,10 @@ void CureEffect(GameObject* g, int numEffects)
         }
     }
 }
+void CureAll(GameObject* g)
+{
+    CureEffect(g,MAX_EFFECTS);
+}
 bool EffectIsEnabled(Effect* e)
 {
     return e->enabled;
