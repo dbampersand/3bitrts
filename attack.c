@@ -349,7 +349,7 @@ void DrawAttack(Attack* a, float dt)
             Normalize(&x2,&y2);
             x2 *= a->x + a->range;
             y2 *= a->y + a->range;
-            al_draw_pixel(x2,y2,POISON);
+            //al_draw_pixel(x2,y2,POISON);
         }
         float angle = RadToDeg(atan2(y2-a->y,x2-a->x));
         DrawCone(ToScreenSpace_X(a->x),ToScreenSpace_Y(a->y),angle,a->radius,a->range,FRIENDLY);

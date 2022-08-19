@@ -2077,18 +2077,18 @@ void DrawChannelHint(GameObject* g)
             }
             if (a->targetingHint == HINT_LINE)
             {
-                al_draw_line(x,y,x2,y2,col,1);
+                al_draw_line(ToScreenSpace_X(x),ToScreenSpace_Y(y),ToScreenSpace_X(x2),ToScreenSpace_Y(y2),col,1);
             }
             if (a->targetingHint == HINT_CIRCLE)
             {
-                al_draw_circle(x2,y2,a->hintRadius,col,1);
+                al_draw_circle(ToScreenSpace_X(x2),ToScreenSpace_Y(y2),a->hintRadius,col,1);
             }
             if (a->targetingHint == HINT_CONE)
             {
                 float angle;
                 angle = atan2(y2-y,x2-x);
                 float length = dist(x,y,x2,y2);
-                DrawCone(x,y,RadToDeg(angle),90,a->hintRadius,ENEMY);   
+                DrawCone(ToScreenSpace_X(x),ToScreenSpace_Y(y),RadToDeg(angle),90,a->hintRadius,ENEMY);   
             }
 
         }

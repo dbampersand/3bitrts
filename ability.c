@@ -31,7 +31,7 @@ void DrawHeldAbility(ALLEGRO_MOUSE_STATE* mouseState)
     int w; int h;
     float radius = players[0].abilityHeld->range;
 
-    al_draw_circle(cx,cy,radius,FRIENDLY,0);
+    al_draw_circle(ToScreenSpace_X(cx),ToScreenSpace_Y(cy),radius,FRIENDLY,0);
     
     if (players[0].abilityHeld->targetingHint == HINT_LINE)
     {
@@ -45,13 +45,13 @@ void DrawHeldAbility(ALLEGRO_MOUSE_STATE* mouseState)
         Normalize(&x,&y); 
         x = cx + x*_MIN(radius,dist);
         y = cy + y*_MIN(radius,dist);
-
-        al_draw_line(cx,cy,x,y,FRIENDLY,1);
+        ToScreenSpace(&x,&y);
+        al_draw_line(ToScreenSpace_X(cx),ToScreenSpace_Y(cy),x,y,FRIENDLY,1);
     }
     GameObject* heldSelected = players[0].selection[players[0].indexSelectedUnit];
     float cxHeld; float cyHeld; 
     GetCentre(heldSelected,&cxHeld,&cyHeld);
-    al_draw_line(mouseState->x+2,mouseState->y+2,cxHeld,cyHeld,FRIENDLY,1);
+    al_draw_line(ToScreenSpace_X(mouseState->x+2),ToScreenSpace_Y(mouseState->y+2),ToScreenSpace_X(cxHeld),ToScreenSpace_Y(cyHeld),FRIENDLY,1);
 
 }
 void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE mouseState,ALLEGRO_MOUSE_STATE mouseStateLastFrame)
