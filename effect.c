@@ -7,6 +7,8 @@
 
 bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
 {
+    if (!target)
+        return false;
      float value = e->value;
     if (!IsOwnedByPlayer(from))
     {
@@ -29,7 +31,8 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     }
     if (e->effectType ==  EFFECT_THREAT)
     {
-        AddThreat(from,target,value*sign);
+        if (from)
+            AddThreat(from,target,value*sign);
     }
     if (e->effectType == EFFECT_SPEED)
     {

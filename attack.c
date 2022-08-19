@@ -471,7 +471,7 @@ void UpdateAttack(Attack* a, float dt)
 
                 if (a->ownedBy && (!ObjIsDecoration(a->ownedBy)))
                 {
-                    if (objOwnedBy)
+                    if (objOwnedBy == abilityOwnedBy)
                     {
                         continue;
                     }
