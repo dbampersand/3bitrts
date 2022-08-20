@@ -216,7 +216,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
     else
     {
         Ability* before = currAbilityRunning;
-        a->castType = ABILITY_INSTANT;
+        a->castType = ABILITY_NONE;
         a->cooldown = 1;
         int funcIndex;
         if (CheckFuncExists("setup",a->luabuffer))
@@ -302,7 +302,7 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
             return;
         }
     }
-    if (target && (a->castType & ABILITY_TARGET_ALL || a->castType & ABILITY_TARGET_ENEMY || a->castType & ABILITY_TARGET_FRIENDLY))
+    if (target && (a->castType & ABILITY_TARGET_ALL || a->castType & ABILITY_TARGET_ENEMY || a->castType & ABILITY_TARGET_FRIENDLY) || a->castType & ABILITY_NONE)
     {
         bool ownedByG = IsOwnedByPlayer(g);
         bool ownedByTarget = IsOwnedByPlayer(target);

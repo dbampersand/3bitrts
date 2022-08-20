@@ -7,6 +7,7 @@ typedef struct GameObject GameObject;
 
 typedef enum ABILITY_CAST_TYPE
 {
+    ABILITY_NONE = 0,
     ABILITY_INSTANT = 1,
     ABILITY_POINT = 2,
     ABILITY_TARGET_FRIENDLY = 4,

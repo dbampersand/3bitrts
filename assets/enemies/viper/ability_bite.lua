@@ -1,7 +1,7 @@
 function setup()
 
     SetAbilityRange(10)
-    AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    --AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(20); 
     AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
