@@ -1,8 +1,8 @@
 function setup()
     SetSprite("assets/enemies/viper/viper.png");
 
-    SetDamage(40);
-    SetMaxHP(200,true)
+    SetDamage(20);
+    SetMaxHP(150,true)
     SetSpeed(80)
 
     AddAbility("assets/enemies/viper/ability_bite.lua",0);

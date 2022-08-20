@@ -1827,7 +1827,7 @@ void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE mouseState, bool
         al_draw_text(ui.font,FRIENDLY,x+u->w/2,y+u->h/2 - al_get_font_line_height(font)/2.0,ALLEGRO_ALIGN_CENTRE,b->description);
 
     }
-    if (PointInRect(mouseState.x,mouseState.y,button) && isActive)
+    if (PointInRect(mouseState.x,mouseState.y,button) && isActive && !b->clicked)
     {
         al_draw_rectangle(x+2,y+2,x+u->w-2,y+u->h-2,FRIENDLY,1);
     }

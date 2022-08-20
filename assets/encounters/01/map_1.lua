@@ -2,6 +2,7 @@ local timer = 0
 
 function setup()
     SetMapSprite("assets/encounters/01/map_1.png")
+
     CreateObject("assets/enemies/viper/viper.lua",115,296,TYPE_ENEMY,0);
     CreateObject("assets/enemies/viper/viper.lua",131,296,TYPE_ENEMY,0);
    
@@ -11,7 +12,6 @@ function setup()
 
     CreateObject("assets/enemies/cobra/cobra.lua",80,184, TYPE_ENEMY,0);
     CreateObject("assets/enemies/cobra/cobra.lua",164,184,TYPE_ENEMY,0);
-
 
     CreateObject("assets/enemies/caduceus/caduceus.lua",156,48,TYPE_ENEMY,0);
 

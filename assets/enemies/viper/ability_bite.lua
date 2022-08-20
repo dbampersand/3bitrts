@@ -6,7 +6,6 @@ function setup()
     SetCooldown(20); 
     AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
     SetDescription("[b]Bite\n\nDeals damage over time.")
-
 end
 function casted(x,y,obj,headingx,headingy)
 

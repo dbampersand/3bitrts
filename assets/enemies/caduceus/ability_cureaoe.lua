@@ -11,7 +11,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_CURE;
     f1["value"] = 1;
 
-    local aoe = CreateAOE(x,y,"",60,0.25,1,false,ATTACK_HITS_ENEMIES,COLOR_HEAL,DITHER_VERTICAL_HALF,false,-1,{f1});
+    local aoe = CreateAOE(x,y,"",120,0.25,1,false,ATTACK_HITS_ENEMIES,COLOR_HEAL,DITHER_VERTICAL_HALF,false,-1,{f1});
     SetAttackCircle(aoe,true);
 
     return true; 
