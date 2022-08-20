@@ -13,7 +13,7 @@ function casted(x,y,obj,headingx,headingy)
     local point = {x=cx, y=cy-32};
     for i=1,2 do
         CreateObject("assets/enemies/viper/viper.lua",point.x,point.y,TYPE_ENEMY,2);
-        point = RotatePoint(point.x,point.y,cx,cy,90*i);
+        point = RotatePoint(point.x,point.y,cx,cy,xPos*i);
     end
     return true; 
 end

@@ -1,4 +1,4 @@
-function setup()
+    function setup()
     SetSprite("assets/enemies/viper/viper.png");
 
     SetDamage(20);

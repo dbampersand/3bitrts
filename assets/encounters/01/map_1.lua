@@ -15,7 +15,6 @@ function setup()
 
     CreateObject("assets/enemies/caduceus/caduceus.lua",156,48,TYPE_ENEMY,0);
 
-    SetAutoWin(false);
     SetSpawnPoint(120,460)
     
 end
