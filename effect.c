@@ -54,21 +54,22 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         for (int i = 0; i < e->value; i++)
         {
-            CureEffect(target,e->value);
+            CureEffect(target,e->value,false);
         }
     }
 
     return false;
 
 }
-void CureEffect(GameObject* g, int numEffects)
+void CureEffect(GameObject* g, int numEffects, bool removeAllStacks)
 {
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
         Effect* e = &g->effects[i];
         if (GetPlayerOwnedBy(e->from) != GetPlayerOwnedBy(g))
         {
-            RemoveEffect(e,g);
+            if (RemoveEffect(e,g,removeAllStacks))
+                i--;
             numEffects--;
             if (numEffects <= 0)
                 return;
@@ -77,26 +78,30 @@ void CureEffect(GameObject* g, int numEffects)
 }
 void CureAll(GameObject* g)
 {
-    CureEffect(g,MAX_EFFECTS);
+    CureEffect(g,MAX_EFFECTS,true);
 }
 bool EffectIsEnabled(Effect* e)
 {
     return e->enabled;
 }
-void RemoveEffect(Effect* e, GameObject* from)
+bool RemoveEffect(Effect* e, GameObject* from, bool removeAllStacks)
 {
+    if (!e->enabled)
+        return false;
+
     if (e->trigger == TRIGGER_CONST && from)
     {
         ProcessEffect(e,e->from,from,true);
     }
 
-    if (e->canStack)
+    if (e->canStack && !removeAllStacks)
     {
         e->stacks--;
         if (e->stacks > 0)
-            return;
+            return true;
     }
     e->enabled = false;
+    e->stacks = 0;
     if (from)
     {
         for (int i = e - from->effects; i < MAX_EFFECTS-1; i++)
@@ -111,6 +116,7 @@ void RemoveEffect(Effect* e, GameObject* from)
         free(e->description);
     e->description = NULL;
     e->name = NULL;
+    return true;
 
 }
 void ProcessEffects(GameObject* g, float dt)
@@ -136,14 +142,14 @@ void ProcessEffects(GameObject* g, float dt)
                 }
                 else
                 {
-                    RemoveEffect(e,g);
+                    RemoveEffect(e,g,false);
                 }
             }
             if (e->trigger == TRIGGER_CONST)
             {
                 if (e->timer > e->duration)
                 {
-                    RemoveEffect(e,g);
+                    RemoveEffect(e,g,false);
                 }
             }
         }
@@ -241,5 +247,5 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
         }
     }
     //if we get here then we haven't applied it to anything
-    RemoveEffect(e,target);
+    RemoveEffect(e,target,false);
 }

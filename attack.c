@@ -92,7 +92,7 @@ void RemoveAttack(int attackindex)
     {
         for (int i = 0; i < a->numEffects; i++)
         {
-            RemoveEffect(&a->effects[i],NULL);
+            RemoveEffect(&a->effects[i],NULL,false);
         }
         free(a->effects);
         a->effects = NULL;

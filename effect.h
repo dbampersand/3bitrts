@@ -56,7 +56,7 @@ typedef struct Effect
 void ApplyEffect(Effect* e, GameObject* from, GameObject* target);
 void ProcessEffects(GameObject* g, float dt);
 bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove);
-void CureEffect(GameObject* g, int numEffects);
+void CureEffect(GameObject* g, int numEffects, bool removeAllStacks);
 void CureAll(GameObject* g);
-void RemoveEffect(Effect* e, GameObject* from);
+bool RemoveEffect(Effect* e, GameObject* from,bool removeAllStacks);
 bool EffectIsEnabled(Effect* e);

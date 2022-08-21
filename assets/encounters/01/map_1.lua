@@ -15,6 +15,7 @@ function setup()
 
     CreateObject("assets/enemies/caduceus/caduceus.lua",156,48,TYPE_ENEMY,0);
 
+    SetAutoWin(false);
     SetSpawnPoint(120,460)
     
 end
@@ -22,7 +23,7 @@ end
 function update(dt)
         
     if (NumObjectsOwnedByPlayer(TYPE_ENEMY) == 0) then
-       -- ChangeMap("assets/encounters/01/map_2.lua")
+        ChangeMap("assets/encounters/01/map_2.lua")
     end
     timer = timer + dt;
     if (timer > 5) then
