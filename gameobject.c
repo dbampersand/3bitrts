@@ -26,6 +26,8 @@
 #include "particle.h"
 #include "settings.h"
 
+#include "pathfind.h"
+
 GameObject* GetMousedOver(ALLEGRO_MOUSE_STATE* mouseState)
 {
     for (int i = 0; i < numObjects; i++)
@@ -1353,16 +1355,53 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
         }
     }
 }
+void GetTilesAroundPoint(Point p, float w, float h, int indexes[2])
+{
+    float x = p.x;
+    float y = p.y;
+
+    int indexLeft = GetIndex(GetMapHeight()/_GRAIN, floor((x) / (float)_GRAIN), floor((y) / (float)_GRAIN));
+    int indexRight = GetIndex(GetMapHeight()/_GRAIN, floor((x+w) / (float)_GRAIN), floor((y+h) / (float)_GRAIN));
+
+    indexes[0] = indexLeft;
+    indexes[1] = indexRight;
+
+}
+void SetTileCollisionAroundObj(GameObject* g, Point before, Point after)
+{
+    if (!currMap->collision)
+        return;
+    int indexesBefore[2];
+    GetTilesAroundPoint(before,GetWidth(g),GetHeight(g),indexesBefore);
+    SetMapCollisionRect(before.x,before.y,GetWidth(g),GetHeight(g),false);
+
+
+    int indexesAfter[2];
+    GetTilesAroundPoint(after,GetWidth(g),GetHeight(g),indexesAfter);
+    SetMapCollisionRect(after.x,after.y,GetWidth(g),GetHeight(g),true);
+    
+}
 void Move(GameObject* g, float delta)
 {
     if (!g) return;
+    if (!IsActive(g))
+        return;
     #define DIST_DELTA 1
-
+    Point before = g->position;
     int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
     int h = al_get_bitmap_height(sprites[g->spriteIndex].sprite);
     float xtarg;
     float ytarg;
 
+    bool success = false;
+
+    PointI targetIndex = (PointI){floor(g->targetPosition.x / (float)_GRAIN), floor(g->targetPosition.y / (float)_GRAIN)};
+    PointI currentIndex = (PointI){floor(g->position.x / (float)_GRAIN), floor(g->position.y / (float)_GRAIN)};
+
+    /*PointI newTarg = SMA(&Path,currentIndex,targetIndex,&success);
+    g->targetPosition.x = newTarg.x * _GRAIN;
+    g->targetPosition.y = newTarg.y * _GRAIN;
+*/
     if (!g->targObj)
     {
         xtarg = g->targetPosition.x;
@@ -1380,7 +1419,7 @@ void Move(GameObject* g, float delta)
 
         float dX = (moveX / dist * g->speed) * delta;
         float dY = (moveY / dist * g->speed) * delta;
-
+        
         if (dist <= DIST_DELTA)
         {
             g->position.x = xtarg;
@@ -1390,7 +1429,7 @@ void Move(GameObject* g, float delta)
             g->position.y = ytarg;
             CheckCollisions(g,false, dY,ObjectCanPush(g));
             CheckCollisionsWorld(g,false, dY);
-
+            SetTileCollisionAroundObj(g,before,g->position);
 
             return;
         }
@@ -1411,9 +1450,10 @@ void Move(GameObject* g, float delta)
             g->targetPosition.x = xtarg;
             g->targetPosition.y = ytarg;
             
+            SetTileCollisionAroundObj(g,before,g->position);
             return;
         }
-
+        
 
         g->position.y += dY;
         CheckCollisions(g,false, dY,ObjectCanPush(g));
@@ -1422,6 +1462,7 @@ void Move(GameObject* g, float delta)
         g->position.x += dX;
         CheckCollisions(g,true, dX,ObjectCanPush(g));
         CheckCollisionsWorld(g,true, dX);
+        SetTileCollisionAroundObj(g,before,g->position);
 
 
 }
@@ -1881,6 +1922,7 @@ void Teleport(GameObject* g, float x, float y)
     g->targetPosition.x = g->position.x;// - cX/2.0f;
     g->targetPosition.y = g->position.y;// - cY/2.0f;
 
+    SetTileCollisionAroundObj(g,(Point){beforeX,beforeY},(Point){g->position.x,g->position.y});
 
 }
 void GetOffsetCenter(GameObject* g, float* x, float* y)

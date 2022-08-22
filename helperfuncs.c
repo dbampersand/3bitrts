@@ -29,7 +29,7 @@ bool CircleInRect(float cx, float cy, float rad, Rect r)
 
 int GetIndex(int w, int x, int y)
 {
-    return (x*w)+y;
+    return (x * w) + y;
 }
 Point IndexToPoint(int h, int index)
 {

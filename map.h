@@ -8,9 +8,16 @@ typedef struct Sprite Sprite;
 #define _MAPSIZE 256
 typedef struct GameObject GameObject;
 
+typedef enum CollisionMapValue {
+    COLLISION_NEVER = 0,
+    COLLISION_OPEN = 1,
+    COLLISION_WORLD_AND_OBJECT = 2,
+}CollisionMapValue;
+
 typedef struct Map 
 {   
-    bool* collision;//[_MAPSIZE*_MAPSIZE/_GRAIN];
+    CollisionMapValue* collision;//[_MAPSIZE*_MAPSIZE/_GRAIN];
+    
     char* path;
     unsigned int spriteIndex;
     unsigned int secondLayerSpriteIndex;
@@ -38,3 +45,5 @@ void UpdateMap(Map* m, float dt);
 void RedrawMapSegmentUnderObj(GameObject* g);
 int GetMapWidth();
 int GetMapHeight();
+void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere);
+void DisplayCollision();

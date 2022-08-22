@@ -132,6 +132,7 @@ void InitColors()
     EffectColors[EFFECT_INVULN] = COLOR_HEAL;
     EffectColors[EFFECT_CURE] = COLOR_HEAL;
 
+
 }
 
 Color GetEffectColor(Effect* e)

@@ -2,6 +2,7 @@
 #include "allegro5/allegro_ttf.h"
 #include "allegro5/allegro_font.h"
 #include "allegro5/allegro_image.h"
+#include "allegro5/allegro_primitives.h"
 
 #include <math.h>
 
@@ -13,7 +14,60 @@
 #include "helperfuncs.h"
 #include "colors.h"
 #include "player.h"
+void DisplayCollision()
+{
+    for (int x = 0; x < GetMapWidth(); x += _GRAIN)
+    {
+        for (int y = 0; y < GetMapHeight(); y += _GRAIN)
+        {
+            int idx = GetIndex(GetMapHeight()/(float)_GRAIN, floor(x / (float)_GRAIN), floor(y / (float)_GRAIN));
+            if (currMap->collision[idx])
+            {
+                ALLEGRO_COLOR c;
+                if (currMap->collision[idx] == COLLISION_OPEN)
+                    c = al_map_rgba(255,0,0,128);
+                if (currMap->collision[idx] == COLLISION_WORLD_AND_OBJECT)
+                    c = al_map_rgba(0,255,0,255);
 
+                al_draw_filled_rectangle(ToScreenSpace_X(x),ToScreenSpace_Y(y),ToScreenSpace_X(x+_GRAIN),ToScreenSpace_Y(y+_GRAIN),c);
+                
+            }
+        }
+    }
+}
+
+void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
+{
+    int indexLeft = GetIndex(GetMapHeight()/_GRAIN, floor((x) / (float)_GRAIN), floor((y) / (float)_GRAIN));
+    int indexRight = GetIndex(GetMapHeight()/_GRAIN, ceil((x+w) / (float)_GRAIN), ceil((y+h) / (float)_GRAIN));
+    for (int xn = x/_GRAIN; xn < ceil((x + w)/_GRAIN); xn++)
+    {
+        for (int yn= y/_GRAIN; yn < ceil((y + h)/_GRAIN); yn++)
+        {
+            if (yn < 0 || yn >= GetMapHeight()/_GRAIN)
+                continue;
+            if (xn < 0 || xn >= GetMapWidth()/_GRAIN)
+                continue;
+            
+            int index = GetIndex(GetMapHeight()/_GRAIN, ceil((xn)), ceil((yn)));
+
+            if (objectIsHere)
+            {
+                if (currMap->collision[index] == COLLISION_OPEN || currMap->collision[index] == COLLISION_WORLD_AND_OBJECT)
+                {
+                    currMap->collision[index] = COLLISION_WORLD_AND_OBJECT;
+                }
+            }
+            else
+            {
+                if (currMap->collision[index] == COLLISION_OPEN || currMap->collision[index] == COLLISION_WORLD_AND_OBJECT)
+                {
+                    currMap->collision[index] = COLLISION_OPEN;
+                }
+            }
+        }
+    }
+}
 void PreprocessMap(Map* map)
 {
         if (map->collision)
@@ -24,7 +78,8 @@ void PreprocessMap(Map* map)
     int w = al_get_bitmap_width(sprite);
     int h = al_get_bitmap_height(sprite);
 
-    map->collision = calloc(w*h/_GRAIN,sizeof(bool));
+    map->collision = calloc(w*h/_GRAIN,sizeof(CollisionMapValue));
+    
     //memset(&map->collision,0,w*h/_GRAIN);
 
     al_lock_bitmap(sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
