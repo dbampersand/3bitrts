@@ -35,7 +35,17 @@ void DisplayCollision()
         }
     }
 }
+bool PointIsFree(int x, int y)
+{
+    int index = GetIndex(GetMapHeight()/_GRAIN, x, y);
+    
+    if (x < 0 || x >= GetMapWidth())
+        return false;
+    if (y < 0 || y >= GetMapHeight())
+        return false;
 
+    return (currMap->collision[index] == COLLISION_OPEN);
+}
 void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
 {
     int indexLeft = GetIndex(GetMapHeight()/_GRAIN, floor((x) / (float)_GRAIN), floor((y) / (float)_GRAIN));

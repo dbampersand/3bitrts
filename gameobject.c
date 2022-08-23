@@ -1381,6 +1381,11 @@ void SetTileCollisionAroundObj(GameObject* g, Point before, Point after)
     SetMapCollisionRect(after.x,after.y,GetWidth(g),GetHeight(g),true);
     
 }
+float drawX; float drawY;
+void GameObjDebugDraw()
+{
+    al_draw_circle(ToScreenSpace_X(drawX),ToScreenSpace_Y(drawY),5,al_map_rgba(255,0,128,255),1);
+}
 void Move(GameObject* g, float delta)
 {
     if (!g) return;
@@ -1390,6 +1395,8 @@ void Move(GameObject* g, float delta)
     Point before = g->position;
     int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
     int h = al_get_bitmap_height(sprites[g->spriteIndex].sprite);
+    SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
+
     float xtarg;
     float ytarg;
 
@@ -1398,14 +1405,20 @@ void Move(GameObject* g, float delta)
     PointI targetIndex = (PointI){floor(g->targetPosition.x / (float)_GRAIN), floor(g->targetPosition.y / (float)_GRAIN)};
     PointI currentIndex = (PointI){floor(g->position.x / (float)_GRAIN), floor(g->position.y / (float)_GRAIN)};
 
-    /*PointI newTarg = SMA(&Path,currentIndex,targetIndex,&success);
-    g->targetPosition.x = newTarg.x * _GRAIN;
-    g->targetPosition.y = newTarg.y * _GRAIN;
-*/
+    PointI path = SMA(&Path,currentIndex,targetIndex,&success);
+    path.x *= _GRAIN;
+    path.y *= _GRAIN;
+    drawX = path.x;
+    drawY = path.y;
+
+
     if (!g->targObj)
     {
-        xtarg = g->targetPosition.x;
-        ytarg = g->targetPosition.y;
+       // xtarg = g->targetPosition.x;
+        //ytarg = g->targetPosition.y;
+        xtarg = path.x;
+        ytarg = path.y;
+
     }
     else
     {

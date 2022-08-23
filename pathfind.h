@@ -14,6 +14,7 @@ typedef struct PathfindNode
     PointI p;
     struct PathfindNode* sucessors[8];
     struct PathfindNode* parent;
+    bool isActive;
 }PathfindNode;
 
 typedef struct Queue

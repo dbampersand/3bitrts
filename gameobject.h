@@ -246,3 +246,4 @@ void DrawObjShadows();
 void DrawMapHighlight(GameObject* g, int lightSize);
 void DrawMapHighlights();
 float GetSummonPercent(GameObject* g);
+void GameObjDebugDraw();

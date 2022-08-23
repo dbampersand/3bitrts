@@ -5,7 +5,19 @@
 #include "map.h"
 int Depth(Queue* q, PathfindNode* p)
 {
-    return p - q->elements;
+    int depth = 0;
+    PathfindNode* parent = p;
+
+    while (1)
+    {
+        parent = parent->parent;
+        depth++;
+        if (!parent)
+        {
+            return depth;
+        }
+    }
+    return depth;
 }
 bool IsEmpty(Queue* q)
 {
@@ -51,11 +63,11 @@ PathfindNode Pop(Queue* q)
 }
 float h(PathfindNode* s, PointI end)
 {
-     return  dist(s->p.x,s->p.y,end.x,end.y);//sqrt(pow(s->p.x - end.x,2) + pow(s->p.y - end.y,2));
+    return dist(s->p.x,s->p.y,end.x,end.y);//sqrt(pow(s->p.x - end.x,2) + pow(s->p.y - end.y,2));
 }
 float g(PathfindNode* s, PointI start)
 {
-    return  dist(s->p.x,s->p.y,start.x,start.y);
+    return s->parent->g + dist(s->p.x,s->p.y,start.x,start.y);
 }
 void GenerateSucessors(PathfindNode* p, Queue* path, PathfindNode nodeArr[8])
 {
@@ -73,10 +85,16 @@ void GenerateSucessors(PathfindNode* p, Queue* path, PathfindNode nodeArr[8])
             //Push(path,successor);
             nodeArr[index] = successor;
             index++;
+            if (PointIsFree(successor.p.x*_GRAIN,successor.p.y*_GRAIN))
+            {
+                p->isActive = true;
+            }
+            else
+                p->isActive = false;
         }
     }
 }
-void UpdateFCost(PathfindNode* n, PointI current, PointI target, Queue* path)
+void UpdateFCost(PathfindNode* n, PointI current, PointI target, Queue* path, PathfindNode* parent)
 {
     int idx = GetIndex(GetMapHeight()/_GRAIN, floor(n->p.x), floor(n->p.y));
     if (n->p.x < 0 || n->p.x >= GetMapWidth()/_GRAIN || n->p.y < 0 || n->p.y >= GetMapHeight()/_GRAIN )
@@ -88,17 +106,14 @@ void UpdateFCost(PathfindNode* n, PointI current, PointI target, Queue* path)
         n->fcost = FLT_MAX;
     else
     {
-        if (!PointIntIsEq(n->p,target) && Depth(path,n) == PATHFIND_SEARCH_MAX)
+        if (!PointIntIsEq(n->p,target) && Depth(path,n) == PATHFIND_DEPTH)
             n->fcost = FLT_MAX; 
         else
         {
-            float parentCost;
-            if (n->parent)
-                parentCost = n->parent->fcost;
-            else
-                parentCost = 0;
-            n->fcost = _MAX(parentCost, g(n,current) + h(n,target));
-
+            float parentCost = n->parent->fcost;
+            float gv = g(n,current);
+            n->fcost = _MAX(parentCost, gv + h(n,target));
+            n->g = gv;
         }
     }
 
@@ -123,8 +138,46 @@ PathfindNode* SuccessorsMinF(PathfindNode nodeArr[8])
     }
     return lowest;
 }
+PointI GetClosestPathablePoint(PointI target, PointI current, bool* found)
+{
+    float closest = FLT_MAX;
+    PointI closestP = current;
+    *found = false;
+
+    for (int x = -16; x < 16; x++)
+    {
+        for (int y = -16; y < 16; y++)
+        {
+            int nx = target.x + x;
+            int ny = target.y + y;
+
+            if (PointIsFree(nx,ny)) 
+            {
+                float distance = dist(nx,ny,target.x,target.y);// + dist(nx,ny,current.x,current.y);
+                if (distance < closest)
+                {
+                    closest = distance;
+                    closestP = (PointI){nx,ny};
+                    *found = true;
+                }
+            }
+        }
+    }
+    return closestP;
+}
 PointI SMA(Queue* path, PointI current, PointI target, bool* success)
 {
+    if (PointIntIsEq(current,target))
+        return target;
+    bool found = false;
+    PointI closest = GetClosestPathablePoint(target,current,&found);
+    if (found)
+    {
+        target = closest;
+    }
+    else
+        return target;
+
     PathfindNode currentSuccessors[8];
     Push(path, (PathfindNode){.fcost = 0, .p = current, .parent = NULL, .g = 0, .sucessors = {0}});
     while (1)
@@ -156,14 +209,16 @@ PointI SMA(Queue* path, PointI current, PointI target, bool* success)
         GenerateSucessors(node, path, currentSuccessors);
         for (int i = 0; i < 8; i++)
         {   
-            UpdateFCost(&currentSuccessors[i], current, target, path);
-            if (IsInQueue(path,&currentSuccessors[i]))
-                nodesInQueue++;
+            UpdateFCost(&currentSuccessors[i], current, target, path,node);
+            //if (IsInQueue(path,&currentSuccessors[i]))
+              //  nodesInQueue++;
         }
         
-        if (nodesInQueue == 8)
-            RemoveAt(path, node - path->elements);
+       // if (nodesInQueue == 8)
+         //   RemoveAt(path, node - path->elements);
         
+           // node->fcost = FLT_MAX;
+
         if (path->numElements >= PATHFIND_SEARCH_MAX)
         {
             PathfindNode* badNode = &path->elements[0]; 
@@ -173,6 +228,7 @@ PointI SMA(Queue* path, PointI current, PointI target, bool* success)
                 if (n->fcost > badNode->fcost)
                     badNode = n;
             }
+
 
             PathfindNode parent;
             PathfindNode* remove = badNode;
@@ -198,11 +254,10 @@ PointI SMA(Queue* path, PointI current, PointI target, bool* success)
         for (int i = 0; i < 8; i++)
         {
                // node->sucessors[i] = Push(path,currentSuccessors[i]);
-            if (!IsInQueue(path,&currentSuccessors[i]))
+            if (currentSuccessors[i].isActive && !IsInQueue(path,&currentSuccessors[i]))
                 Push(path,currentSuccessors[i]);
             
         }
-        node->fcost = FLT_MAX;
-        
+
     }
 }
