@@ -1,20 +1,26 @@
 #include "point.h"
 #include "stdint.h"
 #include "stdlib.h"
-#define PATHFIND_DEPTH 256
+#include "stdbool.h"
+#define PATHFIND_DEPTH 1024
 
-#define PATHFIND_SEARCH_MAX PATHFIND_DEPTH*PATHFIND_DEPTH
+#define PATHFIND_SEARCH_MAX PATHFIND_DEPTH
 
-
+typedef enum NODE_IN_SET
+{
+    NODE_FREE = 0,
+    NODE_INSIDE_OPEN_LIST,
+    NODE_INSIDE_CLOSED_LIST
+} NODE_IN_SET;
 
 typedef struct PathfindNode
 {
-    float fcost;
+    float f;
     float g;
+    float h;
     PointI p;
-    struct PathfindNode* sucessors[8];
-    struct PathfindNode* parent;
-    bool isActive;
+    struct PathfindNode* parent;    
+
 }PathfindNode;
 
 typedef struct Queue
@@ -23,12 +29,27 @@ typedef struct Queue
     uint32_t numElements;
 } Queue;
 
-Queue Path;
+typedef struct PathfindMap
+{
+    NODE_IN_SET* set;
+    int sizex; int sizey;
+} PathfindMap;
 
-PathfindNode* Push(Queue* q, PathfindNode p);
+Queue openSet;
+Queue closedSet;
+PathfindMap pathfindmap;
+
+
+
+
+
+
+PathfindNode* Push(Queue* q, PathfindNode p, bool sort, NODE_IN_SET setToAdd);
 PathfindNode Pop(Queue* q); 
 PathfindNode* Peek(Queue* q); 
+
 bool IsEmpty(Queue* q);
 int Depth(Queue* q, PathfindNode* p);
 
-PointI SMA(Queue* path, PointI current, PointI target, bool* success);
+PointI AStar(PointI here, PointI target, bool* success, float w, float h);
+void InitPathfinding();

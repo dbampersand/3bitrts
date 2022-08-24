@@ -3,48 +3,11 @@
 #include "helperfuncs.h"
 #include "math.h"
 #include "map.h"
-int Depth(Queue* q, PathfindNode* p)
-{
-    int depth = 0;
-    PathfindNode* parent = p;
 
-    while (1)
-    {
-        parent = parent->parent;
-        depth++;
-        if (!parent)
-        {
-            return depth;
-        }
-    }
-    return depth;
-}
-bool IsEmpty(Queue* q)
+PathfindNode Pop(Queue* q)
 {
-    return (q->numElements == 0);
-}
-PathfindNode* Push(Queue* q, PathfindNode p)
-{
-    if (q->numElements >= PATHFIND_SEARCH_MAX)
-    {
-        return NULL;
-    }
-    q->elements[q->numElements] = p;
-    q->numElements++;
-    return &q->elements[q->numElements-1];
-}
-PathfindNode* Peek(Queue* q)
-{
-    return &q->elements[q->numElements-1];
-}
-bool IsInQueue(Queue* q, PathfindNode* p)
-{
-    for (int i = 0; i < q->numElements; i++)
-    {
-        if (PointIntIsEq(p->p,q->elements[i].p))
-            return true;
-    }
-    return false;
+    q->numElements--;
+    return q->elements[q->numElements];
 }
 PathfindNode RemoveAt(Queue* q, int index)
 {
@@ -56,89 +19,107 @@ PathfindNode RemoveAt(Queue* q, int index)
     q->numElements--;
     return n;
 }
-PathfindNode Pop(Queue* q)
+PathfindNode* Peek(Queue* q)
 {
-    q->numElements--;
-    return q->elements[q->numElements];
+    return &q->elements[q->numElements-1];
+}
+int IsInQueue(Queue* q, PathfindNode* p)
+{
+    for (int i = 0; i < q->numElements; i++)
+    {
+        if (PointIntIsEq(p->p,q->elements[i].p))
+            return i;
+    }
+    return -1;
+}
+int cmpNode(const void* a, const void* b) {
+    PathfindNode* p =  *(PathfindNode**)a;
+    PathfindNode* p2 = *(PathfindNode**)b;
+    return (p2->f - p->f);
+
+}
+void InsertAt(Queue* q, PathfindNode p, int index)
+{
+    q->numElements++;
+    if (q->numElements-1 != index)
+        for (int i = q->numElements-1; i > index; i--)
+        {
+            q->elements[i] = q->elements[i-1];
+        }
+    q->elements[index] = p;
+
+}
+void AddToMap(PathfindNode p, NODE_IN_SET set)
+{
+    int index = GetIndex(GetMapHeight()/(float)_GRAIN, p.p.x, p.p.y);
+    pathfindmap.set[index] = set;
+}
+NODE_IN_SET GetSet(int index)
+{
+    return pathfindmap.set[index];
+}
+int DEBUG_NUMNODESPUSHED;
+PathfindNode* Push(Queue* q, PathfindNode p, bool sort, NODE_IN_SET setToAdd)
+{
+    if (q->numElements >= PATHFIND_SEARCH_MAX)
+    {
+        return NULL;
+    }
+    if (sort)
+        for (int i = 0; i < q->numElements; i++)
+        {
+            if (p.f > q->elements[i].f)
+            {
+                InsertAt(q,p,i);
+                AddToMap(p,setToAdd);
+                return &q->elements[i];
+            }
+        }
+    InsertAt(q,p,q->numElements);
+    AddToMap(p,setToAdd);
+    return &q->elements[q->numElements-1];
+}
+void ClearMap(PathfindNode* nodes, int w, int h)
+{
+    for (int i = 0; i < w*h; i++)
+    {
+        nodes[i].g = FLT_MAX;
+        nodes[i].f = FLT_MAX;
+        nodes[i].parent = NULL;
+    }
 }
 float h(PathfindNode* s, PointI end)
 {
-    return dist(s->p.x,s->p.y,end.x,end.y);//sqrt(pow(s->p.x - end.x,2) + pow(s->p.y - end.y,2));
+    return _MAX(abs(end.x - s->p.x), abs(end.y - s->p.y));
+    //return dist(s->p.x,s->p.y,end.x,end.y);//sqrt(pow(s->p.x - end.x,2) + pow(s->p.y - end.y,2));
 }
-float g(PathfindNode* s, PointI start)
-{
-    return s->parent->g + dist(s->p.x,s->p.y,start.x,start.y);
+int cmpQueue (const void * a, const void * b) {
+    PathfindNode* p =  (PathfindNode*)a;
+    PathfindNode* p2 = (PathfindNode*)b;
+    return (p->f - p2->f);
 }
-void GenerateSucessors(PathfindNode* p, Queue* path, PathfindNode nodeArr[8])
-{
-    int index = 0;
-    for (int x = -1; x < 2; x++)
-    {
-        for (int y = -1; y < 2; y++)
-        {
-            if (x == 0 && y == 0)
-                continue;
-            PathfindNode successor = {0};
-            successor.p.x =  p->p.x + x; 
-            successor.p.y = p->p.y + y;
-            successor.parent = p;
-            //Push(path,successor);
-            nodeArr[index] = successor;
-            index++;
-            if (PointIsFree(successor.p.x*_GRAIN,successor.p.y*_GRAIN))
-            {
-                p->isActive = true;
-            }
-            else
-                p->isActive = false;
-        }
-    }
-}
-void UpdateFCost(PathfindNode* n, PointI current, PointI target, Queue* path, PathfindNode* parent)
-{
-    int idx = GetIndex(GetMapHeight()/_GRAIN, floor(n->p.x), floor(n->p.y));
-    if (n->p.x < 0 || n->p.x >= GetMapWidth()/_GRAIN || n->p.y < 0 || n->p.y >= GetMapHeight()/_GRAIN )
-    {
-        n->fcost = FLT_MAX;
-        return;
-    }
-    if (currMap->collision[idx] != COLLISION_OPEN)
-        n->fcost = FLT_MAX;
-    else
-    {
-        if (!PointIntIsEq(n->p,target) && Depth(path,n) == PATHFIND_DEPTH)
-            n->fcost = FLT_MAX; 
-        else
-        {
-            float parentCost = n->parent->fcost;
-            float gv = g(n,current);
-            n->fcost = _MAX(parentCost, gv + h(n,target));
-            n->g = gv;
-        }
-    }
 
-}
-PathfindNode* GetLowestF(Queue* q)
+void SortQueue(Queue* q)
 {
-    PathfindNode* lowest = &q->elements[0];
-    for (int i = 0; i < q->numElements; i++)
-    {
-        if (q->elements[i].fcost < lowest->fcost)
-            lowest = &q->elements[i];
-    }
-    return lowest;
+    qsort(q->elements,q->numElements,sizeof(PathfindNode),cmpQueue);
 }
-PathfindNode* SuccessorsMinF(PathfindNode nodeArr[8])
+
+float d(PathfindNode* p1, PathfindNode* p2)
 {
-    PathfindNode* lowest = &nodeArr[0];
-    for (int i = 0; i < 8; i++)
-    {
-        if (nodeArr[i].fcost < lowest->fcost)
-            lowest = &nodeArr[i];
-    }
-    return lowest;
+    if (PointIsFree(p2->p.x,p2->p.y))
+        return 1;
+    else return 100;
 }
-PointI GetClosestPathablePoint(PointI target, PointI current, bool* found)
+void InitPathfinding()
+{
+    pathfindmap.sizex = 0;
+    pathfindmap.sizey = 0;
+}
+void ClearQueue(Queue* queue)
+{
+    queue->numElements = 0;
+}
+PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w, int h)
 {
     float closest = FLT_MAX;
     PointI closestP = current;
@@ -151,7 +132,7 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found)
             int nx = target.x + x;
             int ny = target.y + y;
 
-            if (PointIsFree(nx,ny)) 
+            if (RectIsFree(nx,ny,w,h)) 
             {
                 float distance = dist(nx,ny,target.x,target.y);// + dist(nx,ny,current.x,current.y);
                 if (distance < closest)
@@ -165,99 +146,149 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found)
     }
     return closestP;
 }
-PointI SMA(Queue* path, PointI current, PointI target, bool* success)
+PointI GetPath(PathfindNode* currentNode)
 {
-    if (PointIntIsEq(current,target))
-        return target;
-    bool found = false;
-    PointI closest = GetClosestPathablePoint(target,current,&found);
-    if (found)
-    {
-        target = closest;
-    }
-    else
-        return target;
-
-    PathfindNode currentSuccessors[8];
-    Push(path, (PathfindNode){.fcost = 0, .p = current, .parent = NULL, .g = 0, .sucessors = {0}});
+    PathfindNode* p = currentNode;
     while (1)
     {
+        if (p->parent)
+        {
 
-        if (IsEmpty(path))
-        {
-            *success = false;
-            return target;
-        } 
-        PathfindNode* node = GetLowestF(path);//Peek(path);
-        if (PointIntIsEq(node->p,target))
-        {
-            *success = true;
-            PathfindNode* last = node;
-            while (1)
+            if (p->parent->parent == NULL)
             {
-                PathfindNode* new = last->parent;
-                if (!new || !new->parent)
-                    break;
-                last = new;
+                return p->p;
             }
-            path->numElements = 0;
-            return last->p;
-        } 
-
-        int nodesInQueue = 0;
-        int index = 0;
-        GenerateSucessors(node, path, currentSuccessors);
-        for (int i = 0; i < 8; i++)
-        {   
-            UpdateFCost(&currentSuccessors[i], current, target, path,node);
-            //if (IsInQueue(path,&currentSuccessors[i]))
-              //  nodesInQueue++;
-        }
-        
-       // if (nodesInQueue == 8)
-         //   RemoveAt(path, node - path->elements);
-        
-           // node->fcost = FLT_MAX;
-
-        if (path->numElements >= PATHFIND_SEARCH_MAX)
-        {
-            PathfindNode* badNode = &path->elements[0]; 
-            for (int i = 0; i < path->numElements; i++)
-            {
-                PathfindNode* n = &path->elements[i];
-                if (n->fcost > badNode->fcost)
-                    badNode = n;
             }
+            else
+            return p->p;   
 
-
-            PathfindNode parent;
-            PathfindNode* remove = badNode;
-            while (1)
-            {
-                if (remove)
-                {
-                    parent = RemoveAt(path, remove - path->elements);
-                }
-                else
-                    break;
-
-                if (remove == parent.parent)
-                    break;
-                remove = parent.parent;
-            }
-        }
-        /*if (nodesInQueue < 8)
-            for (int i = 0; i < 8; i++)
-            {
-                node->sucessors[i] = Push(path,currentSuccessors[i]);
-            }*/
-        for (int i = 0; i < 8; i++)
-        {
-               // node->sucessors[i] = Push(path,currentSuccessors[i]);
-            if (currentSuccessors[i].isActive && !IsInQueue(path,&currentSuccessors[i]))
-                Push(path,currentSuccessors[i]);
-            
-        }
-
+        p = p->parent;
     }
+
+}
+PointI AStar(PointI here, PointI target, bool* success, float w, float h)
+{
+    DEBUG_NUMNODESPUSHED = 0;
+    bool found;
+
+    w /= _GRAIN; h /= _GRAIN;
+    w=1;h=1;
+   // target = GetClosestPathablePoint(target,here,&found,w,h);
+    //if (!found) return target;
+    //here = GetClosestPathablePoint(here,target,&found,w,h);
+    //if (!found) return target;
+
+    if (PointIntIsEq(here,target))
+        return target;
+
+
+    *success = true;
+    ClearQueue(&openSet);
+    ClearQueue(&closedSet);
+
+    PathfindNode start = (PathfindNode){0};
+    start.p = here;
+
+    if (pathfindmap.sizex * pathfindmap.sizey != GetMapWidth() * GetMapHeight())
+    {
+        free(pathfindmap.set);
+        pathfindmap.set = calloc(GetMapWidth()*GetMapHeight(),sizeof(NODE_IN_SET));
+        pathfindmap.sizex = GetMapWidth();
+        pathfindmap.sizey = GetMapHeight();
+    }
+    else
+        memset(pathfindmap.set,0,pathfindmap.sizex*pathfindmap.sizey*sizeof(NODE_IN_SET));
+
+
+    Push(&openSet,start,true,NODE_INSIDE_OPEN_LIST);
+
+
+    while (openSet.numElements > 0)
+    {
+        PathfindNode currentNode = Pop(&openSet);
+        PathfindNode* parent = Push(&closedSet,currentNode,false,NODE_INSIDE_CLOSED_LIST);
+
+        if (PointIntIsEq(currentNode.p,target))
+        {
+            return GetPath(&currentNode);
+        }
+        if (closedSet.numElements >= PATHFIND_DEPTH)
+        {
+            //get the best guess
+            PathfindNode* lowest = &openSet.elements[0];
+            float distance = dist(lowest->p.x,lowest->p.y,target.x,target.y);
+            for (int i = 0; i < openSet.numElements; i++)
+            {
+                PathfindNode* new = &openSet.elements[i];
+                float distancenew = dist(new->p.x,new->p.y,target.x,target.y);
+                if (distancenew < distance)
+                {
+                    lowest = new;
+                    distance = distancenew;
+                }
+            }
+            return GetPath(lowest);
+        }
+        for (int x = _MAX(0,currentNode.p.x-1); x < _MIN(currentNode.p.x+2,GetMapWidth()/_GRAIN); x++)
+        {
+            for (int y = _MAX(0,currentNode.p.y-1); y < _MIN(currentNode.p.y+2,GetMapHeight()); y++)
+            {
+                if (x == currentNode.p.x && y == currentNode.p.y)
+                    continue;
+                    
+                PathfindNode child;
+                child.p.x = x;
+                child.p.y = y;
+                int childIndex = GetIndex(GetMapHeight()/(float)_GRAIN, child.p.x, child.p.y);
+
+                //if (child.p.x < 0 || child.p.x >= GetMapWidth()/_GRAIN)
+                  //  continue;
+               // if (child.p.y < 0 || child.p.y >= GetMapHeight()/_GRAIN)
+                 //   continue;
+
+                NODE_IN_SET set = GetSet(childIndex);
+                //if (IsInQueue(&closedSet,&child) >= 0)
+                //    continue;
+                if (set == NODE_INSIDE_CLOSED_LIST)
+                    continue;
+
+                //bool walkable = (RectIsFree(child.p.x,child.p.y,w,h));
+                bool walkable = (PointIsFree(child.p.x,child.p.y));
+                
+                if (!walkable) 
+                    continue;
+                float distcurrchild = (x != currentNode.p.x && y != currentNode.p.y) ? 1.41421356237f : 1;
+                //distcurrchild = dist(currentNode.p.x,currentNode.p.y,child.p.x,child.p.y);
+                printf("dist: %f\n",distcurrchild);
+                //child.g = currentNode.g + (walkable ? dist(child.p.x,child.p.y,currentNode.p.x,currentNode.p.y) : 100);
+                child.g = currentNode.g + distcurrchild;
+                
+                child.h = dist(child.p.x,child.p.y,target.x,target.y);
+                child.f = child.g + child.h;
+                child.parent =  parent;
+
+                //int found = IsInQueue(&openSet,&child);
+                //if (found >= 0)
+                if (set == NODE_INSIDE_OPEN_LIST)
+                {
+                    int found = IsInQueue(&openSet,&child);
+
+                    if (child.g > openSet.elements[found].g)
+                    {
+                        continue;
+                        //openSet.elements[found] = child;
+                    }
+                    else
+                    {
+                        openSet.elements[found] = child;
+                        continue;
+                    }
+                }
+                Push(&openSet,child,true,NODE_INSIDE_OPEN_LIST);
+                
+            }
+        }
+    }
+    *success = false;
+    return target;
 }

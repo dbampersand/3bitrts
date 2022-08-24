@@ -31,7 +31,7 @@
 #include "replay.h"
 #include "fixed.h"
 #include "minimap.h"
-
+#include "pathfind.h"
 
 
 void init()
@@ -82,6 +82,7 @@ void init()
         SetEncounterRandAugments(encounters[i]);
     }
     InitReplay();
+    InitPathfinding();
 }
 
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
@@ -295,7 +296,21 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
     DrawTransition(dt);
     //DisplayCollision();
-        GameObjDebugDraw();
+    GameObjDebugDraw();
+    
+    for (int i = 0; i < closedSet.numElements; i++)
+    {
+        PathfindNode p = closedSet.elements[i];
+        al_draw_circle(p.p.x*_GRAIN,p.p.y*_GRAIN,2,al_map_rgba(0,255,255,100),1);
+    }
+    for (int i = 0; i < openSet.numElements; i++)
+    {
+        PathfindNode p = openSet.elements[i];
+        al_draw_circle(p.p.x*_GRAIN,p.p.y*_GRAIN,2,al_map_rgba(255,0,255,255),1);
+    }
+
+
+
 }
 
 void DrawMainMenu()

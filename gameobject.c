@@ -1367,20 +1367,6 @@ void GetTilesAroundPoint(Point p, float w, float h, int indexes[2])
     indexes[1] = indexRight;
 
 }
-void SetTileCollisionAroundObj(GameObject* g, Point before, Point after)
-{
-    if (!currMap->collision)
-        return;
-    int indexesBefore[2];
-    GetTilesAroundPoint(before,GetWidth(g),GetHeight(g),indexesBefore);
-    SetMapCollisionRect(before.x,before.y,GetWidth(g),GetHeight(g),false);
-
-
-    int indexesAfter[2];
-    GetTilesAroundPoint(after,GetWidth(g),GetHeight(g),indexesAfter);
-    SetMapCollisionRect(after.x,after.y,GetWidth(g),GetHeight(g),true);
-    
-}
 float drawX; float drawY;
 void GameObjDebugDraw()
 {
@@ -1391,25 +1377,47 @@ void Move(GameObject* g, float delta)
     if (!g) return;
     if (!IsActive(g))
         return;
+    if (ObjIsDecoration(g))
+        return;
     #define DIST_DELTA 1
     Point before = g->position;
-    int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
-    int h = al_get_bitmap_height(sprites[g->spriteIndex].sprite);
-    SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
+    int w = GetWidth(g);//al_get_bitmap_width(sprites[g->spriteIndex].sprite);
+    int h = GetHeight(g);//al_get_bitmap_height(sprites[g->spriteIndex].sprite);
+
 
     float xtarg;
     float ytarg;
 
     bool success = false;
 
-    PointI targetIndex = (PointI){floor(g->targetPosition.x / (float)_GRAIN), floor(g->targetPosition.y / (float)_GRAIN)};
-    PointI currentIndex = (PointI){floor(g->position.x / (float)_GRAIN), floor(g->position.y / (float)_GRAIN)};
+    PointI path;
+    path.x = g->targetPosition.x;
+    path.y = g->targetPosition.y;
+    if (g->targObj)
+    {
+        path.x += GetWidth(g->targObj) + w/2;
+        path.y += GetHeight(g->targObj) + h/2;
+    }
+    SetMapCollisionRect(g->position.x,g->position.y,w/_GRAIN,h/_GRAIN,false);
+    SetMapCollisionRect(path.x,path.y,w/_GRAIN,h/_GRAIN,false);
 
-    PointI path = SMA(&Path,currentIndex,targetIndex,&success);
-    path.x *= _GRAIN;
-    path.y *= _GRAIN;
-    drawX = path.x;
-    drawY = path.y;
+
+    PointI targetIndex = (PointI){floor((path.x) / (float)_GRAIN), floor((path.y) / (float)_GRAIN)};
+    PointI currentIndex = (PointI){floor((g->position.x) / (float)_GRAIN), floor((g->position.y) / (float)_GRAIN)};
+
+    //if (strcmp(g->name,"trainingdummy") == 0)
+    {
+        printf("%s\n",g->name); 
+        path = AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g));
+        printf("\n\n\n\n"); 
+        
+        path.x *= _GRAIN;
+        path.y *= _GRAIN;
+        drawX = path.x;
+        drawY = path.y;
+
+    }
+
 
 
     if (!g->targObj)
@@ -1442,7 +1450,7 @@ void Move(GameObject* g, float delta)
             g->position.y = ytarg;
             CheckCollisions(g,false, dY,ObjectCanPush(g));
             CheckCollisionsWorld(g,false, dY);
-            SetTileCollisionAroundObj(g,before,g->position);
+            SetMapCollisionRect(g->position.x,g->position.y,w/_GRAIN,h/_GRAIN,true);
 
             return;
         }
@@ -1462,8 +1470,9 @@ void Move(GameObject* g, float delta)
 
             g->targetPosition.x = xtarg;
             g->targetPosition.y = ytarg;
+            SetMapCollisionRect(g->position.x,g->position.y,w/_GRAIN,h/_GRAIN,true);
+
             
-            SetTileCollisionAroundObj(g,before,g->position);
             return;
         }
         
@@ -1475,7 +1484,8 @@ void Move(GameObject* g, float delta)
         g->position.x += dX;
         CheckCollisions(g,true, dX,ObjectCanPush(g));
         CheckCollisionsWorld(g,true, dX);
-        SetTileCollisionAroundObj(g,before,g->position);
+        SetMapCollisionRect(g->position.x,g->position.y,w/_GRAIN,h/_GRAIN,true);
+
 
 
 }
@@ -1935,7 +1945,6 @@ void Teleport(GameObject* g, float x, float y)
     g->targetPosition.x = g->position.x;// - cX/2.0f;
     g->targetPosition.y = g->position.y;// - cY/2.0f;
 
-    SetTileCollisionAroundObj(g,(Point){beforeX,beforeY},(Point){g->position.x,g->position.y});
 
 }
 void GetOffsetCenter(GameObject* g, float* x, float* y)

@@ -35,10 +35,14 @@ void DisplayCollision()
         }
     }
 }
+bool RectIsFree(int x, int y, int w, int h)
+{
+    return (PointIsFree(x,y) && PointIsFree(x+w,y) && PointIsFree(x+w,y+h) && PointIsFree(x,y+h));
+}
 bool PointIsFree(int x, int y)
 {
     int index = GetIndex(GetMapHeight()/_GRAIN, x, y);
-    
+
     if (x < 0 || x >= GetMapWidth())
         return false;
     if (y < 0 || y >= GetMapHeight())
