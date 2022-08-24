@@ -37,7 +37,16 @@ void DisplayCollision()
 }
 bool RectIsFree(int x, int y, int w, int h)
 {
-    return (PointIsFree(x,y) && PointIsFree(x+w,y) && PointIsFree(x+w,y+h) && PointIsFree(x,y+h));
+    for (int x2 = x; x2 < x + w; x2++)
+    {
+        for (int y2 = y; y2 < y + h; y2++)
+        {
+            if (!PointIsFree(x2,y2))
+                return false;
+        }
+        
+    }
+    return true;
 }
 bool PointIsFree(int x, int y)
 {

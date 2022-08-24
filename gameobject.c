@@ -1395,11 +1395,11 @@ void Move(GameObject* g, float delta)
     path.y = g->targetPosition.y;
     if (g->targObj)
     {
-        path.x += GetWidth(g->targObj) + w/2;
-        path.y += GetHeight(g->targObj) + h/2;
+        path.x += GetWidth(g->targObj);
+        path.y += GetHeight(g->targObj);
     }
-    SetMapCollisionRect(g->position.x,g->position.y,w/_GRAIN,h/_GRAIN,false);
-    SetMapCollisionRect(path.x,path.y,w/_GRAIN,h/_GRAIN,false);
+    SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
+    SetMapCollisionRect(path.x,path.y,w,h,false);
 
 
     PointI targetIndex = (PointI){floor((path.x) / (float)_GRAIN), floor((path.y) / (float)_GRAIN)};
@@ -1436,10 +1436,10 @@ void Move(GameObject* g, float delta)
         float moveX = xtarg - g->position.x;
         float moveY = ytarg - g->position.y;
 
-        float dist = sqrt(moveX*moveX+moveY*moveY);
+        double dist = sqrt(moveX*moveX+moveY*moveY);
 
-        float dX = (moveX / dist * g->speed) * delta;
-        float dY = (moveY / dist * g->speed) * delta;
+        double dX = (moveX / dist * g->speed) * delta;
+        double dY = (moveY / dist * g->speed) * delta;
         
         if (dist <= DIST_DELTA)
         {
@@ -1450,7 +1450,7 @@ void Move(GameObject* g, float delta)
             g->position.y = ytarg;
             CheckCollisions(g,false, dY,ObjectCanPush(g));
             CheckCollisionsWorld(g,false, dY);
-            SetMapCollisionRect(g->position.x,g->position.y,w/_GRAIN,h/_GRAIN,true);
+            SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
 
             return;
         }
@@ -1470,7 +1470,7 @@ void Move(GameObject* g, float delta)
 
             g->targetPosition.x = xtarg;
             g->targetPosition.y = ytarg;
-            SetMapCollisionRect(g->position.x,g->position.y,w/_GRAIN,h/_GRAIN,true);
+            SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
 
             
             return;
@@ -1484,7 +1484,7 @@ void Move(GameObject* g, float delta)
         g->position.x += dX;
         CheckCollisions(g,true, dX,ObjectCanPush(g));
         CheckCollisionsWorld(g,true, dX);
-        SetMapCollisionRect(g->position.x,g->position.y,w/_GRAIN,h/_GRAIN,true);
+        SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
 
 
 

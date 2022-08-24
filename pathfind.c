@@ -132,7 +132,7 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w
             int nx = target.x + x;
             int ny = target.y + y;
 
-            if (RectIsFree(nx,ny,w,h)) 
+            if (RectIsFree(nx-1,ny-1,w+2,h+2)) 
             {
                 float distance = dist(nx,ny,target.x,target.y);// + dist(nx,ny,current.x,current.y);
                 if (distance < closest)
@@ -172,9 +172,9 @@ PointI AStar(PointI here, PointI target, bool* success, float w, float h)
     bool found;
 
     w /= _GRAIN; h /= _GRAIN;
-    w=1;h=1;
-   // target = GetClosestPathablePoint(target,here,&found,w,h);
-    //if (!found) return target;
+    //w=1;h=1;
+    target = GetClosestPathablePoint(target,here,&found,w,h);
+    if (!found) return target;
     //here = GetClosestPathablePoint(here,target,&found,w,h);
     //if (!found) return target;
 
@@ -253,17 +253,17 @@ PointI AStar(PointI here, PointI target, bool* success, float w, float h)
                     continue;
 
                 //bool walkable = (RectIsFree(child.p.x,child.p.y,w,h));
-                bool walkable = (PointIsFree(child.p.x,child.p.y));
+                bool walkable = (RectIsFree(child.p.x-1,child.p.y-1,w+2,h+2));
                 
                 if (!walkable) 
                     continue;
                 float distcurrchild = (x != currentNode.p.x && y != currentNode.p.y) ? 1.41421356237f : 1;
                 //distcurrchild = dist(currentNode.p.x,currentNode.p.y,child.p.x,child.p.y);
-                printf("dist: %f\n",distcurrchild);
                 //child.g = currentNode.g + (walkable ? dist(child.p.x,child.p.y,currentNode.p.x,currentNode.p.y) : 100);
                 child.g = currentNode.g + distcurrchild;
                 
                 child.h = dist(child.p.x,child.p.y,target.x,target.y);
+                child.h *= (1+TIEBREAK);
                 child.f = child.g + child.h;
                 child.parent =  parent;
 
