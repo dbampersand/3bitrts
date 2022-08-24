@@ -31,7 +31,7 @@ int IsInQueue(Queue* q, PathfindNode* p)
             return i;
     }
     return -1;
-}
+}   
 int cmpNode(const void* a, const void* b) {
     PathfindNode* p =  *(PathfindNode**)a;
     PathfindNode* p2 = *(PathfindNode**)b;
@@ -166,6 +166,23 @@ PointI GetPath(PathfindNode* currentNode)
     }
 
 }
+PathfindNode* GetBestGuess(PointI target)
+{
+    PathfindNode* lowest = &openSet.elements[0];
+    float distance = dist(lowest->p.x,lowest->p.y,target.x,target.y);
+    for (int i = 0; i < openSet.numElements; i++)
+    {
+        PathfindNode* new = &openSet.elements[i];
+        float distancenew = dist(new->p.x,new->p.y,target.x,target.y);
+        if (distancenew < distance)
+        {
+            lowest = new;
+            distance = distancenew;
+        }
+    }
+    return lowest;
+
+}
 PointI AStar(PointI here, PointI target, bool* success, float w, float h)
 {
     DEBUG_NUMNODESPUSHED = 0;
@@ -215,23 +232,12 @@ PointI AStar(PointI here, PointI target, bool* success, float w, float h)
         if (closedSet.numElements >= PATHFIND_DEPTH)
         {
             //get the best guess
-            PathfindNode* lowest = &openSet.elements[0];
-            float distance = dist(lowest->p.x,lowest->p.y,target.x,target.y);
-            for (int i = 0; i < openSet.numElements; i++)
-            {
-                PathfindNode* new = &openSet.elements[i];
-                float distancenew = dist(new->p.x,new->p.y,target.x,target.y);
-                if (distancenew < distance)
-                {
-                    lowest = new;
-                    distance = distancenew;
-                }
-            }
+            PathfindNode* lowest = GetBestGuess(target);
             return GetPath(lowest);
         }
         for (int x = _MAX(0,currentNode.p.x-1); x < _MIN(currentNode.p.x+2,GetMapWidth()/_GRAIN); x++)
         {
-            for (int y = _MAX(0,currentNode.p.y-1); y < _MIN(currentNode.p.y+2,GetMapHeight()); y++)
+            for (int y = _MAX(0,currentNode.p.y-1); y < _MIN(currentNode.p.y+2,GetMapHeight()/_GRAIN); y++)
             {
                 if (x == currentNode.p.x && y == currentNode.p.y)
                     continue;
@@ -255,15 +261,15 @@ PointI AStar(PointI here, PointI target, bool* success, float w, float h)
                 //bool walkable = (RectIsFree(child.p.x,child.p.y,w,h));
                 bool walkable = (RectIsFree(child.p.x-1,child.p.y-1,w+2,h+2));
                 
-                if (!walkable) 
-                    continue;
+                //if (!walkable) 
+                  //  continue;
                 float distcurrchild = (x != currentNode.p.x && y != currentNode.p.y) ? 1.41421356237f : 1;
                 //distcurrchild = dist(currentNode.p.x,currentNode.p.y,child.p.x,child.p.y);
                 //child.g = currentNode.g + (walkable ? dist(child.p.x,child.p.y,currentNode.p.x,currentNode.p.y) : 100);
                 child.g = currentNode.g + distcurrchild;
                 
                 child.h = dist(child.p.x,child.p.y,target.x,target.y);
-                child.h *= (1+TIEBREAK);
+                child.h *= (1+TIEBREAK) + (walkable ? 1 : 100);
                 child.f = child.g + child.h;
                 child.parent =  parent;
 
@@ -289,6 +295,10 @@ PointI AStar(PointI here, PointI target, bool* success, float w, float h)
             }
         }
     }
+
     *success = false;
+    PathfindNode* lowest = GetBestGuess(target);
+    return GetPath(lowest);
+
     return target;
 }

@@ -301,12 +301,12 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     for (int i = 0; i < closedSet.numElements; i++)
     {
         PathfindNode p = closedSet.elements[i];
-        al_draw_circle(p.p.x*_GRAIN,p.p.y*_GRAIN,2,al_map_rgba(0,255,255,100),1);
+        al_draw_circle(ToScreenSpace_X(p.p.x*_GRAIN),ToScreenSpace_Y(p.p.y*_GRAIN),2,al_map_rgba(0,255,255,100),1);
     }
     for (int i = 0; i < openSet.numElements; i++)
     {
         PathfindNode p = openSet.elements[i];
-        al_draw_circle(p.p.x*_GRAIN,p.p.y*_GRAIN,2,al_map_rgba(255,0,255,255),1);
+        al_draw_circle(ToScreenSpace_X(p.p.x*_GRAIN),ToScreenSpace_Y(p.p.y*_GRAIN),2,al_map_rgba(255,0,255,255),1);
     }
 
 
