@@ -19,6 +19,7 @@
 #include "ui.h"
 #include "player.h"
 #include "shield.h"
+#include "settings.h"
 
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);
@@ -2107,6 +2108,7 @@ int L_RotatePoint(lua_State* l)
 
 void SetLuaKeyEnums(lua_State* l)
 {
+    //TODO: Update these when a key is changed in settings
     lua_pushinteger(l,ALLEGRO_KEY_LSHIFT);
     lua_setglobal(l,"KEY_LSHIFT");
 

@@ -48,13 +48,13 @@ GameObject* GetMousedOver(ALLEGRO_MOUSE_STATE* mouseState)
 }
 void UpdatePlayerObjectInteractions(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState)
 {
-    if (al_key_down(keyState, ALLEGRO_KEY_A) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_A))
+    if (IsBindDownThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_AMove))
     {
         players[0].amoveSelected = true;
     }
     if (players[0].abilityHeld) 
         players[0].amoveSelected = false;
-    if (al_key_down(keyState, ALLEGRO_KEY_TAB) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_TAB))
+    if (IsBindDownThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Tab))
     {
         players[0].indexSelectedUnit++;
         if (players[0].indexSelectedUnit >= MAXUNITSSELECTED || players[0].indexSelectedUnit >= players[0].numUnitsSelected)
@@ -75,7 +75,7 @@ void ProcessAttackMoveMouseCommand(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYB
             if (IsSelected(g))
             {
                 float w; float h; GetOffsetCenter(g,&w,&h);
-                if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
                     ClearCommandQueue(g);
 
                 AttackMoveCommand(g,mouseState->x-w/2,mouseState->y-h/2);
@@ -126,16 +126,19 @@ void SetTargetPosition(GameObject* g, float x, float y)
     g->targetPosition.y = y;
     int  w = GetWidth(g);
     int h = GetHeight(g);
+    if (!IsOwnedByPlayer(g))
+    {
 
-    PointI targetIndex = (PointI){((g->targetPosition.x) / (float)_GRAIN), ((g->targetPosition.y) / (float)_GRAIN)};
-    PointI currentIndex = (PointI){((g->position.x) / (float)_GRAIN), ((g->position.y) / (float)_GRAIN)};
-    bool success;
+        PointI targetIndex = (PointI){((g->targetPosition.x) / (float)_GRAIN), ((g->targetPosition.y) / (float)_GRAIN)};
+        PointI currentIndex = (PointI){((g->position.x) / (float)_GRAIN), ((g->position.y) / (float)_GRAIN)};
+        bool success;
 
 
-    SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
-    SetMapCollisionRect(g->targetPosition.x,g->targetPosition.y,w,h,false);
+        SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
+        SetMapCollisionRect(g->targetPosition.x,g->targetPosition.y,w,h,false);
 
-    AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
+        AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
+    }
 
 }
 void UpdateObject(GameObject* g, float dt)
@@ -311,54 +314,54 @@ void InitObjects()
 }
 void GetControlGroup(ALLEGRO_KEYBOARD_STATE* keyState)
 {
-     if (!al_key_down(keyState,ALLEGRO_KEY_LCTRL))
+    if (!IsBindDown(keyState,currSettings.keymap.key_Ctrl))
     {
-        if (al_key_down(keyState,ALLEGRO_KEY_1))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[0]))
         {
             UnsetAll();
             players[0].numUnitsSelected = GetCtrlGroup(1);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_2))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[1]))
         {
             UnsetAll();
             players[0].numUnitsSelected = GetCtrlGroup(2);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_3))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[2]))
         {
             UnsetAll();
             players[0].numUnitsSelected = GetCtrlGroup(3);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_4))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[3]))
         {
             UnsetAll();
             players[0].numUnitsSelected = GetCtrlGroup(4);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_5))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[4]))
         {
             UnsetAll();
             players[0].numUnitsSelected = GetCtrlGroup(5);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_6))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[5]))
         {
             UnsetAll();
             players[0].numUnitsSelected = GetCtrlGroup(6);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_7))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[6]))
         {
             UnsetAll();
             players[0].numUnitsSelected = GetCtrlGroup(7);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_8))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[7]))
         {
             UnsetAll();
             players[0].numUnitsSelected = GetCtrlGroup(8);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_9))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[8]))
         {
             UnsetAll();
             players[0].numUnitsSelected = GetCtrlGroup(9);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_0))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[9]))
         {
             UnsetAll();
             players[0].numUnitsSelected = GetCtrlGroup(0);
@@ -367,45 +370,45 @@ void GetControlGroup(ALLEGRO_KEYBOARD_STATE* keyState)
 }
 void SetControlGroups(ALLEGRO_KEYBOARD_STATE* keyState)
 {
-    if (al_key_down(keyState,ALLEGRO_KEY_LCTRL))
+    if (IsBindDown(keyState,currSettings.keymap.key_Ctrl))
     {
-        if (al_key_down(keyState,ALLEGRO_KEY_1))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[0]))
         {
             SetCtrlGroup(1,players[0].selection,players[0].numUnitsSelected);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_2))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[1]))
         {
             SetCtrlGroup(2,players[0].selection,players[0].numUnitsSelected);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_3))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[2]))
         {
             SetCtrlGroup(3,players[0].selection,players[0].numUnitsSelected);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_4))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[3]))
         {
             SetCtrlGroup(4,players[0].selection,players[0].numUnitsSelected);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_5))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[4]))
         {
             SetCtrlGroup(5,players[0].selection,players[0].numUnitsSelected);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_6))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[5]))
         {
             SetCtrlGroup(6,players[0].selection,players[0].numUnitsSelected);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_7))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[6]))
         {
             SetCtrlGroup(7,players[0].selection,players[0].numUnitsSelected);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_8))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[7]))
         {
             SetCtrlGroup(8,players[0].selection,players[0].numUnitsSelected);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_9))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[8]))
         {
             SetCtrlGroup(9,players[0].selection,players[0].numUnitsSelected);
         }
-         if (al_key_down(keyState,ALLEGRO_KEY_0))
+        if (IsBindDown(keyState,currSettings.keymap.key_ctrlgroups[9]))
         {
             SetCtrlGroup(0,players[0].selection,players[0].numUnitsSelected);
         }
@@ -475,7 +478,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                 Rect rObj = (Rect){obj->position.x,obj->position.y,al_get_bitmap_width(sp->sprite),al_get_bitmap_height(sp->sprite)};
                 if (CheckIntersect(rObj,r))
                 {
-                    if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                    if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
                     if (!hasSelected)
                     {
                         for (int j = 0; j < numObjects; j++)
@@ -486,7 +489,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                         }
                         hasSelected = true;
                     }
-                    if (al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                    if (IsBindDown(keyState,currSettings.keymap.key_Shift))
                     {
                         bool selected = IsSelected(obj);
                         SetSelected(obj,!selected);
@@ -532,7 +535,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                         {
                             int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
                             int h = al_get_bitmap_height(sprites[g->spriteIndex].sprite);
-                                if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                                if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
                                     ClearCommandQueue(g);
                             bool found = false;
                             for (int i = 0; i < MAX_OBJS; i++)
@@ -558,7 +561,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                         {
                             for (int i = 0; i < players[0].numUnitsSelected; i++)
                             {
-                                if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                                if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
                                     ClearCommandQueue(players[0].selection[i]);
                                 if (!ObjIsInvincible(g))
                                     AttackCommand(players[0].selection[i],g);
@@ -1457,11 +1460,15 @@ void Move(GameObject* g, float delta)
         
         //if ((_FRAMES+(g-objects))%60==0)
           //  AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
-        DoCurrentPathingNode(g);
-        path = g->pathNodes[g->currentPathingNode].p;
-        drawX = path.x;
-        drawY = path.y;
+        if (!IsOwnedByPlayer(g)) {
+            DoCurrentPathingNode(g);
+            path = g->pathNodes[g->currentPathingNode].p;
+            drawX = path.x;
+            drawY = path.y;
 
+            xtarg = path.x;
+            ytarg = path.y;
+        }
     }
 
 
@@ -1532,9 +1539,6 @@ void Move(GameObject* g, float delta)
         CheckCollisions(g,true, dX,ObjectCanPush(g));
         CheckCollisionsWorld(g,true, dX);
         SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
-
-        if (strcmp(g->name,"bard"))
-            printf("Posx: %f, targx: %f, DX: %f, DY: %f\n",g->position.x,xtarg,dX,dY);
 
 
 }

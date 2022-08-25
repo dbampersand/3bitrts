@@ -16,6 +16,7 @@
 #include "ui.h"
 #include "colors.h"
 #include "sound.h"
+#include "settings.h"
 
 void InitAbilities()
 {
@@ -112,7 +113,7 @@ void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE*
         float midX=0; float midY=0;
         GetOffsetCenter(currGameObjRunning,&midX,&midY);
     
-        if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+        if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
             ClearCommandQueue(currGameObjRunning);
         if (target)
         {
@@ -133,19 +134,20 @@ void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE*
 }
 int GetAbilityIndexClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
-    if (!al_key_down(keyState,ALLEGRO_KEY_Q) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_Q))
+
+    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Q))
     {
         return 0;
     }
-    if (!al_key_down(keyState,ALLEGRO_KEY_W) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_W))
+    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_W))
     {
         return 1;
     }
-    if (!al_key_down(keyState,ALLEGRO_KEY_E) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_E))
+    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_E))
     {
         return 2;
     }
-    if (!al_key_down(keyState,ALLEGRO_KEY_R) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_R))
+    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_R))
     {
         return 3;
     }

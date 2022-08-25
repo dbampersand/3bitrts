@@ -5,6 +5,7 @@
 #include "luafuncs.h"
 #include "sound.h"
 #include "map.h"
+#include "settings.h"
 
 float cameraSpeed = 200;
 void RemoveIndexFromSelection(Player* p, int index)
@@ -57,9 +58,7 @@ void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STAT
                 {
                     if (currAbilityRunning->castType == ABILITY_INSTANT || currAbilityRunning->castType == ABILITY_TOGGLE)
                     {
-                       // if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
-                         //   ClearCommandQueue(currGameObjRunning);
-                        if (!al_key_down(keyState,ALLEGRO_KEY_LSHIFT))
+                         if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
                             CastAbility(currGameObjRunning,currAbilityRunning,mouseState->x,mouseState->y,mouseState->x-currGameObjRunning->position.x,mouseState->y-currGameObjRunning->position.y,NULL);
                         else
                             CastCommand(currGameObjRunning,NULL,currAbilityRunning,mouseState->x,mouseState->y);
@@ -73,8 +72,7 @@ void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STAT
             }
         }
     }
-
-    if (!al_key_down(keyState,ALLEGRO_KEY_ESCAPE) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_ESCAPE) )
+    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Pause))
     {
         if (players[0].abilityHeld)
         {
@@ -158,22 +156,23 @@ void MoveCamera(ALLEGRO_MOUSE_STATE mouseState,ALLEGRO_KEYBOARD_STATE* keyState,
 {
     ToScreenSpaceI(&mouseState.x, &mouseState.y);
     
-    if (mouseState.x < SCREEN_EDGE || al_key_down(keyState,ALLEGRO_KEY_LEFT))
+
+    if (mouseState.x < SCREEN_EDGE || IsBindDown(keyState,currSettings.keymap.key_PanLeft))
     {
         MoveCam(players[0].cameraPos.x - (cameraSpeed*dt),players[0].cameraPos.y);
     }
 
-    if (mouseState.x > _SCREEN_SIZE - SCREEN_EDGE || al_key_down(keyState,ALLEGRO_KEY_RIGHT))
+    if (mouseState.x > _SCREEN_SIZE - SCREEN_EDGE || IsBindDown(keyState,currSettings.keymap.key_PanRight))
     {
         MoveCam(players[0].cameraPos.x + (cameraSpeed*dt),players[0].cameraPos.y);
     }
 
-    if (mouseState.y < SCREEN_EDGE  || al_key_down(keyState,ALLEGRO_KEY_UP))
+    if (mouseState.y < SCREEN_EDGE  || IsBindDown(keyState,currSettings.keymap.key_PanUp))
     {
         MoveCam(players[0].cameraPos.x,players[0].cameraPos.y - (cameraSpeed*dt));
     }
 
-    if (mouseState.y > _SCREEN_SIZE - SCREEN_EDGE  || al_key_down(keyState,ALLEGRO_KEY_DOWN))
+    if (mouseState.y > _SCREEN_SIZE - SCREEN_EDGE  || IsBindDown(keyState,currSettings.keymap.key_PanDown))
     {
         MoveCam(players[0].cameraPos.x,players[0].cameraPos.y + (cameraSpeed*dt));
     }

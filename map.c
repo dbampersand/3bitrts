@@ -37,6 +37,7 @@ void DisplayCollision()
 }
 bool RectIsFree(int x, int y, int w, int h)
 {
+    x-=1; y-=1; w += 2; h += 2;
     for (int x2 = x; x2 < x + w; x2++)
     {
         for (int y2 = y; y2 < y + h; y2++)

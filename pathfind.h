@@ -56,3 +56,4 @@ int Depth(Queue* q, PathfindNode* p);
 
 void AStar(PointI here, PointI target, bool* success, float w, float h, GameObject* g);
 void InitPathfinding();
+void DebugDrawPathfinding();

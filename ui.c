@@ -228,10 +228,6 @@ void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState)
     ALLEGRO_KEYBOARD_STATE keyState;
     al_get_keyboard_state(&keyState);
 
-    if (al_key_down(&keyState, ALLEGRO_KEY_Q))
-    {
-
-    }
     int startx = players[0].selectionStart.x;
     int starty = players[0].selectionStart.y;
     int endx = endSelection.x;
@@ -550,7 +546,9 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         DrawManaUIElement(selected);
         Ability* heldAbility = players[0].abilityHeld;
         
-        if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0),al_key_down(keyState,ALLEGRO_KEY_Q),*mouseState))
+        if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
+
+        if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0),IsBindDown(keyState,currSettings.keymap.key_Q),*mouseState))
         {
             if (selected->abilities[0].description)
             {
@@ -561,7 +559,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        if (DrawAbilityPortraits(selected,heldAbility,1,GetAbilityPortraitRect(1),al_key_down(keyState,ALLEGRO_KEY_W),*mouseState))
+        if (DrawAbilityPortraits(selected,heldAbility,1,GetAbilityPortraitRect(1),IsBindDown(keyState,currSettings.keymap.key_W),*mouseState))
         {
             if (selected->abilities[1].description)
             {
@@ -572,7 +570,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        if (DrawAbilityPortraits(selected,heldAbility,2,GetAbilityPortraitRect(2),al_key_down(keyState,ALLEGRO_KEY_E),*mouseState))
+        if (DrawAbilityPortraits(selected,heldAbility,2,GetAbilityPortraitRect(2),IsBindDown(keyState,currSettings.keymap.key_E),*mouseState))
         {
             if (selected->abilities[2].description)
             {
@@ -584,7 +582,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        if (DrawAbilityPortraits(selected,heldAbility,3,GetAbilityPortraitRect(3),al_key_down(keyState,ALLEGRO_KEY_R),*mouseState))
+        if (DrawAbilityPortraits(selected,heldAbility,3,GetAbilityPortraitRect(3),IsBindDown(keyState,currSettings.keymap.key_R),*mouseState))
         {
             if (selected->abilities[3].description)
             {
@@ -1722,7 +1720,7 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
         UpdateTabButtons(ui.currentPanel, mouseState,mouseStateLastFrame);
     }
 
-    if (!al_key_down(keyState,ALLEGRO_KEY_P) && al_key_down(keyStateLastFrame,ALLEGRO_KEY_P))
+    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Pause))
     {
         if (GameIsIngame())
         {

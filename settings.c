@@ -12,7 +12,18 @@ void InitSettings(char* path)
 
     SetDefaultSettings(&defaultSettings);
     LoadSettingsFile(path);
-
+}
+bool IsBindReleasedThisFrame(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame,Key k)
+{
+    return (!al_key_down(keyStateThisFrame, k.keyMappedTo) && al_key_down(keyStateLastFrame, k.keyMappedTo));
+}
+bool IsBindDownThisFrame(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame,Key k)
+{
+    return (al_key_down(keyStateThisFrame, k.keyMappedTo) && !al_key_down(keyStateLastFrame, k.keyMappedTo));
+}
+bool IsBindDown(ALLEGRO_KEYBOARD_STATE* keyState, Key k)
+{
+    return (al_key_down(keyState, k.keyMappedTo));
 }
 void SetDefaultSettings(Settings* setting)
 {
@@ -21,8 +32,39 @@ void SetDefaultSettings(Settings* setting)
     setting->displayHealthBar = OPTION_HPBAR_ALWAYS;
     setting->masterVolume = 1.0f;
     setting->displayTimer = false;
+    
+    setting->keymap.key_ctrlgroups[0] = (Key){"Ctrl Group 1",ALLEGRO_KEY_1};
+    setting->keymap.key_ctrlgroups[1] = (Key){"Ctrl Group 2",ALLEGRO_KEY_2};
+    setting->keymap.key_ctrlgroups[2] = (Key){"Ctrl Group 3",ALLEGRO_KEY_3};
+    setting->keymap.key_ctrlgroups[3] = (Key){"Ctrl Group 4",ALLEGRO_KEY_4};
+    setting->keymap.key_ctrlgroups[4] = (Key){"Ctrl Group 5",ALLEGRO_KEY_5};
+    setting->keymap.key_ctrlgroups[5] = (Key){"Ctrl Group 6",ALLEGRO_KEY_6};
+    setting->keymap.key_ctrlgroups[6] = (Key){"Ctrl Group 7",ALLEGRO_KEY_7};
+    setting->keymap.key_ctrlgroups[7] = (Key){"Ctrl Group 8",ALLEGRO_KEY_8};
+    setting->keymap.key_ctrlgroups[8] = (Key){"Ctrl Group 9",ALLEGRO_KEY_9};
+    setting->keymap.key_ctrlgroups[9] = (Key){"Ctrl Group 0",ALLEGRO_KEY_0};
+
+    setting->keymap.key_Q = (Key){"Ability One",ALLEGRO_KEY_Q};
+    setting->keymap.key_W = (Key){"Ability Two",ALLEGRO_KEY_W};
+    setting->keymap.key_E = (Key){"Ability Three",ALLEGRO_KEY_E};
+    setting->keymap.key_R = (Key){"Ability Four",ALLEGRO_KEY_R};
+
+    setting->keymap.key_AMove = (Key){"Attack Move",ALLEGRO_KEY_A};
+    setting->keymap.key_Shift = (Key){"Set Waypoint",ALLEGRO_KEY_LSHIFT};
+    setting->keymap.key_Tab = (Key){"Next unit in group",ALLEGRO_KEY_TAB};
+    setting->keymap.key_Ctrl = (Key){"Add unit to group",ALLEGRO_KEY_LCTRL};
+
+    setting->keymap.key_ShowMap = (Key){"Show Map",ALLEGRO_KEY_BACKQUOTE};
+
+    setting->keymap.key_Pause = (Key){"Pause",ALLEGRO_KEY_P};
+
+    setting->keymap.key_PanLeft = (Key){"Pause",ALLEGRO_KEY_LEFT};
+    setting->keymap.key_PanRight = (Key){"Pause",ALLEGRO_KEY_RIGHT};
+    setting->keymap.key_PanUp = (Key){"Pause",ALLEGRO_KEY_UP};
+    setting->keymap.key_PanDown = (Key){"Pause",ALLEGRO_KEY_DOWN};
 
 }
+
 void EndSettings()
 {
     WriteSettingsFile("config.cfg");

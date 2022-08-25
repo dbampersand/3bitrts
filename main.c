@@ -274,8 +274,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         PlayReplay(al_get_target_bitmap());
         DrawReplayUI(&replay,mouseState,mouseStateLastFrame);
     }
-
-    if (al_key_down(keyState,ALLEGRO_KEY_BACKQUOTE))
+    if (IsBindDown(keyState,currSettings.keymap.key_ShowMap))
     {
         DrawMinimap(*mouseState);
     }
@@ -295,20 +294,9 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
 
     DrawTransition(dt);
-    DisplayCollision();
-    GameObjDebugDraw();
-    
-    for (int i = 0; i < closedSet.numElements; i++)
-    {
-        PathfindNode p = closedSet.elements[i];
-        al_draw_circle(ToScreenSpace_X(p.p.x*_GRAIN),ToScreenSpace_Y(p.p.y*_GRAIN),2,al_map_rgba(0,255,255,100),1);
-    }
-    for (int i = 0; i < openSet.numElements; i++)
-    {
-        PathfindNode p = openSet.elements[i];
-        al_draw_circle(ToScreenSpace_X(p.p.x*_GRAIN),ToScreenSpace_Y(p.p.y*_GRAIN),2,al_map_rgba(255,0,255,255),1);
-    }
-
+    //DisplayCollision();
+    //GameObjDebugDraw();
+    //DebugDrawPathfinding();
 
 
 }
@@ -398,10 +386,7 @@ int main(int argc, char* args[])
             al_set_target_bitmap(SCREEN);
             al_clear_to_color(BG);
 
-            if (al_key_down(&keyState,ALLEGRO_KEY_F1))
-            {
-                StopMusic();
-            }
+            
             UpdateMusic(1/(float)_TARGET_FPS);
 
             UpdateTransition(1/(float)_TARGET_FPS);
