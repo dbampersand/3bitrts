@@ -138,6 +138,7 @@ void SetTargetPosition(GameObject* g, float x, float y)
         SetMapCollisionRect(g->targetPosition.x,g->targetPosition.y,w,h,false);
 
         AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
+        
     }
 
 }
@@ -1411,7 +1412,7 @@ void DoCurrentPathingNode(GameObject* g)
     if (IsNear(g->position.x,g->pathNodes[g->currentPathingNode].p.x, 0.5) && IsNear(g->position.y,g->pathNodes[g->currentPathingNode].p.y, 0.5f))
     {
         g->currentPathingNode++;
-        if (g->currentPathingNode >= MAX_PATHFINDING_NODES_HELD)
+        if (g->currentPathingNode >= MAX_PATHFINDING_NODES_HELD || ((_FRAMES+(g-objects))%MAX_OBJS) == 0)
         {
             PointI targetIndex = (PointI){((g->targetPosition.x) / (float)_GRAIN), ((g->targetPosition.y) / (float)_GRAIN)};
             PointI currentIndex = (PointI){((g->position.x) / (float)_GRAIN), ((g->position.y) / (float)_GRAIN)};
@@ -1447,12 +1448,10 @@ void Move(GameObject* g, float delta)
         path.y += GetHeight(g->targObj);
     }
     
-    //SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
+    SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
    // SetMapCollisionRect(path.x,path.y,w,h,false);
 
 
-    PointI targetIndex = (PointI){floor((path.x) / (float)_GRAIN), floor((path.y) / (float)_GRAIN)};
-    PointI currentIndex = (PointI){floor((g->position.x) / (float)_GRAIN), floor((g->position.y) / (float)_GRAIN)};
 
     //if (strcmp(g->name,"viper") == 0)
     {
@@ -1483,7 +1482,7 @@ void Move(GameObject* g, float delta)
     }
     else
     {
-        GetCentre(g->targObj,&xtarg,&ytarg);
+        //GetCentre(g->targObj,&xtarg,&ytarg);
     }
 
         double moveX = xtarg - g->position.x;
