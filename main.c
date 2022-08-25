@@ -347,7 +347,8 @@ int main(int argc, char* args[])
         {
             if (event.type == ALLEGRO_EVENT_KEY_DOWN)
             {
-                FinishLoadScreen();
+                if (!IsModifierDown(&keyState))
+                    FinishLoadScreen();
             }
         }
         if (gameState == GAMESTATE_IN_CHATBOX)
@@ -359,7 +360,8 @@ int main(int argc, char* args[])
                 if (chatboxes)
                 {
                     if (chatboxShowing && !chatboxShowing->allowsInteraction)
-                        Chatbox_NextLine(); 
+                        if (!IsModifierDown(&keyState))
+                            Chatbox_NextLine(); 
                 }
 
             }

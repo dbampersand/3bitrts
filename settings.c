@@ -13,6 +13,23 @@ void InitSettings(char* path)
     SetDefaultSettings(&defaultSettings);
     LoadSettingsFile(path);
 }
+bool IsModifierDown(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
+{
+    return (
+        al_key_down(keyStateThisFrame,ALLEGRO_KEY_TAB) || 
+        al_key_down(keyStateThisFrame,ALLEGRO_KEY_CAPSLOCK) || 
+        al_key_down(keyStateThisFrame,ALLEGRO_KEY_LSHIFT) ||
+        al_key_down(keyStateThisFrame,ALLEGRO_KEY_RSHIFT) || 
+        al_key_down(keyStateThisFrame,ALLEGRO_KEY_TAB) ||
+        al_key_down(keyStateThisFrame,ALLEGRO_KEY_LWIN) ||
+        al_key_down(keyStateThisFrame,ALLEGRO_KEY_RWIN) ||
+        al_key_down(keyStateThisFrame,ALLEGRO_KEY_LCTRL) ||
+        al_key_down(keyStateThisFrame,ALLEGRO_KEY_RCTRL) ||
+        al_key_down(keyStateThisFrame,ALLEGRO_KEY_COMMAND) 
+
+    );
+
+}
 bool IsBindReleasedThisFrame(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame,Key k)
 {
     return (!al_key_down(keyStateThisFrame, k.keyMappedTo) && al_key_down(keyStateLastFrame, k.keyMappedTo));

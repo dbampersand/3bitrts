@@ -58,6 +58,7 @@ Settings currSettings;
 Settings defaultSettings;
 
 void InitSettings(char* path);
+bool IsModifierDown(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame);
 void SetDefaultSettings(Settings* setting);
 bool LoadSettingsFile(char* path);
 float FindToken(char* str, char* token);
