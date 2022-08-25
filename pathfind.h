@@ -1,3 +1,5 @@
+#pragma once
+
 #include "point.h"
 #include "stdint.h"
 #include "stdlib.h"
@@ -42,7 +44,7 @@ PathfindMap pathfindmap;
 
 
 
-
+typedef struct GameObject GameObject;
 
 
 PathfindNode* Push(Queue* q, PathfindNode p, bool sort, NODE_IN_SET setToAdd);
@@ -52,5 +54,5 @@ PathfindNode* Peek(Queue* q);
 bool IsEmpty(Queue* q);
 int Depth(Queue* q, PathfindNode* p);
 
-PointI AStar(PointI here, PointI target, bool* success, float w, float h);
+void AStar(PointI here, PointI target, bool* success, float w, float h, GameObject* g);
 void InitPathfinding();

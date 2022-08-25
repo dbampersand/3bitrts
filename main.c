@@ -295,7 +295,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
 
     DrawTransition(dt);
-    //DisplayCollision();
+    DisplayCollision();
     GameObjDebugDraw();
     
     for (int i = 0; i < closedSet.numElements; i++)

@@ -12,6 +12,12 @@
 #include "colors.h"
 #include "player.h"
 
+bool IsNear(float f, float f2, float epsilon)
+{
+    float max = fabsf(_MAX(f,f2));
+    float min = fabsf(_MIN(f,f2));
+    return (max-min < epsilon);
+}
 float clamp(float f, float min, float max)
 {
     return f < min ? min : f > max ? max : f;

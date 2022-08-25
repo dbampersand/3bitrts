@@ -188,10 +188,9 @@ void FinishTransition()
             {
                 objects[i].position.x = xPos;
                 objects[i].position.y = yPos;
-                objects[i].targetPosition.x = xPos;
-                objects[i].targetPosition.y = yPos;
+                SetTargetPosition(&objects[i],xPos,yPos);
 
-                    xPos += GetWidth(&objects[i]);
+                xPos += GetWidth(&objects[i]);
                 if (i == encounterGoingTo->numUnitsToSelect/2)
                 {
                     camPos.x = xPos;

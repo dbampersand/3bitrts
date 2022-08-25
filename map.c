@@ -27,7 +27,7 @@ void DisplayCollision()
                 if (currMap->collision[idx] == COLLISION_OPEN)
                     c = al_map_rgba(255,0,0,128);
                 if (currMap->collision[idx] == COLLISION_WORLD_AND_OBJECT)
-                    c = al_map_rgba(0,255,0,255);
+                    c = al_map_rgba(0,255,0,128);
 
                 al_draw_filled_rectangle(ToScreenSpace_X(x),ToScreenSpace_Y(y),ToScreenSpace_X(x+_GRAIN),ToScreenSpace_Y(y+_GRAIN),c);
                 
@@ -61,6 +61,9 @@ bool PointIsFree(int x, int y)
 }
 void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
 {
+    x-=_GRAIN;y-=_GRAIN;
+    w+=_GRAIN*3; h+=_GRAIN*3;
+
     int indexLeft = GetIndex(GetMapHeight()/_GRAIN, floor((x) / (float)_GRAIN), floor((y) / (float)_GRAIN));
     int indexRight = GetIndex(GetMapHeight()/_GRAIN, ceil((x+w) / (float)_GRAIN), ceil((y+h) / (float)_GRAIN));
     for (int xn = x/_GRAIN; xn < ceil((x + w)/_GRAIN); xn++)

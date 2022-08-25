@@ -7,7 +7,8 @@
 #include "allegro5/allegro_primitives.h"
 #include "colors.h"
 #include "player.h"
-
+#include "map.h"
+#include <math.h>
 void DrawCommand(Command* c, int x, int y)
 {
     if (c->commandType == COMMAND_NONE)
@@ -139,9 +140,7 @@ void NextCommand(GameObject* g)
     if (g->queue[0].commandType == COMMAND_NONE)
     {
         g->targObj = NULL;
-        g->targetPosition.x = g->position.x;
-        g->targetPosition.y = g->position.y;
-
+        SetTargetPosition(g,g->position.x,g->position.y);
     }
 }
 void DoCommands(GameObject* g)
@@ -154,9 +153,10 @@ void DoCommands(GameObject* g)
     }
     if (c->commandType == COMMAND_MOVE)
     {
-        g->targetPosition.x = c->x;
-        g->targetPosition.y = c->y;
+        SetTargetPosition(g,c->x,c->y);
+
         g->targObj = NULL;
+
 
         if (dist(g->position.x,g->position.y,c->x,c->y) <= DIST_DELTA)
         {
@@ -223,14 +223,15 @@ void DoCommands(GameObject* g)
         }
         else
         {
-            g->targetPosition.x = c->x;
-            g->targetPosition.y = c->y;
+            SetTargetPosition(g,c->x,c->y);
+
         }
     }
     if (c->commandType == COMMAND_ATTACKMOVE)
     {
-        g->targetPosition.x = c->x;
-        g->targetPosition.y = c->y;
+        SetTargetPosition(g,c->x,c->y);
+
+        
         g->targObj = NULL;
 
         if (dist(g->position.x,g->position.y,c->x,c->y) <= DIST_DELTA)

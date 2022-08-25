@@ -111,7 +111,33 @@ void SetManaRegen(GameObject* g, float regen)
 {
     g->manaRegen = regen;
 }
+void ClearPathfindingQueue(GameObject* g)
+{
+    for (int i = 0; i < MAX_PATHFINDING_NODES_HELD; i++)
+    {
+        g->pathNodes[i].p.x = g->targetPosition.x;
+        g->pathNodes[i].p.y = g->targetPosition.y;
 
+    }
+}
+void SetTargetPosition(GameObject* g, float x, float y)
+{
+    g->targetPosition.x = x;
+    g->targetPosition.y = y;
+    int  w = GetWidth(g);
+    int h = GetHeight(g);
+
+    PointI targetIndex = (PointI){((g->targetPosition.x) / (float)_GRAIN), ((g->targetPosition.y) / (float)_GRAIN)};
+    PointI currentIndex = (PointI){((g->position.x) / (float)_GRAIN), ((g->position.y) / (float)_GRAIN)};
+    bool success;
+
+
+    SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
+    SetMapCollisionRect(g->targetPosition.x,g->targetPosition.y,w,h,false);
+
+    AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
+
+}
 void UpdateObject(GameObject* g, float dt)
 {
     currGameObjRunning = g;
@@ -187,8 +213,7 @@ void UpdateObject(GameObject* g, float dt)
             int wTarg = al_get_bitmap_width(sprites[currGameObjRunning->targObj->spriteIndex].sprite);
             int hTarg = al_get_bitmap_height(sprites[currGameObjRunning->targObj->spriteIndex].sprite);
 
-            currGameObjRunning->targetPosition.x = currGameObjRunning->targObj->position.x + wTarg/2;
-            currGameObjRunning->targetPosition.y = currGameObjRunning->targObj->position.y + hTarg/2;
+            SetTargetPosition(currGameObjRunning,currGameObjRunning->targObj->position.x + wTarg/2,currGameObjRunning->targObj->position.y + hTarg/2);
 
             Rect r2 = (Rect){currGameObjRunning->targObj->position.x,currGameObjRunning->targObj->position.y,wTarg,hTarg};
             #define DISTDELTA 0.001f
@@ -860,6 +885,7 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
 void KillObj(GameObject* g, bool trigger)
 {
     if (!g) return;
+    SetMapCollisionRect(g->position.x,g->position.y,GetWidth(g),GetHeight(g),false);
     GameObject* before = currGameObjRunning;
     currGameObjRunning = g;
     CallLuaFunc(g->luafunc_kill);
@@ -1372,6 +1398,25 @@ void GameObjDebugDraw()
 {
     al_draw_circle(ToScreenSpace_X(drawX),ToScreenSpace_Y(drawY),5,al_map_rgba(255,0,128,255),1);
 }
+void DoCurrentPathingNode(GameObject* g)
+{
+    if (IsNear(g->position.x,g->targetPosition.x, 1.0f) && IsNear(g->position.y,g->targetPosition.y,1.0f))
+    {
+        ClearPathfindingQueue(g);
+        return;
+    }
+    if (IsNear(g->position.x,g->pathNodes[g->currentPathingNode].p.x, 0.5) && IsNear(g->position.y,g->pathNodes[g->currentPathingNode].p.y, 0.5f))
+    {
+        g->currentPathingNode++;
+        if (g->currentPathingNode >= MAX_PATHFINDING_NODES_HELD)
+        {
+            PointI targetIndex = (PointI){((g->targetPosition.x) / (float)_GRAIN), ((g->targetPosition.y) / (float)_GRAIN)};
+            PointI currentIndex = (PointI){((g->position.x) / (float)_GRAIN), ((g->position.y) / (float)_GRAIN)};
+            bool success;
+            AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
+        }
+    }
+}
 void Move(GameObject* g, float delta)
 {
     if (!g) return;
@@ -1398,21 +1443,22 @@ void Move(GameObject* g, float delta)
         path.x += GetWidth(g->targObj);
         path.y += GetHeight(g->targObj);
     }
-    SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
-    SetMapCollisionRect(path.x,path.y,w,h,false);
+    
+    //SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
+   // SetMapCollisionRect(path.x,path.y,w,h,false);
 
 
     PointI targetIndex = (PointI){floor((path.x) / (float)_GRAIN), floor((path.y) / (float)_GRAIN)};
     PointI currentIndex = (PointI){floor((g->position.x) / (float)_GRAIN), floor((g->position.y) / (float)_GRAIN)};
 
-    //if (strcmp(g->name,"trainingdummy") == 0)
+    //if (strcmp(g->name,"viper") == 0)
     {
-        printf("%s\n",g->name); 
-        path = AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g));
-        printf("\n\n\n\n"); 
+        //path = AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g));
         
-        path.x *= _GRAIN;
-        path.y *= _GRAIN;
+        //if ((_FRAMES+(g-objects))%60==0)
+          //  AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
+        DoCurrentPathingNode(g);
+        path = g->pathNodes[g->currentPathingNode].p;
         drawX = path.x;
         drawY = path.y;
 
@@ -1433,14 +1479,14 @@ void Move(GameObject* g, float delta)
         GetCentre(g->targObj,&xtarg,&ytarg);
     }
 
-        float moveX = xtarg - g->position.x;
-        float moveY = ytarg - g->position.y;
-
+        double moveX = xtarg - g->position.x;
+        double moveY = ytarg - g->position.y;
+        
         double dist = sqrt(moveX*moveX+moveY*moveY);
 
         double dX = (moveX / dist * g->speed) * delta;
         double dY = (moveY / dist * g->speed) * delta;
-        
+
         if (dist <= DIST_DELTA)
         {
             g->position.x = xtarg;
@@ -1468,8 +1514,9 @@ void Move(GameObject* g, float delta)
             CheckCollisions(g,true, dX,ObjectCanPush(g));
             CheckCollisionsWorld(g,true, dX);
 
-            g->targetPosition.x = xtarg;
-            g->targetPosition.y = ytarg;
+            SetTargetPosition(g,xtarg,ytarg);
+
+
             SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
 
             
@@ -1486,6 +1533,8 @@ void Move(GameObject* g, float delta)
         CheckCollisionsWorld(g,true, dX);
         SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
 
+        if (strcmp(g->name,"bard"))
+            printf("Posx: %f, targx: %f, DX: %f, DY: %f\n",g->position.x,xtarg,dX,dY);
 
 
 }
@@ -1942,8 +1991,7 @@ void Teleport(GameObject* g, float x, float y)
 
     CheckCollisions(g,true, dx, false);
     CheckCollisions(g,false, dy, false);   
-    g->targetPosition.x = g->position.x;// - cX/2.0f;
-    g->targetPosition.y = g->position.y;// - cY/2.0f;
+      SetTargetPosition(g,g->position.x,g->position.y);
 
 
 }

@@ -3,6 +3,7 @@
 #include "helperfuncs.h"
 #include "math.h"
 #include "map.h"
+#include "gameobject.h"
 
 PathfindNode Pop(Queue* q)
 {
@@ -146,22 +147,36 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w
     }
     return closestP;
 }
-PointI GetPath(PathfindNode* currentNode)
+void GetPath(PathfindNode* currentNode, GameObject* g)
 {
+    if (!currMap->collision)
+        return;
+    g->currentPathingNode = 1;
+
     PathfindNode* p = currentNode;
+    int numNodes = 0;
     while (1)
     {
-        if (p->parent)
+        numNodes++;
+        if (p->parent == NULL)
         {
+            break;
+        }
+        p = p->parent;
+    }
+    int index = 0;
 
-            if (p->parent->parent == NULL)
-            {
-                return p->p;
-            }
-            }
-            else
-            return p->p;   
-
+    //retraverse
+    p = currentNode;
+    ClearPathfindingQueue(g);
+    for (int i = numNodes; i > 0; i--)
+    {
+        if (i < MAX_PATHFINDING_NODES_HELD)
+        {
+            g->pathNodes[i-1] = *p;
+            g->pathNodes[i-1].p.x *= _GRAIN;
+            g->pathNodes[i-1].p.y *= _GRAIN;
+        }
         p = p->parent;
     }
 
@@ -183,20 +198,30 @@ PathfindNode* GetBestGuess(PointI target)
     return lowest;
 
 }
-PointI AStar(PointI here, PointI target, bool* success, float w, float h)
+void AStar(PointI here, PointI target, bool* success, float w, float h, GameObject* g)
 {
-    DEBUG_NUMNODESPUSHED = 0;
     bool found;
-
-    w /= _GRAIN; h /= _GRAIN;
+    
+    w /= (float)_GRAIN; h /= (float)_GRAIN;
     //w=1;h=1;
+    w++; h++;
+
+    if (here.x < 0 || here.x >= GetMapWidth()/_GRAIN)
+        return;
+
+    if (here.y < 0 || here.y >= GetMapHeight()/_GRAIN)
+        return;
     target = GetClosestPathablePoint(target,here,&found,w,h);
-    if (!found) return target;
+    if (!found) 
+        return;
     //here = GetClosestPathablePoint(here,target,&found,w,h);
     //if (!found) return target;
 
     if (PointIntIsEq(here,target))
-        return target;
+    {
+        ClearPathfindingQueue(g);
+        return;
+    }
 
 
     *success = true;
@@ -227,13 +252,15 @@ PointI AStar(PointI here, PointI target, bool* success, float w, float h)
 
         if (PointIntIsEq(currentNode.p,target))
         {
-            return GetPath(&currentNode);
+            GetPath(&currentNode,g);
+            return;
         }
         if (closedSet.numElements >= PATHFIND_DEPTH)
         {
             //get the best guess
             PathfindNode* lowest = GetBestGuess(target);
-            return GetPath(lowest);
+            GetPath(lowest,g);
+            return;
         }
         for (int x = _MAX(0,currentNode.p.x-1); x < _MIN(currentNode.p.x+2,GetMapWidth()/_GRAIN); x++)
         {
@@ -259,17 +286,17 @@ PointI AStar(PointI here, PointI target, bool* success, float w, float h)
                     continue;
 
                 //bool walkable = (RectIsFree(child.p.x,child.p.y,w,h));
-                bool walkable = (RectIsFree(child.p.x-1,child.p.y-1,w+2,h+2));
+                bool walkable = (RectIsFree(child.p.x,child.p.y,w,h));
                 
                 //if (!walkable) 
                   //  continue;
                 float distcurrchild = (x != currentNode.p.x && y != currentNode.p.y) ? 1.41421356237f : 1;
                 //distcurrchild = dist(currentNode.p.x,currentNode.p.y,child.p.x,child.p.y);
                 //child.g = currentNode.g + (walkable ? dist(child.p.x,child.p.y,currentNode.p.x,currentNode.p.y) : 100);
-                child.g = currentNode.g + distcurrchild;
+                child.g = currentNode.g + distcurrchild + (walkable ? 1 : 100);
                 
                 child.h = dist(child.p.x,child.p.y,target.x,target.y);
-                child.h *= (1+TIEBREAK) + (walkable ? 1 : 100);
+                child.h *= (1+TIEBREAK);// + (walkable ? 1 : 100);
                 child.f = child.g + child.h;
                 child.parent =  parent;
 
@@ -298,7 +325,6 @@ PointI AStar(PointI here, PointI target, bool* success, float w, float h)
 
     *success = false;
     PathfindNode* lowest = GetBestGuess(target);
-    return GetPath(lowest);
+    GetPath(lowest,g);
 
-    return target;
 }

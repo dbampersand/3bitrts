@@ -12,7 +12,7 @@ typedef struct GameObject GameObject;
 
 #define MOUSECURSORSIZE 5
 
-
+bool IsNear(float f, float f2, float epsilon);
 int GetIndex(int h, int x, int y);
 Point IndexToPoint(int h, int index);
 ALLEGRO_MOUSE_STATE GetMouseClamped();

@@ -8,6 +8,9 @@
 #include "threat.h"
 #include "command.h"
 #include "point.h"
+#include "pathfind.h"
+
+#define MAX_PATHFINDING_NODES_HELD 20
 
 typedef enum GAMEOBJ_PROPERTIES
 {
@@ -137,6 +140,8 @@ typedef struct GameObject
     bool deathTimerActivated;
     float deathTimer;
 
+    PathfindNode pathNodes[MAX_PATHFINDING_NODES_HELD];
+    int currentPathingNode;
 
 } GameObject;
 
@@ -158,8 +163,8 @@ int numPrefabsAllocated;
 
 //add 8 more free objects when we need to realloc objects array
 #define BUFFER_PREALLOC_AMT 8
-
-
+void SetTargetPosition(GameObject* g, float x, float y);
+void ClearPathfindingQueue(GameObject* g);
 GameObject* GetMousedOver(ALLEGRO_MOUSE_STATE* mouseState);
 void UpdatePlayerObjectInteractions(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState);
 void ProcessAttackMoveMouseCommand(ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_KEYBOARD_STATE* keyState);

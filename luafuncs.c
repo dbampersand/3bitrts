@@ -951,8 +951,8 @@ int L_SetMovePoint(lua_State* l)
         int w = al_get_bitmap_width(sprites[currGameObjRunning->spriteIndex].sprite);
         int h = al_get_bitmap_height(sprites[currGameObjRunning->spriteIndex].sprite);
 
-        currGameObjRunning->targetPosition.x = x-w/2;
-        currGameObjRunning->targetPosition.y = y-h/2;
+        SetTargetPosition(currGameObjRunning,x-w/2,y-h/2);
+
         currGameObjRunning->targObj = NULL;
         MoveCommand(currGameObjRunning,x-w/2,y-w/2);
     }
@@ -1289,8 +1289,8 @@ int L_SetObjTargetPosition(lua_State* l)
     if (index >= 0 && index < MAX_OBJS)
     {
         GameObject* obj = &objects[index];
-        obj->targetPosition.x = lua_tonumber(l,2);
-        obj->targetPosition.y = lua_tonumber(l,3);
+        SetTargetPosition(obj,lua_tonumber(l,2),lua_tonumber(l,3));
+        
         obj->targObj = NULL;
     }
     return 0;
