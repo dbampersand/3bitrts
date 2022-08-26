@@ -807,6 +807,27 @@ void AddElement(Panel* p, UIElement* u)
     p->elements[p->numElements] = *u;
     p->numElements++;
 }
+void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, int h, int maxchars)
+{
+    KeyInput* t = calloc(1,sizeof(KeyInput));
+    t->allowsInteraction = true;
+    t->text = calloc(2,sizeof(char));
+
+    UIElement u = {0};
+    u.data = (void*)t;
+    u.w = w;    
+    u.h = h;
+    u.y = y;
+    u.name = calloc(strlen(name)+1,sizeof(char));
+    strcpy(u.name,name);
+    u.elementType = ELEMENT_KeyInput;
+    u.x = x;
+    u.enabled = true;
+    u.sound_clickDown_Index = ui.uiClickedSound_Index;
+    u.sound_clickUp_Index = ui.uiClickedUpSound_Index;
+    AddElement(p,&u);
+
+}
 void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h)
 {
     Button* b = calloc(1,sizeof(Button));
@@ -887,7 +908,8 @@ void TabGroup(int numPanels, ...)
         }
         list[i]->tabs = malloc(numPanels*sizeof(Panel*));
         list[i]->numTabs = numPanels;
-        InitButton(&list[i]->tabButton, "Tab", "", 0,0, 14, 33, 0);
+        if (!list[i]->tabButton.enabled)
+            InitButton(&list[i]->tabButton, "Tab", "", 0,0, 14, 33, 0);
 
         for (int j = 0; j < numPanels; j++)
         {
@@ -948,6 +970,22 @@ void AddText(Panel* p,int x, int y, char* name, char* description)
     strcpy(u.name,name);
     AddElement(p,&u);
 }
+KeyInput* GetKeyInput(Panel* p, char* name)
+{
+    if (!p) 
+        return NULL;
+    for (int i = 0; i < p->numElements; i++)
+    {
+        UIElement* u = &p->elements[i];
+        if (strcasecmp(u->name,name)==0)
+        {
+            KeyInput* b = (KeyInput*)u->data;
+            return b;
+        }
+    }
+    return NULL;
+}
+
 Button* GetButtonB(Panel* p, char* name)
 {
     if (!p) 
@@ -1276,6 +1314,11 @@ void DeleteUIElement(UIElement* u)
             free(p->elements);
         }
     }
+    if (u->elementType == ELEMENT_KeyInput)
+    {
+        KeyInput* t = (KeyInput*)u->data;
+        free(t->text);
+    }
     if (u->name)
         free(u->name);
     if (u->data)
@@ -1334,19 +1377,9 @@ void ChangeButtonImage(UIElement* u, int spriteIndex)
         b->spriteIndex = spriteIndex;
     }
 }
-void InitUI()
-{
-    ui.augmentIconIndex = LoadSprite("assets/ui/augment.png",false);
-
-    //ui.mainMenuPanel = CreatePanel(29,97,144,15,UI_PADDING,false);
     int padding = 8;
-    ui.mainMenuPanel = CreatePanel(29,80,160,144,15,false);
-    AddButton(&ui.mainMenuPanel,"Return","Return",0,16,96,16);
-    AddButton(&ui.mainMenuPanel,"Tutorial","Tutorial",0,32+(padding),96,16);
-    AddButton(&ui.mainMenuPanel,"Load Replay","Load Replay",0,48+(padding*2),96,16);
-    AddButton(&ui.mainMenuPanel,"Options","Options",0,64+(padding*3),96,16);
-    AddButton(&ui.mainMenuPanel,"Exit","Exit Game",0,80+(padding*4),96,16);
-
+void InitLoadReplayPanel()
+{
     ui.loadReplayPanel = CreatePanel(29,80,160,144,15,true);
     InitButton(&ui.loadReplayPanel.backButton, "Back", "", 0,0, 14,14, LoadSprite("assets/ui/back_tab_icon.png", true));
     ui.loadReplayPanel.back = &ui.mainMenuPanel;
@@ -1355,13 +1388,26 @@ void InitUI()
     InitButton(&replayBackButton,"","",8,5,9,9,0);
     ChangeButtonImage(&replayBackButton,LoadSprite("assets/ui/replay_back.png",true));
 
+}
+void InitMainMenuPanel()
+{
+    ui.mainMenuPanel = CreatePanel(29,80,160,144,15,false);
+    AddButton(&ui.mainMenuPanel,"Return","Start Game",0,16,96,16);
+    AddButton(&ui.mainMenuPanel,"Tutorial","Tutorial",0,32+(padding),96,16);
+    AddButton(&ui.mainMenuPanel,"Load Replay","Load Replay",0,48+(padding*2),96,16);
+    AddButton(&ui.mainMenuPanel,"Options","Options",0,64+(padding*3),96,16);
+    AddButton(&ui.mainMenuPanel,"Exit","Exit Game",0,80+(padding*4),96,16);
+
+}
+void InitPausePanel()
+{
     ui.pauseMenuPanel = CreatePanel(48,48,160,144,15,true);
     AddButton(&ui.pauseMenuPanel,"Return","Return",33,17,96,16);
     AddButton(&ui.pauseMenuPanel,"Options","Options",33,49,96,16);
     AddButton(&ui.pauseMenuPanel,"Exit","Exit Game",33,81,96,16);
-
-
-
+}
+void InitVideoOptionsPanel()
+{
     ui.videoOptionsPanel = CreatePanel(48,48,160,112,15,true);
     AddText(&ui.videoOptionsPanel,33,41,"Tag_RenderScale","RenderScale");
     AddText(&ui.videoOptionsPanel,132,43,"RenderScale","2x");
@@ -1380,50 +1426,88 @@ void InitUI()
     AddText(&ui.videoOptionsPanel,33,132,"Display Timer","Display Timer");
     AddCheckbox(&ui.videoOptionsPanel,132,132,11,11,"DisplayTimerButton",&currSettings.displayTimer);
 
+    InitButton(&ui.videoOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
 
+    InitButton(&ui.videoOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/video_tab_icon.png",true));
+
+    ui.videoOptionsPanel.back = &ui.mainMenuPanel;
+
+        Pulldown* healthbar = (Pulldown*)GetUIElement(&ui.videoOptionsPanel,"HealthBarDisplay")->data;
+    currSettings.displayHealthBar = healthbar->selectedIndex;
+
+
+}
+void InitAudioOptionsPanel()
+{
     ui.audioOptionsPanel = CreatePanel(48,48,160,112,15,true);
     AddText(&ui.audioOptionsPanel,33,41,"Tag_MasterVolume","Master Volume");
     AddSlider(&ui.audioOptionsPanel,34,52,110,10,"MasterVolume",currSettings.masterVolume,&currSettings.masterVolume);
+    InitButton(&ui.audioOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
+    InitButton(&ui.audioOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/audio_tab_icon.png",true));
+    ui.audioOptionsPanel.back = &ui.mainMenuPanel;
 
-
+}
+void InitAccessibilityOptionsPanel()
+{
     ui.accessibilityOptionsPanel = CreatePanel(48,48,160,112,15,true);
     //AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 132,29,96,16);
     //AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",132,29,96,16);
-    TabGroup(3,&ui.videoOptionsPanel,&ui.audioOptionsPanel,&ui.accessibilityOptionsPanel);
+    InitButton(&ui.accessibilityOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
+    InitButton(&ui.accessibilityOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/accessiblity_tab_icon.png",true));
+    ui.accessibilityOptionsPanel.back = &ui.mainMenuPanel;
 
-
-    ui.encounter_scroll = CreatePanel(16,224,224,16,0,true);
-   // InitButton(&ui.encounter_ButtonLeft,"<","<",0,224,48,16,0);
-    //InitButton(&ui.encounter_ButtonConfirm,"Select Party","Select Party",0,224,96,16,0);
-    //InitButton(&ui.encounter_ButtonRight,">",">",0,224,48,16,0);
-
+}
+void InitChoosingUnitButtons()
+{
     InitButton(&ui.choosingUnits_Back,"Back","Back",45,194,48,16,0);
     InitButton(&ui.choosingUnits_GO,"Adventure","Adventure",109,194,96,16,0);
-
-    /*ui.mainMenuPanel.spriteIndex_tabIcon = LoadSprite("assets/ui/back_tab_icon.png",true);
-    ui.videoOptionsPanel.spriteIndex_tabIcon = LoadSprite("assets/ui/video_tab_icon.png",true);
-    ui.audioOptionsPanel.spriteIndex_tabIcon = LoadSprite("assets/ui/audio_tab_icon.png",true);
-    ui.accessibilityOptionsPanel.spriteIndex_tabIcon = LoadSprite("assets/ui/accessiblity_tab_icon.png",true);
-*/
-    InitButton(&ui.videoOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
-    InitButton(&ui.audioOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
-    InitButton(&ui.accessibilityOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
-
-
-    InitButton(&ui.videoOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/video_tab_icon.png",true));
-    InitButton(&ui.audioOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/audio_tab_icon.png",true));
-    InitButton(&ui.accessibilityOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/accessiblity_tab_icon.png",true));
-
-
+}
+void InitEndScreen()
+{
     //endScreen
     InitButton(&ui.endScreen_Back,"Back","Back",10,224,72,16,0);
     InitButton(&ui.endScreen_Retry,"Retry","Retry",91,224,72,16,0);
     InitButton(&ui.endScreen_SaveReplay,"Save Replay","Save Replay",172,224,72,16,0);
 
+}
+void InitControlsPanel()
+{
+    ui.controlsPanel = CreatePanel(48,48,160,112,15,true);
 
-    ui.videoOptionsPanel.back = &ui.mainMenuPanel;
-    ui.audioOptionsPanel.back = &ui.mainMenuPanel;
-    ui.accessibilityOptionsPanel.back = &ui.mainMenuPanel;
+    int x = 34;
+
+    int y = 16;
+    int w = 8;
+    int h = 8;
+    
+    AddKeyInput(&ui.controlsPanel,"Q","Q",x,y+=h+padding,w,h,1);
+    AddKeyInput(&ui.controlsPanel,"W","W",x,y+=h+padding,w,h,1);
+    AddKeyInput(&ui.controlsPanel,"E","E",x,y+=h+padding,w,h,1);
+    AddKeyInput(&ui.controlsPanel,"R","R",x,y+=h+padding,w,h,1);
+
+
+}
+void InitUI()
+{
+    ui.augmentIconIndex = LoadSprite("assets/ui/augment.png",false);
+
+    //ui.mainMenuPanel = CreatePanel(29,97,144,15,UI_PADDING,false);
+
+    InitMainMenuPanel();
+    InitLoadReplayPanel();
+    InitPausePanel();
+    InitVideoOptionsPanel();
+    InitAudioOptionsPanel();
+    InitAccessibilityOptionsPanel();
+    
+
+    InitChoosingUnitButtons();
+
+
+
+    TabGroup(3,&ui.videoOptionsPanel,&ui.audioOptionsPanel,&ui.accessibilityOptionsPanel);
+
+    InitEndScreen();
 
 
     ui.animatePanel = UI_ANIMATE_STATIC;
@@ -1437,12 +1521,8 @@ void InitUI()
 
     //currSettings.particlesEnabled = &particles->activated;
 
-    Pulldown* healthbar = (Pulldown*)GetUIElement(&ui.videoOptionsPanel,"HealthBarDisplay")->data;
-    currSettings.displayHealthBar = healthbar->selectedIndex;
 
     ui.panel_sprite_index = LoadSprite("assets/ui/ui.png",false);
-
-    ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Start");
     ui.panelShownPercent = 1.0f;
 
 
@@ -1623,6 +1703,46 @@ void UpdateTabButtons(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_S
         y += h;
     }
 }
+void UpdateKeyInput(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
+{
+    ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
+
+    KeyInput* t = (KeyInput*)u->data;
+
+    if (mouseState.buttons & 1 && !(mouseStateLastFrame.buttons & 1))
+    {
+        Rect r = (Rect){rX,rY,u->w,u->h};
+        if (PointInRect(mouseState.x,mouseState.y,r))
+        {
+            if (!t->clicked)
+            {
+                PlaySound(&sounds[u->sound_clickUp_Index],0.5f);
+            }
+            t->clicked = true;
+        }
+        else
+        {
+            t->clicked = false;
+            UpdateBind(u);
+        }
+    }
+
+    if (t->clicked)
+    {
+        for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
+        {
+            if (al_key_down(keyStateThisFrame,i))
+            {
+                t->key = i;
+                t->clicked = false;
+                UpdateBind(u);
+                break;
+            }
+
+        }
+    }
+}
 void UpdateButton(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseStateLastFrame)
 {
     ToScreenSpaceI(&mouseState.x,&mouseState.y);
@@ -1659,7 +1779,7 @@ void UpdateButton(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE mouseState, 
         b->clicked = false;
     }
 }
-void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
 {
     if (!u->enabled)
         return;
@@ -1670,6 +1790,11 @@ void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLE
     {
         UpdateButton(x,y,u,*mouseState,*mouseStateLastFrame);
     }
+    if (u->elementType == ELEMENT_KeyInput)
+    {
+        UpdateKeyInput(x,y,u,*mouseState,*mouseStateLastFrame,keyStateThisFrame);
+    }
+
     if (u->elementType == ELEMENT_SLIDER)
     {
         UpdateSlider((Slider*)u->data, x,  y, u->w, u->h, *mouseState, *mouseStateLastFrame);
@@ -1687,13 +1812,13 @@ void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLE
 
 
 }
-void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
 {
     if (p)
     {
         for (int i = 0; i < p->numElements; i++)
         {
-            UpdateElement(p,&p->elements[i],mouseState,mouseStateLastFrame);
+            UpdateElement(p,&p->elements[i],mouseState,mouseStateLastFrame, keyStateThisFrame);
         }
     }
     UpdateScrollbar(p,mouseState,mouseStateLastFrame);
@@ -1765,7 +1890,7 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
     }
     if (ui.currentPanel)
     {
-        UpdatePanel(ui.currentPanel,mouseState,mouseStateLastFrame);
+        UpdatePanel(ui.currentPanel,mouseState,mouseStateLastFrame, keyState);
     }
     int displayW = al_get_display_width(display);
     int displayH = al_get_display_height(display);
@@ -1845,6 +1970,37 @@ void UIDrawText(UIElement* u, int x, int y)
 
 
 }
+void DrawKeyInput(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE mouseState, bool isActive, ALLEGRO_COLOR bgColor)
+{
+    KeyInput* k = (KeyInput*)u->data;
+    ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    ALLEGRO_FONT* font = ui.font;
+    Rect button = (Rect){x,y,u->w,u->h};
+
+    if (k->clicked && isActive)
+    {
+        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,FRIENDLY);
+        al_draw_rectangle(x,y,x+u->w,y+u->h,BG,1);
+        al_draw_text(ui.font,BG,x+u->w/2,y+u->h /2 - al_get_font_line_height(font)/2.0,ALLEGRO_ALIGN_CENTRE,k->text);
+     }
+    else
+    {
+        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,bgColor);
+        if (isActive)
+        {
+            al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
+        }
+        else
+        {   
+            DrawOutlinedRect_Dithered(&button,FRIENDLY);
+        }
+    }
+    if (PointInRect(mouseState.x,mouseState.y,button) && isActive && !k->clicked)
+    {
+        al_draw_rectangle(x+2,y+2,x+u->w-2,y+u->h-2,FRIENDLY,1);
+    }
+
+}
 void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_COLOR bgColor)
 {
     if (u->elementType == ELEMENT_BUTTON)
@@ -1866,6 +2022,10 @@ void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, 
     if (u->elementType == ELEMENT_PULLDOWN)
     {
         DrawPullDownMenu((Pulldown*)u->data,x,y,u->w,u->h,u->enabled,mouseState,bgColor);
+    }
+    if (u->elementType == ELEMENT_PULLDOWN)
+    {
+        DrawKeyInput(u,x,y,*mouseState,u->enabled,bgColor);
     }
 
 

@@ -28,6 +28,14 @@ typedef struct Text
     ALLEGRO_COLOR color;
     int lineHeight;
 } Text;
+typedef struct KeyInput
+{
+    int x; int y; int w; int h;
+    bool allowsInteraction;
+    bool clicked;
+    int key;
+    char* text;
+} KeyInput;
 
 typedef struct Scrollbar
 {
@@ -51,6 +59,7 @@ typedef enum UIElement_Type
     ELEMENT_CHECKBOX,
     ELEMENT_TEXT,
     ELEMENT_PULLDOWN,
+    ELEMENT_KeyInput
     //ELEMENT_CHATBOX
 
 } UIElement_Type;
@@ -165,6 +174,7 @@ typedef struct UI
     Panel audioOptionsPanel;
     Panel accessibilityOptionsPanel;
     Panel loadReplayPanel;
+    Panel controlsPanel;
 
     UI_AnimState animatePanel;
     Panel* changingTo;
@@ -187,6 +197,7 @@ typedef struct UI
     UIElement endScreen_Back;
     UIElement endScreen_Retry;
     UIElement endScreen_SaveReplay;
+
 
 
     
@@ -250,12 +261,14 @@ Rect GetAbilityPortraitRect(int index);
 void InitUI();  
 void InitFonts();
 void DrawMenus(ALLEGRO_MOUSE_STATE* mouseState);
+void UpdateKeyInput(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame);
 void UpdateButton(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseStateLastFrame);
-void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
+void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame);
 void GetUILocation(Panel* p, UIElement* uF, int* x, int* y);
-void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
+void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame);
 void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, float dt);
 bool GetButton(Panel* p, char* name);
+KeyInput* GetKeyInput(Panel* p, char* name);
 Button* GetButtonB(Panel* p, char* name);
 void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_COLOR bgColor); 
 void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState);
@@ -265,6 +278,7 @@ void ChangeUIPanel(Panel* to);
 bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MOUSE_STATE* mouse);
 void InitButton(UIElement* u, char* name, char* description, int x, int y, int w, int h, int sprite);
 void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h);
+void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, int h, int maxchars);
 bool GetButtonIsClicked(UIElement* u);
 bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c,ALLEGRO_MOUSE_STATE* mouseState);
 void UpdateTabButtons(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);

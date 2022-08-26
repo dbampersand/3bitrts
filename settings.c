@@ -5,13 +5,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "ui.h"
 #include "sprite.h"
+
 #include "allegro5/allegro.h"
+
 void InitSettings(char* path)
 {
 
     SetDefaultSettings(&defaultSettings);
     LoadSettingsFile(path);
+}   
+void UpdateBind(UIElement* u)
+{
+    KeyInput* t = (KeyInput*)u->data;
+    KeyInput* Q = GetKeyInput(&ui.controlsPanel, "Q");
+    KeyInput* W = GetKeyInput(&ui.controlsPanel, "W");
+    KeyInput* E = GetKeyInput(&ui.controlsPanel, "E");
+    KeyInput* R = GetKeyInput(&ui.controlsPanel, "R");
+
+
+    if (t == Q)
+    {
+        char ch = t->text[0];
+        currSettings.keymap.key_Q.keyMappedTo = ch;
+    }
 }
 bool IsModifierDown(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
 {
