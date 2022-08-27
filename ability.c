@@ -151,6 +151,11 @@ int GetAbilityIndexClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_ST
     {
         return 3;
     }
+    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_F))
+    {
+        return 4;
+    }
+
     return -1;
 }
 Ability CloneAbilityPrefab(Ability* prefab, lua_State* l)

@@ -1921,6 +1921,10 @@ int L_AddAbility(lua_State* l)
     if (index >= MAX_ABILITIES) index = MAX_ABILITIES-1;
 
     Ability* prefab = AddAbility(path); 
+    if (!currGameObjRunning->abilities[index].path)
+    {
+        currGameObjRunning->numAbilities++;
+    }
     currGameObjRunning->abilities[index] = CloneAbilityPrefab(prefab,l);
     lua_pushnumber(l,index);
     return 1;

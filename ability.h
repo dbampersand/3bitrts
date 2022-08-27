@@ -56,6 +56,7 @@ typedef struct Ability
     float hintRadius;
 
 
+
 } Ability;
 
 

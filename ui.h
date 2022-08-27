@@ -151,6 +151,8 @@ typedef enum Widget_DrawOrder
 typedef struct UI
 {
     int panel_sprite_index;
+    int panel_5_abilities_sprite_index;
+
     int cursorDefaultIndex;
     int cursorCastingIndex;
     int cursorAttackIndex;

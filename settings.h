@@ -22,6 +22,7 @@ typedef struct Keymap
     Key key_W;
     Key key_E;
     Key key_R;
+    Key key_F;
 
     Key key_AMove;
     Key key_Shift;

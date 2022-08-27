@@ -65,6 +65,9 @@ typedef struct GameObject
     Effect effects[MAX_EFFECTS];
     Command queue[MAX_QUEUED_CMD];
 
+    int numAbilities;
+
+
     Point position;
     Point offset; //offset for drawing the 'attack animation'
     float angle;

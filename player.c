@@ -42,7 +42,6 @@ void InitPlayers()
 void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState)
 {
     int index = GetAbilityIndexClicked(keyState,keyStateLastFrame);
-
     if (index > -1)
     if (players[0].selection[players[0].indexSelectedUnit])
     {
@@ -51,6 +50,9 @@ void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STAT
             PlaySound(&sounds[ability_UI_click_sound],0.5f);
             players[0].abilityHeld = NULL;
             currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
+            if (currGameObjRunning->numAbilities < 5 && index == 4)
+                return;
+            
             if (currGameObjRunning)
             {
                 currAbilityRunning = &players[0].selection[players[0].indexSelectedUnit]->abilities[index];

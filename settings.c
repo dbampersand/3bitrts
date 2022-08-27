@@ -86,6 +86,9 @@ void SetDefaultSettings(Settings* setting)
     setting->keymap.key_W = (Key){"Ability Two",ALLEGRO_KEY_W};
     setting->keymap.key_E = (Key){"Ability Three",ALLEGRO_KEY_E};
     setting->keymap.key_R = (Key){"Ability Four",ALLEGRO_KEY_R};
+    setting->keymap.key_F = (Key){"Ability Five",ALLEGRO_KEY_F};
+
+    
 
     setting->keymap.key_AMove = (Key){"Attack Move",ALLEGRO_KEY_A};
     setting->keymap.key_Shift = (Key){"Set Waypoint",ALLEGRO_KEY_LSHIFT};
@@ -164,7 +167,7 @@ float FindToken(char* str, char* token)
                 value[index++] = str[j];
                 if (str[j] == ';')  
                 {
-                    //got value; convert value to int
+                    //got value; convert value to float
                     value[index-1] = '\0';
                     float ret = atof(value);
                     free(value);
@@ -177,6 +180,54 @@ float FindToken(char* str, char* token)
     }
     return -1;
 }
+float FindToken_Str(char* str, char* token)
+{
+    if (!str || !token) return -1;
+
+    int len = strlen(str);
+    int indexOf = strstr(str,token)-str;
+    if (indexOf < 0)
+    {
+        return -1;
+    }
+    int foundIndex = -1;
+    //search forward for a ;
+    for (int i = indexOf; i < len; i++)
+    {
+        if (str[i] == ';')
+        {
+            foundIndex = i;
+            break;
+        }
+    }
+    //value is between indexOf - foundIndex
+    bool spaceFound;
+    for (int i = indexOf+1; i < foundIndex; i++)
+    {
+        if (str[i-1] == ' '  && isdigit(str[i]))
+        {
+            char* value = calloc(len,sizeof(char));
+            int index = 0;
+            //found value
+            for (int j = i; i < foundIndex; j++)
+            {
+                value[index++] = str[j];
+                if (str[j] == ';')  
+                {
+                    //got value; convert value to float
+                    value[index-1] = '\0';
+                    float ret = atof(value);
+                    free(value);
+                    return ret;
+                }
+            }
+            free(value);
+
+        }
+    }
+    return -1;
+}
+
 bool LoadSettingsFile(char* path)
 {
     currSettings = defaultSettings;
