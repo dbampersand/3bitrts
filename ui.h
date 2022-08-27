@@ -5,6 +5,7 @@
 #include "stdbool.h"
 #include "gamestate.h"
 #include "sound.h"
+#include "settings.h"
 //error printf colour
 #define COL_ERR  "\x1B[31m"
 
@@ -33,8 +34,8 @@ typedef struct KeyInput
     int x; int y; int w; int h;
     bool allowsInteraction;
     bool clicked;
-    int key;
     char* text;
+    KEY* mappedTo;
 } KeyInput;
 
 typedef struct Scrollbar
@@ -59,7 +60,7 @@ typedef enum UIElement_Type
     ELEMENT_CHECKBOX,
     ELEMENT_TEXT,
     ELEMENT_PULLDOWN,
-    ELEMENT_KeyInput
+    ELEMENT_KEYINPUT
     //ELEMENT_CHATBOX
 
 } UIElement_Type;
@@ -278,7 +279,7 @@ void ChangeUIPanel(Panel* to);
 bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MOUSE_STATE* mouse);
 void InitButton(UIElement* u, char* name, char* description, int x, int y, int w, int h, int sprite);
 void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h);
-void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, int h, int maxchars);
+void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, int h, int maxchars, KEY* mapTo);
 bool GetButtonIsClicked(UIElement* u);
 bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c,ALLEGRO_MOUSE_STATE* mouseState);
 void UpdateTabButtons(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);

@@ -19,16 +19,19 @@ void InitSettings(char* path)
 void UpdateBind(UIElement* u)
 {
     KeyInput* t = (KeyInput*)u->data;
-    KeyInput* Q = GetKeyInput(&ui.controlsPanel, "Q");
-    KeyInput* W = GetKeyInput(&ui.controlsPanel, "W");
-    KeyInput* E = GetKeyInput(&ui.controlsPanel, "E");
-    KeyInput* R = GetKeyInput(&ui.controlsPanel, "R");
-
-
-    if (t == Q)
+    if (t->mappedTo)
     {
-        char ch = t->text[0];
-        currSettings.keymap.key_Q.keyMappedTo = ch;
+        //char ch = t->key;
+        //currSettings.keymap.key_Q.keyMappedTo = ch;
+        const char* str = al_keycode_to_name(*t->mappedTo);
+
+        if (t->text)
+        {
+            t->text = realloc(t->text,(strlen(str)+1)*sizeof(char));
+        }
+        else
+            t->text = calloc(strlen(str)+1,sizeof(char));
+        strcpy(t->text,str);
     }
 }
 bool IsModifierDown(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)

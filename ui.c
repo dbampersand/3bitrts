@@ -807,11 +807,12 @@ void AddElement(Panel* p, UIElement* u)
     p->elements[p->numElements] = *u;
     p->numElements++;
 }
-void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, int h, int maxchars)
+void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, int h, int maxchars, KEY* mapTo)
 {
     KeyInput* t = calloc(1,sizeof(KeyInput));
     t->allowsInteraction = true;
     t->text = calloc(2,sizeof(char));
+    t->mappedTo = (int*)mapTo;
 
     UIElement u = {0};
     u.data = (void*)t;
@@ -820,7 +821,7 @@ void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, i
     u.y = y;
     u.name = calloc(strlen(name)+1,sizeof(char));
     strcpy(u.name,name);
-    u.elementType = ELEMENT_KeyInput;
+    u.elementType = ELEMENT_KEYINPUT;
     u.x = x;
     u.enabled = true;
     u.sound_clickDown_Index = ui.uiClickedSound_Index;
@@ -1314,7 +1315,7 @@ void DeleteUIElement(UIElement* u)
             free(p->elements);
         }
     }
-    if (u->elementType == ELEMENT_KeyInput)
+    if (u->elementType == ELEMENT_KEYINPUT)
     {
         KeyInput* t = (KeyInput*)u->data;
         free(t->text);
@@ -1401,14 +1402,14 @@ void InitMainMenuPanel()
 }
 void InitPausePanel()
 {
-    ui.pauseMenuPanel = CreatePanel(48,48,160,144,15,true);
+    ui.pauseMenuPanel = CreatePanel(48,48,160,160,15,true);
     AddButton(&ui.pauseMenuPanel,"Return","Return",33,17,96,16);
     AddButton(&ui.pauseMenuPanel,"Options","Options",33,49,96,16);
     AddButton(&ui.pauseMenuPanel,"Exit","Exit Game",33,81,96,16);
 }
 void InitVideoOptionsPanel()
 {
-    ui.videoOptionsPanel = CreatePanel(48,48,160,112,15,true);
+    ui.videoOptionsPanel = CreatePanel(48,48,160,160,15,true);
     AddText(&ui.videoOptionsPanel,33,41,"Tag_RenderScale","RenderScale");
     AddText(&ui.videoOptionsPanel,132,43,"RenderScale","2x");
     
@@ -1439,7 +1440,7 @@ void InitVideoOptionsPanel()
 }
 void InitAudioOptionsPanel()
 {
-    ui.audioOptionsPanel = CreatePanel(48,48,160,112,15,true);
+    ui.audioOptionsPanel = CreatePanel(48,48,160,160,15,true);
     AddText(&ui.audioOptionsPanel,33,41,"Tag_MasterVolume","Master Volume");
     AddSlider(&ui.audioOptionsPanel,34,52,110,10,"MasterVolume",currSettings.masterVolume,&currSettings.masterVolume);
     InitButton(&ui.audioOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
@@ -1449,7 +1450,7 @@ void InitAudioOptionsPanel()
 }
 void InitAccessibilityOptionsPanel()
 {
-    ui.accessibilityOptionsPanel = CreatePanel(48,48,160,112,15,true);
+    ui.accessibilityOptionsPanel = CreatePanel(48,48,160,160,15,true);
     //AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 132,29,96,16);
     //AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",132,29,96,16);
     InitButton(&ui.accessibilityOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
@@ -1472,18 +1473,32 @@ void InitEndScreen()
 }
 void InitControlsPanel()
 {
-    ui.controlsPanel = CreatePanel(48,48,160,112,15,true);
+    ui.controlsPanel = CreatePanel(48,48,160,160,15,true);
 
-    int x = 34;
+    int xButtons = 100;
+    int xText = 16;
+
 
     int y = 16;
-    int w = 8;
-    int h = 8;
+    int w = 16;
+    int h = 16;
     
-    AddKeyInput(&ui.controlsPanel,"Q","Q",x,y+=h+padding,w,h,1);
-    AddKeyInput(&ui.controlsPanel,"W","W",x,y+=h+padding,w,h,1);
-    AddKeyInput(&ui.controlsPanel,"E","E",x,y+=h+padding,w,h,1);
-    AddKeyInput(&ui.controlsPanel,"R","R",x,y+=h+padding,w,h,1);
+    AddKeyInput(&ui.controlsPanel,"Q","Q",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Q.keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"First Ability","First Ability");
+
+    AddKeyInput(&ui.controlsPanel,"W","W",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_W.keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Second Ability","Second Ability");
+
+    AddKeyInput(&ui.controlsPanel,"E","E",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_E.keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Third Ability","Third Ability");
+
+    AddKeyInput(&ui.controlsPanel,"R","R",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_R.keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Fourth Ability","Fourth Ability");
+
+
+    InitButton(&ui.controlsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
+    InitButton(&ui.controlsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/controls_tab_icon.png",true));
+    ui.controlsPanel.back = &ui.mainMenuPanel;
 
 
 }
@@ -1492,6 +1507,7 @@ void InitUI()
     ui.augmentIconIndex = LoadSprite("assets/ui/augment.png",false);
 
     //ui.mainMenuPanel = CreatePanel(29,97,144,15,UI_PADDING,false);
+    InitFonts();
 
     InitMainMenuPanel();
     InitLoadReplayPanel();
@@ -1499,13 +1515,12 @@ void InitUI()
     InitVideoOptionsPanel();
     InitAudioOptionsPanel();
     InitAccessibilityOptionsPanel();
+    InitControlsPanel();
     
-
     InitChoosingUnitButtons();
 
 
-
-    TabGroup(3,&ui.videoOptionsPanel,&ui.audioOptionsPanel,&ui.accessibilityOptionsPanel);
+    TabGroup(4,&ui.videoOptionsPanel,&ui.audioOptionsPanel,&ui.accessibilityOptionsPanel,&ui.controlsPanel);
 
     InitEndScreen();
 
@@ -1532,7 +1547,6 @@ void InitUI()
     LoadCursorSprite(&ui,&ui.cursorFriendlyIndex,"assets/ui/cursor_friendly.png");
 
 
-    InitFonts();
 
     ui.currentPanel = &ui.mainMenuPanel;
     ui.panelShownPercent = 1.0f;
@@ -1734,7 +1748,8 @@ void UpdateKeyInput(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE mouseState
         {
             if (al_key_down(keyStateThisFrame,i))
             {
-                t->key = i;
+                if (t->mappedTo)
+                    *t->mappedTo = i;
                 t->clicked = false;
                 UpdateBind(u);
                 break;
@@ -1790,7 +1805,7 @@ void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLE
     {
         UpdateButton(x,y,u,*mouseState,*mouseStateLastFrame);
     }
-    if (u->elementType == ELEMENT_KeyInput)
+    if (u->elementType == ELEMENT_KEYINPUT)
     {
         UpdateKeyInput(x,y,u,*mouseState,*mouseStateLastFrame,keyStateThisFrame);
     }
@@ -1833,12 +1848,14 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
         ui.videoOptionsPanel.back = &ui.pauseMenuPanel;
         ui.audioOptionsPanel.back = &ui.pauseMenuPanel;
         ui.accessibilityOptionsPanel.back = &ui.pauseMenuPanel;
+        ui.controlsPanel.back = &ui.pauseMenuPanel;
     }
     else
     {
         ui.videoOptionsPanel.back = &ui.mainMenuPanel;
         ui.audioOptionsPanel.back = &ui.mainMenuPanel;
         ui.accessibilityOptionsPanel.back = &ui.mainMenuPanel;
+        ui.controlsPanel.back = &ui.mainMenuPanel;
     }
     if (ui.currentPanel)
     {
@@ -2023,7 +2040,7 @@ void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, 
     {
         DrawPullDownMenu((Pulldown*)u->data,x,y,u->w,u->h,u->enabled,mouseState,bgColor);
     }
-    if (u->elementType == ELEMENT_PULLDOWN)
+    if (u->elementType == ELEMENT_KEYINPUT)
     {
         DrawKeyInput(u,x,y,*mouseState,u->enabled,bgColor);
     }
