@@ -827,6 +827,7 @@ void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, i
     u.sound_clickDown_Index = ui.uiClickedSound_Index;
     u.sound_clickUp_Index = ui.uiClickedUpSound_Index;
     AddElement(p,&u);
+    UpdateBind(&u);
 
 }
 void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h)
@@ -1378,7 +1379,7 @@ void ChangeButtonImage(UIElement* u, int spriteIndex)
         b->spriteIndex = spriteIndex;
     }
 }
-    int padding = 8;
+int padding = 8;
 void InitLoadReplayPanel()
 {
     ui.loadReplayPanel = CreatePanel(29,80,160,144,15,true);
@@ -1475,13 +1476,15 @@ void InitControlsPanel()
 {
     ui.controlsPanel = CreatePanel(48,48,160,160,15,true);
 
-    int xButtons = 100;
     int xText = 16;
 
 
     int y = 16;
-    int w = 16;
+    int w = 32;
     int h = 16;
+    
+    int xButtons = 160-w-padding*2;
+
     
     AddKeyInput(&ui.controlsPanel,"Q","Q",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Q.keyMappedTo);
     AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"First Ability","First Ability");
@@ -1494,6 +1497,66 @@ void InitControlsPanel()
 
     AddKeyInput(&ui.controlsPanel,"R","R",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_R.keyMappedTo);
     AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Fourth Ability","Fourth Ability");
+
+    AddKeyInput(&ui.controlsPanel,"AMove","AMove",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_AMove.keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Attack Move","Attack Move");
+
+    AddKeyInput(&ui.controlsPanel,"Add To Selection","Add To Selection",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Shift.keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Add To Selection","Add To Selection");
+
+    AddKeyInput(&ui.controlsPanel,"Shift Selected","Shift Selected",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Tab.keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Shift Selected","Shift Selected");
+
+    AddKeyInput(&ui.controlsPanel,"Set Group","Set Group",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Ctrl.keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Set Group","Set Group");
+
+    AddKeyInput(&ui.controlsPanel,"Show Map","Show Map",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ShowMap.keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Show Map","Show Map");
+
+    AddKeyInput(&ui.controlsPanel,"Pause","Pause",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Tab.keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Pause","Pause");
+
+    AddKeyInput(&ui.controlsPanel,"Pan Left","Pan Left",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_PanLeft.keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Pan Left","Pan Left");
+
+    AddKeyInput(&ui.controlsPanel,"Pan Right","Pan Right",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_PanRight.keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Pan Right","Pan Right");
+
+    AddKeyInput(&ui.controlsPanel,"Pan Up","Pan Up",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_PanUp.keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Pan Up","Pan Up");
+
+    AddKeyInput(&ui.controlsPanel,"Pan Down","Pan Down",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_PanDown.keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Pan Down","Pan Down");
+
+    AddKeyInput(&ui.controlsPanel,"Control Group 1","Control Group 1",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[0].keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 1","Control Group 1");
+
+    AddKeyInput(&ui.controlsPanel,"Control Group 2","Control Group 2",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[1].keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 2","Control Group 2");
+
+    AddKeyInput(&ui.controlsPanel,"Control Group 3","Control Group 3",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[2].keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 3","Control Group 3");
+
+    AddKeyInput(&ui.controlsPanel,"Control Group 4","Control Group 4",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[3].keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 4","Control Group 4");
+
+    AddKeyInput(&ui.controlsPanel,"Control Group 5","Control Group 5",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[4].keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 5","Control Group 5");
+
+    AddKeyInput(&ui.controlsPanel,"Control Group 6","Control Group 6",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[5].keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 6","Control Group 6");
+
+    AddKeyInput(&ui.controlsPanel,"Control Group 7","Control Group 7",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[6].keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 7","Control Group 7");
+
+    AddKeyInput(&ui.controlsPanel,"Control Group 8","Control Group 8",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[7].keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 8","Control Group 8");
+
+    AddKeyInput(&ui.controlsPanel,"Control Group 9","Control Group 9",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[8].keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 9","Control Group 9");
+
+    AddKeyInput(&ui.controlsPanel,"Control Group 0","Control Group 0",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[9].keyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 0","Control Group 0");
 
 
     InitButton(&ui.controlsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
@@ -1994,11 +2057,16 @@ void DrawKeyInput(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE mouseState, bo
     ALLEGRO_FONT* font = ui.font;
     Rect button = (Rect){x,y,u->w,u->h};
 
+    if (!k->text)
+    {
+        UpdateBind(u);
+    }
+
     if (k->clicked && isActive)
     {
         al_draw_filled_rectangle(x,y,x+u->w,y+u->h,FRIENDLY);
         al_draw_rectangle(x,y,x+u->w,y+u->h,BG,1);
-        al_draw_text(ui.font,BG,x+u->w/2,y+u->h /2 - al_get_font_line_height(font)/2.0,ALLEGRO_ALIGN_CENTRE,k->text);
+        al_draw_text(ui.tinyFont,BG,x+u->w/2, y + u->h /2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,k->text);
      }
     else
     {
@@ -2011,6 +2079,8 @@ void DrawKeyInput(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE mouseState, bo
         {   
             DrawOutlinedRect_Dithered(&button,FRIENDLY);
         }
+        al_draw_text(ui.tinyFont,FRIENDLY,x+u->w/2,y + u->h / 2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,k->text);
+
     }
     if (PointInRect(mouseState.x,mouseState.y,button) && isActive && !k->clicked)
     {
