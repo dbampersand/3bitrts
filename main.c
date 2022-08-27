@@ -274,11 +274,13 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         PlayReplay(al_get_target_bitmap());
         DrawReplayUI(&replay,mouseState,mouseStateLastFrame);
     }
-    if (IsBindDown(keyState,currSettings.keymap.key_ShowMap))
+    if (gameState == GAMESTATE_INGAME)
     {
-        DrawMinimap(*mouseState);
+        if (IsBindDown(keyState,currSettings.keymap.key_ShowMap))
+        {
+            DrawMinimap(*mouseState);
+        }
     }
-    
 
 
     DrawMenus(mouseState);
