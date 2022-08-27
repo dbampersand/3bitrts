@@ -1564,6 +1564,7 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
     r.y = g->position.y - padding + g->offset.y + (HEALTHBAR_HEIGHT * (1-summPercent));
     ToScreenSpace(&r.x,&r.y);
 
+    al_draw_rectangle((int)r.x-1,(int)r.y-1,(int)r.x+r.w+1,(int)r.y+r.h+1,BG,1);
     al_draw_rectangle((int)r.x,(int)r.y,(int)r.x+r.w,(int)r.y+r.h,col,1);
 
     float percent = (g->health) / (float)g->maxHP;
@@ -1676,17 +1677,6 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     else
         DrawSprite(s,x,y,0.5f,0.5f,g->angle,c, isReversed);
     
-    if (!ObjIsInvincible(g))
-    {
-        DrawRoundedRect(selectRect, c,false);
-        
-        if (currSettings.displayHealthBar == OPTION_HPBAR_ALWAYS)
-            DrawHealthBar(g,c);
-        else if (currSettings.displayHealthBar == OPTION_HPBAR_SELECTED && (IsOwnedByPlayer(g) && IsSelected(g)))
-            DrawHealthBar(g,c);
-        else if (currSettings.displayHealthBar == OPTION_HPBAR_NEVER && (!IsOwnedByPlayer(g)))
-            DrawHealthBar(g,c);
-    }
 
     if ((g->queue[0].commandType == COMMAND_ATTACK || g->queue[0].commandType == COMMAND_CAST) && g->queue[0].target)
     {

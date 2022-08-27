@@ -200,6 +200,43 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
         }
     }
+    //Draw health bars on top of all objects
+    for (int i = 0; i < numObjects; i++)
+    {
+        GameObject* g = &objects[i];
+        if (!IsActive(g))
+            continue;
+        ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
+        if (ObjIsDecoration(g))
+            c = BG;
+
+        if (!ObjIsInvincible(g))
+        {
+            float percent = GetSummonPercent(g);  
+
+            Sprite* s = ObjIsChannelling(g) ? &sprites[g->channelingSpriteIndex] :  &sprites[g->spriteIndex];
+
+            float x = g->position.x + g->offset.x; 
+            float y = g->position.y + g->offset.y;
+            ToScreenSpace(&x,&y);
+
+            Rect selectRect;
+            selectRect.w = al_get_bitmap_width(s->sprite);
+            selectRect.h = (al_get_bitmap_height(s->sprite) * percent);
+            selectRect.x = x;
+            selectRect.y = (y + (al_get_bitmap_height(s->sprite) - selectRect.h));
+
+            DrawRoundedRect(selectRect, c,false);
+            
+            if (currSettings.displayHealthBar == OPTION_HPBAR_ALWAYS)
+                DrawHealthBar(g,c);
+            else if (currSettings.displayHealthBar == OPTION_HPBAR_SELECTED && (IsOwnedByPlayer(g) && IsSelected(g)))
+                DrawHealthBar(g,c);
+            else if (currSettings.displayHealthBar == OPTION_HPBAR_NEVER && (!IsOwnedByPlayer(g)))
+                DrawHealthBar(g,c);
+        }
+
+    }
     if (players[0].selecting)
         DrawMouseSelectBox(GetMouseClamped());
         
