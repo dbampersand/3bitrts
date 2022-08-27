@@ -179,8 +179,12 @@ void DoCommands(GameObject* g)
     {
             if (c->target)
             {
+                c->x = c->target->position.x;
+                c->y = c->target->position.y;
+
                 if (AbilityShouldBeCastOnTarget(c->ability))
                     g->targObj = c->target;
+                
             }
 
             if (AbilityCanBeCast(c->ability,g,c->target,c->x,c->y))
@@ -223,8 +227,10 @@ void DoCommands(GameObject* g)
         }
         else
         {
-            SetTargetPosition(g,c->x,c->y);
-
+            if (c->target)
+                SetTargetPosition(g,g->position.x,g->position.y);
+            else
+                SetTargetPosition(g,c->x,c->y);
         }
     }
     if (c->commandType == COMMAND_ATTACKMOVE)

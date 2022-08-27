@@ -122,7 +122,7 @@ void ClearPathfindingQueue(GameObject* g)
 }
 void SetTargetPosition(GameObject* g, float x, float y)
 {
-    g->targetPosition.x = x;
+     g->targetPosition.x = x;
     g->targetPosition.y = y;
     int  w = GetWidth(g);
     int h = GetHeight(g);
@@ -1442,11 +1442,6 @@ void Move(GameObject* g, float delta)
     PointI path;
     path.x = g->targetPosition.x;
     path.y = g->targetPosition.y;
-    if (g->targObj)
-    {
-        path.x += GetWidth(g->targObj);
-        path.y += GetHeight(g->targObj);
-    }
     
     SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
    // SetMapCollisionRect(path.x,path.y,w,h,false);
@@ -1470,6 +1465,8 @@ void Move(GameObject* g, float delta)
         }
     }
 
+        xtarg = path.x;
+        ytarg = path.y;
 
 
     if (!g->targObj)
