@@ -72,7 +72,7 @@ void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STAT
             }
         }
     }
-    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Pause))
+    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Cancel))
     {
         if (players[0].abilityHeld)
         {

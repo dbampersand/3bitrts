@@ -1454,7 +1454,7 @@ void Move(GameObject* g, float delta)
         
         //if ((_FRAMES+(g-objects))%60==0)
           //  AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
-        if (!IsOwnedByPlayer(g)) {
+        if (!IsOwnedByPlayer(g) && !ObjectCanPush(g)) {
             DoCurrentPathingNode(g);
             path = g->pathNodes[g->currentPathingNode].p;
             drawX = path.x;

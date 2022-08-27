@@ -11,6 +11,7 @@ typedef struct Key
 {
     char* name;
     KEY keyMappedTo;
+    KEY secondKeyMappedTo;
 
 } Key;
 
@@ -28,6 +29,8 @@ typedef struct Keymap
     Key key_Ctrl;
     Key key_ShowMap;
     Key key_Pause;
+    Key key_Cancel;
+
 
     Key key_PanLeft;
     Key key_PanRight;

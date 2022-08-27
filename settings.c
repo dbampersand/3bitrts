@@ -53,15 +53,15 @@ bool IsModifierDown(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
 }
 bool IsBindReleasedThisFrame(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame,Key k)
 {
-    return (!al_key_down(keyStateThisFrame, k.keyMappedTo) && al_key_down(keyStateLastFrame, k.keyMappedTo));
+    return ((!al_key_down(keyStateThisFrame, k.keyMappedTo) && al_key_down(keyStateLastFrame, k.keyMappedTo)) || (!al_key_down(keyStateThisFrame, k.secondKeyMappedTo) && al_key_down(keyStateLastFrame, k.secondKeyMappedTo)));
 }
 bool IsBindDownThisFrame(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame,Key k)
 {
-    return (al_key_down(keyStateThisFrame, k.keyMappedTo) && !al_key_down(keyStateLastFrame, k.keyMappedTo));
+    return (al_key_down(keyStateThisFrame, k.keyMappedTo) && !al_key_down(keyStateLastFrame, k.secondKeyMappedTo) || al_key_down(keyStateThisFrame, k.secondKeyMappedTo) && !al_key_down(keyStateLastFrame, k.secondKeyMappedTo));
 }
 bool IsBindDown(ALLEGRO_KEYBOARD_STATE* keyState, Key k)
 {
-    return (al_key_down(keyState, k.keyMappedTo));
+    return (al_key_down(keyState, k.keyMappedTo) || al_key_down(keyState, k.secondKeyMappedTo));
 }
 void SetDefaultSettings(Settings* setting)
 {
@@ -95,6 +95,7 @@ void SetDefaultSettings(Settings* setting)
     setting->keymap.key_ShowMap = (Key){"Show Map",ALLEGRO_KEY_BACKQUOTE};
 
     setting->keymap.key_Pause = (Key){"Pause",ALLEGRO_KEY_P};
+    setting->keymap.key_Cancel = (Key){"Pause",ALLEGRO_KEY_ESCAPE};
 
     setting->keymap.key_PanLeft = (Key){"Pause",ALLEGRO_KEY_LEFT};
     setting->keymap.key_PanRight = (Key){"Pause",ALLEGRO_KEY_RIGHT};
