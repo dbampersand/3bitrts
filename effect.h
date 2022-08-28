@@ -38,6 +38,7 @@ typedef struct Effect
     char* description;
     bool canStack;
     int stacks;
+    int maxStacks;
     float value;
 
     float numTriggers;

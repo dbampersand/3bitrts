@@ -5,7 +5,7 @@ function setup()
     AddAbility("assets/friendly/rogue/shiv.lua",0)    
     AddAbility("assets/friendly/rogue/dash.lua",1)    
     AddAbility("assets/friendly/rogue/backstab.lua",2)    
-    AddAbility("assets/friendly/rogue/cloak.lua",3)    
+    AddAbility("assets/friendly/rogue/cloak.lua",3) 
     AddAbility("assets/friendly/rogue/summon_cabal.lua",4)    
 
 

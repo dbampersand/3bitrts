@@ -200,10 +200,14 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
                 {
                     if (strcmp(e->name,e2->name)==0)
                     {
-                        e2->value += e->value;
-                        e2->duration = e->duration;
-                        e2->stacks++;
+                        if (e2->stacks < e2->maxStacks)
+                        {
+                            e2->value += e->value;
+                            //e2->duration = e->duration;
+                            e2->stacks++;
+                        }
                         return;
+
                     }
                 }
             }

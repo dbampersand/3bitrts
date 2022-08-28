@@ -577,6 +577,7 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
     lua_gettable(l,tableStackPos);
 
     Effect e;
+    e.maxStacks = 9999;
     bool isField = false;
     e.trigger = GetTableField(l,-1,"trigger", &isField);
     e.effectType = GetTableField(l,-1,"type",&isField);
@@ -615,6 +616,11 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
     e.numTriggers = e.duration * triggersPerSecond;
     if (e.numTriggers == 0) 
         e.numTriggers = 1;
+    int maxStacks = GetTableField(l,-1,"maxStacks",&isField);
+    if (isField)
+    {
+        e.maxStacks = maxStacks;
+    }
 
     e.tickTime = e.duration / e.numTriggers;
     e.value = GetTableField(l,-1,"value",&isField);

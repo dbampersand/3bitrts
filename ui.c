@@ -1874,6 +1874,7 @@ void UpdateKeyInput(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE mouseState
     {
         if (t->clicked)
         {
+            //for unbinding key
             if (!PointInRect(mouseState.x,mouseState.y,r))
             {
                 *t->mappedTo = 0;

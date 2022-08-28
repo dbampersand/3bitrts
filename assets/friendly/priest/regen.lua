@@ -1,0 +1,27 @@
+
+function setup()
+    AbilitySetPortrait("assets/friendly/priest/icon_regen.png");
+    AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
+    SetAbilityRange(120)
+    SetDescription("Regen\n\nA heal over time effect.")
+    SetManaCost(15)
+    SetAbilityCooldown(1);
+    
+end
+function casted(x,y,obj,headingx,headingy)
+    f1 = {};
+    f1["name"] = "Regen"
+    f1["trigger"] = TRIGGER_TIMER
+    f1["type"] = EFFECT_HEAL
+    f1["value"] = 10;
+    f1["duration"] = 10
+
+    ApplyEffect(obj,{f1})
+    return true;
+end
+function onhit(x,y,objhit)
+end
+
+function abilitytick(x, y, durationLeft)
+    
+end
