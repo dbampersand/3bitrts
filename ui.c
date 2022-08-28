@@ -1868,10 +1868,21 @@ void UpdateKeyInput(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE mouseState
     ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
 
     KeyInput* t = (KeyInput*)u->data;
+    Rect r = (Rect){rX,rY,u->w,u->h};
 
     if (mouseState.buttons & 1 && !(mouseStateLastFrame.buttons & 1))
     {
-        Rect r = (Rect){rX,rY,u->w,u->h};
+        if (t->clicked)
+        {
+            if (!PointInRect(mouseState.x,mouseState.y,r))
+            {
+                *t->mappedTo = 0;
+                UpdateBind(u);
+                t->clicked = false;
+                return;
+            }
+        }
+
         if (PointInRect(mouseState.x,mouseState.y,r))
         {
             if (!t->clicked)
@@ -1882,13 +1893,20 @@ void UpdateKeyInput(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE mouseState
         }
         else
         {
+            if (t->clicked)
+            {
+                //UpdateBind(u);
+                //t->clicked = false;
+            }
             t->clicked = false;
             UpdateBind(u);
         }
     }
 
+
     if (t->clicked)
     {
+
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
         {
             if (al_key_down(keyStateThisFrame,i))
