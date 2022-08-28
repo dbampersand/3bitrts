@@ -1528,7 +1528,17 @@ int L_SetHPRegen(lua_State* l)
     return 0;
 
 }
+int L_HurtObj(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    float damage = lua_tonumber(l,2);
 
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    
+    Damage(currGameObjRunning,&objects[index],damage);
+    return 0;
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -2558,5 +2568,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_RotatePoint);
     lua_setglobal(luaState, "RotatePoint");
+
+    lua_pushcfunction(luaState, L_HurtObj);
+    lua_setglobal(luaState, "HurtObj");
 
 }
