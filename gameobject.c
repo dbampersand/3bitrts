@@ -134,8 +134,8 @@ void SetTargetPosition(GameObject* g, float x, float y)
         bool success;
 
 
-        SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
-        SetMapCollisionRect(g->targetPosition.x,g->targetPosition.y,w,h,false);
+        //SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
+        //SetMapCollisionRect(g->targetPosition.x,g->targetPosition.y,w,h,false);
 
         AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
         
@@ -160,6 +160,7 @@ void UpdateObject(GameObject* g, float dt)
             lua_pushnumber(luaState,dt);
             lua_pcall(luaState,1,0,0);
         }
+        return;
     }
     if (g->deathTimerActivated)
     {
@@ -242,7 +243,7 @@ void UpdateObject(GameObject* g, float dt)
                     for (int i = 0; i < MAX_OBJS; i++)
                     {
                         GameObject* g2 = &objects[i];
-                        if (IsActive(g2))
+                        if (IsActive(g2) && !ObjIsDecoration(g2))
                         {
                             if (GetPlayerOwnedBy(g2) != GetPlayerOwnedBy(currGameObjRunning))
                             {
@@ -1449,6 +1450,8 @@ void Move(GameObject* g, float delta)
     path.y = g->targetPosition.y;
     
     SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
+    SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
+
    // SetMapCollisionRect(path.x,path.y,w,h,false);
 
 
@@ -1986,7 +1989,9 @@ void Teleport(GameObject* g, float x, float y)
 
     CheckCollisions(g,true, dx, false);
     CheckCollisions(g,false, dy, false);   
-      SetTargetPosition(g,g->position.x,g->position.y);
+    SetTargetPosition(g,g->position.x,g->position.y);
+    SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
+
 
 
 }
@@ -2021,6 +2026,8 @@ void GetCentre(GameObject* g, float* x, float* y)
 }
 void DoAI(GameObject* g)
 {
+    if (ObjIsDecoration(g))
+        return;
     if (g->threatList.obj)
     {
         Threat* t = GetHighestThreat(&g->threatList);
@@ -2038,14 +2045,15 @@ void DoAI(GameObject* g)
         {
             if (objects[i].properties & OBJ_ACTIVE)
             {
-                if ((g->properties & OBJ_OWNED_BY) != (objects[i].properties & OBJ_OWNED_BY))
+                if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(&objects[i]) && !ObjIsDecoration(&objects[i]))
                 {
                     if (GetDist(g,&objects[i]) < g->aggroRadius)
                     {
                         //also bring in the others
                         for (int j = 0; j < MAX_OBJS; j++)
                         {
-                            if ((g->properties & OBJ_OWNED_BY) == (objects[j].properties & OBJ_OWNED_BY))
+                            GameObject* jg = &objects[j];
+                            if (GetPlayerOwnedBy(g) == GetPlayerOwnedBy(&objects[j]) && !ObjIsDecoration(&objects[j]))
                             {
                                 if (GetDist(&objects[i],&objects[j]) < objects[j].aggroRadius)
                                     AddThreat(&objects[i],&objects[j],0);

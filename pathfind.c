@@ -217,6 +217,8 @@ PathfindNode* GetBestGuess(PointI target)
 }
 void AStar(PointI here, PointI target, bool* success, float w, float h, GameObject* g)
 {
+    SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
+
     bool found;
     
     w /= (float)_GRAIN; h /= (float)_GRAIN;
@@ -231,7 +233,8 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
     target = GetClosestPathablePoint(target,here,&found,w,h);
     if (!found) 
         return;
-    //here = GetClosestPathablePoint(here,target,&found,w,h);
+    here = GetClosestPathablePoint(here,target,&found,w,h);
+    
     //if (!found) return target;
 
     if (PointIntIsEq(here,target))

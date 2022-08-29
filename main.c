@@ -333,7 +333,9 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
 
     DrawTransition(dt);
-    //  DisplayCollision();
+
+    if (al_key_down(keyState,ALLEGRO_KEY_MINUS))
+        DisplayCollision();
     //GameObjDebugDraw();
     //DebugDrawPathfinding();
 
