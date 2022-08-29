@@ -196,7 +196,10 @@ Ability* AddAbility(const char* path)
         numAbilitiesAllocated += BUFFER_PREALLOC_AMT;
         abilities = realloc(abilities,numAbilitiesAllocated*sizeof(Ability));
     }
+    memset(&abilities[numAbilities],0,sizeof(Ability));
+
     abilities[numAbilities].hintRadius = 1;
+
     LoadAbility(path,luaState,&abilities[numAbilities]);
     numAbilities++;
 
