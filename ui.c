@@ -123,7 +123,7 @@ void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STA
     {
         players[0].amoveSelected = false;
         int index = GetAbilityClicked(&mouseState,&mouseStateLastFrame);
-        if (index != -1)
+        if (index != -1 && (currGameObjRunning->numAbilities -1 >= index))
         {
             Ability* a = &currGameObjRunning->abilities[index];
             if (AbilityIsCastImmediately(a))
@@ -2573,6 +2573,9 @@ int GetAbilityClicked(ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouse
         return 2;
     if (PointInRect(mouseState->x,mouseState->y,GetAbilityPortraitRect(3)))
         return 3;
+    if (PointInRect(mouseState->x,mouseState->y,GetAbilityPortraitRect(4)))
+        return 4;
+
 
     return -1;
 

@@ -675,7 +675,7 @@ int L_SetDamage(lua_State* l)
 }
 int L_SetAttackSpeed(lua_State* l)
 {
-    
+    //int index = 
 }
 int L_AddAttackSprite(lua_State* l)
 {

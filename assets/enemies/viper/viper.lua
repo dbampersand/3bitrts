@@ -17,7 +17,7 @@ function update(dt)
         CastAbility(0,0,{target});
     end
 end
-
+    
 function kill()
 
 end
