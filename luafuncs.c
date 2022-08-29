@@ -530,7 +530,7 @@ int L_AbilityIsOnCooldown(lua_State* l)
 {
     GameObject* g = &objects[(int)lua_tonumber(l,1)];
     Ability* a = &g->abilities[(int)lua_tonumber(l,1)];
-    if (a->cdTimer  <= 0)
+    if (AbilityIsOnCooldown(a))
     {
         lua_pushboolean(l,false);
         return 1;
@@ -627,6 +627,12 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
 
 
     return e;
+}
+int L_SetAbilityMaxStacks(lua_State* l)
+{
+    currAbilityRunning->maxStacks = lua_tonumber(l,1);
+    currAbilityRunning->stacks = lua_tonumber(l,1); 
+    return 0;
 }
 int L_GetWidth(lua_State* l)
 {
@@ -1860,7 +1866,7 @@ int L_CastAbility(lua_State* l)
     if (index >= MAX_ABILITIES) 
         index = MAX_ABILITIES-1;
 
-    if (currGameObjRunning->abilities[index].cdTimer > 0.001f)
+    if (!AbilityIsOnCooldown(&currGameObjRunning->abilities[index]))//.cdTimer > 0.001f)
     {
         return 0;
     }
@@ -2577,5 +2583,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_HurtObj);
     lua_setglobal(luaState, "HurtObj");
+    
+    lua_pushcfunction(luaState, L_SetAbilityMaxStacks);
+    lua_setglobal(luaState, "SetAbilityMaxStacks");
 
 }

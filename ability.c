@@ -225,6 +225,8 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         Ability* before = currAbilityRunning;
         a->castType = ABILITY_NONE;
         a->cooldown = 1;
+        a->stacks = 1;
+        a->maxStacks = 1;
         int funcIndex;
         if (CheckFuncExists("setup",a->luabuffer))
         {
@@ -300,7 +302,7 @@ bool AbilityCanBeCastOnGround(Ability* a)
 
 void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, float headingy, GameObject* target)
 {
-    if (a->cdTimer > 0)
+    if (AbilityIsOnCooldown(a))//->cdTimer > 0)
         return;
     if (g)
     {
@@ -381,6 +383,9 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         if (b)
         {
             a->cdTimer = a->cooldown;
+            a->stacks--;
+            if (a->stacks < 0)
+                a->stacks = 0;
         }
         else
         {
@@ -465,7 +470,7 @@ void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled)
 }
 bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, float y)
 {
-    if (a->cdTimer > 0)
+    if (a->stacks <= 0)
         return false;
     if (a->castType & ABILITY_INSTANT || a->castType & ABILITY_TOGGLE)
     {
@@ -515,7 +520,7 @@ void SetManaCost(Ability* a, float mana)
 }
 bool AbilityIsOnCooldown(Ability* a)
 {
-    return a->cdTimer > 0;
+    return a->stacks <= 0;//a->cdTimer > 0;
 }
 bool ObjectHasManaToCast(GameObject* g, Ability* a)
 {

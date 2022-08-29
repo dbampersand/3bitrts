@@ -194,7 +194,12 @@ void UpdateObject(GameObject* g, float dt)
     {
         currGameObjRunning->abilities[i].cdTimer -= dt;
         if (currGameObjRunning->abilities[i].cdTimer < 0)
-            currGameObjRunning->abilities[i].cdTimer = 0;
+        {
+            currGameObjRunning->abilities[i].cdTimer = currGameObjRunning->abilities[i].cooldown;
+            currGameObjRunning->abilities[i].stacks++;
+            if (currGameObjRunning->abilities[i].stacks > currGameObjRunning->abilities[i].maxStacks)
+                 currGameObjRunning->abilities[i].stacks  = currGameObjRunning->abilities[i].maxStacks;
+        }
 
     }
 
