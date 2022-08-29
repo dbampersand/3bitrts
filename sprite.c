@@ -155,7 +155,7 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
         }
     }
 
-    ALLEGRO_BITMAP* sprite = al_load_bitmap(path);
+     ALLEGRO_BITMAP* sprite = al_load_bitmap(path);
 
     if (numSprites+1 > maxSprites)
     {

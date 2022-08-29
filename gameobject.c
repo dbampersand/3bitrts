@@ -662,10 +662,9 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     
     *found = *prefab;
     currGameObjRunning = found; 
-    found->properties |= OBJ_ACTIVE;
 
 
-    memset(found->abilities,0,sizeof(Ability)*4);
+   // memset(found->abilities,0,sizeof(Ability)*4);
     memset(currGameObjRunning,0,sizeof(GameObject));
 
     currGameObjRunning->lua_buffer = prefab->lua_buffer; 
@@ -1892,7 +1891,7 @@ bool Damage(GameObject* source, GameObject* g, float value)
 
     value = DamageShields(g,value);
     g->health -= value;
-    if (value > 0)
+    if (g != source && value > 0)
         g->flashTimer = FLASH_TIMER;
     if (g->health <= 0)
     {

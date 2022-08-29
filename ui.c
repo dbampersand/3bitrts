@@ -562,7 +562,6 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         DrawManaUIElement(selected);
         Ability* heldAbility = players[0].abilityHeld;
         
-        if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
 
         if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0),IsBindDown(keyState,currSettings.keymap.key_Q),*mouseState))
         {
