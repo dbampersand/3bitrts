@@ -61,6 +61,23 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     return false;
 
 }
+int CureNamedEffect(GameObject* g, const char* name, int numStacksToRemove)
+{
+    int numStacksRemoved = 0;
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        Effect* e = &g->effects[i];
+        if (e->name && strcmp(name,e->name)==0)
+        {
+            for (int j = 0; j < numStacksToRemove; j++)
+                if (RemoveEffect(e,g,false))
+                    numStacksRemoved++;
+                else
+                    return numStacksRemoved;
+        }
+    }
+    return numStacksRemoved;
+}
 void CureEffect(GameObject* g, int numEffects, bool removeAllStacks)
 {
     for (int i = 0; i < MAX_EFFECTS; i++)

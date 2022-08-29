@@ -2131,6 +2131,20 @@ int L_RotatePoint(lua_State* l)
 
     return 1;
 }
+int L_CureNamedEffect(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    const char* name = lua_tostring(l,2);
+    int numberToRemove = lua_tonumber(l,3);
+
+    GameObject* g;
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    g = &objects[index];
+    int numCured = CureNamedEffect(g, name, numberToRemove);
+    lua_pushnumber(l,numCured);
+    return 1;
+}
 
 void SetLuaKeyEnums(lua_State* l)
 {
@@ -2586,5 +2600,8 @@ void SetLuaFuncs()
     
     lua_pushcfunction(luaState, L_SetAbilityMaxStacks);
     lua_setglobal(luaState, "SetAbilityMaxStacks");
+
+    lua_pushcfunction(luaState, L_CureNamedEffect);
+    lua_setglobal(luaState, "CureNamedEffect");
 
 }
