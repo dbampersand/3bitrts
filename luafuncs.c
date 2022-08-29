@@ -1866,7 +1866,7 @@ int L_CastAbility(lua_State* l)
     if (index >= MAX_ABILITIES) 
         index = MAX_ABILITIES-1;
 
-    if (!AbilityIsOnCooldown(&currGameObjRunning->abilities[index]))//.cdTimer > 0.001f)
+    if (AbilityIsOnCooldown(&currGameObjRunning->abilities[index]))//.cdTimer > 0.001f)
     {
         return 0;
     }
