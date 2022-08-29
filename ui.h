@@ -233,6 +233,7 @@ int numChatboxes;
 Chatbox* chatboxShowing;
 
 UI ui;
+char* stackDrawBuffer;
 
 #define UI_PADDING 5
 typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE;

@@ -15,7 +15,7 @@ function casted()
     f1["trigger"] = TRIGGER_CONST;
     f1["type"] = EFFECT_SPEED;
     --f1["numTriggers"] = 5
-    f1["value"] = 400;
+    f1["value"] = 50;
     f1["duration"] = 1.5;
     f1["triggersPerSecond"] = 1
     f1["name"] = "Song of Speed"

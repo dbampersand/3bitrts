@@ -6,14 +6,20 @@ function setup()
     AbilitySetPortrait("assets/friendly/warrior/strike.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(40)
-    SetDescription("Strike\n\nStrikes the target, dealing damage and adding high amounts of threat.")
+    SetDescription("Strike\n\nStrikes the target, dealing damage and adding high amounts of threat. Deals more damage when Shield is on cooldown.")
     
 end
 function casted(x,y,obj,headingx,headingy)
+    local damage = 20;
+
+    if (GetAbilityCooldown(GetObjRef(),1) > 0) then
+        damage = 40
+    end
+
     f2 = {};
     f2["trigger"] = TRIGGER_INSTANT
     f2["type"] = EFFECT_HURT
-    f2["value"] = 10;  
+    f2["value"] = damage;  
 
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;

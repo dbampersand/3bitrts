@@ -533,6 +533,25 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
     ALLEGRO_COLOR* col = (ObjectHasManaToCast(selected,a) && !AbilityIsOnCooldown(a)) ? &FRIENDLY : &GROUND;
     DrawSpriteRegion(s,0,0,w,h,r.x,r.y,*col,keydown);
 
+    //Draw stacks counter
+    if (a->maxStacks > 1)
+    {
+        int sizeStackCounter = 8;
+        int xStackCounter = r.x+r.w-sizeStackCounter;
+        int yStackCounter = r.y+r.h-sizeStackCounter;
+
+        al_draw_filled_rectangle(xStackCounter,yStackCounter,xStackCounter+sizeStackCounter,yStackCounter+sizeStackCounter,BG);
+        al_draw_rectangle(xStackCounter,yStackCounter,xStackCounter+sizeStackCounter,yStackCounter+sizeStackCounter,FRIENDLY,1);
+
+        const int maxchars = ceil(log10(pow(2,sizeof(a->stacks)*8)))+2;
+        if (!stackDrawBuffer)
+            stackDrawBuffer = calloc(maxchars,sizeof(char));
+        memset(stackDrawBuffer,0,maxchars*sizeof(char));
+        sprintf(stackDrawBuffer,"%i",a->stacks);
+        al_draw_text(ui.tinyFont, FRIENDLY, xStackCounter+sizeStackCounter/2, yStackCounter+sizeStackCounter/2-al_get_font_line_height(ui.tinyFont)/4, ALLEGRO_ALIGN_CENTRE, stackDrawBuffer);
+
+    }
+
     if (PointInRect(mouseState.x,mouseState.y,r))
     {
         return true;

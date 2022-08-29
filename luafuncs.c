@@ -673,6 +673,10 @@ int L_SetDamage(lua_State* l)
     currGameObjRunning->baseDamage = damage + GetAugmentDamageBonus(damage,currEncounterRunning->augment);
     return 0;
 }
+int L_SetAttackSpeed(lua_State* l)
+{
+    
+}
 int L_AddAttackSprite(lua_State* l)
 {
     const char* _path = lua_tostring(l,1);
@@ -894,6 +898,26 @@ int L_SetAbilityCooldownTimer(lua_State* l)
     if (a->cdTimer > a->cooldown)
         a->cdTimer = a->cooldown;
     return 0;
+}
+int L_GetAbilityCooldownTimer(lua_State* l)
+{
+    int gameObjIndex = lua_tonumber(l,1);
+    int abilityObjIndex = lua_tonumber(l,2);
+
+    GameObject* g = &objects[gameObjIndex];
+    Ability* a = &g->abilities[abilityObjIndex];
+    lua_pushnumber(l,a->cdTimer);
+    return 1;
+}
+int L_GetAbilityCooldown(lua_State* l)
+{
+    int gameObjIndex = lua_tonumber(l,1);
+    int abilityObjIndex = lua_tonumber(l,2);
+
+    GameObject* g = &objects[gameObjIndex];
+    Ability* a = &g->abilities[abilityObjIndex];
+    lua_pushnumber(l,a->cooldown);
+    return 1;
 }
 
 
@@ -2603,5 +2627,12 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_CureNamedEffect);
     lua_setglobal(luaState, "CureNamedEffect");
+
+
+    lua_pushcfunction(luaState, L_GetAbilityCooldownTimer);
+    lua_setglobal(luaState, "GetAbilityCooldownTimer");
+
+    lua_pushcfunction(luaState, L_GetAbilityCooldown);
+    lua_setglobal(luaState, "GetAbilityCooldown");
 
 }
