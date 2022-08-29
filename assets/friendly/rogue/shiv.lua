@@ -4,7 +4,7 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(50)
     SetDescription("Shiv\n\nDamages and poisons the target.")
-    SetCooldown(1)
+    SetCooldown(10)
 end
 function casted(x,y,obj,headingx,headingy)
     f1 = {};
@@ -19,7 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     f2["type"] = EFFECT_HURT
     f2["value"] = 5;  
     f2["triggersPerSecond"] = 1;  
-    f2["duration"] = 20;
+    f2["duration"] = 25;
 
 
     ApplyEffect(obj,{f1,f2})

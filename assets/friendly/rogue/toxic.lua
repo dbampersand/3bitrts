@@ -10,13 +10,10 @@ end
 function casted(x,y,obj,headingx,headingy)
 
     local numStacks = CureNamedEffect(obj,"Poison",999);
-    if numStacks > 0 then
-        numStacks = numStacks + 2;
-    end
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT
-    f1["value"] = (numStacks*numStacks) * 25;  
+    f1["value"] = (numStacks*numStacks) * 20;  
     ApplyEffect(obj,{f1});
    return true;
 end

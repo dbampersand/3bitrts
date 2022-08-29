@@ -228,7 +228,7 @@ void DoCommands(GameObject* g)
         else
         {
             if (c->target)
-                SetTargetPosition(g,g->position.x,g->position.y);
+                SetTargetPosition(g,c->target->position.x,c->target->position.y);
             else
                 SetTargetPosition(g,c->x,c->y);
         }

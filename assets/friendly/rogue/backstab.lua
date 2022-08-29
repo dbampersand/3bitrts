@@ -10,7 +10,7 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT
-    f1["value"] = 40;  
+    f1["value"] = 150;  
 
     f2["trigger"] = TRIGGER_CONST
     f2["type"] = EFFECT_SPEED
