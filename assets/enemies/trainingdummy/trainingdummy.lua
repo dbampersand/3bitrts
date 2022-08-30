@@ -10,26 +10,41 @@ function setup()
 end
 
 local timer = 0
+local totalTimeInCombat = 0;
 local timerActivated = false
-local lastTenSeconds = "0.00";
+local dpsStr = "DPS: 0.00";
+local hpLastFrame = maxHP;
+local damageDone = 0
 function update(dt)
+
     if (GetHP() < maxHP) then
-        timerActivated = true;
+        timer = 0;
+        timerActivated = true
+        damageDone = damageDone + maxHP - GetHP();
     end
     if (timerActivated == true) then
         timer = timer + dt;
+        totalTimeInCombat = totalTimeInCombat + dt
     end
 
-    if (timer > 10) then
+    if (timer > 3) then
+
         timerActivated = false;
         timer = 0;
-        lastTenSeconds = ""
-        --lastTenSeconds = lastTenSeconds .. (maxHP - GetHP())
-        lastTenSeconds = string.format("%.2f",(maxHP - GetHP()));
-        SetHP(maxHP);
+        damageDone = 0;
+        totalTimeInCombat = 0;
     end
 
-    ShowString(lastTenSeconds,6,6);
+    hpLastFrame = GetHP();
+    SetHP(maxHP);
+
+    local dps = 0
+    if (totalTimeInCombat > 0) then
+        dps = damageDone / totalTimeInCombat;
+    end
+    dpsStr = string.format("DPS: %.0f",dps);
+
+    ShowString(dpsStr,6,6);
 
     ClearCommandQueue(GetObjRef());
 end

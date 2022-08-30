@@ -10,10 +10,10 @@ function setup()
     SetCooldown(6)
 end
 function casted(x,y,obj,headingx,headingy)
-    local damage = 20;
+    local damage = 60;
 
     if (GetAbilityCooldown(GetObjRef(),1) > 0) then
-        damage = 40
+        damage = 80
     end
 
     f2 = {};
