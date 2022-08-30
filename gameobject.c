@@ -130,15 +130,15 @@ void SetTargetPosition(GameObject* g, float x, float y)
     if (!IsOwnedByPlayer(g))
     {
 
-        PointI targetIndex = (PointI){((g->targetPosition.x) / (float)_GRAIN), ((g->targetPosition.y) / (float)_GRAIN)};
-        PointI currentIndex = (PointI){((g->position.x) / (float)_GRAIN), ((g->position.y) / (float)_GRAIN)};
-        bool success;
+        //PointI targetIndex = (PointI){((g->targetPosition.x) / (float)_GRAIN), ((g->targetPosition.y) / (float)_GRAIN)};
+        //PointI currentIndex = (PointI){((g->position.x) / (float)_GRAIN), ((g->position.y) / (float)_GRAIN)};
+        //bool success;
 
 
         //SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
         //SetMapCollisionRect(g->targetPosition.x,g->targetPosition.y,w,h,false);
-
-        AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
+        g->pathfindNeedsRefresh = true;
+        //AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
         
     }
 
@@ -1415,15 +1415,22 @@ void DoCurrentPathingNode(GameObject* g)
         ClearPathfindingQueue(g);
         return;
     }
-    if (IsNear(g->position.x,g->pathNodes[g->currentPathingNode].p.x, 0.5) && IsNear(g->position.y,g->pathNodes[g->currentPathingNode].p.y, 0.5f))
+    if (IsNear(g->position.x,g->pathNodes[g->currentPathingNode].p.x, 0.5) && IsNear(g->position.y,g->pathNodes[g->currentPathingNode].p.y, 0.5f) || g->pathfindNeedsRefresh)
     {
-        g->currentPathingNode++;
-        if (g->currentPathingNode >= MAX_PATHFINDING_NODES_HELD || ((_FRAMES+(g-objects))%MAX_OBJS) == 0)
-        {
-            PointI targetIndex = (PointI){((g->targetPosition.x) / (float)_GRAIN), ((g->targetPosition.y) / (float)_GRAIN)};
-            PointI currentIndex = (PointI){((g->position.x) / (float)_GRAIN), ((g->position.y) / (float)_GRAIN)};
-            bool success;
+        bool success;
+        PointI targetIndex = (PointI){((g->targetPosition.x) / (float)_GRAIN), ((g->targetPosition.y) / (float)_GRAIN)};
+        PointI currentIndex = (PointI){((g->position.x) / (float)_GRAIN), ((g->position.y) / (float)_GRAIN)};
+
+
+        if (g->pathfindNeedsRefresh)
             AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
+        else   
+        {
+            g->currentPathingNode++;
+            if (g->currentPathingNode >= MAX_PATHFINDING_NODES_HELD || ((_FRAMES+(g-objects))%MAX_OBJS) == 0)
+            {
+                AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
+            }
         }
     }
 }
@@ -1449,7 +1456,6 @@ void Move(GameObject* g, float delta)
     path.x = g->targetPosition.x;
     path.y = g->targetPosition.y;
     
-    SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
     SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
 
    // SetMapCollisionRect(path.x,path.y,w,h,false);

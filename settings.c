@@ -28,6 +28,8 @@ void InitPath()
         while (1)
         {
             chdir("..");
+            //path should be just '/' and so should return a pointer
+            //when the buffer size is capable of holding it
             char* here = getcwd(curr, 2);
             if (here)
                 break;

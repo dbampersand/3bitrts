@@ -145,7 +145,7 @@ typedef struct GameObject
 
     PathfindNode pathNodes[MAX_PATHFINDING_NODES_HELD];
     int currentPathingNode;
-
+    bool pathfindNeedsRefresh;
 } GameObject;
 
 

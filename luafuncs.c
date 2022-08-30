@@ -675,7 +675,13 @@ int L_SetDamage(lua_State* l)
 }
 int L_SetAttackSpeed(lua_State* l)
 {
-    //int index = 
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    GameObject* g = &objects[index];
+    float as = lua_tonumber(l,2);
+    g->attackSpeed = as;
+    return 0;
 }
 int L_AddAttackSprite(lua_State* l)
 {
@@ -2634,5 +2640,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetAbilityCooldown);
     lua_setglobal(luaState, "GetAbilityCooldown");
+
+    lua_pushcfunction(luaState, L_SetAttackSpeed);
+    lua_setglobal(luaState, "SetAttackSpeed");
 
 }
