@@ -46,6 +46,8 @@ void init()
     al_install_mouse();
     al_install_keyboard();
     al_install_audio();
+
+    InitPath();
     
     InitSettings("config.cfg");
 

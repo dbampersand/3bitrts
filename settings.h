@@ -80,3 +80,4 @@ void UpdateBind(UIElement* u);
 bool IsBindReleasedThisFrame(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame,Key k);
 bool IsBindDownThisFrame(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame,Key k);
 bool IsBindDown(ALLEGRO_KEYBOARD_STATE* keyState,Key k);
+void InitPath();
