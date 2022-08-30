@@ -10,6 +10,9 @@
 #include "helperfuncs.h"
 #include "point.h"
 #include "sprite.h"
+#include "ui.h"
+
+#include "allegro5/allegro_font.h"
 
 void InitVideo()
 {
@@ -26,7 +29,13 @@ void InitVideo()
 
     SCREEN = al_create_bitmap(256,256);
     backbuffer = al_get_backbuffer(display);
-    _FRAMES = 0;    
+    _FRAMES = 0;
+    
+    stringsToDraw = calloc(1,sizeof(char*));
+    locationsToDrawString = calloc(1,sizeof(Point));
+    numStringsToDraw = 0;
+
+
 
 }
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)
@@ -370,4 +379,17 @@ void SetDisplaySize()
     
     //al_set_target_bitmap(SCREEN);
 
+}
+void DrawBufferedStrings()
+{
+    for (int i = 0; i < numStringsToDraw; i++)
+    {
+        al_draw_text(ui.font,FRIENDLY,locationsToDrawString[i].x,locationsToDrawString[i].y,ALLEGRO_ALIGN_LEFT,stringsToDraw[i]);
+        free(stringsToDraw[i]);
+    }
+    locationsToDrawString = realloc(locationsToDrawString,1*sizeof(Point));
+    stringsToDraw = realloc(stringsToDraw,1*sizeof(Point));
+
+    stringsToDraw[0] = NULL;
+    numStringsToDraw = 0;
 }

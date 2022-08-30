@@ -7,7 +7,7 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(40)
     SetDescription("Strike\n\nStrikes the target, dealing damage and adding high amounts of threat. Deals more damage when Shield is on cooldown.")
-    
+    SetCooldown(6)
 end
 function casted(x,y,obj,headingx,headingy)
     local damage = 20;
@@ -32,10 +32,10 @@ function casted(x,y,obj,headingx,headingy)
     f3["trigger"] = TRIGGER_CONST;
     f3["type"] = EFFECT_SPEED;
     f3["value"] = 100;  
-    f3["duration"] = 5; 
+    f3["duration"] = 1; 
 
     ApplyEffect(obj,{f1,f2})
-    ApplyEffect(GetThisObj(),{f3});
+    ApplyEffect(GetObjRef(),{f3});
     return true;
 end
 function onhit(x,y,objhit)

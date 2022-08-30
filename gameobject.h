@@ -4,7 +4,7 @@
 #include "ability.h"
 #include "allegro5/allegro.h"
 #include "effect.h"
-#include "rect.h"
+#include "rect.h"   
 #include "threat.h"
 #include "command.h"
 #include "point.h"

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rect.h"
+#include "point.h"
 #include "allegro5/allegro.h"
 
 #ifndef M_PI
@@ -14,6 +15,13 @@ ALLEGRO_BITMAP* backbuffer;
 ALLEGRO_BITMAP* SCREEN;
 ALLEGRO_BITMAP* background_screen;
 ALLEGRO_DISPLAY* display;
+
+
+char** stringsToDraw;
+Point* locationsToDrawString;
+int numStringsToDraw;
+
+void DrawBufferedStrings();
 
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled);
 void DrawOutlinedRect_Dithered(Rect* r, ALLEGRO_COLOR color);

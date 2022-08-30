@@ -526,7 +526,7 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
         percent = 1;
     int h = al_get_bitmap_height(s->sprite) * percent;
     int w = al_get_bitmap_width(s->sprite);
-    if (!AbilityIsOnCooldown(a))//a->cdTimer > 0)
+    if (AbilityIsOnCooldown(a))//a->cdTimer > 0)
     {
         keydown = false;
     }

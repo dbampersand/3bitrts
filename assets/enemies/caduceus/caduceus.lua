@@ -16,6 +16,7 @@ function update(dt)
 
         CastAbility(1,0,{{x=cx,y=cy}});
         CastAbility(0,0,{{x=cx,y=cy}});
+        
     end
 
 

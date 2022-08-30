@@ -20,6 +20,7 @@
 #include "player.h"
 #include "shield.h"
 #include "settings.h"
+#include "video.h"
 
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);
@@ -1582,6 +1583,18 @@ int L_HurtObj(lua_State* l)
     Damage(currGameObjRunning,&objects[index],damage);
     return 0;
 }
+int L_ShowString(lua_State* l)
+{
+    numStringsToDraw++;
+    stringsToDraw = realloc(stringsToDraw,numStringsToDraw * sizeof(char*));
+    locationsToDrawString = realloc(locationsToDrawString,numStringsToDraw * sizeof(Point));
+
+    const char* str = lua_tostring(l,1);
+    stringsToDraw[numStringsToDraw-1] = calloc(strlen(str)+1,sizeof(char));
+    strcpy(stringsToDraw[numStringsToDraw-1],str);
+    locationsToDrawString[numStringsToDraw-1] = (Point){lua_tonumber(l,2),lua_tonumber(l,3)};
+    return 0;
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -2644,5 +2657,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetAttackSpeed);
     lua_setglobal(luaState, "SetAttackSpeed");
+
+    lua_pushcfunction(luaState, L_ShowString);
+    lua_setglobal(luaState, "ShowString");
 
 }

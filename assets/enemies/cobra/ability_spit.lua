@@ -19,7 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 10;  
     f1["duration"] = 10
     f1["triggersPerSecond"] = 1
-
+    f1["canStack"]= true;
     center = GetCentre(GetObjRef());
     centertarget = GetCentre(obj);
     objTargetting = obj;

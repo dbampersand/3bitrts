@@ -161,7 +161,6 @@ void UpdateObject(GameObject* g, float dt)
             lua_pushnumber(luaState,dt);
             lua_pcall(luaState,1,0,0);
         }
-        return;
     }
     if (g->deathTimerActivated)
     {
