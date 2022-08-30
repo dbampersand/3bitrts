@@ -11,6 +11,7 @@
 #include "pathfind.h"
 
 #define MAX_PATHFINDING_NODES_HELD 20
+#define MINIMUM_RANGE 5
 
 typedef enum GAMEOBJ_PROPERTIES
 {

@@ -679,7 +679,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     currGameObjRunning->health = 100;
     currGameObjRunning->maxHP = 100;
 
-    currGameObjRunning->range = 1;
+    currGameObjRunning->range = MINIMUM_RANGE;
     currGameObjRunning->attackSpeed = 1;
 
     currGameObjRunning->mana = 50;

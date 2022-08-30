@@ -62,8 +62,14 @@ bool PointIsFree(int x, int y)
 }
 void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
 {
-    x+=_GRAIN*1.5f; y+=_GRAIN*1.5f;
-    w-=_GRAIN*2; h-=_GRAIN*2;
+    //x+=_GRAIN*1.5f; y+=_GRAIN*1.5f;
+   // w-=_GRAIN*2; h-=_GRAIN*2;
+
+    x-=1;
+    //y-=_GRAIN;
+    w+=_GRAIN;
+    h+=_GRAIN;
+
 
     int indexLeft = GetIndex(GetMapHeight()/_GRAIN, floor((x) / (float)_GRAIN), floor((y) / (float)_GRAIN));
     int indexRight = GetIndex(GetMapHeight()/_GRAIN, ceil((x+w) / (float)_GRAIN), ceil((y+h) / (float)_GRAIN));

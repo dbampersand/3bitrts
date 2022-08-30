@@ -119,6 +119,7 @@ int L_AddEncounterAbility(lua_State* l)
 int L_SetRange(lua_State* l)
 {
     currGameObjRunning->range = lua_tonumber(l,1);
+    currGameObjRunning->range = _MAX(currGameObjRunning->range,MINIMUM_RANGE);
     return 0;
 }
 int L_SetDescription(lua_State* l)

@@ -4,6 +4,7 @@ function setup()
     SetDamage(20);
     SetMaxHP(150,true)
     SetSpeed(80)
+    SetRange(5);
 
     AddAbility("assets/enemies/viper/ability_bite.lua",0);
 
@@ -17,7 +18,7 @@ function update(dt)
         CastAbility(0,0,{target});
     end
 end
-    
+
 function kill()
 
 end
