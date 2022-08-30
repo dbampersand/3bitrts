@@ -1,3 +1,5 @@
+
+local damage = 40
 function setup()
     AbilitySetCastType(Bor(ABILITY_POINT,ABILITY_TARGET_ENEMY)); 
     AbilitySetPortrait("assets/friendly/warrior/icon_charge.png");
@@ -5,7 +7,7 @@ function setup()
 
     SetAbilityRange(60)
     SetCooldown(20);
-    SetDescription("Charge\n\nCharges the target, dealing 20 damage.")
+    SetDescription("Charge\n\nCharges the target, dealing " .. damage  .. "damage to targets around you.")
 
 end
 
@@ -18,7 +20,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
     --f1["numTriggers"] = 5
-    f1["value"] = 20;  
+    f1["value"] = damage;  
     --f1["duration"] = 10;
     
     f2 = {};

@@ -13,7 +13,7 @@ function casted(x,y,obj,headingx,headingy)
     local damage = 60;
 
     if (GetAbilityCooldown(GetObjRef(),1) > 0) then
-        damage = 80
+        damage = 150
     end
 
     f2 = {};

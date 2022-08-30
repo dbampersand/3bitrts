@@ -613,7 +613,7 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
 
     e.canStack = (bool)GetTableField_Bool(l,-1,"canStack",&isField);
     e.overwrites = (bool)GetTableField_Bool(l,-1,"overwrites",&isField);
-    e.stacks = 0;
+    e.stacks = 1;
     e.timer = 0;
     e.numTriggers = e.duration * triggersPerSecond;
     if (e.numTriggers == 0) 

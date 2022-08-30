@@ -381,7 +381,7 @@ void SetDisplaySize()
 
 }
 void DrawBufferedStrings()
-{
+{   
     for (int i = 0; i < numStringsToDraw; i++)
     {
         al_draw_text(ui.font,FRIENDLY,locationsToDrawString[i].x,locationsToDrawString[i].y,ALLEGRO_ALIGN_LEFT,stringsToDraw[i]);

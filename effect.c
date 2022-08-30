@@ -9,7 +9,8 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
 {
     if (!target)
         return false;
-     float value = e->value;
+    
+    float value = e->value * e->stacks;
     if (!IsOwnedByPlayer(from))
     {
         if (currEncounterRunning)
@@ -219,10 +220,13 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
                     {
                         if (e2->stacks < e2->maxStacks)
                         {
-                            e2->value += e->value;
-                            //e2->duration = e->duration;
+                            //e2->value += e->value;
                             e2->stacks++;
                         }
+                        e2->duration = e->duration;
+                        e2->tickTime = e->tickTime;
+                        e2->numTriggers = e->numTriggers;
+                        e2->value = e->value;
                         return;
 
                     }

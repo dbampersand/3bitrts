@@ -4,14 +4,15 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(10)
     SetDescription("Backstab\n\nHits the target for major damage and causes a slow effect.")
-    SetCooldown(30);
+    SetCooldown(15);
 end
 function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT
-    f1["value"] = 150;  
+    f1["value"] = 120;  
 
+    f2 = {};
     f2["trigger"] = TRIGGER_CONST
     f2["type"] = EFFECT_SPEED
     f2["value"] = -25;
