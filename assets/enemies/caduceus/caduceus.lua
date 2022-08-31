@@ -1,7 +1,7 @@
 function setup()
     SetSprite("assets/enemies/caduceus/caduceus.png");
     SetDamage(0);
-    SetMaxHP(200,true)
+    SetMaxHP(600,true)
     SetSpeed(0)
 
     AddAbility("assets/enemies/caduceus/ability_summon.lua",0);
@@ -16,7 +16,7 @@ function update(dt)
 
         CastAbility(1,0,{{x=cx,y=cy}});
         CastAbility(0,0,{{x=cx,y=cy}});
-        
+
     end
 
 

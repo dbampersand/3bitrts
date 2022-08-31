@@ -1,33 +1,45 @@
 function setup()
     AbilitySetPortrait("assets/friendly/chromamancer/icon_iridesce.png");
-    AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
-    SetDescription("Iridesce\n\nShields target and heals over time.")
+    AbilitySetCastType(ABILITY_TARGET_ALL);
+    SetDescription("Iridesce\n\nShields target and heals over time. When used on enemies, causes a damage over time effect.")
     SetCooldown(0.5);
     SetManaCost(20)
 end
 
 function casted(x,y,obj,headingx,headingy)
 
-    --SetObjPosition(GetObjRef(),xPos,yPos);
-    --SetObjTargetPosition(GetObjRef(),xPos,yPos);
-    --CreateProjectile(GetMouseX(),GetMouseY(),"",ATTACK_PROJECTILE_POINT,25,10,true,{})
+    local thisObjSide = GetObjFriendliness(GetObjRef());
+    local targetSide = GetObjFriendliness(obj);
+
     f1 = {};
-    f1["trigger"] = TRIGGER_INSTANT;
-    f1["type"] = EFFECT_SHIELD;
-    f1["value"] = 200;  
-    f1["duration"] = 10;
+    f2 = {};
+    --if this is a friendly unit
+    if (thisObjSide == targetSide) then
+        f1["trigger"] = TRIGGER_INSTANT;
+        f1["type"] = EFFECT_SHIELD;
+        f1["value"] = 200;  
+        f1["duration"] = 10;
+    
+        f2["trigger"] = TRIGGER_TIMER;
+        f2["type"] = EFFECT_HEAL;   
+        f2["value"] = 20;  
+        f2["duration"] = 10;
+        f2["triggersPerSecond"] = 1;
+        f2["name"] = "Iridesce";
+        f2["description"] = "Every second, adds 20 shield to the target."
+        ApplyEffect(obj,{f1,f2});
 
-    f2 = {};    
-    f2["trigger"] = TRIGGER_TIMER;
-    f2["type"] = EFFECT_HEAL;   
-    f2["value"] = 20;  
-    f2["duration"] = 10;
-    f2["triggersPerSecond"] = 1;
-    f2["name"] = "Iridesce";
-    f2["description"] = "Every second, adds 20 shield to the target."
+    else 
+        f1["trigger"] = TRIGGER_TIMER;
+        f1["type"] = EFFECT_HURT;   
+        f1["value"] = 15;  
+        f1["duration"] = 10;
+        f1["triggersPerSecond"] = 1;
+        f1["name"] = "Iridesce";
+        f1["description"] = "Every second, 20 damage applied to the target."
+        ApplyEffect(obj,{f1});
+    end
 
-
-    ApplyEffect(obj,{f1,f2});
 
     return true;
 end

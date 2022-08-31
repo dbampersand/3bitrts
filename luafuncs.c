@@ -1519,6 +1519,15 @@ int L_GetObjectName(lua_State* l)
     lua_pushstring(l,"");
     return 1;
 }
+int L_GetObjFriendliness(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    
+    lua_pushnumber(l,GetPlayerOwnedBy(&objects[index]));
+    return 1;
+}
 int L_SetChannelingSprite(lua_State* l)
 {
     currGameObjRunning->channelingSpriteIndex = LoadSprite(lua_tostring(l,-1),true);
@@ -1769,7 +1778,9 @@ void SetGlobals(lua_State* l)
     lua_setglobal(l,"TYPE_RANGEDDPS");
     lua_pushinteger(l,TYPE_UTILITY);
     lua_setglobal(l,"TYPE_UTILITY");
-
+    
+    lua_pushinteger(l,TYPE_DECORATION);
+    lua_setglobal(l,"TYPE_DECORATION");
     lua_pushinteger(l,TYPE_ENEMY);
     lua_setglobal(l,"TYPE_ENEMY");
     lua_pushinteger(l,TYPE_FRIENDLY);
@@ -2660,5 +2671,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_ShowString);
     lua_setglobal(luaState, "ShowString");
+
+    lua_pushcfunction(luaState, L_GetObjFriendliness);
+    lua_setglobal(luaState, "GetObjFriendliness");
 
 }

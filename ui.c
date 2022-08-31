@@ -551,6 +551,31 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
         al_draw_text(ui.tinyFont, FRIENDLY, xStackCounter+sizeStackCounter/2, yStackCounter+sizeStackCounter/2-al_get_font_line_height(ui.tinyFont)/4, ALLEGRO_ALIGN_CENTRE, stackDrawBuffer);
 
     }
+    //Draw key to press for the ability
+    const char* key = 0; 
+    if (index == 0)
+        key = al_keycode_to_name(currSettings.keymap.key_Q.keyMappedTo);
+    if (index == 1)
+        key = al_keycode_to_name(currSettings.keymap.key_W.keyMappedTo);
+    if (index == 2)
+        key = al_keycode_to_name(currSettings.keymap.key_E.keyMappedTo);
+    if (index == 3)
+        key = al_keycode_to_name(currSettings.keymap.key_R.keyMappedTo);
+    if (index == 4)
+        key = al_keycode_to_name(currSettings.keymap.key_F.keyMappedTo);
+
+
+    if (key)
+    {
+        int keyW = al_get_text_width(ui.tinyFont,key)+4;
+        int keyH = al_get_font_line_height(ui.tinyFont)+4;
+
+        al_draw_filled_rectangle(r.x,r.y,r.x+keyW,r.y+keyH,BG);
+        al_draw_rectangle(r.x,r.y,r.x+keyW,r.y+keyH,FRIENDLY,1);
+
+        al_draw_text(ui.tinyFont, FRIENDLY, r.x+keyW/2,r.y+keyH/2-1, ALLEGRO_ALIGN_CENTRE, key);
+
+    }
 
     if (PointInRect(mouseState.x,mouseState.y,r))
     {

@@ -9,7 +9,7 @@ function setup()
 
     SetAbilityRange(60)
     SetCooldown(30);
-    SetDescription("Chromophore\n\nHeals and provides a shield to those in its area.")
+    SetDescription("Chromophore\n\nHeals and provides a shield to those in its area. Autoattack damage is increased while in effect.")
 end
 
 local aoe = -1;
@@ -29,7 +29,14 @@ function casted(x,y,obj,headingx,headingy)
     f2["type"] = EFFECT_HEAL;
     f2["value"] = 10;  
 
-    local atk = CreateAOE(x,y,"", radius, 1, 4, false, ATTACK_HITS_FRIENDLIES, COLOR_HEAL, DITHER_HORIZONTAL_QUARTER, false, -1, {f1,f2})
+
+    f3 = {};
+    f3["trigger"] = TRIGGER_CONST;
+    f3["type"] = EFFECT_DAMAGE;
+    f3["duration"] = 1
+    f3["value"] = 15;  
+
+    local atk = CreateAOE(x,y,"", radius, 1, 4, false, ATTACK_HITS_FRIENDLIES, COLOR_HEAL, DITHER_HORIZONTAL_QUARTER, false, -1, {f1,f2,f3})
     SetAttackCircle(atk,true);
     
     return true; 

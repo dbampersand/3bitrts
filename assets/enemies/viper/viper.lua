@@ -2,7 +2,7 @@ function setup()
     SetSprite("assets/enemies/viper/viper.png");
 
     SetDamage(20);
-    SetMaxHP(150,true)
+    SetMaxHP(350,true)
     SetSpeed(80)
     SetRange(5);
 

@@ -2,7 +2,7 @@
     SetSprite("assets/enemies/viper/viper.png");
 
     SetDamage(20);
-    SetMaxHP(200,true)
+    SetMaxHP(400,true)
     SetSpeed(80)
 
     AddAbility("assets/enemies/cobra/ability_spit.lua",0);

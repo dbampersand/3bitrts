@@ -4,7 +4,7 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(50)
     SetDescription("Shiv\n\nDamages and poisons the target.")
-    SetCooldown(1)
+    SetCooldown(10)
 end
 function casted(x,y,obj,headingx,headingy)
     f1 = {};

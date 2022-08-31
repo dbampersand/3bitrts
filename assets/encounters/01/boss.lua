@@ -1,4 +1,4 @@
-local maxHP = 1000
+local maxHP = 4000
 
 local bite = 0
 local fire = 0
@@ -85,7 +85,7 @@ function update(dt)
         CastAbility(summonAdd,0.1);
         makeChoice = 1;
         if (enraged == false) then
-            SetDamage(30);
+            SetDamage(60);
             SetSpeed(30)
 
         end
