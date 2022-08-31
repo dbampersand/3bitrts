@@ -10,7 +10,44 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "allegro5/allegro_primitives.h"
+#include "allegro5/allegro.h"
+#include "rect.h"
+void InitAugments()
+{
+    for (int i = 0; i < AUGMENT_ALL; i++)
+    {
+        AllAugments[i].augment = i;
+        
+        if (i > AUGMENT_NULL && i < AUGMENT_NEUTRAL_DIVIDER)
+        {
+            AllAugments[i].friendliness = AUGMENT_BAD;
+        }
+        if (i > AUGMENT_NEUTRAL_DIVIDER && i < AUGMENT_GOOD_DIVIDER)
+        {
+            AllAugments[i].friendliness = AUGMENT_NEUTRAL;
+        }
+        if (i > AUGMENT_GOOD_DIVIDER && i < AUGMENT_ALL)
+        {
+            AllAugments[i].friendliness = AUGMENT_GOOD;
+        }
+        AllAugments[i].timer = 0;
+        AllAugments[i].portrait_sprite_index = 0;
+    }
 
+    AllAugments[AUGMENT_BAD_EFFECT_TIME].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
+    AllAugments[AUGMENT_BAD_RANDOMDMGPOOLS].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
+    AllAugments[AUGMENT_BAD_DEATHINCDMG].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
+    AllAugments[AUGMENT_BAD_MOVESPEED].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
+    AllAugments[AUGMENT_BAD_ENEMY_EXPLODES].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
+    AllAugments[AUGMENT_NEUTRAL_TOTALHEAL].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
+    AllAugments[AUGMENT_NEUTRAL_TOTALDAMAGE].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
+    AllAugments[AUGMENT_GOOD_HEALS].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
+    AllAugments[AUGMENT_GOOD_DAMAGE].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
+    AllAugments[AUGMENT_GOOD_MOVESPEED].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
+    AllAugments[AUGMENT_GOOD_SHIELD].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
+
+}
 float GetAugmentDamageBonus(int damage, int augmentLevel)
 {
     return damage*(augmentLevel/10.0f);
@@ -138,9 +175,10 @@ Augment GetRandomAugment(AUGMENT_BUFF_TYPE augType, Encounter* e)
     //our augment is between 0-maxIndex
     AUGMENT_TYPES selected = allAugs[(rand() % ((maxIndex)))];
 
-    Augment a;
-    a.augment = selected;
-    a.friendliness = augType;
+    Augment a = AllAugments[selected];
+    //a.augment = selected;
+    //a.friendliness = augType;
+
 
     free(allAugs);
 
@@ -375,4 +413,31 @@ void Bad_EnemyExplodes(GameObject* g, int augmentLevel)
     e.spriteIndex_Portrait = 0;
 
     CreateAoE(x,y, NULL, 10, 3, 1,false, ATTACK_HITS_FRIENDLIES, ALColorToCol(ENEMY), DITHER_VERTICAL_EIGTH, 1, &e, NULL, NULL);
+}
+ALLEGRO_COLOR GetAugmentColor(Augment* a)
+{
+    if (a->friendliness == AUGMENT_GOOD)
+        return FRIENDLY;
+
+    if (a->friendliness == AUGMENT_BAD)
+        return ENEMY;
+
+    if (a->friendliness == AUGMENT_NEUTRAL)
+        return GROUND;
+    return BG;
+}
+bool DrawAugmentPortrait(Augment* a, int x, int y, ALLEGRO_MOUSE_STATE* mouseState)
+{
+    int w = 20; int h = 20;
+    ALLEGRO_COLOR col = GetAugmentColor(a);
+
+
+    Rect r = (Rect){x,y,w,h};
+    bool mousedOver = PointInRect(mouseState->x,mouseState->y,r);
+    DrawSprite(&sprites[a->portrait_sprite_index],x,y,0,0,0,col,mousedOver);
+    if (!mousedOver)
+        al_draw_rectangle(x,y,x+w,y+h,col,1);
+    return mousedOver;
+
+    
 }

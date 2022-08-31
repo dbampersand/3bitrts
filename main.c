@@ -50,7 +50,7 @@ void init()
     InitPath();
     
     InitSettings("config.cfg");
-
+    InitAugments();
     InitGameState();
     InitSound();
     InitColors();

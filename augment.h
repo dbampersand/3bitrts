@@ -42,13 +42,16 @@ typedef struct Augment
     AUGMENT_TYPES augment;
     AUGMENT_BUFF_TYPE friendliness;
     float timer;
+    int portrait_sprite_index;
 }Augment;
 
 typedef struct Effect Effect;
 typedef struct Encounter Encounter; 
 typedef struct GameObject GameObject;
 typedef struct ALLEGRO_COLOR ALLEGRO_COLOR;
+typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE;
 
+Augment AllAugments[AUGMENT_ALL];
 
 int GetNumBadAugments(int augmentLevel);
 int GetNumGoodAugments(int augmentLevel);
@@ -83,3 +86,5 @@ float GetAugmentMultiplier(int augmentLevel);
 
 
 ALLEGRO_COLOR* GetAugmentDescriptionColor(Augment* a);
+void InitAugments();
+bool DrawAugmentPortrait(Augment* a, int x, int y, ALLEGRO_MOUSE_STATE* mouseState);

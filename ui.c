@@ -765,21 +765,25 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
 
     int row = 52;
     int column = 16;
+    char* augmentDescriptionToDraw = NULL;
     for (int i = 0; i < MAX_AUGMENTS; i++)
     {
         Augment* a = &currEncounterRunning->augments[i];
         char* description = GetAugmentDescription(a->augment);
         ALLEGRO_COLOR* color = GetAugmentDescriptionColor(a);
 
-        al_draw_text(ui.tinyFont,*color,column+offsetX,row,0,description);
-
-        column += al_get_text_width(ui.tinyFont,description)+5;
+        if (DrawAugmentPortrait(a,column+offsetX,row, mouseState))
+            augmentDescriptionToDraw = description;
+        //al_draw_text(ui.tinyFont,*color,column+offsetX,row,0,description);
+        column += 24;
+        //column += al_get_text_width(ui.tinyFont,description)+5;
         if (i+1 == MAX_AUGMENTS/2)
         {
-            row += al_get_font_line_height(ui.tinyFont)+2;
-            column = 16;
+          //  row += al_get_font_line_height(ui.tinyFont)+2;
+            //column = 16;
         }
     }
+    
 
 
     free(dmgString);
@@ -833,6 +837,8 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     {
         descriptionToDraw = e->description;
     }
+    if (augmentDescriptionToDraw)
+        descriptionToDraw = augmentDescriptionToDraw;
     if (descriptionToDraw)
     {
         DrawDescriptionBox(descriptionToDraw,2,ui.font,ui.boldFont,16+offsetX,170,224,41,ENEMY,true);
