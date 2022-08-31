@@ -322,7 +322,24 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     }
 
     DrawBufferedStrings();
+    if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS)
+    {
+        UpdateButton(ui.menuButton.x,ui.menuButton.y,&ui.menuButton,*mouseState,*mouseStateLastFrame);
+        DrawUIElement(&ui.menuButton,ui.menuButton.x,ui.menuButton.y,mouseState,BG);
 
+        if (GetButtonIsClicked(&ui.menuButton))
+        {
+            if (ui.currentPanel)
+            {
+                ChangeUIPanel(NULL);
+                WriteSettingsFile("config.cfg");
+            }
+            else
+            {
+                ChangeUIPanel(&ui.pauseMenuPanel);
+            }
+        }
+    }
     DrawMenus(mouseState);
     DrawWidgets(gameState, DRAWORDER_AFTERUI);
     DrawMouse(mouseState, mousedOver);

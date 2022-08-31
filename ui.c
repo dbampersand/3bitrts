@@ -1563,6 +1563,11 @@ void InitEndScreen()
     InitButton(&ui.endScreen_SaveReplay,"Save Replay","Save Replay",172,224,72,16,0);
 
 }
+void InitGameUI()
+{
+    InitButton(&ui.menuButton,"Menu","Menu",213,4,40,11,0);
+
+}
 void InitControlsPanel()
 {
     ui.controlsPanel = CreatePanel(48,48,180,160,15,true);
@@ -1711,7 +1716,7 @@ void InitUI()
     TabGroup(4,&ui.videoOptionsPanel,&ui.audioOptionsPanel,&ui.accessibilityOptionsPanel,&ui.controlsPanel);
 
     InitEndScreen();
-
+    InitGameUI();
 
     ui.animatePanel = UI_ANIMATE_STATIC;
     ui.panelShownPercent = 0;
