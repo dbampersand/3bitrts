@@ -667,7 +667,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                 if (selected->abilities[4].description)
                 {
                     int h = GetDescriptionBoxH(selected->abilities[4].description,100,ui.font,UI_PADDING);
-                    int x = 160 + ceil(UI_PADDING/2.0f);
+                    int x = 140 + ceil(UI_PADDING/2.0f);
                     int y = 221 - h - 3;
                     DrawDescriptionBox(selected->abilities[4].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
                 }
