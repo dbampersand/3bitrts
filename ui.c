@@ -400,6 +400,9 @@ void DrawHealthUIElement(GameObject* selected)
     int hpW = 9;
     int hpH = 26;
 
+    if (!selected->usesMana)
+        hpW = 24;
+
     int startY = startHPY + (hpH - (hpH*percentHP));
     int endY = (startHPY + hpH);
     al_draw_filled_rectangle(startHPX, startY, startHPX+hpW,endY, FRIENDLY);
@@ -407,6 +410,8 @@ void DrawHealthUIElement(GameObject* selected)
 
 void DrawManaUIElement(GameObject* selected)
 {
+    if (!selected->usesMana) 
+        return;
     float percentMana = selected->mana / selected->maxMana;
     int startManaY = UI_START_Y+1 + 6;
     int startManaX = 18;
@@ -588,8 +593,11 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
     al_draw_filled_rectangle(0, UI_START_Y, _SCREEN_SIZE, _SCREEN_SIZE, BG);
 
     GameObject* selected = players[0].selection[players[0].indexSelectedUnit];
-        Sprite* s =  &sprites[ui.panel_sprite_index];
+    Sprite* s =  &sprites[ui.panel_sprite_index];
 
+    Sprite* health = &sprites[ui.health_element_sprite_index];
+    if (selected)
+        health = selected->usesMana ? &sprites[ui.health_and_mana_element_sprite_index] : &sprites[ui.health_element_sprite_index];
     if (selected)
     {
         if (selected->numAbilities <= 4)
@@ -599,6 +607,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
     }
     if (!s) return;
     DrawSprite(s,1,UI_START_Y+1,0.5f,0.5f,0,FRIENDLY,false);
+    DrawSprite(health,1,UI_START_Y+1,0.5f,0.5f,0,FRIENDLY,false);
 
     if (selected)
     {
@@ -1732,6 +1741,9 @@ void InitUI()
 
     ui.panel_sprite_index = LoadSprite("assets/ui/ui.png",false);
     ui.panel_5_abilities_sprite_index = LoadSprite("assets/ui/ui_5abilities.png",false);
+    ui.health_element_sprite_index = LoadSprite("assets/ui/health.png",false);
+    ui.health_and_mana_element_sprite_index = LoadSprite("assets/ui/health_and_mana.png",false);
+
 
     ui.panelShownPercent = 1.0f;
 

@@ -26,6 +26,8 @@ function setup()
     IsPlayerChoosable(true);
     SetCategory(TYPE_HEALER);
     SetObjectPush(false);
+    ObjectUsesMana(GetObjRef(),true);
+
 end
 
 function update(dt)

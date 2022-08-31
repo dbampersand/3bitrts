@@ -78,7 +78,8 @@ typedef struct GameObject
     float healthRegen;
 
     int numShields;
-    
+
+    bool usesMana;
     float mana;
     float manaRegen;
     float maxMana;

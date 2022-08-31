@@ -279,6 +279,16 @@ int L_EncounterSetNumUnitsToSelect(lua_State* l)
     currEncounterRunning->numUnitsToSelect = lua_tonumber(l,1);
     return 0;
 }
+int L_ObjectUsesMana(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index > MAX_OBJS)
+        return 0;
+    bool usesMana = lua_toboolean(l,2);
+
+    objects[index].usesMana = usesMana;
+    return 0;
+}
 int L_Print(lua_State* l)
 {
     if (currGameObjRunning)
@@ -2674,5 +2684,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetObjFriendliness);
     lua_setglobal(luaState, "GetObjFriendliness");
+
+    lua_pushcfunction(luaState, L_ObjectUsesMana);
+    lua_setglobal(luaState, "ObjectUsesMana");
 
 }

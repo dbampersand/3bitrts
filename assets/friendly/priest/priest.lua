@@ -23,7 +23,7 @@ function setup()
 
     SetCategory(TYPE_HEALER);
 
-
+    ObjectUsesMana(GetObjRef(),true);
 
 
 
