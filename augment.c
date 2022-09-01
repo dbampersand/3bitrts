@@ -35,17 +35,17 @@ void InitAugments()
         AllAugments[i].portrait_sprite_index = 0;
     }
 
-    AllAugments[AUGMENT_BAD_EFFECT_TIME].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
-    AllAugments[AUGMENT_BAD_RANDOMDMGPOOLS].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
-    AllAugments[AUGMENT_BAD_DEATHINCDMG].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
-    AllAugments[AUGMENT_BAD_MOVESPEED].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
-    AllAugments[AUGMENT_BAD_ENEMY_EXPLODES].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
-    AllAugments[AUGMENT_NEUTRAL_TOTALHEAL].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
-    AllAugments[AUGMENT_NEUTRAL_TOTALDAMAGE].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
-    AllAugments[AUGMENT_GOOD_HEALS].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
-    AllAugments[AUGMENT_GOOD_DAMAGE].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
-    AllAugments[AUGMENT_GOOD_MOVESPEED].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
-    AllAugments[AUGMENT_GOOD_SHIELD].portrait_sprite_index = LoadSprite("assets/ui/augments/AUGMENT_BAD_EFFECT_TIME.png",true);
+    AllAugments[AUGMENT_BAD_EFFECT_TIME].portrait_sprite_index = LoadSprite("assets/ui/augments/bad/AUGMENT_BAD_EFFECT_TIME.png",true);
+    AllAugments[AUGMENT_BAD_RANDOMDMGPOOLS].portrait_sprite_index = LoadSprite("assets/ui/augments/bad/AUGMENT_BAD_RANDOMDMGPOOLS.png",true);
+    AllAugments[AUGMENT_BAD_DEATHINCDMG].portrait_sprite_index = LoadSprite("assets/ui/augments/bad/AUGMENT_BAD_DEATHINCDMG.png",true);
+    AllAugments[AUGMENT_BAD_MOVESPEED].portrait_sprite_index = LoadSprite("assets/ui/augments/bad/AUGMENT_BAD_MOVESPEED.png",true);
+    AllAugments[AUGMENT_BAD_ENEMY_EXPLODES].portrait_sprite_index = LoadSprite("assets/ui/augments/bad/AUGMENT_BAD_ENEMY_EXPLODES.png",true);
+    AllAugments[AUGMENT_NEUTRAL_TOTALHEAL].portrait_sprite_index = LoadSprite("assets/ui/augments/neutral/AUGMENT_NEUTRAL_TOTALHEAL.png",true);
+    AllAugments[AUGMENT_NEUTRAL_TOTALDAMAGE].portrait_sprite_index = LoadSprite("assets/ui/augments/neutral/AUGMENT_NEUTRAL_TOTALDAMAGE.png",true);
+    AllAugments[AUGMENT_GOOD_HEALS].portrait_sprite_index = LoadSprite("assets/ui/augments/good/AUGMENT_GOOD_HEALS.png",true);
+    AllAugments[AUGMENT_GOOD_DAMAGE].portrait_sprite_index = LoadSprite("assets/ui/augments/good/AUGMENT_GOOD_DAMAGE.png",true);
+    AllAugments[AUGMENT_GOOD_MOVESPEED].portrait_sprite_index = LoadSprite("assets/ui/augments/good/AUGMENT_GOOD_MOVESPEED.png",true);
+    AllAugments[AUGMENT_GOOD_SHIELD].portrait_sprite_index = LoadSprite("assets/ui/augments/good/AUGMENT_GOOD_SHIELD.png",true);
 
 }
 float GetAugmentDamageBonus(int damage, int augmentLevel)
