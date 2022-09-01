@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include "ui.h"
 #include "sound.h"
+#include <stdio.h>
 
 #define REPLAY_PREALLOC 39321600
 //10 seconds worth @ 60fps 
@@ -22,6 +23,8 @@ char* replayBuffer;
 int soundPlayedThisFramePosition;
 //num frames before flushing to disk
 #define TEMP_REPLAY_NAME "CURRREP"
+
+
 FILE* tempFile;
 
 

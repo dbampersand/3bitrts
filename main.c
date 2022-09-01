@@ -29,7 +29,6 @@
 #include "loadscreen.h"
 #include "settings.h"
 #include "replay.h"
-#include "fixed.h"
 #include "minimap.h"
 #include "pathfind.h"
 

@@ -6,5 +6,6 @@ replays/*
 *.json
 *.gcda
 *.gcno
+*.dll
 game.dSYM/Contents
 game

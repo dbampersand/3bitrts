@@ -1,6 +1,7 @@
 #include "colors.h"
 #include "command.h"
 #include "gameobject.h"
+#include <stdio.h>
 ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy)
 {
     if (c >= COLOR_ALL)
