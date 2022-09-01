@@ -7,5 +7,6 @@ replays/*
 *.gcda
 *.gcno
 *.dll
+*.exe
 game.dSYM/Contents
 game
