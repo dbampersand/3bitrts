@@ -763,12 +763,21 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
     al_draw_text(ui.tinyFont,FRIENDLY,138+offsetX,40,0,abilityDmg);
     
 
-    int row = 52;
+    int row = 50;
     int column = 16;
+
+    UpdateButton(column+offsetX,row,&e->encounter_RerollAugments,*mouseState,*mouseStateLastFrame);
+    DrawUIElement(&e->encounter_RerollAugments,column+offsetX,row,mouseState,BG);
+    column += 32;
+    if (GetButtonIsClicked(&e->encounter_RerollAugments))
+    {
+        SetEncounterRandAugments(e);
+    }
+
     char* augmentDescriptionToDraw = NULL;
     for (int i = 0; i < MAX_AUGMENTS; i++)
     {
-        Augment* a = &currEncounterRunning->augments[i];
+        Augment* a = &e->augments[i];
         char* description = GetAugmentDescription(a->augment);
         ALLEGRO_COLOR* color = GetAugmentDescriptionColor(a);
 
@@ -783,7 +792,6 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
             //column = 16;
         }
     }
-    
 
 
     free(dmgString);

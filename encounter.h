@@ -52,6 +52,8 @@ typedef struct Encounter
     UIElement encounter_ButtonLeft;
     UIElement encounter_ButtonConfirm;
     UIElement encounter_ButtonRight;
+    UIElement encounter_RerollAugments;
+
 
 } Encounter;
 

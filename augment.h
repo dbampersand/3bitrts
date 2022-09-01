@@ -57,7 +57,7 @@ int GetNumBadAugments(int augmentLevel);
 int GetNumGoodAugments(int augmentLevel);
 
 Augment GetRandomAugment(AUGMENT_BUFF_TYPE augType, Encounter* e);
-void SetEncounterRandAugments();
+void SetEncounterRandAugments(Encounter* e);
 bool HasAugment(Encounter* e, AUGMENT_TYPES augment);
 
 void ProcessAugments(Augment* a, float dt);
