@@ -1,4 +1,4 @@
-local maxHP = 4000
+local maxHP = 2800
 
 local bite = 0
 local fire = 0
@@ -13,6 +13,7 @@ local makeChoice = 3
 local enraged = false
 
 local inCombat = false;
+
 function setup()
     SetSprite("assets/enemies/wyrm_boss/wyrm.png");
     SetChannelingSprite("assets/enemies/wyrm_boss/wyrm_channeling.png");
@@ -22,6 +23,7 @@ function setup()
     firebreath = AddAbility("assets/enemies/wyrm_boss/ability_firebreath.lua",3)    
     summonAdd = AddAbility("assets/enemies/wyrm_boss/ability_summon_adds.lua",4)    
     bomb = AddAbility("assets/enemies/wyrm_boss/ability_bomb.lua",5);    
+    rage = AddAbility("assets/enemies/wyrm_boss/ability_rage.lua",6);    
 
     SetDamage(50);
     SetMaxHP(maxHP,true)
@@ -29,9 +31,23 @@ function setup()
     SetObjectPush(true);
 end
 
+local enrageTransitionTimer = 0
 function update(dt)
-
     decisionTime = decisionTime + dt;
+
+    local f1 = {};
+    f1["trigger"] = TRIGGER_INSTANT;
+    f1["type"] = EFFECT_HURT;
+    f1["value"] = 20;  
+    
+    CastAbility(rage,0.8,{});
+    SetMovePoint(128,106)
+
+    if (enraged == true and enrageTransitionTimer < 10) then
+        enrageTransitionTimer = enrageTransitionTimer + dt;
+        do return end;
+    end
+
     if (decisionTime < makeChoice) then
         do return end
     end
@@ -81,13 +97,15 @@ function update(dt)
 
     end
 
-    if (GetHP() <= maxHP/1.5) then
+    if (GetHP() <= maxHP/1.25) then
         CastAbility(summonAdd,0.1);
+        --Choose spell to cast every second instead of every 3
         makeChoice = 1;
         if (enraged == false) then
             SetDamage(60);
             SetSpeed(30)
-
+            SetSprite("assets/enemies/wyrm_boss/wyrm_enraged.png")
+            
         end
         enraged = true
     end

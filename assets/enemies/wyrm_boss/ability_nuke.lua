@@ -14,7 +14,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["trigger"] = TRIGGER_TIMER;
     f1["type"] = EFFECT_HURT;
     f1["triggersPerSecond"] = 1 
-    f1["value"] = 30;  
+    f1["value"] = 20;  
     f1["duration"] = 4;
 
     CreateAOE(GetX(obj),GetY(obj),"", 30, 6, 6, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, true, obj, {f1})

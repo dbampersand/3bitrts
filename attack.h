@@ -72,4 +72,8 @@ void UpdateAttack(Attack* a, float dt);
 void ApplyAttack(Attack* a, GameObject* target);
 Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float tickrate, float duration, bool shouldCallback, int properties, int color, int dither, int numEffects, Effect* effects, GameObject* target, GameObject* from);
 bool AttackIsSoak(Attack* a);
+bool AttackIsProjectile(Attack* a);
+void AttackCanHitTarget(Attack* a, GameObject* g);
+
+
 int NumUnitsInsideAttack(Attack* a);

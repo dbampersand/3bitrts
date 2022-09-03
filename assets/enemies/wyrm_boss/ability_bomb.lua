@@ -27,7 +27,7 @@ function ontimeout(x,y,obj,dt,target)
         f1["trigger"] = TRIGGER_TIMER;
         f1["type"] = EFFECT_HURT;
         f1["triggersPerSecond"] = 2
-        f1["value"] = 2;  
+        f1["value"] = 1.5;  
         f1["duration"] = 10;
         f1["portrait"] = "assets/enemies/wyrm_boss/ability_bite_effect_portrait.png"
         CreateAOE(x, y, "", radius, 1, 15, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_VERTICAL_QUARTER, false, target, {f1})

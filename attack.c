@@ -365,6 +365,10 @@ bool AttackIsAOE(Attack* a)
 {
     return (a->attackType == ATTACK_AOE);
 }
+bool AttackIsProjectile(Attack* a)
+{
+    return (a->attackType == ATTACK_PROJECTILE_TARGETED || a->attackType == ATTACK_PROJECTILE_POINT || a->attackType == ATTACK_PROJECTILE_ANGLE);
+}
 void UpdateAttack(Attack* a, float dt)
 {
     if (!(a->properties & ATTACK_ACTIVE))
@@ -461,8 +465,11 @@ void UpdateAttack(Attack* a, float dt)
         {
             if (!IsActive(&objects[i]))
                 continue;
-
             int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
+
+            //if (&objects[i] == &objects[abilityOwnedBy] && (AttackIsProjectile(a)))
+              //  continue;
+
 
             if (a->properties & ATTACK_HITS_ENEMIES)
             {

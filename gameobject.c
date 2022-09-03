@@ -214,6 +214,14 @@ void UpdateObject(GameObject* g, float dt)
     ProcessEffects(currGameObjRunning,dt);
     ProcessShields(currGameObjRunning,dt);
 
+
+    if (currGameObjRunning->properties & OBJ_ACTIVE)
+    {
+        lua_rawgeti(luaState,LUA_REGISTRYINDEX,g->luafunc_update);
+        lua_pushnumber(luaState,dt);
+        lua_pcall(luaState,1,0,0);
+    }
+
     if (currGameObjRunning->targObj && currGameObjRunning->queue[0].commandType == COMMAND_ATTACK) 
     {
         GameObject* tempAttack = currGameObjRunning->targObj;
@@ -293,12 +301,6 @@ void UpdateObject(GameObject* g, float dt)
     }
     if (shouldMove)
         Move(currGameObjRunning, dt);
-    if (currGameObjRunning->properties & OBJ_ACTIVE)
-    {
-        lua_rawgeti(luaState,LUA_REGISTRYINDEX,g->luafunc_update);
-        lua_pushnumber(luaState,dt);
-        lua_pcall(luaState,1,0,0);
-    }
 }
 
 void InitObjects()
@@ -1893,7 +1895,8 @@ bool Damage(GameObject* source, GameObject* g, float value)
 
         gameStats.damageDone += value;
     }
-    AddDamageNumber((int)value,g->position.x+(rand()%(int)GetWidth(g)*1.1f),g->position.y+(rand()%(int)GetHeight(g)*1.1f),source);
+    if (source && GetWidth(g) > 0 && GetHeight(g) > 0)
+        AddDamageNumber((int)value,g->position.x+(rand()%(int)GetWidth(g)*1.1f),g->position.y+(rand()%(int)GetHeight(g)*1.1f),source);
 
     value = DamageShields(g,value);
     g->health -= value;
