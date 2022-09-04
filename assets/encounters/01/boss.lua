@@ -1,4 +1,4 @@
-local maxHP = 2800
+local maxHP = 5000
 
 local bite = 0
 local fire = 0
@@ -44,7 +44,7 @@ function update(dt)
     if (enraged == true and enrageTransitionTimer < 10) then
         enrageTransitionTimer = enrageTransitionTimer + dt;
         CastAbility(rage,1.2,{});
-        SetMovePoint(128,106)
+        SetMovePoint(128,106,false)
     
         do return end;
     end
@@ -98,7 +98,7 @@ function update(dt)
 
     end
 
-    if (GetHP() <= maxHP/2  ) then
+    if (GetHP() <= maxHP/2) then
         CastAbility(summonAdd,0.1);
         --Choose spell to cast every second instead of every 3
         makeChoice = 1;

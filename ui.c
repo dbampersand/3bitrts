@@ -2684,8 +2684,8 @@ void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseSt
 
     //Write time taken
     int hours = floor(gameStats.timeTaken/(60.0f*60.0f));
-    int minutes = floor(gameStats.timeTaken/(60.0f));    
-    int seconds = floor(gameStats.timeTaken); 
+    int minutes = floor(gameStats.timeTaken/(60.0f) - hours*60);    
+    int seconds = floor(gameStats.timeTaken - minutes*60); 
     buffer = realloc(buffer,(strlen("Time: ")+log10(pow(2,sizeof(hours)*8+1))*3+4)*sizeof(char));
     sprintf(buffer,"Time: %i:%i:%i",hours,minutes,seconds);
     al_draw_text(ui.font,FRIENDLY,17,173,0,buffer);
