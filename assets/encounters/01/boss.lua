@@ -40,11 +40,12 @@ function update(dt)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 20;  
     
-    CastAbility(rage,0.8,{});
-    SetMovePoint(128,106)
 
     if (enraged == true and enrageTransitionTimer < 10) then
         enrageTransitionTimer = enrageTransitionTimer + dt;
+        CastAbility(rage,1.2,{});
+        SetMovePoint(128,106)
+    
         do return end;
     end
 
@@ -97,7 +98,7 @@ function update(dt)
 
     end
 
-    if (GetHP() <= maxHP/1.25) then
+    if (GetHP() <= maxHP/2  ) then
         CastAbility(summonAdd,0.1);
         --Choose spell to cast every second instead of every 3
         makeChoice = 1;

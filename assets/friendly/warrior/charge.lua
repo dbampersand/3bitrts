@@ -42,7 +42,7 @@ function casted(x,y,obj,headingx,headingy)
     speed["duration"] = 0.1
     ApplyEffect(GetObjRef(),{speed});
 
-    SetMovePoint(GetMouseX(),GetMouseY())
+    SetMovePoint(GetMouseX(),GetMouseY(), true)
     CreateCircularProjectiles(xPos,yPos,"",ATTACK_PROJECTILE_ANGLE,sp,duration,true,ATTACK_HITS_ENEMIES,10,COLOR_DAMAGE,{f1,f2})
 
     --aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,false,-1, {f1})

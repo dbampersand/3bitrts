@@ -994,25 +994,30 @@ int L_SetMovePoint(lua_State* l)
 {
     const float x = lua_tonumber(l,1);
     const float y = lua_tonumber(l,2);
+    bool shouldAttack = lua_toboolean(l,3);
     GameObject* target = GetClicked(x,y);
     ClearCommandQueue(currGameObjRunning);
-    //if (target)
-   // {
-     //   currGameObjRunning->targObj = target;
-       // AttackCommand(currGameObjRunning,target);
 
-    //}
-   // else
-    //{
+    //always pop the 0th element after processing the cast command
+    //so add a null move
+    MoveCommand(currGameObjRunning,0,0);
+    if (target && shouldAttack)
+    {
+        currGameObjRunning->targObj = target;
+        AttackCommand(currGameObjRunning,target);
+        
+    }
+    else
+    {
         int w = al_get_bitmap_width(sprites[currGameObjRunning->spriteIndex].sprite);
         int h = al_get_bitmap_height(sprites[currGameObjRunning->spriteIndex].sprite);
 
         SetTargetPosition(currGameObjRunning,x-w/2,y-h/2);
 
-        currGameObjRunning->targObj = NULL;
+       // currGameObjRunning->targObj = NULL;
         
         MoveCommand(currGameObjRunning,x-w/2,y-w/2);
-    //}
+    }
     return 0;
 }
 int L_SetAttackTarget(lua_State* l)
