@@ -130,14 +130,15 @@ void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE*
         players[0].clickedThisFrame = target;
 
         //Attack/move command with all other objs
-        for (int i = 0; i < MAXUNITSSELECTED; i++)
-        {
-            GameObject* g = players[0].selection[i];
-            if (target)
-                AttackCommand(g,target);
-            else
-                MoveCommand(g,mouseState->x,mouseState->y);
-        }
+        if (GetPlayerOwnedBy(target) == TYPE_ENEMY)
+            for (int i = 0; i < MAXUNITSSELECTED; i++)
+            {
+                GameObject* g = players[0].selection[i];
+                if (target)
+                    AttackCommand(g,target);
+                else
+                    MoveCommand(g,mouseState->x,mouseState->y);
+            }
 
     }
 
