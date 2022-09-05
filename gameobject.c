@@ -896,6 +896,7 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
 void KillObj(GameObject* g, bool trigger)
 {
     if (!g) return;
+    RemoveObjFromAllThreatlists(g);
     SetMapCollisionRect(g->position.x,g->position.y,GetWidth(g),GetHeight(g),false);
     GameObject* before = currGameObjRunning;
     currGameObjRunning = g;

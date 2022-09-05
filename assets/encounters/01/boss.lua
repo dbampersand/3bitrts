@@ -1,4 +1,4 @@
-local maxHP = 5000
+local maxHP = 7000
 
 local bite = 0
 local fire = 0

@@ -44,6 +44,32 @@ void AddThreat(GameObject* source, GameObject* target, int damage)
     }
 }
 
+void RemoveObjFromAllThreatlists(GameObject* g)
+{
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        GameObject* g2 = &objects[i];
+        if (IsActive(g2))
+        {
+            Threat* next = g2->threatList.next;
+            while (1)
+            {
+                if (next)
+                {
+                    if (next->obj == g)
+                    {
+                        next->obj = NULL;
+                        next->threat = 0;
+                        break;
+                    }
+                    next = next->next;
+                }
+                else
+                    break;
+            }      
+        }
+    }
+}
 void DeleteThreatList(GameObject* g)
 {
     int numElements = 0;
@@ -89,10 +115,11 @@ Threat* GetHighestThreat(Threat* threatList)
     Threat* highestThreat = NULL;
     while (1)
     {
-        if (!(next->obj->properties & OBJ_ACTIVE))
+        if (next->obj && !(next->obj->properties & OBJ_ACTIVE))
         {
             next = next->next;
-            if (next == NULL) break;
+            if (next == NULL) 
+                break;
         }
 
         if (next->threat > highest)
