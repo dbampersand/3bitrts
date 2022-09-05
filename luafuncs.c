@@ -45,6 +45,16 @@ static void dumpstack (lua_State* l) {
     }
   }
 }
+int L_SetHPIgnoreAugment(lua_State* l)
+{
+    currGameObjRunning->health = lua_tonumber(l,1);
+    if (currGameObjRunning->health > currGameObjRunning->maxHP)
+    {
+        currGameObjRunning->health = currGameObjRunning->maxHP;
+    } 
+    return 0;
+
+}
 int L_SetHP(lua_State* l)
 {
     currGameObjRunning->health = lua_tonumber(l,1) + GetAugmentHealthBonus(lua_tonumber(l,1),currEncounterRunning->augment);
@@ -2696,5 +2706,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_ObjectUsesMana);
     lua_setglobal(luaState, "ObjectUsesMana");
+
+    lua_pushcfunction(luaState, L_SetHPIgnoreAugment);
+    lua_setglobal(luaState, "SetHPIgnoreAugment");
 
 }
