@@ -18,7 +18,6 @@ function setup()
 
     SetMaxHP(1000,true);
 
-
 end
 
 function update(dt)

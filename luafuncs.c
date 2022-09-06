@@ -1633,6 +1633,13 @@ int L_ShowString(lua_State* l)
     locationsToDrawString[numStringsToDraw-1] = (Point){lua_tonumber(l,2),lua_tonumber(l,3)};
     return 0;
 }
+int L_PlaySound(lua_State* l)
+{
+    const char* path = lua_tostring(l,1);
+    Sound* s = &sounds[LoadSound(path)];
+    PlaySound(s,1);
+    return 0;
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -2709,5 +2716,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetHPIgnoreAugment);
     lua_setglobal(luaState, "SetHPIgnoreAugment");
+
+    lua_pushcfunction(luaState, L_PlaySound);
+    lua_setglobal(luaState, "PlaySound");
 
 }

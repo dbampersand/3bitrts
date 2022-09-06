@@ -6,6 +6,7 @@ function setup()
 end
 
 function casted()
+    PlaySound("assets/friendly/warrior/audio/Ancient_Game_Weapon_Parry_Block_Metal_3.wav");
 
     --SetObjPosition(GetObjRef(),xPos,yPos);
     --SetObjTargetPosition(GetObjRef(),xPos,yPos);
@@ -15,7 +16,8 @@ function casted()
     f1["type"] = EFFECT_SHIELD;
     f1["value"] = 600;  
     f1["duration"] = 10;  
-    ApplyEffect(GetThisObj(),{f1});
+    ApplyEffect(GetObjRef(),{f1});
+
 
     return true;
 end

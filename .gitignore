@@ -8,5 +8,6 @@ replays/*
 *.gcno
 *.dll
 *.exe
+*.wav
 game.dSYM/Contents
 game

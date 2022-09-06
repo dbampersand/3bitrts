@@ -100,7 +100,7 @@ void PlaySound(Sound* s, float relativeVolume)
             soundPlayedThisFramePosition++;
         }
     }
-
+    printf("%s\n",s->path);
     al_play_sample(s->sample, currSettings.masterVolume * relativeVolume, 0, 1.0f, ALLEGRO_PLAYMODE_ONCE, NULL);
 }
 void StopMusic()
