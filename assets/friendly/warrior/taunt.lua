@@ -16,6 +16,8 @@ function casted(x,y,obj,headingx,headingy)
     f1["duration"] = 10;  
     SetAttacking(obj);
     ApplyEffect(obj,{f1});
+    PlaySound("assets/friendly/warrior/audio/taunt.wav",0.5);
+
     return true;
 end
 

@@ -6,7 +6,7 @@ function setup()
 end
 
 function casted()
-    PlaySound("assets/friendly/warrior/audio/Ancient_Game_Weapon_Parry_Block_Metal_3.wav");
+    PlaySound("assets/friendly/warrior/audio/shield.wav",0.5);
 
     --SetObjPosition(GetObjRef(),xPos,yPos);
     --SetObjTargetPosition(GetObjRef(),xPos,yPos);

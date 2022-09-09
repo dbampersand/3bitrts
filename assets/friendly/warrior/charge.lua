@@ -15,6 +15,7 @@ local aoe = -1;
 
 function casted(x,y,obj,headingx,headingy)
 
+    PlaySound("assets/friendly/warrior/audio/charge.wav",0.5);
     
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;

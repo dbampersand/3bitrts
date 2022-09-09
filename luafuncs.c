@@ -1637,7 +1637,7 @@ int L_PlaySound(lua_State* l)
 {
     const char* path = lua_tostring(l,1);
     Sound* s = &sounds[LoadSound(path)];
-    PlaySound(s,1);
+    PlaySound(s,lua_tonumber(l,2));
     return 0;
 }
 void SetGlobals(lua_State* l)

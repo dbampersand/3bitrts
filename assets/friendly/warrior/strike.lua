@@ -36,7 +36,7 @@ function casted(x,y,obj,headingx,headingy)
 
     ApplyEffect(obj,{f1,f2})
     ApplyEffect(GetObjRef(),{f3});
-    PlaySound("assets/friendly/warrior/audio/Ancient_Game_Accept_Quest_Hit_2.wav");
+    PlaySound("assets/friendly/warrior/audio/strike.wav",0.5);
     
     return true;
 end
