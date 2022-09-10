@@ -6,6 +6,8 @@ function setup()
     SetCooldown(30);
 end
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/friendly/rogue/audio/cloak.wav",1.25)
+
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_INVULN

@@ -8,6 +8,7 @@ function setup()
     SetCooldown(0);
 end
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/friendly/rogue/audio/toxic.wav",1.25)
 
     local numStacks = CureNamedEffect(obj,"Poison",999);
     f1 = {};

@@ -6,6 +6,7 @@ function setup()
     SetCooldown(60);
 end
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/friendly/rogue/audio/summon.wav",1.25)
 
     local xpos = GetX(GetObjRef());
     local ypos = GetY(GetObjRef());

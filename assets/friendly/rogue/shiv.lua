@@ -7,6 +7,8 @@ function setup()
     SetCooldown(10)
 end
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/friendly/rogue/audio/shiv.wav",1.25)
+
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT
