@@ -15,6 +15,7 @@ end
 local aoe = -1;
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/friendly/chromamancer/audio/chromophore.wav",1)
 
     
     f1 = {};

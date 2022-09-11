@@ -12,6 +12,8 @@ function setup()
     
 end
 function casted()
+    PlaySound("assets/friendly/bard/audio/song_of_damage.wav",1)
+
     UntoggleOthers();
     f1 = {};
     f1["trigger"] = TRIGGER_CONST;

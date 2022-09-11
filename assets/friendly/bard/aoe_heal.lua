@@ -11,6 +11,8 @@ end
 local aoe = -1;
 local g = 5;
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/friendly/bard/audio/song_of_healing.wav",1)
+
     UntoggleOthers();
 
     f1 = {};

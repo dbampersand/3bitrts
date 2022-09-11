@@ -7,6 +7,8 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/friendly/chromamancer/audio/iridesce.wav",1)
+
 
     local thisObjSide = GetObjFriendliness(GetObjRef());
     local targetSide = GetObjFriendliness(obj);

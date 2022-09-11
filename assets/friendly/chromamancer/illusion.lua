@@ -11,6 +11,8 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/friendly/chromamancer/audio/illusion.wav",1)
+
     copied = CopyObject(obj,GetX(GetObjRef()),GetY(GetObjRef()));
     SetLifetime(copied,5);
     return true; 

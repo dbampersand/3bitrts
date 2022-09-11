@@ -10,6 +10,8 @@ function setup()
     SetDescription("Song of Speed\n\nProvides speed in a radius.")
 end
 function casted()
+    PlaySound("assets/friendly/bard/audio/song_of_speed.wav",1)
+
     UntoggleOthers();
     f1 = {};
     f1["trigger"] = TRIGGER_CONST;

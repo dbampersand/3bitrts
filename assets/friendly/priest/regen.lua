@@ -9,6 +9,8 @@ function setup()
     
 end
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/friendly/priest/audio/regen.wav",1)
+
     f1 = {};
     f1["name"] = "Regen"
     f1["trigger"] = TRIGGER_TIMER

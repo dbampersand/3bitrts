@@ -8,6 +8,7 @@ function setup()
     
 end
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/friendly/priest/audio/greater_heal.wav",1)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HEAL

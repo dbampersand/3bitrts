@@ -7,6 +7,8 @@ function setup()
     SetManaCost(30)
 end
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/friendly/priest/audio/shield.wav",1)
+
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_SHIELD

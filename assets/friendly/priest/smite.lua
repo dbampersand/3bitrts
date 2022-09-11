@@ -9,6 +9,8 @@ function setup()
     SetAbilityMaxStacks(2);
 end
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/friendly/priest/audio/smite.wav",1)
+
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT
