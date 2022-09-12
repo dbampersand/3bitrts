@@ -10,6 +10,9 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
+
+    PlaySound("assets/enemies/wyrm_boss/audio/nuke.wav",1)
+
     f1 = {};
     f1["trigger"] = TRIGGER_TIMER;
     f1["type"] = EFFECT_HURT;

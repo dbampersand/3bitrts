@@ -22,7 +22,10 @@ function onhit(x,y,objhit)
 
 end
 function ontimeout(x,y,obj,dt,target)
+    
     if (atk >= 0) then
+        PlaySound("assets/enemies/wyrm_boss/audio/bomb.wav",1)
+
         f1 = {};
         f1["trigger"] = TRIGGER_TIMER;
         f1["type"] = EFFECT_HURT;

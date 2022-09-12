@@ -11,6 +11,7 @@ function casted(x,y,obj,headingx,headingy)
     if (obj == GetThisObj()) then
         return false;
     end
+    PlaySound("assets/enemies/wyrm_boss/audio/bite.wav",1)
 
     f1 = {};
     f1["name"] = "Bite"

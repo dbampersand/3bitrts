@@ -7,6 +7,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/enemies/wyrm_boss/audio/rage.wav",1)
 
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
