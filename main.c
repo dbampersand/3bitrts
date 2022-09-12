@@ -265,7 +265,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     {
 
         Rect selectedUnitsR = (Rect){8,146,240,41};
-        int numUnitsInRect = GetNumObjectsInRect(&selectedUnitsR);
+        int numUnitsInRect = GetNumObjectsInRect(&selectedUnitsR,true);
 
         if (GetButtonIsClicked(&ui.choosingUnits_Back))
         {
@@ -287,7 +287,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             int foundIndex = 0;
             for (int i = 0; i < MAX_OBJS; i++)
             {
-                if (IsActive(&objects[i]) && !ObjIsDecoration(&objects[i]))
+                if (IsActive(&objects[i]) && !ObjIsDecoration(&objects[i]) && objects[i].playerChoosable)
                 {
                     Rect r2 = GetObjRect(&objects[i]);
 

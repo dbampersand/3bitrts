@@ -586,12 +586,15 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
         
     }
 }
-int GetNumObjectsInRect(Rect* r)
+int GetNumObjectsInRect(Rect* r, bool onlyPlayerChoosable)
 {
     int j = 0;
     for (int i = 0; i < MAX_OBJS; i++)
     {
         if (!IsActive(&objects[i]) || ObjIsDecoration(&objects[i]))
+            continue;
+            
+        if (onlyPlayerChoosable && !objects[i].playerChoosable)
             continue;
         Rect r2 = GetObjRect(&objects[i]);
         if (CheckIntersect(*r,r2))

@@ -186,7 +186,7 @@ void DrawUnitChoiceUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         
         Rect selectedUnitsR = (Rect){60,146,180,41};
         Encounter* e = encounters[selectedEncounterIndex];
-        int numUnitsInRect = GetNumObjectsInRect(&selectedUnitsR);
+        int numUnitsInRect = GetNumObjectsInRect(&selectedUnitsR,true);
         ToScreenSpace(&selectedUnitsR.x,&selectedUnitsR.y);
 
         UpdateButton(45,194,&ui.choosingUnits_Back,*mouseState,*mouseStateLastFrame);

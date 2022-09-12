@@ -243,7 +243,7 @@ void DrawChannelHint(GameObject* g);
 
 void LoadFolderPrefabs(const char* dirPath, char* name);
 void LoadPrefabs(const char* dirPath);
-int GetNumObjectsInRect(Rect* r);
+int GetNumObjectsInRect(Rect* r, bool onlyPlayerChoosable);
 void RemoveAllGameObjects();
 int GetNumPlayerControlledObjs(Player* p);
 void SetDecoration(GameObject* g, bool b);
