@@ -32,7 +32,6 @@ function casted()
     return true;
 end
 function untoggle()
-    --Print(aoe);
     RemoveAttack(aoe);
     aoe = -1;
     return true;

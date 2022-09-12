@@ -21,10 +21,6 @@ void DrawCommand(Command* c, int x, int y)
         al_draw_circle(x,y,2,GetColor(queueCommandColors[COMMAND_CAST],0),1);
     if (c->commandType == COMMAND_STOP)
         al_draw_filled_rectangle(x-2,y-2,x+2,y+2,GetColor(queueCommandColors[COMMAND_MOVE],0));
-        
-    
-        
-
 }
 void DrawCommandQueue(GameObject* g)
 {

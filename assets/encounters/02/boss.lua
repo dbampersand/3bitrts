@@ -37,7 +37,6 @@ function update(dt)
         CastAbility(3,2,{targ2});
         addsTimer = addsTimer + dt
     end
-    Print("" .. addsTimer)
 
     
     --if (j != nil)

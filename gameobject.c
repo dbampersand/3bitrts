@@ -1816,7 +1816,11 @@ void AttackTarget(GameObject* g)
     {
         if (g->luafunc_onattack >= 0)
         {
-            CallLuaFunc(g->luafunc_onattack);
+            //CallLuaFunc(g->luafunc_onattack);
+            lua_rawgeti(luaState,LUA_REGISTRYINDEX,g->luafunc_onattack);
+            lua_pushnumber(luaState,g->targObj - objects);
+            lua_pcall(luaState,1,0,0);
+
         }
         int damage = g->baseDamage;
        //    g->targObj->health -= damage   ;

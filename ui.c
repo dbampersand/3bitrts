@@ -2025,7 +2025,6 @@ void UpdateButton(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE mouseState, 
             if (PointInRect(mouseState.x,mouseState.y,r))
             {
                 b->activated = true;
-                printf("gg\n");
             }
         }
     }

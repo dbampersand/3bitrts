@@ -702,6 +702,8 @@ int L_SetAttackSpeed(lua_State* l)
         return 0;
     GameObject* g = &objects[index];
     float as = lua_tonumber(l,2);
+    if (as < 0.05f)
+        as = 0.05f;
     g->attackSpeed = as;
     return 0;
 }

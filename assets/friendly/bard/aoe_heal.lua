@@ -31,7 +31,6 @@ function casted(x,y,obj,headingx,headingy)
 end
 
 function untoggle()
-    --Print(aoe);
     RemoveAttack(aoe);
     aoe = -1;
     return true;
