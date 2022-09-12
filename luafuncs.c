@@ -2000,8 +2000,8 @@ int L_CastAbility(lua_State* l)
 
     size_t len =  lua_rawlen(l,3);
 
-    int x = -1; int y = -1; int obj = -1; float headingx=-1; float headingy=-1;
-
+    float x; float y; int obj = -1; float headingx=-1; float headingy=-1;
+    GetCentre(currGameObjRunning,&x,&y);
     bool isAField;
     for (int i = 0; i < len; i++)
     {
