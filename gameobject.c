@@ -1950,60 +1950,20 @@ void Teleport(GameObject* g, float x, float y)
         return;
     if (!g) return;
 
-    float dx = x - g->position.x;// > 0 ? 1 : -1;
-    float dy = y - g->position.y;// > 0 ? 1 : -1;
+    PointI target = (PointI){x/_GRAIN,y/_GRAIN};
+    PointI here = (PointI){g->position.x/_GRAIN,g->position.y/_GRAIN};
+    bool found = false;
+    PointI move = GetClosestPathablePoint(target,here,&found,GetWidth(g)/_GRAIN,GetHeight(g)/_GRAIN);
+    g->position.x = move.x*_GRAIN;
+    g->position.y = move.y*_GRAIN;
 
-    float beforeX = g->position.x;
-    float beforeY = g->position.y;
-
-    float cX; float cY;
-    GetOffsetCenter(g,&cX,&cY);
-    g->position.x = x - cX/2;
-    g->position.y = y - cY/2;
-
-
-
-
-    float nrmX = dx;
-    float nrmY = dy;
-    Normalize(&nrmX,&nrmY);
-
-
-    float xn = g->position.x;
-    float yn = g->position.y;
-
-    int w = GetWidth(g);
-    int h = GetHeight(g);
+    CheckCollisions(g,true, 1, false);
+    CheckCollisions(g,false, 1, false);   
+    SetTargetPosition(g,g->position.x,g->position.y);
+    SetMapCollisionRect(g->position.x,g->position.y,GetWidth(g),GetHeight(g),true);
+    return;
 
     
-
-    //step back until we find a spot where the object can stand
-    if (nrmX != 0 && nrmY != 0)
-        while (xn >= 0  && yn >= 0 && xn+w < GetMapWidth() && yn+h < GetMapHeight())
-        {
-            int indexTop = GetIndex(GetMapHeight()/(float)_GRAIN, floor(xn/ (float)_GRAIN), floor(yn / (float)_GRAIN));
-            int indexRight = GetIndex(GetMapHeight()/(float)_GRAIN, floor((xn+w) / (float)_GRAIN), floor((yn) / (float)_GRAIN));
-            int indexBottom = GetIndex(GetMapHeight()/(float)_GRAIN, floor((xn) / (float)_GRAIN), floor((yn+h) / (float)_GRAIN));
-            int indexLeft = GetIndex(GetMapHeight()/(float)_GRAIN, floor((xn) / (float)_GRAIN), floor((yn) / (float)_GRAIN));
-            if (currMap->collision[indexLeft] && currMap->collision[indexRight] && currMap->collision[indexTop] && currMap->collision[indexBottom])
-            {
-                g->position.x = xn;
-                g->position.y = yn;
-
-                break;
-            }
-            xn -= nrmX;
-            yn -= nrmY;
-
-        }
-
-
-
-    CheckCollisions(g,true, dx, false);
-    CheckCollisions(g,false, dy, false);   
-    SetTargetPosition(g,g->position.x,g->position.y);
-    SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
-
 
 
 }
