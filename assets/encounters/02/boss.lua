@@ -5,7 +5,7 @@ function setup()
     AddAbility("assets/enemies/wyrm_boss/ability_fire.lua",1)    
     AddAbility("assets/enemies/wyrm_boss/ability_nuke.lua",2)    
     AddAbility("assets/enemies/wyrm_boss/ability_firebreath.lua",3)    
-
+    
     SetDamage(10);
     SetMaxHP(10000,true)
     SetSpeed(10)

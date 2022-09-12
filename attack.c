@@ -448,7 +448,6 @@ void UpdateAttack(Attack* a, float dt)
         {
             isSoak = true;
             int numUnits = NumUnitsInsideAttack(a);
-            printf("%i\n",numUnits);
             copy.effects = calloc(a->numEffects,sizeof(Effect));
             for (int i = 0; i < a->numEffects; i++)
             {

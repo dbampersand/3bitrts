@@ -1631,9 +1631,9 @@ void InitControlsPanel()
     AddKeyInput(&ui.controlsPanel,"AMove2","AMove2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_AMove.secondKeyMappedTo);
     AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Attack Move","Attack Move");
 
-    AddKeyInput(&ui.controlsPanel,"Add To Selection","Add To Selection",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Shift.keyMappedTo);
-    AddKeyInput(&ui.controlsPanel,"Add To Selection2","Add To Selection2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_Shift.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Add To Selection","Add To Selection");
+    AddKeyInput(&ui.controlsPanel,"Add Selection","Add Selection",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Shift.keyMappedTo);
+    AddKeyInput(&ui.controlsPanel,"Add Selection2","Add Selection2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_Shift.secondKeyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Add Selection","Add Selection");
 
     AddKeyInput(&ui.controlsPanel,"Shift Selected","Shift Selected",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Tab.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Shift Selected2","Shift Selected2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_Tab.secondKeyMappedTo);

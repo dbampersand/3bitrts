@@ -1,4 +1,9 @@
-local attackSpeed = 2
+local attackSpeedMin = 2
+local attackSpeedMax = 0.25
+
+local attackSpeed = attackSpeedMin
+local lastAttacked = -1
+
 function setup()
     SetSprite("assets/enemies/berzerker/berzerker.png");
 
@@ -19,6 +24,15 @@ function kill()
 end
 
 function OnAttack(obj)
-    attackSpeed = attackSpeed - 0.1
-    SetAttackSpeed(attackSpeed);    
+    if lastAttacked == obj then
+        attackSpeed = attackSpeed - 0.1
+        if (attackSpeed < attackSpeedMax) then
+            attackSpeed = attackSpeedMax
+        end
+        SetAttackSpeed(GetObjRef(),attackSpeed);    
+    else 
+        lastAttacked = obj
+        attackSpeed = attackSpeedMin
+        SetAttackSpeed(GetObjRef(),attackSpeed);    
+    end
 end

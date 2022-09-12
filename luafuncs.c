@@ -129,8 +129,9 @@ int L_AddEncounterAbility(lua_State* l)
 
 int L_SetRange(lua_State* l)
 {
-    currGameObjRunning->range = lua_tonumber(l,1);
-    currGameObjRunning->range = _MAX(currGameObjRunning->range,MINIMUM_RANGE);
+    SetRange(currGameObjRunning,lua_tonumber(l,1));
+    //currGameObjRunning->range = lua_tonumber(l,1);
+    //currGameObjRunning->range = _MAX(currGameObjRunning->range,MINIMUM_RANGE);
     return 0;
 }
 int L_SetDescription(lua_State* l)
@@ -1002,6 +1003,15 @@ int L_GetHP(lua_State* l)
     lua_pushnumber(l,currGameObjRunning->health);
     return 1;
 }
+int L_SetObjAggroRadius(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    int radius = lua_tonumber(l,2);
+    objects[index].aggroRadius = radius;
+    return 0;
+}
 int L_SetMovePoint(lua_State* l)
 {
     const float x = lua_tonumber(l,1);
@@ -1558,6 +1568,27 @@ int L_GetObjFriendliness(lua_State* l)
     
     lua_pushnumber(l,GetPlayerOwnedBy(&objects[index]));
     return 1;
+}
+int L_GetAllObjsByFriendliness(lua_State* l)
+{
+    int friendliness = lua_tonumber(l,1);
+    
+    lua_newtable(l);
+    int index = 0;
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        GameObject* g = &objects[i];
+
+        if (IsActive(g) && GetPlayerOwnedBy(g) == friendliness)
+        {
+            index++;
+            lua_pushnumber(l,index);
+            lua_pushnumber(l,i+1);
+            lua_settable(l,-3);
+        }
+    }
+    return 1;
+
 }
 int L_SetChannelingSprite(lua_State* l)
 {
@@ -2721,5 +2752,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_PlaySound);
     lua_setglobal(luaState, "PlaySound");
+
+    lua_pushcfunction(luaState, L_SetObjAggroRadius);
+    lua_setglobal(luaState, "SetObjAggroRadius");
+
+    lua_pushcfunction(luaState, L_GetAllObjsByFriendliness);
+    lua_setglobal(luaState, "GetAllObjsByFriendliness");
 
 }

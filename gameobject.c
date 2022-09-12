@@ -677,13 +677,12 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     currGameObjRunning->name = prefab->name;
     currGameObjRunning->threatMultiplier = 1;
 
-    currGameObjRunning->range = 1;
+    SetRange(currGameObjRunning,1);
     currGameObjRunning->objType = TYPE_ALL;
 
     currGameObjRunning->health = 100;
     currGameObjRunning->maxHP = 100;
 
-    currGameObjRunning->range = MINIMUM_RANGE;
     currGameObjRunning->attackSpeed = 1;
 
     currGameObjRunning->mana = 50;
@@ -1795,6 +1794,10 @@ void DrawMapHighlight(GameObject* g, int lightSize)
      }
 
 
+}
+void SetRange(GameObject* g, float range)
+{
+    g->range = _MAX(range,MINIMUM_RANGE);
 }
 void SetAttackingObj(GameObject* g, GameObject* target)
 {

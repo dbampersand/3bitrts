@@ -27,7 +27,7 @@ void AddThreat(GameObject* source, GameObject* target, int damage)
         {
             next->threat += damage * source->threatMultiplier;
             found = true;
-            break;
+            //break;
         }
         if (next->next == NULL)
         {

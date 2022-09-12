@@ -11,7 +11,7 @@
 #include "pathfind.h"
 
 #define MAX_PATHFINDING_NODES_HELD 20
-#define MINIMUM_RANGE 5
+#define MINIMUM_RANGE 6
 
 typedef enum GAMEOBJ_PROPERTIES
 {
@@ -212,6 +212,7 @@ void ModifyMaxHP(GameObject* g, float value);
 void AddMana(GameObject* g, float mana);
 void SetManaRegen(GameObject* g, float regen);
 void SetHPRegen(GameObject* g, float regen);
+void SetRange(GameObject* g, float range);
 
 
 void Teleport(GameObject* g, float x, float y);
