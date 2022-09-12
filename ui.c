@@ -2372,7 +2372,7 @@ void DrawPanelTabs(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
 void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
 {
 
-    al_set_clipping_rectangle(p->x-1,p->y,p->w+1,p->h*ui.panelShownPercent+1);
+    al_set_clipping_rectangle(p->x-1,p->y-1,p->w+1,p->h*ui.panelShownPercent+2);
     if (p->showBorder)
     {
         al_draw_filled_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,BG);
@@ -2380,7 +2380,7 @@ void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
     }
 
 
-    al_set_clipping_rectangle(p->x-1,p->y,p->w,p->h*ui.panelShownPercent);
+    al_set_clipping_rectangle(p->x-1,p->y,p->w,p->h*ui.panelShownPercent-1);
 
 
 
