@@ -4,11 +4,13 @@ local attackSpeedMax = 0.25
 local attackSpeed = attackSpeedMin
 local lastAttacked = -1
 
+local maxHP = 400;
+
 function setup()
     SetSprite("assets/enemies/berzerker/berzerker.png");
 
     SetDamage(5);
-    SetMaxHP(600,true)
+    SetMaxHP(maxHP,true)
     SetSpeed(80)
     SetRange(40);
     SetAttackSpeed(2)

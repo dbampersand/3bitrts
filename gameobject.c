@@ -151,8 +151,18 @@ void UpdateObject(GameObject* g, float dt)
 
     g->summonTime += dt;
     if (g->summonTime < g->summonMax)
-        return;
+    {
+        float fxtimer = GetSummonPercent(g);
 
+        float cx; float cy;
+        GetCentre(g,&cx,&cy);
+        float r = _MAX(GetWidth(g), GetHeight(g)) * fxtimer;
+        ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
+        if ((_FRAMES+(g-objects))%2==0)
+        RandParticleAroundEdgeOfCircle(cx, cy, r, g->summonMax+1, 0.4, ALColorToCol(c));
+
+        return;
+    }
     if (ObjIsDecoration(g))
     {
         if (currGameObjRunning->properties & OBJ_ACTIVE)
@@ -1642,7 +1652,7 @@ void DrawObjShadows()
 {
     for (int i = 0; i < MAX_OBJS; i++)
     {
-        if (IsActive(&objects[i]) && !ObjIsDecoration(&objects[i]))
+        if (IsActive(&objects[i]) && !ObjIsDecoration(&objects[i]) && objects[i].summonTime > objects[i].summonMax)
             DrawObjShadow(&objects[i]);
     }
 }
@@ -1660,6 +1670,20 @@ void DrawMapHighlights()
     }
     al_unlock_bitmap(sprites[currMap->spriteIndex].sprite);
 
+}
+void DrawSummonEffect(GameObject* g)
+{
+    ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
+    float fxtimer = GetSummonPercent(g);
+    if (g->summonTime > g->summonMax)
+    {
+        fxtimer = fxtimer - EaseInOutCubic((g->summonTime-g->summonMax) / (g->summonMax*1.15));
+    }
+    float x; float y;
+    GetCentre(g,&x,&y);
+
+    float r = _MAX(GetWidth(g), GetHeight(g)) * fxtimer;
+    al_draw_circle(x,y,r,c,1);
 }
 void DrawGameObj(GameObject* g, bool forceInverse)
 {
@@ -1690,6 +1714,8 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     selectRect.x = x;
     selectRect.y = (y + (al_get_bitmap_height(s->sprite) - selectRect.h));
 
+    DrawSummonEffect(g);
+
     if (g->summonTime < g->summonMax)
     {
         float sx = 0;
@@ -1697,7 +1723,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
         float sw = GetWidth(g);
         float sh = (GetHeight(g) * percent);
         c = GROUND_DARK;
-        DrawSpriteRegion(s,sx,sy,sw,sh,x,(y+sy),GetColor(COLOR_GROUND_DARK,GetPlayerOwnedBy(g)),false);
+        //DrawSpriteRegion(s,sx,sy,sw,sh,x,(y+sy),GetColor(COLOR_GROUND_DARK,GetPlayerOwnedBy(g)),false);
     }
     else
         DrawSprite(s,x,y,0.5f,0.5f,g->angle,c, isReversed);

@@ -211,7 +211,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         if (ObjIsDecoration(g))
             c = BG;
 
-        if (!ObjIsInvincible(g))
+        if (!ObjIsInvincible(g) && g->summonTime > g->summonMax)
         {
             float percent = GetSummonPercent(g);  
 
@@ -221,13 +221,15 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             float y = g->position.y + g->offset.y;
             ToScreenSpace(&x,&y);
 
+
             Rect selectRect;
             selectRect.w = al_get_bitmap_width(s->sprite);
             selectRect.h = (al_get_bitmap_height(s->sprite) * percent);
             selectRect.x = x;
             selectRect.y = (y + (al_get_bitmap_height(s->sprite) - selectRect.h));
-
             DrawRoundedRect(selectRect, c,false);
+
+
             
             if (currSettings.displayHealthBar == OPTION_HPBAR_ALWAYS)
                 DrawHealthBar(g,c);
