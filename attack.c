@@ -113,7 +113,7 @@ int NumUnitsInsideAttack(Attack* a)
         if (IsActive(g))
         {
             Rect r = GetObjRect(&objects[i]);
-            if (CircleInRect(a->x,a->y,a->radius,r))
+            if (CircleInRect(a->x,a->y,a->targetRadius,r))
             {   
                 int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
 
@@ -324,10 +324,10 @@ void DrawAttack(Attack* a, float dt)
         {
             float move = ((_FRAMES)%10)/4.0f;
             float x = a->x;
-            float y = a->y - a->radius - 10 - move;
+            float y = a->y - a->targetRadius - 10 - move;
 
             float endX = a->x;
-            float endY = a->y - a->radius - 5 - move;
+            float endY = a->y - a->targetRadius - 5 - move;
             RotatePointF(&x,&y,a->x,a->y,DegToRad(45));
             RotatePointF(&endX,&endY,a->x,a->y,DegToRad(45));
 
@@ -511,7 +511,7 @@ void UpdateAttack(Attack* a, float dt)
             Rect r = GetObjRect(&objects[i]);
             if (a->attackType == ATTACK_AOE || a->attackType == ATTACK_PROJECTILE_TARGETED || a->attackType ==   ATTACK_PROJECTILE_POINT ||a->attackType == ATTACK_PROJECTILE_ANGLE)
             {
-                if (CircleInRect(a->x,a->y,a->radius,r))
+                if (CircleInRect(a->x,a->y,a->targetRadius,r))
                 {   
                     if (isSoak)
                         ApplyAttack(copied,&objects[i]);

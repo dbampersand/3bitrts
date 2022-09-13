@@ -24,7 +24,7 @@ function casted(x,y,obj,headingx,headingy)
     f2["value"] = 4;  
 
 
-    CreateAOE(GetX(obj),GetY(obj),"", 30, 0, 0, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, true, obj, {f1,f2})
+    CreateAOE(GetX(obj),GetY(obj),"", 30, 0, 0, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj, {f1,f2})
     return true; 
 end
 
