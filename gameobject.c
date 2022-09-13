@@ -1694,8 +1694,10 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
     if (ObjIsDecoration(g))
         c = BG;
+    DrawSummonEffect(g);
 
-    RedrawMapSegmentUnderObj(g);
+    if (g->summonTime >= g->summonMax)
+        RedrawMapSegmentUnderObj(g);
         
     Sprite* s = ObjIsChannelling(g) ? &sprites[g->channelingSpriteIndex] :  &sprites[g->spriteIndex];
     bool isReversed = IsSelected(g) || forceInverse;
@@ -1714,7 +1716,6 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     selectRect.x = x;
     selectRect.y = (y + (al_get_bitmap_height(s->sprite) - selectRect.h));
 
-    DrawSummonEffect(g);
 
     if (g->summonTime < g->summonMax)
     {
