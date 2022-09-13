@@ -66,9 +66,10 @@ void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
    // w-=_GRAIN*2; h-=_GRAIN*2;
 
     x-=1;
+    y-=1;
     //y-=_GRAIN;
-    w+=_GRAIN;
-    h+=_GRAIN;
+    w+=_GRAIN+1;
+    h+=_GRAIN+1;
 
 
     int indexLeft = GetIndex(GetMapHeight()/_GRAIN, floor((x) / (float)_GRAIN), floor((y) / (float)_GRAIN));

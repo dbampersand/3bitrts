@@ -190,12 +190,12 @@ void GetPath(PathfindNode* currentNode, GameObject* g)
     {
         if (i < MAX_PATHFINDING_NODES_HELD)
         {
-            g->pathNodes[i-1] = *p;
-            g->pathNodes[i-1].p.x *= _GRAIN;
-            g->pathNodes[i-1].p.y *= _GRAIN;
+            g->pathNodes[i] = *p;
+            g->pathNodes[i].p.x *= _GRAIN;
+            g->pathNodes[i].p.y *= _GRAIN;
         }
-        p = p->parent;
     }
+
 
 }
 PathfindNode* GetBestGuess(PointI target)

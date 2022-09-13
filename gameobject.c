@@ -1474,7 +1474,14 @@ void Move(GameObject* g, float delta)
           //  AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
         if (!IsOwnedByPlayer(g) && !ObjectCanPush(g)) {
             DoCurrentPathingNode(g);
-            path = g->pathNodes[g->currentPathingNode].p;
+            if (g->currentPathingNode < MAX_PATHFINDING_NODES_HELD)
+            {
+                path.x = (g->pathNodes[g->currentPathingNode].p.x + g->pathNodes[g->currentPathingNode+1].p.x) / 2;
+                path.y = (g->pathNodes[g->currentPathingNode].p.y + g->pathNodes[g->currentPathingNode+1].p.y) / 2;
+            }
+            else
+                path = g->pathNodes[g->currentPathingNode].p;
+
             drawX = path.x;
             drawY = path.y;
 
@@ -1483,8 +1490,8 @@ void Move(GameObject* g, float delta)
         }
     }
 
-        xtarg = path.x;
-        ytarg = path.y;
+    xtarg = path.x;
+    ytarg = path.y;
 
 
     if (!g->targObj)

@@ -9,7 +9,6 @@ function setup()
 
 end
 function casted(x,y,obj,headingx,headingy)
-    Print("bbbbb")
 
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
