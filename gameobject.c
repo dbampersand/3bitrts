@@ -146,6 +146,54 @@ void SetTargetPosition(GameObject* g, float x, float y)
 void UpdateObject(GameObject* g, float dt)
 {
     currGameObjRunning = g;
+
+    //things that should always run:
+    for (int i = 0; i < MAX_ABILITIES; i++)
+    {
+        currGameObjRunning->abilities[i].cdTimer -= dt;
+        if (currGameObjRunning->abilities[i].cdTimer < 0)
+        {
+            currGameObjRunning->abilities[i].cdTimer = currGameObjRunning->abilities[i].cooldown;
+            currGameObjRunning->abilities[i].stacks++;
+            if (currGameObjRunning->abilities[i].stacks > currGameObjRunning->abilities[i].maxStacks)
+                 currGameObjRunning->abilities[i].stacks  = currGameObjRunning->abilities[i].maxStacks;
+        }
+    }
+    UpdateMana(g, dt);
+    UpdateHPRegen(g, dt);
+
+    currGameObjRunning->invulnerableTime -= dt;
+    if (currGameObjRunning->invulnerableTime < 0)
+        currGameObjRunning->invulnerableTime = 0;
+
+
+    g->stunTimer -= dt;
+    if (g->stunTimer < 0)  
+        g->stunTimer = 0;
+    if (g->stunTimer > 0)
+        return;
+
+    g->flashTimer -= dt;
+    if (g->flashTimer < 0)
+        g->flashTimer = 0;
+
+    if (g->deathTimerActivated)
+    {
+        g->deathTimer -= dt;
+        if (g->deathTimer <= 0)
+        {
+            KillObj(g,true);
+            return;
+        }
+    }
+
+    ProcessEffects(currGameObjRunning,dt);
+    ProcessShields(currGameObjRunning,dt);
+
+
+
+
+    //things that should only run when not stunned:
     currGameObjRunning->offset.x = Towards(currGameObjRunning->offset.x,0,dt*2);
     currGameObjRunning->offset.y = Towards(currGameObjRunning->offset.y,0,dt*2);
 
@@ -172,27 +220,10 @@ void UpdateObject(GameObject* g, float dt)
             lua_pcall(luaState,1,0,0);
         }
     }
-    if (g->deathTimerActivated)
-    {
-        g->deathTimer -= dt;
-        if (g->deathTimer <= 0)
-        {
-            KillObj(g,true);
-            return;
-        }
-    }
-    UpdateMana(g, dt);
-    UpdateHPRegen(g, dt);
     
-    g->flashTimer -= dt;
-    if (g->flashTimer < 0)
-        g->flashTimer = 0;
     if (!IsActive(currGameObjRunning) || ObjIsDecoration(g))
         return;
     UpdateChannellingdObj(currGameObjRunning,dt);
-    currGameObjRunning->invulnerableTime -= dt;
-    if (currGameObjRunning->invulnerableTime < 0)
-        currGameObjRunning->invulnerableTime = 0;
     if (currGameObjRunning->properties & OBJ_ACTIVE && !IsOwnedByPlayer(currGameObjRunning))
     {
         DoAI(currGameObjRunning);
@@ -201,18 +232,6 @@ void UpdateObject(GameObject* g, float dt)
     currGameObjRunning->attackTimer -= dt;
     if (currGameObjRunning->attackTimer < 0)
         currGameObjRunning->attackTimer = 0;
-    for (int i = 0; i < MAX_ABILITIES; i++)
-    {
-        currGameObjRunning->abilities[i].cdTimer -= dt;
-        if (currGameObjRunning->abilities[i].cdTimer < 0)
-        {
-            currGameObjRunning->abilities[i].cdTimer = currGameObjRunning->abilities[i].cooldown;
-            currGameObjRunning->abilities[i].stacks++;
-            if (currGameObjRunning->abilities[i].stacks > currGameObjRunning->abilities[i].maxStacks)
-                 currGameObjRunning->abilities[i].stacks  = currGameObjRunning->abilities[i].maxStacks;
-        }
-
-    }
 
     int w = al_get_bitmap_width(sprites[currGameObjRunning->spriteIndex].sprite);
     int h = al_get_bitmap_height(sprites[currGameObjRunning->spriteIndex].sprite);
@@ -221,8 +240,6 @@ void UpdateObject(GameObject* g, float dt)
 
     bool shouldMove = true;
     bool shouldAttack = false;
-    ProcessEffects(currGameObjRunning,dt);
-    ProcessShields(currGameObjRunning,dt);
 
 
     if (currGameObjRunning->properties & OBJ_ACTIVE)
@@ -1918,6 +1935,18 @@ void SetMoveSpeed(GameObject* g, float value)
     }
     g->speed = value;
 }
+void Stun(GameObject* source, GameObject* g, float value)
+{
+    if (!g) return;
+    g->stunTimer += value;
+
+    for (int i = 0; i < MAX_ABILITIES; i++)
+    {
+        Ability* a = &g->abilities[i];
+        a->cdTimer = _MAX(g->stunTimer,a->cdTimer);
+    }
+}
+
 
 bool Damage(GameObject* source, GameObject* g, float value)
 {

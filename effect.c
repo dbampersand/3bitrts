@@ -26,6 +26,11 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         return Damage(from,target,value*sign);
     }
+    if (e->effectType == EFFECT_STUN)
+    {
+        Stun(from,target,value*sign);
+    }
+
     if (e->effectType == EFFECT_HEAL)
     {
         Heal(target,value*sign);

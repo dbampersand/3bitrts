@@ -1735,6 +1735,10 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,EFFECT_CURE);
     lua_setglobal(l,"EFFECT_CURE");
 
+    lua_pushinteger(l,EFFECT_STUN);
+    lua_setglobal(l,"EFFECT_STUN");
+
+
 
     lua_pushinteger(l,ABILITY_INSTANT);
     lua_setglobal(l,"ABILITY_INSTANT");
@@ -1905,6 +1909,10 @@ void SetGlobals(lua_State* l)
     lua_setglobal(l,"DIALOGUE_W");
     lua_pushinteger(l,DIALOGUE_H);
     lua_setglobal(l,"DIALOGUE_H");
+
+    lua_pushboolean(l,_DEBUG);
+    lua_setglobal(l,"_DEBUG");
+
 
 
 

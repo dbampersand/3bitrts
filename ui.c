@@ -527,7 +527,7 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
     {
         percent = 1 - (a->cdTimer / a->cooldown);
     }
-    if (a->stacks > 0)
+    if (a->stacks > 0 && selected->stunTimer == 0)
         percent = 1;
     int h = al_get_bitmap_height(s->sprite) * percent;
     int w = al_get_bitmap_width(s->sprite);
@@ -535,7 +535,7 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
     {
         keydown = false;
     }
-    ALLEGRO_COLOR* col = (ObjectHasManaToCast(selected,a) && !AbilityIsOnCooldown(a)) ? &FRIENDLY : &GROUND;
+    ALLEGRO_COLOR* col = (ObjectHasManaToCast(selected,a) && !AbilityIsOnCooldown(a) && percent >= 1.0f) ? &FRIENDLY : &GROUND;
     DrawSpriteRegion(s,0,0,w,h,r.x,r.y,*col,keydown);
 
     //Draw stacks counter

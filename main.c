@@ -227,7 +227,8 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             selectRect.h = (al_get_bitmap_height(s->sprite) * percent);
             selectRect.x = x;
             selectRect.y = (y + (al_get_bitmap_height(s->sprite) - selectRect.h));
-            DrawRoundedRect(selectRect, c,false);
+            if (g->stunTimer == 0)
+                DrawRoundedRect(selectRect, c,false);
 
 
             

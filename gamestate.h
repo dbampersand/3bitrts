@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 
+#define _DEBUG true
 
 typedef enum GameState {
     GAMESTATE_LOAD_SCREEN = 1,

@@ -124,6 +124,7 @@ void InitColors()
     EffectColors[EFFECT_NONE] = COLOR_BG;
     EffectColors[EFFECT_MAXHP] = COLOR_HEAL;
     EffectColors[EFFECT_HURT] = COLOR_DAMAGE;
+    EffectColors[EFFECT_STUN] = COLOR_DAMAGE;
     EffectColors[EFFECT_HEAL] = COLOR_HEAL;
     EffectColors[EFFECT_POSITION] = COLOR_GROUND_DARK;
     EffectColors[EFFECT_THREAT] = COLOR_FRIENDLY;

@@ -145,6 +145,8 @@ typedef struct GameObject
     bool deathTimerActivated;
     float deathTimer;
 
+    float stunTimer;
+
     PathfindNode pathNodes[MAX_PATHFINDING_NODES_HELD];
     int currentPathingNode;
     bool pathfindNeedsRefresh;
@@ -204,6 +206,7 @@ int GetPlayerOwnedBy(GameObject* g);
 
 bool Damage(GameObject* source, GameObject* g, float value);
 void Heal(GameObject* g, float value);
+void Stun(GameObject* source, GameObject* g, float value);
 
 void SetMoveSpeed(GameObject* g, float value);
 void AddSpeed(GameObject* g, float value);
@@ -213,6 +216,7 @@ void AddMana(GameObject* g, float mana);
 void SetManaRegen(GameObject* g, float regen);
 void SetHPRegen(GameObject* g, float regen);
 void SetRange(GameObject* g, float range);
+
 
 
 void Teleport(GameObject* g, float x, float y);

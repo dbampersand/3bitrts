@@ -316,6 +316,8 @@ bool AbilityCanBeCastOnGround(Ability* a)
 
 void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, float headingy, GameObject* target)
 {
+    if (g->stunTimer > 0)
+        return;
     if (AbilityIsOnCooldown(a))//->cdTimer > 0)
         return;
     if (g)
@@ -484,6 +486,8 @@ void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled)
 }
 bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, float y)
 {
+    if (g->stunTimer > 0)
+        return false;
     if (a->stacks <= 0)
         return false;
     if (a->castType & ABILITY_INSTANT || a->castType & ABILITY_TOGGLE)

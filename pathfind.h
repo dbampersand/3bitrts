@@ -6,7 +6,7 @@
 #include "stdbool.h"
 #define PATHFIND_DEPTH 256
 #define TIEBREAK 1/(float)PATHFIND_DEPTH   
-
+    
 #define PATHFIND_SEARCH_MAX PATHFIND_DEPTH
 
 typedef enum NODE_IN_SET
