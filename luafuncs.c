@@ -22,6 +22,8 @@
 #include "settings.h"
 #include "video.h"
 
+
+
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);
   for (int i=1; i <= top; i++) {

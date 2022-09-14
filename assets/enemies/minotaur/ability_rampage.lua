@@ -2,7 +2,8 @@ local delay = 5
 local radius = 60
 
 local length = 10
-
+local timer = 0
+local shouldChange = true
 function setup()
     SetAbilityRange(256)
     SetCooldown(30);
@@ -21,7 +22,8 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 10;  
 
     atk = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 0.1, length, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, GetObjRef(), {f1})
-    
+    timer = 0
+    shouldChange = true
     return true; 
 end
 
@@ -30,6 +32,7 @@ function onhit(x,y,objhit)
 end
 function ontimeout(x,y,obj,dt,target)
     EnableAI(GetObjRef(),true);
+    atk = -1
 
 end
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
@@ -40,5 +43,15 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     end
 
     EnableAI(GetObjRef(),false);
-    SetMovePoint(RandRange(0,255),RandRange(0,255),false,false);
+    if (math.fmod(math.floor(timer),2) == 0) then
+        if (shouldChange == true) then
+            SetMovePoint(RandRange(0,255),RandRange(0,255),false,false);
+        end
+        shouldChange = false
+    else
+        shouldChange = true
+    end
+    timer = timer + dt;
+
+    
 end
