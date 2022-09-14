@@ -16,14 +16,22 @@ local atk = -1
 local attackActive = false;
 
 function casted(x,y,obj,headingx,headingy)
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
     f1["value"] = 10;  
 
+    local speed = {}
+    speed["trigger"] = TRIGGER_CONST
+    speed["type"] = EFFECT_SPEED
+    speed["duration"] = 10
+    speed["value"] = 100
+
     atk = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 0.1, length, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, GetObjRef(), {f1})
+    ApplyEffect(GetObjRef(),{speed});
     timer = 0
     shouldChange = true
+
     return true; 
 end
 
@@ -31,7 +39,7 @@ function onhit(x,y,objhit)
 
 end
 function ontimeout(x,y,obj,dt,target)
-    EnableAI(GetObjRef(),true);
+    EnableAI(GetObjRef(),true); 
     atk = -1
 
 end
@@ -43,7 +51,7 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     end
 
     EnableAI(GetObjRef(),false);
-    if (math.fmod(math.floor(timer),2) == 0) then
+    if (math.fmod((timer),0.6) <= 0.1) then
         if (shouldChange == true) then
             SetMovePoint(RandRange(0,255),RandRange(0,255),false,false);
         end

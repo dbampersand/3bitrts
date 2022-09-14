@@ -18,7 +18,10 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 35;
     f1["duration"] = 12
     f1["triggersPerSecond"] = 1 
-
+    f1["overwrites"] = true
+    --f1["canStack"] = true
+    --f1["maxStacks"] = 3
+ 
 
     ApplyEffect(obj,{f1})
     return true;

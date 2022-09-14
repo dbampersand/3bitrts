@@ -246,7 +246,7 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
             {
                 Effect* e2 = &target->effects[i];
                 
-                if (e->enabled && e->name && e2->name)
+                if (e2->enabled && e->name && e2->name)
                 {
                     if (strcmp(e->name,e2->name) == 0)
                     {
@@ -254,6 +254,7 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
                         char* desc = e2->description;
 
                         memcpy(e2,e,sizeof(Effect));
+                        e2->enabled = true;
                         return;
                     }
                 }

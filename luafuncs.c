@@ -1018,7 +1018,6 @@ int L_SetMovePoint(lua_State* l)
 {
     const float x = lua_tonumber(l,1);
     const float y = lua_tonumber(l,2);
-    printf("%f,%f\n",x,y);
     bool shouldAttack = lua_toboolean(l,3);
     bool shouldPathfind = lua_toboolean(l,4);
 
@@ -1958,7 +1957,7 @@ int L_ApplyEffect(lua_State* l)
         Effect e;
         e = GetEffectFromTable(l, 2, i);
         e.from = currGameObjRunning;
-        lua_remove(l,-1);
+        //lua_remove(l,-1);
         ApplyEffect(&e,currGameObjRunning,&objects[objIndex]);
     }       
     
