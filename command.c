@@ -124,7 +124,10 @@ void StopCommand(GameObject* g)
     Command c = (Command){.x = g->position.x, .y = g->position.y, .commandType = COMMAND_STOP, .target = NULL, .ability = NULL};
     AddCommand(g,c);
 }
-
+bool CmdEqual(Command c1, Command c2)
+{
+    return (c1.commandType == c2.commandType && c1.target == c2.target && c1.ability == c2.ability && c1.x == c2.x && c1.y == c2.y);
+}
 void NextCommand(GameObject* g)
 {
     if (!g) return;
@@ -187,7 +190,7 @@ void DoCommands(GameObject* g)
             {
                 Command before = *c;
                 CastAbility(g,c->ability,c->x,c->y,c->x-g->position.x,c->y-g->position.y,c->target);
-                if (!memcmp(&before,&g->queue[0],sizeof(Command)))
+                if (!CmdEqual(before,g->queue[0]))
                 {
                     //if casting the ability has modified the queue
                     //eg, SetMovePoint
