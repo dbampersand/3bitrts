@@ -150,6 +150,8 @@ typedef struct GameObject
     PathfindNode pathNodes[MAX_PATHFINDING_NODES_HELD];
     int currentPathingNode;
     bool pathfindNeedsRefresh;
+
+    bool shouldProcessAI;
 } GameObject;
 
 
@@ -165,6 +167,8 @@ int numFreeObjs;
 GameObject** prefabs;
 int numPrefabs;
 int numPrefabsAllocated;
+
+
 
 
 

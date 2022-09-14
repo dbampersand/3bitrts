@@ -185,7 +185,14 @@ void DoCommands(GameObject* g)
 
             if (AbilityCanBeCast(c->ability,g,c->target,c->x,c->y))
             {
+                Command before = *c;
                 CastAbility(g,c->ability,c->x,c->y,c->x-g->position.x,c->y-g->position.y,c->target);
+                if (!memcmp(&before,&g->queue[0],sizeof(Command)))
+                {
+                    //if casting the ability has modified the queue
+                    //eg, SetMovePoint
+                    return;
+                }
                 if (g->queue[1].commandType == COMMAND_NONE)
                 {
                     if (c->target)

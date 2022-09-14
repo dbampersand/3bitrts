@@ -728,6 +728,9 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
 
     currGameObjRunning->position.x = _SCREEN_SIZE/2.0f;
     currGameObjRunning->position.y = _SCREEN_SIZE/2.0f;
+    
+    currGameObjRunning->shouldProcessAI = true;
+
 
     Teleport(currGameObjRunning,x,y);
 
@@ -2068,6 +2071,8 @@ void GetCentre(GameObject* g, float* x, float* y)
 }
 void DoAI(GameObject* g)
 {
+    if (!g->shouldProcessAI)
+        return;
     if (ObjIsDecoration(g))
         return;
     if (g->threatList.obj)

@@ -1016,13 +1016,16 @@ int L_SetMovePoint(lua_State* l)
 {
     const float x = lua_tonumber(l,1);
     const float y = lua_tonumber(l,2);
+    printf("%f,%f\n",x,y);
     bool shouldAttack = lua_toboolean(l,3);
+    bool shouldPathfind = lua_toboolean(l,4);
+
     GameObject* target = GetClicked(x,y);
     ClearCommandQueue(currGameObjRunning);
 
     //always pop the 0th element after processing the cast command
     //so add a null move
-    MoveCommand(currGameObjRunning,0,0);
+    //MoveCommand(currGameObjRunning,0,0);
     if (target && shouldAttack)
     {
         currGameObjRunning->targObj = target;
@@ -1035,11 +1038,29 @@ int L_SetMovePoint(lua_State* l)
         int h = al_get_bitmap_height(sprites[currGameObjRunning->spriteIndex].sprite);
 
         SetTargetPosition(currGameObjRunning,x-w/2,y-h/2);
-
+        if (!shouldPathfind)
+        {
+            currGameObjRunning->pathfindNeedsRefresh = false;
+            currGameObjRunning->currentPathingNode = 0;
+            currGameObjRunning->pathNodes[0].p.x = x; 
+            currGameObjRunning->pathNodes[0].p.y = y; 
+        }
        // currGameObjRunning->targObj = NULL;
         
         MoveCommand(currGameObjRunning,x-w/2,y-w/2);
     }
+    return 0;
+}
+int L_EnableAI(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+
+    GameObject* g = &objects[index];
+    bool set = lua_toboolean(l,2);
+
+    g->shouldProcessAI = set;
     return 0;
 }
 int L_SetAttackTarget(lua_State* l)
@@ -2766,5 +2787,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetAllObjsByFriendliness);
     lua_setglobal(luaState, "GetAllObjsByFriendliness");
+
+    lua_pushcfunction(luaState, L_EnableAI);
+    lua_setglobal(luaState, "EnableAI");
 
 }
