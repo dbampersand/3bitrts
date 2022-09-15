@@ -98,8 +98,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         UpdateEncounter(dt);
         CheckSelected(mouseState,mouseStateLastFrame, keyState);
         ProcessAugments(currEncounterRunning->augments,dt);
-        UpdateAttacks(dt);
-        SetControlGroups(keyState);
+        SetControlGroups(keyState); 
         GetControlGroup(keyState);
         UpdateDamageNumbers(dt);
         UpdatePlayerObjectInteractions(keyState,keyStateLastFrame,mouseState);
@@ -107,6 +106,8 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         {
             UpdateObject(&objects[i],dt);
         }
+        UpdateAttacks(dt);
+
         currGameObjRunning = NULL;
         UpdateAbilityInteractions(keyState, keyStateLastFrame,*mouseState,*mouseStateLastFrame);
 

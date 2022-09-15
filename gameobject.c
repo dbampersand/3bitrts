@@ -2104,7 +2104,7 @@ void DoAI(GameObject* g)
         return;
     if (ObjIsDecoration(g))
         return;
-    if (g->threatList.obj)
+    if (g->threatList.obj && g->channellingTime == 0)
     {
         Threat* t = GetHighestThreat(&g->threatList);
         if (t)

@@ -53,7 +53,7 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     EnableAI(GetObjRef(),false);
     if (math.fmod((timer),0.6) <= 0.1) then
         if (shouldChange == true) then
-            SetMovePoint(RandRange(0,255),RandRange(0,255),false,false);
+            SetMovePoint(parent,RandRange(0,255),RandRange(0,255),false,false);
         end
         shouldChange = false
     else

@@ -44,7 +44,7 @@ function update(dt)
     if (enraged == true and enrageTransitionTimer < 10) then
         enrageTransitionTimer = enrageTransitionTimer + dt;
         CastAbility(rage,1.2,{});
-        SetMovePoint(128,106,false,false)
+        SetMovePoint(GetObjRef(),128,106,false,false)
     
         do return end;
     end

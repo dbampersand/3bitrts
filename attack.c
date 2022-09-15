@@ -596,8 +596,8 @@ void UpdateAttack(Attack* a, float dt)
             lua_pushinteger(luaState,currGameObjRunning-objects);
             lua_pushnumber(luaState,dt);    
             lua_pushinteger(luaState,a->target - objects);
-
-            lua_pcall(luaState,5,0,0);
+            lua_pushinteger(luaState,a-attacks);
+            lua_pcall(luaState,6,0,0);
 
         }
         RemoveAttack(a-attacks);

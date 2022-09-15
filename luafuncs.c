@@ -1016,39 +1016,46 @@ int L_SetObjAggroRadius(lua_State* l)
 }
 int L_SetMovePoint(lua_State* l)
 {
-    const float x = lua_tonumber(l,1);
-    const float y = lua_tonumber(l,2);
-    bool shouldAttack = lua_toboolean(l,3);
-    bool shouldPathfind = lua_toboolean(l,4);
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    GameObject* obj = &objects[index];
+    const float x = lua_tonumber(l,2);
+    const float y = lua_tonumber(l,3);
+    bool shouldAttack = lua_toboolean(l,4);
+    bool shouldPathfind = lua_toboolean(l,5);
 
     GameObject* target = GetClicked(x,y);
-    ClearCommandQueue(currGameObjRunning);
+    ClearCommandQueue(obj);
 
     //always pop the 0th element after processing the cast command
     //so add a null move
-    //MoveCommand(currGameObjRunning,0,0);
+    //MoveCommand(obj,0,0);
     if (target && shouldAttack)
     {
         currGameObjRunning->targObj = target;
-        AttackCommand(currGameObjRunning,target);
+        AttackCommand(obj,target);
         
     }
     else
     {
-        int w = al_get_bitmap_width(sprites[currGameObjRunning->spriteIndex].sprite);
-        int h = al_get_bitmap_height(sprites[currGameObjRunning->spriteIndex].sprite);
+        obj->targObj = NULL;
+        int w = al_get_bitmap_width(sprites[obj->spriteIndex].sprite);
+        int h = al_get_bitmap_height(sprites[obj->spriteIndex].sprite);
 
-        SetTargetPosition(currGameObjRunning,x-w/2,y-h/2);
+        SetTargetPosition(obj,x-w/2,y-h/2);
         if (!shouldPathfind)
         {
-            currGameObjRunning->pathfindNeedsRefresh = false;
-            currGameObjRunning->currentPathingNode = 0;
-            currGameObjRunning->pathNodes[0].p.x = x; 
-            currGameObjRunning->pathNodes[0].p.y = y; 
+            obj->pathfindNeedsRefresh = false;
+            obj->currentPathingNode = 0;
+            obj->pathNodes[0].p.x = x; 
+            obj->pathNodes[0].p.y = y;
+            obj->pathNodes[1].p.x = x; 
+            obj->pathNodes[1].p.y = y; 
         }
-       // currGameObjRunning->targObj = NULL;
+       // obj->targObj = NULL;
         
-        MoveCommand(currGameObjRunning,x-w/2,y-w/2);
+        MoveCommand(obj,x-w/2,y-w/2);
     }
     return 0;
 }
