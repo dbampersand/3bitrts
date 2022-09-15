@@ -1231,7 +1231,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     if (objectCanPush)
                     {
                             if (!ObjIsDecoration(g2))
-                            {
+                            {   
 
                                 g2->position.y = g->position.y + GetHeight(g);
                             if (g2->position.y <0)
@@ -1718,9 +1718,17 @@ void DrawSummonEffect(GameObject* g)
     }
     float x; float y;
     GetCentre(g,&x,&y);
+    ToScreenSpace(&x,&y);
 
     float r = _MAX(GetWidth(g), GetHeight(g)) * fxtimer;
     al_draw_circle(x,y,r,c,1);
+
+    int w = _MIN(GetWidth(g),r);
+    int h = _MIN(GetHeight(g),r);
+
+    if (g->summonTime < g->summonMax)
+        al_draw_filled_rectangle(x - (w/2), y - (h/2), x+(w/2), y+(h/2), c);
+
 }
 void DrawGameObj(GameObject* g, bool forceInverse)
 {
