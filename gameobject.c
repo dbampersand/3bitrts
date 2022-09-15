@@ -728,7 +728,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
 
     currGameObjRunning->position.x = _SCREEN_SIZE/2.0f;
     currGameObjRunning->position.y = _SCREEN_SIZE/2.0f;
-    
+
     currGameObjRunning->shouldProcessAI = true;
 
 
@@ -1159,9 +1159,12 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             if (g2->position.x + GetWidth(g2) > GetMapWidth())
                             {   
                                 g2->position.x = GetMapWidth() - GetWidth(g2);
+                                CheckCollisions(g2,true,-1,true);
+                                CheckCollisionsWorld(g2,true,-1);
+                                return;
                             }
                         }
-                        CheckCollisions(g2,true,1,objectCanPush);
+                        CheckCollisions(g2,true,1,true);
                         CheckCollisionsWorld(g2,true,1);
                     }
                     else
@@ -1170,7 +1173,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         if (!ObjIsDecoration(g))
                         {
                             g->position.x = (g2->position.x - al_get_bitmap_width(s->sprite));
-                            CheckCollisions(g2,true,1,objectCanPush);
+                            CheckCollisions(g2,true,1,true);
                             CheckCollisionsWorld(g2,true,1);
                         }
 
@@ -1191,13 +1194,17 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             if (g2->position.x < 0)
                             {
                                 g2->position.x=0;
+                                CheckCollisions(g2,true,1,true);
+                                 CheckCollisionsWorld(g2,true,1);
+                                return;
+
                             }
                             if (g2->position.x + GetWidth(g2) > GetMapWidth())
                             {
                                 g2->position.x = GetMapWidth() - GetWidth(g2);
                             }
                         }
-                        CheckCollisions(g2,true,-1,objectCanPush);
+                        CheckCollisions(g2,true,-1,true);
                         CheckCollisionsWorld(g2,true,-1);
                     }
                     else
@@ -1205,7 +1212,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         if (!ObjIsDecoration(g))
                         {
                              g->position.x = g2->position.x+al_get_bitmap_width(s2->sprite); 
-                            CheckCollisions(g2,true,-1,objectCanPush);
+                            CheckCollisions(g2,true,-1,true);
                             CheckCollisionsWorld(g2,true,-1);
                         }
                     }
@@ -1230,15 +1237,17 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             if (g2->position.y <0)
                             {
                                 g2->position.y=0;
-
                             }
                             if (ObjectIsInUI(g2))
                             {
-                                g2->position.y = UI_START_Y - GetHeight(g2);
+                                g2->position.y = GetUIStartHeight() - GetHeight(g2);
+                                CheckCollisions(g2,false,-1,true);
+                                CheckCollisionsWorld(g2,false,-1);
+                                return;
                             }
                         }
 
-                        CheckCollisions(g2,false,1,objectCanPush);
+                        CheckCollisions(g2,false,1,true);
                         CheckCollisionsWorld(g2,false,1);
 
                     }
@@ -1247,7 +1256,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         if (!ObjIsDecoration(g))
                         {
                             g->position.y = g2->position.y - al_get_bitmap_height(s->sprite);
-                            CheckCollisions(g2,false,1,objectCanPush);
+                            CheckCollisions(g2,false,1,true);
                             CheckCollisionsWorld(g2,false,1);
                         }
 
@@ -1261,17 +1270,20 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         if (!ObjIsDecoration(g2))
                         {
                             g2->position.y = g->position.y - GetHeight(g2);
-                        if (g2->position.y <0)
-                        {
-                            g2->position.y=0;
-                        }
-                        if (ObjectIsInUI(g2))
-                        {
-                            g2->position.y = UI_START_Y - GetHeight(g2);
+                            if (g2->position.y < 0)
+                            {
+                                g2->position.y=0;
+                                CheckCollisions(g2,false,1,true);
+                                CheckCollisionsWorld(g2,false,1);
+                                return;
+                            }
+                            if (ObjectIsInUI(g2))
+                            {
+                                g2->position.y = UI_START_Y - GetHeight(g2);
                         }
                         }
 
-                        CheckCollisions(g2,false,-1,objectCanPush);
+                        CheckCollisions(g2,false,-1,true);
                         CheckCollisionsWorld(g2,false,-1);
                     }
                     else
@@ -1279,7 +1291,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         if (!ObjIsDecoration(g))
                         {
                             g->position.y = g2->position.y + al_get_bitmap_height(s2->sprite);
-                            CheckCollisions(g2,false,-1,objectCanPush);
+                            CheckCollisions(g2,false,-1,true);
                             CheckCollisionsWorld(g2,false,-1);
                         }
                     }
@@ -1309,9 +1321,14 @@ GameObject* GetCollidedWith(GameObject* g)
     return NULL;
 
 }
+int GetUIStartHeight()
+{
+    return (GetMapHeight() - (_SCREEN_SIZE-UI_START_Y)) + 1;
+
+}
 bool ObjectIsInUI(GameObject* g)
 {
-    if (g->position.y > GetMapHeight() - (_SCREEN_SIZE-UI_START_Y))
+    if (g->position.y + GetHeight(g) > GetUIStartHeight())
     {
         return true;
     }

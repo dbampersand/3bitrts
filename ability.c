@@ -313,18 +313,18 @@ bool AbilityCanBeCastOnGround(Ability* a)
 {
     return (a->castType & (ABILITY_POINT|ABILITY_ANGLE));
 }
-
-void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, float headingy, GameObject* target)
+//returns if the ability has been cast or not
+bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, float headingy, GameObject* target)
 {
     if (g->stunTimer > 0)
-        return;
+        return false;
     if (AbilityIsOnCooldown(a))//->cdTimer > 0)
-        return;
+        return false;
     if (g)
     {
         if (!ObjectHasManaToCast(g,a))
         {
-            return;
+            return false;
         }
     }
     if (target && (a->castType & ABILITY_TARGET_ALL || a->castType & ABILITY_TARGET_ENEMY || a->castType & ABILITY_TARGET_FRIENDLY) || a->castType & ABILITY_NONE)
@@ -336,19 +336,19 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         {
             if (ownedByG == ownedByTarget)
             {
-                return;
+                return false;
             }
         }
         if (a->castType & ABILITY_TARGET_FRIENDLY)
         {
             if (ownedByG != ownedByTarget)
             {
-                return;
+                return false;
             }
         }
 
         if (GetDist(g,target) > a->range)
-            return;
+            return false;
     }
     if (g && (!(a->castType & ABILITY_INSTANT) &&  !(a->castType & ABILITY_TOGGLE)))
     {
@@ -363,11 +363,11 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         if (target)
             distance = RectDist(g,target);
         if (distance > a->range)
-            return;
+            return false;
 
     }
     if (target == NULL && AbilityShouldBeCastOnTarget(a) && !AbilityCanBeCastOnGround(a))
-        return;
+        return false;
 
     if (target != g)
     {
@@ -438,6 +438,7 @@ void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         a->toggled = !a->toggled;
     }
     AddMana(g,-GetManaCost(a));
+    return true;
 
 }
 //TODO: things that affect mana cost change this value

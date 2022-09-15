@@ -82,7 +82,7 @@ void SetManaCost(Ability* a, float mana);
 void LoadAbility(const char* path, lua_State* l, Ability* a);
 Ability CloneAbilityPrefab(Ability* prefab, lua_State* l);
 Ability* AddAbility(const char* path);
-void CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, float headingy, GameObject* target);
+bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, float headingy, GameObject* target);
 float GetManaCost(Ability* a);
 bool AbilityIsInitialised(Ability* a);
 void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled);

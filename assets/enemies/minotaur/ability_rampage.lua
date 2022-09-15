@@ -6,7 +6,7 @@ local timer = 0
 local shouldChange = true
 function setup()
     SetAbilityRange(256)
-    SetCooldown(30);
+    SetCooldown(length);
     AbilitySetPortrait("assets/enemies/minotaur/ability_rampage.png");
     SetDescription("[b]Rampage\n\nMoves wildly, causing damage around it.")
 

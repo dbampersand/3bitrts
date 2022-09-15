@@ -360,7 +360,6 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     //GameObjDebugDraw();
     //DebugDrawPathfinding();
 
-
 }
 
 void DrawMainMenu()

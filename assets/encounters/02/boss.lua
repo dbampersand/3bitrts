@@ -1,10 +1,13 @@
+local timer = 1
+local rampage = 0
+local smash = 0
 
 function setup()
     SetSprite("assets/encounters/02/minotaur/minotaur.png");
     SetChannelingSprite("assets/enemies/minotaur/minotaur_channeling.png");
 
-    AddAbility("assets/enemies/minotaur/ability_smash.lua",0)   
-    AddAbility("assets/enemies/minotaur/ability_rampage.lua",1)    
+    smash = AddAbility("assets/enemies/minotaur/ability_smash.lua",0)   
+    rampage = AddAbility("assets/enemies/minotaur/ability_rampage.lua",1)    
     
     AddAbility("assets/enemies/wyrm_boss/ability_nuke.lua",2)    
     AddAbility("assets/enemies/wyrm_boss/ability_firebreath.lua",3)    
@@ -17,13 +20,21 @@ end
 
 function update(dt)
     if (IsInCombat()) then
+        timer = timer + dt;
+        if (AbilityIsOnCooldown(rampage)) then
+            do return end;
+        end
+        if (math.fmod(math.floor(timer),30)) then
+            CastAbility(1, 0.1, {})
+            do return end;
+        end
+
         j = GetThreatRank()
 
         target = {};
         target["target"] = j[1];
         
-        --CastAbility(0,4,{target})
-        CastAbility(1,0,{target})
+        CastAbility(0,4,{target})
 
     end
 

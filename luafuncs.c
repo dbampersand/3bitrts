@@ -2010,7 +2010,7 @@ int L_CastAbility(lua_State* l)
 {
     if (ObjIsChannelling(currGameObjRunning))
     {
-        lua_pushnumber(l,-1);
+        lua_pushboolean(l,false);
         return 1;
     }
     int index = lua_tonumber(l,1);
@@ -2022,10 +2022,14 @@ int L_CastAbility(lua_State* l)
 
     if (AbilityIsOnCooldown(&currGameObjRunning->abilities[index]))//.cdTimer > 0.001f)
     {
-        return 0;
+        lua_pushboolean(l,false);
+        return 1;
     }
     if (!AbilityIsInitialised(&currGameObjRunning->abilities[index]))
-        return 0;
+    {
+        lua_pushboolean(l,false);
+        return 1;
+    }
     float channelTime = lua_tonumber(l,2);
 
     size_t len =  lua_rawlen(l,3);
@@ -2055,14 +2059,17 @@ int L_CastAbility(lua_State* l)
             target = NULL;
         Ability* a = &currGameObjRunning->abilities[index];
         SetObjChannelling(currGameObjRunning,a,channelTime,x,y,target,headingx,headingy);
+        lua_pushboolean(l,true);
+        return 1;
+
     }
     else
     {
         GameObject* g = NULL;
         if (obj >= 0 && obj < MAX_OBJS)
             g = &objects[obj];
-
-        CastAbility(currGameObjRunning,&currGameObjRunning->abilities[index],x,y,headingx,headingy,g);
+        
+        lua_pushboolean(l,CastAbility(currGameObjRunning,&currGameObjRunning->abilities[index],x,y,headingx,headingy,g));
         
     }
     return 1;
