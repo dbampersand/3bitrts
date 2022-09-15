@@ -2006,6 +2006,19 @@ int L_IsAlive(lua_State* l)
     }
     return 1;
 }
+int L_SetObjChannelling(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    GameObject* obj = &objects[index];
+    float time = lua_tonumber(l,2);
+
+    float x; float y;
+    GetCentre(currGameObjRunning,&x,&y);
+    SetObjChannelling(currGameObjRunning,NULL,time,x,y,currGameObjRunning,0,0);
+    return 0;
+}
 int L_CastAbility(lua_State* l)
 {
     if (ObjIsChannelling(currGameObjRunning))
@@ -2798,5 +2811,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_EnableAI);
     lua_setglobal(luaState, "EnableAI");
+
+    lua_pushcfunction(luaState, L_SetObjChannelling);
+    lua_setglobal(luaState, "SetObjChannelling");
 
 }

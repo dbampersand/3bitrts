@@ -1727,8 +1727,12 @@ void DrawSummonEffect(GameObject* g)
     int h = _MIN(GetHeight(g),r);
 
     if (g->summonTime < g->summonMax)
-        al_draw_filled_rectangle(x - (w/2), y - (h/2), x+(w/2), y+(h/2), c);
+    {   
+        Rect r = (Rect){x - (w/2), y - (h/2),(w),(h)};
+        DrawFilledRect_Dithered(r, c);
 
+       // al_draw_filled_rectangle(x - (w/2), y - (h/2), x+(w/2), y+(h/2), c);
+    }
 }
 void DrawGameObj(GameObject* g, bool forceInverse)
 {

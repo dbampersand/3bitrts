@@ -569,8 +569,10 @@ void UpdateAttack(Attack* a, float dt)
             lua_pushinteger(luaState,a->target - objects);
             lua_pushnumber(luaState,dt);
             lua_pushinteger(luaState,a-attacks);
+            lua_pushnumber(luaState,a->duration);
 
-            lua_pcall(luaState,7,0,0);
+
+            lua_pcall(luaState,8,0,0);
         }
 
     }

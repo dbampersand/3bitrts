@@ -36,3 +36,4 @@ float CircleRectDist(int cx, int cy, float radius, Rect r);
 void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO_COLOR col, float length);
 void SetDisplaySize();
 void InitVideo();
+void DrawFilledRect_Dithered(Rect r, ALLEGRO_COLOR color);

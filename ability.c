@@ -539,7 +539,9 @@ void SetManaCost(Ability* a, float mana)
 }
 bool AbilityIsOnCooldown(Ability* a)
 {
-    return a->stacks <= 0;//a->cdTimer > 0;
+    if (a)
+        return a->stacks <= 0;//a->cdTimer > 0;
+    else  return true;
 }
 bool ObjectHasManaToCast(GameObject* g, Ability* a)
 {

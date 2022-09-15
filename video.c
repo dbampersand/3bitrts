@@ -52,6 +52,21 @@ void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)
     al_draw_line(x, y+1, x, y+h, color,1);
     al_draw_line(x + w, y+1, x+w, y+h, color,1);
 }
+void DrawFilledRect_Dithered(Rect r, ALLEGRO_COLOR color)
+{
+    int dither = 2;
+    for (int x = r.x; x < r.x+r.w; x++)
+    {
+        for (int y = r.y; y < r.y+r.h; y++)
+        {
+            if (x%dither==0 && y%dither == 0)
+            {
+                al_draw_pixel(x,y,color);
+            }
+        }
+    }
+
+}
 void DrawOutlinedRect_Dithered(Rect* r, ALLEGRO_COLOR color)
 {
     if (!r) return;
