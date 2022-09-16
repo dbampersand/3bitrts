@@ -246,9 +246,11 @@ int L_GetRandomUnit(lua_State* l)
 
             }
         }
-        GameObject* randObj = list[rand()%numObjs];
-        lua_pushnumber(l,randObj-objects);
-
+        if (numObjs > 0)
+        {
+            GameObject* randObj = list[rand()%numObjs];
+            lua_pushnumber(l,randObj-objects);
+        }
     }
     //there are no objects with the friendliness specified so let's just pick a completely random object
     if (numObjs <= 0)
@@ -1755,8 +1757,8 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,EFFECT_SHIELD);
     lua_setglobal(l,"EFFECT_SHIELD");
 
-    lua_pushinteger(l,EFFECT_DAMAGE);
-    lua_setglobal(l,"EFFECT_DAMAGE");
+    lua_pushinteger(l,EFFECT_ATTACKDAMAGE);
+    lua_setglobal(l,"EFFECT_ATTACKDAMAGE");
 
     lua_pushinteger(l,EFFECT_INVULN);
     lua_setglobal(l,"EFFECT_INVULN");

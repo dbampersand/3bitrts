@@ -33,7 +33,7 @@ function casted(x,y,obj,headingx,headingy)
 
     f3 = {};
     f3["trigger"] = TRIGGER_CONST;
-    f3["type"] = EFFECT_DAMAGE;
+    f3["type"] = EFFECT_ATTACKDAMAGE;
     f3["duration"] = 1
     f3["value"] = 15;  
 

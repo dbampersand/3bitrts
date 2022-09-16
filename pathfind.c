@@ -124,7 +124,7 @@ void SortQueue(Queue* q)
 
 float d(PathfindNode* p1, PathfindNode* p2)
 {
-    if (PointIsFree(p2->p.x,p2->p.y))
+    if (PointIsFree(p2->p.x,p2->p.y,false))
         return 1;
     else return 100;
 }
@@ -150,7 +150,7 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w
             int nx = target.x + x;
             int ny = target.y + y;
 
-            if (RectIsFree(nx-1,ny-1,w+2,h+2)) 
+            if (RectIsFree(nx-1,ny-1,w+2,h+2,false)) 
             {
                 float distance = dist(nx,ny,target.x,target.y);// + dist(nx,ny,current.x,current.y);
                 if (distance < closest)
@@ -305,7 +305,7 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
                     continue;
 
                 //bool walkable = (RectIsFree(child.p.x,child.p.y,w,h));
-                bool walkable = (RectIsFree(child.p.x,child.p.y,w,h));
+                bool walkable = (RectIsFree(child.p.x,child.p.y,w,h,ObjectCanPush(g)));
                 
                 //if (!walkable) 
                   //  continue;

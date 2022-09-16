@@ -402,7 +402,7 @@ void Bad_EnemyExplodes(GameObject* g, int augmentLevel)
     GetCentre(g,&x,&y);
     Effect e;
     e.trigger = TRIGGER_TIMER;
-    e.effectType = EFFECT_DAMAGE;
+    e.effectType = EFFECT_ATTACKDAMAGE;
     e.from = NULL;
     e.value = augmentLevel * 30;
     e.numTriggers = 1;

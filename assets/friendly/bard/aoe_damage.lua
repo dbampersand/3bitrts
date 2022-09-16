@@ -17,7 +17,7 @@ function casted()
     UntoggleOthers();
     f1 = {};
     f1["trigger"] = TRIGGER_CONST;
-    f1["type"] = EFFECT_DAMAGE;
+    f1["type"] = EFFECT_ATTACKDAMAGE;
     --f1["numTriggers"] = 5
     f1["value"] = 10;
     f1["duration"] = 1.5;

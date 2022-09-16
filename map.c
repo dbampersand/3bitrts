@@ -35,21 +35,21 @@ void DisplayCollision()
         }
     }
 }
-bool RectIsFree(int x, int y, int w, int h)
+bool RectIsFree(int x, int y, int w, int h, bool caresAboutUnits)
 {
     x-=1; y-=1; w += 2; h += 2;
     for (int x2 = x; x2 < x + w; x2++)
     {
         for (int y2 = y; y2 < y + h; y2++)
         {
-            if (!PointIsFree(x2,y2))
+            if (!PointIsFree(x2,y2,caresAboutUnits))
                 return false;
         }
         
     }
     return true;
 }
-bool PointIsFree(int x, int y)
+bool PointIsFree(int x, int y, bool caresAboutUnits)
 {
     int index = GetIndex(GetMapHeight()/_GRAIN, x, y);
 
@@ -57,8 +57,10 @@ bool PointIsFree(int x, int y)
         return false;
     if (y < 0 || y >= GetMapHeight())
         return false;
-
-    return (currMap->collision[index] == COLLISION_OPEN);
+    if (caresAboutUnits)
+        return (currMap->collision[index] == COLLISION_OPEN);
+    else
+        return (currMap->collision[index] == COLLISION_OPEN || currMap->collision[index] == COLLISION_WORLD_AND_OBJECT);
 }
 void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
 {

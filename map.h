@@ -47,5 +47,5 @@ int GetMapWidth();
 int GetMapHeight();
 void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere);
 void DisplayCollision();
-bool PointIsFree(int x, int y);
-bool RectIsFree(int x, int y, int w, int h);
+bool PointIsFree(int x, int y, bool caresAboutUnits);
+bool RectIsFree(int x, int y, int w, int h, bool caresAboutUnits);

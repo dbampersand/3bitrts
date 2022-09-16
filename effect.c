@@ -48,7 +48,7 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         AttachShield(target,e->duration,value*sign);
     }
-    if (e->effectType == EFFECT_DAMAGE)
+    if (e->effectType == EFFECT_ATTACKDAMAGE)
     {
         AddDamage(target,value*sign);
     }
