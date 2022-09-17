@@ -13,6 +13,7 @@ function setup()
     quake = AddAbility("assets/enemies/minotaur/ability_quake.lua",2)    
     chuck = AddAbility("assets/enemies/minotaur/ability_chuck.lua",3)    
     charge = AddAbility("assets/enemies/minotaur/ability_charge.lua",4)    
+    summon = AddAbility("assets/enemies/minotaur/ability_summon.lua",5)    
 
     SetDamage(10);
     SetMaxHP(10000,true)
@@ -24,7 +25,12 @@ function update(dt)
     if (IsInCombat()) then
         local chargeTarget = {}
         chargeTarget["target"] = GetRandomUnit(TYPE_ENEMY,Bor(TYPE_MELEEDPS,Bor(TYPE_RANGEDDPS,TYPE_HEALER)))
-        CastAbility(charge,2,{chargeTarget})
+        CastAbility(charge,5,{chargeTarget})
+        local summonPosition = {}
+        summonPosition["x"] = GetX();
+        summonPosition["y"] = GetY();
+
+        CastAbility(summon,0,{summonPosition})
         CastAbility(quake,0,{})
 
         local chuckTarget = {}

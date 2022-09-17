@@ -12,6 +12,7 @@
 
 #define MAX_PATHFINDING_NODES_HELD 20
 #define MINIMUM_RANGE 6
+#define SHIELD_EFFECT_TIME 0.5f
 
 typedef enum GAMEOBJ_PROPERTIES
 {
@@ -61,8 +62,12 @@ typedef struct GameObject
     char* name; 
     char* path; 
     GameObject* targObj;
+
     int* onAttackEffectsIndices;
+    
     Shield* shields;
+    float shieldSizeTimer;
+
     Ability abilities[MAX_ABILITIES]; 
     Effect effects[MAX_EFFECTS];
     Command queue[MAX_QUEUED_CMD];

@@ -10,3 +10,4 @@ replays/*
 *.exe
 game.dSYM/Contents
 game
+game.dSYM

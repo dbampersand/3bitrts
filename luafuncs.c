@@ -1469,6 +1469,11 @@ int L_CreateObject(lua_State* l)
 {
     GameObject* g;
     const char* l_path = lua_tostring(l,1);
+    if (!l_path)
+    {
+        printf("CreateObject: Path null\n");
+        return 0;    
+    }
     const int x = lua_tonumber(l,2);
     const int y = lua_tonumber(l,3);
     int PLAYER = lua_tonumber(l,4);
@@ -1477,6 +1482,7 @@ int L_CreateObject(lua_State* l)
     bool prefabFound = false;
     for (int i = 0; i < numPrefabs; i++)
     {
+        
         if (strcasecmp(prefabs[i]->path,l_path) == 0)
         {
             g = prefabs[i];

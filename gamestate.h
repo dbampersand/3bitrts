@@ -79,3 +79,5 @@ void GoTutorial();
 void WinGame();
 void LoseGame();
 
+float easeOutBack(float x); 
+float easeInOutBack(float x);

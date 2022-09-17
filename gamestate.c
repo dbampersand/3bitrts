@@ -485,14 +485,16 @@ void UpdateTransition(float dt)
 
 }
 //based on https://easings.net/#easeOutBack
-float easeOutBack(float x) {
+float easeOutBack(float x) 
+{
     const float c1 = 1.70158f;
     const float c3 = c1 + 1;
 
     return 1 + c3 * pow(x - 1, 3) + c1 * pow(x - 1, 2);
 }
 //based on https://easings.net/#easeInOutBack
-float easeInOutBack(float x) {
+float easeInOutBack(float x) 
+{
     const float c1 = 1.70158f;
     const float c2 = c1 * 1.525f;
     

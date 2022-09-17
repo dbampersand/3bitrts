@@ -91,3 +91,19 @@ float DamageShields(GameObject* g, float damage)
     }
     return damage;
 }
+void UpdateShield(GameObject* g, float dt)
+{
+    if (GetTotalShield(g) > 0)
+    {
+        g->shieldSizeTimer += dt * (1/SHIELD_EFFECT_TIME);
+        if (g->shieldSizeTimer > 1)
+            g->shieldSizeTimer = 1;
+    }
+    else
+    {
+        g->shieldSizeTimer -= dt * (1/SHIELD_EFFECT_TIME);
+        if (g->shieldSizeTimer < 0)
+            g->shieldSizeTimer = 0;
+
+    }
+}

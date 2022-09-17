@@ -12,3 +12,4 @@ void AttachShield(GameObject* g, float duration, float value);
 void RemoveShield(GameObject* g, Shield* s);
 void ProcessShields(GameObject* g, float dt);
 float DamageShields(GameObject* g, float damage);
+void UpdateShield(GameObject* g, float dt);

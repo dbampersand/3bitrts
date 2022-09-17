@@ -161,6 +161,7 @@ void UpdateObject(GameObject* g, float dt)
     }
     UpdateMana(g, dt);
     UpdateHPRegen(g, dt);
+    UpdateShield(g,dt);
 
     currGameObjRunning->invulnerableTime -= dt;
     if (currGameObjRunning->invulnerableTime < 0)
@@ -1723,7 +1724,7 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
     int numPixelsShield = percentShield*r.w;
     
     al_draw_filled_rectangle((int)r.x,(int)r.y,(int)(r.x+numPixels),(int)(r.y+r.h),col);
-    al_draw_filled_rectangle((int)r.x,(int)r.y-5,(int)(r.x+numPixelsShield),(int)((r.y-5)+r.h-1),col);
+    al_draw_filled_rectangle((int)r.x,(int)r.y-7,(int)(r.x+numPixelsShield),(int)((r.y-7)+r.h-1),col);
 
     
 }
@@ -1810,7 +1811,7 @@ void DrawSummonEffect(GameObject* g)
     }
 }
 void DrawGameObj(GameObject* g, bool forceInverse)
-{
+{   
     if (!(g->properties & OBJ_ACTIVE))
         return;
     

@@ -230,7 +230,11 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             selectRect.y = (y + (al_get_bitmap_height(s->sprite) - selectRect.h));
             if (g->stunTimer == 0)
                 DrawRoundedRect(selectRect, c,false);
-
+            //if (GetTotalShield(g) > 0)
+            {
+                float r = (GetWidth(g) > GetHeight(g) ? GetWidth(g) : GetHeight(g)) * easeInOutBack(g->shieldSizeTimer);
+                al_draw_circle(floor(x+GetWidth(g)/2),floor(y+GetHeight(g)/2),r,c,1);
+            }
 
             
             if (currSettings.displayHealthBar == OPTION_HPBAR_ALWAYS)
