@@ -8,7 +8,7 @@ function setup()
 
     SetAbilityRange(20)
     SetCooldown(0);
-    SetManaCost(55);
+    SetManaCost(65);
 end
 
 

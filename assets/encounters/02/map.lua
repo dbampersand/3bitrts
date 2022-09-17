@@ -25,14 +25,14 @@ function setup()
 end
 
 function update(dt)
-    if (_DEBUG) then
-        if (spawnedBoss == false) then
+    --if (_DEBUG) then
+      --  if (spawnedBoss == false) then
 
-            CreateObject("assets/encounters/02/boss.lua",120,22,TYPE_ENEMY,5);
-            spawnedBoss = true;
-            do return end;
-        end
-    end
+        --    CreateObject("assets/encounters/02/boss.lua",120,22,TYPE_ENEMY,5);
+          --  spawnedBoss = true;
+           -- do return end;
+      --  end
+    --end
 
     timer = timer + dt
     if (spawnedBoss == false and timer > 60) then

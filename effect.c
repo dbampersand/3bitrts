@@ -9,8 +9,14 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
 {
     if (!target)
         return false;
-    
+
     float value = e->value * e->stacks;
+    
+    //If it's a trigger_const we've already added the value to it
+    if (e->trigger == TRIGGER_CONST)
+        value = e->value;
+
+    
     if (!IsOwnedByPlayer(from))
     {
         if (currEncounterRunning)
@@ -120,6 +126,7 @@ bool RemoveEffect(Effect* e, GameObject* from, bool removeAllStacks)
     if (e->trigger == TRIGGER_CONST && from)
     {
         ProcessEffect(e,e->from,from,true);
+        e->stacks = 0;
     }
 
     if (e->canStack && !removeAllStacks)
@@ -236,7 +243,13 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
                         e2->duration = e->duration;
                         e2->tickTime = e->tickTime;
                         e2->numTriggers = e->numTriggers;
-                        e2->value = e->value;
+                        if (e2->trigger == TRIGGER_CONST)
+                        {
+                            (ProcessEffect(e,from,target,false));
+                            e2->value += e->value;
+                        }
+                        else
+                            e2->value = e->value;
                         return;
 
                     }

@@ -13,7 +13,7 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_SHIELD;
-    f1["value"] = 600;  
+    f1["value"] = 300;  
     f1["duration"] = 20
     ApplyEffect(GetObjRef(),{f1});
 

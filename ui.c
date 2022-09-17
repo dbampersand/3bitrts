@@ -37,7 +37,7 @@ void DrawTimer(bool enabled)
         size_t buffsiz = snprintf(NULL, 0, "%i:%i",minutes,seconds);
         char* buff = calloc(buffsiz+1,sizeof(char));
         sprintf(buff,"%i:%i",minutes,seconds);
-        al_draw_text(ui.font,FRIENDLY,255-10,10,ALLEGRO_ALIGN_RIGHT,buff);
+        al_draw_text(ui.font,FRIENDLY,255-10,20,ALLEGRO_ALIGN_RIGHT,buff);
     }
 
 }

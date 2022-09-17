@@ -553,6 +553,12 @@ int L_GetObjRef(lua_State* l)
     lua_pushnumber(l,(int)(currGameObjRunning-objects));
     return 1;
 }
+int L_GetAbilityRef(lua_State* l)
+{
+    lua_pushnumber(l,(int)(currAbilityRunning-currGameObjRunning->abilities));
+    return 1;
+}
+
 int L_AbilityIsOnCooldown(lua_State* l)
 {
     GameObject* g = &objects[(int)lua_tonumber(l,1)];
@@ -659,6 +665,15 @@ int L_SetAbilityMaxStacks(lua_State* l)
 {
     currAbilityRunning->maxStacks = lua_tonumber(l,1);
     currAbilityRunning->stacks = lua_tonumber(l,1); 
+    return 0;
+}
+int L_SetAbilityStacks(lua_State* l)
+{
+    currAbilityRunning->stacks = lua_tonumber(l,1); 
+    if (currAbilityRunning->stacks > currAbilityRunning->maxStacks)
+        currAbilityRunning->stacks = currAbilityRunning->maxStacks;
+    if (currAbilityRunning->stacks < 0)
+        currAbilityRunning->stacks = 0;
     return 0;
 }
 int L_GetWidth(lua_State* l)
@@ -966,6 +981,16 @@ int L_UntoggleOthers(lua_State* l)
         ToggleAbility(&currGameObjRunning->abilities[i],currGameObjRunning,false);
     }
     return 0;
+}
+int L_GetAttackLifetime(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_ATTACKS)
+        return 0;
+    Attack* a = &attacks[index];
+
+    lua_pushnumber(l,a->duration);
+    return 1;
 }
 int L_SetAttackLifetime(lua_State* l)
 {
@@ -1719,6 +1744,34 @@ int L_PlaySound(lua_State* l)
     PlaySound(s,lua_tonumber(l,2));
     return 0;
 }
+int L_AddStack(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    int abilityIndex = lua_tonumber(l,2);
+    int numStacksToAdd = lua_tonumber(l,3);
+
+    if (objIndex < 0 || objIndex >= MAX_OBJS || abilityIndex < 0 || abilityIndex >= MAX_ABILITIES)  
+        return 0;
+    GameObject* obj = &objects[objIndex];
+    Ability* a = &obj->abilities[abilityIndex];
+    a->stacks += numStacksToAdd;
+    if (a->stacks > a->maxStacks)
+        a->stacks = a->maxStacks;
+    if (a->stacks < 0)
+        a->stacks = 0;
+    return 0;
+}
+int L_GetStacks(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    int abilityIndex = lua_tonumber(l,2);
+
+    GameObject* obj = &objects[objIndex];
+    Ability* a = &obj->abilities[abilityIndex];
+    lua_pushnumber(l,a->stacks);
+    return 0;
+}
+
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -2844,5 +2897,23 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetAttackLifetime);
     lua_setglobal(luaState, "SetAttackLifetime");
+
+    lua_pushcfunction(luaState, L_GetAttackLifetime);
+    lua_setglobal(luaState, "GetAttackLifetime");
+
+    lua_pushcfunction(luaState, L_AddStack);
+    lua_setglobal(luaState, "AddStack");
+
+    lua_pushcfunction(luaState, L_GetStacks);
+    lua_setglobal(luaState, "GetStacks");
+
+    lua_pushcfunction(luaState, L_GetAbilityRef);
+    lua_setglobal(luaState, "GetAbilityRef");
+
+    lua_pushcfunction(luaState, L_SetAbilityStacks);
+    lua_setglobal(luaState, "SetAbilityStacks");
+
+    lua_pushcfunction(luaState, L_SetCooldownTimer);
+    lua_setglobal(luaState, "SetCooldownTimer");
 
 }
