@@ -967,6 +967,15 @@ int L_UntoggleOthers(lua_State* l)
     }
     return 0;
 }
+int L_SetAttackLifetime(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_ATTACKS)
+        return 0;
+    Attack* a = &attacks[index];
+    a->duration = lua_tonumber(l,2);
+    return 0;
+}
 int L_ToggleAbility(lua_State* l)
 {
     Ability* a;
@@ -1765,6 +1774,9 @@ void SetGlobals(lua_State* l)
 
     lua_pushinteger(l,EFFECT_ATTACKDAMAGE);
     lua_setglobal(l,"EFFECT_ATTACKDAMAGE");
+
+    lua_pushinteger(l,EFFECT_ATTACKSPEED);
+    lua_setglobal(l,"EFFECT_ATTACKSPEED");
 
     lua_pushinteger(l,EFFECT_INVULN);
     lua_setglobal(l,"EFFECT_INVULN");
@@ -2829,5 +2841,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetObjChannelling);
     lua_setglobal(luaState, "SetObjChannelling");
+
+    lua_pushcfunction(luaState, L_SetAttackLifetime);
+    lua_setglobal(luaState, "SetAttackLifetime");
 
 }

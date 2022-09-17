@@ -36,7 +36,7 @@ Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float ti
     a.targx = x;
     a.targy = y;
     a.radius = 0;
-    a.easing = 0.1f;
+    a.easing = 0.85f;
     a.targetRadius = radius;
     a.effects = calloc(numEffects,sizeof(Effect));
     memcpy(a.effects,effects,sizeof(Effect)*numEffects);
@@ -392,7 +392,7 @@ void UpdateAttack(Attack* a, float dt)
     {
         a->duration -= dt;
     }
-    float amtToIncreaseBy = (a->timer*a->timer*a->timer);
+    float amtToIncreaseBy = (a->timer*a->timer*a->timer*a->timer);
 
     if (a->radius != a->targetRadius)
     {

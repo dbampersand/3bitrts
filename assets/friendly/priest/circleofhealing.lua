@@ -1,12 +1,16 @@
+local radius = 75
+
 function setup()
-    AbilitySetCastType(ABILITY_TOGGLE);
+    AbilitySetPortrait("assets/friendly/priest/icon_minorheal.png");
+    SetDescription("Circle of Healing\n\nLarge area heal.")
+
+    AbilitySetCastType(ABILITY_INSTANT);
 
     SetAbilityRange(20)
     SetCooldown(0);
-
+    SetManaCost(55);
 end
 
-local aoe = -1;
 
 function casted(x,y,obj,headingx,headingy)
 
@@ -14,20 +18,15 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HEAL;
-    --f1["numTriggers"] = 5
-    f1["value"] = 2;  
-    --f1["duration"] = 10;
-    f1["triggersPerSecond"] = 1
+    f1["value"] = 100;  
 
-    aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_HALF,false, -1, {f1})
+    local aoe = CreateAOE(GetX(obj),GetY(obj),"", radius, 0.25, 0.25, false, ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_HALF,false, -1, {f1})
     SetAttackCircle(aoe,true);
 
     return true; 
 end
 
 function untoggle()
-    RemoveAttack(aoe);
-    aoe = -1;
 end
 
 function onhit(x,y,objhit)

@@ -3,7 +3,7 @@ local maxHP = 250;
 function setup()
     SetSprite("assets/friendly/priest/priest.png");
     AddAbility("assets/friendly/priest/smite.lua",0)    
-    AddAbility("assets/friendly/priest/minorheal.lua",1)    
+    AddAbility("assets/friendly/priest/circleofhealing.lua",1)    
     AddAbility("assets/friendly/priest/regen.lua",2)    
     AddAbility("assets/friendly/priest/shield.lua",3)    
     AddAbility("assets/friendly/priest/greaterheal.lua",4)    

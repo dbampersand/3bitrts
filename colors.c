@@ -131,6 +131,7 @@ void InitColors()
     EffectColors[EFFECT_SPEED] = COLOR_FRIENDLY;
     EffectColors[EFFECT_SHIELD] = COLOR_HEAL;
     EffectColors[EFFECT_ATTACKDAMAGE] = COLOR_DAMAGE;
+    EffectColors[EFFECT_ATTACKSPEED] = COLOR_DAMAGE;
     EffectColors[EFFECT_INVULN] = COLOR_HEAL;
     EffectColors[EFFECT_CURE] = COLOR_HEAL;
 

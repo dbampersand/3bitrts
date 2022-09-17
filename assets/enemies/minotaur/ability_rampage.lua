@@ -19,7 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 2;  
+    f1["value"] = 1;  
 
     local speed = {}
     speed["trigger"] = TRIGGER_CONST

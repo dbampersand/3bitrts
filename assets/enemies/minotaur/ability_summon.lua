@@ -10,10 +10,12 @@ function setup()
 
     adds[1] = "assets/enemies/berzerker/berzerker.lua"
     adds[2] = "assets/enemies/shield_warrior/shield_warrior.lua"
+    adds[3] = "assets/enemies/drummer/drummer.lua"
+    
 end
 
 function casted(x,y,obj,headingx,headingy)
-    local toSpawn = math.random(1,#adds);
+    local toSpawn = math.random(#adds);
     CreateObject(adds[toSpawn],x,y,TYPE_ENEMY,1);
     SetObjChannelling(GetObjRef(),1);
 

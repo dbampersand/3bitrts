@@ -2430,3 +2430,7 @@ bool ObjIsInvincible(GameObject* g)
 {
     return (g->properties & OBJ_IS_INVINCIBLE);
 }
+void AddAttackSpeed(GameObject* g, float speed)
+{
+    g->attackSpeed += speed;
+}

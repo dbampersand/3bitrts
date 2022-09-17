@@ -52,6 +52,11 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         AddDamage(target,value*sign);
     }
+    if (e->effectType == EFFECT_ATTACKSPEED)
+    {
+        AddAttackSpeed(target,value * sign);
+    }
+
     if (e->effectType == EFFECT_INVULN)
     {
         MakeInvulnerable(target,e->duration*sign);

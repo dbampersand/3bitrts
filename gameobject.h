@@ -235,7 +235,7 @@ void AddMana(GameObject* g, float mana);
 void SetManaRegen(GameObject* g, float regen);
 void SetHPRegen(GameObject* g, float regen);
 void SetRange(GameObject* g, float range);
-
+void AddAttackSpeed(GameObject* g, float speed);
 
 
 void Teleport(GameObject* g, float x, float y);

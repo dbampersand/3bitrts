@@ -27,6 +27,7 @@ end
 function update(dt)
     if (_DEBUG) then
         if (spawnedBoss == false) then
+
             CreateObject("assets/encounters/02/boss.lua",120,22,TYPE_ENEMY,5);
             spawnedBoss = true;
             do return end;
@@ -48,6 +49,9 @@ function update(dt)
         
             ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2);
             SetObjAggroRadius(ob,999)       
+
+            
+
             firstWave = true;    
 
         end
@@ -68,7 +72,11 @@ function update(dt)
             SetObjAggroRadius(ob,999)
         
             ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2);
-            SetObjAggroRadius(ob,999)    
+            SetObjAggroRadius(ob,999)
+            
+            ob = CreateObject("assets/enemies/drummer/drummer.lua",120,22,TYPE_ENEMY,5);
+            SetObjAggroRadius(ob,999)       
+
             thirdWave = true;    
         end
 
