@@ -168,16 +168,17 @@ int numFreeObjs;
 GameObject** prefabs;
 int numPrefabs;
 int numPrefabsAllocated;
-
-CollisionEvent collisionEvents[MAX_OBJS];
-
-
 typedef struct CollisionEvent
 {
     GameObject* obj;
     bool x;
     int direction;
-}
+}CollisionEvent;
+
+CollisionEvent collisionEvents[MAX_OBJS];
+
+
+
 
 
 
