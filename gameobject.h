@@ -44,6 +44,7 @@ typedef enum OBJ_FRIENDLINESS
     TYPE_DECORATION = 2
 }OBJ_FRIENDLINESS;
 
+
 typedef struct Shield Shield;
 typedef struct lua_State lua_State;
 typedef struct Player Player;
@@ -168,7 +169,15 @@ GameObject** prefabs;
 int numPrefabs;
 int numPrefabsAllocated;
 
+CollisionEvent collisionEvents[MAX_OBJS];
 
+
+typedef struct CollisionEvent
+{
+    GameObject* obj;
+    bool x;
+    int direction;
+}
 
 
 

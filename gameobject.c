@@ -1161,7 +1161,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                                 g2->position.x = GetMapWidth() - GetWidth(g2);
                                 CheckCollisions(g2,true,-1,true);
                                 CheckCollisionsWorld(g2,true,-1);
-                                return;
+                                continue;
                             }
                         }
                         CheckCollisions(g2,true,1,true);
@@ -1196,7 +1196,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                                 g2->position.x=0;
                                 CheckCollisions(g2,true,1,true);
                                  CheckCollisionsWorld(g2,true,1);
-                                return;
+                                continue;
 
                             }
                             if (g2->position.x + GetWidth(g2) > GetMapWidth())
@@ -1234,17 +1234,17 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             {   
 
                                 g2->position.y = g->position.y + GetHeight(g);
-                            if (g2->position.y <0)
-                            {
-                                g2->position.y=0;
-                            }
-                            if (ObjectIsInUI(g2))
-                            {
-                                g2->position.y = GetUIStartHeight() - GetHeight(g2);
-                                CheckCollisions(g2,false,-1,true);
-                                CheckCollisionsWorld(g2,false,-1);
-                                return;
-                            }
+                                if (g2->position.y <0)
+                                {
+                                    g2->position.y=0;
+                                }
+                                if (ObjectIsInUI(g2))
+                                {
+                                    g2->position.y = GetUIStartHeight() - GetHeight(g2);
+                                    CheckCollisions(g2,false,-1,true);
+                                    CheckCollisionsWorld(g2,false,-1);
+                                    continue;
+                                }
                         }
 
                         CheckCollisions(g2,false,1,true);
@@ -1275,11 +1275,11 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                                 g2->position.y=0;
                                 CheckCollisions(g2,false,1,true);
                                 CheckCollisionsWorld(g2,false,1);
-                                return;
+                                continue;
                             }
                             if (ObjectIsInUI(g2))
                             {
-                                g2->position.y = UI_START_Y - GetHeight(g2);
+                               // g2->position.y = GetUIStartHeight() - GetHeight(g2);//UI_START_Y - GetHeight(g2);
                         }
                         }
 
@@ -1344,7 +1344,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
     
     if (ObjectIsInUI(g))
     {
-        g->position.y = UI_START_Y - GetHeight(g);
+        g->position.y = GetUIStartHeight() - GetHeight(g);// UI_START_Y - GetHeight(g);
     }
 
     float posX = g->position.x;
@@ -1598,15 +1598,29 @@ void Move(GameObject* g, float delta)
             return;
         }
         
+        if (dY > dX)
+        {
+            g->position.y += dY;
+            CheckCollisions(g,false, dY,ObjectCanPush(g));
+            CheckCollisionsWorld(g,false, dY);
 
-        g->position.y += dY;
-        CheckCollisions(g,false, dY,ObjectCanPush(g));
-        CheckCollisionsWorld(g,false, dY);
+            g->position.x += dX;
+            CheckCollisions(g,true, dX,ObjectCanPush(g));
+            CheckCollisionsWorld(g,true, dX);
+            SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
+        }
+        else
+        {
+            g->position.x += dX;
+            CheckCollisions(g,true, dX,ObjectCanPush(g));
+            CheckCollisionsWorld(g,true, dX);
+            SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
 
-        g->position.x += dX;
-        CheckCollisions(g,true, dX,ObjectCanPush(g));
-        CheckCollisionsWorld(g,true, dX);
-        SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
+            g->position.y += dY;
+            CheckCollisions(g,false, dY,ObjectCanPush(g));
+            CheckCollisionsWorld(g,false, dY);
+
+        }
 
 
 }
