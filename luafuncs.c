@@ -2399,6 +2399,18 @@ int L_CureNamedEffect(lua_State* l)
     lua_pushnumber(l,numCured);
     return 1;
 }
+int L_GetAbilityStacks(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    int abilityIndex = lua_tonumber(l,2);
+
+    if (objIndex < 0 || objIndex >= MAX_OBJS || abilityIndex < 0 || abilityIndex >= MAX_ABILITIES)
+        return 0;
+    lua_pushnumber(l,objects[objIndex].abilities[abilityIndex].stacks);
+    return 1;
+    
+
+}
 
 void SetLuaKeyEnums(lua_State* l)
 {
@@ -2915,5 +2927,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetCooldownTimer);
     lua_setglobal(luaState, "SetCooldownTimer");
+
+    lua_pushcfunction(luaState, L_GetAbilityStacks);
+    lua_setglobal(luaState, "GetAbilityStacks");
 
 }

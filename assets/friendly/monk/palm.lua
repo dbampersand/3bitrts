@@ -2,9 +2,9 @@
 function setup()
     AbilitySetPortrait("assets/friendly/ranger/aimed_shot.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
-    SetDescription("Aimed Shot\n\nA heavy shot. Generates a stack of Flurry.")
-    SetCooldown(12);
-    SetAbilityRange(50);
+    SetDescription("Palm\n\nA heavy hit. Generates a chi.")
+    SetCooldown(6);
+    SetAbilityRange(50);    
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/rogue/audio/cloak.wav",1.25)
@@ -12,9 +12,13 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT
-    f1["value"] = 160;
+    f1["value"] = 120;
     ApplyEffect(obj,{f1})
+
     AddStack(GetObjRef(),2,1);
+    AddStack(GetObjRef(),3,1);
+    AddStack(GetObjRef(),4,1);
+
 
 
     return true;

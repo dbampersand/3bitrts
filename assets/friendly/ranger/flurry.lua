@@ -2,7 +2,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/ranger/icon_flurry.png");
     AbilitySetCastType(ABILITY_INSTANT);
-    SetDescription("Flurry\n\nIncreases attack speed.")
+    SetDescription("Flurry\n\nIncreases attack speed and damage.")
     SetAbilityTargetHint(HINT_NONE)
     SetCooldown(99999999);
     SetCooldownTimer(99999999);
@@ -11,16 +11,28 @@ function setup()
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/rogue/audio/toxic.wav",1.25)
-
+    f1 = {}
     f1["trigger"] = TRIGGER_CONST
     f1["type"] = EFFECT_ATTACKSPEED
-    f1["value"] = -0.15;
+    f1["value"] = -0.18;
     f1["maxStacks"] = 5;
     f1["canStack"] = true;  
     f1["duration"] = 10
     f1["name"] = "Flurry"
 
-    ApplyEffect(GetObjRef(),{f1});
+    f2 = {}
+    f2["trigger"] = TRIGGER_CONST
+    f2["type"] = EFFECT_ATTACKDAMAGE
+    f2["value"] = 3;
+    f2["maxStacks"] = 5;
+    f2["canStack"] = true;  
+    f2["duration"] = 10
+    f2["name"] = "Flurry Damage"
+
+
+
+
+    ApplyEffect(GetObjRef(),{f1,f2});
    return true;
 end
 function onhit(x,y,objhit)

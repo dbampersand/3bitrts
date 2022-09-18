@@ -51,7 +51,7 @@ function update(dt)
     
     end
     if (aoe > -1) then
-        MoveAttack(aoe,GetX(parent),GetY(parent));
+        MoveAttack(aoe,GetX(GetObjRef()),GetY(GetObjRef()));
         SetAttackLifetime(aoe, 10)
     end
 
