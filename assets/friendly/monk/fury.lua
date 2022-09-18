@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("assets/friendly/ranger/icon_flurry.png");
+    AbilitySetPortrait("assets/friendly/monk/icon_fury.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetDescription("Fury\n\nA devastating single target attack. Uses all stacks of chi to deal proportional damage.")
     SetAbilityTargetHint(HINT_NONE)
@@ -8,6 +8,8 @@ function setup()
     SetCooldownTimer(99999999);
     SetAbilityMaxStacks(5);
     SetAbilityStacks(0)
+
+    SetAbilityRange(50)
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/rogue/audio/toxic.wav",1.25)

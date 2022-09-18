@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("assets/friendly/ranger/icon_cripple.png");
+    AbilitySetPortrait("assets/friendly/monk/icon_kick.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(50)
     SetDescription("Kick\n\nStuns the target. Generates a chi.")

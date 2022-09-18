@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("assets/friendly/ranger/aimed_shot.png");
+    AbilitySetPortrait("assets/friendly/monk/icon_palm.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetDescription("Palm\n\nA heavy hit. Generates a chi.")
     SetCooldown(6);

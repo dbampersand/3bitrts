@@ -1,7 +1,7 @@
 local radius = 60;
 
 function setup()
-    AbilitySetPortrait("assets/friendly/ranger/icon_instinct.png");
+    AbilitySetPortrait("assets/friendly/monk/icon_whirlwind.png");
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityRange(50)
     SetDescription("Whirlwind\n\nUses a chi to deal area damage to all nearby enemies.")

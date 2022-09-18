@@ -367,8 +367,8 @@ void SetGameStateToChoosingParty()
 
                     if ((numRanged-1) % 3 == 0)
                     {
-                        meleeX = RANGEDDPSSTARTX;
-                        meleeY += largestRanged;
+                        rangedX = RANGEDDPSSTARTX;
+                        rangedY += largestRanged;
                         largestRanged = -1;
                     }
                     x = rangedX;

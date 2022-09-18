@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("assets/friendly/ranger/icon_galeshot.png");
+    AbilitySetPortrait("assets/friendly/monk/icon_lotus.png");
     AbilitySetCastType(ABILITY_INSTANT);
     SetDescription("Lotus\n\nCauses a lotus to bloom, healing yourself. Uses a chi charge.")
     SetCooldown(0);
