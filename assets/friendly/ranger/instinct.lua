@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("assets/friendly/rogue/icon_shiv.png");
+    AbilitySetPortrait("assets/friendly/ranger/icon_instinct.png");
     AbilitySetCastType(ABILITY_POINT);
     SetAbilityRange(50)
     SetDescription("Instinct\n\nIncreases autoattack damage for units around the target position.")

@@ -1,9 +1,9 @@
 
 function setup()
-    AbilitySetPortrait("assets/friendly/rogue/icon_backstab.png");
+    AbilitySetPortrait("assets/friendly/ranger/icon_cripple.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(50)
-    SetDescription("Cripple\n\nHits the target with a slow effect and taunts the target.")
+    SetDescription("Cripple\n\nThrows a bola at the target, causing a slow effect and taunting the target.")
     SetCooldown(15);
 end
 function casted(x,y,obj,headingx,headingy)

@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("assets/friendly/rogue/icon_summon_cabal.png");
+    AbilitySetPortrait("assets/friendly/ranger/icon_galeshot.png");
     AbilitySetCastType(ABILITY_POINT);
     SetDescription("Galeshot\n\nDeals damage in an area.")
     SetCooldown(40);

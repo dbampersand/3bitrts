@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("assets/friendly/rogue/icon_toxic.png");
+    AbilitySetPortrait("assets/friendly/ranger/icon_flurry.png");
     AbilitySetCastType(ABILITY_INSTANT);
     SetDescription("Flurry\n\nIncreases attack speed.")
     SetAbilityTargetHint(HINT_NONE)
@@ -8,9 +8,6 @@ function setup()
     SetCooldownTimer(99999999);
     SetAbilityMaxStacks(5);
     SetAbilityStacks(0)
-    
-    --AddStack(GetObjRef(),GetAbilityRef(),-1)
-    
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/rogue/audio/toxic.wav",1.25)
@@ -22,7 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["canStack"] = true;  
     f1["duration"] = 10
     f1["name"] = "Flurry"
-    
+
     ApplyEffect(GetObjRef(),{f1});
    return true;
 end

@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("assets/friendly/rogue/icon_cloak.png");
+    AbilitySetPortrait("assets/friendly/ranger/aimed_shot.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetDescription("Aimed Shot\n\nA heavy shot. Generates a stack of Flurry.")
     SetCooldown(1);
