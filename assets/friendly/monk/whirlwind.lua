@@ -23,7 +23,6 @@ function casted(x,y,obj,headingx,headingy)
     local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 0.25, 0.25, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_STAR_HALF,false, -1, {f1});
 
     AddStack(GetObjRef(),2,-1);
-    AddStack(GetObjRef(),3,-1);
     AddStack(GetObjRef(),4,-1);
 
     return true;

@@ -1,8 +1,8 @@
 
 function setup()
     AbilitySetPortrait("assets/friendly/ranger/icon_galeshot.png");
-    AbilitySetCastType(ABILITY_POINT);
-    SetDescription("Mantra\n\nHeals self. Uses a chi charge.")
+    AbilitySetCastType(ABILITY_INSTANT);
+    SetDescription("Lotus\n\nCauses a lotus to bloom, healing yourself. Uses a chi charge.")
     SetCooldown(0);
     SetAbilityRange(50);
 
@@ -23,7 +23,6 @@ function casted(x,y,obj,headingx,headingy)
 
     AddStack(GetObjRef(),2,-1);
     AddStack(GetObjRef(),3,-1);
-    AddStack(GetObjRef(),4,-1);
 
 
 

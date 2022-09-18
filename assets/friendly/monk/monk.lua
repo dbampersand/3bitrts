@@ -9,7 +9,7 @@ function setup()
     AddAbility("assets/friendly/monk/kick.lua",1)
     AddAbility("assets/friendly/monk/fury.lua",2)
     AddAbility("assets/friendly/monk/whirlwind.lua",3)
-    AddAbility("assets/friendly/monk/mantra.lua",4)
+    AddAbility("assets/friendly/monk/lotus.lua",4)
 
 
     AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05);
@@ -21,10 +21,10 @@ function setup()
     SetSpeed(60)
     SetMaxHP(maxHP,true);
 
-    SetObjType(TYPE_RANGEDDPS);
+    SetObjType(TYPE_MELEEDPS);
 
     IsPlayerChoosable(true);
-    SetCategory(TYPE_RANGEDDPS);
+    SetCategory(TYPE_MELEEDPS);
     
     SetObjectPush(false);
 end
@@ -39,7 +39,7 @@ function update(dt)
         f1["value"] = 5;
 
     
-        heal = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_DEFAULT,DITHER_HALF,true, -1, {f1})
+        heal = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_DEFAULT,DITHER_EIGTH,false, -1, {f1})
     end
     if (heal > -1) then
         MoveAttack(heal,GetX(GetObjRef()),GetY(GetObjRef()));
