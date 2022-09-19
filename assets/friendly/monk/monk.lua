@@ -12,7 +12,7 @@ function setup()
     AddAbility("assets/friendly/monk/lotus.lua",4)
 
 
-    AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05);
+    AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05); 
     AddAttackSprite("assets/ui/slash_fx2.png",16,16,0.05);
     AddAttackSprite("assets/ui/slash_fx.png",32,32,0.05);
 

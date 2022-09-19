@@ -29,6 +29,7 @@ typedef enum HINT
 
 typedef struct Ability
 {
+
     char* luabuffer;
     int luafunc_casted;
     int luafunc_setup;
@@ -98,3 +99,5 @@ void InitAbilities();
 bool ObjectHasManaToCast(GameObject* g, Ability* a); 
 bool AbilityIsOnCooldown(Ability* a);
 bool AbilityCanBeCastOnGround(Ability* a);
+
+void ModifyAbilityCooldownTimer(Ability* a, float value);

@@ -1771,7 +1771,26 @@ int L_GetStacks(lua_State* l)
     lua_pushnumber(l,a->stacks);
     return 0;
 }
+int L_Normalize(lua_State* l)
+{
+    float x = lua_tonumber(l,1);
+    float y = lua_tonumber(l,2);
+    Normalize(&x,&y);
 
+    lua_newtable(l);
+
+    lua_pushstring(l,"x");
+    lua_pushnumber(l,x);
+    lua_settable(l,-3);
+
+    lua_pushstring(l,"y");
+    lua_pushnumber(l,y);
+    lua_settable(l,-3);
+
+    return 1;
+    
+
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -2214,8 +2233,8 @@ int L_MoveAttack(lua_State* l)
         if (a)
         {
 
-            int x = lua_tonumber(l,2);
-            int y = lua_tonumber(l,3);
+            float x = lua_tonumber(l,2);
+            float y = lua_tonumber(l,3);
             a->x = x;
             a->y = y;
         }
@@ -2411,7 +2430,38 @@ int L_GetAbilityStacks(lua_State* l)
     
 
 }
+int L_ModifyAbilityCooldownTimer(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    int abilityIndex = lua_tonumber(l,2);
 
+    if (objIndex < 0 || objIndex >= MAX_OBJS || abilityIndex < 0 || abilityIndex >= MAX_ABILITIES)
+        return 0;
+    Ability* a = &objects[objIndex].abilities[abilityIndex];
+    ModifyAbilityCooldownTimer(a,lua_tonumber(l,3));
+    
+    return 1;
+
+}
+int L_GetAttackPosition(lua_State* l)
+{
+    int atk = lua_tonumber(l,1);
+    if (atk < 0 || atk >= MAX_ATTACKS)
+        return 0;
+        lua_newtable(l);
+
+    Attack* a = &attacks[atk];
+    lua_pushstring(l,"x");
+    lua_pushnumber(l,a->x);
+    lua_settable(l,-3);
+
+    lua_pushstring(l,"y");
+    lua_pushnumber(l,a->y);
+    lua_settable(l,-3);
+
+    return 1;
+
+}
 void SetLuaKeyEnums(lua_State* l)
 {
     //TODO: Update these when a key is changed in settings
@@ -2930,5 +2980,14 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetAbilityStacks);
     lua_setglobal(luaState, "GetAbilityStacks");
+
+    lua_pushcfunction(luaState, L_ModifyAbilityCooldownTimer);
+    lua_setglobal(luaState, "ModifyAbilityCooldownTimer");
+    
+    lua_pushcfunction(luaState, L_Normalize);
+    lua_setglobal(luaState, "Normalize");
+
+    lua_pushcfunction(luaState, L_GetAttackPosition);
+    lua_setglobal(luaState, "GetAttackPosition");
 
 }

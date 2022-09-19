@@ -552,3 +552,12 @@ bool AbilityIsCastImmediately(Ability* a)
     if (!a) return false;
     return !!((a->castType & ABILITY_TOGGLE) | (a->castType & ABILITY_INSTANT));
 }
+void ModifyAbilityCooldownTimer(Ability* a, float value)
+{
+    a->cdTimer += value;
+    if (a->cdTimer < 0)
+        a->cdTimer = 0;
+    if (a->cdTimer > a->cooldown)
+        a->cdTimer = a->cooldown;
+    
+}
