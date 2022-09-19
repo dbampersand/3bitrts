@@ -152,12 +152,14 @@ typedef struct GameObject
     float deathTimer;
 
     float stunTimer;
+    bool objectIsStunnable;
 
     PathfindNode pathNodes[MAX_PATHFINDING_NODES_HELD];
     int currentPathingNode;
     bool pathfindNeedsRefresh;
 
     bool shouldProcessAI;
+    
 } GameObject;
 
 

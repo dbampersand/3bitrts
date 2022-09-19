@@ -98,7 +98,7 @@ function update(dt)
 
     end
 
-    if (GetHP() <= maxHP/2) then
+    if (GetHP(GetObjRef()) <= maxHP/2) then
         CastAbility(summonAdd,0.1);
         --Choose spell to cast every second instead of every 3
         makeChoice = 1;

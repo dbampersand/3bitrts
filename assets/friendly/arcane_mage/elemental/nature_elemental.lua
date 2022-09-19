@@ -1,0 +1,29 @@
+local maxHP = 150;
+local lifetime = 20
+
+function setup()
+    SetSprite("assets/friendly/arcane_mage/arcane_mage.png");
+
+    AddAbility("assets/friendly/arcane_mage/elemental/transmute.lua",0)
+
+
+    AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05);
+    AddAttackSprite("assets/ui/slash_fx2.png",16,16,0.05);
+    AddAttackSprite("assets/ui/slash_fx.png",32,32,0.05);
+
+    SetDamage(15);
+    SetRange(5)
+    SetSpeed(60)
+    SetMaxHP(maxHP,true);
+
+    SetObjType(TYPE_RANGEDDPS);
+    SetCategory(TYPE_RANGEDDPS);
+    
+    SetObjectPush(false);
+end
+
+function update(dt)
+end
+
+function kill()
+end

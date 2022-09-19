@@ -9,9 +9,9 @@ function setup()
     SetCooldown(30);
     SetAbilityRange(50)
 
-    elementals[1] = "assets/friendly/arcane_mage/elemental/water_elemental.lua";
-    --elementals[2] = "assets/friendly/arcane_mage/elemental/fire_elemental.lua";
-    --elementals[2] = "assets/friendly/arcane_mage/elemental/nature_elemental.lua";
+    --elementals[1] = "assets/friendly/arcane_mage/elemental/water_elemental.lua";
+    --elementals[1] = "assets/friendly/arcane_mage/elemental/fire_elemental.lua";
+    elementals[1] = "assets/friendly/arcane_mage/elemental/nature_elemental.lua";
 
 end
 function casted(x,y,obj,headingx,headingy)

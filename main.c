@@ -310,7 +310,6 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             free(list);
         }
     }
-    DrawDamageNumbers();
     if (gameState == GAMESTATE_END)
     {
         DrawEndScreen(mouseState,mouseStateLastFrame);
@@ -331,6 +330,8 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     DrawBufferedStrings();
     if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS)
     {
+        DrawDamageNumbers();
+
         UpdateButton(ui.menuButton.x,ui.menuButton.y,&ui.menuButton,*mouseState,*mouseStateLastFrame);
         DrawUIElement(&ui.menuButton,ui.menuButton.x,ui.menuButton.y,mouseState,BG);
 

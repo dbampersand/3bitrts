@@ -1038,7 +1038,11 @@ int L_ToggleAbility(lua_State* l)
 }
 int L_GetHP(lua_State* l)
 {
-    lua_pushnumber(l,currGameObjRunning->health);
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+
+    lua_pushnumber(l,objects[index].health);
     return 1;
 }
 int L_SetObjAggroRadius(lua_State* l)
@@ -1790,6 +1794,15 @@ int L_Normalize(lua_State* l)
     return 1;
     
 
+}
+int L_ObjIsStunnable(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    bool stunnable = lua_toboolean(l,2);
+    objects[index].objectIsStunnable = stunnable;
+    return 0;
 }
 void SetGlobals(lua_State* l)
 {
@@ -2989,5 +3002,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetAttackPosition);
     lua_setglobal(luaState, "GetAttackPosition");
+
+    lua_pushcfunction(luaState, L_ObjIsStunnable);
+    lua_setglobal(luaState, "ObjIsStunnable");
 
 }

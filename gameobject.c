@@ -2046,6 +2046,8 @@ void SetMoveSpeed(GameObject* g, float value)
 void Stun(GameObject* source, GameObject* g, float value)
 {
     if (!g) return;
+    if (!g->objectIsStunnable)
+        return;
     g->stunTimer += value;
 
     for (int i = 0; i < MAX_ABILITIES; i++)

@@ -9,6 +9,8 @@ function setup()
 
     SetSpeed(0)
     SetObjectPush(true);
+    ObjIsStunnable(GetObjRef(),false);
+
 end
 
 local timer = 4
@@ -19,10 +21,10 @@ local hpLastFrame = maxHP;
 local damageDone = 0
 function update(dt)
 
-    if (math.floor(GetHP()) > math.floor(maxHP / 2)) then
+    if (math.floor(GetHP(GetObjRef())) > math.floor(maxHP / 2)) then
         timer = 0;
         timerActivated = true
-        damageDone = damageDone + (GetHP() - (maxHP/2));
+        damageDone = damageDone + (GetHP(GetObjRef()) - (maxHP/2));
     end
     if (timerActivated == true) then
         timer = timer + dt;
@@ -37,7 +39,7 @@ function update(dt)
         totalTimeInCombat = 0;
     end
 
-    hpLastFrame = GetHP();
+    hpLastFrame = GetHP(GetObjRef());
     SetHPIgnoreAugment(math.floor(maxHP/2));
 
     local dps = 0
