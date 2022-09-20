@@ -4,7 +4,7 @@ local timer = 0;
 
 function setup()
     SetSprite("assets/friendly/rogue/cabal/cabal.png");
-    AddAbility("assets/friendly/rogue/cabal/poison_dagger.lua",0)    
+    AddAbility(GetObjRef(),"assets/friendly/rogue/cabal/poison_dagger.lua",0)    
 
 
     AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05);

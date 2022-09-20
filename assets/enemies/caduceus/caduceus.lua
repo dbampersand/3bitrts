@@ -4,8 +4,8 @@ function setup()
     SetMaxHP(600,true)
     SetSpeed(0)
 
-    AddAbility("assets/enemies/caduceus/ability_summon.lua",0);
-    AddAbility("assets/enemies/caduceus/ability_cureaoe.lua",1);
+    AddAbility(GetObjRef(),"assets/enemies/caduceus/ability_summon.lua",0);
+    AddAbility(GetObjRef(),"assets/enemies/caduceus/ability_cureaoe.lua",1);
 
 end
 

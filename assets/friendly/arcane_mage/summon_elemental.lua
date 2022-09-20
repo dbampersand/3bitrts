@@ -2,12 +2,14 @@ elementals = {}
 
 
 function setup()
-    AbilitySetPortrait("assets/friendly/monk/icon_fury.png");
+    AbilitySetPortrait("assets/friendly/arcane_mage/icon_summon_elemental.png");
     AbilitySetCastType(ABILITY_INSTANT);
     SetDescription("Summon Elemental\n\nSummons one of three random elementals.")
     SetAbilityTargetHint(HINT_NONE)
     SetCooldown(30);
     SetAbilityRange(50)
+    SetManaCost(5);
+
 
     --elementals[1] = "assets/friendly/arcane_mage/elemental/water_elemental.lua";
     --elementals[1] = "assets/friendly/arcane_mage/elemental/fire_elemental.lua";

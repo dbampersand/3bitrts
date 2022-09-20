@@ -17,13 +17,13 @@ local inCombat = false;
 function setup()
     SetSprite("assets/enemies/wyrm_boss/wyrm.png");
     SetChannelingSprite("assets/enemies/wyrm_boss/wyrm_channeling.png");
-    bite = AddAbility("assets/enemies/wyrm_boss/ability_bite.lua",0)   
-    fire = AddAbility("assets/enemies/wyrm_boss/ability_fire.lua",1)    
-    nuke = AddAbility("assets/enemies/wyrm_boss/ability_nuke.lua",2)    
-    firebreath = AddAbility("assets/enemies/wyrm_boss/ability_firebreath.lua",3)    
-    summonAdd = AddAbility("assets/enemies/wyrm_boss/ability_summon_adds.lua",4)    
-    bomb = AddAbility("assets/enemies/wyrm_boss/ability_bomb.lua",5);    
-    rage = AddAbility("assets/enemies/wyrm_boss/ability_rage.lua",6);    
+    bite = AddAbility(GetObjRef(),"assets/enemies/wyrm_boss/ability_bite.lua",0)   
+    fire = AddAbility(GetObjRef(),"assets/enemies/wyrm_boss/ability_fire.lua",1)    
+    nuke = AddAbility(GetObjRef(),"assets/enemies/wyrm_boss/ability_nuke.lua",2)    
+    firebreath = AddAbility(GetObjRef(),"assets/enemies/wyrm_boss/ability_firebreath.lua",3)    
+    summonAdd = AddAbility(GetObjRef(),"assets/enemies/wyrm_boss/ability_summon_adds.lua",4)    
+    bomb = AddAbility(GetObjRef(),"assets/enemies/wyrm_boss/ability_bomb.lua",5);    
+    rage = AddAbility(GetObjRef(),"assets/enemies/wyrm_boss/ability_rage.lua",6);    
 
     SetDamage(50);
     SetMaxHP(maxHP,true)

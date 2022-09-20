@@ -1795,6 +1795,14 @@ int L_Normalize(lua_State* l)
     
 
 }
+int L_CreateTicker(lua_State* l)
+{
+    float time = lua_tonumber(l,1);
+    Attack* a = CreateAoE(0,0,"",0,0,time,true,0,1,0,0,NULL,NULL,currGameObjRunning);
+
+    lua_pushnumber(l,a-attacks);
+    return 1;
+}
 int L_ObjIsStunnable(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -1862,6 +1870,13 @@ void SetGlobals(lua_State* l)
 
     lua_pushinteger(l,EFFECT_ATTACKSPEED);
     lua_setglobal(l,"EFFECT_ATTACKSPEED");
+
+    lua_pushinteger(l,EFFECT_ATTACKRANGE);
+    lua_setglobal(l,"EFFECT_ATTACKRANGE");
+
+    lua_pushinteger(l,EFFECT_ADD_MANA);
+    lua_setglobal(l,"EFFECT_ADD_MANA");
+
 
     lua_pushinteger(l,EFFECT_INVULN);
     lua_setglobal(l,"EFFECT_INVULN");
@@ -2223,18 +2238,34 @@ int L_ChangeMap(lua_State* l)
 }
 int L_AddAbility(lua_State* l)
 {
-    const char* path = lua_tostring(l,1);
-    int index = lua_tonumber(l,2);
+    int objIndex = lua_tonumber(l,1);
+    if (objIndex < 0 || objIndex >= MAX_OBJS)
+        return 0;
+    GameObject* g = &objects[objIndex];
+    const char* path = lua_tostring(l,2);
+    int index = lua_tonumber(l,3);
     if (index < 0) index = 0; 
     if (index >= MAX_ABILITIES) index = MAX_ABILITIES-1;
 
-    Ability* prefab = AddAbility(path); 
-    if (!currGameObjRunning->abilities[index].path)
+    //if we're adding the same ability twice in a row don't add it
+    bool shouldAdd = true;
+    if (g->abilities[index].path)
     {
-        currGameObjRunning->numAbilities++;
+        if (strcasecmp(g->abilities[index].path,path) == 0)
+            shouldAdd = false;
     }
-    currGameObjRunning->abilities[index] = CloneAbilityPrefab(prefab,l);
+    if (shouldAdd)
+    {
+        Ability* prefab = AddAbility(path); 
+        if (!g->abilities[index].path)
+        {
+            g->numAbilities++;
+        }
+        g->abilities[index] = CloneAbilityPrefab(prefab,l);
+        }
+    
     lua_pushnumber(l,index);
+
     return 1;
 }
 int L_MoveAttack(lua_State* l)
@@ -3005,5 +3036,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_ObjIsStunnable);
     lua_setglobal(luaState, "ObjIsStunnable");
+
+    lua_pushcfunction(luaState, L_CreateTicker);
+    lua_setglobal(luaState, "CreateTicker");
 
 }

@@ -1,6 +1,6 @@
     function setup()
     SetSprite("assets/enemies/shield_warrior/shield_warrior.png");
-    AddAbility("assets/enemies/shield_warrior/ability_shieldstance.lua",0);
+    AddAbility(GetObjRef(),"assets/enemies/shield_warrior/ability_shieldstance.lua",0);
 
     SetDamage(20);
     SetMaxHP(400,true)

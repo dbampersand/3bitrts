@@ -3,11 +3,11 @@ local maxHP = 250;
 function setup()
     SetSprite("assets/friendly/ranger/ranger.png");
 
-    AddAbility("assets/friendly/ranger/aimed_shot.lua",0)
-    AddAbility("assets/friendly/ranger/cripple.lua",1)
-    AddAbility("assets/friendly/ranger/flurry.lua",2)
-    AddAbility("assets/friendly/ranger/instinct.lua",3)
-    AddAbility("assets/friendly/ranger/galeshot.lua",4)
+    AddAbility(GetObjRef(),"assets/friendly/ranger/aimed_shot.lua",0)
+    AddAbility(GetObjRef(),"assets/friendly/ranger/cripple.lua",1)
+    AddAbility(GetObjRef(),"assets/friendly/ranger/flurry.lua",2)
+    AddAbility(GetObjRef(),"assets/friendly/ranger/instinct.lua",3)
+    AddAbility(GetObjRef(),"assets/friendly/ranger/galeshot.lua",4)
 
 
     AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05);

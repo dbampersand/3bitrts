@@ -32,7 +32,7 @@ Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float ti
     Attack a = {0};
     a.ownedBy = from;
     a.x = x;
-    a.y = y;
+    a.y = y;    
     a.targx = x;
     a.targy = y;
     a.radius = 0;
@@ -593,7 +593,7 @@ void UpdateAttack(Attack* a, float dt)
 
             lua_pushnumber(luaState,a->x);
             lua_pushnumber(luaState,a->y);
-            lua_pushinteger(luaState,currGameObjRunning-objects);
+            lua_pushinteger(luaState,a->ownedBy-objects);
             lua_pushnumber(luaState,dt);    
             lua_pushinteger(luaState,a->target - objects);
             lua_pushinteger(luaState,a-attacks);

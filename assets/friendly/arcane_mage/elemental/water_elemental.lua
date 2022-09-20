@@ -3,7 +3,7 @@ local maxHP = 100;
 function setup()
     SetSprite("assets/friendly/arcane_mage/arcane_mage.png");
 
-    AddAbility("assets/friendly/arcane_mage/elemental/tsunami.lua",0)
+    AddAbility(GetObjRef(),"assets/friendly/arcane_mage/elemental/tsunami.lua",0)
 
 
     AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05);

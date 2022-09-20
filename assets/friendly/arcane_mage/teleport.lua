@@ -1,10 +1,12 @@
 
 function setup()
-    AbilitySetPortrait("assets/friendly/monk/icon_kick.png");
+    AbilitySetPortrait("assets/friendly/arcane_mage/icon_teleport.png");
     AbilitySetCastType(ABILITY_POINT);
     SetAbilityRange(50)
     SetDescription("Teleport\n\nMove to target position, increasing you and allies' attack speed.")
     SetCooldown(15);
+    SetManaCost(20);
+
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/rogue/audio/backstab.wav",1.25)

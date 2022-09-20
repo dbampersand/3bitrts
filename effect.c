@@ -62,6 +62,15 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         AddAttackSpeed(target,value * sign);
     }
+    if (e->effectType == EFFECT_ATTACKRANGE)
+    {
+        AddAttackRange(target,value * sign);
+    }
+    if (e->effectType == EFFECT_ADD_MANA)
+    {
+        AddMana(target,value * sign);
+    }
+
 
     if (e->effectType == EFFECT_INVULN)
     {

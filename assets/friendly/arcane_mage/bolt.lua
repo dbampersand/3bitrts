@@ -1,10 +1,11 @@
 
 function setup()
-    AbilitySetPortrait("assets/friendly/monk/icon_palm.png");
+    AbilitySetPortrait("assets/friendly/arcane_mage/icon_bolt.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetDescription("Bolt\n\nDeals damage and reduces cooldown of Mana Sword.");
-    SetCooldown(8);
-    SetAbilityRange(50);    
+    SetCooldown(6);
+    SetAbilityRange(80);    
+    SetManaCost(15);
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/rogue/audio/cloak.wav",1.25)

@@ -238,6 +238,8 @@ void SetManaRegen(GameObject* g, float regen);
 void SetHPRegen(GameObject* g, float regen);
 void SetRange(GameObject* g, float range);
 void AddAttackSpeed(GameObject* g, float speed);
+void AddAttackRange(GameObject* g, float range);
+
 
 
 void Teleport(GameObject* g, float x, float y);
@@ -258,6 +260,8 @@ void UnsetAll();
 void MakeInvulnerable(GameObject* g, float time);
 int GetWidth(GameObject* g);
 int GetHeight(GameObject* g);
+float GetAttackRange(GameObject* g);
+
 
 bool ObjectCanPush(GameObject* g);
 bool IsInCombat(GameObject* g);

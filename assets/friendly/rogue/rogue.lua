@@ -3,11 +3,11 @@ local maxHP = 300;
 function setup()
     SetSprite("assets/friendly/rogue/rogue.png");
 
-    AddAbility("assets/friendly/rogue/shiv.lua",0)
-    AddAbility("assets/friendly/rogue/cloak.lua",1)
-    AddAbility("assets/friendly/rogue/backstab.lua",2)
-    AddAbility("assets/friendly/rogue/toxic.lua",3)
-    AddAbility("assets/friendly/rogue/summon_cabal.lua",4)
+    AddAbility(GetObjRef(),"assets/friendly/rogue/shiv.lua",0)
+    AddAbility(GetObjRef(),"assets/friendly/rogue/cloak.lua",1)
+    AddAbility(GetObjRef(),"assets/friendly/rogue/backstab.lua",2)
+    AddAbility(GetObjRef(),"assets/friendly/rogue/toxic.lua",3)
+    AddAbility(GetObjRef(),"assets/friendly/rogue/summon_cabal.lua",4)
 
 
     AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05);

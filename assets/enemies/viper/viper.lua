@@ -6,7 +6,7 @@ function setup()
     SetSpeed(80)
     SetRange(5);
 
-    AddAbility("assets/enemies/viper/ability_bite.lua",0);
+    AddAbility(GetObjRef(),"assets/enemies/viper/ability_bite.lua",0);
 
 end
 

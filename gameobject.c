@@ -265,7 +265,7 @@ void UpdateObject(GameObject* g, float dt)
             #define DISTDELTA 0.001f
             Rect unioned = UnionRectR(r,r2);
             
-            if (RectDist(currGameObjRunning,currGameObjRunning->targObj) < currGameObjRunning->range+DISTDELTA)
+            if (RectDist(currGameObjRunning,currGameObjRunning->targObj) < GetAttackRange(g))
             {
                 shouldMove = false;
                 shouldAttack = true;
@@ -2043,6 +2043,10 @@ void SetMoveSpeed(GameObject* g, float value)
     }
     g->speed = value;
 }
+float GetAttackRange(GameObject* g)
+{
+    return (_MAX(g->range,MINIMUM_RANGE));
+}
 void Stun(GameObject* source, GameObject* g, float value)
 {
     if (!g) return;
@@ -2436,3 +2440,8 @@ void AddAttackSpeed(GameObject* g, float speed)
 {
     g->attackSpeed += speed;
 }
+void AddAttackRange(GameObject* g, float range)
+{
+    g->range += range;
+}
+

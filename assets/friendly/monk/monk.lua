@@ -5,11 +5,11 @@ local heal = -1
 function setup()
     SetSprite("assets/friendly/monk/monk.png");
 
-    AddAbility("assets/friendly/monk/palm.lua",0)
-    AddAbility("assets/friendly/monk/kick.lua",1)
-    AddAbility("assets/friendly/monk/fury.lua",2)
-    AddAbility("assets/friendly/monk/whirlwind.lua",3)
-    AddAbility("assets/friendly/monk/lotus.lua",4)
+    AddAbility(GetObjRef(),"assets/friendly/monk/palm.lua",0)
+    AddAbility(GetObjRef(),"assets/friendly/monk/kick.lua",1)
+    AddAbility(GetObjRef(),"assets/friendly/monk/fury.lua",2)
+    AddAbility(GetObjRef(),"assets/friendly/monk/whirlwind.lua",3)
+    AddAbility(GetObjRef(),"assets/friendly/monk/lotus.lua",4)
 
 
     AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05); 

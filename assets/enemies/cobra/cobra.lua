@@ -5,7 +5,7 @@
     SetMaxHP(400,true)
     SetSpeed(80)
 
-    AddAbility("assets/enemies/cobra/ability_spit.lua",0);
+    AddAbility(GetObjRef(),"assets/enemies/cobra/ability_spit.lua",0);
 
 end
 local timer = 0
