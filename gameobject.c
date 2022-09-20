@@ -713,8 +713,9 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
 
     currGameObjRunning->attackSpeed = 1;
 
-    currGameObjRunning->mana = 50;
     currGameObjRunning->maxMana = 100;
+    currGameObjRunning->mana = currGameObjRunning->maxMana;
+
     currGameObjRunning->manaRegen = 1;
 
     currGameObjRunning->aggroRadius = 50;
@@ -738,8 +739,6 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
 
 
     found->attackSpeed = 1;
-    found->mana = 50;
-    found->maxMana = 100;
     currGameObjRunning->prefab = prefab;
 
     numObjects++;
