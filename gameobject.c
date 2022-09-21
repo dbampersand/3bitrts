@@ -803,6 +803,7 @@ bool ObjHasType(GameObject* g, GAMEOBJ_TYPE_HINT typeHint)
     bool b = ((g->objType & typeHint));
     return (g->objType & typeHint);
 }
+
 void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g) 
 {
     char* cpy;
@@ -1618,10 +1619,13 @@ void Move(GameObject* g, float delta)
         double moveX = xtarg - g->position.x;
         double moveY = ytarg - g->position.y;
         
+
         double dist = sqrt(moveX*moveX+moveY*moveY);
 
-        double dX = (moveX / dist * g->speed) * delta;
-        double dY = (moveY / dist * g->speed) * delta;
+        float speed = _MAX(0,g->speed);
+
+        double dX = (moveX / dist * speed) * delta;
+        double dY = (moveY / dist * speed) * delta;
 
         if (dist <= DIST_DELTA)
         {
@@ -2069,6 +2073,9 @@ bool Damage(GameObject* source, GameObject* g, float value)
     {
         return false;
     }
+    value -= g->armor;
+    if (value < 1)
+        value = 1;
     if (HasAugment(currEncounterRunning,AUGMENT_NEUTRAL_TOTALDAMAGE))
     {
         value += Neutral_GetAugmentAbilityDamage(value,currEncounterRunning->augment);
@@ -2442,5 +2449,9 @@ void AddAttackSpeed(GameObject* g, float speed)
 void AddAttackRange(GameObject* g, float range)
 {
     g->range += range;
+}
+void AddArmor(GameObject* g, float armor)
+{
+    g->armor += armor;
 }
 

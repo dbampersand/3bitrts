@@ -982,6 +982,15 @@ int L_UntoggleOthers(lua_State* l)
     }
     return 0;
 }
+int L_UntoggleAll(lua_State* l)
+{
+    for (int i = 0; i < MAX_ABILITIES; i++)
+    {
+        ToggleAbility(&currGameObjRunning->abilities[i],currGameObjRunning,false);
+    }
+    return 0;
+}
+
 int L_GetAttackLifetime(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -1546,6 +1555,72 @@ int L_CreateObject(lua_State* l)
     lua_pushnumber(l,g-objects);
     return 1;
 }
+int L_GetClosestObjectInRange(lua_State* l)
+{
+    float x = lua_tonumber(l,1);
+    float y = lua_tonumber(l,2);
+    float range = lua_tonumber(l,3);
+
+    float closestDist = range;
+    GameObject* closestObj = NULL;
+
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        if (!IsActive(&objects[i]))
+            continue;
+        float cx; float cy;
+        GetCentre(&objects[i],&cx,&cy);
+        if (dist(cx,cy,x,y) < closestDist)
+        {
+            closestObj = &objects[i];
+            closestDist = dist(cx,cy,x,y);
+        }
+    }
+    lua_pushnumber(l,closestObj-objects);
+    return 1;
+
+}
+int L_GetObjectsInRange(lua_State* l)
+{
+    float x = lua_tonumber(l,1);
+    float y = lua_tonumber(l,2);
+    float range = lua_tonumber(l,3);
+    int ownedBy = lua_tonumber(l,4);
+
+    int index = 1;
+    lua_newtable(l);
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        GameObject* g = &objects[i];
+        if (!IsActive(g))
+            continue;
+        float cx; float cy;
+        GetCentre(g,&cx,&cy);
+        if (GetPlayerOwnedBy(g) == ownedBy)
+        {
+            if (dist(cx,cy,x,y) < range)
+            {
+
+                lua_pushnumber(l,index);
+                lua_newtable(l);
+
+
+                lua_pushnumber(l, i);
+                lua_setfield(l, -2, "obj");
+
+                lua_pushnumber(l, dist(cx,cy,x,y));
+                lua_setfield(l, -2, "dist");
+                
+                lua_settable(l,-3);
+
+                index++;
+            }
+        }
+    }
+
+
+    return 1;
+}
 int L_GetUnitCommandList(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -1876,6 +1951,9 @@ void SetGlobals(lua_State* l)
 
     lua_pushinteger(l,EFFECT_ADD_MANA);
     lua_setglobal(l,"EFFECT_ADD_MANA");
+
+    lua_pushinteger(l,EFFECT_ARMOR);
+    lua_setglobal(l,"EFFECT_ARMOR");
 
 
     lua_pushinteger(l,EFFECT_INVULN);
@@ -3039,5 +3117,14 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_CreateTicker);
     lua_setglobal(luaState, "CreateTicker");
+
+    lua_pushcfunction(luaState, L_UntoggleAll);
+    lua_setglobal(luaState, "UntoggleAll");
+
+    lua_pushcfunction(luaState, L_GetObjectsInRange);
+    lua_setglobal(luaState, "GetObjectsInRange");
+
+    lua_pushcfunction(luaState, L_GetClosestObjectInRange);
+    lua_setglobal(luaState, "GetClosestObjectInRange");
 
 }

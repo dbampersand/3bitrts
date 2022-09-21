@@ -105,6 +105,7 @@ typedef struct GameObject
 
     float speed;
 
+
     float attackSpeed;
     float attackTimer;
 
@@ -239,7 +240,7 @@ void SetHPRegen(GameObject* g, float regen);
 void SetRange(GameObject* g, float range);
 void AddAttackSpeed(GameObject* g, float speed);
 void AddAttackRange(GameObject* g, float range);
-
+void AddArmor(GameObject* g, float armor);
 
 
 void Teleport(GameObject* g, float x, float y);

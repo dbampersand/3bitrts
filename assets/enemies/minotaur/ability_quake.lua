@@ -26,7 +26,6 @@ end
 
 function abilitytick(x, y, timeUntilAttackTick, parent, target, dt, attackRef, totalAttackDurationLeft)
 
-    --Print(totalAttackDurationLeft);
     if (attackRef == ticker) then
         
         SetMovePoint(GetObjRef(),128,128,false,false);

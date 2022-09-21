@@ -70,6 +70,11 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         AddMana(target,value * sign);
     }
+    if (e->effectType == EFFECT_ARMOR)
+    {
+        AddArmor(target,value * sign);
+    }
+
 
 
     if (e->effectType == EFFECT_INVULN)
@@ -160,6 +165,7 @@ bool RemoveEffect(Effect* e, GameObject* from, bool removeAllStacks)
         free(e->description);
     e->description = NULL;
     e->name = NULL;
+    e->enabled = false;
     return true;
 
 }

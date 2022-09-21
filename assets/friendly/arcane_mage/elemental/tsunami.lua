@@ -27,7 +27,6 @@ function casted(x,y,obj,headingx,headingy)
 
 
     directionMoving = Normalize(dirX,dirY);
-    Print("" .. directionMoving.x .. ", " .. directionMoving.y)
     timer = 0
     return true;
 end
