@@ -1,12 +1,12 @@
 local totem = -1
 
 function setup()
-    AbilitySetPortrait("assets/friendly/priest/icon_minorheal.png");
+    AbilitySetPortrait("assets/friendly/shaman/icon_swift_totem.png");
     SetDescription("Swift Totem\n\nCasts a movement speed aura, also increases attack speed. Only one totem can be active.")
 
     AbilitySetCastType(ABILITY_INSTANT);
 
-    SetCooldown(0);
+    SetCooldown(2);
 end
 
 

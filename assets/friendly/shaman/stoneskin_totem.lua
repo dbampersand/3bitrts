@@ -1,12 +1,12 @@
 local totem = -1
 
 function setup()
-    AbilitySetPortrait("assets/friendly/priest/icon_minorheal.png");
+    AbilitySetPortrait("assets/friendly/shaman/icon_stoneskin_totem.png");
     SetDescription("Stoneskin Totem\n\nCasts a circle of protection, giving armor to those inside. Only one totem can be active.")
 
     AbilitySetCastType(ABILITY_INSTANT);
 
-    SetCooldown(0);
+    SetCooldown(2);
 end
 
 

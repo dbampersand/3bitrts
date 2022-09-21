@@ -1,12 +1,12 @@
 local totem = -1
 
 function setup()
-    AbilitySetPortrait("assets/friendly/priest/icon_minorheal.png");
+    AbilitySetPortrait("assets/friendly/shaman/icon_flame_totem.png");
     SetDescription("Fire Totem\n\nCasts a damaging aura. Only one totem can be active.")
 
     AbilitySetCastType(ABILITY_INSTANT);
 
-    SetCooldown(0);
+    SetCooldown(2);
 end
 
 
