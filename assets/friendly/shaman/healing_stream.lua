@@ -26,12 +26,12 @@ function casted(x,y,obj,headingx,headingy)
         ApplyEffect(newObj,{f1})
 
         newX = GetX(newObj); newY = GetY(newObj);
-
+        
         local objectsInRange = GetObjectsInRange(newX,newY,bounceDistance,GetObjFriendliness(newObj));
         table.sort(objectsInRange,function(a,b) return a.dist < b.dist end)
         for j = 1, #objectsInRange do
             if (objectsInRange[j].obj ~= newObj) then
-                --bounce to the next object and break
+                --bounce to the next (closest) object and break
                 newObj = objectsInRange[j].obj;
 
                 break;

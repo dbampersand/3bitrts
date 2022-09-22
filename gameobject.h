@@ -262,7 +262,7 @@ void MakeInvulnerable(GameObject* g, float time);
 int GetWidth(GameObject* g);
 int GetHeight(GameObject* g);
 float GetAttackRange(GameObject* g);
-
+int GetNumberOfActiveEffects(GameObject* g);
 
 bool ObjectCanPush(GameObject* g);
 bool IsInCombat(GameObject* g);
@@ -289,3 +289,5 @@ void DrawMapHighlights();
 float GetSummonPercent(GameObject* g);
 void GameObjDebugDraw();
 int GetUIStartHeight();
+
+

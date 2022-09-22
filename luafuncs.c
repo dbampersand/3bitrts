@@ -615,6 +615,7 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
     e.trigger = GetTableField(l,-1,"trigger", &isField);
     e.effectType = GetTableField(l,-1,"type",&isField);
     float triggersPerSecond = GetTableField(l,-1,"triggersPerSecond",&isField);
+    e.triggersPerSecond = triggersPerSecond;
     e.duration = GetTableField(l,-1,"duration",&isField);
     const char* portrait = GetTableField_Str(l,-1,"portrait",&isField);
     if (isField && portrait)
@@ -926,7 +927,12 @@ int L_SetCooldownTimer(lua_State* l)
 int L_SetAbilityCooldown(lua_State* l)
 {
     int gameObjIndex = lua_tonumber(l,1);
+    if (gameObjIndex < 0 || gameObjIndex >= MAX_OBJS)
+        return 0;
     int abilityObjIndex = lua_tonumber(l,2);
+    if (abilityObjIndex < 0 || abilityObjIndex >= MAX_ABILITIES)
+        return 0;
+
     int cd = lua_tonumber(l,3);
 
     GameObject* g = &objects[gameObjIndex];
@@ -1185,28 +1191,6 @@ int L_CreateCone(lua_State* l)
 
     lua_pushnumber(l,ref - attacks);
 
-    return 1;
-}
-int L_GetNumEffects(lua_State* l)
-{
-    int index = lua_tonumber(l,1);
-    if (index >= 0 && index < MAX_OBJS)
-    {
-        GameObject* g = &objects[index];
-        int numEffects = 0;
-        for (int i = 0; i < MAX_EFFECTS; i++)
-        {
-            if (g->effects[i].enabled)
-            {
-                numEffects++;
-            }
-        }
-        lua_pushnumber(l,numEffects);
-    }
-    else
-    {
-        lua_pushnumber(l,-1);
-    }
     return 1;
 }
 int L_SetAttackCircle(lua_State* l)
@@ -1887,6 +1871,14 @@ int L_ObjIsStunnable(lua_State* l)
     objects[index].objectIsStunnable = stunnable;
     return 0;
 }
+int L_GetNumEffects(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    lua_pushnumber(l,GetNumberOfActiveEffects(&objects[index]));
+    return 1;
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -2339,7 +2331,9 @@ int L_AddAbility(lua_State* l)
         {
             g->numAbilities++;
         }
-        g->abilities[index] = CloneAbilityPrefab(prefab,l);
+        //g->abilities[index] = CloneAbilityPrefab(prefab,l);
+        CloneAbilityPrefab(prefab,l,&g->abilities[index]);
+        
         }
     
     lua_pushnumber(l,index);
@@ -2529,7 +2523,11 @@ int L_RotatePoint(lua_State* l)
 int L_CureNamedEffect(lua_State* l)
 {
     int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
     const char* name = lua_tostring(l,2);
+    if (!name) 
+        return 0;
     int numberToRemove = lua_tonumber(l,3);
 
     GameObject* g;
@@ -2583,6 +2581,88 @@ int L_GetAttackPosition(lua_State* l)
 
     return 1;
 
+}
+int L_GetEffects(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    if (objIndex < 0 || objIndex >= MAX_OBJS)
+        return 0;
+    GameObject* g = &objects[objIndex];
+    lua_newtable(l);
+    int index = 1;
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        Effect* e = &g->effects[i];
+        if (!e->enabled)
+            continue;
+
+        lua_pushnumber(l,index);
+        lua_newtable(l);
+
+        lua_pushnumber(l, e->trigger);
+        lua_setfield(l, -2, "trigger");
+
+        lua_pushnumber(l, e->effectType);
+        lua_setfield(l, -2, "effectType");
+
+        if (e->from)
+        {
+            lua_pushnumber(l, e->from-objects);
+            lua_setfield(l, -2, "from");
+        }
+        if (e->name)
+        {
+            lua_pushstring(l, e->name);
+            lua_setfield(l, -2, "name");
+        }
+        if (e->description)
+        {
+            lua_pushstring(l, e->description);
+            lua_setfield(l, -2, "description");
+        }
+        lua_pushboolean(l, e->canStack);
+        lua_setfield(l, -2, "canStack");
+
+        lua_pushnumber(l, e->stacks);
+        lua_setfield(l, -2, "stacks");
+
+        lua_pushnumber(l, e->maxStacks);
+        lua_setfield(l, -2, "maxStacks");
+
+        lua_pushnumber(l, e->value);
+        lua_setfield(l, -2, "value");
+
+        lua_pushnumber(l, e->triggersPerSecond);
+        lua_setfield(l, -2, "triggersPerSecond");
+
+        lua_pushnumber(l, e->numTriggers);
+        lua_setfield(l, -2, "numTriggers");
+
+        lua_pushnumber(l, e->timer);
+        lua_setfield(l, -2, "timer");
+
+        lua_pushnumber(l, e->duration);
+        lua_setfield(l, -2, "duration");
+
+        lua_pushnumber(l, e->duration - e->timer);
+        lua_setfield(l, -2, "durationLeft");
+
+
+        lua_pushnumber(l, e->tickTime);
+        lua_setfield(l, -2, "tickTime");
+
+        lua_pushnumber(l, e->spriteIndex_Portrait);
+        lua_setfield(l, -2, "spriteIndex_Portrait");
+
+        lua_pushnumber(l, e->overwrites);
+        lua_setfield(l, -2, "overwrites");
+
+        lua_settable(l,-3);
+
+        index++;
+
+    }
+    return 1;
 }
 void SetLuaKeyEnums(lua_State* l)
 {
@@ -3126,5 +3206,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetClosestObjectInRange);
     lua_setglobal(luaState, "GetClosestObjectInRange");
+
+    lua_pushcfunction(luaState, L_GetNumEffects);
+    lua_setglobal(luaState, "GetNumEffects");
+
+    lua_pushcfunction(luaState, L_GetEffects);
+    lua_setglobal(luaState, "GetEffects");
 
 }

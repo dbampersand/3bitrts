@@ -2455,3 +2455,14 @@ void AddArmor(GameObject* g, float armor)
     g->armor += armor;
 }
 
+int GetNumberOfActiveEffects(GameObject* g)
+{
+    if (!g) return 0;
+    int numEffects = 0;
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        if (g->effects[i].enabled)
+            numEffects++;
+    }
+    return numEffects;
+}

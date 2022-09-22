@@ -169,16 +169,15 @@ int GetAbilityIndexClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_ST
 
     return -1;
 }
-Ability CloneAbilityPrefab(Ability* prefab, lua_State* l)
+void CloneAbilityPrefab(Ability* prefab, lua_State* l, Ability* cloneTo)
 {
-    Ability a = {0};
-    a.path = prefab->path;
-    a.luabuffer = prefab->luabuffer;
-    if (a.path && a.luabuffer)
+    Ability* a = cloneTo;
+    a->path = prefab->path;
+    a->luabuffer = prefab->luabuffer;
+    if (a->path && a->luabuffer)
     {
-        LoadAbility(a.path, l, &a);
+        LoadAbility(a->path, l, a);
     }
-    return a;
 }
 
 Ability* AddAbility(const char* path)
@@ -237,6 +236,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
     else
     {
         Ability* before = currAbilityRunning;
+        currAbilityRunning = a;
         a->castType = ABILITY_NONE;
         a->cooldown = 1;
         a->stacks = 1;

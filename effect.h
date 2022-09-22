@@ -46,6 +46,7 @@ typedef struct Effect
     int maxStacks;
     float value;
 
+    float triggersPerSecond;
     float numTriggers;
     float timer;
     

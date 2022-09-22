@@ -81,7 +81,7 @@ typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE;
 void SetManaCost(Ability* a, float mana);
 
 void LoadAbility(const char* path, lua_State* l, Ability* a);
-Ability CloneAbilityPrefab(Ability* prefab, lua_State* l);
+void CloneAbilityPrefab(Ability* prefab, lua_State* l, Ability* cloneTo);
 Ability* AddAbility(const char* path);
 bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, float headingy, GameObject* target);
 float GetManaCost(Ability* a);
