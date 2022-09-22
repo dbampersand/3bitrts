@@ -4,7 +4,7 @@ local directionMoving = {}
 
 local speed = 40
 function setup()
-    AbilitySetPortrait("assets/friendly/monk/icon_palm.png");
+    AbilitySetPortrait("assets/friendly/arcane_mage/elemental/icon_tsunami.png");
     AbilitySetCastType(ABILITY_ANGLE);
     SetAbilityTargetHint(HINT_LINE);
     SetDescription("Tsunami\n\nDeals damage and slows in a moving tidal wave.");

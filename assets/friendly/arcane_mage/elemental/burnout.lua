@@ -1,5 +1,5 @@
 function setup()
-    AbilitySetPortrait("assets/friendly/monk/icon_palm.png");
+    AbilitySetPortrait("assets/friendly/arcane_mage/elemental/icon_burnout.png");
     AbilitySetCastType(ABILITY_INSTANT);
     SetDescription("Burnout\n\nKills the elemental, dealing damage proportional to its current health in an area.");
     SetCooldown(1);

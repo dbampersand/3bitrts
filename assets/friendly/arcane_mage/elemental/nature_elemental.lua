@@ -2,7 +2,7 @@ local maxHP = 150;
 local lifetime = 20
 
 function setup()
-    SetSprite("assets/friendly/arcane_mage/arcane_mage.png");
+    SetSprite("assets/friendly/arcane_mage/elemental/nature_elemental.png");
 
     AddAbility(GetObjRef(),"assets/friendly/arcane_mage/elemental/transmute.lua",0)
 
@@ -20,6 +20,8 @@ function setup()
     SetCategory(TYPE_RANGEDDPS);
     
     SetObjectPush(false);
+    SetLifetime(GetObjRef(),15);
+
 end
 
 function update(dt)

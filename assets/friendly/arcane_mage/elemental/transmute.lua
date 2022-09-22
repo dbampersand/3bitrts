@@ -1,6 +1,6 @@
 local lifetime = 20
 function setup()
-    AbilitySetPortrait("assets/friendly/monk/icon_palm.png");
+    AbilitySetPortrait("assets/friendly/arcane_mage/elemental/icon_transmute.png");
     AbilitySetCastType(ABILITY_TARGET_ALL);
     SetDescription("Transmute\n\nApplies a heal over time effect if used on allies, or a damage over time effect if used on enemies");
     SetCooldown(60);

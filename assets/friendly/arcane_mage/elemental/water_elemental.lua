@@ -1,7 +1,7 @@
 local maxHP = 100;
 
 function setup()
-    SetSprite("assets/friendly/arcane_mage/arcane_mage.png");
+    SetSprite("assets/friendly/arcane_mage/elemental/water_elemental.png");
 
     AddAbility(GetObjRef(),"assets/friendly/arcane_mage/elemental/tsunami.lua",0)
 
@@ -19,6 +19,8 @@ function setup()
     SetCategory(TYPE_RANGEDDPS);
     
     SetObjectPush(false);
+    SetLifetime(GetObjRef(),15);
+
 end
 
 function update(dt)

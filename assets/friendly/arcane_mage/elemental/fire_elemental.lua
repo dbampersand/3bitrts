@@ -2,7 +2,7 @@ local maxHP = 150;
 local lifetime = 20
 
 function setup()
-    SetSprite("assets/friendly/arcane_mage/arcane_mage.png");
+    SetSprite("assets/friendly/arcane_mage/elemental/fire_elemental.png");
 
     AddAbility(GetObjRef(),"assets/friendly/arcane_mage/elemental/burnout.lua",0)
 
