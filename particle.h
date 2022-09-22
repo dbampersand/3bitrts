@@ -30,4 +30,4 @@ void InitParticles();
 void AddParticle(float x, float y, short lifetime, float speed, float angle, Color colour); 
 void AddMouseRandomParticles(ALLEGRO_MOUSE_STATE mouseState, int numParticles);
 void RandParticleAroundEdgeOfCircle(float cx, float cy, float r, short lifetime, float maxspeed, Color col);
-
+void AddParticleWithRandomProperties(float x, float y, Color color, float lifetimeMin, float lifetimeMax, float speedMin, float speedMax);

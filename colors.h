@@ -69,3 +69,4 @@ void InitColors();
 bool AlColIsEq(ALLEGRO_COLOR c, ALLEGRO_COLOR c2);
 unsigned char HashColor(ALLEGRO_COLOR c);
 Color GetEffectColor(Effect* e);
+Color GameObjToColor(GameObject* g);

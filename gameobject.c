@@ -926,9 +926,39 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
      }
      free(cpy);
 }
+void ScatterEffect(GameObject* g)
+{
+
+    ALLEGRO_BITMAP* sprite = sprites[g->spriteIndex].sprite;
+    if (IsSelected(g) && sprites[g->spriteIndex].inverseSprite)
+        sprite = sprites[g->spriteIndex].inverseSprite;
+    if (!sprite)
+        return;
+    al_lock_bitmap(sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READONLY);
+    int w = al_get_bitmap_width(sprite);
+    int h = al_get_bitmap_height(sprite);
+
+    Color c = GameObjToColor(g);
+    for (int x = 0; x < w; x++)
+    {
+        for (int y = 0; y < h; y++)
+        {
+            ALLEGRO_COLOR pixel = al_get_pixel(sprite, x, y);
+            if (pixel.a)
+            {
+                AddParticleWithRandomProperties(g->position.x+x,g->position.y+y,c, 0.15, 2, 0, 0.025);
+            }
+        }
+    }
+    al_unlock_bitmap(sprite);
+
+
+}
 void KillObj(GameObject* g, bool trigger)
 {
     if (!g) return;
+    ScatterEffect(g);
+
     RemoveObjFromAllThreatlists(g);
     SetMapCollisionRect(g->position.x,g->position.y,GetWidth(g),GetHeight(g),false);
     GameObject* before = currGameObjRunning;
@@ -993,6 +1023,7 @@ void KillObj(GameObject* g, bool trigger)
         
     }
 }   
+
 
 void LoadFolderPrefabs(const char* dirPath, char* name)
 {
@@ -1818,10 +1849,11 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     if (!(g->properties & OBJ_ACTIVE))
         return;
     
-    bool b = IsOwnedByPlayer(g);
-    ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
-    if (ObjIsDecoration(g))
-        c = BG;
+    //bool b = IsOwnedByPlayer(g);
+    //ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
+    //if (ObjIsDecoration(g))
+    //    c = BG;
+    ALLEGRO_COLOR c = GetColor(GameObjToColor(g),GetPlayerOwnedBy(g));
     DrawSummonEffect(g);
 
     if (g->summonTime >= g->summonMax)

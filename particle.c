@@ -23,6 +23,10 @@ void AddMouseRandomParticles(ALLEGRO_MOUSE_STATE mouseState, int numParticles)
     for (int i = 0; i < numParticles; i++)
         AddParticle(mouseState.x,mouseState.y,2,2,RandRange(-M_PI,M_PI),true);
 }
+void AddParticleWithRandomProperties(float x, float y, Color color, float lifetimeMin, float lifetimeMax, float speedMin, float speedMax)
+{
+    AddParticle(x,y,RandRange(lifetimeMin,lifetimeMax),RandRange(speedMin,speedMax),RandRange(-M_PI,M_PI),color);
+}
 void AddParticle(float x, float y, short lifetime, float speed, float angle, Color colour)
 {
     particle_x[PARTICLES_TOP] = x;

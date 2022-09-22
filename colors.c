@@ -147,3 +147,13 @@ Color GetEffectColor(Effect* e)
     if (!e) return COLOR_DEFAULT;
     return EffectColors[e->effectType];
 }
+Color GameObjToColor(GameObject* g)
+{
+    Color c = IsOwnedByPlayer(g) == true ? COLOR_FRIENDLY : COLOR_ENEMY;
+    if (ObjIsDecoration(g))
+        c = COLOR_BG;
+    if (g->summonTime < g->summonMax)
+        c = COLOR_GROUND_DARK;
+    return c;
+
+}
