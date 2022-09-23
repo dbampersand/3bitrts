@@ -1947,6 +1947,8 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,EFFECT_ARMOR);
     lua_setglobal(l,"EFFECT_ARMOR");
 
+    lua_pushinteger(l,EFFECT_LIFESTEAL);
+    lua_setglobal(l,"EFFECT_LIFESTEAL");
 
     lua_pushinteger(l,EFFECT_INVULN);
     lua_setglobal(l,"EFFECT_INVULN");
@@ -2146,6 +2148,7 @@ int L_ApplyEffect(lua_State* l)
         return -1; 
     if (objIndex >= MAX_OBJS) 
         return -1;
+    GameObject* g = &objects[objIndex];
 
     size_t len =  lua_rawlen(l,2);
 

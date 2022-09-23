@@ -29,6 +29,7 @@ function setup()
     SetMaxHP(maxHP,true)
     SetSpeed(10)
     SetObjectPush(true);
+    ObjIsStunnable(GetObjRef(),false);
 end
 
 local enrageTransitionTimer = 0

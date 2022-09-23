@@ -74,6 +74,11 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         AddArmor(target,value * sign);
     }
+    if (e->effectType == EFFECT_LIFESTEAL)
+    {
+        AddLifesteal(target,value * sign);
+    }
+
 
 
 

@@ -4,7 +4,8 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetDescription("Slash\n\nSwings the sword, dealing damage. Generates mana.");
     SetCooldown(4);
-    SetAbilityRange(50);    
+    SetAbilityRange(50);   
+    SetManaCost(0); 
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/rogue/audio/cloak.wav",1.25)

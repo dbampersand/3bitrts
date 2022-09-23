@@ -19,6 +19,8 @@ function setup()
     SetMaxHP(10000,true)
     SetSpeed(10)
     SetObjectPush(true);
+    ObjIsStunnable(GetObjRef(),false);
+
 end
 
 function update(dt)

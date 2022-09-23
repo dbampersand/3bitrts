@@ -33,15 +33,12 @@ GameObject* GetMousedOver(ALLEGRO_MOUSE_STATE* mouseState)
 {
     for (int i = 0; i < numObjects; i++)
     {
-        for (int i = 0; i < numObjects; i++)
+        GameObject* g = &objects[i];
+        if (g->properties & OBJ_ACTIVE)
         {
-            GameObject* g = &objects[i];
-            if (g->properties & OBJ_ACTIVE)
+            if (PointInRect(mouseState->x,mouseState->y,GetObjRect(g)))
             {
-                if (PointInRect(mouseState->x,mouseState->y,GetObjRect(g)))
-                {
-                    return(g);
-                }
+                return(g);
             }
         }
     }
@@ -930,10 +927,10 @@ void ScatterEffect(GameObject* g)
 {
 
     ALLEGRO_BITMAP* sprite = sprites[g->spriteIndex].sprite;
-    if (IsSelected(g) && sprites[g->spriteIndex].inverseSprite)
-        sprite = sprites[g->spriteIndex].inverseSprite;
-    if (!sprite)
-        return;
+    //if (IsSelected(g) && sprites[g->spriteIndex].inverseSprite)
+      //  sprite = sprites[g->spriteIndex].inverseSprite;
+    //if (!sprite)
+      //  return;
     al_lock_bitmap(sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READONLY);
     int w = al_get_bitmap_width(sprite);
     int h = al_get_bitmap_height(sprite);
@@ -2100,7 +2097,9 @@ void Stun(GameObject* source, GameObject* g, float value)
 bool Damage(GameObject* source, GameObject* g, float value)
 {
     if (!g) return false;
-    if (!(g->properties & OBJ_ACTIVE)) return false;
+
+    if (!IsActive(g))
+         return false;
     if (g->invulnerableTime > 0)
     {
         return false;
@@ -2126,6 +2125,10 @@ bool Damage(GameObject* source, GameObject* g, float value)
 
     value = DamageShields(g,value);
     g->health -= value;
+    if (source && source != g)
+    {
+        Heal(source,source->lifesteal * value);
+    }
     if (g != source && value > 0)
         g->flashTimer = FLASH_TIMER;
     if (g->health <= 0)
@@ -2295,8 +2298,10 @@ float GetDist(GameObject* g1, GameObject* g2)
 }
 GameObject* GetClicked(float x, float y)
 {
-    for (int i = 0; i < numObjects; i++)
+    for (int i = 0; i < MAX_OBJS; i++)
     {
+        if (!IsActive(&objects[i]))
+            continue;
         Rect r = GetObjRect(&objects[i]);
         if (PointInRect(x,y,r))
         {
@@ -2497,4 +2502,8 @@ int GetNumberOfActiveEffects(GameObject* g)
             numEffects++;
     }
     return numEffects;
+}
+void AddLifesteal(GameObject* g, float value)
+{
+    g->lifesteal += value;
 }

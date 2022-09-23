@@ -49,7 +49,7 @@ typedef enum OBJ_FRIENDLINESS
 typedef struct Shield Shield;
 typedef struct lua_State lua_State;
 typedef struct Player Player;
-#define MAX_EFFECTS 32
+#define MAX_EFFECTS 16
 #define MAX_QUEUED_CMD 8
 #define MAX_ABILITIES 8
 #define FLASH_TIMER 0.1
@@ -160,6 +160,8 @@ typedef struct GameObject
     bool pathfindNeedsRefresh;
 
     bool shouldProcessAI;
+
+    float lifesteal;
     
 } GameObject;
 
@@ -241,7 +243,7 @@ void SetRange(GameObject* g, float range);
 void AddAttackSpeed(GameObject* g, float speed);
 void AddAttackRange(GameObject* g, float range);
 void AddArmor(GameObject* g, float armor);
-
+void AddLifesteal(GameObject* g, float value);
 
 void Teleport(GameObject* g, float x, float y);
 void GetOffsetCenter(GameObject* g, float* x, float* y);

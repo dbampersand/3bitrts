@@ -137,6 +137,7 @@ void InitColors()
     EffectColors[EFFECT_CURE] = COLOR_HEAL;
     EffectColors[EFFECT_ADD_MANA] = COLOR_HEAL;
     EffectColors[EFFECT_ARMOR] = COLOR_HEAL;
+    EffectColors[EFFECT_LIFESTEAL] = COLOR_HEAL;
 
 
 

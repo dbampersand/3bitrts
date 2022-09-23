@@ -14,7 +14,7 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {}
     f1["trigger"] = TRIGGER_CONST
     f1["type"] = EFFECT_ATTACKSPEED
-    f1["value"] = -0.18;
+    f1["value"] = -0.08;
     f1["maxStacks"] = 5;
     f1["canStack"] = true;  
     f1["duration"] = 10

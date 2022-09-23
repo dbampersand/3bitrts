@@ -31,8 +31,8 @@ void DrawTimer(bool enabled)
     if (enabled)
     {
         int hours = floor(gameStats.timeTaken/(60.0f*60.0f));
-        int minutes = floor(gameStats.timeTaken/(60.0f));    
-        int seconds = floor(gameStats.timeTaken); 
+        int minutes = floor(gameStats.timeTaken/(60.0f) - hours*60);    
+        int seconds = floor(gameStats.timeTaken - minutes*60); 
 
         size_t buffsiz = snprintf(NULL, 0, "%i:%i",minutes,seconds);
         char* buff = calloc(buffsiz+1,sizeof(char));

@@ -1,4 +1,4 @@
-local totalHeal = 900
+local totalHeal = 1200
 local duration = 30
 local tickRate = 0.1
 local maxStacks = 3

@@ -1,13 +1,13 @@
 local maxBounces = 4
 local bounceDistance = 30
-local maxHeal = 400
+local maxHeal = 250
 
 function setup()
     AbilitySetPortrait("assets/friendly/shaman/icon_healing_stream.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
     SetAbilityRange(60)
     SetDescription("Healing Stream\n\nA heal that bounces between friendly targets.")
-    SetManaCost(35)
+    SetManaCost(45)
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/priest/audio/shield.wav",1)

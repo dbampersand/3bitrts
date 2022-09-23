@@ -101,7 +101,7 @@ void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE*
         GameObject* target = NULL;
         for (int i = 0; i < MAX_OBJS; i++)
         {
-            if (objects[i].properties & OBJ_ACTIVE)
+            if (IsActive(&objects[i]))
             {
                 if (PointInRect(mouseState->x,mouseState->y,GetObjRect(&objects[i])))
                 {
@@ -110,7 +110,7 @@ void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE*
                 }
             }
         }
-        float midX=0; float midY=0;
+            float midX=0; float midY=0;
         GetOffsetCenter(currGameObjRunning,&midX,&midY);
     
         if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
@@ -241,6 +241,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         a->cooldown = 1;
         a->stacks = 1;
         a->maxStacks = 1;
+        a->manaCost = 0;
         int funcIndex;
         if (CheckFuncExists("setup",a->luabuffer))
         {
