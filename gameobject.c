@@ -2127,7 +2127,10 @@ bool Damage(GameObject* source, GameObject* g, float value)
     g->health -= value;
     if (source && source != g)
     {
-        Heal(source,source->lifesteal * value);
+        if (source->lifesteal > 0)
+        {
+            Heal(source,source->lifesteal * value);
+        }
     }
     if (g != source && value > 0)
         g->flashTimer = FLASH_TIMER;

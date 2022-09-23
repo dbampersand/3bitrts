@@ -1,7 +1,7 @@
 local duration = 3
 
 function setup()
-    AbilitySetPortrait("assets/friendly/paladin/icon_lay_on_hands.png");
+    AbilitySetPortrait("assets/friendly/rune_smith/icon_rune_of_shield.png");
     AbilitySetCastType(ABILITY_INSTANT);
     SetCooldown(5);
 

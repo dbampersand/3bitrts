@@ -1,5 +1,5 @@
 function setup()
-    AbilitySetPortrait("assets/friendly/paladin/icon_holy_word.png");
+    AbilitySetPortrait("assets/friendly/rune_smith/icon_rune_of_pain.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetDescription("Rune of Pain\n\nDamages you and your target. Applies a large amount of threat.")
     SetCooldown(8);

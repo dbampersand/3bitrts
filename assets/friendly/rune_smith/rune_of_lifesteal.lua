@@ -2,7 +2,7 @@ local lifestealAmt = 0.6
 
 function setup()
     AbilitySetCastType(ABILITY_INSTANT); 
-    AbilitySetPortrait("assets/friendly/paladin/icon_shield_slam.png");
+    AbilitySetPortrait("assets/friendly/rune_smith/icon_rune_of_lifesteal.png");
     
 
     SetAbilityRange(60)

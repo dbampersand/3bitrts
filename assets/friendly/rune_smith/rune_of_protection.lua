@@ -4,7 +4,7 @@ local duration = 15;
 
 
 function setup()
-    AbilitySetPortrait("assets/friendly/paladin/icon_circle_of_protection.png");
+    AbilitySetPortrait("assets/friendly/rune_smith/icon_rune_of_protection.png");
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityRange(40)
     SetDescription("Rune of Protection\n\nShields you from damage, applying a large amount of armor.")
