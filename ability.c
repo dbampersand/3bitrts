@@ -98,7 +98,7 @@ void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE*
 {
     if (players[0].abilityHeld)
     {
-        GameObject* target = NULL;
+        GameObject* target = NULL;  
         for (int i = 0; i < MAX_OBJS; i++)
         {
             if (IsActive(&objects[i]))

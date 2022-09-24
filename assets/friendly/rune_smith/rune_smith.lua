@@ -4,6 +4,7 @@ function setup()
     AddAbility(GetObjRef(),"assets/friendly/rune_smith/rune_of_pain.lua",1)    
     AddAbility(GetObjRef(),"assets/friendly/rune_smith/rune_of_protection.lua",2)    
     AddAbility(GetObjRef(),"assets/friendly/rune_smith/rune_of_shield.lua",3)    
+    AddAbility(GetObjRef(),"assets/friendly/rune_smith/rune_of_menace.lua",4)    
 
     AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05);
     AddAttackSprite("assets/ui/slash_fx2.png",16,16,0.05);
