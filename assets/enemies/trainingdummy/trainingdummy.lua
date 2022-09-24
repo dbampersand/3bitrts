@@ -3,7 +3,7 @@ local maxHP = 9999;
 function setup()
     SetSprite("assets/enemies/trainingdummy/trainingdummy.png");
 
-    SetDamage(60);
+    SetDamage(0);
     SetRange(0)
     SetMaxHP(maxHP,true)
     SetSpeed(0)

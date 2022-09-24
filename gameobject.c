@@ -1195,8 +1195,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
 
                                 numEvents++;
                                 g2->position.x = GetMapWidth() - GetWidth(g2);
-                                //CheckCollisions(g2,true,-1,true);
-                                //CheckCollisionsWorld(g2,true,-1);
                                 continue;
                             }
                         }
@@ -1204,8 +1202,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         collisionEvents[numEvents].x = true;
                         collisionEvents[numEvents].direction = 1;
                         numEvents++;
-                        //CheckCollisions(g2,true,1,true);
-                        //CheckCollisionsWorld(g2,true,1);
                     }
                     else
                     {
@@ -1218,8 +1214,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             numEvents++;
 
                             g->position.x = (g2->position.x - al_get_bitmap_width(s->sprite));
-                           // CheckCollisions(g2,true,1,true);
-                            //CheckCollisionsWorld(g2,true,1);
                         }
 
                     }
@@ -1385,7 +1379,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
     for (int i = 0; i < numEvents; i++)
     {
         CollisionEvent* c = &collisionEvents[i];
-         CheckCollisions(c->obj,c->x,c->direction,true);
+        CheckCollisions(c->obj,c->x,c->direction,true);
         CheckCollisionsWorld(c->obj,c->x,c->direction);
 
     }
@@ -1691,30 +1685,28 @@ void Move(GameObject* g, float delta)
             return;
         }
         
-        if (dY > dX)
+        if (1)
         {
-            g->position.y += dY;
-            CheckCollisions(g,false, dY,ObjectCanPush(g));
-            CheckCollisionsWorld(g,false, dY);
-
-            g->position.x += dX;
-            CheckCollisions(g,true, dX,ObjectCanPush(g));
-            CheckCollisionsWorld(g,true, dX);
-            SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
+            //if we're moving at > 1 pixels per second, we need to move it in subdivisions
+            //a bit of a hack but will work until collision is refactored
+            int numMoves = ceil(fabs(dY));
+            dY /= numMoves;
+            for (int i = 0; i < numMoves; i++)
+            {
+                g->position.y += dY;
+                CheckCollisions(g,false, dY,ObjectCanPush(g));
+                CheckCollisionsWorld(g,false, dY);
+            }
+            numMoves = ceil(fabs(dX));
+            dX /= numMoves;
+            for (int i = 0; i < numMoves; i++)
+            {
+                g->position.x += dX;
+                CheckCollisions(g,true, dX,ObjectCanPush(g));
+                CheckCollisionsWorld(g,true, dX);
+                SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
+            }
         }
-        else
-        {
-            g->position.x += dX;
-            CheckCollisions(g,true, dX,ObjectCanPush(g));
-            CheckCollisionsWorld(g,true, dX);
-            SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
-
-            g->position.y += dY;
-            CheckCollisions(g,false, dY,ObjectCanPush(g));
-            CheckCollisionsWorld(g,false, dY);
-
-        }
-
 
 }
 bool ObjectCanPush(GameObject* g)
