@@ -81,3 +81,4 @@ void LoseGame();
 
 float easeOutBack(float x); 
 float easeInOutBack(float x);
+float easeOutSine(float x);

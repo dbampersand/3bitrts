@@ -391,6 +391,12 @@ void ChangeUIPanel(Panel* to)
     ui.changingTo = to;
     ui.animatePanel = UI_ANIMATE_OUT;
 
+    if (ui.currentPanel == &ui.mainMenuPanel)
+    {
+        ui.currentPanel = to;
+        ui.panelShownPercent = 0;
+        ui.animatePanel = UI_ANIMATE_IN;
+    }
 }
 void DrawHealthUIElement(GameObject* selected)
 {
@@ -2368,10 +2374,10 @@ void DrawPanelTabs(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
         } 
     }
 }
-void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
-{
-
-    al_set_clipping_rectangle(p->x-1,p->y-1,p->w+1,p->h*ui.panelShownPercent+2);
+void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, float panelShownPercent)
+{   
+    panelShownPercent = easeOutSine(panelShownPercent);
+    al_set_clipping_rectangle(p->x-1,p->y-1,p->w+1,p->h*panelShownPercent+2);
     if (p->showBorder)
     {
         al_draw_filled_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,BG);
@@ -2379,7 +2385,7 @@ void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
     }
 
 
-    al_set_clipping_rectangle(p->x-1,p->y,p->w,p->h*ui.panelShownPercent-1);
+    al_set_clipping_rectangle(p->x-1,p->y,p->w,p->h*panelShownPercent-1);
 
 
 
@@ -2445,8 +2451,16 @@ void AddPanelTabs(Panel* p, int numTabs, ...)
 }
 void DrawMenus(ALLEGRO_MOUSE_STATE* mouseState)
 {
+    //TODO: change rendering panels to a system that can show multiple at once
+    //and use an index to decide order
+
     if (ui.currentPanel)
-        DrawPanel(ui.currentPanel,mouseState);
+    {
+        float shownPercent = ui.panelShownPercent;
+        if (ui.currentPanel == &ui.mainMenuPanel)
+            shownPercent = 1;
+        DrawPanel(ui.currentPanel,mouseState,shownPercent);
+    }
 }
 void LoadCursorSprite(UI* ui, int* index, char* path)
 {

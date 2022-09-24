@@ -259,6 +259,11 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     if (gameState == GAMESTATE_MAIN_MENU)
     {
         al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+
+        if (ui.currentPanel != &ui.mainMenuPanel)
+        {
+            DrawPanel(&ui.mainMenuPanel,mouseState,1);
+        }
     }
     DrawWidgets(gameState, DRAWORDER_BEFOREUI);
 

@@ -492,6 +492,11 @@ float easeOutBack(float x)
 
     return 1 + c3 * pow(x - 1, 3) + c1 * pow(x - 1, 2);
 }
+//based on https://easings.net/#easeOutSine
+float easeOutSine(float x)
+{
+  return sin((x * M_PI) / 2.0f);
+}
 //based on https://easings.net/#easeInOutBack
 float easeInOutBack(float x) 
 {

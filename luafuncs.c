@@ -1263,7 +1263,7 @@ int L_CreateAOE(lua_State* l)
     a.dither = dither;*/
     GameObject* targ = NULL;
     if (target >= 0 && target < MAX_OBJS)
-    {
+    {   
         targ = &objects[target];
     }
 

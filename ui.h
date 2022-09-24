@@ -275,7 +275,7 @@ bool GetButton(Panel* p, char* name);
 KeyInput* GetKeyInput(Panel* p, char* name);
 Button* GetButtonB(Panel* p, char* name);
 void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_COLOR bgColor); 
-void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState);
+void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, float panelShownPercent);
 void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, int index, int offsetX);
 void DrawAllLevelSelects();
 void ChangeUIPanel(Panel* to);
