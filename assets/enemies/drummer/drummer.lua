@@ -2,7 +2,7 @@
 local attackSpeed = attackSpeedMin
 local lastAttacked = -1
 
-local maxHP = 400;
+local maxHP = 250;
 local aoe = -1
 function setup()
     SetSprite("assets/enemies/drummer/drummer.png");

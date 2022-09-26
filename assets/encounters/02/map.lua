@@ -12,7 +12,6 @@ local thirdWave = false
 function setup()
     SetMapSprite("assets/encounters/02/map.png")
     SetAutoWin(false);
-    do return end;
     if (_DEBUG == false) then
         local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,54,TYPE_ENEMY,2);
         SetObjAggroRadius(ob,999)
@@ -34,8 +33,6 @@ function update(dt)
            -- do return end;
       --  end
     --end
-
-    do return end;
 
     timer = timer + dt
     if (spawnedBoss == false and timer > 60) then

@@ -22,6 +22,7 @@ void MoveAngle(float* x, float* y, float dx, float dy, float speed, float delta)
 bool CircleInRect(float cx, float cy, float rad, Rect r);
 void Normalize(float* x, float* y);
 double RandRange(double min, double max);
+int RandRangeI(int min, int max);
 float dot(float x1, float y1, float x2, float y2);
 float dist(float x1, float y1, float x2, float y2);
 bool LineIntersectsObj(GameObject* g, float xLine, float yLine, float x2Line, float y2Line);

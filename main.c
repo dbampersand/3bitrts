@@ -31,6 +31,7 @@
 #include "replay.h"
 #include "minimap.h"
 #include "pathfind.h"
+#include "shop.h"
 
 
 void init()
@@ -84,11 +85,13 @@ void init()
     }
     InitReplay();
     InitPathfinding();
+    LoadShop();
 }
 
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
 
+    UpdateShop(dt);
     
     if (!GameIsPaused())
     {
@@ -369,8 +372,9 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     if (al_key_down(keyState,ALLEGRO_KEY_MINUS))
         DisplayCollision();
     //GameObjDebugDraw();
-    //DebugDrawPathfinding();
-
+    //DebugDrawPathfinding();   
+    //al_draw_filled_rectangle(0,0,255,255,BG);
+    //DrawShop(dt);
 }
 
 void DrawMainMenu()

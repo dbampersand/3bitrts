@@ -1851,7 +1851,6 @@ int L_Normalize(lua_State* l)
     lua_settable(l,-3);
 
     return 1;
-    
 
 }
 int L_CreateTicker(lua_State* l)

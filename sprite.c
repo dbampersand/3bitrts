@@ -140,8 +140,8 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
         maxSprites=2;
 
             //dodge a lot of crashes by setting the 0th sprite to a zeroed bitmap
-    sprites[0].sprite = al_create_bitmap(0,0);
-    sprites[0].inverseSprite = al_create_bitmap(0,0);
+        sprites[0].sprite = al_create_bitmap(0,0);
+        sprites[0].inverseSprite = al_create_bitmap(0,0);
 
     }
     for (int i = 0; i < numSprites; i++)
@@ -157,7 +157,7 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
 
      ALLEGRO_BITMAP* sprite = al_load_bitmap(path);
 
-    if (numSprites+1 > maxSprites)
+    if (numSprites+1 >= maxSprites)
     {
         maxSprites+=32;
         sprites = realloc(sprites,maxSprites*sizeof(Sprite));

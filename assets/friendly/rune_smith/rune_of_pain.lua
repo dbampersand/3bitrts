@@ -21,8 +21,8 @@ function casted(x,y,obj,headingx,headingy)
     f2["type"] = EFFECT_THREAT;
     f2["value"] = 200;  
 
-    ApplyEffect(obj,{f1,f2});
     ApplyEffect(GetObjRef(),{f1});
+    ApplyEffect(obj,{f1,f2});
 
     return true;
 end

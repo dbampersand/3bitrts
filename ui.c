@@ -393,7 +393,7 @@ void ChangeUIPanel(Panel* to)
 
     if (ui.currentPanel == &ui.mainMenuPanel)
     {
-        ui.currentPanel = to;
+        ui.currentPanel = to;   
         ui.panelShownPercent = 0;
         ui.animatePanel = UI_ANIMATE_IN;
     }

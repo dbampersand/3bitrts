@@ -148,6 +148,11 @@ double RandRange(double min, double max)
 {
    return ((max - min) * ((double)rand() / RAND_MAX)) + min;
 }    
+int RandRangeI(int min, int max)
+{
+   return min + (rand() % max);
+}    
+
 bool LineIntersectsObj(GameObject* g, float xLine, float yLine, float x2Line, float y2Line)
 {   
     typedef struct line { 
