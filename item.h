@@ -38,10 +38,12 @@ Item* currItemRunning;
 
 typedef struct lua_State lua_State;
 
-void LoadItem(char* path, lua_State* l);
+Item* LoadItem(const char* path, lua_State* l);
 void LoadItemFolder(char* path);
 Item* LoadItemFuncs(Item* i, lua_State* l);
 void UpdateItems(float dt);
 
 void ProcessItemsOnAttack(GameObject* g, float dt, float* value);
 void ProcessItemsOnEffect(GameObject* g, Effect* e, float* value);
+
+void AttachItem(GameObject* g, Item* i);

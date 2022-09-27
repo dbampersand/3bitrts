@@ -2582,6 +2582,17 @@ int L_GetAbilityStacks(lua_State* l)
     
 
 }
+int L_AddItem(lua_State* l)
+{
+        int objIndex = lua_tonumber(l,1);
+    const char* path = lua_tostring(l,2);
+
+    if (objIndex < 0 || objIndex >= MAX_OBJS)
+        return 0;
+    Item* i = LoadItem(path,l);
+    AttachItem(&objects[objIndex],i);
+    return 0;
+}
 int L_ModifyAbilityCooldownTimer(lua_State* l)
 {
     int objIndex = lua_tonumber(l,1);
@@ -3253,5 +3264,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetItemDescription);
     lua_setglobal(luaState, "SetItemDescription");
+
+    lua_pushcfunction(luaState, L_AddItem);
+    lua_setglobal(luaState, "AddItem");
 
 }

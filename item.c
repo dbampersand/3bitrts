@@ -60,8 +60,17 @@ Item* LoadItemFuncs(Item* i, lua_State* l)
     return i;
 }
 
-void LoadItem(char* path, lua_State* l)
+Item* LoadItem(const char* path, lua_State* l)
 {
+    for (int i = 0; i < numItems; i++)
+    {
+        Item* it = &items[i];
+        
+        if (it->path && strcasecmp(path,it->path))
+        {
+            return it;
+        }
+    }
     Item iNew = {0};
     items[numItems] = iNew;
 
@@ -144,6 +153,7 @@ void LoadItem(char* path, lua_State* l)
         items = realloc(items,(numItemsAllocated+32)*sizeof(Item));
         numItemsAllocated += 32;
     }
+    return i;
 }
 int GetNumSubDirs(char* path)
 {
@@ -256,15 +266,15 @@ void ItemOnAttack(Item* i, GameObject* g, float dt, float* value)
         return;
     currItemRunning = i;
     currGameObjRunning = g;
-    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_update);
+    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_onattack);
     lua_pushinteger(luaState, i - g->inventory);
     lua_pushinteger(luaState, g - objects);
     lua_pushinteger(luaState, g->targObj - objects);
     lua_pushnumber(luaState, dt);
     lua_pushnumber(luaState, *value);
 
-
     lua_pcall(luaState,5,1,0);
+
     //if script returns something
     if (lua_isnumber(luaState,-1))
     {
@@ -286,7 +296,7 @@ void ItemOnEffect(Item* i, GameObject* g, Effect* e, float* value)
     currItemRunning = i;
     currGameObjRunning = g;
 
-    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_update);
+    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_oneffect);
     lua_pushinteger(luaState, i - g->inventory);
     lua_pushinteger(luaState, g - objects);
     lua_pushinteger(luaState, g->targObj - objects);
@@ -300,7 +310,7 @@ void ItemOnEffect(Item* i, GameObject* g, Effect* e, float* value)
     lua_pushnumber(luaState, *value);
 
 
-    lua_pcall(luaState,8,1,0);
+    lua_pcall(luaState,9,1,0);
     //if script returns something
     if (lua_isnumber(luaState,-1))
     {

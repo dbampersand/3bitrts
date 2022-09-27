@@ -48,7 +48,7 @@ function update(dt)
 
     ShowString(dpsStr,6,6);
 
-    --ClearCommandQueue(GetObjRef());
+    ClearCommandQueue(GetObjRef());
 end
 
 function kill()

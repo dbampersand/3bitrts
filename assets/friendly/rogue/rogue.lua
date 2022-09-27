@@ -21,10 +21,12 @@ function setup()
 
     SetObjType(TYPE_MELEEDPS);
 
-    IsPlayerChoosable(true);
+    IsPlayerChoosable(true);    
     SetCategory(TYPE_MELEEDPS);
     
     SetObjectPush(false);
+
+    AddItem(GetObjRef(),"assets/items/sharp_sword/sharp_sword.lua");
 end
 
 function update(dt)
