@@ -21,6 +21,7 @@
 #include "shield.h"
 #include "settings.h"
 #include "video.h"
+#include "item.h"
 
 
 
@@ -1878,6 +1879,35 @@ int L_GetNumEffects(lua_State* l)
     lua_pushnumber(l,GetNumberOfActiveEffects(&objects[index]));
     return 1;
 }
+int L_GetItemRef(lua_State* l)
+{
+    lua_pushnumber(l,currItemRunning-items);
+    return 1;
+}
+int L_SetItemName(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    const char* str = lua_tostring(l,2);
+    if (index < 0 || index >= numItems)
+        return 0;
+    Item* i = &items[index];
+    i->name = calloc(strlen(str)+1,sizeof(char));
+    strcpy(i->name,str);
+    return 0;
+}
+int L_SetItemDescription(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    const char* str = lua_tostring(l,2);
+    if (index < 0 || index >= numItems)
+        return 0;
+    Item* i = &items[index];
+    i->description = calloc(strlen(str)+1,sizeof(char));
+    strcpy(i->description,str);
+    return 0;
+}
+
+
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -3214,5 +3244,14 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetEffects);
     lua_setglobal(luaState, "GetEffects");
+
+    lua_pushcfunction(luaState, L_GetItemRef);
+    lua_setglobal(luaState, "GetItemRef");
+
+    lua_pushcfunction(luaState, L_SetItemName);
+    lua_setglobal(luaState, "SetItemName");
+
+    lua_pushcfunction(luaState, L_SetItemDescription);
+    lua_setglobal(luaState, "SetItemDescription");
 
 }

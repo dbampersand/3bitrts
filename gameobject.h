@@ -9,10 +9,12 @@
 #include "command.h"
 #include "point.h"
 #include "pathfind.h"
+#include "item.h"
 
 #define MAX_PATHFINDING_NODES_HELD 20
 #define MINIMUM_RANGE 6
 #define SHIELD_EFFECT_TIME 0.5f
+#define INVENTORY_SLOTS 3
 
 typedef enum GAMEOBJ_PROPERTIES
 {
@@ -163,6 +165,7 @@ typedef struct GameObject
 
     float lifesteal;
     
+    Item inventory[INVENTORY_SLOTS];
 } GameObject;
 
 
@@ -222,7 +225,7 @@ void DrawGameObj(GameObject* g, bool forceInverse);
 
 
 void SetAttackingObj(GameObject* g, GameObject* target);
-void AttackTarget(GameObject* g);
+void AttackTarget(GameObject* g, float dt);
 void NewObj(GameObject* g);
 
 Rect GetObjRect(GameObject* g);

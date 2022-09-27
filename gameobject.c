@@ -307,7 +307,7 @@ void UpdateObject(GameObject* g, float dt)
 
             if (currGameObjRunning->attackTimer <= 0)
             {
-                AttackTarget(currGameObjRunning);
+                AttackTarget(currGameObjRunning,dt);
                 if (currGameObjRunning->targObj)
                 {
                      currGameObjRunning->attackTimer = currGameObjRunning->attackSpeed;
@@ -871,6 +871,7 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
         }
         else
             g->luafunc_onattack = -1;
+        
 
 
         char* strSplit;
@@ -1986,7 +1987,7 @@ void SetAttackingObj(GameObject* g, GameObject* target)
 {
     g->targObj = target;
 }
-void AttackTarget(GameObject* g)
+void AttackTarget(GameObject* g, float dt)
 {
     if (!g) return;
     if (!g->targObj) return;
@@ -2008,7 +2009,10 @@ void AttackTarget(GameObject* g)
             lua_pcall(luaState,1,0,0);
 
         }
-        int damage = g->baseDamage;
+
+        float damage = g->baseDamage;
+        ProcessItemsOnAttack(g,dt,&damage);
+        
        //    g->targObj->health -= damage   ;
 
         if (g->numAttackEffectIndices > 0)

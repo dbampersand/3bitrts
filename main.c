@@ -32,7 +32,7 @@
 #include "minimap.h"
 #include "pathfind.h"
 #include "shop.h"
-
+#include "item.h"
 
 void init()
 {
@@ -86,6 +86,7 @@ void init()
     InitReplay();
     InitPathfinding();
     LoadShop();
+    LoadItemFolder("assets/items");
 }
 
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
@@ -96,7 +97,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
     if (!GameIsPaused())
     {
         MoveCamera(*mouseState,keyState,dt);
-
+        UpdateItems(dt);
         lua_settop(luaState,0);
         UpdateEncounter(dt);
         CheckSelected(mouseState,mouseStateLastFrame, keyState);

@@ -16,7 +16,7 @@ void ProcessAnimations(Animation* a, float dt)
         a->currentIndice++;
         a->timer = 0;
         if (a->currentIndice >= a->startIndice + a->numFrames)
-        {
+        {   
             a->currentIndice = a->startIndice;
             a->hasLooped = true;
         }

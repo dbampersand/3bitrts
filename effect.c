@@ -9,8 +9,13 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
 {
     if (!target)
         return false;
+    
+    float v = e->value;
 
-    float value = e->value * e->stacks;
+    ProcessItemsOnEffect(from,e,&v);
+    float value = v * e->stacks;
+
+
     
     //If it's a trigger_const we've already added the value to it
     if (e->trigger == TRIGGER_CONST)
