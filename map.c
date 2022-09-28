@@ -257,6 +257,16 @@ void SetMap(Map* m)
     m->collision = NULL;
     currMap = m;
     CallLuaFunc(m->luafunc_setup);
+
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        GameObject* g = &objects[i];
+        if (IsActive(g))
+        {
+            CallLuaFunc(g->luafunc_onmapchange);
+        }
+    }
+
     //PreprocessMap(m);
 
 }

@@ -15,7 +15,8 @@ typedef enum GameState {
     GAMESTATE_IN_CHATBOX = 8,
     GAMESTATE_END = 9,
     GAMESTATE_WATCHING_REPLAY = 10,
-    GAMESTATE_EXIT = 11,
+    GAMESTATE_IN_SHOP = 11,
+    GAMESTATE_EXIT = 12,
 
     NUMGAMESTATES = 12
 } GameState;
@@ -60,8 +61,9 @@ void SetGameStateToChoosingEncounter();
 void SetGameStateToEndscreen();
 void SetGameStateToInMenu();
 void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Encounter* e);
-void SetGameStateToChangingMap(const char* mapPath);
+void SetGameStateToChangingMap();
 void SetGameStateToWatchingReplay();
+void SetGameStateToInShop();
 
 
 void Quit();

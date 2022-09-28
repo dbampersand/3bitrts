@@ -94,7 +94,8 @@ void init()
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
 {
 
-    UpdateShop(dt);
+    if (gameState == GAMESTATE_IN_SHOP)
+        UpdateShop(dt,*mouseState,*mouseStateLastFrame);
     
     if (!GameIsPaused())
     {
@@ -359,6 +360,11 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             }
         }
     }
+    if (gameState == GAMESTATE_IN_SHOP)
+    {
+        DrawShop(dt,*mouseState);
+    }
+
     DrawMenus(mouseState);
     DrawWidgets(gameState, DRAWORDER_AFTERUI);
     DrawMouse(mouseState, mousedOver);
@@ -369,7 +375,6 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         DrawLoadscreen();
     }
 
-
     DrawTransition(dt);
 
     if (al_key_down(keyState,ALLEGRO_KEY_MINUS))
@@ -377,7 +382,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     //GameObjDebugDraw();
     //DebugDrawPathfinding();   
     //al_draw_filled_rectangle(0,0,255,255,BG);
-    //DrawShop(dt);
+    
 }
 
 void DrawMainMenu()

@@ -618,7 +618,6 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
     float triggersPerSecond = GetTableField(l,-1,"triggersPerSecond",&isField);
     e.triggersPerSecond = triggersPerSecond;
     e.duration = GetTableField(l,-1,"duration",&isField);
-    e.propagateEffect = propagateItemEffects;
     const char* portrait = GetTableField_Str(l,-1,"portrait",&isField);
     if (isField && portrait)
     {
@@ -2335,8 +2334,19 @@ int L_SetAbilityHint(lua_State* l)
 }
 int L_ChangeMap(lua_State* l)
 {
+    //if we're already in the shop
+    if (gameState == GAMESTATE_IN_SHOP)
+        return 0;
+        
     const char* path = lua_tostring(l,1);
-    SetGameStateToChangingMap(path);
+    //SetGameStateToChangingMap(path);
+    SetGameStateToInShop();
+
+    if (pathToNextMap)
+        free(pathToNextMap);
+    pathToNextMap = calloc(strlen(path)+1,sizeof(char));
+    strcpy(pathToNextMap,path);
+
     return 0;
 }
 int L_AddAbility(lua_State* l)

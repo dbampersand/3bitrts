@@ -29,6 +29,9 @@ function setup()
     SetObjectPush(false);
 end
 
+function OnMapChange()
+    heal = -1
+end
 function update(dt)
     if (heal == -1) then
 

@@ -9,6 +9,8 @@
 typedef struct GameObject GameObject;
 typedef struct Effect Effect;
 
+#define DEFAULT_COST 1
+
 
 typedef struct Item
 {
@@ -18,6 +20,7 @@ typedef struct Item
     int luafunc_oneffect;
     int luafunc_attached;
     int luafunc_ondamaged;
+
 
 
     char* description;

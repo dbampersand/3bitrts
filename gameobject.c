@@ -872,6 +872,14 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
         else
             g->luafunc_onattack = -1;
         
+        if (CheckFuncExists("OnMapChange",g->lua_buffer))
+        {
+            lua_getglobal(l, "OnMapChange");
+            funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+            g->luafunc_onmapchange = funcIndex;
+        }
+        else
+            g->luafunc_onmapchange = -1;
 
 
         char* strSplit;
@@ -2100,7 +2108,7 @@ bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems)
     {
         return false;
     }
-    if (propagateItemEffects)
+    if (triggerItems)
         ProcessItemsOnDamaged(source,g,&value);
     value -= g->armor;
     if (value < 1)

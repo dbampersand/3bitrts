@@ -302,6 +302,8 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         else
             a->luafunc_untoggle = -1;
 
+
+
         currAbilityRunning = before;
 
      }

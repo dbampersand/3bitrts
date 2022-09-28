@@ -102,6 +102,8 @@ typedef struct GameObject
     int luafunc_setup;
     int luafunc_kill;
     int luafunc_onattack;
+    int luafunc_onmapchange;
+
     int numAttackEffectIndices;
 
 

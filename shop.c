@@ -3,6 +3,9 @@
 #include "colors.h"
 #include "sprite.h"
 #include "helperfuncs.h"
+#include "player.h"
+#include "video.h"
+#include "allegro5/allegro_primitives.h"
 
 void LoadShop()
 {
@@ -31,7 +34,7 @@ void LoadShop()
 
     shop.spriteIndex_stall = LoadSprite("assets/ui/shop/shop_base.png",false);
 
-
+    InitButton(&shop.continueButton,"Continue","Continue",170,234,81,15,0);
 }
 void SwitchShopkeepAnimation(Animation* to)
 {
@@ -42,8 +45,9 @@ void SwitchShopkeepAnimation(Animation* to)
     to->timer = 0;
 
 }
-void UpdateShop(float dt)
+void UpdateShop(float dt, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseStateLastFrame)
 {
+
     ProcessAnimations(shop.currAnimation,dt);
 
     if (shop.currAnimation->hasLooped)
@@ -64,13 +68,22 @@ void UpdateShop(float dt)
             SwitchShopkeepAnimation(to);
         }
     }
+    UpdateButton(shop.continueButton.x,shop.continueButton.y,&shop.continueButton,mouseState,mouseStateLastFrame);
+    if (GetButtonIsClicked(&shop.continueButton))
+    {
+        SetGameStateToChangingMap();
+    }
 }
-void DrawShop(float dt)
+void DrawShop(float dt, ALLEGRO_MOUSE_STATE mouseState)
 {
+
     int startX = 8; int startY = 8;
     int shopkeeperOffsetX = 18;
     int shopkeeperOffsetY = 44;
 
+    al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+
     DrawSprite(&sprites[shop.spriteIndex_stall],startX,startY,0,0,0,FRIENDLY,false);
     DrawAnimation(shop.currAnimation,startX + shopkeeperOffsetX,startY + shopkeeperOffsetY,COLOR_FRIENDLY,false);
+    DrawButton(&shop.continueButton,shop.continueButton.x,shop.continueButton.y,mouseState,true,BG);
 }

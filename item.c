@@ -91,6 +91,8 @@ Item* LoadItem(const char* path, lua_State* l)
         }
     }
     Item iNew = {0};
+    iNew.goldCost = DEFAULT_COST;
+
     items[numItems] = iNew;
 
     Item* i = &items[numItems];

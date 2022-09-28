@@ -74,6 +74,10 @@ void SetGameStateToChoosingEncounter()
     TransitionTo(GAMESTATE_CHOOSING_ENCOUNTER);
 
 }
+void SetGameStateToEnterShop()
+{
+    
+}
 void FinishTransition()
 {
     if (transitioningTo == GAMESTATE_MAIN_MENU)
@@ -136,6 +140,7 @@ void FinishTransition()
 
         ui.currentPanel = NULL;
         RemoveAllAttacks();
+
         ClearSelection();
         //ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
 
@@ -170,10 +175,24 @@ void FinishTransition()
         SetMap(&maps[0]);
 
     }
+    if (transitioningTo == GAMESTATE_IN_SHOP)
+    {
+        gameState = GAMESTATE_IN_SHOP;
+
+
+    }
     if (transitioningTo == GAMESTATE_CHANGE_MAP)
     {
         gameState = GAMESTATE_INGAME;
         transitioningTo = GAMESTATE_INGAME;
+
+        for (int i = 0; i < MAX_OBJS; i++)
+        {
+            if (!IsOwnedByPlayer(&objects[i]))
+            {
+                KillObj(&objects[i],false);
+            }
+        }
 
         SetMap(LoadMap(pathToNextMap));
 
@@ -197,7 +216,6 @@ void FinishTransition()
                     camPos.y = yPos;    
                 }
             }
-
         }
         FocusCameraOnPos(camPos.x,camPos.y);
 
@@ -222,15 +240,13 @@ void SetGameStateToWatchingReplay()
     TransitionTo(GAMESTATE_WATCHING_REPLAY);
     ChangeUIPanel(NULL);
 }
-void SetGameStateToChangingMap(const char* mapPath)
+void SetGameStateToInShop()
+{
+    TransitionTo(GAMESTATE_IN_SHOP);
+}
+void SetGameStateToChangingMap()
 {
     TransitionTo(GAMESTATE_CHANGE_MAP);
-
-    if (pathToNextMap)
-        free(pathToNextMap);
-    pathToNextMap = calloc(strlen(mapPath)+1,sizeof(char));
-    strcpy(pathToNextMap,mapPath);
-
 }
 void SetGameStateToChoosingParty()
 {

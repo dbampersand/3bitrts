@@ -35,7 +35,7 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     }
     if (e->effectType == EFFECT_HURT)
     {
-        return Damage(from,target,value*sign,e->propagateEffect);
+        return Damage(from,target,value*sign,propagateItemEffects);
     }
     if (e->effectType == EFFECT_STUN)
     {
