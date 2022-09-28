@@ -2,6 +2,8 @@
 function setup(obj)
     SetItemName(obj,"Sharp Sword")
     SetItemDescription(obj,"+2 Attack")
+    SetItemGoldCost(10)
+    SetItemTier(1)
 end
 
 function Attached(item,obj)

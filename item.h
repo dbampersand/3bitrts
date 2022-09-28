@@ -17,6 +17,8 @@ typedef struct Item
     int luafunc_onattack;
     int luafunc_oneffect;
     int luafunc_attached;
+    int luafunc_ondamaged;
+
 
     char* description;
     char* name;
@@ -27,12 +29,16 @@ typedef struct Item
     char* luaBuffer;
 
     GameObject* attachedTo;
+
+    int goldCost;
+    int itemTier;
 } Item;
 
 Item* items;
 int numItems;
 int numItemsAllocated;
 
+bool propagateItemEffects;
 
 Item* currItemRunning;
 
@@ -45,5 +51,7 @@ void UpdateItems(float dt);
 
 void ProcessItemsOnAttack(GameObject* g, float dt, float* value);
 void ProcessItemsOnEffect(GameObject* g, Effect* e, float* value);
+void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value);
 
 void AttachItem(GameObject* g, Item* i);
+void InitItems();

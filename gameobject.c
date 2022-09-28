@@ -2038,7 +2038,7 @@ void AttackTarget(GameObject* g, float dt)
 
 
         AddThreat(g,g->targObj,damage);
-        if (Damage(g,g->targObj,damage))
+        if (Damage(g,g->targObj,damage,true))
         {
             g->targObj = NULL;
         }
@@ -2090,7 +2090,7 @@ void Stun(GameObject* source, GameObject* g, float value)
 }
 
 
-bool Damage(GameObject* source, GameObject* g, float value)
+bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems)
 {
     if (!g) return false;
 
@@ -2100,6 +2100,8 @@ bool Damage(GameObject* source, GameObject* g, float value)
     {
         return false;
     }
+    if (propagateItemEffects)
+        ProcessItemsOnDamaged(source,g,&value);
     value -= g->armor;
     if (value < 1)
         value = 1;

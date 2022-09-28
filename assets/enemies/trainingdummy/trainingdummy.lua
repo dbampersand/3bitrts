@@ -9,6 +9,7 @@ function setup()
     SetSpeed(0)
     SetObjectPush(true);
     ObjIsStunnable(GetObjRef(),false);
+
 end 
 
 local timer = 0
@@ -48,7 +49,7 @@ function update(dt)
 
     ShowString(dpsStr,6,6);
 
-    ClearCommandQueue(GetObjRef());
+    --ClearCommandQueue(GetObjRef());
 end
 
 function kill()

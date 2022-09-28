@@ -26,7 +26,7 @@ function setup()
     
     SetObjectPush(false);
 
-    AddItem(GetObjRef(),"assets/items/sharp_sword/sharp_sword.lua");
+    AddItem(GetObjRef(),"assets/items/barbed_wire/barbed_wire.lua");
 end
 
 function update(dt)

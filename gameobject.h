@@ -11,6 +11,8 @@
 #include "pathfind.h"
 #include "item.h"
 
+#include "stdbool.h"
+
 #define MAX_PATHFINDING_NODES_HELD 20
 #define MINIMUM_RANGE 6
 #define SHIELD_EFFECT_TIME 0.5f
@@ -231,7 +233,7 @@ void NewObj(GameObject* g);
 Rect GetObjRect(GameObject* g);
 int GetPlayerOwnedBy(GameObject* g);
 
-bool Damage(GameObject* source, GameObject* g, float value);
+bool Damage(GameObject* source, GameObject* g, float value,bool triggerItems);
 void Heal(GameObject* g, float value);
 void Stun(GameObject* source, GameObject* g, float value);
 

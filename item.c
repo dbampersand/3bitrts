@@ -13,50 +13,69 @@
 #include "gameobject.h"
 #include "effect.h"
 
-
+void InitItems()
+{
+    propagateItemEffects = true;
+}
 Item* LoadItemFuncs(Item* i, lua_State* l)
 {
-        int funcIndex;
+    int funcIndex;
+    if (luaL_loadbuffer(l, i->luaBuffer,strlen(i->luaBuffer),NULL) || lua_pcall(l, 0, 0, 0))
+    {
+        printf("%s\n\n---\nCan't load lua file:\n %s\n---\n\n\n",COL_ERR,lua_tostring(l,-1));
+        fflush(stdout);
+        return NULL;
+    }
 
-        if (CheckFuncExists("update",i->luaBuffer))
-        {
-            lua_getglobal(l, "update");
-            funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
-            i->luafunc_update = funcIndex;
-        }
-        else
-            i->luafunc_update = -1;
+    if (CheckFuncExists("update",i->luaBuffer))
+    {
+        lua_getglobal(l, "update");
+        funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+        i->luafunc_update = funcIndex;
+    }
+    else
+        i->luafunc_update = -1;
 
-        if (CheckFuncExists("setup",i->luaBuffer))
-        {
-            lua_getglobal(l, "setup");
-            funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
-            lua_rawgeti(l,LUA_REGISTRYINDEX,funcIndex);
-            lua_pushnumber(l,i-items);
-            lua_pcall(l,1,0,0);
-            i->luafunc_setup = funcIndex;
-        }
-        else
-            i->luafunc_setup = -1;
+    if (CheckFuncExists("setup",i->luaBuffer))
+    {
+        lua_getglobal(l, "setup");
+        funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+        lua_rawgeti(l,LUA_REGISTRYINDEX,funcIndex);
+        lua_pushnumber(l,i-items);
+        lua_pcall(l,1,0,0);
+        i->luafunc_setup = funcIndex;
+    }
+    else
+        i->luafunc_setup = -1;
 
 
-        if (CheckFuncExists("OnEffect",i->luaBuffer))
-        {
-            lua_getglobal(l, "OnEffect");
-            funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
-            i->luafunc_oneffect = funcIndex;
-        }
-        else
-            i->luafunc_oneffect = -1;
+    if (CheckFuncExists("OnEffect",i->luaBuffer))
+    {
+        lua_getglobal(l, "OnEffect");
+        funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+        i->luafunc_oneffect = funcIndex;
+    }
+    else
+        i->luafunc_oneffect = -1;
 
-        if (CheckFuncExists("OnAttack",i->luaBuffer))
-        {
-            lua_getglobal(l, "OnAttack");
-            funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
-            i->luafunc_onattack = funcIndex;
-        }
-        else
-            i->luafunc_onattack = -1;
+    if (CheckFuncExists("OnAttack",i->luaBuffer))
+    {
+        lua_getglobal(l, "OnAttack");
+        funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+        i->luafunc_onattack = funcIndex;
+    }
+    else
+        i->luafunc_onattack = -1;
+
+    if (CheckFuncExists("OnDamaged",i->luaBuffer))
+    {
+        lua_getglobal(l, "OnDamaged");
+        funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+        i->luafunc_ondamaged = funcIndex;
+    }
+    else
+        i->luafunc_ondamaged = -1;
+
     return i;
 }
 
@@ -66,7 +85,7 @@ Item* LoadItem(const char* path, lua_State* l)
     {
         Item* it = &items[i];
         
-        if (it->path && strcasecmp(path,it->path))
+        if (it->path && strcasecmp(path,it->path) == 0)
         {
             return it;
         }
@@ -289,6 +308,49 @@ void ProcessItemsOnAttack(GameObject* g, float dt, float* value)
         ItemOnAttack(it,g,dt,value);
     }
 }
+void ItemOnDamaged(Item* i, GameObject* src, GameObject* target, float* value)
+{
+    if (!i->enabled)
+        return;
+
+    Item* beforeItem = currItemRunning;
+    GameObject* beforeObj = currGameObjRunning;
+
+    currItemRunning = i;
+    currGameObjRunning = src;
+
+    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_ondamaged);
+
+    lua_pushinteger(luaState, i - src->inventory);
+    lua_pushinteger(luaState, src - objects);
+    lua_pushinteger(luaState, target - objects);
+    
+    lua_pushnumber(luaState, *value);
+
+
+    lua_pcall(luaState,4,1,0);
+    //if script returns something
+    if (lua_isnumber(luaState,-1))
+    {
+        *value = lua_tonumber(luaState, -1);
+    }
+    currItemRunning = beforeItem;
+    currGameObjRunning = beforeObj;
+
+
+}
+void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value)
+{
+    propagateItemEffects = false;
+    for (int i = 0; i < INVENTORY_SLOTS; i++)
+    {
+        Item* it = &target->inventory[i];
+        ItemOnDamaged(it,source,target,value);
+    }
+    propagateItemEffects = true;
+    
+}
+
 void ItemOnEffect(Item* i, GameObject* g, Effect* e, float* value)
 {
     if (!i->enabled)

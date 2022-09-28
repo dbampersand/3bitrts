@@ -1,0 +1,29 @@
+
+function setup(obj)
+    SetItemName(obj,"Barbed Wire")
+    SetItemDescription(obj,"Deals damage when hit.")
+    SetItemGoldCost(10)
+    SetItemTier(1)
+end
+
+function Attached(item,obj)
+
+end
+
+function update(dt)
+end
+
+function OnAttack(item,obj,target,dt,value)
+end
+
+function OnEffect(item,obj,target,trigger,effectType,stacks,value,duration,value)
+end
+
+function OnDamaged(item,sourceObj,damagedObj,value)
+    local f1 = {};
+    f1["trigger"] = TRIGGER_INSTANT;
+    f1["type"] = EFFECT_HURT;
+    f1["value"] = 20;  
+
+    ApplyEffect(sourceObj,{f1});
+end

@@ -55,6 +55,10 @@ void init()
     InitSound();
     InitColors();
     InitVideo();
+    init_lua();
+
+    LoadItemFolder("assets/items");
+    InitItems();
     InitObjects();
     InitPlayers();
     InitMaps();
@@ -62,7 +66,6 @@ void init()
 
     //memset(&gameOptions,0,sizeof(GameOptions));
 
-    init_lua();
     InitAttacks();
     InitAbilities();
     InitParticles();
@@ -86,7 +89,6 @@ void init()
     InitReplay();
     InitPathfinding();
     LoadShop();
-    LoadItemFolder("assets/items");
 }
 
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)

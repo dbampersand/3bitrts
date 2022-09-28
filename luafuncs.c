@@ -618,6 +618,7 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
     float triggersPerSecond = GetTableField(l,-1,"triggersPerSecond",&isField);
     e.triggersPerSecond = triggersPerSecond;
     e.duration = GetTableField(l,-1,"duration",&isField);
+    e.propagateEffect = propagateItemEffects;
     const char* portrait = GetTableField_Str(l,-1,"portrait",&isField);
     if (isField && portrait)
     {
@@ -1786,7 +1787,7 @@ int L_HurtObj(lua_State* l)
     if (index < 0 || index >= MAX_OBJS)
         return 0;
     
-    Damage(currGameObjRunning,&objects[index],damage);
+    Damage(currGameObjRunning,&objects[index],damage,false);
     return 0;
 }
 int L_ShowString(lua_State* l)
@@ -2199,7 +2200,7 @@ int L_DealDamage(lua_State* l)
     if (objIndex >= MAX_OBJS) return -1;
 
     int dmg = lua_tonumber(l,2);
-    Damage(currGameObjRunning,&objects[objIndex],dmg);
+    Damage(currGameObjRunning,&objects[objIndex],dmg,false);
     return 1;
 }
 int L_ClearCommandQueue(lua_State* l)
@@ -2584,15 +2585,36 @@ int L_GetAbilityStacks(lua_State* l)
 }
 int L_AddItem(lua_State* l)
 {
-        int objIndex = lua_tonumber(l,1);
+    int objIndex = lua_tonumber(l,1);
     const char* path = lua_tostring(l,2);
 
     if (objIndex < 0 || objIndex >= MAX_OBJS)
         return 0;
+    GameObject* g = &objects[objIndex];
+
     Item* i = LoadItem(path,l);
-    AttachItem(&objects[objIndex],i);
+    AttachItem(g,i);
     return 0;
 }
+int L_SetGoldCost(lua_State* l)
+{
+    int itemIndex = lua_tonumber(l,1);
+    if (itemIndex < 0 || itemIndex >= numItems)
+        return 0;
+    int cost = lua_tonumber(l,2);
+    items[itemIndex].goldCost = cost;
+    return 0;
+}
+int L_SetItemTier(lua_State* l)
+{
+    int itemIndex = lua_tonumber(l,1);
+    if (itemIndex < 0 || itemIndex >= numItems)
+        return 0;
+    int tier = lua_tonumber(l,2);
+    items[itemIndex].itemTier = tier;
+    return 0;
+}
+
 int L_ModifyAbilityCooldownTimer(lua_State* l)
 {
     int objIndex = lua_tonumber(l,1);
@@ -3268,4 +3290,11 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_AddItem);
     lua_setglobal(luaState, "AddItem");
 
+    lua_pushcfunction(luaState, L_SetItemTier);
+    lua_setglobal(luaState, "SetItemTier");
+
+    lua_pushcfunction(luaState, L_SetGoldCost);
+    lua_setglobal(luaState, "SetGoldCost");
+
 }
+
