@@ -2,6 +2,7 @@
 
 #include "stdbool.h"
 #include "point.h"
+#include "helperfuncs.h"
 
 typedef struct Ability Ability; 
 typedef struct GameObject GameObject;
@@ -26,6 +27,7 @@ typedef struct Player
     Point cameraPos;
 
     int gold;
+    char* goldText;
 } Player;
 
 Player* players;
@@ -57,3 +59,7 @@ void MoveCam(float x, float y);
 void ClearSelection();
 bool BuyItem(Item* i);
 int GetGold();
+void AddGold(int count);
+void DrawGoldCount();
+void ClearGold();
+

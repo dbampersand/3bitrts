@@ -1031,6 +1031,8 @@ void KillObj(GameObject* g, bool trigger)
     {
         
     }
+    if (!IsOwnedByPlayer(g) && gameState == GAMESTATE_INGAME)
+        AddGold(g->bounty);
 }   
 
 

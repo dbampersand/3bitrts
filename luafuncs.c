@@ -1854,6 +1854,16 @@ int L_Normalize(lua_State* l)
     return 1;
 
 }
+int L_SetBounty(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    int bounty = lua_tonumber(l,2);
+    GameObject* g = &objects[objIndex];
+    if (objIndex < 0 || objIndex >= MAX_OBJS)
+        return 0;
+    g->bounty = bounty;
+    return 0;
+}
 int L_CreateTicker(lua_State* l)
 {
     float time = lua_tonumber(l,1);
@@ -3333,6 +3343,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetItemIcon);
     lua_setglobal(luaState, "SetItemIcon");
+
+    lua_pushcfunction(luaState, L_SetBounty);
+    lua_setglobal(luaState, "SetBounty");
 
 }
 

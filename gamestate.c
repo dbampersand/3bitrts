@@ -120,6 +120,8 @@ void FinishTransition()
         FocusCameraOnPos(camPos.x,camPos.y);
         memset(&gameStats,0,sizeof(GameState));
 
+        ClearGold();
+
 
         for (int i = 0; i < MAX_OBJS; i++)
         {
@@ -158,6 +160,7 @@ void FinishTransition()
         RemoveAllAttacks();
         gameState = GAMESTATE_LOAD_ENCOUNTER;
         transitioningTo = GAMESTATE_LOAD_ENCOUNTER;
+
         //if (toSpawn)
          //   free(toSpawn);
        // toSpawn = NULL;

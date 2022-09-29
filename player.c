@@ -7,7 +7,7 @@
 #include "map.h"
 #include "settings.h"
 #include "item.h"
-
+#include "allegro5/allegro_ttf.h"
 float cameraSpeed = 200;
 void RemoveIndexFromSelection(Player* p, int index)
 {
@@ -39,6 +39,7 @@ void RemoveGameObjectFromSelection(Player* p, GameObject* g)
 void InitPlayers()
 {
     players = calloc(3,sizeof(Player));
+    AddGold(0);
 }
 void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState)
 {
@@ -196,11 +197,36 @@ bool BuyItem(Item* i)
 {
     if (players[0].gold < i->goldCost)
         return false;
-
-    players[0].gold -= i->goldCost;
+    AddGold(-i->goldCost);
     return true;
 }
 int GetGold()
 {
     return players[0].gold;
+}
+
+void AddGold(int count)
+{
+    players[0].gold += count;
+    int numDigits = NumDigits(players[0].gold);
+    if (!players[0].goldText)
+    {
+        players[0].goldText = calloc(numDigits+1,sizeof(char));
+    }
+    else
+    {
+        players[0].goldText = realloc(players[0].goldText,(numDigits+1)*sizeof(char));
+    }
+    sprintf(players[0].goldText,"%i",players[0].gold);
+    players[0].goldText[numDigits] = '\0';
+}
+void DrawGoldCount()
+{
+    int x = 8; int y = 8;
+    DrawSprite(&sprites[ui.gold_element_sprite_index],x,y,0,0,0,FRIENDLY,false);
+    al_draw_text(ui.tinyFont,FRIENDLY,x+GetWidthSprite(&sprites[ui.gold_element_sprite_index])+2,y,ALLEGRO_ALIGN_LEFT,players[0].goldText);
+}
+void ClearGold()
+{
+    AddGold(-GetGold());
 }

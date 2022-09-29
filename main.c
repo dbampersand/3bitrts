@@ -338,6 +338,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             DrawMinimap(*mouseState);
         }
         DrawTimer(currSettings.displayTimer);
+        DrawGoldCount();
 
     }
 

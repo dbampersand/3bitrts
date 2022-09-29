@@ -154,6 +154,8 @@ typedef struct UI
     int panel_5_abilities_sprite_index;
     int health_element_sprite_index;
     int health_and_mana_element_sprite_index;
+    int gold_element_sprite_index;
+
 
     int cursorDefaultIndex;
     int cursorCastingIndex;
@@ -205,6 +207,7 @@ typedef struct UI
 
     UIElement menuButton;
 
+    
 
 } UI;   
  

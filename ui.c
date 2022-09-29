@@ -1582,7 +1582,7 @@ void InitAccessibilityOptionsPanel()
 void InitChoosingUnitButtons()
 {
     InitButton(&ui.choosingUnits_Back,"Back","Back",45,194,48,16,0);
-    InitButton(&ui.choosingUnits_GO,"Adventure","Adventure",109,194,96,16,0);
+    InitButton(&ui.choosingUnits_GO,"Adventure","A  dventure",109,194,96,16,0);
 }
 void InitEndScreen()
 {
@@ -1595,6 +1595,8 @@ void InitEndScreen()
 void InitGameUI()
 {
     InitButton(&ui.menuButton,"Menu","Menu",213,4,40,11,0);
+
+    ui.gold_element_sprite_index = LoadSprite("assets/ui/gold.png",false);
 
 }
 void InitControlsPanel()

@@ -8,6 +8,9 @@
 #include "allegro5/allegro_primitives.h"
 #include <math.h>
 #include "gameobject.h"
+#include "allegro5/allegro_ttf.h"
+#include "ui.h"
+
 void LoadShop()
 {
     int numIdleSprites = 4;
@@ -82,7 +85,6 @@ void UpdateShop(float dt, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mo
     if (shop.currAnimation->hasLooped)
     {
         float r = RandRange(0,1);
-        return; 
         //Play animation other than the default idle 
         if (r > 0.6)
         {
@@ -122,7 +124,6 @@ void UpdateShop(float dt, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mo
         ShopItem* si = &shop.items[i];
 
         si->desiredPosition.y += sin((shop.timer)*6)/16.0f;
-        printf("%f\n",sin(shop.timer));
 
         if (si == shop.heldItem)
             continue;
@@ -185,6 +186,10 @@ void DrawShopItems(float dt, ALLEGRO_MOUSE_STATE mouseState)
             al_draw_circle(cx,cy, r,col,1);
             DrawSprite(&sprites[si->item->spriteIndex_Icon],si->position.x,si->position.y,0,0,0,col,false);
         }
+        char* price = calloc(NumDigits(si->item->goldCost)+1,sizeof(char));
+        sprintf(price,"%i",si->item->goldCost);
+        al_draw_text(ui.tinyFont,col,cx,si->position.y+h+3,ALLEGRO_ALIGN_CENTRE,price);
+        free(price);
     }
 }
 void DrawShopObjects(ALLEGRO_MOUSE_STATE mouseState)
@@ -230,6 +235,7 @@ void DrawShopObjects(ALLEGRO_MOUSE_STATE mouseState)
             }
         }
         y += 24+4;
+
     }
 
     if (!(mouseState.buttons & 1))
