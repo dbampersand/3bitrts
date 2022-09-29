@@ -4,7 +4,7 @@ function setup(obj)
     SetItemDescription(obj,"+2 Attack")
     SetItemGoldCost(obj,10)
     SetItemTier(obj,1)
-    SetItemIcon(obj, "assets/items/sharp_sword/sharp_sword.png");
+    SetItemIcon(obj, "assets/items/quality_mid/sharp_sword/sharp_sword.png");
 
 end
 

@@ -4,7 +4,7 @@ function setup(obj)
     SetItemDescription(obj,"Deals damage when hit.")
     SetItemGoldCost(obj,20)
     SetItemTier(obj,2)  
-    SetItemIcon(obj, "assets/items/barbed_wire/barbed_wire.png");
+    SetItemIcon(obj, "assets/items/quality_high/barbed_wire/barbed_wire.png");
 end
 
 function Attached(item,obj)

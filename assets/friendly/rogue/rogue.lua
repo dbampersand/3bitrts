@@ -25,8 +25,6 @@ function setup()
     SetCategory(TYPE_MELEEDPS);
     
     SetObjectPush(false);
-
-    AddItem(GetObjRef(),"assets/items/barbed_wire/barbed_wire.lua");
 end
 
 function update(dt)

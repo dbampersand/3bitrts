@@ -12,7 +12,8 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     
     float v = e->value;
 
-    ProcessItemsOnEffect(from,e,&v);
+    if (from)
+        ProcessItemsOnEffect(from,e,&v);
     float value = v * e->stacks;
 
 
