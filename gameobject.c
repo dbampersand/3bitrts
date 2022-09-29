@@ -702,6 +702,9 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     currGameObjRunning->name = prefab->name;
     currGameObjRunning->threatMultiplier = 1;
 
+    currGameObjRunning->bounty = DEFAULT_BOUNTY;
+
+
     SetRange(currGameObjRunning,1);
     currGameObjRunning->objType = TYPE_ALL;
 

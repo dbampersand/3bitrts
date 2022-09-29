@@ -6,6 +6,7 @@
 #include "sound.h"
 #include "map.h"
 #include "settings.h"
+#include "item.h"
 
 float cameraSpeed = 200;
 void RemoveIndexFromSelection(Player* p, int index)
@@ -190,4 +191,16 @@ void ClearSelection()
     }
     players[0].numUnitsSelected = 0;
 
+}
+bool BuyItem(Item* i)
+{
+    if (players[0].gold < i->goldCost)
+        return false;
+
+    players[0].gold -= i->goldCost;
+    return true;
+}
+int GetGold()
+{
+    return players[0].gold;
 }

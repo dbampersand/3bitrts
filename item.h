@@ -10,6 +10,14 @@ typedef struct GameObject GameObject;
 typedef struct Effect Effect;
 
 #define DEFAULT_COST 1
+#define NUM_ITEM_POOLS 3
+
+typedef enum ItemLevel
+{
+    LEVEL_POOR = 0,
+    LEVEL_MID = 1,
+    LEVEL_HIGH = 2
+} ItemLevel;
 
 
 typedef struct Item
@@ -35,11 +43,20 @@ typedef struct Item
 
     int goldCost;
     int itemTier;
+
+    int spriteIndex_Icon;
 } Item;
+typedef struct ItemPool
+{
+    int* itemIndices;
+    int numItems;
+} ItemPool;
 
 Item* items;
 int numItems;
 int numItemsAllocated;
+
+ItemPool itemPools[NUM_ITEM_POOLS];
 
 bool propagateItemEffects;
 
@@ -58,3 +75,7 @@ void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value)
 
 void AttachItem(GameObject* g, Item* i);
 void InitItems();
+
+Item* GetRandomItem(ItemLevel i);
+int NumAttachedItems(GameObject* g);
+bool ItemIsPurchasable(Item* i);

@@ -15,6 +15,8 @@
 #include "loadscreen.h"
 #include "attack.h"
 #include "replay.h"
+#include "shop.h"
+
 bool TransitionTo(GameState state)
 {
     if (transitioningTo == state)
@@ -178,6 +180,7 @@ void FinishTransition()
     if (transitioningTo == GAMESTATE_IN_SHOP)
     {
         gameState = GAMESTATE_IN_SHOP;
+        RefreshShop();
 
 
     }

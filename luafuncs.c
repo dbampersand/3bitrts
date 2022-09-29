@@ -22,7 +22,7 @@
 #include "settings.h"
 #include "video.h"
 #include "item.h"
-
+#include "shop.h"
 
 
 static void dumpstack (lua_State* l) {
@@ -2163,11 +2163,31 @@ void SetGlobals(lua_State* l)
     lua_pushboolean(l,_DEBUG);
     lua_setglobal(l,"_DEBUG");
 
+    lua_pushinteger(l,LEVEL_POOR);
+    lua_setglobal(l,"LEVEL_POOR");
+    lua_pushinteger(l,LEVEL_MID);
+    lua_setglobal(l,"LEVEL_MID");
+    lua_pushinteger(l,LEVEL_HIGH);
+    lua_setglobal(l,"LEVEL_HIGH");
 
-
-
-
-
+}
+int L_SetItemIcon(lua_State* l)
+{
+    const int item = lua_tonumber(l,1);
+    const char* path = lua_tostring(l,2);
+    if (item < 0 || item >= numItems)
+        return 0;
+    items[item].spriteIndex_Icon = LoadSprite(path,true);
+    return 0;
+}
+int L_SetItemGoldCost(lua_State* l)
+{
+    const int item = lua_tonumber(l,1);
+    const int cost = lua_tonumber(l,2);
+    if (item < 0 || item >= numItems)
+        return 0;
+    items[item].goldCost = cost;
+    return 0;
 
 }
 int L_ApplyEffect(lua_State* l)
@@ -2337,7 +2357,7 @@ int L_ChangeMap(lua_State* l)
     //if we're already in the shop
     if (gameState == GAMESTATE_IN_SHOP)
         return 0;
-        
+
     const char* path = lua_tostring(l,1);
     //SetGameStateToChangingMap(path);
     SetGameStateToInShop();
@@ -2621,7 +2641,9 @@ int L_SetItemTier(lua_State* l)
     if (itemIndex < 0 || itemIndex >= numItems)
         return 0;
     int tier = lua_tonumber(l,2);
+    tier = clamp(tier,0,NUM_ITEM_POOLS-1);
     items[itemIndex].itemTier = tier;
+
     return 0;
 }
 
@@ -3300,11 +3322,17 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_AddItem);
     lua_setglobal(luaState, "AddItem");
 
+    lua_pushcfunction(luaState, L_SetItemGoldCost);
+    lua_setglobal(luaState, "SetItemGoldCost");
+
     lua_pushcfunction(luaState, L_SetItemTier);
     lua_setglobal(luaState, "SetItemTier");
 
     lua_pushcfunction(luaState, L_SetGoldCost);
     lua_setglobal(luaState, "SetGoldCost");
+
+    lua_pushcfunction(luaState, L_SetItemIcon);
+    lua_setglobal(luaState, "SetItemIcon");
 
 }
 

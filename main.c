@@ -337,6 +337,8 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         {
             DrawMinimap(*mouseState);
         }
+        DrawTimer(currSettings.displayTimer);
+
     }
 
     DrawBufferedStrings();
@@ -359,6 +361,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
                 ChangeUIPanel(&ui.pauseMenuPanel);
             }
         }
+
     }
     if (gameState == GAMESTATE_IN_SHOP)
     {
@@ -368,7 +371,6 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     DrawMenus(mouseState);
     DrawWidgets(gameState, DRAWORDER_AFTERUI);
     DrawMouse(mouseState, mousedOver);
-    DrawTimer(currSettings.displayTimer);
     players[0].clickedThisFrame = NULL;
     if (gameState == GAMESTATE_LOAD_SCREEN || gameState == GAMESTATE_LOAD_ENCOUNTER) 
     {

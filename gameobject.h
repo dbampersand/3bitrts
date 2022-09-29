@@ -17,6 +17,7 @@
 #define MINIMUM_RANGE 6
 #define SHIELD_EFFECT_TIME 0.5f
 #define INVENTORY_SLOTS 3
+#define DEFAULT_BOUNTY 5
 
 typedef enum GAMEOBJ_PROPERTIES
 {
@@ -170,6 +171,8 @@ typedef struct GameObject
     float lifesteal;
     
     Item inventory[INVENTORY_SLOTS];
+
+    int bounty;
 } GameObject;
 
 

@@ -1,11 +1,12 @@
 
 function setup(obj)
-    SetItemName(obj,"Sharp Sword")
-    SetItemDescription(obj,"+2 Attack")
-    SetItemGoldCost(obj,10)
-    SetItemTier(obj,1)
-    SetItemIcon(obj, "assets/items/sharp_sword/sharp_sword.png");
+    SetItemName(obj,"Sharpening Stone")
+    SetItemDescription(obj,"+1 Attack")
+    SetItemGoldCost(obj,4)
+    SetItemTier(obj,0)
+    SetItemIcon(obj, "assets/items/sharpening_stone/sharpening_stone.png");
 
+    
 end
 
 function Attached(item,obj)

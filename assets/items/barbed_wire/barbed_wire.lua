@@ -2,8 +2,9 @@
 function setup(obj)
     SetItemName(obj,"Barbed Wire")
     SetItemDescription(obj,"Deals damage when hit.")
-    SetItemGoldCost(10)
-    SetItemTier(1)
+    SetItemGoldCost(obj,20)
+    SetItemTier(obj,2)  
+    SetItemIcon(obj, "assets/items/barbed_wire/barbed_wire.png");
 end
 
 function Attached(item,obj)

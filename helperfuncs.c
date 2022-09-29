@@ -150,6 +150,8 @@ double RandRange(double min, double max)
 }    
 int RandRangeI(int min, int max)
 {
+    if (max == 0)
+        return 0;
    return min + (rand() % max);
 }    
 
@@ -319,6 +321,22 @@ float Towards(float f, float to, float maxDist)
         return _MAX(f-maxDist, to);
 
     return(to);
+}
+Point Towards_Angled(Point from, Point target, float maxDist)
+{
+    Point to;
+    to.x = target.x - from.x;
+    to.y = target.y - from.y;
+    float d = dist(from.x,from.y,target.x,target.y);
+
+    if (d < maxDist)
+        return target;
+
+    float distDelta = d / maxDist;
+    Point end;
+    end.x = from.x + to.x / distDelta;
+    end.y = from.y + to.y / distDelta;
+    return end;
 }
 
 

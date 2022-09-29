@@ -12,6 +12,7 @@
 #include "ui.h"
 #include "gameobject.h"
 #include "effect.h"
+#include "helperfuncs.h"
 
 void InitItems()
 {
@@ -169,10 +170,18 @@ Item* LoadItem(const char* path, lua_State* l)
      }
      free(cpy);
 
+    itemPools[i->itemTier].itemIndices[itemPools[i->itemTier].numItems] = i - items;
+    itemPools[i->itemTier].numItems++;
+
     if (numItems >= numItemsAllocated)
     {
         items = realloc(items,(numItemsAllocated+32)*sizeof(Item));
         numItemsAllocated += 32;
+
+        for (int i = 0; i < NUM_ITEM_POOLS; i++)
+        {
+            itemPools[i].itemIndices = realloc(itemPools[i].itemIndices,numItemsAllocated*sizeof(int));
+        }
     }
     return i;
 }
@@ -204,6 +213,11 @@ void LoadItemFolder(char* path)
         numItems = 0;
         numItemsAllocated = GetNumSubDirs(path);
         items = calloc(numItemsAllocated,sizeof(Item));
+
+        for (int i = 0; i < NUM_ITEM_POOLS; i++)
+        {
+            itemPools[i].itemIndices = calloc(numItemsAllocated,sizeof(int));
+        }
     }
     DIR *d;
     struct dirent *dir;
@@ -213,9 +227,8 @@ void LoadItemFolder(char* path)
             while ((dir = readdir(d)) != NULL) {
                 if (dir->d_type == DT_REG &&  strcmp(dir->d_name,".DS_Store")!=0 && strlen(dir->d_name) > 0)
                 {
-                    int f = strcasecmp(dir->d_name,".lua");
-                    int cx = strlen(dir->d_name);
-                    if (strcasecmp(dir->d_name,".lua") > 0)
+                    char* f = strstr(dir->d_name,".lua");
+                    if (f > 0)
                     {
                         char* dirConcat = calloc(strlen(path)+strlen("/")+strlen(".lua")+strlen(dir->d_name)+1,sizeof(char));
                         strcpy(dirConcat,path);
@@ -405,4 +418,21 @@ void UpdateItems(float dt)
             }
         }
     }
+}
+Item* GetRandomItem(ItemLevel i)
+{
+    ItemPool* ip = &itemPools[i];
+    Item* it = &items[ip->itemIndices[RandRangeI(0,ip->numItems)]];
+
+    return it;  
+}
+int NumAttachedItems(GameObject* g)
+{
+    int numItems = 0;
+    for (int i = 0; i < INVENTORY_SLOTS; i++)
+    {
+        if (g->inventory[i].enabled)
+            numItems++;
+    }
+    return numItems;
 }
