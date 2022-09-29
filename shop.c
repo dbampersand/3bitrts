@@ -142,7 +142,7 @@ void UpdateShop(float dt, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mo
 
         float cx = si->position.x + w/2.0f;
         float cy = si->position.y + h/2.0f;
-        if (ItemIsPurchasable(si->item)  && mouseState.buttons & 1 && mouseStateLastFrame.buttons & 1 && dist(mouseState.x,mouseState.y,cx,cy) <= r)
+        if (ItemIsPurchasable(si->item)  && mouseState.buttons & 1 && !(mouseStateLastFrame.buttons & 1) && dist(mouseState.x,mouseState.y,cx,cy) <= r)
         {
             shop.heldItem = &shop.items[i];
             shop.heldOffset.x = mouseState.x - si->position.x;
@@ -176,7 +176,7 @@ void DrawShopItems(float dt, ALLEGRO_MOUSE_STATE mouseState)
         if (!ItemIsPurchasable(si->item))
             col = GROUND;
 
-        if (ItemIsPurchasable(si->item) && dist(mouseState.x,mouseState.y,cx,cy) <= r)
+        if ((!shop.heldItem || shop.heldItem == si) && ItemIsPurchasable(si->item) && dist(mouseState.x,mouseState.y,cx,cy) <= r)
         {
             al_draw_filled_circle(cx,cy, r,FRIENDLY);
             DrawSprite(&sprites[si->item->spriteIndex_Icon],si->position.x,si->position.y,0,0,0,BG,false);
@@ -190,7 +190,23 @@ void DrawShopItems(float dt, ALLEGRO_MOUSE_STATE mouseState)
         sprintf(price,"%i",si->item->goldCost);
         al_draw_text(ui.tinyFont,col,cx,si->position.y+h+3,ALLEGRO_ALIGN_CENTRE,price);
         free(price);
+
+
+        if (dist(mouseState.x,mouseState.y,cx,cy) <= r || shop.heldItem)
+        {
+            ShopItem* draw = si;
+            if (shop.heldItem)
+                draw = shop.heldItem;
+
+            al_set_clipping_rectangle(16,161,136,81);
+            al_draw_multiline_text(ui.boldFont, FRIENDLY, 18, 168, 126, 10, ALLEGRO_ALIGN_LEFT, draw->item->name);
+            al_draw_multiline_text(ui.font, FRIENDLY, 18, 184, 126, 10, ALLEGRO_ALIGN_LEFT, draw->item->description);
+            al_reset_clipping_rectangle();
+        }
+
     }
+
+    
 }
 void DrawShopObjects(ALLEGRO_MOUSE_STATE mouseState)
 {
