@@ -18,20 +18,23 @@ void LoadShop()
     shop.numIdleSprites = numIdleSprites;
     
 
-    char* path = "assets/ui/shop/shop_idle.png";
+    char* path = "assets/ui/shop/shop.png";
     Sprite* s = &sprites[LoadSprite(path,false)];
 
     int frameW = 87;
-    int frameH = 95;
+    int frameH = 101;
     int lineW = GetWidthSprite(s)/frameW;
 
     int currIndice = -2;
     int currAnimation = 0;
 
-    shop.idleSprites[currAnimation++] = LoadAnimation(path,frameW,frameH,1.2f,0,2);
+    shop.idleSprites[currAnimation++] = LoadAnimation(path,frameW,frameH,0.9f,0,2);
     shop.idleSprites[currAnimation++] = LoadAnimation(path,frameW,frameH,0.2f,3,7);
-    shop.idleSprites[currAnimation++] = LoadAnimation(path,frameW,frameH,1.5f,9,2);
-    shop.idleSprites[currAnimation++] = LoadAnimation(path,frameW,frameH,1.5f,11,2);
+    shop.idleSprites[currAnimation++] = LoadAnimation(path,frameW,frameH,1.1f,9,2);
+    shop.idleSprites[currAnimation++] = LoadAnimation(path,frameW,frameH,1.1f,11,2);
+
+    shop.interestTransitionAnimation = LoadAnimation(path,frameW,frameH,0.75f,13,3);
+    shop.interestHeldAnimation = LoadAnimation(path,frameW,frameH,1.1f,15,2);
 
 
     shop.currAnimation = &shop.idleSprites[0];
@@ -84,19 +87,37 @@ void UpdateShop(float dt, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mo
 
     if (shop.currAnimation->hasLooped)
     {
-        float r = RandRange(0,1);
-        //Play animation other than the default idle 
-        if (r > 0.6)
+        float rad = 12;
+        
+
+        if (!shop.heldItem)
         {
-            Animation* to = shop.currAnimation;
-            while (to == shop.currAnimation)
-                to = &shop.idleSprites[RandRangeI(0,shop.numIdleSprites)];
-            SwitchShopkeepAnimation(to);
+            float r = RandRange(0,1);
+            //Play animation other than the default idle 
+            if (r > 0.6)
+            {
+                Animation* to = shop.currAnimation;
+                while (to == shop.currAnimation)
+                    to = &shop.idleSprites[RandRangeI(0,shop.numIdleSprites)];
+                SwitchShopkeepAnimation(to);
+            }
+            else
+            {
+                Animation* to = &shop.idleSprites[0];
+                SwitchShopkeepAnimation(to);
+            }
         }
         else
         {
-            Animation* to = &shop.idleSprites[0];
-            SwitchShopkeepAnimation(to);
+            if (shop.currAnimation == &shop.interestTransitionAnimation || shop.currAnimation == &shop.interestHeldAnimation)
+            {
+                SwitchShopkeepAnimation(&shop.interestHeldAnimation);
+            }
+            else
+            {
+                SwitchShopkeepAnimation(&shop.interestTransitionAnimation);
+            }
+            
         }
     }
     UpdateButton(shop.continueButton.x,shop.continueButton.y,&shop.continueButton,mouseState,mouseStateLastFrame);

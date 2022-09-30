@@ -21,6 +21,10 @@ typedef struct Shop
     Animation* idleSprites;
     int numIdleSprites;
 
+    Animation interestTransitionAnimation;
+    Animation interestHeldAnimation;
+
+
     int spriteIndex_stall;
 
     Animation* currAnimation;
