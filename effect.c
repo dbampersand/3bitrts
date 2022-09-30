@@ -188,7 +188,8 @@ void ProcessEffects(GameObject* g, float dt)
 
         if (e->enabled == true)
         {   
-            e->timer += dt;
+            if (e->trigger != TRIGGER_PERMANENT)
+                e->timer += dt;
 
             if (e->trigger == TRIGGER_TIMER)
             {

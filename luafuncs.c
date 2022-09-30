@@ -660,6 +660,8 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
     e.tickTime = e.duration / e.numTriggers;
     e.value = GetTableField(l,-1,"value",&isField);
 
+    if (e.trigger == TRIGGER_PERMANENT)
+        e.duration = 1;
 
     return e;
 }
@@ -1917,7 +1919,16 @@ int L_SetItemDescription(lua_State* l)
     return 0;
 }
 
-
+int L_AddArmor(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    GameObject* g = &objects[index];
+    int armor = lua_tonumber(l,2);
+    g->armor += armor;
+    return 0;
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -1948,6 +1959,10 @@ void SetGlobals(lua_State* l)
 
     lua_pushinteger(l,TRIGGER_CONST);
     lua_setglobal(l,"TRIGGER_CONST");
+
+    lua_pushinteger(l,TRIGGER_PERMANENT);
+    lua_setglobal(l,"TRIGGER_PERMANENT");
+
 
 
     lua_pushinteger(l,EFFECT_MAXHP);
@@ -3346,6 +3361,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetBounty);
     lua_setglobal(luaState, "SetBounty");
+
+    lua_pushcfunction(luaState, L_AddArmor);
+    lua_setglobal(luaState, "AddArmor");
 
 }
 
