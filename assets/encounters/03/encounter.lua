@@ -1,5 +1,5 @@
 function setup()
-    SetEncounterSprite("assets/encounters/02/minotaur/minotaur.png");
+    SetEncounterSprite("assets/enemies/cusith/cusith.png");
     SetEncounterDescription("Cu-Sith, the black dog.")
 
     AddEncounterAbility("assets/enemies/wyrm_boss/ability_bite.lua",0,0);

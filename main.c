@@ -396,7 +396,6 @@ void DrawMainMenu()
 int main(int argc, char* args[])
 {
     init();
-    printf("%lu\n",sizeof(PathfindNode));
 
     ALLEGRO_TIMER* _FPS_TIMER = al_create_timer(1.0f / (double)_TARGET_FPS);
 
@@ -422,6 +421,7 @@ int main(int argc, char* args[])
 
     fflush(stdout);
 
+    printf("%lu\n",sizeof(Attack));
 
 
     while (gameState != GAMESTATE_EXIT) {

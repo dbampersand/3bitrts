@@ -12,19 +12,13 @@ local thirdWave = false
 function setup()
     SetMapSprite("assets/encounters/03/map.png")
     SetAutoWin(false);
-    if (_DEBUG == false) then
-        local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,54,TYPE_ENEMY,2);
-        SetObjAggroRadius(ob,999)
+        --CreateObject("assets/encounters/02/boss.lua",32,32,TYPE_ENEMY);
+        CreateObject("assets/enemies/cusith/cusith.lua",120,22,TYPE_ENEMY,5);
 
-        ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2);
-        SetObjAggroRadius(ob,999)
-
-
-    end
-    --CreateObject("assets/encounters/02/boss.lua",32,32,TYPE_ENEMY);
 end
 
 function update(dt)
+    do return end;
     --if (_DEBUG) then
       --  if (spawnedBoss == false) then
 

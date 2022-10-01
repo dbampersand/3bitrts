@@ -8,6 +8,8 @@ typedef struct GameObject GameObject;
 typedef struct Effect Effect;
 typedef struct Ability Ability;
 
+#define ATTACK_EASING 0.85f
+
 typedef enum ATTACK_TYPE
 {
     ATTACK_AOE = 0,
@@ -29,32 +31,38 @@ typedef enum ATTACK_PROPERTIES
 
 typedef struct Attack
 {
+    Ability* cameFrom;
+    GameObject* target;
+    GameObject* ownedBy;
+    Effect* effects;    
+
     float x; float y; float radius; float targetRadius; 
     float easing;
 
-    float targx; float targy; 
-    GameObject* target;
-    Effect* effects;    
-    int numEffects;
-    ATTACK_TYPE attackType;
-    ATTACK_PROPERTIES properties;
-    GameObject* ownedBy;
+    float targx; 
+    float targy; 
+    
     float speed;    
     
-    bool shouldCallback;
     float duration;
     float tickrate;
     float timer;
     float range;
 
-    Ability* cameFrom;
-
     Color color;
+
+    bool shouldCallback;
+
+    char numEffects;
+
     DITHER_PATTERN dither;
+    ATTACK_TYPE attackType;
+    ATTACK_PROPERTIES properties;
+
 
 } Attack;
 
-#define MAX_ATTACKS 128
+#define MAX_ATTACKS 1024
 Attack attacks[MAX_ATTACKS];
 unsigned char freeAttacks[MAX_ATTACKS]; //indices for attacks
 int attack_top;
