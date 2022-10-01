@@ -2013,6 +2013,10 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,EFFECT_STUN);
     lua_setglobal(l,"EFFECT_STUN");
 
+    lua_pushinteger(l,EFFECT_HURT_PERCENT);
+    lua_setglobal(l,"EFFECT_HURT_PERCENT");
+
+
 
 
     lua_pushinteger(l,ABILITY_INSTANT);

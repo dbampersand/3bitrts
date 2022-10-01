@@ -38,6 +38,10 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         return Damage(from,target,value*sign,propagateItemEffects);
     }
+    if (e->effectType == EFFECT_HURT_PERCENT)
+    {
+        return Damage(from,target,target->maxHP * (value*sign),propagateItemEffects);
+    }
     if (e->effectType == EFFECT_STUN)
     {
         Stun(from,target,value*sign);

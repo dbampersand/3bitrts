@@ -1,0 +1,32 @@
+function setup()
+    AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetPortrait("assets/enemies/wyrm_boss/ability_summon_adds.png");
+    SetDescription("[b]Howl");
+    SetCooldown(3)
+
+end
+
+function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/enemies/wyrm_boss/audio/rage.wav",1)
+
+    local f1 = {};
+    f1["trigger"] = TRIGGER_TIMER;
+    f1["duration"] = 0.1
+    f1["triggersPerSecond"] = 1
+    f1["type"] = EFFECT_HURT_PERCENT;
+    f1["value"] = 0.34;  
+    f1["name"] = "Howl"
+    f1["overwrites"] = true
+
+    CreateCircularProjectiles(GetX(GetObjRef()),GetY(GetObjRef()),"",ATTACK_PROJECTILE_ANGLE,80,999,false,ATTACK_HITS_ENEMIES,128,COLOR_DAMAGE,{f1})
+
+    return true; 
+end
+
+function onhit(x,y,objhit)
+
+end
+
+function abilitytick(x, y, durationLeft)
+
+end

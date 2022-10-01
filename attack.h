@@ -56,7 +56,7 @@ typedef struct Attack
     char numEffects;
 
     DITHER_PATTERN dither;
-    ATTACK_TYPE attackType;
+    ATTACK_TYPE attackType; 
     ATTACK_PROPERTIES properties;
 
 
