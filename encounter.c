@@ -103,7 +103,7 @@ int sortEncounters(const void* a, const void* b)
 {
     Encounter* e =  *(Encounter**)a;
     Encounter* e2 = *(Encounter**)b;
-    if (e->encounterShouldBeSkipped) return 1;
+    if (e->encounterShouldBeSkipped) return -1;
     return ( e->difficulty - e2->difficulty);
 }
 
