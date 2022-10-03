@@ -2,6 +2,10 @@
 local maxHP = 8000;
 
 local howl = 0
+
+local howlTimer = 0
+local howlCD = 30
+
 function setup()
     SetSprite("assets/enemies/cusith/cusith.png");
     SetChannelingSprite("assets/enemies/cusith/cusith_channelling.png")
@@ -19,6 +23,7 @@ function untoggle()
 end
 function update(dt)
     CastAbility(howl,3,{});
+
 end
 
 function kill()

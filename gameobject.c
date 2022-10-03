@@ -2109,6 +2109,8 @@ bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems)
 
     if (!IsActive(g))
          return false;
+    if (ObjIsInvincible(g))
+        return false;
     if (g->invulnerableTime > 0)
     {
         return false;
@@ -2183,6 +2185,19 @@ void ModifyMaxHP(GameObject* g, float value)
     if (!g) return;
     g->maxHP += value;
 }   
+void SetObjectCanPush(GameObject* g, bool value)
+{
+    if (value)
+    {
+        g->properties |= OBJ_CAN_PUSH;
+    }
+    else
+    {
+        g->properties &= ~OBJ_CAN_PUSH;
+
+    }
+}
+
 void Teleport(GameObject* g, float x, float y)
 {
     if (!currMap->collision)
@@ -2196,8 +2211,10 @@ void Teleport(GameObject* g, float x, float y)
     g->position.x = move.x*_GRAIN;
     g->position.y = move.y*_GRAIN;
 
-    CheckCollisions(g,true, 1, false);
-    CheckCollisions(g,false, 1, false);   
+
+    CheckCollisions(g,true, 1, true);
+    CheckCollisions(g,false, 1, true);  
+ 
     SetTargetPosition(g,g->position.x,g->position.y);
     SetMapCollisionRect(g->position.x,g->position.y,GetWidth(g),GetHeight(g),true);
     return;

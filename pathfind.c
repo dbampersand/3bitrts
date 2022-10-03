@@ -137,6 +137,7 @@ void ClearQueue(Queue* queue)
 {
     queue->numElements = 0;
 }
+//TODO: this can be made *far* more efficient
 PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w, int h)
 {
     float closest = FLT_MAX;

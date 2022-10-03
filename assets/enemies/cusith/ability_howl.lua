@@ -11,7 +11,7 @@ function casted(x,y,obj,headingx,headingy)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_TIMER;
-    f1["duration"] = 0.1
+    f1["duration"] = 0.2
     f1["triggersPerSecond"] = 1
     f1["type"] = EFFECT_HURT_PERCENT;
     f1["value"] = 0.34;  

@@ -276,6 +276,7 @@ int GetHeight(GameObject* g);
 float GetAttackRange(GameObject* g);
 int GetNumberOfActiveEffects(GameObject* g);
 
+void SetObjectCanPush(GameObject* g, bool value);
 bool ObjectCanPush(GameObject* g);
 bool IsInCombat(GameObject* g);
 bool ObjHasType(GameObject* g, GAMEOBJ_TYPE_HINT typeHint);
