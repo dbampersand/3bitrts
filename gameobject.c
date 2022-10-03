@@ -302,7 +302,7 @@ void UpdateObject(GameObject* g, float dt)
         GameObject* old = currGameObjRunning->targObj;
         currGameObjRunning->targObj = tempAttack;
 
-        if (shouldAttack)
+        if (shouldAttack || (g->isBoss && tempAttack))
         {
 
             if (currGameObjRunning->attackTimer <= 0)
@@ -2397,6 +2397,21 @@ void UpdateChannellingdObj(GameObject* g, float dt)
 {
     if (ObjIsChannelling(g))
     {
+        
+
+        lua_rawgeti(luaState,LUA_REGISTRYINDEX,g->channelledAbility->luafunc_onchanneled);
+        lua_pushnumber(luaState,g-objects);
+        lua_pushnumber(luaState,g->channellingTime);
+        lua_pushnumber(luaState,g->channellingTotal);
+        lua_pushnumber(luaState,g->channelled_target - objects);
+        lua_pushnumber(luaState,g->channelled_x);
+        lua_pushnumber(luaState,g->channelled_y);
+        lua_pushnumber(luaState,g->target_heading_x);
+        lua_pushnumber(luaState,g->target_heading_y);
+
+        lua_pcall(luaState,8,0,0);
+
+
         g->channellingTime -= dt;
         if (g->channellingTime < 0)
         {
@@ -2537,4 +2552,8 @@ int GetNumberOfActiveEffects(GameObject* g)
 void AddLifesteal(GameObject* g, float value)
 {
     g->lifesteal += value;
+}
+void SetObjIsBoss(GameObject* g, bool value)
+{
+    g->isBoss = value;
 }

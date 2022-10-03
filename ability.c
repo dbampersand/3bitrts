@@ -302,6 +302,15 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         else
             a->luafunc_untoggle = -1;
 
+        if (CheckFuncExists("onchanneled",a->luabuffer))
+        {
+            lua_getglobal(l, "onchanneled");
+            funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+            a->luafunc_onchanneled = funcIndex;
+        }
+        else
+            a->luafunc_onchanneled = -1;
+
 
 
         currAbilityRunning = before;

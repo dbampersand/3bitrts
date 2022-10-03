@@ -2,6 +2,7 @@
 local maxHP = 8000;
 
 local howl = 0
+local bite = 0
 
 local howlTimer = 0
 local howlCD = 30
@@ -14,10 +15,11 @@ function setup()
     SetSpeed(80)
     SetRange(40);
     SetAttackSpeed(1)
+    SetObjIsBoss(GetObjRef(),true);
 
     howl = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_howl.lua",0)   
-
-end
+    bite = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_bite.lua",1);
+end 
 function untoggle()
 
 end
@@ -34,6 +36,12 @@ function update(dt)
         end
         do return end;
     end
+    local biteTarget = {};
+    biteTarget["target"] = GetHighestThreat();
+
+    CastAbility(bite,2,{biteTarget})
+
+
 
 end
 

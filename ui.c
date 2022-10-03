@@ -1514,7 +1514,7 @@ void InitLoadReplayPanel()
 }
 void InitMainMenuPanel()
 {
-    ui.mainMenuPanel = CreatePanel(29,80,160,144,15,false);
+    ui.mainMenuPanel = CreatePanel(29,70,160,144,15,false);
     AddButton(&ui.mainMenuPanel,"Return","Start Game",0,16,96,16,false);
     AddButton(&ui.mainMenuPanel,"Tutorial","Tutorial",0,32+(padding),96,16,false);
     AddButton(&ui.mainMenuPanel,"Load Replay","Load Replay",0,48+(padding*2),96,16,false);
@@ -1801,7 +1801,7 @@ void InitUI()
     CreateWidget(GAMESTATE_MAIN_MENU,&sprites[block],157,93,0.5,0.5,DRAWORDER_BEFOREUI,0,NULL);
     CreateWidget(GAMESTATE_MAIN_MENU,&sprites[lantern],155,100,0.46,0.033,DRAWORDER_BEFOREUI,0,UpdateLanternWidget);
 
-    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[name],29,38,0.5,0.5,DRAWORDER_BEFOREUI,0,NULL);
+    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[name],29,50,0.5,0.5,DRAWORDER_BEFOREUI,0,NULL);
 
     int x = -5;
 

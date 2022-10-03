@@ -173,6 +173,8 @@ typedef struct GameObject
     Item inventory[INVENTORY_SLOTS];
 
     int bounty;
+
+    bool isBoss;
 } GameObject;
 
 
@@ -254,6 +256,7 @@ void AddAttackSpeed(GameObject* g, float speed);
 void AddAttackRange(GameObject* g, float range);
 void AddArmor(GameObject* g, float armor);
 void AddLifesteal(GameObject* g, float value);
+void SetObjIsBoss(GameObject* g, bool value);
 
 void Teleport(GameObject* g, float x, float y);
 void GetOffsetCenter(GameObject* g, float* x, float* y);
@@ -302,5 +305,3 @@ void DrawMapHighlights();
 float GetSummonPercent(GameObject* g);
 void GameObjDebugDraw();
 int GetUIStartHeight();
-
-

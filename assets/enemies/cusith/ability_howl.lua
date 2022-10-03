@@ -30,3 +30,6 @@ end
 function abilitytick(x, y, durationLeft)
 
 end
+function onchanneled(obj)
+    SetChannelingSprite("assets/enemies/cusith/cusith_channelling.png")
+end

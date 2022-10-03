@@ -968,6 +968,18 @@ int L_GetAbilityCooldownTimer(lua_State* l)
     lua_pushnumber(l,a->cdTimer);
     return 1;
 }
+int L_SetObjIsBoss(lua_State* l)
+{
+    int gameObjIndex = lua_tonumber(l,1);
+    bool value = lua_toboolean(l,2);
+
+    if (gameObjIndex < 0 || gameObjIndex >= MAX_OBJS)
+        return 0;
+
+    SetObjIsBoss(&objects[gameObjIndex],value);
+    return 0;
+}
+
 int L_GetAbilityCooldown(lua_State* l)
 {
     int gameObjIndex = lua_tonumber(l,1);
@@ -3368,6 +3380,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_AddArmor);
     lua_setglobal(luaState, "AddArmor");
+
+    lua_pushcfunction(luaState, L_SetObjIsBoss);
+    lua_setglobal(luaState, "SetObjIsBoss");
 
 }
 

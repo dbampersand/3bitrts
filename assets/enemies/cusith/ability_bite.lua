@@ -1,15 +1,16 @@
+local cone = -1
+local objTargetting = -1
+
 function setup()
 
     SetAbilityRange(2)
     --AbilitySetCastType(ABILITY_CONE);
-    SetAbilityHint(HINT_CONE,80);
+    SetAbilityHint(HINT_CONE,120);
     SetCooldown(20); 
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_firebreath.png");
-    SetDescription("[b]Firebreath\n\nDeals damage in a cone.")
+    SetDescription("[b]Bite\n\nDeals damage in a cone.")
 
 end
-local cone = -1
-local objTargetting = -1
 function casted(x,y,obj,headingx,headingy)
     if (obj == GetThisObj()) then
         return false;
@@ -20,11 +21,12 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 10;  
+    f1["value"] = 200;  
+
     center = GetCentre(GetObjRef());
     centertarget = GetCentre(obj);
     objTargetting = obj;
-    cone = CreateCone(center.x,center.y,centertarget.x,centertarget.y,"", 80, 0, 0, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER,80, {f1})
+    cone = CreateCone(center.x,center.y,centertarget.x,centertarget.y,"", 120, 0, 0, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER,140, {f1})
     SetAttackTarget(cone,objTargetting);
 
     return true; 
@@ -38,4 +40,8 @@ function abilitytick(x, y, durationLeft)
     center = GetCentre(GetObjRef());
     SetAttackPosition(cone,center.x,center.y)
     SetAttackTarget(cone,objTargetting);
+end
+
+function onchanneled(obj, channelingtime, totalchanneltime, targetObj, targetX, targetY, targetHeadingX, targetHeadingY)
+    SetChannelingSprite("assets/enemies/cusith/cusith_channelling_bite.png")
 end
