@@ -24,7 +24,7 @@ function setup()
     IsPlayerChoosable(true);    
     SetCategory(TYPE_MELEEDPS);
     
-    SetObjectPush(true);
+    SetObjectPush(false);
 end
 
 function update(dt)

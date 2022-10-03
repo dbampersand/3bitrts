@@ -290,7 +290,7 @@ void DrawShop(float dt, ALLEGRO_MOUSE_STATE mouseState)
 
     DrawSprite(&sprites[shop.spriteIndex_stall],startX,startY,0,0,0,FRIENDLY,false);
     DrawAnimation(shop.currAnimation,startX + shopkeeperOffsetX,startY + shopkeeperOffsetY,COLOR_FRIENDLY,false);
-    DrawButton(&shop.continueButton,shop.continueButton.x,shop.continueButton.y,mouseState,true,BG);
+    DrawButton(&shop.continueButton,shop.continueButton.x,shop.continueButton.y,mouseState,true,BG,true);
 
     DrawShopObjects(mouseState);
     DrawShopItems(dt,mouseState);

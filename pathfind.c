@@ -219,16 +219,18 @@ PathfindNode* GetBestGuess(PointI target)
 void AStar(PointI here, PointI target, bool* success, float w, float h, GameObject* g)
 {
     //SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
+    int mapW = GetMapWidth()/_GRAIN;
+    int mapH = GetMapHeight()/_GRAIN;
 
     bool found;
     
     w /= (float)_GRAIN; h /= (float)_GRAIN;
     //w=1;h=1;
 
-    if (here.x < 0 || here.x >= GetMapWidth()/_GRAIN)
+    if (here.x < 0 || here.x >= mapW)
         return;
 
-    if (here.y < 0 || here.y >= GetMapHeight()/_GRAIN)
+    if (here.y < 0 || here.y >= mapH)
         return;
     target = GetClosestPathablePoint(target,here,&found,w,h);
     if (!found) 
@@ -282,9 +284,9 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
             GetPath(lowest,g);
             return;
         }
-        for (int x = _MAX(0,currentNode.p.x-1); x < _MIN(currentNode.p.x+2,GetMapWidth()/_GRAIN); x++)
+        for (int x = _MAX(0,currentNode.p.x-1); x < _MIN(currentNode.p.x+2,mapW); x++)
         {
-            for (int y = _MAX(0,currentNode.p.y-1); y < _MIN(currentNode.p.y+2,GetMapHeight()/_GRAIN); y++)
+            for (int y = _MAX(0,currentNode.p.y-1); y < _MIN(currentNode.p.y+2,mapH); y++)
             {
                 if (x == currentNode.p.x && y == currentNode.p.y)
                     continue;
@@ -292,27 +294,17 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
                 PathfindNode child;
                 child.p.x = x;
                 child.p.y = y;
-                int childIndex = GetIndex(GetMapHeight()/(float)_GRAIN, child.p.x, child.p.y);
-
-                //if (child.p.x < 0 || child.p.x >= GetMapWidth()/_GRAIN)
-                  //  continue;
-               // if (child.p.y < 0 || child.p.y >= GetMapHeight()/_GRAIN)
-                 //   continue;
+                int childIndex = GetIndex(mapH, child.p.x, child.p.y);
 
                 NODE_IN_SET set = GetSet(childIndex);
-                //if (IsInQueue(&closedSet,&child) >= 0)
-                //    continue;
+
                 if (set == NODE_INSIDE_CLOSED_LIST)
                     continue;
 
-                //bool walkable = (RectIsFree(child.p.x,child.p.y,w,h));
                 bool walkable = (RectIsFree(child.p.x,child.p.y,w,h,ObjectCanPush(g)));
                 
-                //if (!walkable) 
-                  //  continue;
                 float distcurrchild = (x != currentNode.p.x && y != currentNode.p.y) ? 1.41421356237f : 1;
-                //distcurrchild = dist(currentNode.p.x,currentNode.p.y,child.p.x,child.p.y);
-                //child.g = currentNode.g + (walkable ? dist(child.p.x,child.p.y,currentNode.p.x,currentNode.p.y) : 100);
+
                 child.g = currentNode.g + distcurrchild + (walkable ? 1 : 100);
                 
                 child.h = dist(child.p.x,child.p.y,target.x,target.y);
@@ -320,8 +312,6 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
                 child.f = child.g + child.h;
                 child.parent =  parent;
 
-                //int found = IsInQueue(&openSet,&child);
-                //if (found >= 0)
                 if (set == NODE_INSIDE_OPEN_LIST)
                 {
                     int found = IsInQueue(&openSet,&child);
@@ -338,7 +328,6 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
                     }
                 }
                 Push(&openSet,child,true,NODE_INSIDE_OPEN_LIST);
-                
             }
         }
     }
@@ -346,5 +335,4 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
     *success = false;
     PathfindNode* lowest = GetBestGuess(target);
     GetPath(lowest,g);
-
 }

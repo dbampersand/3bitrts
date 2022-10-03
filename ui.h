@@ -97,6 +97,7 @@ typedef struct Button
     bool clicked; 
     bool activated;
     int spriteIndex;
+    bool drawLine;
 } Button;
 
 typedef struct UIElement
@@ -284,7 +285,7 @@ void DrawAllLevelSelects();
 void ChangeUIPanel(Panel* to);
 bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MOUSE_STATE* mouse);
 void InitButton(UIElement* u, char* name, char* description, int x, int y, int w, int h, int sprite);
-void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h);
+void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h, bool shouldDrawLine);
 void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, int h, int maxchars, KEY* mapTo);
 bool GetButtonIsClicked(UIElement* u);
 bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c,ALLEGRO_MOUSE_STATE* mouseState);
@@ -301,6 +302,6 @@ void UpdateWidget(Widget* w, float dt);
 void ClearPanelElements(Panel* p);
 void GenerateFileListButtons(char* path, Panel* p);
 void DrawReplayUI(Replay* r, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame);
-void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE mouseState, bool isActive, ALLEGRO_COLOR bgColor);
+void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected);
 void ChangeButtonImage(UIElement* u, int spriteIndex);
 void DrawTimer(bool enabled);

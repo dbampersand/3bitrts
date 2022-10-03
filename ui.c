@@ -270,7 +270,7 @@ void DrawReplayUI(Replay* r, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STAT
     al_draw_rectangle(19,5,222,13,FRIENDLY,1);
     al_draw_filled_rectangle(position.x,position.y,position.x+position.w,position.h,FRIENDLY);
 
-    DrawButton(&replayPlayButton,replayPlayButton.x,replayPlayButton.y,*mouseState,true,BG);
+    DrawButton(&replayPlayButton,replayPlayButton.x,replayPlayButton.y,*mouseState,true,BG,true);
     UpdateButton(replayPlayButton.x,replayPlayButton.y,&replayPlayButton,*mouseState,*mouseStateLastFrame);
 
     if (GetButtonIsClicked(&replayPlayButton))
@@ -285,7 +285,7 @@ void DrawReplayUI(Replay* r, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STAT
             ChangeButtonImage(&replayPlayButton,LoadSprite("assets/ui/button_play.png",true));
         }
     }
-    DrawButton(&replayBackButton,replayBackButton.x,replayBackButton.y,*mouseState,true,BG);
+    DrawButton(&replayBackButton,replayBackButton.x,replayBackButton.y,*mouseState,true,BG,true);
     UpdateButton(replayBackButton.x,replayBackButton.y,&replayBackButton,*mouseState,*mouseStateLastFrame);
     if (GetButtonIsClicked(&replayBackButton))
     {
@@ -950,12 +950,13 @@ void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, i
     UpdateBind(&u);
 
 }
-void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h)
+void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h, bool shouldDrawLine)
 {
     Button* b = calloc(1,sizeof(Button));
     b->description = calloc(strlen(description)+1,sizeof(char));
     strcpy(b->description,description);
     b->clicked = false; 
+    b->drawLine = shouldDrawLine;
     UIElement u = {0};
     u.data = (void*)b;
     u.w = w;
@@ -1047,7 +1048,7 @@ void InitButton(UIElement* u, char* name, char* description, int x, int y, int w
 
     b->description = calloc(strlen(description)+1,sizeof(char));
     strcpy(b->description,description);
-
+    b->drawLine = true;
     b->clicked = false; 
     b->spriteIndex = sprite;
     u->data = (void*)b;
@@ -1481,7 +1482,7 @@ void GenerateFileListButtons(char* path, Panel* p)
                 strcpy(name,dir->d_name);
                 memcpy(description,dir->d_name,numChars);
 
-                AddButton(p,name,description,xPos,yPos+(index*(padding+h)),w,h);
+                AddButton(p,name,description,xPos,yPos+(index*(padding+h)),w,h,true);
 
                 index++;
                 free(name);
@@ -1514,19 +1515,19 @@ void InitLoadReplayPanel()
 void InitMainMenuPanel()
 {
     ui.mainMenuPanel = CreatePanel(29,80,160,144,15,false);
-    AddButton(&ui.mainMenuPanel,"Return","Start Game",0,16,96,16);
-    AddButton(&ui.mainMenuPanel,"Tutorial","Tutorial",0,32+(padding),96,16);
-    AddButton(&ui.mainMenuPanel,"Load Replay","Load Replay",0,48+(padding*2),96,16);
-    AddButton(&ui.mainMenuPanel,"Options","Options",0,64+(padding*3),96,16);
-    AddButton(&ui.mainMenuPanel,"Exit","Exit Game",0,80+(padding*4),96,16);
+    AddButton(&ui.mainMenuPanel,"Return","Start Game",0,16,96,16,false);
+    AddButton(&ui.mainMenuPanel,"Tutorial","Tutorial",0,32+(padding),96,16,false);
+    AddButton(&ui.mainMenuPanel,"Load Replay","Load Replay",0,48+(padding*2),96,16,false);
+    AddButton(&ui.mainMenuPanel,"Options","Options",0,64+(padding*3),96,16,false);
+    AddButton(&ui.mainMenuPanel,"Exit","Exit Game",0,80+(padding*4),96,16,false);
 
 }
 void InitPausePanel()
 {
     ui.pauseMenuPanel = CreatePanel(48,48,160,160,15,true);
-    AddButton(&ui.pauseMenuPanel,"Return","Return",33,17,96,16);
-    AddButton(&ui.pauseMenuPanel,"Options","Options",33,49,96,16);
-    AddButton(&ui.pauseMenuPanel,"Exit","Exit Game",33,81,96,16);
+    AddButton(&ui.pauseMenuPanel,"Return","Return",33,17,96,16,true);
+    AddButton(&ui.pauseMenuPanel,"Options","Options",33,49,96,16,true);
+    AddButton(&ui.pauseMenuPanel,"Exit","Exit Game",33,81,96,16,true);
 }
 void InitVideoOptionsPanel()
 {
@@ -1539,8 +1540,8 @@ void InitVideoOptionsPanel()
     SetUITextStr(GetUIElement(&ui.videoOptionsPanel,"RenderScale")->data,renderScale);
     free(renderScale);
     
-    AddButton(&ui.videoOptionsPanel,"RenderScale+","+",132,29,11,11);
-    AddButton(&ui.videoOptionsPanel,"RenderScale-","-",132,53,11,11);
+    AddButton(&ui.videoOptionsPanel,"RenderScale+","+",132,29,11,11,true);
+    AddButton(&ui.videoOptionsPanel,"RenderScale-","-",132,53,11,11,true);
     AddText(&ui.videoOptionsPanel,33,73,"Tag_Particles","Particles");
     AddCheckbox(&ui.videoOptionsPanel,131,72,13,13,"EnableParticles",&currSettings.particlesEnabled);
     AddText(&ui.videoOptionsPanel,33,105,"Display\nHealth Bar","Display\nHealth Bar");
@@ -1572,8 +1573,8 @@ void InitAudioOptionsPanel()
 void InitAccessibilityOptionsPanel()
 {
     ui.accessibilityOptionsPanel = CreatePanel(48,48,180,160,15,true);
-    //AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 132,29,96,16);
-    //AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",132,29,96,16);
+    //AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 132,29,96,16,true);
+    //AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",132,29,96,16,true);
     InitButton(&ui.accessibilityOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
     InitButton(&ui.accessibilityOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/accessiblity_tab_icon.png",true));
     ui.accessibilityOptionsPanel.back = &ui.mainMenuPanel;
@@ -2188,30 +2189,48 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
 
 
 }
-void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE mouseState, bool isActive, ALLEGRO_COLOR bgColor)
+void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected)
 {
     ToScreenSpaceI(&mouseState.x,&mouseState.y);
     Button* b = (Button*)u->data;
     ALLEGRO_FONT* font = ui.font;
     Rect button = (Rect){x,y,u->w,u->h};
+    Rect r = (Rect){x,y,u->w,u->h};
+
+    int align = b->drawLine ? ALLEGRO_ALIGN_CENTRE : ALLEGRO_ALIGN_LEFT;
+    int textX; int textY;
+    if (align == ALLEGRO_ALIGN_CENTRE)
+    {
+        textX = x + u->w/2;
+        textY = y + u->h/2 - al_get_font_line_height(font)/2.0;
+    }
+    if (align == ALLEGRO_ALIGN_LEFT)
+    {
+        textX = x+3;
+        textY = y + u->h/2 - al_get_font_line_height(font)/2.0;
+    }
+
     if (b->clicked && isActive)
     {
         al_draw_filled_rectangle(x,y,x+u->w,y+u->h,FRIENDLY);
         al_draw_rectangle(x,y,x+u->w,y+u->h,BG,1);
-        al_draw_text(ui.font,BG,x+u->w/2,y+u->h /2 - al_get_font_line_height(font)/2.0,ALLEGRO_ALIGN_CENTRE,b->description);
+        al_draw_text(ui.font,BG,textX,textY,align,b->description);
     }
-    else
+    else 
     {
-        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,bgColor);
-        if (isActive)
+        if (b->drawLine)
         {
-            al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
+            al_draw_filled_rectangle(x,y,x+u->w,y+u->h,bgColor);
+            if (isActive)
+            {
+                    al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
+            }
+            else
+            {
+                DrawOutlinedRect_Dithered(&button,FRIENDLY);
+            }
         }
-        else
-        {
-            DrawOutlinedRect_Dithered(&button,FRIENDLY);
-        }
-        al_draw_text(ui.font,FRIENDLY,x+u->w/2,y+u->h/2 - al_get_font_line_height(font)/2.0,ALLEGRO_ALIGN_CENTRE,b->description);
+        al_draw_text(ui.font,FRIENDLY,textX,textY,align,b->description);
 
     }
     if (PointInRect(mouseState.x,mouseState.y,button) && isActive && !b->clicked)
@@ -2276,7 +2295,7 @@ void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, 
 {
     if (u->elementType == ELEMENT_BUTTON)
     {
-        DrawButton(u,x,y,*mouseState,u->enabled,bgColor);
+        DrawButton(u,x,y,*mouseState,u->enabled,bgColor,((Button*)(u->data))->drawLine);
     }
     if (u->elementType == ELEMENT_TEXT)
     {
@@ -2370,7 +2389,7 @@ void DrawPanelTabs(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
             h = al_get_bitmap_height(sprites[b->spriteIndex].sprite);
             w = al_get_bitmap_width(sprites[b->spriteIndex].sprite);
             al_draw_rectangle(x,y,x+w,y+h,FRIENDLY,1);
-            DrawButton(&tab->tabButton,x,y,*mouseState,true,BG);
+            DrawButton(&tab->tabButton,x,y,*mouseState,true,BG,true);
             //DrawSprite(&sprites[b->spriteIndex],p->x,y,FRIENDLY,false);
             y += h;
         } 
@@ -2394,7 +2413,7 @@ void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, float panelShownPercen
     int currX=p->x+p->padding; int currY=p->y+p->padding; 
     if (p->backButton.data)
     {
-        DrawButton(&p->backButton,p->x,p->y,*mouseState,true,BG);
+        DrawButton(&p->backButton,p->x,p->y,*mouseState,true,BG,true);
         currY+=p->backButton.h;
     }
 

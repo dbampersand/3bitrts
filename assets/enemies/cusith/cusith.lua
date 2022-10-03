@@ -22,7 +22,18 @@ function untoggle()
 
 end
 function update(dt)
-    CastAbility(howl,3,{});
+
+    howlTimer = howlTimer + dt
+
+    if (howlTimer > howlCD) then
+        SetMovePoint(128,128);
+        CastAbility(howl,3,{});
+        SetAbilityCooldownTimer(GetObjRef(),howl,0);
+        if (howlTimer > howlCD + GetAbilityCooldown(GetObjRef(),howl)*3) then
+            howlTimer = 0
+        end
+        do return end;
+    end
 
 end
 
