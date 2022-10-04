@@ -3,6 +3,7 @@ local maxHP = 8000;
 
 local howl = 0
 local bite = 0
+local callPack = 0
 
 local howlTimer = 0
 local howlCD = 30
@@ -10,7 +11,7 @@ local howlCD = 30
 function setup()
     SetSprite("assets/enemies/cusith/cusith.png");
     SetChannelingSprite("assets/enemies/cusith/cusith_channelling.png")
-    SetDamage(50);
+    SetDamage(0);
     SetMaxHP(maxHP,true)
     SetSpeed(80)
     SetRange(40);
@@ -19,12 +20,14 @@ function setup()
 
     howl = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_howl.lua",0)   
     bite = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_bite.lua",1);
+    callPack = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_call_pack.lua",2);
+
 end 
 function untoggle()
 
 end
 function update(dt)
-
+    --[[]
     howlTimer = howlTimer + dt
 
     if (howlTimer > howlCD) then
@@ -36,10 +39,15 @@ function update(dt)
         end
         do return end;
     end
+
+    CastAbility(callPack,3,{})
+    --]]
     local biteTarget = {};
     biteTarget["target"] = GetHighestThreat();
 
-    CastAbility(bite,2,{biteTarget})
+    CastAbility(bite,1,{biteTarget})
+    --SetAbilityCooldownTimer(GetObjRef(),bite,2);
+
 
 
 

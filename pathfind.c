@@ -138,7 +138,7 @@ void ClearQueue(Queue* queue)
     queue->numElements = 0;
 }
 //TODO: this can be made *far* more efficient
-PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w, int h)
+PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w, int h, bool caresAboutUnits)
 {
     float closest = FLT_MAX;
     PointI closestP = current;
@@ -151,9 +151,9 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w
             int nx = target.x + x;
             int ny = target.y + y;
 
-            if (RectIsFree(nx-1,ny-1,w+2,h+2,false)) 
+            if (RectIsFree(nx,ny,w,h,caresAboutUnits)) 
             {
-                float distance = dist(nx,ny,target.x,target.y);// + dist(nx,ny,current.x,current.y);
+                float distance = dist(nx,ny,target.x,target.y) + dist(nx,ny,current.x,current.y);
                 if (distance < closest)
                 {
                     closest = distance;
@@ -232,10 +232,10 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
 
     if (here.y < 0 || here.y >= mapH)
         return;
-    target = GetClosestPathablePoint(target,here,&found,w,h);
+    target = GetClosestPathablePoint(target,here,&found,w,h,false);
     if (!found) 
         return;
-    here = GetClosestPathablePoint(here,target,&found,w,h);
+    here = GetClosestPathablePoint(here,target,&found,w,h,false);
     
     //if (!found) return target;
 
@@ -301,7 +301,7 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
                 if (set == NODE_INSIDE_CLOSED_LIST)
                     continue;
 
-                bool walkable = (RectIsFree(child.p.x,child.p.y,w,h,ObjectCanPush(g)));
+                bool walkable = (RectIsFree(child.p.x,child.p.y,w,h,ObjectCanPush(g)),false);
                 
                 float distcurrchild = (x != currentNode.p.x && y != currentNode.p.y) ? 1.41421356237f : 1;
 

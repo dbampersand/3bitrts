@@ -533,12 +533,20 @@ void UpdateAttack(Attack* a, float dt)
             }
             if (a->attackType == ATTACK_CONE)
             {
-                float x2; float y2;
-                GetCentre(&objects[i],&x2,&y2);
+                float x = a->x; float y = a->y; 
+                float x2 = a->targx; float y2 = a->targy;
+                if (a->target)
+                {
+                    x2 = a->target->position.x;
+                    y2 = a->target->position.y;
+                }
 
-                float angle = RadToDeg(atan2(y2-a->y,x2-a->x));
+                float angle;
+                angle = atan2(y2 - y, x2 - x);
+                float length = a->range;//dist(x,y,x2,y2);
+                
                 Rect r = GetObjRect(&objects[i]);
-                if (RectInCone(r,a->x,a->y,angle,a->radius,a->range))
+                if (RectInCone(r,x,y,angle,a->targetRadius,length))
                 {
                     ApplyAttack(a,&objects[i]);
                 }
@@ -603,7 +611,6 @@ void UpdateAttack(Attack* a, float dt)
         RemoveAttack(a-attacks);
         return;
     }
-
 }
 void UpdateAttacks(float dt)
 {

@@ -1590,6 +1590,8 @@ void Move(GameObject* g, float delta)
         return;
     if (ObjIsDecoration(g))
         return;
+    if (g->speed == 0)
+        return;
     #define DIST_DELTA 1
     Point before = g->position;
     int w = GetWidth(g);//al_get_bitmap_width(sprites[g->spriteIndex].sprite);
@@ -2207,13 +2209,15 @@ void Teleport(GameObject* g, float x, float y)
     PointI target = (PointI){x/_GRAIN,y/_GRAIN};
     PointI here = (PointI){g->position.x/_GRAIN,g->position.y/_GRAIN};
     bool found = false;
-      PointI move = GetClosestPathablePoint(target,here,&found,GetWidth(g)/_GRAIN,GetHeight(g)/_GRAIN);
+
+    PointI move = GetClosestPathablePoint(target,here,&found,GetWidth(g)/_GRAIN,GetHeight(g)/_GRAIN,true);
+    
     g->position.x = move.x*_GRAIN;
     g->position.y = move.y*_GRAIN;
 
 
-    CheckCollisions(g,true, 1, true);
-    CheckCollisions(g,false, 1, true);  
+    //CheckCollisions(g,true, 1, true);
+    //CheckCollisions(g,false, 1, true);  
  
     SetTargetPosition(g,g->position.x,g->position.y);
     SetMapCollisionRect(g->position.x,g->position.y,GetWidth(g),GetHeight(g),true);
@@ -2398,7 +2402,9 @@ void UpdateChannellingdObj(GameObject* g, float dt)
     if (ObjIsChannelling(g))
     {
         
-
+        currGameObjRunning = g;
+        currAbilityRunning = g->channelledAbility;
+        
         lua_rawgeti(luaState,LUA_REGISTRYINDEX,g->channelledAbility->luafunc_onchanneled);
         lua_pushnumber(luaState,g-objects);
         lua_pushnumber(luaState,g->channellingTime);
@@ -2454,7 +2460,7 @@ void DrawChannelHint(GameObject* g)
                 float angle;
                 angle = atan2(y2-y,x2-x);
                 float length = dist(x,y,x2,y2);
-                DrawCone(ToScreenSpace_X(x),ToScreenSpace_Y(y),RadToDeg(angle),90,a->hintRadius,ENEMY);   
+                DrawCone(ToScreenSpace_X(x),ToScreenSpace_Y(y),RadToDeg(angle),a->hintRadius,200,ENEMY);   
             }
 
         }

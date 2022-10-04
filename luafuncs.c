@@ -181,6 +181,19 @@ int L_SetObjType(lua_State* l)
     currGameObjRunning->objType = lua_tonumber(l,1);
     return 0; 
 }
+int L_AddThreat(lua_State* l)
+{
+    int fromIndex = lua_tonumber(l,1);
+    int toIndex = lua_tonumber(l,2);
+
+    float value = lua_tonumber(l,3);
+
+    if (fromIndex < 0 || fromIndex >= MAX_OBJS || toIndex < 0 || toIndex >= MAX_OBJS)
+        return 0;
+    
+    AddThreat(&objects[fromIndex],&objects[toIndex],value);
+    return 0;
+}
 int L_GetRandomUnit(lua_State* l)
 {
     OBJ_FRIENDLINESS friend = lua_tonumber(l,1);

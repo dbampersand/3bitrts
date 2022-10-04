@@ -1,4 +1,4 @@
-local lifestealAmt = 0.6
+local lifestealAmt = 2.5
 
 function setup()
     AbilitySetCastType(ABILITY_INSTANT); 
@@ -17,7 +17,7 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_CONST;
     f1["type"] = EFFECT_LIFESTEAL;
-    f1["value"] = 2.5;  
+    f1["value"] = lifestealAmt;  
     f1["duration"] = 10
 
     ApplyEffect(GetObjRef(),{f1});

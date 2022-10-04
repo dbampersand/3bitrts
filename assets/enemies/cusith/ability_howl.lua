@@ -2,7 +2,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_summon_adds.png");
     SetDescription("[b]Howl");
-    SetCooldown(3)
+    SetCooldown(5)
 
 end
 

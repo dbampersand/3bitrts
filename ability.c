@@ -384,6 +384,9 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
     if (target != g)
     {
     }
+    
+    cast:
+
     currAbilityRunning = a; 
     currGameObjRunning = g; 
 

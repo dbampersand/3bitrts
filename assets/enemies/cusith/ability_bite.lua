@@ -1,12 +1,13 @@
 local cone = -1
 local objTargetting = -1
 
+local radius = 120
 function setup()
 
-    SetAbilityRange(2)
+    SetAbilityRange(500)
     --AbilitySetCastType(ABILITY_CONE);
-    SetAbilityHint(HINT_CONE,120);
-    SetCooldown(20); 
+    SetAbilityHint(HINT_CONE,radius);
+    SetCooldown(2); 
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_firebreath.png");
     SetDescription("[b]Bite\n\nDeals damage in a cone.")
 
@@ -21,12 +22,12 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 200;  
+    f1["value"] = 0;  
 
     center = GetCentre(GetObjRef());
     centertarget = GetCentre(obj);
     objTargetting = obj;
-    cone = CreateCone(center.x,center.y,centertarget.x,centertarget.y,"", 120, 0, 0, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER,140, {f1})
+    cone = CreateCone(center.x,center.y,centertarget.x,centertarget.y,"", radius, 0, 0, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER,140, {f1})
     SetAttackTarget(cone,objTargetting);
 
     return true; 
@@ -44,4 +45,5 @@ end
 
 function onchanneled(obj, channelingtime, totalchanneltime, targetObj, targetX, targetY, targetHeadingX, targetHeadingY)
     SetChannelingSprite("assets/enemies/cusith/cusith_channelling_bite.png")
+
 end

@@ -23,6 +23,13 @@ char** stringsToDraw;
 Point* locationsToDrawString;
 int numStringsToDraw;
 
+
+Point DEBUG_P1;
+Point DEBUG_P2;
+Point DEBUG_P3;
+Point DEBUG_P4;
+float DEBUG_EXTRA;
+
 void DrawBufferedStrings();
 
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled);

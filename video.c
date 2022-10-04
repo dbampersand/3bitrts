@@ -281,6 +281,7 @@ void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO
 
 }
 
+
 //TODO: this isn't an accurate function.
 //right now it will return true just when the center or corners are intersected
 //does this need fixed? Unlikely for a cone to be *that* small radius
@@ -299,6 +300,8 @@ bool RectInCone(Rect r, int cx, int cy, float angle, float radius, float length)
         
         int startX; int startY; int endX; int endY;
         GetConeVertices(cx,cy,&startX,&startY,&endX,&endY,angle,radius,length);
+
+
         if (isInsideSector(rc.x, rc.y,cx,cy,startX,startY,endX,endY,length,radius,angle) ||
             isInsideSector(tl.x, tl.y,cx,cy,startX,startY,endX,endY,length,radius,angle) ||
             isInsideSector(tr.x, tr.y,cx,cy,startX,startY,endX,endY,length,radius,angle) ||
@@ -312,16 +315,18 @@ bool RectInCone(Rect r, int cx, int cy, float angle, float radius, float length)
 }
 void GetConeVertices(int cx, int cy, int* x1, int* y1, int* x2, int* y2, float angle, float radius, int length)
 {
-    angle -= 45;
-    *x1 = cx + length; *y1 = cy + length;
-    *x2 = cx + length; *y2 = cy + length;
+    angle -= DegToRad(45);
+    
 
-    radius = radius * M_PI/180.0f;
-    angle = angle * M_PI/180.0f;
-    float l_r = length * M_PI/180.0f;
+    *x1 = cx + length; 
+    *y1 = cy + length;
+    *x2 = cx + length; 
+    *y2 = cy + length;
 
-    RotatePoint(x1,y1,cx,cy, -radius/2.0f+angle);
-    RotatePoint(x2,y2,cx,cy, radius/2.0f+angle);
+    radius = DegToRad(radius);//radius * M_PI/180.0f;
+
+    RotatePoint(x1,y1,cx,cy, radius/2.0+angle);
+    RotatePoint(x2,y2,cx,cy, -radius/2.0f+angle);
 
 }
 void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR color)

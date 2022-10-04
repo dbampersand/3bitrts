@@ -385,7 +385,19 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     //GameObjDebugDraw();
     //DebugDrawPathfinding();   
     //al_draw_filled_rectangle(0,0,255,255,BG);
-    
+    al_draw_line(DEBUG_P1.x,DEBUG_P1.y,DEBUG_P2.x,DEBUG_P2.y,DAMAGE,1);
+    al_draw_line(DEBUG_P1.x,DEBUG_P1.y,DEBUG_P3.x,DEBUG_P3.y,DAMAGE,1);
+    al_draw_pixel(DEBUG_P4.x,DEBUG_P4.y,FRIENDLY);
+
+    if (al_key_down(keyState,ALLEGRO_KEY_U))
+    {
+        DEBUG_EXTRA += dt*8;
+    }
+
+    if (al_key_down(keyState,ALLEGRO_KEY_Y))
+    {
+        DEBUG_EXTRA -= dt*8;
+    }
 }
 
 void DrawMainMenu()

@@ -103,14 +103,17 @@ void FinishTransition()
         int yPos = currMap->spawnPoint.y;
 
         Point camPos = (Point){0,0};
+
+
          
         if (toSpawn)
             for (int i = 0; i < encounterGoingTo->numUnitsToSelect; i++)
             {
                 if (toSpawn[i] == NULL)
                     continue;
-                AddGameobject(toSpawn[i],xPos,yPos);   
-                xPos += GetWidth(toSpawn[i]);
+                GameObject* g = toSpawn[i];
+                AddGameobject(g,xPos,yPos);   
+                xPos += GetWidth(g)+4;
                 if (i == encounterGoingTo->numUnitsToSelect/2)
                 {
                     camPos.x = xPos;
@@ -337,7 +340,7 @@ void SetGameStateToChoosingParty()
                     if ((numTanks-1) % 3 == 0)
                     {
                         tankX = TANKSTARTX;
-                        tankY += largestTank;
+                        tankY += largestTank+1;
                         largestHealer = -1;
                     }
                     x = tankX;
@@ -355,7 +358,7 @@ void SetGameStateToChoosingParty()
                     if ((numHealers - 1) % 3 == 0)
                     {
                         healerX = HEALERSTARTX;
-                        healerY += largestHealer;
+                        healerY += largestHealer+1;
                         largestHealer = -1;
                     }
                     x = healerX;
@@ -372,7 +375,7 @@ void SetGameStateToChoosingParty()
                     if ((numMelee-1) % 3 == 0)
                     {
                         meleeX = MELEEDPSSTARTX;
-                        meleeY += largestMelee;
+                        meleeY += largestMelee+1;
                         largestMelee = -1;
                     }
                     x = meleeX;
@@ -390,7 +393,7 @@ void SetGameStateToChoosingParty()
                     if ((numRanged-1) % 3 == 0)
                     {
                         rangedX = RANGEDDPSSTARTX;
-                        rangedY += largestRanged;
+                        rangedY += largestRanged+1;
                         largestRanged = -1;
                     }
                     x = rangedX;
@@ -408,7 +411,7 @@ void SetGameStateToChoosingParty()
                     if ((numUtility-1) % 3 == 0)
                     {
                         utilityX = UTILITYSTARTX;
-                        utilityY += largestUtility;
+                        utilityY += largestUtility+1;
                         largestUtility = -1;
                     }
                     x = utilityX;
@@ -425,7 +428,7 @@ void SetGameStateToChoosingParty()
                     if ((numUncategorised-1) % 3 == 0)
                     {
                         uncategorisedX = UTILITYSTARTX;
-                        uncategorisedY += largestUncategorised;
+                        uncategorisedY += largestUncategorised+1;
                         largestUncategorised = -1;
                     }
                     x = uncategorisedX;
