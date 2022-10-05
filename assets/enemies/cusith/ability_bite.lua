@@ -1,7 +1,7 @@
 local cone = -1
 local objTargetting = -1
 
-local radius = 120
+local radius = 60
 function setup()
 
     SetAbilityRange(500)
@@ -22,7 +22,7 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 0;  
+    f1["value"] = 100;  
 
     center = GetCentre(GetObjRef());
     centertarget = GetCentre(obj);

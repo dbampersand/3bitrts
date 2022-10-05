@@ -530,14 +530,14 @@ bool GetTableField_Bool(lua_State* l, int tableIndex, const char* name, bool* is
     lua_getfield(l,tableIndex,name);
     if (!lua_isnil(l,-1))
     {
-        float j = lua_toboolean(l,-1);
+        bool j = lua_toboolean(l,-1);
         lua_remove(l,-1);
         *isAField = true; 
         return j;
     }
     *isAField = false; 
     lua_remove(l,-1);
-    return 0;
+    return false;
 
 }
 

@@ -284,8 +284,15 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     if (gameState == GAMESTATE_CHOOSING_UNITS) 
     {
 
-        Rect selectedUnitsR = (Rect){8,146,240,41};
-        int numUnitsInRect = GetNumObjectsInRect(&selectedUnitsR,true);
+        int numUnitsSelected = 0;//GetNumObjectsInRect(&selectedUnitsR,true);
+        for (int i = 0; i < players[0].numUnitsSelected; i++)
+        {
+            if (players[0].selection[i]->playerChoosable)
+            {
+                numUnitsSelected++;
+            }
+        }
+
 
         if (GetButtonIsClicked(&ui.choosingUnits_Back))
         {
@@ -293,7 +300,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             //gameState = GAMESTATE_TRANSITION_TO_CHOOSING_ENCOUNTER;
         }
 
-        if (GetButtonIsClicked(&ui.choosingUnits_GO) && numUnitsInRect==encounters[selectedEncounterIndex]->numUnitsToSelect)
+        if (GetButtonIsClicked(&ui.choosingUnits_GO) && numUnitsSelected==encounters[selectedEncounterIndex]->numUnitsToSelect)
         {
             combatStarted = false;
 
@@ -303,19 +310,13 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
             currEncounterRunning = e;
             GameObject** list = calloc(e->numUnitsToSelect,sizeof(GameObject*));
 
-            //Get the number of units in the rect and make a list of them
             int foundIndex = 0;
-            for (int i = 0; i < MAX_OBJS; i++)
+            for (int i = 0; i < players[0].numUnitsSelected; i++)
             {
-                if (IsActive(&objects[i]) && !ObjIsDecoration(&objects[i]) && objects[i].playerChoosable)
+                if (players[0].selection[i]->playerChoosable)
                 {
-                    Rect r2 = GetObjRect(&objects[i]);
-
-                    if (CheckIntersect(selectedUnitsR,r2))
-                    {
-                        list[foundIndex] = objects[i].prefab;
-                        foundIndex++;
-                    }
+                    list[foundIndex] = players[0].selection[i]->prefab; 
+                    foundIndex++;
                 }
             }
             SetGameStateToLoadingEncounter(list,foundIndex,e);//SetGameStateToInGame(list,foundIndex,e); 
@@ -385,19 +386,6 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     //GameObjDebugDraw();
     //DebugDrawPathfinding();   
     //al_draw_filled_rectangle(0,0,255,255,BG);
-    al_draw_line(DEBUG_P1.x,DEBUG_P1.y,DEBUG_P2.x,DEBUG_P2.y,DAMAGE,1);
-    al_draw_line(DEBUG_P1.x,DEBUG_P1.y,DEBUG_P3.x,DEBUG_P3.y,DAMAGE,1);
-    al_draw_pixel(DEBUG_P4.x,DEBUG_P4.y,FRIENDLY);
-
-    if (al_key_down(keyState,ALLEGRO_KEY_U))
-    {
-        DEBUG_EXTRA += dt*8;
-    }
-
-    if (al_key_down(keyState,ALLEGRO_KEY_Y))
-    {
-        DEBUG_EXTRA -= dt*8;
-    }
 }
 
 void DrawMainMenu()

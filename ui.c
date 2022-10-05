@@ -184,16 +184,22 @@ void DrawUnitChoiceUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
          //   wheel = al_load_bitmap("assets/decor/wheel.png");
        // al_draw_rotated_bitmap(wheel,41/2,41/2,50,50,DegToRad(angle),0);
         
-        Rect selectedUnitsR = (Rect){60,146,180,41};
         Encounter* e = encounters[selectedEncounterIndex];
-        int numUnitsInRect = GetNumObjectsInRect(&selectedUnitsR,true);
-        ToScreenSpace(&selectedUnitsR.x,&selectedUnitsR.y);
+
+        int numUnitsSelected = 0;
+        for (int i = 0; i < players[0].numUnitsSelected; i++)
+        {
+            if (IsActive(players[0].selection[i]) && players[0].selection[i]->playerChoosable)
+            {
+                numUnitsSelected++;
+            }
+        }
 
         UpdateButton(45,194,&ui.choosingUnits_Back,*mouseState,*mouseStateLastFrame);
         UpdateButton(109,194,&ui.choosingUnits_GO,*mouseState,*mouseStateLastFrame);
 
 
-        if (numUnitsInRect==e->numUnitsToSelect)
+        if (numUnitsSelected==e->numUnitsToSelect)
         {
             ui.choosingUnits_GO.enabled = true;
         }
@@ -205,18 +211,10 @@ void DrawUnitChoiceUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         DrawUIElement(&ui.choosingUnits_GO,109,194,mouseState,BG);
 
 
-        if (numUnitsInRect != e->numUnitsToSelect)
-        {
-            DrawOutlinedRect_Dithered(&selectedUnitsR,FRIENDLY);
-        }
-        else if (numUnitsInRect == e->numUnitsToSelect)
-        {
-            al_draw_rectangle(selectedUnitsR.x,selectedUnitsR.y,selectedUnitsR.x+selectedUnitsR.w,selectedUnitsR.y+selectedUnitsR.h,FRIENDLY,1);
-        }
-                char* number = calloc(log10(INT_MAX)*2+2,sizeof(char));
-        sprintf(number,"%i/%i",numUnitsInRect,e->numUnitsToSelect);
+        char* number = calloc(log10(INT_MAX)*2+2,sizeof(char));
+        sprintf(number,"%i/%i",numUnitsSelected,e->numUnitsToSelect);
 
-        al_draw_text(ui.font,FRIENDLY,ToScreenSpace_X(202),ToScreenSpace_Y(162),ALLEGRO_ALIGN_LEFT,number);
+        al_draw_text(ui.font,FRIENDLY,ToScreenSpace_X(ui.choosingUnits_GO.x+ui.choosingUnits_GO.w/2),ToScreenSpace_Y(180),ALLEGRO_ALIGN_CENTER,number);
 
         free(number);
 

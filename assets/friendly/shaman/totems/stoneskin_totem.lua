@@ -14,7 +14,6 @@ function setup()
     SetManaRegen(15);
 
     SetObjType(TYPE_HEALER);
-    IsPlayerChoosable(true);
 
     SetCategory(TYPE_HEALER);
 
