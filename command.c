@@ -15,6 +15,8 @@ void DrawCommand(Command* c, int x, int y)
         return;
     if (c->commandType == COMMAND_MOVE)
         al_draw_rectangle(x-2,y-2,x+2,y+2,GetColor(queueCommandColors[COMMAND_MOVE],0),1);
+    if (c->commandType == COMMAND_FOLLOW)
+        al_draw_rectangle(x-2,y-2,x+2,y+2,GetColor(queueCommandColors[COMMAND_MOVE],0),1);
     if (c->commandType == COMMAND_ATTACK || c->commandType == COMMAND_ATTACKMOVE)
         al_draw_triangle(x-2,y-2,x+2,y+2,x,y-2,GetColor(queueCommandColors[c->commandType],0),1);
     if (c->commandType == COMMAND_CAST)
@@ -74,8 +76,10 @@ void DrawCommandQueue(GameObject* g)
     }
 }
 
-void AddCommand(GameObject* g, Command c)
+void AddCommand(GameObject* g, Command c, bool shiftHeld)
 {
+    if (!shiftHeld)
+        ClearCommandQueue(g);
     for (int i = 0; i < MAX_QUEUED_CMD; i++)
     {
         Command* c2 = &g->queue[i];
@@ -91,38 +95,55 @@ void ClearCommandQueue(GameObject* g)
     if (!g) return;
     memset(&g->queue,0,sizeof(Command)*MAX_QUEUED_CMD);
 }
-void MoveCommand(GameObject* g, float x, float y)
+void MoveCommand(GameObject* g, float x, float y, bool shiftHeld)
 {
     if (!g) return;
+    
     Command c = (Command){.x = x, .y = y, .commandType = COMMAND_MOVE, .target = NULL, .ability = NULL};
-    AddCommand(g,c);
+    AddCommand(g,c,shiftHeld);
 }
-void AttackMoveCommand(GameObject* g, float x, float y)
+void AttackMoveCommand(GameObject* g, float x, float y, bool shiftHeld)
 {
     if (!g) return;
     Command c = (Command){.x = x, .y = y, .commandType = COMMAND_ATTACKMOVE, .target = NULL, .ability = NULL};
-    AddCommand(g,c);
+    AddCommand(g,c,shiftHeld);
+}
+void FollowCommand(GameObject* g, GameObject* target, bool shiftHeld)
+{
+    if (!g) return;
+    float x = 0; float y = 0;
+    GetCentre(target,&x,&y);
+
+    Command c = (Command){.x = x, .y = y, .commandType = COMMAND_FOLLOW, .target = target, .ability = NULL};
+    AddCommand(g,c,shiftHeld);
+
 }
 
-void AttackCommand(GameObject* g, GameObject* target)
+void AttackCommand(GameObject* g, GameObject* target, bool shiftHeld)
 {
     if (!g) return;
     float x = 0; float y = 0;
     GetCentre(target,&x,&y);
     Command c = (Command){.x = x, .y = y, .commandType = COMMAND_ATTACK, .target = target, .ability = NULL};
-    AddCommand(g,c);
+    AddCommand(g,c,shiftHeld);
 }
-void CastCommand(GameObject* g, GameObject* target, Ability* a, float x, float y)
+void CastCommand(GameObject* g, GameObject* target, Ability* a, float x, float y, bool shiftHeld)
 {
     if (!g) return;
     Command c = (Command){.x = x, .y = y, .commandType = COMMAND_CAST, .target = target, .ability = a};
-    AddCommand(g,c);
+    AddCommand(g,c,shiftHeld);
 }
-void StopCommand(GameObject* g)
+void StopCommand(GameObject* g, bool shiftHeld)
 {
     if (!g) return;
     Command c = (Command){.x = g->position.x, .y = g->position.y, .commandType = COMMAND_STOP, .target = NULL, .ability = NULL};
-    AddCommand(g,c);
+    AddCommand(g,c,shiftHeld);
+}
+void HoldCommand(GameObject* g, bool shiftHeld)
+{
+    if (!g) return;
+    Command c = (Command){.x = g->position.x, .y = g->position.y, .commandType = COMMAND_HOLD, .target = NULL, .ability = NULL};
+    AddCommand(g,c,shiftHeld);
 }
 bool CmdEqual(Command c1, Command c2)
 {
@@ -142,13 +163,37 @@ void NextCommand(GameObject* g)
         SetTargetPosition(g,g->position.x,g->position.y);
     }
 }
+void FindEnemiesToAttack(GameObject* g)
+{
+    for (int i = 0; i < numObjects; i++)
+    {
+        GameObject* g2 = &objects[i];  
+        if (IsActive(g2) && GetPlayerOwnedBy(g) != GetPlayerOwnedBy(g2) && !ObjIsDecoration(g2))
+        {
+            if (GetDist(g,g2) <= g->aggroRadius)
+            {
+                AttackCommand(g,g2,false);
+                return;
+            }
+
+        }
+
+    }
+}
 void DoCommands(GameObject* g)
 {
     if (!g) return;
     Command* c = &g->queue[0];
+    if (c->commandType == COMMAND_HOLD)
+    {
+        g->targObj = NULL;
+        SetTargetPosition(g,g->position.x,g->position.y);
+        return;
+    }
+
     if (c->commandType == COMMAND_NONE)
     {
-        return;
+        FindEnemiesToAttack(g);
     }
     if (c->commandType == COMMAND_MOVE)
     {
@@ -163,6 +208,20 @@ void DoCommands(GameObject* g)
             return;
         }
     }
+    if (c->commandType == COMMAND_FOLLOW)
+    {
+        if (!c->target)
+            NextCommand(g);
+        SetTargetPosition(g,c->target->position.x,c->target->position.y);
+
+
+        if (dist(g->position.x,g->position.y,c->x,c->y) <= DIST_DELTA)
+        {
+            NextCommand(g);
+            return;
+        }
+    }
+
     if (c->commandType == COMMAND_ATTACK)
     {
         g->targObj = c->target;

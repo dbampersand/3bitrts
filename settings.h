@@ -31,12 +31,13 @@ typedef struct Keymap
     Key key_ShowMap;
     Key key_Pause;
     Key key_Cancel;
-
+    Key key_HoldPosition;
 
     Key key_PanLeft;
     Key key_PanRight;
     Key key_PanUp;
     Key key_PanDown;
+
 
     Key key_ctrlgroups[10];
 

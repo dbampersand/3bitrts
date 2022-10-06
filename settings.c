@@ -143,6 +143,8 @@ void SetDefaultSettings(Settings* setting)
     setting->keymap.key_PanUp = (Key){"Pause",ALLEGRO_KEY_UP};
     setting->keymap.key_PanDown = (Key){"Pause",ALLEGRO_KEY_DOWN};
 
+    setting->keymap.key_HoldPosition = (Key){"Hold Position",ALLEGRO_KEY_H};
+
 }
 
 void EndSettings()

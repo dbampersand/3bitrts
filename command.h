@@ -1,5 +1,6 @@
 #pragma once
 #include "colors.h"
+#include <stdbool.h>
 
 typedef enum QueueCommand
 {
@@ -8,7 +9,9 @@ typedef enum QueueCommand
     COMMAND_ATTACK,
     COMMAND_CAST,
     COMMAND_STOP,
-    COMMAND_ATTACKMOVE
+    COMMAND_ATTACKMOVE,
+    COMMAND_FOLLOW,
+    COMMAND_HOLD
 } QueueCommand;
 
 typedef struct GameObject GameObject;
@@ -26,14 +29,17 @@ typedef struct Command
 Color queueCommandColors[COMMAND_ATTACKMOVE+1];
 
 
-void AddCommand(GameObject* g, Command c);
-void MoveCommand(GameObject* g, float x, float y);
-void AttackCommand(GameObject* g, GameObject* target);
-void CastCommand(GameObject* g, GameObject* target, Ability* a, float x, float y);
-void StopCommand(GameObject* g);
+void AddCommand(GameObject* g, Command c, bool shiftHeld);
+void MoveCommand(GameObject* g, float x, float y, bool shiftHeld);
+void AttackCommand(GameObject* g, GameObject* target, bool shiftHeld);
+void CastCommand(GameObject* g, GameObject* target, Ability* a, float x, float y, bool shiftHeld);
+void StopCommand(GameObject* g, bool shiftHeld);
+void FollowCommand(GameObject* g, GameObject* target, bool shiftHeld);
+void HoldCommand(GameObject* g, bool shiftHeld);
+void AttackMoveCommand(GameObject* g, float x, float y, bool shiftHeld);
+
 void DoCommands(GameObject* g);
 void NextCommand(GameObject* g);
-void AddCommand(GameObject* g, Command c);
 void ClearCommandQueue(GameObject* g);
-void AttackMoveCommand(GameObject* g, float x, float y);
 void DrawCommandQueue(GameObject* g);
+

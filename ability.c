@@ -113,19 +113,19 @@ void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE*
             float midX=0; float midY=0;
         GetOffsetCenter(currGameObjRunning,&midX,&midY);
     
-        if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
-            ClearCommandQueue(currGameObjRunning);
+        //if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
+          //  ClearCommandQueue(currGameObjRunning);
         if (target)
         {
             if (!ObjIsInvincible(target))
             {
-                CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->x,mouseState->y);
+                CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->x,mouseState->y,IsBindDown(keyState,currSettings.keymap.key_Shift));
             }
             else
-                MoveCommand(currGameObjRunning,mouseState->x,mouseState->y);
+                MoveCommand(currGameObjRunning,mouseState->x,mouseState->y, IsBindDown(keyState,currSettings.keymap.key_Shift));
         }
         else
-            CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->x,mouseState->y);
+            CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->x,mouseState->y,IsBindDown(keyState,currSettings.keymap.key_Shift));
         //CastAbility(currGameObjRunning,currAbilityRunning,mouseState->x,mouseState->y,mouseState->x-midX,mouseState->y-midY,target);
         players[0].clickedThisFrame = target;
 
@@ -135,9 +135,9 @@ void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE*
             {
                 GameObject* g = players[0].selection[i];
                 if (target)
-                    AttackCommand(g,target);
+                    AttackCommand(g,target,IsBindDown(keyState,currSettings.keymap.key_Shift));
                 else
-                    MoveCommand(g,mouseState->x,mouseState->y);
+                    MoveCommand(g,mouseState->x,mouseState->y,IsBindDown(keyState,currSettings.keymap.key_Shift));
             }
 
     }

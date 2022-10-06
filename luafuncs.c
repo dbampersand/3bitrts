@@ -1117,7 +1117,7 @@ int L_SetMovePoint(lua_State* l)
     if (target && shouldAttack)
     {
         currGameObjRunning->targObj = target;
-        AttackCommand(obj,target);
+        AttackCommand(obj,target,false);
         
     }
     else
@@ -1138,7 +1138,7 @@ int L_SetMovePoint(lua_State* l)
         }
        // obj->targObj = NULL;
         
-        MoveCommand(obj,x-w/2,y-w/2);
+        MoveCommand(obj,x-w/2,y-w/2,false);
     }
     return 0;
 }

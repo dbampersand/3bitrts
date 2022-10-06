@@ -65,7 +65,7 @@ void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STAT
                          if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
                             CastAbility(currGameObjRunning,currAbilityRunning,mouseState->x,mouseState->y,mouseState->x-currGameObjRunning->position.x,mouseState->y-currGameObjRunning->position.y,NULL);
                         else
-                            CastCommand(currGameObjRunning,NULL,currAbilityRunning,mouseState->x,mouseState->y);
+                            CastCommand(currGameObjRunning,NULL,currAbilityRunning,mouseState->x,mouseState->y,IsBindDown(keyState,currSettings.keymap.key_Shift));
                     }
                     else
                     {

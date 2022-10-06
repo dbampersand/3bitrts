@@ -103,7 +103,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mou
         UpdateItems(dt);
         lua_settop(luaState,0);
         UpdateEncounter(dt);
-        CheckSelected(mouseState,mouseStateLastFrame, keyState);
+        CheckSelected(mouseState,mouseStateLastFrame, keyState, keyStateLastFrame);
         ProcessAugments(currEncounterRunning->augments,dt);
         SetControlGroups(keyState); 
         GetControlGroup(keyState);

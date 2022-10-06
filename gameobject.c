@@ -73,10 +73,10 @@ void ProcessAttackMoveMouseCommand(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYB
             if (IsSelected(g))
             {
                 float w; float h; GetOffsetCenter(g,&w,&h);
-                if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
-                    ClearCommandQueue(g);
+                //if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
+                  //  ClearCommandQueue(g);
 
-                AttackMoveCommand(g,mouseState->x-w/2,mouseState->y-h/2);
+                AttackMoveCommand(g,mouseState->x-w/2,mouseState->y-h/2,IsBindDown(keyState,currSettings.keymap.key_Shift));
                 
             }
 
@@ -478,7 +478,7 @@ void SetCtrlGroup(int index, GameObject** list, int numUnitsSelected)
     }
 }
 
-void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState)
+void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
 
     if (!(mouseLastFrame->buttons & 1)  && (mouseState->buttons & 1) && !players[0].abilityHeld)
@@ -547,6 +547,14 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
         }
         players[0].selecting = false;
     }
+    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_HoldPosition))
+    {
+        for (int i = 0; i < players[0].numUnitsSelected; i++)
+        {
+            HoldCommand(players[0].selection[i],IsBindDown(keyState,currSettings.keymap.key_Shift));
+        }
+
+    }
     if (!(mouseState->buttons & 2) && (mouseLastFrame->buttons & 2))
     {
         if (!IsInsideUI(mouseState->x,mouseState->y))
@@ -581,12 +589,15 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                                 if (PointInRect(mouseState->x,mouseState->y,r))
                                 {
                                     found = true;
-                                    AttackCommand(g,g2);
+                                    if (IsOwnedByPlayer(g2))
+                                        FollowCommand(g,g2,IsBindDown(keyState,currSettings.keymap.key_Shift));
+                                    else
+                                        AttackCommand(g,g2,IsBindDown(keyState,currSettings.keymap.key_Shift));
                                     break;
                                 }
                             }
                             if (!found)
-                                MoveCommand(g,mouseState->x-w/2,mouseState->y-h/2);
+                                MoveCommand(g,mouseState->x-w/2,mouseState->y-h/2,IsBindDown(keyState,currSettings.keymap.key_Shift));
                         
                         }
                         Sprite* s = &sprites[g->spriteIndex];
@@ -595,12 +606,12 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                         {
                             for (int i = 0; i < players[0].numUnitsSelected; i++)
                             {
-                                if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
-                                    ClearCommandQueue(players[0].selection[i]);
+                                //if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
+                                  //  ClearCommandQueue(players[0].selection[i]);
                                 if (!ObjIsInvincible(g))
-                                    AttackCommand(players[0].selection[i],g);
+                                    AttackCommand(players[0].selection[i],g,IsBindDown(keyState,currSettings.keymap.key_Shift));
                                 else
-                                    MoveCommand(players[0].selection[i],mouseState->x,mouseState->y);
+                                    MoveCommand(players[0].selection[i],mouseState->x,mouseState->y,IsBindDown(keyState,currSettings.keymap.key_Shift));
                             }
                             break;
                         }
@@ -1999,8 +2010,6 @@ void DrawMapHighlight(GameObject* g, int lightSize)
 
                     c2 = al_map_rgb(xpR,xpG ,xpB);
                     al_put_pixel(x2,y2,c2);
-                    //printf("%i,%i\n",(int)(mX-cx)+lightSize,(int)(mY-cy)+lightSize);
-                    //fflush(stdout);
                     touched[touchedCoordX][touchedCoordY] = true;
                 }
                 if (col.a <= 0.001f)
@@ -2307,7 +2316,7 @@ void DoAI(GameObject* g)
         if (t)
         {
             ClearCommandQueue(g);
-            AttackCommand(g,t->obj);
+            AttackCommand(g,t->obj,false);
         }
             //g->targObj = t->obj;
     }
