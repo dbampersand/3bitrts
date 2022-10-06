@@ -1811,7 +1811,7 @@ void DrawObjShadows()
 void DrawMapHighlights()
 {
     al_lock_bitmap(sprites[currMap->spriteIndex].sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
-
+    al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
     for (int i = 0; i < MAX_OBJS; i++)
     {
         GameObject* g = &objects[i];
@@ -1821,6 +1821,8 @@ void DrawMapHighlights()
         }
     }
     al_unlock_bitmap(sprites[currMap->spriteIndex].sprite);
+    al_unlock_bitmap(al_get_target_bitmap());
+
 
 }
 void DrawSummonEffect(GameObject* g)
@@ -1964,9 +1966,34 @@ void DrawMapHighlight(GameObject* g, int lightSize)
                 mX += moveX;
                 mY += moveY;
                 ALLEGRO_COLOR col = al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
+
+                float x2 = mX;
+                float y2 = mY;
+                ToScreenSpace(&x2,&y2);
+                ALLEGRO_COLOR colGround = al_get_pixel(al_get_target_bitmap(),x2,y2);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
+
+                ALLEGRO_COLOR c2 = colGround;
+                //if (AlColIsEq(colGround,GROUND))
+                {
+                    float f = 1/(lightSize/(float)(lightSize-steps+1));
+                    //make effect more subtle
+                    f *= 0.1f;
+                    
+                    float xpR = (c2.r + c2.r*1.01*f)*255;
+                    float xpG = (c2.g + c2.g*1.01*f)*255;
+                    float xpB = (c2.b + c2.b*1.01*f)*255;
+
+                    xpR = xpR > 255 ? 255 : xpR;
+                    xpG = xpG > 255 ? 255 : xpG;
+                    xpB = xpB > 255 ? 255 : xpB;
+
+
+                    c2 = al_map_rgb(xpR,xpG ,xpB);
+                    al_put_pixel(x2,y2,c2);
+                }
                 if (col.a <= 0.001f)
                 {
-                float screenSpaceX = mX; float screenSpaceY = mY;
+                    float screenSpaceX = mX; float screenSpaceY = mY;
 
                     ToScreenSpace(&screenSpaceX,&screenSpaceY);
 
