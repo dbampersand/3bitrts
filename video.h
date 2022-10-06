@@ -19,8 +19,15 @@ ALLEGRO_BITMAP* background_screen;
 ALLEGRO_DISPLAY* display;
 
 
-char** stringsToDraw;
-Point* locationsToDrawString;
+#define NUM_TEXT_DISPLAYS 30
+#define TEXT_DISPLAY_MAX_SIZE 128
+
+typedef struct TextDisplay
+{
+    char str[TEXT_DISPLAY_MAX_SIZE+1];
+    int x; int y;
+} TextDisplay;
+TextDisplay textDisplays[NUM_TEXT_DISPLAYS];
 int numStringsToDraw;
 
 

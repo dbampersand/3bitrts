@@ -148,16 +148,6 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     al_hide_mouse_cursor(display);
     al_grab_mouse(display);
     al_set_target_bitmap(SCREEN);
-    if (gameState == GAMESTATE_CHOOSING_ENCOUNTER)
-    {
-        DrawAllLevelSelects(mouseState,mouseStateLastFrame);
-        encounterMoveTimer += dt;
-        encounterOffset = Towards(encounterOffset,encounterMoveTo,easeOutQuint(encounterMoveTimer)*_SCREEN_SIZE/8.0f);
-        DrawMouse(mouseState, NULL);
-        DrawTransition(dt);
-
-        return;
-    }
 
     DrawMap();
     
@@ -368,6 +358,19 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
     if (gameState == GAMESTATE_IN_SHOP)
     {
         DrawShop(dt,*mouseState);
+    }
+
+    if (gameState == GAMESTATE_CHOOSING_ENCOUNTER)
+    {
+        al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+
+        DrawAllLevelSelects(mouseState,mouseStateLastFrame);
+        encounterMoveTimer += dt;
+        encounterOffset = Towards(encounterOffset,encounterMoveTo,easeOutQuint(encounterMoveTimer)*_SCREEN_SIZE/8.0f);
+        DrawMouse(mouseState, NULL);
+        DrawTransition(dt);
+
+        return;
     }
 
     DrawMenus(mouseState);

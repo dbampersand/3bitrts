@@ -31,8 +31,10 @@ void InitVideo()
     backbuffer = al_get_backbuffer(display);
     _FRAMES = 0;
     
-    stringsToDraw = calloc(1,sizeof(char*));
-    locationsToDrawString = calloc(1,sizeof(Point));
+    for (int i = 0; i < NUM_TEXT_DISPLAYS; i++)
+    {
+        memset(textDisplays[i].str,0,TEXT_DISPLAY_MAX_SIZE*sizeof(char));
+    }
     numStringsToDraw = 0;
 
 
@@ -404,12 +406,12 @@ void DrawBufferedStrings()
 {   
     for (int i = 0; i < numStringsToDraw; i++)
     {
-        al_draw_text(ui.font,FRIENDLY,locationsToDrawString[i].x,locationsToDrawString[i].y,ALLEGRO_ALIGN_LEFT,stringsToDraw[i]);
-        free(stringsToDraw[i]);
+        char* str = textDisplays[i].str;
+        al_draw_text(ui.font,FRIENDLY,textDisplays[i].x,textDisplays[i].y,ALLEGRO_ALIGN_LEFT,str);
+        //free(stringsToDraw[i]);
     }
-    locationsToDrawString = realloc(locationsToDrawString,1*sizeof(Point));
-    stringsToDraw = realloc(stringsToDraw,1*sizeof(Point));
+    //locationsToDrawString = realloc(locationsToDrawString,1*sizeof(Point));
+    //stringsToDraw = realloc(stringsToDraw,1*sizeof(Point));
 
-    stringsToDraw[0] = NULL;
     numStringsToDraw = 0;
 }

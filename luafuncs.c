@@ -1818,14 +1818,18 @@ int L_HurtObj(lua_State* l)
 }
 int L_ShowString(lua_State* l)
 {
-    numStringsToDraw++;
-    stringsToDraw = realloc(stringsToDraw,numStringsToDraw * sizeof(char*));
-    locationsToDrawString = realloc(locationsToDrawString,numStringsToDraw * sizeof(Point));
 
     const char* str = lua_tostring(l,1);
-    stringsToDraw[numStringsToDraw-1] = calloc(strlen(str)+1,sizeof(char));
-    strcpy(stringsToDraw[numStringsToDraw-1],str);
-    locationsToDrawString[numStringsToDraw-1] = (Point){lua_tonumber(l,2),lua_tonumber(l,3)};
+    if (numStringsToDraw >= NUM_TEXT_DISPLAYS)
+    {
+        printf("Too many strings (%i) to draw '%s'\n",numStringsToDraw,str);
+        return 0;
+    }
+    strncpy(textDisplays[numStringsToDraw].str,str,TEXT_DISPLAY_MAX_SIZE);
+    textDisplays[numStringsToDraw].x = lua_tonumber(l,2);
+    textDisplays[numStringsToDraw].y = lua_tonumber(l,3);
+    numStringsToDraw++;
+
     return 0;
 }
 int L_PlaySound(lua_State* l)
