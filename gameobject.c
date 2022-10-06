@@ -1946,8 +1946,38 @@ void DrawMapHighlight(GameObject* g, int lightSize)
     //Use circle algorithm to get the points to end at
     //Then calculate the angle between gCX and gCY and that point
     //Then go from g to that point
-    float cx; float cy;
-    GetCentre(g,&cx,&cy);
+
+
+    ALLEGRO_BITMAP* screen = al_get_target_bitmap();
+    //Generate LUT for given lightsize if it doesn't exist
+    if (mapLightFactorLUT[lightSize] == NULL)
+    {
+        mapLightFactorLUT[lightSize] = malloc(lightSize*sizeof(float));
+        for (int i = 0; i < lightSize; i++)
+        {
+            int steps = i;
+            float fac = (float)(lightSize-steps+1);
+            float f = 1/(lightSize/(fac*fac));
+
+            //make effect more subtle
+            f *= LIGHT_FACTOR;
+
+            mapLightFactorLUT[lightSize][i] = f;//*255.0f;
+        }
+    }
+    // float xpB = (i + i*0.4*f)*255;
+    
+    //float fac = (float)(lightSize-steps+1);
+    //float f = 1/(lightSize/(fac*fac));
+    
+
+
+    float cxf; float cyf;
+    GetCentre(g,&cxf,&cyf);
+
+    int cx = round(cxf);
+    int cy = round(cyf);
+
     //ToScreenSpace(&cx,&cy);
     int r = lightSize;
     int x = -r;
@@ -1960,7 +1990,7 @@ void DrawMapHighlight(GameObject* g, int lightSize)
 
     while (x <= 0)
     {
-
+        //TODO: if we pivot this around (0,0) we can use a lut for PointsToAngleRad
         Point points[4];
         points[0].x = cx-x;  points[0].y = cy+y;
         points[1].x = cx-y;  points[1].y = cy-x;
@@ -1973,8 +2003,8 @@ void DrawMapHighlight(GameObject* g, int lightSize)
             float moveX = cos(angle);
             float moveY = sin(angle);
             int steps = 0;
-            float mX = cx;
-            float mY = cy;
+            float mX = (cx);
+            float mY = (cy);
 
             while (steps < lightSize)
             {
@@ -1982,26 +2012,26 @@ void DrawMapHighlight(GameObject* g, int lightSize)
                 mY += moveY;
                 ALLEGRO_COLOR col = al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
 
-                float x2 = mX;
-                float y2 = mY;
-                ToScreenSpace(&x2,&y2);
-                ALLEGRO_COLOR colGround = al_get_pixel(al_get_target_bitmap(),x2,y2);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
-
-                ALLEGRO_COLOR c2 = colGround;
                 
-                int touchedCoordX = (int)floor((mX-floor(cx))+lightSize);
-                int touchedCoordY = (int)floor((mY-floor(cy))+lightSize);
+                int touchedCoordX = (int)((mX-cx)+lightSize);
+                int touchedCoordY = (int)((mY-cy)+lightSize);
 
                 if (!touched[touchedCoordX][touchedCoordY])
                 //if (AlColIsEq(colGround,GROUND))
                 {
-                    float f = 1/(lightSize/(float)(lightSize-steps+1))/(lightSize/(float)(lightSize-steps+1));
-                    //make effect more subtle
-                    f *= 0.3f;
+                    float x2 = mX;
+                    float y2 = mY;
+                    ToScreenSpace(&x2,&y2);
+
+                    ALLEGRO_COLOR colGround = al_get_pixel(screen,x2,y2);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
+
+                    ALLEGRO_COLOR c2 = colGround;
                     
-                    float xpR = (c2.r + c2.r*1.08*f)*255;
-                    float xpG = (c2.g + c2.g*0.1*f)*255;
-                    float xpB = (c2.b + c2.b*0.4*f)*255;
+                    float f = mapLightFactorLUT[lightSize][steps];
+                    
+                    float xpR = (c2.r + c2.r*0.5f*f)*255;
+                    float xpG = (c2.g + c2.g*0.2f*f)*255;
+                    float xpB = (c2.b + c2.b*0.4f*f)*255;
 
                     xpR = xpR > 255 ? 255 : xpR;
                     xpG = xpG > 255 ? 255 : xpG;

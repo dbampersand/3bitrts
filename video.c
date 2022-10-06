@@ -11,7 +11,7 @@
 #include "point.h"
 #include "sprite.h"
 #include "ui.h"
-
+#include "gameobject.h"
 #include "allegro5/allegro_font.h"
 
 void InitVideo()
@@ -37,6 +37,7 @@ void InitVideo()
     }
     numStringsToDraw = 0;
 
+    memset(mapLightFactorLUT,0,sizeof(float*)*MAX_LIGHT_SIZE);
 
 
 }

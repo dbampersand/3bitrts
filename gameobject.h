@@ -199,8 +199,9 @@ typedef struct CollisionEvent
 
 CollisionEvent collisionEvents[MAX_OBJS];
 
-
-
+#define MAX_LIGHT_SIZE 90
+#define LIGHT_FACTOR 0.3f
+float* mapLightFactorLUT[MAX_LIGHT_SIZE];
 
 
 
