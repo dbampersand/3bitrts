@@ -1943,6 +1943,10 @@ void DrawMapHighlight(GameObject* g, int lightSize)
     int y = 0;
     int err = 2-2*r;
 
+    int touchedArrSize = (lightSize+1)*2;
+    bool touched[touchedArrSize][touchedArrSize];
+    memset(touched,0,touchedArrSize*touchedArrSize*sizeof(bool));
+
     while (x <= 0)
     {
 
@@ -1973,15 +1977,20 @@ void DrawMapHighlight(GameObject* g, int lightSize)
                 ALLEGRO_COLOR colGround = al_get_pixel(al_get_target_bitmap(),x2,y2);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
 
                 ALLEGRO_COLOR c2 = colGround;
+                
+                int touchedCoordX = (int)floor((mX-floor(cx))+lightSize);
+                int touchedCoordY = (int)floor((mY-floor(cy))+lightSize);
+
+                if (!touched[touchedCoordX][touchedCoordY])
                 //if (AlColIsEq(colGround,GROUND))
                 {
-                    float f = 1/(lightSize/(float)(lightSize-steps+1));
+                    float f = 1/(lightSize/(float)(lightSize-steps+1))/(lightSize/(float)(lightSize-steps+1));
                     //make effect more subtle
-                    f *= 0.1f;
+                    f *= 0.3f;
                     
-                    float xpR = (c2.r + c2.r*1.01*f)*255;
-                    float xpG = (c2.g + c2.g*1.01*f)*255;
-                    float xpB = (c2.b + c2.b*1.01*f)*255;
+                    float xpR = (c2.r + c2.r*1.08*f)*255;
+                    float xpG = (c2.g + c2.g*0.1*f)*255;
+                    float xpB = (c2.b + c2.b*0.4*f)*255;
 
                     xpR = xpR > 255 ? 255 : xpR;
                     xpG = xpG > 255 ? 255 : xpG;
@@ -1990,6 +1999,9 @@ void DrawMapHighlight(GameObject* g, int lightSize)
 
                     c2 = al_map_rgb(xpR,xpG ,xpB);
                     al_put_pixel(x2,y2,c2);
+                    //printf("%i,%i\n",(int)(mX-cx)+lightSize,(int)(mY-cy)+lightSize);
+                    //fflush(stdout);
+                    touched[touchedCoordX][touchedCoordY] = true;
                 }
                 if (col.a <= 0.001f)
                 {
