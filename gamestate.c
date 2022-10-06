@@ -437,8 +437,9 @@ void SetGameStateToChoosingParty()
                 }
 
 
-                AddGameobject(g,x,y);
-                //xPos+=GetWidth(g);
+                GameObject* gNew = AddGameobject(g,x,y);
+                HoldCommand(gNew,false);
+                
             }   
         }
     }
