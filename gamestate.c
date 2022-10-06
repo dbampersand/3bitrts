@@ -112,7 +112,8 @@ void FinishTransition()
                 if (toSpawn[i] == NULL)
                     continue;
                 GameObject* g = toSpawn[i];
-                AddGameobject(g,xPos,yPos);   
+                GameObject* gNew = AddGameobject(g,xPos,yPos);   
+                HoldCommand(gNew,false);
                 xPos += GetWidth(g)+4;
                 if (i == encounterGoingTo->numUnitsToSelect/2)
                 {

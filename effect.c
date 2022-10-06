@@ -327,5 +327,5 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
         }
     }
     //if we get here then we haven't applied it to anything
-    RemoveEffect(e,target,false);
+    //RemoveEffect(e,target,false);
 }
