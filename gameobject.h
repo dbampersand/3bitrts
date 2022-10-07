@@ -313,3 +313,4 @@ void UpdateObjPosition(GameObject* g, float x, float y);
 void UpdateObjPosition_X(GameObject* g, float x);
 void UpdateObjPosition_Y(GameObject* g, float y);
 void UpdateScreenPositions(GameObject* g);
+void GetCentre_Screen(GameObject* g, float* x, float* y);

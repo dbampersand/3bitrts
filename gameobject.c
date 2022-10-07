@@ -1858,9 +1858,8 @@ void DrawObjShadow(GameObject* g)
     float percent = GetSummonPercent(g); 
     int w = GetWidth(g);
     int h = ceil(GetHeight(g) * percent); 
-    int x = g->position.worldX + g->offset.x;
-    int y = g->position.worldY + g->offset.y + ceil(GetHeight(g)*(1-percent));
-    ToScreenSpaceI(&x,&y);
+    int x = g->position.screenX + g->offset.x;
+    int y = g->position.screenY + g->offset.y + ceil(GetHeight(g)*(1-percent));
 
     int lineW = (ceil(w/16.0f));
     int lineH = (ceil(h/16.0f));
@@ -1904,8 +1903,9 @@ void DrawSummonEffect(GameObject* g)
         fxtimer = fxtimer - EaseInOutCubic((g->summonTime-g->summonMax) / (g->summonMax*1.15));
     }
     float x; float y;
-    GetCentre(g,&x,&y);
-    ToScreenSpace(&x,&y);
+    GetCentre_Screen(g,&x,&y);
+    
+    //ToScreenSpace(&x,&y);
 
     float r = _MAX(GetWidth(g), GetHeight(g)) * fxtimer;
     al_draw_circle(x,y,r,c,1);
@@ -1940,9 +1940,8 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     bool isReversed = IsSelected(g) || forceInverse;
     isReversed = g->flashTimer > 0 ? !isReversed : isReversed;
 
-    float x = g->position.worldX + g->offset.x; 
-    float y = g->position.worldY + g->offset.y;
-    ToScreenSpace(&x,&y);
+    float x = g->position.screenX + g->offset.x; 
+    float y = g->position.screenY + g->offset.y;
     
     float percent = GetSummonPercent(g);  
 
@@ -2405,6 +2404,19 @@ void GetCentre(GameObject* g, float* x, float* y)
     *y = g->position.worldY + al_get_bitmap_height(sprites[g->spriteIndex].sprite)/2.0f;
 
 }
+void GetCentre_Screen(GameObject* g, float* x, float* y)
+{
+    if (!g)
+    {
+        *x = 0;
+        *y = 0;
+         return;
+    }
+    *x = g->position.screenX + al_get_bitmap_width(sprites[g->spriteIndex].sprite)/2.0f;
+    *y = g->position.screenY + al_get_bitmap_height(sprites[g->spriteIndex].sprite)/2.0f;
+
+}
+
 void DoAI(GameObject* g)
 {
     if (!g->shouldProcessAI)

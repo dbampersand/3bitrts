@@ -220,9 +220,9 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
             Sprite* s = ObjIsChannelling(g) ? &sprites[g->channelingSpriteIndex] :  &sprites[g->spriteIndex];
 
-            float x = g->position.worldX + g->offset.x; 
-            float y = g->position.worldY + g->offset.y;
-            ToScreenSpace(&x,&y);
+            float x = g->position.screenX + g->offset.x; 
+            float y = g->position.screenY + g->offset.y;
+            //ToScreenSpace(&x,&y);
 
 
             Rect selectRect;
