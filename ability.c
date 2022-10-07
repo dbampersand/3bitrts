@@ -28,11 +28,11 @@ void DrawHeldAbility(MouseState* mouseState)
 {
     float cx; float cy;
     GameObject* g = players[0].selection[players[0].indexSelectedUnit];
-    GetCentre(g, &cx, &cy);
+    GetCentre_Screen(g, &cx, &cy);
     int w; int h;
     float radius = players[0].abilityHeld->range;
 
-    al_draw_circle(ToScreenSpace_X(cx),ToScreenSpace_Y(cy),radius,FRIENDLY,0);
+    al_draw_circle((cx),(cy),radius,FRIENDLY,0);
     
     if (players[0].abilityHeld->targetingHint == HINT_LINE)
     {

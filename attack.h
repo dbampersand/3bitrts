@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 #include "colors.h"
+#include "video.h"
 
 typedef struct GameObject GameObject;
 typedef struct Effect Effect;
@@ -36,7 +37,10 @@ typedef struct Attack
     GameObject* ownedBy;
     Effect* effects;    
 
-    float x; float y; float radius; float targetRadius; 
+    float x; float y; 
+    float screenX; float screenY;
+    
+    float radius; float targetRadius; 
     float easing;
 
     float targx; 
@@ -85,3 +89,5 @@ void AttackCanHitTarget(Attack* a, GameObject* g);
 
 
 int NumUnitsInsideAttack(Attack* a);
+bool AttackIsActive(Attack* a);
+void UpdateScreenPositionsAttack(Attack* a);

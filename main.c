@@ -154,6 +154,12 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         if (IsActive(&objects[i]))
             UpdateScreenPositions(&objects[i]);
     }
+    for (int i = 0; i < MAX_ATTACKS; i++)
+    {
+        if (AttackIsActive(&attacks[i]))
+            UpdateScreenPositionsAttack(&attacks[i]);
+    }
+
     DrawMap();
     
     DrawCommandQueue(players[0].selection[players[0].indexSelectedUnit]);
