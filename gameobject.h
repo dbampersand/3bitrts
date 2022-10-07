@@ -10,8 +10,10 @@
 #include "point.h"
 #include "pathfind.h"
 #include "item.h"
-
+#include "gameobject.h"
 #include "stdbool.h"
+#include "video.h"
+
 
 #define MAX_PATHFINDING_NODES_HELD 20
 #define MINIMUM_RANGE 6
@@ -80,7 +82,7 @@ typedef struct GameObject
     int numAbilities;
 
 
-    Point position;
+    PointSpace position;
     Point offset; //offset for drawing the 'attack animation'
     float angle;
 
@@ -307,3 +309,7 @@ void DrawMapHighlights();
 float GetSummonPercent(GameObject* g);
 void GameObjDebugDraw();
 int GetUIStartHeight();
+void UpdateObjPosition(GameObject* g, float x, float y);
+void UpdateObjPosition_X(GameObject* g, float x);
+void UpdateObjPosition_Y(GameObject* g, float y);
+void UpdateScreenPositions(GameObject* g);

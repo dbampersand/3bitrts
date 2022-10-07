@@ -516,7 +516,7 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
     }
     if (a->castType & ABILITY_POINT)
     {
-        if (dist(g->position.x,g->position.y,x,y) <= a->range)
+        if (dist(g->position.worldX,g->position.worldY,x,y) <= a->range)
             return true;
         else
             return false;

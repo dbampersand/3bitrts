@@ -16,6 +16,11 @@ typedef struct MouseState
 } MouseState;
 unsigned long long _FRAMES;
 
+typedef struct PointSpace
+{
+    float worldX; float worldY; 
+    float screenX; float screenY;
+} PointSpace;
 
 #define _TARGET_FPS 60
 

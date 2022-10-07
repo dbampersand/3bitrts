@@ -136,13 +136,13 @@ void CastCommand(GameObject* g, GameObject* target, Ability* a, float x, float y
 void StopCommand(GameObject* g, bool shiftHeld)
 {
     if (!g) return;
-    Command c = (Command){.x = g->position.x, .y = g->position.y, .commandType = COMMAND_STOP, .target = NULL, .ability = NULL};
+    Command c = (Command){.x = g->position.worldX, .y = g->position.worldY, .commandType = COMMAND_STOP, .target = NULL, .ability = NULL};
     AddCommand(g,c,shiftHeld);
 }
 void HoldCommand(GameObject* g, bool shiftHeld)
 {
     if (!g) return;
-    Command c = (Command){.x = g->position.x, .y = g->position.y, .commandType = COMMAND_HOLD, .target = NULL, .ability = NULL};
+    Command c = (Command){.x = g->position.worldX, .y = g->position.worldY, .commandType = COMMAND_HOLD, .target = NULL, .ability = NULL};
     AddCommand(g,c,shiftHeld);
 }
 bool CmdEqual(Command c1, Command c2)
@@ -160,7 +160,7 @@ void NextCommand(GameObject* g)
     if (g->queue[0].commandType == COMMAND_NONE)
     {
         g->targObj = NULL;
-        SetTargetPosition(g,g->position.x,g->position.y);
+        SetTargetPosition(g,g->position.worldX,g->position.worldY);
     }
 }
 void FindEnemiesToAttack(GameObject* g)
@@ -187,7 +187,7 @@ void DoCommands(GameObject* g)
     if (c->commandType == COMMAND_HOLD)
     {
         g->targObj = NULL;
-        SetTargetPosition(g,g->position.x,g->position.y);
+        SetTargetPosition(g,g->position.worldX,g->position.worldY);
         return;
     }
 
@@ -202,7 +202,7 @@ void DoCommands(GameObject* g)
         g->targObj = NULL;
 
 
-        if (dist(g->position.x,g->position.y,c->x,c->y) <= DIST_DELTA)
+        if (dist(g->position.worldX,g->position.worldY,c->x,c->y) <= DIST_DELTA)
         {
             NextCommand(g);
             return;
@@ -212,10 +212,10 @@ void DoCommands(GameObject* g)
     {
         if (!c->target)
             NextCommand(g);
-        SetTargetPosition(g,c->target->position.x,c->target->position.y);
+        SetTargetPosition(g,c->target->position.worldX,c->target->position.worldY);
 
 
-        if (dist(g->position.x,g->position.y,c->x,c->y) <= DIST_DELTA)
+        if (dist(g->position.worldX,g->position.worldY,c->x,c->y) <= DIST_DELTA)
         {
             NextCommand(g);
             return;
@@ -237,8 +237,8 @@ void DoCommands(GameObject* g)
     {
             if (c->target)
             {
-                c->x = c->target->position.x;
-                c->y = c->target->position.y;
+                c->x = c->target->position.worldX;
+                c->y = c->target->position.worldY;
 
                 if (AbilityShouldBeCastOnTarget(c->ability))
                     g->targObj = c->target;
@@ -248,7 +248,7 @@ void DoCommands(GameObject* g)
             if (AbilityCanBeCast(c->ability,g,c->target,c->x,c->y))
             {
                 Command before = *c;
-                CastAbility(g,c->ability,c->x,c->y,c->x-g->position.x,c->y-g->position.y,c->target);
+                CastAbility(g,c->ability,c->x,c->y,c->x-g->position.worldX,c->y-g->position.worldY,c->target);
                 if (!CmdEqual(before,g->queue[0]))
                 {
                     //if casting the ability has modified the queue
@@ -293,7 +293,7 @@ void DoCommands(GameObject* g)
         else
         {
             if (c->target)
-                SetTargetPosition(g,c->target->position.x,c->target->position.y);
+                SetTargetPosition(g,c->target->position.worldX,c->target->position.worldY);
             else
                 SetTargetPosition(g,c->x,c->y);
         }
@@ -305,7 +305,7 @@ void DoCommands(GameObject* g)
         
         g->targObj = NULL;
 
-        if (dist(g->position.x,g->position.y,c->x,c->y) <= DIST_DELTA)
+        if (dist(g->position.worldX,g->position.worldY,c->x,c->y) <= DIST_DELTA)
         {
             NextCommand(g);
             return;

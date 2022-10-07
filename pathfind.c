@@ -218,7 +218,7 @@ PathfindNode* GetBestGuess(PointI target)
 }
 void AStar(PointI here, PointI target, bool* success, float w, float h, GameObject* g)
 {
-    //SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
+    //SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,false);
     int mapW = GetMapWidth()/_GRAIN;
     int mapH = GetMapHeight()/_GRAIN;
 

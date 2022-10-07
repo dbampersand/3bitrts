@@ -63,7 +63,7 @@ void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STAT
                     if (currAbilityRunning->castType == ABILITY_INSTANT || currAbilityRunning->castType == ABILITY_TOGGLE)
                     {
                          if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
-                            CastAbility(currGameObjRunning,currAbilityRunning,mouseState->worldX,mouseState->worldY,mouseState->worldX-currGameObjRunning->position.x,mouseState->worldY-currGameObjRunning->position.y,NULL);
+                            CastAbility(currGameObjRunning,currAbilityRunning,mouseState->worldX,mouseState->worldY,mouseState->worldX-currGameObjRunning->position.worldX,mouseState->worldY-currGameObjRunning->position.worldY,NULL);
                         else
                             CastCommand(currGameObjRunning,NULL,currAbilityRunning,mouseState->worldX,mouseState->worldY,IsBindDown(keyState,currSettings.keymap.key_Shift));
                     }

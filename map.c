@@ -299,9 +299,9 @@ void UpdateMap(Map* m, float dt)
 void RedrawMapSegmentUnderObj(GameObject* g)
 {
     float percent = GetSummonPercent(g);  
-    float realY = g->position.y + g->offset.y;
+    float realY = g->position.worldY + g->offset.y;
 
-    int x = g->position.x + g->offset.x;
+    int x = g->position.worldX + g->offset.x;
     int y = realY + (GetHeight(g) * (1-percent));
     int w = GetWidth(g);
     int h = (GetHeight(g) * percent);

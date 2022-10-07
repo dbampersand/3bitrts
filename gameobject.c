@@ -128,11 +128,11 @@ void SetTargetPosition(GameObject* g, float x, float y)
     {
 
         //PointI targetIndex = (PointI){((g->targetPosition.x) / (float)_GRAIN), ((g->targetPosition.y) / (float)_GRAIN)};
-        //PointI currentIndex = (PointI){((g->position.x) / (float)_GRAIN), ((g->position.y) / (float)_GRAIN)};
+        //PointI currentIndex = (PointI){((g->position.worldX) / (float)_GRAIN), ((g->position.worldY) / (float)_GRAIN)};
         //bool success;
 
 
-        //SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
+        //SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,false);
         //SetMapCollisionRect(g->targetPosition.x,g->targetPosition.y,w,h,false);
         g->pathfindNeedsRefresh = true;
         //AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
@@ -234,7 +234,7 @@ void UpdateObject(GameObject* g, float dt)
     int w = al_get_bitmap_width(sprites[currGameObjRunning->spriteIndex].sprite);
     int h = al_get_bitmap_height(sprites[currGameObjRunning->spriteIndex].sprite);
 
-    Rect r = (Rect){currGameObjRunning->position.x,currGameObjRunning->position.y,w,h};
+    Rect r = (Rect){currGameObjRunning->position.worldX,currGameObjRunning->position.worldY,w,h};
 
     bool shouldMove = true;
     bool shouldAttack = false;
@@ -256,9 +256,9 @@ void UpdateObject(GameObject* g, float dt)
             int wTarg = al_get_bitmap_width(sprites[currGameObjRunning->targObj->spriteIndex].sprite);
             int hTarg = al_get_bitmap_height(sprites[currGameObjRunning->targObj->spriteIndex].sprite);
 
-            SetTargetPosition(currGameObjRunning,currGameObjRunning->targObj->position.x + wTarg/2,currGameObjRunning->targObj->position.y + hTarg/2);
+            SetTargetPosition(currGameObjRunning,currGameObjRunning->targObj->position.worldX + wTarg/2,currGameObjRunning->targObj->position.worldY + hTarg/2);
 
-            Rect r2 = (Rect){currGameObjRunning->targObj->position.x,currGameObjRunning->targObj->position.y,wTarg,hTarg};
+            Rect r2 = (Rect){currGameObjRunning->targObj->position.worldX,currGameObjRunning->targObj->position.worldY,wTarg,hTarg};
             #define DISTDELTA 0.001f
             Rect unioned = UnionRectR(r,r2);
             
@@ -312,7 +312,7 @@ void UpdateObject(GameObject* g, float dt)
                 {
                      currGameObjRunning->attackTimer = currGameObjRunning->attackSpeed;
                     GameObject* g = currGameObjRunning; GameObject* g2 = g->targObj;
-                    float angle = (atan2(g2->position.y-g->position.y,g2->position.x-g->position.x));
+                    float angle = (atan2(g2->position.worldY-g->position.worldY,g2->position.worldX-g->position.worldX));
                     
                     currGameObjRunning->offset.x = cos(angle);
                     currGameObjRunning->offset.y = sin(angle);
@@ -509,7 +509,7 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                     continue;
                 Sprite* sp = &sprites[obj->spriteIndex];
                 int j = al_get_bitmap_width(sp->sprite);
-                Rect rObj = (Rect){obj->position.x,obj->position.y,al_get_bitmap_width(sp->sprite),al_get_bitmap_height(sp->sprite)};
+                Rect rObj = (Rect){obj->position.worldX,obj->position.worldY,al_get_bitmap_width(sp->sprite),al_get_bitmap_height(sp->sprite)};
                 if (CheckIntersect(rObj,r))
                 {
                     if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
@@ -601,7 +601,7 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                         
                         }
                         Sprite* s = &sprites[g->spriteIndex];
-                        Rect r = (Rect){g->position.x,g->position.y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)}; 
+                        Rect r = (Rect){g->position.worldX,g->position.worldY,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)}; 
                         if (PointInRect(mouseState->worldX,mouseState->worldY,r))
                         {
                             for (int i = 0; i < players[0].numUnitsSelected; i++)
@@ -738,9 +738,9 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     loadLuaGameObj(luaState, found->path, found); 
     found->properties |= OBJ_ACTIVE;
 
-
-    currGameObjRunning->position.x = _SCREEN_SIZE/2.0f;
-    currGameObjRunning->position.y = _SCREEN_SIZE/2.0f;
+    //currGameObjRunning->position.worldX = _SCREEN_SIZE/2.0f;
+    //currGameObjRunning->position.worldY = _SCREEN_SIZE/2.0f;
+    UpdateObjPosition(currGameObjRunning,_SCREEN_SIZE/2.0f,_SCREEN_SIZE/2.0f);
 
     currGameObjRunning->shouldProcessAI = true;
 
@@ -966,7 +966,7 @@ void ScatterEffect(GameObject* g)
             ALLEGRO_COLOR pixel = al_get_pixel(sprite, x, y);
             if (pixel.a)
             {
-                AddParticleWithRandomProperties(g->position.x+x,g->position.y+y,c, 0.15, 2, 0, 0.025);
+                AddParticleWithRandomProperties(g->position.worldX+x,g->position.worldY+y,c, 0.15, 2, 0, 0.025);
             }
         }
     }
@@ -980,7 +980,7 @@ void KillObj(GameObject* g, bool trigger)
     ScatterEffect(g);
 
     RemoveObjFromAllThreatlists(g);
-    SetMapCollisionRect(g->position.x,g->position.y,GetWidth(g),GetHeight(g),false);
+    SetMapCollisionRect(g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g),false);
     GameObject* before = currGameObjRunning;
     currGameObjRunning = g;
     CallLuaFunc(g->luafunc_kill);
@@ -1109,6 +1109,31 @@ void MakeInvulnerable(GameObject* g, float time)
 {
     g->invulnerableTime += time;
 }
+void UpdateObjPosition(GameObject* g, float x, float y)
+{
+    g->position.worldX = x;
+    g->position.worldY = y;
+
+    //g->position.screenX = ToScreenSpace_X(x);
+   // g->position.screenY = ToScreenSpace_Y(y);
+
+}
+void UpdateObjPosition_X(GameObject* g, float x)
+{
+    g->position.worldX = x;
+    //g->position.screenX = ToScreenSpace_X(x);
+}
+void UpdateObjPosition_Y(GameObject* g, float y)
+{
+    g->position.worldY = y;
+    //g->position.screenY = ToScreenSpace_X(y);
+}
+void UpdateScreenPositions(GameObject* g)
+{
+    g->position.screenX = ToScreenSpace_X(g->position.worldX);
+    g->position.screenY = ToScreenSpace_Y(g->position.worldY);
+
+}
 void LoadPrefabs(const char* dirPath)
 {
     DIR *d;
@@ -1187,13 +1212,13 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
 
     for (int i = 0; i < numObjects; i++)
     {
-        Rect rG = (Rect){g->position.x,g->position.y,GetWidth(g),GetHeight(g)};
+        Rect rG = (Rect){g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g)};
 
         GameObject* g2 = &objects[i];
         if ((!IsActive(g2) || g2 == g)) 
             continue;
         Sprite* s2 = &sprites[g2->spriteIndex];
-        Rect r2 = (Rect){g2->position.x,g2->position.y,GetWidth(g2),GetHeight(g2)};
+        Rect r2 = (Rect){g2->position.worldX,g2->position.worldY,GetWidth(g2),GetHeight(g2)};
         //Decoration objects are always static
         if (!CheckIntersect(rG,r2))
         {
@@ -1210,12 +1235,14 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     {
                         if (!ObjIsDecoration(g2))
                         {
-                            g2->position.x = g->position.x + GetWidth(g);
-                            if (g2->position.x < 0)
+                            //g2->position.worldX = g->position.worldX + GetWidth(g);
+                            UpdateObjPosition_X(g2,g->position.worldX + GetWidth(g));
+                            if (g2->position.worldX < 0)
                             {
-                                g2->position.x=0;
+                                //g2->position.worldX=0;
+                                UpdateObjPosition_X(g2,0);
                             }
-                            if (g2->position.x + GetWidth(g2) > GetMapWidth())
+                            if (g2->position.worldX + GetWidth(g2) > GetMapWidth())
                             {   
                                 collisionEvents[numEvents].obj = g2;
                                 collisionEvents[numEvents].x = true;
@@ -1223,7 +1250,8 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
 
 
                                 numEvents++;
-                                g2->position.x = GetMapWidth() - GetWidth(g2);
+                                //g2->position.worldX = GetMapWidth() - GetWidth(g2);
+                                UpdateObjPosition_X(g2,GetMapWidth() - GetWidth(g2));
                                 continue;
                             }
                         }
@@ -1242,7 +1270,9 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             collisionEvents[numEvents].direction = -1;
                             numEvents++;
 
-                            g->position.x = (g2->position.x - al_get_bitmap_width(s->sprite));
+                            //g->position.worldX = (g2->position.worldX - al_get_bitmap_width(s->sprite));
+                            UpdateObjPosition_X(g, (g2->position.worldX - al_get_bitmap_width(s->sprite)));
+
                         }
 
                     }
@@ -1258,23 +1288,27 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     {
                         if (!ObjIsDecoration(g2))
                         {
-                            g2->position.x = g->position.x - GetWidth(g2);
-                            if (g2->position.x < 0)
+                            //g2->position.worldX = g->position.worldX - GetWidth(g2);
+                            UpdateObjPosition_X(g2,g->position.worldX - GetWidth(g2));
+                            if (g2->position.worldX < 0)
                             {
                                 collisionEvents[numEvents].obj = g2;
                                 collisionEvents[numEvents].x = true;
                                 collisionEvents[numEvents].direction = 1;
                                 numEvents++;
 
-                                g2->position.x=0;
+                               // g2->position.worldX=0;
+                                UpdateObjPosition_X(g2,0);
+
                                // CheckCollisions(g2,true,1,true);
                                //  CheckCollisionsWorld(g2,true,1);
                                 continue;
 
                             }
-                            if (g2->position.x + GetWidth(g2) > GetMapWidth())
+                            if (g2->position.worldX + GetWidth(g2) > GetMapWidth())
                             {
-                                g2->position.x = GetMapWidth() - GetWidth(g2);
+                                UpdateObjPosition_X(g2,GetMapWidth() - GetWidth(g2));
+                            
                             }
                         }
                         collisionEvents[numEvents].obj = g2;
@@ -1293,7 +1327,8 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             collisionEvents[numEvents].direction = -1;
                             numEvents++;
 
-                             g->position.x = g2->position.x+al_get_bitmap_width(s2->sprite); 
+                            //g->position.worldX = g2->position.worldX+al_get_bitmap_width(s2->sprite); 
+                            UpdateObjPosition_X(g,g2->position.worldX+al_get_bitmap_width(s2->sprite));
                             //CheckCollisions(g2,true,-1,true);
                             //CheckCollisionsWorld(g2,true,-1);
                         }
@@ -1315,10 +1350,14 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             if (!ObjIsDecoration(g2))
                             {   
 
-                                g2->position.y = g->position.y + GetHeight(g);
-                                if (g2->position.y <0)
+                                //g2->position.worldY = g->position.worldY + GetHeight(g);
+                                UpdateObjPosition_Y(g2,g->position.worldY + GetHeight(g));
+
+                                if (g2->position.worldY <0)
                                 {
-                                    g2->position.y=0;
+                                    //g2->position.worldY=0;
+                                    UpdateObjPosition_Y(g2,0);
+
                                 }
                                 if (ObjectIsInUI(g2))
                                 {
@@ -1327,7 +1366,8 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                                     collisionEvents[numEvents].direction = -1;
                                     numEvents++;
 
-                                    g2->position.y = GetUIStartHeight() - GetHeight(g2);
+                                    g2->position.worldY = GetUIStartHeight() - GetHeight(g2);
+                                    UpdateObjPosition_Y(g2,GetUIStartHeight() - GetHeight(g2));
                                     //CheckCollisions(g2,false,-1,true);
                                     //CheckCollisionsWorld(g2,false,-1);
                                     continue;
@@ -1350,7 +1390,8 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             collisionEvents[numEvents].direction = 1;
                             numEvents++;
                             
-                            g->position.y = g2->position.y - al_get_bitmap_height(s->sprite);
+                            //g->position.worldY = g2->position.worldY - al_get_bitmap_height(s->sprite);
+                            UpdateObjPosition_Y(g,g2->position.worldY - al_get_bitmap_height(s->sprite));
                             //CheckCollisions(g2,false,1,true);
                             //CheckCollisionsWorld(g2,false,1);
                         }
@@ -1364,10 +1405,12 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                     {
                         if (!ObjIsDecoration(g2))
                         {
-                            g2->position.y = g->position.y - GetHeight(g2);
-                            if (g2->position.y < 0)
+                            //g2->position.worldY = g->position.worldY - GetHeight(g2);
+                            UpdateObjPosition_Y(g2,g->position.worldY - GetHeight(g2));
+                            if (g2->position.worldY < 0)
                             {
-                                g2->position.y=0;
+                                //g2->position.worldY=0;
+                                UpdateObjPosition_Y(g2,0);
                                 collisionEvents[numEvents].obj = g2;
                                 collisionEvents[numEvents].x = false;
                                 collisionEvents[numEvents].direction = 1;
@@ -1378,7 +1421,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             }
                             if (ObjectIsInUI(g2))
                             {
-                               // g2->position.y = GetUIStartHeight() - GetHeight(g2);//UI_START_Y - GetHeight(g2);
+                               // g2->position.worldY = GetUIStartHeight() - GetHeight(g2);//UI_START_Y - GetHeight(g2);
                         }
                         }
                         collisionEvents[numEvents].obj = g2;
@@ -1396,7 +1439,8 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             collisionEvents[numEvents].x = false;
                             collisionEvents[numEvents].direction = -1;
                             numEvents++;
-                            g->position.y = g2->position.y + al_get_bitmap_height(s2->sprite);
+                            //g->position.worldY = g2->position.worldY + al_get_bitmap_height(s2->sprite);
+                            UpdateObjPosition_Y(g,g2->position.worldY + al_get_bitmap_height(s2->sprite));
                            // CheckCollisions(g2,false,-1,true);
                             //CheckCollisionsWorld(g2,false,-1);
                         }
@@ -1416,14 +1460,14 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
 GameObject* GetCollidedWith(GameObject* g)
 {
     Sprite* s = &sprites[g->spriteIndex];
-    Rect rG = (Rect){g->position.x,g->position.y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)};
+    Rect rG = (Rect){g->position.worldX,g->position.worldY,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)};
     for (int i = 0; i < numObjects; i++)
     {
         GameObject* g2 = &objects[i];
         if (g2 == g || !IsActive(g2)) 
             continue;
         Sprite* s2 = &sprites[g2->spriteIndex];
-        Rect r2 = (Rect){g2->position.x,g2->position.y,al_get_bitmap_width(s2->sprite),al_get_bitmap_height(s2->sprite)};
+        Rect r2 = (Rect){g2->position.worldX,g2->position.worldY,al_get_bitmap_width(s2->sprite),al_get_bitmap_height(s2->sprite)};
 
         if (!CheckIntersect(rG,r2))
         {
@@ -1441,7 +1485,7 @@ int GetUIStartHeight()
 }
 bool ObjectIsInUI(GameObject* g)
 {
-    if (g->position.y + GetHeight(g) > GetUIStartHeight())
+    if (g->position.worldY + GetHeight(g) > GetUIStartHeight())
     {
         return true;
     }
@@ -1457,23 +1501,26 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
     
     if (ObjectIsInUI(g))
     {
-        g->position.y = GetUIStartHeight() - GetHeight(g);// UI_START_Y - GetHeight(g);
+       // g->position.worldY = GetUIStartHeight() - GetHeight(g);// UI_START_Y - GetHeight(g);
+        UpdateObjPosition_Y(g,GetUIStartHeight() - GetHeight(g));
     }
 
-    float posX = g->position.x;
-    float posY = g->position.y;
+    float posX = g->position.worldX;
+    float posY = g->position.worldY;
 
     if (posX < 0 || posX+w > GetMapWidth())
     {
         if (posX < 0) 
         {
-            g->position.x = 0;
+            //g->position.worldX = 0;
+            UpdateObjPosition_X(g,0);
             CheckCollisions(g,true,1,true);
 
         }
         if (posX+w > GetMapWidth()) 
         {
-            g->position.x = GetMapWidth()-w;
+           // g->position.worldX = GetMapWidth()-w;
+            UpdateObjPosition_X(g,GetMapWidth()-w);
             CheckCollisions(g,true,-1,true);
 
         }
@@ -1484,13 +1531,15 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
     {
         if (posY < 0)
         {
-            g->position.y = 0;
+            //g->position.worldY = 0;
+            UpdateObjPosition_Y(g,0);
             CheckCollisions(g,false,1,true);
 
         } 
         if (posY+h >  GetMapHeight())
         {
-            g->position.y =  GetMapHeight()-h;
+            //g->position.worldY =  GetMapHeight()-h;
+            UpdateObjPosition_Y(g,GetMapHeight()-h);
             CheckCollisions(g,false,-1,true);
         } 
 
@@ -1511,7 +1560,9 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             if (currMap->collision[indexLeft] == false)
             {
                // printf("gg");
-                g->position.x = IndexToPoint(GetMapHeight()/_GRAIN,indexLeft).x*_GRAIN + _GRAIN;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
+                //g->position.worldX = IndexToPoint(GetMapHeight()/_GRAIN,indexLeft).x*_GRAIN + _GRAIN;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
+                UpdateObjPosition_X(g,IndexToPoint(GetMapHeight()/_GRAIN,indexLeft).x*_GRAIN + _GRAIN);
+
                 CheckCollisions(g,true,1,true);
 
             }
@@ -1520,8 +1571,9 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
         {
             if (currMap->collision[indexRight] == false)
             {
-                //g->position.x = (indexRight/(GetMapHeight()/_GRAIN))*_GRAIN - w;
-                g->position.x = IndexToPoint(GetMapHeight()/_GRAIN,indexRight).x*_GRAIN - w;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
+                //g->position.worldX = (indexRight/(GetMapHeight()/_GRAIN))*_GRAIN - w;
+                //g->position.worldX = IndexToPoint(GetMapHeight()/_GRAIN,indexRight).x*_GRAIN - w;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
+                UpdateObjPosition_X(g,IndexToPoint(GetMapHeight()/_GRAIN,indexRight).x*_GRAIN - w);
                 
                 CheckCollisions(g,true,-dV,true);
             }
@@ -1535,9 +1587,9 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             if (currMap->collision[indexTop] == false)
             {
                 //int yCoord = (indexTop%(GetMapHeight()/_GRAIN)+1)*_GRAIN;
-                g->position.y = IndexToPoint(GetMapHeight()/_GRAIN,indexTop).y*_GRAIN + _GRAIN;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
-                
-               // g->position.y = yCoord;
+                //g->position.worldY = IndexToPoint(GetMapHeight()/_GRAIN,indexTop).y*_GRAIN + _GRAIN;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
+                UpdateObjPosition_Y(g,IndexToPoint(GetMapHeight()/_GRAIN,indexTop).y*_GRAIN + _GRAIN);
+               // g->position.worldY = yCoord;
                 CheckCollisions(g,false,-dV,true);
             }
 
@@ -1547,9 +1599,9 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             if (currMap->collision[indexBottom] == false)
             {
                 //int yCoord = (indexBottom%(GetMapHeight()/_GRAIN))*_GRAIN - h;
-                //g->position.y = yCoord;
-                g->position.y = IndexToPoint(GetMapHeight()/_GRAIN,indexBottom).y*_GRAIN - h;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
-
+                //g->position.worldY = yCoord;
+                //g->position.worldY = IndexToPoint(GetMapHeight()/_GRAIN,indexBottom).y*_GRAIN - h;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
+                UpdateObjPosition_Y(g,IndexToPoint(GetMapHeight()/_GRAIN,indexBottom).y*_GRAIN - h);
                 CheckCollisions(g,false,-dV,true);
             }
         }
@@ -1574,16 +1626,16 @@ void GameObjDebugDraw()
 }
 void DoCurrentPathingNode(GameObject* g)
 {
-    if (IsNear(g->position.x,g->targetPosition.x, 1.0f) && IsNear(g->position.y,g->targetPosition.y,1.0f))
+    if (IsNear(g->position.worldX,g->targetPosition.x, 1.0f) && IsNear(g->position.worldY,g->targetPosition.y,1.0f))
     {
         ClearPathfindingQueue(g);
         return;
     }
-    if (IsNear(g->position.x,g->pathNodes[g->currentPathingNode].p.x, 0.5) && IsNear(g->position.y,g->pathNodes[g->currentPathingNode].p.y, 0.5f) || g->pathfindNeedsRefresh)
+    if (IsNear(g->position.worldX,g->pathNodes[g->currentPathingNode].p.x, 0.5) && IsNear(g->position.worldY,g->pathNodes[g->currentPathingNode].p.y, 0.5f) || g->pathfindNeedsRefresh)
     {
         bool success;
         PointI targetIndex = (PointI){((g->targetPosition.x) / (float)_GRAIN), ((g->targetPosition.y) / (float)_GRAIN)};
-        PointI currentIndex = (PointI){((g->position.x) / (float)_GRAIN), ((g->position.y) / (float)_GRAIN)};
+        PointI currentIndex = (PointI){((g->position.worldX) / (float)_GRAIN), ((g->position.worldY) / (float)_GRAIN)};
 
 
         if (g->pathfindNeedsRefresh)
@@ -1608,7 +1660,7 @@ void Move(GameObject* g, float delta)
     if (g->speed == 0)
         return;
     #define DIST_DELTA 1
-    Point before = g->position;
+    PointSpace before = g->position;
     int w = GetWidth(g);//al_get_bitmap_width(sprites[g->spriteIndex].sprite);
     int h = GetHeight(g);//al_get_bitmap_height(sprites[g->spriteIndex].sprite);
 
@@ -1622,7 +1674,7 @@ void Move(GameObject* g, float delta)
     path.x = g->targetPosition.x;
     path.y = g->targetPosition.y;
     
-    SetMapCollisionRect(g->position.x,g->position.y,w,h,false);
+    SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,false);
 
    // SetMapCollisionRect(path.x,path.y,w,h,false);
 
@@ -1669,8 +1721,8 @@ void Move(GameObject* g, float delta)
         //GetCentre(g->targObj,&xtarg,&ytarg);
     }
 
-        double moveX = xtarg - g->position.x;
-        double moveY = ytarg - g->position.y;
+        double moveX = xtarg - g->position.worldX;
+        double moveY = ytarg - g->position.worldY;
         
 
         double dist = sqrt(moveX*moveX+moveY*moveY);
@@ -1682,35 +1734,36 @@ void Move(GameObject* g, float delta)
 
         if (dist <= DIST_DELTA)
         {
-            g->position.x = xtarg;
+            //g->position.worldX = xtarg;
+            UpdateObjPosition_X(g,xtarg);
             CheckCollisions(g,true, dX,ObjectCanPush(g));
             CheckCollisionsWorld(g,true, dX);
 
-            g->position.y = ytarg;
+            g->position.worldY = ytarg;
             CheckCollisions(g,false, dY,ObjectCanPush(g));
             CheckCollisionsWorld(g,false, dY);
-            SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
+            SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,true);
 
             return;
         }
         double mDist = sqrt(dX * dX + dY * dY);
         if (dist <= mDist)
         {
-            dX = xtarg - g->position.x;
-            dY = ytarg - g->position.y;
+            dX = xtarg - g->position.worldX;
+            dY = ytarg - g->position.worldY;
             
-            g->position.y=ytarg;
+            g->position.worldY=ytarg;
             CheckCollisions(g,false, dY,ObjectCanPush(g));
             CheckCollisionsWorld(g,false, dY);
-            g->position.x=xtarg;
 
+            g->position.worldX=xtarg;
             CheckCollisions(g,true, dX,ObjectCanPush(g));
             CheckCollisionsWorld(g,true, dX);
 
-            SetTargetPosition(g,xtarg,ytarg);
+            SetTargetPosition(g,g->position.worldX,g->position.worldY);
 
 
-            SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
+            SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,true);
 
             
             return;
@@ -1724,7 +1777,7 @@ void Move(GameObject* g, float delta)
             dY /= numMoves;
             for (int i = 0; i < numMoves; i++)
             {
-                g->position.y += dY;
+                g->position.worldY += dY;
                 CheckCollisions(g,false, dY,ObjectCanPush(g));
                 CheckCollisionsWorld(g,false, dY);
             }
@@ -1732,12 +1785,14 @@ void Move(GameObject* g, float delta)
             dX /= numMoves;
             for (int i = 0; i < numMoves; i++)
             {
-                g->position.x += dX;
+                g->position.worldX += dX;
+
                 CheckCollisions(g,true, dX,ObjectCanPush(g));
                 CheckCollisionsWorld(g,true, dX);
-                SetMapCollisionRect(g->position.x,g->position.y,w,h,true);
+                SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,true);
             }
         }
+    UpdateObjPosition(g,g->position.worldX,g->position.worldY);
 
 }
 bool ObjectCanPush(GameObject* g)
@@ -1762,9 +1817,9 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
     Rect r;
     r.h = HEALTHBAR_HEIGHT * summPercent;
     r.w = al_get_bitmap_width(s->sprite);
-    r.x = g->position.x + g->offset.x;
-    r.y = g->position.y - padding + g->offset.y + (HEALTHBAR_HEIGHT * (1-summPercent));
-    ToScreenSpace(&r.x,&r.y);
+    r.x = g->position.screenX + g->offset.x;
+    r.y = g->position.screenY - padding + g->offset.y + (HEALTHBAR_HEIGHT * (1-summPercent));
+    //ToScreenSpace(&r.x,&r.y);
 
     al_draw_rectangle((int)r.x-1,(int)r.y-1,(int)r.x+r.w+1,(int)r.y+r.h+1,BG,1);
     al_draw_rectangle((int)r.x,(int)r.y,(int)r.x+r.w,(int)r.y+r.h,col,1);
@@ -1803,8 +1858,8 @@ void DrawObjShadow(GameObject* g)
     float percent = GetSummonPercent(g); 
     int w = GetWidth(g);
     int h = ceil(GetHeight(g) * percent); 
-    int x = g->position.x + g->offset.x;
-    int y = g->position.y + g->offset.y + ceil(GetHeight(g)*(1-percent));
+    int x = g->position.worldX + g->offset.x;
+    int y = g->position.worldY + g->offset.y + ceil(GetHeight(g)*(1-percent));
     ToScreenSpaceI(&x,&y);
 
     int lineW = (ceil(w/16.0f));
@@ -1885,8 +1940,8 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     bool isReversed = IsSelected(g) || forceInverse;
     isReversed = g->flashTimer > 0 ? !isReversed : isReversed;
 
-    float x = g->position.x + g->offset.x; 
-    float y = g->position.y + g->offset.y;
+    float x = g->position.worldX + g->offset.x; 
+    float y = g->position.worldY + g->offset.y;
     ToScreenSpace(&x,&y);
     
     float percent = GetSummonPercent(g);  
@@ -2154,8 +2209,8 @@ void AttackTarget(GameObject* g, float dt)
 Rect GetObjRect(GameObject* g)
 {
     if (!g) return (Rect){0,0,0,0};
-    if (g->spriteIndex <= 0) return (Rect){g->position.x,g->position.y,0,0};
-    Rect r = (Rect){g->position.x,g->position.y,al_get_bitmap_width(sprites[g->spriteIndex].sprite),al_get_bitmap_height(sprites[g->spriteIndex].sprite)};
+    if (g->spriteIndex <= 0) return (Rect){g->position.worldX,g->position.worldY,0,0};
+    Rect r = (Rect){g->position.worldX,g->position.worldY,al_get_bitmap_width(sprites[g->spriteIndex].sprite),al_get_bitmap_height(sprites[g->spriteIndex].sprite)};
     return r;
 }
 void SetMoveSpeed(GameObject* g, float value)
@@ -2227,7 +2282,7 @@ bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems)
         gameStats.damageDone += value;
     }
     if (source && GetWidth(g) > 0 && GetHeight(g) > 0)
-        AddDamageNumber((int)value,g->position.x+(rand()%(int)GetWidth(g)*1.1f),g->position.y+(rand()%(int)GetHeight(g)*1.1f),source);
+        AddDamageNumber((int)value,g->position.worldX+(rand()%(int)GetWidth(g)*1.1f),g->position.worldY+(rand()%(int)GetHeight(g)*1.1f),source);
 
     value = DamageShields(g,value);
     g->health -= value;
@@ -2298,20 +2353,23 @@ void Teleport(GameObject* g, float x, float y)
     if (!g) return;
 
     PointI target = (PointI){x/_GRAIN,y/_GRAIN};
-    PointI here = (PointI){g->position.x/_GRAIN,g->position.y/_GRAIN};
+    PointI here = (PointI){g->position.worldX/_GRAIN,g->position.worldY/_GRAIN};
     bool found = false;
 
     PointI move = GetClosestPathablePoint(target,here,&found,GetWidth(g)/_GRAIN,GetHeight(g)/_GRAIN,true);
     
-    g->position.x = move.x*_GRAIN;
-    g->position.y = move.y*_GRAIN;
+    //g->position.worldX = move.x*_GRAIN;
+    //g->position.worldY = move.y*_GRAIN;
+
+    UpdateObjPosition(g, move.x*_GRAIN, move.y*_GRAIN);
+
 
 
     //CheckCollisions(g,true, 1, true);
     //CheckCollisions(g,false, 1, true);  
  
-    SetTargetPosition(g,g->position.x,g->position.y);
-    SetMapCollisionRect(g->position.x,g->position.y,GetWidth(g),GetHeight(g),true);
+    SetTargetPosition(g,g->position.worldX,g->position.worldY);
+    SetMapCollisionRect(g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g),true);
     return;
 
     
@@ -2343,8 +2401,8 @@ void GetCentre(GameObject* g, float* x, float* y)
         *y = 0;
          return;
     }
-    *x = g->position.x + al_get_bitmap_width(sprites[g->spriteIndex].sprite)/2.0f;
-    *y = g->position.y + al_get_bitmap_height(sprites[g->spriteIndex].sprite)/2.0f;
+    *x = g->position.worldX + al_get_bitmap_width(sprites[g->spriteIndex].sprite)/2.0f;
+    *y = g->position.worldY + al_get_bitmap_height(sprites[g->spriteIndex].sprite)/2.0f;
 
 }
 void DoAI(GameObject* g)
@@ -2455,8 +2513,8 @@ int GetHeight(GameObject* g)
 
 float RectDist(GameObject* g1, GameObject* g2)
 {
-    Rect r1 = (Rect){g1->position.x,g1->position.y,GetWidth(g1),GetHeight(g1)};
-    Rect r2 = (Rect){g2->position.x,g2->position.y,GetWidth(g2),GetHeight(g2)};
+    Rect r1 = (Rect){g1->position.worldX,g1->position.worldY,GetWidth(g1),GetHeight(g1)};
+    Rect r2 = (Rect){g2->position.worldX,g2->position.worldY,GetWidth(g2),GetHeight(g2)};
     Rect unioned = UnionRectR(r1,r2);
     float dist = (unioned.w+unioned.h) - (r1.w+r2.w+r1.h+r2.h);
     return dist;

@@ -537,8 +537,8 @@ void UpdateAttack(Attack* a, float dt)
                 float x2 = a->targx; float y2 = a->targy;
                 if (a->target)
                 {
-                    x2 = a->target->position.x;
-                    y2 = a->target->position.y;
+                    x2 = a->target->position.worldX;
+                    y2 = a->target->position.worldY;
                 }
 
                 float angle;

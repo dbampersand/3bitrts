@@ -219,8 +219,9 @@ void FinishTransition()
         {
             if (IsActive(&objects[i]) && IsOwnedByPlayer(&objects[i]))
             {
-                objects[i].position.x = xPos;
-                objects[i].position.y = yPos;
+               // objects[i].position.worldX = xPos;
+                //objects[i].position.worldY = yPos;
+                UpdateObjPosition(&objects[i],xPos,yPos);
                 SetTargetPosition(&objects[i],xPos,yPos);
 
                 xPos += GetWidth(&objects[i]);

@@ -171,10 +171,10 @@ bool LineIntersectsObj(GameObject* g, float xLine, float yLine, float x2Line, fl
     int w = GetWidth(g);
     int h = GetHeight(g);
 
-    line top = {g->position.x,g->position.y,g->position.x + w,g->position.y}; 
-    line right = {g->position.x + w, g->position.y, g->position.x + w, g->position.y + h}; 
-    line bottom = {g->position.x, g->position.y + h, g->position.x + w, g->position.y + h}; 
-    line left = {g->position.x,g->position.y,g->position.x,g->position.y+h}; 
+    line top = {g->position.worldX,g->position.worldY,g->position.worldX + w,g->position.worldY}; 
+    line right = {g->position.worldX + w, g->position.worldY, g->position.worldX + w, g->position.worldY + h}; 
+    line bottom = {g->position.worldX, g->position.worldY + h, g->position.worldX + w, g->position.worldY + h}; 
+    line left = {g->position.worldX,g->position.worldY,g->position.worldX,g->position.worldY+h}; 
 
     float intersectX;
     float intersectY;

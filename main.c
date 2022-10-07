@@ -149,6 +149,11 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     al_grab_mouse(display);
     al_set_target_bitmap(SCREEN);
 
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        if (IsActive(&objects[i]))
+            UpdateScreenPositions(&objects[i]);
+    }
     DrawMap();
     
     DrawCommandQueue(players[0].selection[players[0].indexSelectedUnit]);
@@ -215,8 +220,8 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
             Sprite* s = ObjIsChannelling(g) ? &sprites[g->channelingSpriteIndex] :  &sprites[g->spriteIndex];
 
-            float x = g->position.x + g->offset.x; 
-            float y = g->position.y + g->offset.y;
+            float x = g->position.worldX + g->offset.x; 
+            float y = g->position.worldY + g->offset.y;
             ToScreenSpace(&x,&y);
 
 

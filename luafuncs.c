@@ -778,8 +778,8 @@ void CreateProjectile(lua_State* l, float x, float y, const char* portrait, int 
         h = al_get_bitmap_height(sprites[currGameObjRunning->spriteIndex].sprite);
     }
     Attack a;
-    a.x = currGameObjRunning->position.x + w/2;
-    a.y = currGameObjRunning->position.y + h/2;
+    a.x = currGameObjRunning->position.worldX + w/2;
+    a.y = currGameObjRunning->position.worldY + h/2;
     a.radius = 1;
     a.easing=0;
     a.targetRadius = a.radius;
@@ -1478,8 +1478,9 @@ int L_SetObjPosition(lua_State* l)
     if (index >= 0 && index < MAX_OBJS)
     {
         GameObject* obj = &objects[index];
-        obj->position.x = lua_tonumber(l,2);
-        obj->position.y = lua_tonumber(l,3);
+        //obj->position.worldX = lua_tonumber(l,2);
+        //obj->position.worldY = lua_tonumber(l,3);
+        UpdateObjPosition(obj,lua_tonumber(l,2),lua_tonumber(l,3));
     }
     return 1;
 }

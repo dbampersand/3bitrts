@@ -29,8 +29,8 @@ void DrawMinimap(MouseState mouseState)
         GameObject* g = &objects[i];
         if (IsActive(g))
         {
-            float gX = x + (g->position.x * scale);
-            float gY = y + (g->position.y * scale);
+            float gX = x + (g->position.worldX * scale);
+            float gY = y + (g->position.worldY * scale);
             float gW = GetWidth(g) * scale;
             float gH = GetHeight(g) * scale;
             gW = gW < 1 ? 1 : gW;
