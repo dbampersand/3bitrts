@@ -45,7 +45,7 @@ void init()
     al_init_primitives_addon();
     al_install_mouse();
     al_install_keyboard();
-    al_install_audio();
+
 
     InitPath();
     

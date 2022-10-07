@@ -12,32 +12,34 @@
 #include "replay.h"
 void InitSound()
 {
-    al_init_acodec_addon();
-    al_reserve_samples(RESERVED_SAMPLES);
-
-    if (!sounds)
+    if (    al_install_audio())
     {
-        sounds = calloc(NUMSOUNDSTOPREALLOC,sizeof(Sound));
-        numSoundsAllocated = NUMSOUNDSTOPREALLOC;
-        numSounds = 1;
+        al_init_acodec_addon();
+        al_reserve_samples(RESERVED_SAMPLES);
 
-        //null sound
-        sounds[0].path = calloc(1,sizeof(char));
-        sounds[0].sample = NULL;
+        if (!sounds)
+        {
+            sounds = calloc(NUMSOUNDSTOPREALLOC,sizeof(Sound));
+            numSoundsAllocated = NUMSOUNDSTOPREALLOC;
+            numSounds = 1;
+
+            //null sound
+            sounds[0].path = calloc(1,sizeof(char));
+            sounds[0].sample = NULL;
+        }
+            
+        ui.uiClickedSound_Index = LoadSound("assets/audio/click.wav");
+        ui.uiClickedUpSound_Index = LoadSound("assets/audio/click_up.wav");
+
+
+        musicMixer1 = al_create_mixer(44100, ALLEGRO_AUDIO_DEPTH_FLOAT32, ALLEGRO_CHANNEL_CONF_2);
+        musicMixer2 = al_create_mixer(44100, ALLEGRO_AUDIO_DEPTH_FLOAT32, ALLEGRO_CHANNEL_CONF_2);
+        musicVoice1 = al_create_voice(44100, ALLEGRO_AUDIO_DEPTH_INT16, ALLEGRO_CHANNEL_CONF_2);
+        musicVoice2 = al_create_voice(44100, ALLEGRO_AUDIO_DEPTH_INT16, ALLEGRO_CHANNEL_CONF_2);
+
+        al_attach_mixer_to_voice(musicMixer1, musicVoice1);
+        al_attach_mixer_to_voice(musicMixer2, musicVoice2);
     }
-        
-    ui.uiClickedSound_Index = LoadSound("assets/audio/click.wav");
-    ui.uiClickedUpSound_Index = LoadSound("assets/audio/click_up.wav");
-
-
-    musicMixer1 = al_create_mixer(44100, ALLEGRO_AUDIO_DEPTH_FLOAT32, ALLEGRO_CHANNEL_CONF_2);
-    musicMixer2 = al_create_mixer(44100, ALLEGRO_AUDIO_DEPTH_FLOAT32, ALLEGRO_CHANNEL_CONF_2);
-    musicVoice1 = al_create_voice(44100, ALLEGRO_AUDIO_DEPTH_INT16, ALLEGRO_CHANNEL_CONF_2);
-    musicVoice2 = al_create_voice(44100, ALLEGRO_AUDIO_DEPTH_INT16, ALLEGRO_CHANNEL_CONF_2);
-
-    al_attach_mixer_to_voice(musicMixer1, musicVoice1);
-    al_attach_mixer_to_voice(musicMixer2, musicVoice2);
-
 
 }
 void ResetSoundsThisFrame()
