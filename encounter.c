@@ -57,7 +57,7 @@ void LoadEncounter(char* dirPath, lua_State* l)
                                 e->luafunc_update = funcIndex;
                             }
 
-                                            }
+                        }
                     }
                 }   
             }
@@ -79,6 +79,9 @@ void LoadEncounter(char* dirPath, lua_State* l)
     encounters[numEncounters] = e;
     numEncounters++;
 
+    if (d)
+        closedir(d);
+
 
 }
 bool FileIsInFolder(char* dirPath, char* fileName)
@@ -91,6 +94,7 @@ bool FileIsInFolder(char* dirPath, char* fileName)
     while ((dir = readdir(d)) != NULL) {
         if (strcasecmp(dir->d_name,fileName)==0)
         {
+            closedir(d);
             return true;
         }
     }

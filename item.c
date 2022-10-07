@@ -200,9 +200,9 @@ int GetNumSubDirs(char* path)
                 numDirs++;
             }
         }
+        closedir(d);
     }
 
-    closedir(d);
     return numDirs;
 }
 //recursively load all items in path
@@ -253,8 +253,9 @@ void LoadItemFolder(char* path)
 
                 }
             }
+            closedir(d);
+
         }
-    closedir(d);
 
 }
 Item CopyItem(Item* i, lua_State* l)

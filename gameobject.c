@@ -1076,6 +1076,8 @@ void LoadFolderPrefabs(const char* dirPath, char* name)
                 }
             }
         }
+    closedir(d);
+
     }
     free(file);
 
@@ -1126,6 +1128,8 @@ void LoadPrefabs(const char* dirPath)
                 free(dirConcat);
             }
         }
+        closedir(d);
+
     }
 }
 bool IsSelected(GameObject* g)
