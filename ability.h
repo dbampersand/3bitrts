@@ -38,7 +38,7 @@ typedef struct Ability
     int luafunc_untoggle;
     int luafunc_ontimeout;
     int luafunc_onchanneled;
-    
+
     float range;
     //float length;
     char* path;
@@ -77,7 +77,7 @@ SoundIndex ability_UI_click_up_sound;
 
 typedef struct lua_State lua_State;
 typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE;
-typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE;
+typedef struct MouseState MouseState;
 
 void SetManaCost(Ability* a, float mana);
 
@@ -92,9 +92,9 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
 bool AbilityIsCastImmediately(Ability* a);
 bool AbilityShouldBeCastOnTarget(Ability* a);
 int GetAbilityIndexClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
-void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyState);
-void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE mouseState,ALLEGRO_MOUSE_STATE mouseStateLastFrame);
-void DrawHeldAbility(ALLEGRO_MOUSE_STATE* mouseState);
+void CastAbilityOnMouse(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState);
+void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState mouseState,MouseState mouseStateLastFrame);
+void DrawHeldAbility(MouseState* mouseState);
 void InitAbilities();
 
 bool ObjectHasManaToCast(GameObject* g, Ability* a); 

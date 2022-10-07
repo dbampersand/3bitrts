@@ -34,7 +34,7 @@ typedef struct LoadScreen
 } LoadScreen;
 
 typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE;
-typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE;
+typedef struct MouseState MouseState;
 
 LoadScreen loadScreen;
 
@@ -43,7 +43,7 @@ LoadScreen loadScreen;
 void InitLoadscreen(char* initialPath);
 float Transition_EaseInOutQuad(float timer);
 void DrawLoadscreen();
-void UpdateLoadscreen(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState);
+void UpdateLoadscreen(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState);
 void SetLoadscreen(char* path, float transitionInTime, float moveTime, float pauseTime, float textInTime, float textHoldTime, char* header, char* description);
 void FinishLoadScreen();
 

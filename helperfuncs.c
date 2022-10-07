@@ -63,7 +63,7 @@ bool MoveTo(float* x, float* y, float toX, float toY, float speed, float delta)
         return false;
 
 }
-ALLEGRO_MOUSE_STATE GetMouseClamped()
+MouseState GetMouseClamped()
 {
     ALLEGRO_MOUSE_STATE mouse;
     al_get_mouse_state(&mouse);
@@ -81,7 +81,7 @@ ALLEGRO_MOUSE_STATE GetMouseClamped()
             al_set_mouse_xy(display, (_SCREEN_SIZE*_RENDERSIZE)-MOUSECURSORSIZE*_RENDERSIZE, beforeY);
         #endif
     }
-    ToWorldSpaceI(&mouse.x,&mouse.y);
+    //ToWorldSpaceI(&mouse.x,&mouse.y);
 
     /*
     if (mouse.y > (_SCREEN_SIZE-MOUSECURSORSIZE))
@@ -92,8 +92,15 @@ ALLEGRO_MOUSE_STATE GetMouseClamped()
         mouse.x = 0;
    if (mouse.y < 0)
         mouse.y = 0;*/
+    MouseState m;
+    m.mouse = mouse;
+    m.screenX = mouse.x;
+    m.screenY = mouse.y;
+    m.worldX = ToWorldSpace_X(mouse.x);
+    m.worldY = ToWorldSpace_Y(mouse.y);
 
-    return mouse;
+
+    return m;
     
 }
 

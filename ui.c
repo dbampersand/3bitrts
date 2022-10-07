@@ -113,12 +113,12 @@ void Chatbox_NextLine()
     }
 
 }
-void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseStateLastFrame)
+void GetAbilityClickedInsideUI(MouseState mouseState, MouseState mouseStateLastFrame)
 {
-    ToScreenSpaceI(&mouseState.x,&mouseState.y);
-    ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
+    //ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    //ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
 
-    if (mouseStateLastFrame.buttons & 1)
+    if (mouseStateLastFrame.mouse.buttons & 1)
     if (currGameObjRunning)
     {
         players[0].amoveSelected = false;
@@ -145,10 +145,10 @@ void GetAbilityClickedInsideUI(ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STA
     }
 
 }
-void DrawMouse(ALLEGRO_MOUSE_STATE* mouseState, GameObject* mousedOver)
+void DrawMouse(MouseState* mouseState, GameObject* mousedOver)
 {
-    ALLEGRO_MOUSE_STATE mouse = *mouseState;
-    ToScreenSpaceI(&mouse.x,&mouse.y);
+    MouseState mouse = *mouseState;
+    //ToScreenSpaceI(&mouse.x,&mouse.y);
 
     if (players[0].abilityHeld)
     {
@@ -176,7 +176,7 @@ void DrawMouse(ALLEGRO_MOUSE_STATE* mouseState, GameObject* mousedOver)
 }
 //float angle;
 //ALLEGRO_BITMAP* wheel;
-void DrawUnitChoiceUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame)
 {
         //angle += 0.1f;
 
@@ -219,9 +219,9 @@ void DrawUnitChoiceUI(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         free(number);
 
 }
-void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState)
+void DrawMouseSelectBox(MouseState mouseState)
 {
-    Point endSelection = (Point){mouseState.x,mouseState.y};
+    Point endSelection = (Point){mouseState.worldX,mouseState.worldY};
     Rect r;
     ALLEGRO_KEYBOARD_STATE keyState;
     al_get_keyboard_state(&keyState);
@@ -243,7 +243,7 @@ void DrawMouseSelectBox(ALLEGRO_MOUSE_STATE mouseState)
    
 }
 
-void DrawReplayUI(Replay* r, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+void DrawReplayUI(Replay* r, MouseState* mouseState, MouseState* mouseStateLastFrame)
 {
     al_draw_filled_rectangle(3,2,252,16,BG);
     al_draw_rectangle(3,2,252,16,BG,1);
@@ -254,11 +254,11 @@ void DrawReplayUI(Replay* r, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STAT
 
     Rect fullPlayBar = (Rect){19,5,REP_UI_PLAY_SCRUBBER_SIZE,13};
     Rect position = (Rect){fullPlayBar.x,fullPlayBar.y,w,fullPlayBar.h};
-    if (PointInRect(mouseState->x,mouseState->y,fullPlayBar))
+    if (PointInRect(mouseState->screenX,mouseState->screenY,fullPlayBar))
     {
-        if (mouseState->buttons & 1)
+        if (mouseState->mouse.buttons & 1)
         {
-            float changedPercent = (mouseState->x-5) / (float)REP_UI_PLAY_SCRUBBER_SIZE;
+            float changedPercent = (mouseState->screenX-5) / (float)REP_UI_PLAY_SCRUBBER_SIZE;
             changedPercent = clamp(changedPercent,0,1);
             r->framePlayPosition = changedPercent * r->numFrames;
             position.w = fullPlayBar.w * changedPercent;
@@ -294,7 +294,7 @@ void DrawReplayUI(Replay* r, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STAT
 
 }
 
-void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseStateLastFrame)
 {
     UpdateUI(keyState,mouseState,keyStateLastFrame,mouseStateLastFrame,dt);
     if (ui.currentPanel == &ui.mainMenuPanel)
@@ -462,7 +462,7 @@ Rect GetAbilityPortraitRect(int index)
 
 
 }
-bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MOUSE_STATE* mouse)
+bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, MouseState* mouse)
 {
     Sprite* s = &sprites[ability->spriteIndex_Portrait];
     int w = al_get_bitmap_width(s->sprite);
@@ -473,7 +473,7 @@ bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MO
         al_draw_rectangle(x,y,x+w,y+h,color,1);
     bool shouldInvert = false;
 
-    if (PointInRect(mouse->x,mouse->y,r))
+    if (PointInRect(mouse->screenX,mouse->screenY,r))
     {
         shouldInvert = true;
     }
@@ -485,7 +485,7 @@ bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, ALLEGRO_MO
     else
         return false;
 }
-bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c, ALLEGRO_MOUSE_STATE* mouseState)
+bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c, MouseState* mouseState)
 {
     Rect r = (Rect){x,y,16,16};
 
@@ -508,15 +508,15 @@ bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c, ALLEGRO_MOUSE_
             }
         }
     }
-    if (PointInRect(mouseState->x,mouseState->y,r))
+    if (PointInRect(mouseState->screenX,mouseState->screenY,r))
     {
         return true;
     }
     return false;
 }
-bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, ALLEGRO_MOUSE_STATE mouseState)
+bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, MouseState mouseState)
 {
-    ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     if (selected->abilities[index].spriteIndex_Portrait <= 0) 
         return false;
     if (heldAbility == &selected->abilities[index])
@@ -586,13 +586,13 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
 
     }
 
-    if (PointInRect(mouseState.x,mouseState.y,r))
+    if (PointInRect(mouseState.screenX,mouseState.screenY,r))
     {
         return true;
     }
     return false;
 }
-void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState)
+void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseState)
 {
     al_draw_filled_rectangle(0, UI_START_Y, _SCREEN_SIZE, _SCREEN_SIZE, BG);
 
@@ -732,7 +732,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
     }
 
 }
-void DrawAllLevelSelects(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame)
 {
     for (int i = 0; i < numEncounters; i++)
     {
@@ -740,7 +740,7 @@ void DrawAllLevelSelects(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* m
         DrawLevelSelect(mouseState,mouseStateLastFrame,i,offset);
     }
 }
-void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, int index, int offsetX)
+void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, int index, int offsetX)
 {
     Encounter* e = encounters[index];
 
@@ -812,9 +812,9 @@ void DrawLevelSelect(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouse
         DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0.5f,0.5f,0,i < e->augment ? FRIENDLY : GROUND,false);
         augmentX += drawRect.w+3;
 
-        if (mouseStateLastFrame->buttons & 1 && !(mouseState->buttons & 1))
+        if (mouseStateLastFrame->mouse.buttons & 1 && !(mouseState->mouse.buttons & 1))
         {
-            if (PointInRect(mouseState->x,mouseState->y,drawRect))
+            if (PointInRect(mouseState->screenX,mouseState->screenY,drawRect))
             {
                 e->augment = i+1;
                 SetEncounterRandAugments(currEncounterRunning);
@@ -969,27 +969,27 @@ void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int
     u.sound_clickUp_Index = ui.uiClickedUpSound_Index;
     AddElement(p,&u);
 }
-void UpdateSlider(Slider* s, int x, int y, int w, int h, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseStateLastFrame)
+void UpdateSlider(Slider* s, int x, int y, int w, int h, MouseState mouseState, MouseState mouseStateLastFrame)
 {
-    ToScreenSpaceI(&mouseState.x,&mouseState.y);
-    ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
+   // ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    //ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
 
     Rect r = (Rect){x,y,w,h};
-    if (mouseState.buttons & 1 && !(mouseStateLastFrame.buttons & 1))
+    if (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1))
     {
-        if (PointInRect(mouseState.x,mouseState.y,r))
+        if (PointInRect(mouseState.screenX,mouseState.screenY,r))
         {
             s->clicked = true;
         }
     }
-    if (!(mouseState.buttons & 1))
+    if (!(mouseState.mouse.buttons & 1))
     {
         s->clicked = false;
     }
 
     if (s->clicked)
     {
-        float v = 1-((x+w) - mouseState.x) / (float)w;
+        float v = 1-((x+w) - mouseState.screenX) / (float)w;
         if (v>1)
             v = 1;
         if (v<0)
@@ -1122,49 +1122,49 @@ Button* GetButtonB(Panel* p, char* name)
     }
     return NULL;
 }
-void DrawSlider(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, bool isActive, ALLEGRO_COLOR bgColor)
+void DrawSlider(UIElement* u, int x, int y, MouseState* mouseState, bool isActive, ALLEGRO_COLOR bgColor)
 {
     Slider* s = (Slider*)u->data;
     al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
     float w = u->w * *s->value;
     al_draw_filled_rectangle(x,y,x+w,y+u->h,FRIENDLY);
 }
-void UpdateCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseStateLastFrame)
+void UpdateCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive, MouseState mouseState, MouseState mouseStateLastFrame)
 {
     if (!isActive)
         return;
         
-    ToScreenSpaceI(&mouseState.x,&mouseState.y);
-    ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
+    //ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    //ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
 
-    if (mouseState.buttons & 1 && !(mouseStateLastFrame.buttons & 1))
+    if (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1))
     {
         Rect r = (Rect){x,y,w,h};
-        if (PointInRect(mouseState.x,mouseState.y,r))
+        if (PointInRect(mouseState.screenX,mouseState.screenY,r))
         {
             c->clicked = true;
         }
     }
-    if (mouseStateLastFrame.buttons & 1 && !(mouseState.buttons & 1))
+    if (mouseStateLastFrame.mouse.buttons & 1 && !(mouseState.mouse.buttons & 1))
     {
         Rect r = (Rect){x,y,w,h};
         if (c->clicked)
         {
-            if (PointInRect(mouseState.x,mouseState.y,r))
+            if (PointInRect(mouseState.screenX,mouseState.screenY,r))
             {
                 *c->activated = !(*c->activated);
             }
         }
     }
-    if (!(mouseState.buttons & 1))
+    if (!(mouseState.mouse.buttons & 1))
     {
         c->clicked = false;
     }
 
 }
-void DrawCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive,ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_COLOR bgColor)
+void DrawCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive,MouseState mouseState, ALLEGRO_COLOR bgColor)
 {
-    ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     Rect checkbox = (Rect){x,y,w,h};
     if (*c->activated && isActive)
     {
@@ -1183,7 +1183,7 @@ void DrawCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive,ALLEGRO
             DrawOutlinedRect_Dithered(&checkbox,FRIENDLY);
         }
     }
-    if (PointInRect(mouseState.x,mouseState.y,checkbox))
+    if (PointInRect(mouseState.screenX,mouseState.screenY,checkbox))
     {
         Color col = *c->activated ? COLOR_BG : COLOR_FRIENDLY;
         al_draw_rectangle(x+2,y+2,x+w-2,y+h-2,GetColor(col,0),1);
@@ -1259,20 +1259,20 @@ void AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int s
     AddElement(panel,&u);
 
 }
-void UpdatePulldownMenu(Pulldown* p, int x, int y, int w, int h, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseStateLastFrame)
+void UpdatePulldownMenu(Pulldown* p, int x, int y, int w, int h, MouseState mouseState, MouseState mouseStateLastFrame)
 {
-    ToScreenSpaceI(&mouseState.x,&mouseState.y);
-    ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
+    //ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    //ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
 
     if (p->clicked)
     {
-        if (mouseState.buttons & 1 && !(mouseStateLastFrame.buttons & 1))
+        if (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1))
         {
             int y2 = y;
             for (int i = 0; i < p->numElements; i++)
             {
                 Rect r = (Rect){x,y2,w,h};
-                if (PointInRect(mouseState.x,mouseState.y,r))
+                if (PointInRect(mouseState.screenX,mouseState.screenY,r))
                 {
                     p->clicked = false;
                     p->selectedIndex = i;
@@ -1284,10 +1284,10 @@ void UpdatePulldownMenu(Pulldown* p, int x, int y, int w, int h, ALLEGRO_MOUSE_S
         }
     } 
 
-    if (mouseState.buttons & 1 && !(mouseStateLastFrame.buttons & 1))
+    if (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1))
     {
         Rect r = (Rect){x,y,w,h};
-        if (PointInRect(mouseState.x,mouseState.y,r))
+        if (PointInRect(mouseState.screenX,mouseState.screenY,r))
         {
             p->clicked = true;
         }
@@ -1297,7 +1297,7 @@ void UpdatePulldownMenu(Pulldown* p, int x, int y, int w, int h, ALLEGRO_MOUSE_S
         }
     }
 }
-void DrawPullDownMenu(Pulldown* p, int x, int y, int w, int h, bool isActive, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_COLOR bgColor)
+void DrawPullDownMenu(Pulldown* p, int x, int y, int w, int h, bool isActive, MouseState* mouseState, ALLEGRO_COLOR bgColor)
 {
     Rect clip;
     int clipX; int clipY;
@@ -1316,7 +1316,7 @@ void DrawPullDownMenu(Pulldown* p, int x, int y, int w, int h, bool isActive, AL
             al_draw_rectangle(x,y2,x+w,y2+h,FRIENDLY,1);
             al_draw_text(ui.font,FRIENDLY,x+w/2,y2+h/2 - al_get_font_line_height(ui.font)/2.0,ALLEGRO_ALIGN_CENTRE,p->elements[i]);
             Rect r2 = (Rect){x,y2,w,h};
-            if (PointInRect(mouseState->x,mouseState->y,r2))
+            if (PointInRect(mouseState->screenX,mouseState->screenY,r2))
             {
                 al_draw_rectangle(x+2,y2+2,x+w-2,y2+h-2,FRIENDLY,1);
             }
@@ -1330,7 +1330,7 @@ void DrawPullDownMenu(Pulldown* p, int x, int y, int w, int h, bool isActive, AL
         al_draw_filled_rectangle(x,y,x+w,y+h,bgColor);
         al_draw_rectangle(x,y,x+w,y+h,FRIENDLY,1);
         al_draw_text(ui.font,FRIENDLY,x+w/2,y+h/2 - al_get_font_line_height(ui.font)/2.0,ALLEGRO_ALIGN_CENTRE,p->elements[p->selectedIndex]);
-        if (PointInRect(mouseState->x,mouseState->y,r) && isActive)
+        if (PointInRect(mouseState->screenX,mouseState->screenY,r) && isActive)
         {
             al_draw_rectangle(x+2,y+2,x+w-2,y+h-2,FRIENDLY,1);
         }
@@ -1348,31 +1348,31 @@ void DrawScrollbar(Panel* p)
     al_draw_filled_rectangle(p->x+p->w-w, yPos, p->x+p->w, yPos+14, FRIENDLY);
 
 }
-void UpdateScrollbar(Panel* p, ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+void UpdateScrollbar(Panel* p, MouseState* mouseState,MouseState* mouseStateLastFrame)
 {
     int w = SCROLLBARW;
     Rect scrollbar = (Rect){p->x+p->w-w,p->y,w,p->h};
-    if (mouseState->z != mouseStateLastFrame->z)
+    if (mouseState->mouse.z != mouseStateLastFrame->mouse.z)
     {
-        float v = mouseState->z - mouseStateLastFrame->z;
+        float v = mouseState->mouse.z - mouseStateLastFrame->mouse.z;
         p->scrollPercent -= v/6.0f;
         p->scrollPercent = clamp(p->scrollPercent,0,1);
     }
 
-    if (mouseState->buttons & 1 && !(mouseStateLastFrame->buttons & 1))
+    if (mouseState->mouse.buttons & 1 && !(mouseStateLastFrame->mouse.buttons & 1))
     {
-        if (PointInRect(mouseState->x,mouseState->y,scrollbar))
+        if (PointInRect(mouseState->screenX,mouseState->screenY,scrollbar))
         {
             p->scrollbarClicked = true;
         }
     }
-    if (!(mouseState->buttons & 1))
+    if (!(mouseState->mouse.buttons & 1))
     {
         p->scrollbarClicked = false;
     }
     if (p->scrollbarClicked)
     {
-        float v = 1-((p->y+p->h) - mouseState->y) / (float)p->h;
+        float v = 1-((p->y+p->h) - mouseState->screenY) / (float)p->h;
         if (v>1)
             v = 1;
         if (v<0)
@@ -1913,7 +1913,7 @@ bool GetButton(Panel* p, char* name)
     }
     return false;
 }
-void UpdateTabButtons(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+void UpdateTabButtons(Panel* p, MouseState* mouseState, MouseState* mouseStateLastFrame)
 {
     int y = p->y; 
     int x = p->x;
@@ -1945,20 +1945,20 @@ void UpdateTabButtons(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_S
         y += h;
     }
 }
-void UpdateKeyInput(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
+void UpdateKeyInput(int rX, int rY, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
 {
-    ToScreenSpaceI(&mouseState.x,&mouseState.y);
-    ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
+    //ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    //ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
 
     KeyInput* t = (KeyInput*)u->data;
     Rect r = (Rect){rX,rY,u->w,u->h};
 
-    if (mouseState.buttons & 1 && !(mouseStateLastFrame.buttons & 1))
+    if (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1))
     {
         if (t->clicked)
         {
             //for unbinding key
-            if (!PointInRect(mouseState.x,mouseState.y,r))
+            if (!PointInRect(mouseState.screenX,mouseState.screenY,r))
             {
                 *t->mappedTo = 0;
                 UpdateBind(u);
@@ -1967,7 +1967,7 @@ void UpdateKeyInput(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE mouseState
             }
         }
 
-        if (PointInRect(mouseState.x,mouseState.y,r))
+        if (PointInRect(mouseState.screenX,mouseState.screenY,r))
         {
             if (!t->clicked)
             {
@@ -2005,17 +2005,17 @@ void UpdateKeyInput(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE mouseState
         }
     }
 }
-void UpdateButton(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseStateLastFrame)
+void UpdateButton(int rX, int rY, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame)
 {
-    ToScreenSpaceI(&mouseState.x,&mouseState.y);
-    ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
+    //ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    //ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
 
     Button* b = (Button*)u->data;
     b->activated = false;
-    if (mouseState.buttons & 1 && !(mouseStateLastFrame.buttons & 1))
+    if (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1))
     {
         Rect r = (Rect){rX,rY,u->w,u->h};
-        if (PointInRect(mouseState.x,mouseState.y,r))
+        if (PointInRect(mouseState.screenX,mouseState.screenY,r))
         {
             if (!b->clicked)
             {
@@ -2024,23 +2024,23 @@ void UpdateButton(int rX, int rY, UIElement* u, ALLEGRO_MOUSE_STATE mouseState, 
             b->clicked = true;
         }
     }
-    if (mouseStateLastFrame.buttons & 1 && !(mouseState.buttons & 1))
+    if (mouseStateLastFrame.mouse.buttons & 1 && !(mouseState.mouse.buttons & 1))
     {
         Rect r = (Rect){rX,rY,u->w,u->h};
         if (b->clicked)
         {
-            if (PointInRect(mouseState.x,mouseState.y,r))
+            if (PointInRect(mouseState.screenX,mouseState.screenY,r))
             {
                 b->activated = true;
             }
         }
     }
-    if (!(mouseState.buttons & 1))
+    if (!(mouseState.mouse.buttons & 1))
     {
         b->clicked = false;
     }
 }
-void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
+void UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
 {
     if (!u->enabled)
         return;
@@ -2073,7 +2073,7 @@ void UpdateElement(Panel* p, UIElement* u, ALLEGRO_MOUSE_STATE* mouseState, ALLE
 
 
 }
-void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
+void UpdatePanel(Panel* p, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
 {
     if (p)
     {
@@ -2085,7 +2085,7 @@ void UpdatePanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE*
     UpdateScrollbar(p,mouseState,mouseStateLastFrame);
 
 }
-void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, float dt)
+void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseStateLastFrame, float dt)
 {
 
     //todo: refactor this to be automatic
@@ -2187,9 +2187,9 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState,
 
 
 }
-void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected)
+void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected)
 {
-    ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     Button* b = (Button*)u->data;
     ALLEGRO_FONT* font = ui.font;
     Rect button = (Rect){x,y,u->w,u->h};
@@ -2231,7 +2231,7 @@ void DrawButton(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE mouseState, bool
         al_draw_text(ui.font,FRIENDLY,textX,textY,align,b->description);
 
     }
-    if (PointInRect(mouseState.x,mouseState.y,button) && isActive && !b->clicked)
+    if (PointInRect(mouseState.screenX,mouseState.screenY,button) && isActive && !b->clicked)
     {
         al_draw_rectangle(x+2,y+2,x+u->w-2,y+u->h-2,FRIENDLY,1);
     }
@@ -2251,10 +2251,10 @@ void UIDrawText(UIElement* u, int x, int y)
 
 
 }
-void DrawKeyInput(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE mouseState, bool isActive, ALLEGRO_COLOR bgColor)
+void DrawKeyInput(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor)
 {
     KeyInput* k = (KeyInput*)u->data;
-    ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     ALLEGRO_FONT* font = ui.font;
     Rect button = (Rect){x,y,u->w,u->h};
 
@@ -2283,13 +2283,13 @@ void DrawKeyInput(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE mouseState, bo
         al_draw_text(ui.tinyFont,FRIENDLY,x+u->w/2,y + u->h / 2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,k->text);
 
     }
-    if (PointInRect(mouseState.x,mouseState.y,button) && isActive && !k->clicked)
+    if (PointInRect(mouseState.screenX,mouseState.screenY,button) && isActive && !k->clicked)
     {
         al_draw_rectangle(x+2,y+2,x+u->w-2,y+u->h-2,FRIENDLY,1);
     }
 
 }
-void DrawUIElement(UIElement* u, int x, int y, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_COLOR bgColor)
+void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, ALLEGRO_COLOR bgColor)
 {
     if (u->elementType == ELEMENT_BUTTON)
     {
@@ -2368,7 +2368,7 @@ void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)
     }
 
 }
-void DrawPanelTabs(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
+void DrawPanelTabs(Panel* p, MouseState* mouseState)
 {
     int y = p->y; 
     int x = p->x;
@@ -2393,7 +2393,7 @@ void DrawPanelTabs(Panel* p, ALLEGRO_MOUSE_STATE* mouseState)
         } 
     }
 }
-void DrawPanel(Panel* p, ALLEGRO_MOUSE_STATE* mouseState, float panelShownPercent)
+void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent)
 {   
     panelShownPercent = easeOutSine(panelShownPercent);
     al_set_clipping_rectangle(p->x-1,p->y-1,p->w+1,p->h*panelShownPercent+2);
@@ -2468,7 +2468,7 @@ void AddPanelTabs(Panel* p, int numTabs, ...)
 
     va_end(argp);
 }
-void DrawMenus(ALLEGRO_MOUSE_STATE* mouseState)
+void DrawMenus(MouseState* mouseState)
 {
     //TODO: change rendering panels to a system that can show multiple at once
     //and use an index to decide order
@@ -2543,18 +2543,18 @@ bool GetButtonIsClicked(UIElement* u)
     return false;
 }
 
-void DrawCursor(ALLEGRO_MOUSE_STATE* mouseState, int index, bool clicked)
+void DrawCursor(MouseState* mouseState, int index, bool clicked)
 {
-    if (mouseState->buttons & 1 || mouseState->buttons & 2)
+    if (mouseState->mouse.buttons & 1 || mouseState->mouse.buttons & 2)
     {
-        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0.5f,0.5f,0,FRIENDLY,true);
-        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0.5f,0.5f,0,BG,false);
+        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,FRIENDLY,true);
+        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,BG,false);
 
     }
     else
     {
-        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0.5f,0.5f,0,BG,true);
-        DrawSprite(&sprites[index],mouseState->x,mouseState->y,0.5f,0.5f,0,FRIENDLY,false);
+        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,BG,true);
+        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,FRIENDLY,false);
     }
 
 
@@ -2651,17 +2651,17 @@ bool IsInsideUI(int x, int y)
         return true;
     return false;
 }
-int GetAbilityClicked(ALLEGRO_MOUSE_STATE* mouseState,ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+int GetAbilityClicked(MouseState* mouseState,MouseState* mouseStateLastFrame)
 {
-    if (PointInRect(mouseState->x,mouseState->y,GetAbilityPortraitRect(0)))
+    if (PointInRect(mouseState->screenX,mouseState->screenY,GetAbilityPortraitRect(0)))
         return 0;
-    if (PointInRect(mouseState->x,mouseState->y,GetAbilityPortraitRect(1)))
+    if (PointInRect(mouseState->screenX,mouseState->screenY,GetAbilityPortraitRect(1)))
         return 1;
-    if (PointInRect(mouseState->x,mouseState->y,GetAbilityPortraitRect(2)))
+    if (PointInRect(mouseState->screenX,mouseState->screenY,GetAbilityPortraitRect(2)))
         return 2;
-    if (PointInRect(mouseState->x,mouseState->y,GetAbilityPortraitRect(3)))
+    if (PointInRect(mouseState->screenX,mouseState->screenY,GetAbilityPortraitRect(3)))
         return 3;
-    if (PointInRect(mouseState->x,mouseState->y,GetAbilityPortraitRect(4)))
+    if (PointInRect(mouseState->screenX,mouseState->screenY,GetAbilityPortraitRect(4)))
         return 4;
 
 
@@ -2693,7 +2693,7 @@ void SetOptions()
         free(newText);
     }
 }
-void DrawEndScreen(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
 {
         char* buffer = calloc(1,sizeof(char));
 

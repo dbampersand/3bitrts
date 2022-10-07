@@ -494,14 +494,14 @@ int L_GetBetween(lua_State* l)
 }
 int L_GetMouseX(lua_State* l)
 {
-    ALLEGRO_MOUSE_STATE mouseState = GetMouseClamped();
-    lua_pushnumber(l,mouseState.x);
+    MouseState mouseState = GetMouseClamped();
+    lua_pushnumber(l,mouseState.screenX);
     return 1;
 }
 int L_GetMouseY(lua_State* l)
 {
-    ALLEGRO_MOUSE_STATE mouseState = GetMouseClamped();
-    lua_pushnumber(l,mouseState.y);
+    MouseState mouseState = GetMouseClamped();
+    lua_pushnumber(l,mouseState.screenY);
     return 1;
 }
 float GetTableField(lua_State* l, int tableIndex, const char* name, bool* isAField)
@@ -824,7 +824,7 @@ int L_CreateCircularProjectiles(lua_State* l)
 
     size_t len =  lua_rawlen(l,11);
 
-    ALLEGRO_MOUSE_STATE mouseState = GetMouseClamped();
+    MouseState mouseState = GetMouseClamped();
     GameObject* targ = NULL;
     if (attackType == ATTACK_PROJECTILE_TARGETED)
     {   
@@ -896,7 +896,7 @@ int L_CreateProjectile(lua_State* l)
     const uint32_t color = lua_tonumber(l,9);
     size_t len =  lua_rawlen(l,10);
 
-    ALLEGRO_MOUSE_STATE mouseState = GetMouseClamped();
+    MouseState mouseState = GetMouseClamped();
     GameObject* targ = NULL;
     if (attackType == ATTACK_PROJECTILE_TARGETED)
     {   

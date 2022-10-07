@@ -29,14 +29,14 @@
 #include "pathfind.h"
 
 
-GameObject* GetMousedOver(ALLEGRO_MOUSE_STATE* mouseState)
+GameObject* GetMousedOver(MouseState* mouseState)
 {
     for (int i = 0; i < numObjects; i++)
     {
         GameObject* g = &objects[i];
         if (g->properties & OBJ_ACTIVE)
         {
-            if (PointInRect(mouseState->x,mouseState->y,GetObjRect(g)))
+            if (PointInRect(mouseState->worldX,mouseState->worldY,GetObjRect(g)))
             {
                 return(g);
             }
@@ -44,7 +44,7 @@ GameObject* GetMousedOver(ALLEGRO_MOUSE_STATE* mouseState)
     }
     return NULL;
 }
-void UpdatePlayerObjectInteractions(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseState)
+void UpdatePlayerObjectInteractions(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseState)
 {
     if (IsBindDownThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_AMove))
     {
@@ -62,7 +62,7 @@ void UpdatePlayerObjectInteractions(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KE
     }
 
 }
-void ProcessAttackMoveMouseCommand(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyState)
+void ProcessAttackMoveMouseCommand(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState)
 {
     if (players[0].amoveSelected)
     {
@@ -76,7 +76,7 @@ void ProcessAttackMoveMouseCommand(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYB
                 //if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
                   //  ClearCommandQueue(g);
 
-                AttackMoveCommand(g,mouseState->x-w/2,mouseState->y-h/2,IsBindDown(keyState,currSettings.keymap.key_Shift));
+                AttackMoveCommand(g,mouseState->worldX-w/2,mouseState->worldY-h/2,IsBindDown(keyState,currSettings.keymap.key_Shift));
                 
             }
 
@@ -478,23 +478,23 @@ void SetCtrlGroup(int index, GameObject** list, int numUnitsSelected)
     }
 }
 
-void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
+void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
 
-    if (!(mouseLastFrame->buttons & 1)  && (mouseState->buttons & 1) && !players[0].abilityHeld)
+    if (!(mouseLastFrame->mouse.buttons & 1)  && (mouseState->mouse.buttons & 1) && !players[0].abilityHeld)
     {
         AddMouseRandomParticles(*mouseState, 3);
         players[0].selecting = true;
-        players[0].selectionStart = (Point){mouseState->x,mouseState->y};
+        players[0].selectionStart = (Point){mouseState->worldX,mouseState->worldY};
     }
     if (players[0].selecting)
     {
     }
-    if (!(mouseState->buttons & 1))
+    if (!(mouseState->mouse.buttons & 1))
     {
         if (players[0].selecting)
         {
-            Point endSelection = (Point){mouseState->x,mouseState->y};
+            Point endSelection = (Point){mouseState->worldX,mouseState->worldY};
             Rect r;
             r.x = _MIN(endSelection.x,players[0].selectionStart.x);
             r.y = _MIN(endSelection.y,players[0].selectionStart.y);
@@ -555,9 +555,9 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
         }
 
     }
-    if (!(mouseState->buttons & 2) && (mouseLastFrame->buttons & 2))
+    if (!(mouseState->mouse.buttons & 2) && (mouseLastFrame->mouse.buttons & 2))
     {
-        if (!IsInsideUI(mouseState->x,mouseState->y))
+        if (!IsInsideUI(mouseState->screenX,mouseState->screenY))
         {
             if (players[0].abilityHeld == NULL)
                     {
@@ -586,7 +586,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                                 if (g == g2) continue;
 
                                 Rect r = GetObjRect(g2);
-                                if (PointInRect(mouseState->x,mouseState->y,r))
+                                if (PointInRect(mouseState->worldX,mouseState->worldY,r))
                                 {
                                     found = true;
                                     if (IsOwnedByPlayer(g2))
@@ -597,12 +597,12 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                                 }
                             }
                             if (!found)
-                                MoveCommand(g,mouseState->x-w/2,mouseState->y-h/2,IsBindDown(keyState,currSettings.keymap.key_Shift));
+                                MoveCommand(g,mouseState->worldX-w/2,mouseState->worldY-h/2,IsBindDown(keyState,currSettings.keymap.key_Shift));
                         
                         }
                         Sprite* s = &sprites[g->spriteIndex];
                         Rect r = (Rect){g->position.x,g->position.y,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)}; 
-                        if (PointInRect(mouseState->x,mouseState->y,r))
+                        if (PointInRect(mouseState->worldX,mouseState->worldY,r))
                         {
                             for (int i = 0; i < players[0].numUnitsSelected; i++)
                             {
@@ -611,7 +611,7 @@ void CheckSelected(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseLa
                                 if (!ObjIsInvincible(g))
                                     AttackCommand(players[0].selection[i],g,IsBindDown(keyState,currSettings.keymap.key_Shift));
                                 else
-                                    MoveCommand(players[0].selection[i],mouseState->x,mouseState->y,IsBindDown(keyState,currSettings.keymap.key_Shift));
+                                    MoveCommand(players[0].selection[i],mouseState->worldX,mouseState->worldY,IsBindDown(keyState,currSettings.keymap.key_Shift));
                             }
                             break;
                         }

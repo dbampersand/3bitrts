@@ -4,6 +4,7 @@
 #include "stdbool.h"
 #include "allegro5/allegro.h"
 #include "colors.h"
+#include "video.h"
 
 #ifndef M_PI
     #define M_PI 3.14159265358979323846
@@ -28,6 +29,6 @@ void UpdateParticles(float dt);
 void DrawParticles();
 void InitParticles();
 void AddParticle(float x, float y, short lifetime, float speed, float angle, Color colour); 
-void AddMouseRandomParticles(ALLEGRO_MOUSE_STATE mouseState, int numParticles);
+void AddMouseRandomParticles(MouseState mouseState, int numParticles);
 void RandParticleAroundEdgeOfCircle(float cx, float cy, float r, short lifetime, float maxspeed, Color col);
 void AddParticleWithRandomProperties(float x, float y, Color color, float lifetimeMin, float lifetimeMax, float speedMin, float speedMax);

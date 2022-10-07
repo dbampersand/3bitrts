@@ -43,8 +43,8 @@ typedef struct Shop
 
 Shop shop;
 
-void DrawShop(float dt, ALLEGRO_MOUSE_STATE mouseState);
+void DrawShop(float dt, MouseState mouseState);
 void LoadShop();
-void UpdateShop(float dt, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseStateLastFrame);
+void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame);
 void SwitchShopkeepAnimation(Animation* to);
 void RefreshShop();

@@ -91,7 +91,7 @@ void init()
     LoadShop();
 }
 
-void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE* mouseStateLastFrame)
+void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseStateLastFrame)
 {
 
     if (gameState == GAMESTATE_IN_SHOP)
@@ -143,7 +143,7 @@ float easeOutQuint(float x) {
 }
 float aefesfsd = 0;
 
-void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
+void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
     al_hide_mouse_cursor(display);
     al_grab_mouse(display);
@@ -162,7 +162,7 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
 
 
     int objSelected = -1;
-    bool abilityCastOnTarget = players[0].abilityHeld && (mouseStateLastFrame->buttons & 1 || mouseState->buttons & 1);
+    bool abilityCastOnTarget = players[0].abilityHeld && (mouseStateLastFrame->mouse.buttons & 1 || mouseState->mouse.buttons & 1);
     if (abilityCastOnTarget)
     {
         if (players[0].abilityHeld->castType & ABILITY_TARGET_ENEMY || players[0].abilityHeld->castType & ABILITY_TARGET_ALL)
@@ -170,14 +170,14 @@ void Render(float dt, ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_MOUSE_STATE* mous
         else
             abilityCastOnTarget = false;
     }
-    if ((mouseStateLastFrame->buttons & 2 || mouseState->buttons & 2) || abilityCastOnTarget)
+    if ((mouseStateLastFrame->mouse.buttons & 2 || mouseState->mouse.buttons & 2) || abilityCastOnTarget)
     {
         for (int i = 0; i < numObjects; i++)
         {
             GameObject* g = &objects[i];
             if (g->properties & OBJ_ACTIVE && (g->properties & OBJ_OWNED_BY || abilityCastOnTarget))
             {
-                if (PointInRect(mouseState->x,mouseState->y,GetObjRect(&objects[i])))
+                if (PointInRect(mouseState->worldX,mouseState->worldY,GetObjRect(&objects[i])))
                 {
                     objSelected = i;
                 }
@@ -412,10 +412,10 @@ int main(int argc, char* args[])
 
    ALLEGRO_KEYBOARD_STATE keyStateLastFrame;
    al_get_keyboard_state(&keyStateLastFrame);
-   ALLEGRO_MOUSE_STATE mouseStateLastFrame;
+    MouseState mouseStateLastFrame;
     mouseStateLastFrame = GetMouseClamped();
 
-    ALLEGRO_MOUSE_STATE mouseState;
+    MouseState mouseState;
     ALLEGRO_KEYBOARD_STATE keyState;
 
 
@@ -446,7 +446,7 @@ int main(int argc, char* args[])
         {
             mouseState = GetMouseClamped();
 
-            if (event.type == ALLEGRO_EVENT_KEY_DOWN || (mouseState.buttons & 1 && !(mouseStateLastFrame.buttons & 1)))
+            if (event.type == ALLEGRO_EVENT_KEY_DOWN || (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1)))
             {
                 if (chatboxes)
                 {

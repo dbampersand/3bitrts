@@ -18,10 +18,10 @@ void UpdateParticles(float dt)
             particle_properties[i] &= ~PARTICLE_ENABLED;
     }
 }
-void AddMouseRandomParticles(ALLEGRO_MOUSE_STATE mouseState, int numParticles)
+void AddMouseRandomParticles(MouseState mouseState, int numParticles)
 {
     for (int i = 0; i < numParticles; i++)
-        AddParticle(mouseState.x,mouseState.y,2,2,RandRange(-M_PI,M_PI),true);
+        AddParticle(mouseState.worldX,mouseState.worldY,2,2,RandRange(-M_PI,M_PI),true);
 }
 void AddParticleWithRandomProperties(float x, float y, Color color, float lifetimeMin, float lifetimeMax, float speedMin, float speedMax)
 {

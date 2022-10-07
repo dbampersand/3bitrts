@@ -24,7 +24,7 @@ void InitAbilities()
     ability_UI_click_up_sound = LoadSound("assets/audio/ability_up.wav");
     
 }
-void DrawHeldAbility(ALLEGRO_MOUSE_STATE* mouseState)
+void DrawHeldAbility(MouseState* mouseState)
 {
     float cx; float cy;
     GameObject* g = players[0].selection[players[0].indexSelectedUnit];
@@ -37,12 +37,12 @@ void DrawHeldAbility(ALLEGRO_MOUSE_STATE* mouseState)
     if (players[0].abilityHeld->targetingHint == HINT_LINE)
     {
         //normalise then project to min(radius,mousepos)
-        float distX = mouseState->x - cx; 
-        float distY = mouseState->y - cy;
+        float distX = mouseState->screenX - cx; 
+        float distY = mouseState->screenY - cy;
         float dist = sqrt(distX*distX+distY*distY);
         
-        float x = mouseState->x - cx;
-        float y = mouseState->y - cy;
+        float x = mouseState->worldX - cx;
+        float y = mouseState->worldY - cy;
         Normalize(&x,&y); 
         x = cx + x*_MIN(radius,dist);
         y = cy + y*_MIN(radius,dist);
@@ -52,19 +52,19 @@ void DrawHeldAbility(ALLEGRO_MOUSE_STATE* mouseState)
     GameObject* heldSelected = players[0].selection[players[0].indexSelectedUnit];
     float cxHeld; float cyHeld; 
     GetCentre(heldSelected,&cxHeld,&cyHeld);
-    al_draw_line(ToScreenSpace_X(mouseState->x+2),ToScreenSpace_Y(mouseState->y+2),ToScreenSpace_X(cxHeld),ToScreenSpace_Y(cyHeld),FRIENDLY,1);
+    al_draw_line(mouseState->screenX+2,(mouseState->screenY+2),ToScreenSpace_X(cxHeld),ToScreenSpace_Y(cyHeld),FRIENDLY,1);
 
 }
-void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, ALLEGRO_MOUSE_STATE mouseState,ALLEGRO_MOUSE_STATE mouseStateLastFrame)
+void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState mouseState,MouseState mouseStateLastFrame)
 {
     if (transitioningTo != gameState)
         return;
     CheckAbilityClicked(keyState,keyStateLastFrame, &mouseState);
-    if (mouseState.buttons & 1) 
+    if (mouseState.mouse.buttons & 1) 
     {
         currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
         currAbilityRunning = players[0].abilityHeld;
-        if (IsInsideUI(mouseState.x,mouseState.y))
+        if (IsInsideUI(mouseState.worldX,mouseState.worldY))
         {
             GetAbilityClickedInsideUI(mouseState,mouseStateLastFrame);
         }
@@ -78,7 +78,7 @@ void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD
         currAbilityRunning = NULL;
     }
 
-    if (!(mouseState.buttons & 2) && (mouseStateLastFrame.buttons & 2))
+    if (!(mouseState.mouse.buttons & 2) && (mouseStateLastFrame.mouse.buttons & 2))
     {
         currAbilityRunning = NULL;
         players[0].abilityHeld = NULL;
@@ -94,7 +94,7 @@ void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD
 
     }
 }
-void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE* keyState)
+void CastAbilityOnMouse(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState)
 {
     if (players[0].abilityHeld)
     {
@@ -103,7 +103,7 @@ void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE*
         {
             if (IsActive(&objects[i]))
             {
-                if (PointInRect(mouseState->x,mouseState->y,GetObjRect(&objects[i])))
+                if (PointInRect(mouseState->worldX,mouseState->worldY,GetObjRect(&objects[i])))
                 {
                     target = &objects[i];
                     break;
@@ -119,13 +119,13 @@ void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE*
         {
             if (!ObjIsInvincible(target))
             {
-                CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->x,mouseState->y,IsBindDown(keyState,currSettings.keymap.key_Shift));
+                CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->worldX,mouseState->worldY,IsBindDown(keyState,currSettings.keymap.key_Shift));
             }
             else
-                MoveCommand(currGameObjRunning,mouseState->x,mouseState->y, IsBindDown(keyState,currSettings.keymap.key_Shift));
+                MoveCommand(currGameObjRunning,mouseState->worldX,mouseState->worldY, IsBindDown(keyState,currSettings.keymap.key_Shift));
         }
         else
-            CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->x,mouseState->y,IsBindDown(keyState,currSettings.keymap.key_Shift));
+            CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->worldX,mouseState->worldY,IsBindDown(keyState,currSettings.keymap.key_Shift));
         //CastAbility(currGameObjRunning,currAbilityRunning,mouseState->x,mouseState->y,mouseState->x-midX,mouseState->y-midY,target);
         players[0].clickedThisFrame = target;
 
@@ -137,7 +137,7 @@ void CastAbilityOnMouse(ALLEGRO_MOUSE_STATE* mouseState, ALLEGRO_KEYBOARD_STATE*
                 if (target)
                     AttackCommand(g,target,IsBindDown(keyState,currSettings.keymap.key_Shift));
                 else
-                    MoveCommand(g,mouseState->x,mouseState->y,IsBindDown(keyState,currSettings.keymap.key_Shift));
+                    MoveCommand(g,mouseState->worldX,mouseState->worldY,IsBindDown(keyState,currSettings.keymap.key_Shift));
             }
 
     }

@@ -426,14 +426,14 @@ ALLEGRO_COLOR GetAugmentColor(Augment* a)
         return GROUND;
     return BG;
 }
-bool DrawAugmentPortrait(Augment* a, int x, int y, ALLEGRO_MOUSE_STATE* mouseState)
+bool DrawAugmentPortrait(Augment* a, int x, int y, MouseState* mouseState)
 {
     int w = 20; int h = 20;
     ALLEGRO_COLOR col = GetAugmentColor(a);
 
 
     Rect r = (Rect){x,y,w,h};
-    bool mousedOver = PointInRect(mouseState->x,mouseState->y,r);
+    bool mousedOver = PointInRect(mouseState->screenX,mouseState->screenY,r);
     DrawSprite(&sprites[a->portrait_sprite_index],x,y,0,0,0,col,mousedOver);
     if (!mousedOver)
         al_draw_rectangle(x,y,x+w,y+h,col,1);

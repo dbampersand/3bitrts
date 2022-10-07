@@ -49,7 +49,7 @@ typedef struct Effect Effect;
 typedef struct Encounter Encounter; 
 typedef struct GameObject GameObject;
 typedef struct ALLEGRO_COLOR ALLEGRO_COLOR;
-typedef struct ALLEGRO_MOUSE_STATE ALLEGRO_MOUSE_STATE;
+typedef struct MouseState MouseState;
 
 Augment AllAugments[AUGMENT_ALL];
 
@@ -87,4 +87,4 @@ float GetAugmentMultiplier(int augmentLevel);
 
 ALLEGRO_COLOR* GetAugmentDescriptionColor(Augment* a);
 void InitAugments();
-bool DrawAugmentPortrait(Augment* a, int x, int y, ALLEGRO_MOUSE_STATE* mouseState);
+bool DrawAugmentPortrait(Augment* a, int x, int y, MouseState* mouseState);

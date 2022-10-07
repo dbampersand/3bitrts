@@ -3,6 +3,7 @@
 #include "allegro5/allegro.h"
 #include "rect.h"
 #include "point.h"
+#include "video.h"
 #define DIST_DELTA 1
 
 #define _MIN(X,Y) ((X) < (Y) ? (X) : (Y))
@@ -15,7 +16,7 @@ typedef struct GameObject GameObject;
 bool IsNear(float f, float f2, float epsilon);
 int GetIndex(int h, int x, int y);
 Point IndexToPoint(int h, int index);
-ALLEGRO_MOUSE_STATE GetMouseClamped();
+MouseState GetMouseClamped();
 char* readFile(const char* filename);
 bool MoveTo(float* x, float* y, float toX, float toY, float speed, float delta);
 void MoveAngle(float* x, float* y, float dx, float dy, float speed, float delta);   

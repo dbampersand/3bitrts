@@ -364,7 +364,7 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
     //angle2 -= angle;
     //angle3 -= angle;
 
-    ALLEGRO_MOUSE_STATE m = GetMouseClamped();
+    MouseState m = GetMouseClamped();
 
     int startX = x2; int startY = y2;
     int endX = x3; int endY = y3;
@@ -387,7 +387,7 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
     float distY = y - y2;
 
     float l = sqrt(distX*distX+distY*distY);
-    if (isInsideSector(m.x,m.y,x,y,x2,y2,x3,y3,l,radius,angle+DegToRad(45)))
+    if (isInsideSector(m.worldX,m.worldY,x,y,x2,y2,x3,y3,l,radius,angle+DegToRad(45)))
         CircleSegment(x,y,l,angle2,angle3,color,length); 
     else
         CircleSegment(x,y,l,angle2,angle3,color,length);

@@ -8,6 +8,12 @@
     #define M_PI 3.14159265358979323846
 #endif
 
+typedef struct MouseState
+{
+    ALLEGRO_MOUSE_STATE mouse;
+    int worldX; int worldY;
+    int screenX; int screenY;
+} MouseState;
 unsigned long long _FRAMES;
 
 

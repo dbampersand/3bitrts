@@ -81,7 +81,7 @@ void RefreshShop()
     shop.items[2].desiredPosition = shop.items[2].position;
 
 }
-void UpdateShop(float dt, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mouseStateLastFrame)
+void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 {
     ProcessAnimations(shop.currAnimation,dt);
 
@@ -126,7 +126,7 @@ void UpdateShop(float dt, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mo
         SetGameStateToChangingMap();
     }
 
-    ToScreenSpaceI(&mouseState.x,&mouseState.y);
+//    ToScreenSpaceI(&mouseState.x,&mouseState.y);
 
 
 
@@ -134,8 +134,8 @@ void UpdateShop(float dt, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mo
 
     if (shop.heldItem)
     {
-        shop.heldItem->position.x = mouseState.x - shop.heldOffset.x;
-        shop.heldItem->position.y = mouseState.y - shop.heldOffset.y;
+        shop.heldItem->position.x = mouseState.screenX - shop.heldOffset.x;
+        shop.heldItem->position.y = mouseState.screenY - shop.heldOffset.y;
     }
     shop.timer += dt;
     
@@ -163,11 +163,11 @@ void UpdateShop(float dt, ALLEGRO_MOUSE_STATE mouseState, ALLEGRO_MOUSE_STATE mo
 
         float cx = si->position.x + w/2.0f;
         float cy = si->position.y + h/2.0f;
-        if (ItemIsPurchasable(si->item)  && mouseState.buttons & 1 && !(mouseStateLastFrame.buttons & 1) && dist(mouseState.x,mouseState.y,cx,cy) <= r)
+        if (ItemIsPurchasable(si->item)  && mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1) && dist(mouseState.screenX,mouseState.screenY,cx,cy) <= r)
         {
             shop.heldItem = &shop.items[i];
-            shop.heldOffset.x = mouseState.x - si->position.x;
-            shop.heldOffset.y = mouseState.y - si->position.y;
+            shop.heldOffset.x = mouseState.screenX - si->position.x;
+            shop.heldOffset.y = mouseState.screenY - si->position.y;
         }
     }
 
@@ -180,7 +180,7 @@ bool ItemIsPurchasable(Item* i)
         return true;
     return false;
 }
-void DrawShopItems(float dt, ALLEGRO_MOUSE_STATE mouseState)
+void DrawShopItems(float dt, MouseState mouseState)
 {
     for (int i = 0; i < NUM_ITEM_POOLS; i++)
     {
@@ -197,7 +197,7 @@ void DrawShopItems(float dt, ALLEGRO_MOUSE_STATE mouseState)
         if (!ItemIsPurchasable(si->item))
             col = GROUND;
 
-        if ((!shop.heldItem || shop.heldItem == si) && ItemIsPurchasable(si->item) && dist(mouseState.x,mouseState.y,cx,cy) <= r)
+        if ((!shop.heldItem || shop.heldItem == si) && ItemIsPurchasable(si->item) && dist(mouseState.screenX,mouseState.screenY,cx,cy) <= r)
         {
             al_draw_filled_circle(cx,cy, r,FRIENDLY);
             DrawSprite(&sprites[si->item->spriteIndex_Icon],si->position.x,si->position.y,0,0,0,BG,false);
@@ -213,7 +213,7 @@ void DrawShopItems(float dt, ALLEGRO_MOUSE_STATE mouseState)
         free(price);
 
 
-        if (dist(mouseState.x,mouseState.y,cx,cy) <= r || shop.heldItem)
+        if (dist(mouseState.screenX,mouseState.screenY,cx,cy) <= r || shop.heldItem)
         {
             ShopItem* draw = si;
             if (shop.heldItem)
@@ -229,7 +229,7 @@ void DrawShopItems(float dt, ALLEGRO_MOUSE_STATE mouseState)
 
     
 }
-void DrawShopObjects(ALLEGRO_MOUSE_STATE mouseState)
+void DrawShopObjects(MouseState mouseState)
 {
     int x = shop.startX * 2 + GetWidthSprite(&sprites[shop.spriteIndex_stall]);
     int y = shop.startY;
@@ -262,7 +262,7 @@ void DrawShopObjects(ALLEGRO_MOUSE_STATE mouseState)
                 al_draw_rectangle(r.x, r.y, r.x + r.w, r.y + r.h,FRIENDLY,1);
                 //al_draw_rectangle(x-1,y-1,x + 1 + slotX-x,y+25,FRIENDLY,1);
             
-            if (!(mouseState.buttons & 1) && PointInRect(mouseState.x,mouseState.y,r))
+            if (!(mouseState.mouse.buttons & 1) && PointInRect(mouseState.screenX,mouseState.screenY,r))
             {
                 BuyItem(shop.heldItem->item);
                 AttachItem(g,shop.heldItem->item);
@@ -275,13 +275,13 @@ void DrawShopObjects(ALLEGRO_MOUSE_STATE mouseState)
 
     }
 
-    if (!(mouseState.buttons & 1))
+    if (!(mouseState.mouse.buttons & 1))
         shop.heldItem = NULL;
 
 }
-void DrawShop(float dt, ALLEGRO_MOUSE_STATE mouseState)
+void DrawShop(float dt, MouseState mouseState)
 {
-    ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     int startX = shop.startX; int startY = shop.startY;
     int shopkeeperOffsetX = 18;
     int shopkeeperOffsetY = 44;

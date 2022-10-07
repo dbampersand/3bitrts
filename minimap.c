@@ -10,7 +10,7 @@
 #include "allegro5/allegro.h"
 #include "gameobject.h"
 
-void DrawMinimap(ALLEGRO_MOUSE_STATE mouseState)
+void DrawMinimap(MouseState mouseState)
 {
     Sprite* s = &sprites[currMap->spriteIndex];
     int w = GetWidthSprite(s);
@@ -54,14 +54,14 @@ void DrawMinimap(ALLEGRO_MOUSE_STATE mouseState)
     al_draw_rectangle(pX,pY,pX+_SCREEN_SIZE*scale,pY+_SCREEN_SIZE*scale,FRIENDLY,1);
 
     Rect r = (Rect){x,y,w,h};
-    if (mouseState.buttons & 1)
+    if (mouseState.mouse.buttons & 1)
     {
-        ToScreenSpaceI(&mouseState.x,&mouseState.y);
-        if (PointInRect(mouseState.x,mouseState.y,r))
+        //ToScreenSpaceI(&mouseState.x,&mouseState.y);
+        if (PointInRect(mouseState.screenX,mouseState.screenY,r))
         {
 
-            float dx = (mouseState.x - x) / scale;
-            float dy = (mouseState.y - y) / scale;
+            float dx = (mouseState.screenX - x) / scale;
+            float dy = (mouseState.screenY - y) / scale;
 
             FocusCameraOnPos(dx, dy);
         }

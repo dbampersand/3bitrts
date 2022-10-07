@@ -102,7 +102,7 @@ void FinishLoadScreen()
     if (gameState == GAMESTATE_LOAD_ENCOUNTER)
         SetGameStateToInGame();
 }
-void UpdateLoadscreen(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_STATE* mouseState)
+void UpdateLoadscreen(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState)
 {
 
     loadScreen.timer += dt;
@@ -136,7 +136,7 @@ void UpdateLoadscreen(float dt, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_MOUSE_
     }
     if (loadScreen.state >= LOADSCREEN_END)
     {
-        if (mouseState->buttons & 1 || mouseState->buttons & 2)
+        if (mouseState->mouse.buttons & 1 || mouseState->mouse.buttons & 2)
         {
             FinishLoadScreen();
         }
