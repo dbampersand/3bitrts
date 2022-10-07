@@ -1076,7 +1076,7 @@ void LoadFolderPrefabs(const char* dirPath, char* name)
                 }
             }
         }
-    closedir(d);
+    closedir(d);    
 
     }
     free(file);

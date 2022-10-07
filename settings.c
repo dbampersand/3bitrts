@@ -613,7 +613,7 @@ bool LoadSettingsFile(char* path)
             SetBinds(str);
 
 
-
+            al_fclose(file);
             free(str);
             return true;
         }
