@@ -1879,18 +1879,24 @@ void DrawObjShadows()
 }
 void DrawMapHighlights()
 {
+    ALLEGRO_BITMAP* screen = al_get_target_bitmap();
     al_lock_bitmap(sprites[currMap->spriteIndex].sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READONLY);
-    al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
-    for (int i = 0; i < MAX_OBJS; i++)
+    al_lock_bitmap(screen,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+
+
+    #pragma omp parallel for
     {
-        GameObject* g = &objects[i];
-        if (IsActive(g) && IsOwnedByPlayer(g))
+        for (int i = 0; i < MAX_OBJS; i++)
         {
-            DrawMapHighlight(g,30);
+            GameObject* g = &objects[i];
+            if (IsActive(g) && IsOwnedByPlayer(g))
+            {
+                DrawMapHighlight(g,30,screen);
+            }
         }
     }
     al_unlock_bitmap(sprites[currMap->spriteIndex].sprite);
-    al_unlock_bitmap(al_get_target_bitmap());
+    al_unlock_bitmap(screen);
 
 
 }
@@ -1999,15 +2005,17 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     }
     
 }
-void DrawMapHighlight(GameObject* g, int lightSize)
+void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
 {
     //Use circle algorithm to get the points to end at
     //Then calculate the angle between gCX and gCY and that point
     //Then go from g to that point
 
+    //ALLEGRO_BITMAP* screen = al_get_target_bitmap();
+    al_set_target_bitmap(screen);
 
-    ALLEGRO_BITMAP* screen = al_get_target_bitmap();
     //Generate LUT for given lightsize if it doesn't exist
+
     if (mapLightFactorLUT[lightSize] == NULL)
     {
         mapLightFactorLUT[lightSize] = malloc(lightSize*sizeof(float));
@@ -2036,6 +2044,7 @@ void DrawMapHighlight(GameObject* g, int lightSize)
     int cx = round(cxf);
     int cy = round(cyf);
 
+
     //ToScreenSpace(&cx,&cy);
     int r = lightSize;
     int x = -r;
@@ -2046,6 +2055,7 @@ void DrawMapHighlight(GameObject* g, int lightSize)
     bool touched[touchedArrSize][touchedArrSize];
     memset(touched,0,touchedArrSize*touchedArrSize*sizeof(bool));
     #define HALFPI M_PI/2.0f
+ 
     while (x <= 0)
     {
         //TODO: if we pivot this around (0,0) we can use a lut for PointsToAngleRad
@@ -2098,14 +2108,14 @@ void DrawMapHighlight(GameObject* g, int lightSize)
                         float x2 = mX;
                         float y2 = mY;
                         ToScreenSpace(&x2,&y2);
-
-                        ALLEGRO_COLOR colGround = al_get_pixel(screen,x2,y2);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
+                        ALLEGRO_COLOR colGround;
+                        colGround = al_get_pixel(screen,x2,y2);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
 
                         ALLEGRO_COLOR c2 = colGround;
                         
                         float f = mapLightFactorLUT[lightSize][steps];
                         
-                        float xpR = (c2.r + c2.r*0.5f*f)*255;
+                        float xpR = (c2.r + c2.r*0.25f*f)*255;
                         float xpG = (c2.g + c2.g*0.2f*f)*255;
                         float xpB = (c2.b + c2.b*0.4f*f)*255;
 

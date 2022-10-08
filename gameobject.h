@@ -202,7 +202,7 @@ typedef struct CollisionEvent
 CollisionEvent collisionEvents[MAX_OBJS];
 
 #define MAX_LIGHT_SIZE 90
-#define LIGHT_FACTOR 0.3f
+#define LIGHT_FACTOR 0.05f
 float* mapLightFactorLUT[MAX_LIGHT_SIZE];
 
 
@@ -304,7 +304,7 @@ bool ObjIsInvincible(GameObject* g);
 void DrawArrow(int cx, int cy, int targetx, int targety, ALLEGRO_COLOR color);
 bool ObjectIsInUI(GameObject* g);
 void DrawObjShadows();
-void DrawMapHighlight(GameObject* g, int lightSize);
+void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen);
 void DrawMapHighlights();
 float GetSummonPercent(GameObject* g);
 void GameObjDebugDraw();
@@ -314,3 +314,4 @@ void UpdateObjPosition_X(GameObject* g, float x);
 void UpdateObjPosition_Y(GameObject* g, float y);
 void UpdateScreenPositions(GameObject* g);
 void GetCentre_Screen(GameObject* g, float* x, float* y);
+

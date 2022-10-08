@@ -105,7 +105,7 @@ void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
 }
 void PreprocessMap(Map* map)
 {
-        if (map->collision)
+    if (map->collision)
         free(map->collision);
     ALLEGRO_BITMAP* before = al_get_target_bitmap();
 

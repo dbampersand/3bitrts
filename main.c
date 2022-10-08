@@ -257,7 +257,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     if (players[0].selecting)
         DrawMouseSelectBox(GetMouseClamped());
-        
     if (currSettings.particlesEnabled)    
         DrawParticles();
 
@@ -406,22 +405,11 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 void DrawMainMenu()
 {
     al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
-
 }
 int main(int argc, char* args[])
 {
     init();
 
-    HashTable* ha  = InitHashTable();
-    SearchHashTable(ha,"test1");
-    SearchHashTable(ha,"test1");
-    SearchHashTable(ha,"test1");
-    SearchHashTable(ha,"test2");
-    SearchHashTable(ha,"test3");
-    SearchHashTable(ha,"test4");
-
-    HashItem* hi = SearchHashTable(ha,"test1");
-    printf("%s, %i\n",hi->str,ha->numElements);
 
     ALLEGRO_TIMER* _FPS_TIMER = al_create_timer(1.0f / (double)_TARGET_FPS);
 
