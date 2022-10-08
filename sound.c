@@ -10,11 +10,9 @@
 #include "encounter.h"
 #include "settings.h"
 #include "replay.h"
-#include "hashtable.h"
-
 void InitSound()
 {
-    if (al_install_audio())
+    if (    al_install_audio())
     {
         al_init_acodec_addon();
         al_reserve_samples(RESERVED_SAMPLES);
@@ -28,9 +26,10 @@ void InitSound()
             //null sound
             sounds[0].path = calloc(1,sizeof(char));
             sounds[0].sample = NULL;
-
         }
             
+        ui.uiClickedSound_Index = LoadSound("assets/audio/click.wav");
+        ui.uiClickedUpSound_Index = LoadSound("assets/audio/click_up.wav");
 
 
         musicMixer1 = al_create_mixer(44100, ALLEGRO_AUDIO_DEPTH_FLOAT32, ALLEGRO_CHANNEL_CONF_2);
@@ -41,12 +40,6 @@ void InitSound()
         al_attach_mixer_to_voice(musicMixer1, musicVoice1);
         al_attach_mixer_to_voice(musicMixer2, musicVoice2);
     }
-    if (!soundHashTable)
-        soundHashTable = InitHashTable();
-
-    ui.uiClickedSound_Index = LoadSound("assets/audio/click.wav");
-    ui.uiClickedUpSound_Index = LoadSound("assets/audio/click_up.wav");
-
 
 }
 void ResetSoundsThisFrame()
@@ -61,17 +54,12 @@ int LoadSound(char* path)
         sounds = calloc(NUMSOUNDSTOPREALLOC,sizeof(Sound));
         numSoundsAllocated = NUMSOUNDSTOPREALLOC;
         numSounds = 0;
-
-        if (!soundHashTable)
-            soundHashTable = InitHashTable();
     }    
-    if (strlen(path) <= 0 || !path)
+    if (strlen(path) <= 0)
         return 0;
 
-    HashItem* hi = SearchHashTable(soundHashTable,path);
-    if (hi->data)
-        return *(int*)hi->data;
-    /*for (int i = 0; i < numSounds; i++)
+
+    for (int i = 0; i < numSounds; i++)
     {
         if (sounds[i].path)
         {
@@ -81,7 +69,7 @@ int LoadSound(char* path)
             }
         }
         
-    }*/
+    }
 
     if (numSounds >= numSoundsAllocated)
     {
@@ -92,8 +80,6 @@ int LoadSound(char* path)
     sounds[numSounds].sample = al_load_sample(path);
     sounds[numSounds].path = calloc(strlen(path)+1,sizeof(char));
     strcpy(sounds[numSounds].path,path);
-    hi->data = calloc(1,sizeof(int));
-    *(int*)hi->data = numSounds;
     numSounds++;
 
     return numSounds-1;

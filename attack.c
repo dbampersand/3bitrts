@@ -21,7 +21,6 @@ int attack_top = 0;
 
 void InitAttacks()
 {
-
     for (int i = 0; i < MAX_ATTACKS; i++)
     {
         freeAttacks[i] = i;
@@ -635,12 +634,12 @@ void DrawAttacks(float dt)
         }
     }   
 }
+bool AttackIsActive(Attack* a)
+{
+    return (a->properties & ATTACK_ACTIVE);
+}
 void UpdateScreenPositionsAttack(Attack* a)
 {
     a->screenX = ToScreenSpace_X(a->x);
     a->screenY = ToScreenSpace_Y(a->y);
-}
-bool AttackIsActive(Attack* a)
-{
-    return (a->properties & ATTACK_ACTIVE);
 }

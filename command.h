@@ -36,7 +36,7 @@ void CastCommand(GameObject* g, GameObject* target, Ability* a, float x, float y
 void StopCommand(GameObject* g, bool shiftHeld);
 void FollowCommand(GameObject* g, GameObject* target, bool shiftHeld);
 void HoldCommand(GameObject* g, bool shiftHeld);
-void AttackMoveCommand(GameObject* g, float x, float y, bool shiftHeldin);
+void AttackMoveCommand(GameObject* g, float x, float y, bool shiftHeld);
 
 void DoCommands(GameObject* g);
 void NextCommand(GameObject* g);

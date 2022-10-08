@@ -77,7 +77,6 @@ void LoadEncounter(char* dirPath, lua_State* l)
     e->augment = 1;
     ClearAugments(e);
     encounters[numEncounters] = e;
-
     numEncounters++;
 
     if (d)

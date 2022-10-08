@@ -8,7 +8,6 @@
 
 typedef struct Sprite Sprite;
 typedef struct lua_State lua_State;
-typedef struct HashTable HashTable;
 
 typedef enum Encounter_Difficulty
 {
@@ -64,7 +63,6 @@ void NextEncounter();
 void PreviousEncounter();
 Encounter* GetEncounterByName(char* name);
 void UpdateEncounter(float dt);
-
 
 Encounter** encounters;
 int numEncounters;

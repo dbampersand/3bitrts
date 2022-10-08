@@ -1,10 +1,7 @@
 #pragma once
 
 #include <allegro5/allegro_audio.h>
-
 typedef int SoundIndex; 
-typedef struct HashTable HashTable;
-
 typedef struct Sound
 {
     ALLEGRO_SAMPLE* sample;
@@ -27,7 +24,7 @@ void PlayEncounterMusic();
 void StopMusic();
 void ResetSoundsThisFrame();
 
-HashTable* soundHashTable;
+
 
 #define RESERVED_SAMPLES 16
 #define NUMSOUNDSTOPREALLOC 32

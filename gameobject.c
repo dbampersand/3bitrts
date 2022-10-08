@@ -1884,17 +1884,15 @@ void DrawMapHighlights()
     al_lock_bitmap(screen,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
 
 
-    #pragma omp parallel for
+    for (int i = 0; i < MAX_OBJS; i++)
     {
-        for (int i = 0; i < MAX_OBJS; i++)
+        GameObject* g = &objects[i];
+        if (IsActive(g) && IsOwnedByPlayer(g))
         {
-            GameObject* g = &objects[i];
-            if (IsActive(g) && IsOwnedByPlayer(g))
-            {
-                DrawMapHighlight(g,30,screen);
-            }
+            DrawMapHighlight(g,30,screen);
         }
     }
+
     al_unlock_bitmap(sprites[currMap->spriteIndex].sprite);
     al_unlock_bitmap(screen);
 
@@ -2012,7 +2010,6 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
     //Then go from g to that point
 
     //ALLEGRO_BITMAP* screen = al_get_target_bitmap();
-    al_set_target_bitmap(screen);
 
     //Generate LUT for given lightsize if it doesn't exist
 

@@ -9,7 +9,6 @@ unsigned int _RENDERSIZE;
 
 typedef struct ALLEGRO_BITMAP ALLEGRO_BITMAP;
 typedef struct GameObject GameObject;
-typedef struct HashTable HashTable;
 typedef struct Sprite
 {
     ALLEGRO_BITMAP* sprite;
@@ -21,8 +20,6 @@ typedef struct Sprite
 int numSprites; 
 int maxSprites; //will dynamically change 
 Sprite* sprites;
-
-HashTable* spritesHashTable;
 
 unsigned int LoadSprite(const char* path, bool needsInverted);
 void DrawSprite(Sprite* sprite, int x, int y, float originX, float originY, float angle, ALLEGRO_COLOR tint, bool invert);

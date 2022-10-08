@@ -73,12 +73,11 @@ int numAbilitiesAllocated;
 SoundIndex ability_UI_click_sound;
 SoundIndex ability_UI_click_up_sound;   
 
-typedef struct HashTable HashTable;
+
+
 typedef struct lua_State lua_State;
 typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE;
 typedef struct MouseState MouseState;
-
-HashTable* abilityPathHashTable;
 
 void SetManaCost(Ability* a, float mana);
 
