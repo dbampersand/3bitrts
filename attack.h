@@ -71,6 +71,7 @@ Attack attacks[MAX_ATTACKS];
 unsigned char freeAttacks[MAX_ATTACKS]; //indices for attacks
 int attack_top;
 
+
 #define AOE_PARTICLES_PER_SECOND 1.0f
 
 Attack* AddAttack(Attack* a);

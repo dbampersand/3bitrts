@@ -33,6 +33,7 @@
 #include "pathfind.h"
 #include "shop.h"
 #include "item.h"
+#include "hashtable.h"
 
 void init()
 {
@@ -410,6 +411,17 @@ void DrawMainMenu()
 int main(int argc, char* args[])
 {
     init();
+
+    HashTable* ha  = InitHashTable();
+    SearchHashTable(ha,"test1");
+    SearchHashTable(ha,"test1");
+    SearchHashTable(ha,"test1");
+    SearchHashTable(ha,"test2");
+    SearchHashTable(ha,"test3");
+    SearchHashTable(ha,"test4");
+
+    HashItem* hi = SearchHashTable(ha,"test1");
+    printf("%s, %i\n",hi->str,ha->numElements);
 
     ALLEGRO_TIMER* _FPS_TIMER = al_create_timer(1.0f / (double)_TARGET_FPS);
 

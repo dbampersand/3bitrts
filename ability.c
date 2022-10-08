@@ -17,12 +17,13 @@
 #include "colors.h"
 #include "sound.h"
 #include "settings.h"
-
+#include "hashtable.h"
 void InitAbilities()
 {
     ability_UI_click_sound = LoadSound("assets/audio/ability_down.wav");
     ability_UI_click_up_sound = LoadSound("assets/audio/ability_up.wav");
     
+    abilityPathHashTable = InitHashTable();
 }
 void DrawHeldAbility(MouseState* mouseState)
 {
@@ -189,18 +190,29 @@ Ability* AddAbility(const char* path)
         numAbilitiesAllocated = 32;
     }
 
+    HashItem* i = SearchHashTable(abilityPathHashTable,path);
+    if (i->data)
+    {
+        int index = *((int*)i->data);
+        Ability* a = &abilities[index];
+    }
+    /*
     for (int i = 0; i < numAbilities; i++)
     {
         if (abilities[i].path)
         {
             const char* c = path;
             const char* c2 = abilities[i].path;
-            if (strcasecmp(path,abilities[i].path) == 0)
-            {
-                return &abilities[i];
-            }
+            HashItem* i = SearchHashTable(abilityPathHashTable,path);
+            Ability* a = (Ability*)data;
+            if (a)
+                return a;
+            //if (strcasecmp(path,abilities[i].path) == 0)
+            //{
+            //    return &abilities[i];
+            //}
         }
-    }
+    }*/
     if (numAbilities + 1 >= numAbilitiesAllocated)
     {
         numAbilitiesAllocated += BUFFER_PREALLOC_AMT;
@@ -211,6 +223,9 @@ Ability* AddAbility(const char* path)
     abilities[numAbilities].hintRadius = 1;
 
     LoadAbility(path,luaState,&abilities[numAbilities]);
+    i->data = calloc(1,sizeof(int));
+    *(int*)(i->data) = numAbilities;
+
     numAbilities++;
 
     return &abilities[numAbilities-1];

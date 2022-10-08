@@ -8,6 +8,7 @@
 
 #include "gameobject.h"
 #include "colors.h"
+#include "hashtable.h"
 
 
 int GetWidthSprite(Sprite* s)
@@ -110,6 +111,9 @@ Sprite* NewSprite(int w, int h)
         sprites[0].sprite = al_create_bitmap(0,0);
         sprites[0].inverseSprite = al_create_bitmap(0,0);
 
+        if (!spritesHashTable)
+            spritesHashTable = InitHashTable();
+
     }
 
     if (numSprites+1 > maxSprites)
@@ -143,8 +147,15 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
         sprites[0].sprite = al_create_bitmap(0,0);
         sprites[0].inverseSprite = al_create_bitmap(0,0);
 
+        if (!spritesHashTable)
+            spritesHashTable = InitHashTable();
+
+
     }
-    for (int i = 0; i < numSprites; i++)
+    HashItem* i = SearchHashTable(spritesHashTable,path);
+    if (i->data)
+        return *(unsigned int*)i->data;
+    /*for (int i = 0; i < numSprites; i++)
     {
         if (sprites)
         {
@@ -154,8 +165,11 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
             }
         }
     }
+    */
 
-     ALLEGRO_BITMAP* sprite = al_load_bitmap(path);
+
+
+    ALLEGRO_BITMAP* sprite = al_load_bitmap(path);
 
     if (numSprites+1 >= maxSprites)
     {
@@ -171,6 +185,8 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
         loadedSprite.path = calloc(strlen(path)+1,sizeof(char));
         strcpy(loadedSprite.path,path);
         sprites[numSprites] = loadedSprite;
+        i->data = calloc(1,sizeof(unsigned int));
+        *(int*)i->data = numSprites;
         numSprites++;
         if (needsInverted)
             GenerateInvertedSprite(&sprites[numSprites-1]);
@@ -229,4 +245,6 @@ void InitSprites()
 {
     numSprites=1;
     maxSprites = 0;
+    if (!spritesHashTable)
+        spritesHashTable = InitHashTable();
 }
