@@ -2028,51 +2028,40 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
             mapLightFactorLUT[lightSize][i] = f;//*255.0f;
         }
     }
-    // float xpB = (i + i*0.4*f)*255;
-    
-    //float fac = (float)(lightSize-steps+1);
-    //float f = 1/(lightSize/(fac*fac));
-    
-
 
     float cxf; float cyf;
     GetCentre(g,&cxf,&cyf);
 
-    int cx = round(cxf);
-    int cy = round(cyf);
+    int cx = (cxf);
+    int cy = (cyf);
 
-
-    //ToScreenSpace(&cx,&cy);
     int r = lightSize;
     int x = -r;
     int y = 0;
     int err = 2-2*r;
 
-    int touchedArrSize = (lightSize+1)*2;
-    bool touched[touchedArrSize][touchedArrSize];
-    memset(touched,0,touchedArrSize*touchedArrSize*sizeof(bool));
-    #define HALFPI M_PI/2.0f
- 
-    while (x <= 0)
+    while (x < 0)
     {
         //TODO: if we pivot this around (0,0) we can use a lut for PointsToAngleRad
-        Point points[4];
+        PointI points[4];
         points[0].x = cx-x;  points[0].y = cy+y;
         points[1].x = cx-y;  points[1].y = cy-x;
         points[2].x = cx+x;  points[2].y = cy-y; 
         points[3].x = cx+y;  points[3].y = cy+x; 
 
-        float angles[4];
-        angles[0] = PointsToAngleRad(cx,cy,points[0].x,points[0].y);
-        angles[1] = angles[0] + HALFPI;
-        angles[2] = PointsToAngleRad(cx,cy,points[2].x,points[2].y);
-        angles[3] = (angles[2] + HALFPI);
+        int angles[4];
+
+        angles[0] = PointsToAngleDeg(cx,cy,points[0].x,points[0].y);
+        angles[1] = angles[0] + 90;
+        angles[2] = PointsToAngleDeg(cx,cy,points[2].x,points[2].y);
+        angles[3] = (angles[2] + 90);
 
         for (int i = 0; i < 4; i++)
         {
-            float angle = angles[i];//PointsToAngleRad(cx,cy,points[i].x,points[i].y);
-            float moveX = cos(angle);
-            float moveY = sin(angle);
+            int angle = (angles[i]);//PointsToAngleRad(cx,cy,points[i].x,points[i].y);
+            float moveX = cosTable[angle];
+            float moveY = sinTable[angle];
+
 
             float mX = (cx);
             float mY = (cy);
@@ -2082,19 +2071,14 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
                 mX += moveX;
                 mY += moveY;
 
-                int touchedCoordX = ((mX-cx)+lightSize);
-                int touchedCoordY = ((mY-cy)+lightSize);
 
-                if (!touched[touchedCoordX][touchedCoordY])
                 {
                     ALLEGRO_COLOR col = al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
 
                     if (col.a <= 0.001f)
                     {
                         float screenSpaceX = mX; float screenSpaceY = mY;
-
                         ToScreenSpace(&screenSpaceX,&screenSpaceY);
-
                         al_draw_pixel(screenSpaceX - moveX,screenSpaceY - moveY,EDGE_HIGHLIGHT);
                         break;
                     }
@@ -2106,24 +2090,22 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
                         float y2 = mY;
                         ToScreenSpace(&x2,&y2);
                         ALLEGRO_COLOR colGround;
-                        colGround = al_get_pixel(screen,x2,y2);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
+                        colGround = al_get_pixel(screen,x2,y2);
 
                         ALLEGRO_COLOR c2 = colGround;
                         
                         float f = mapLightFactorLUT[lightSize][steps];
                         
-                        float xpR = (c2.r + c2.r*0.25f*f)*255;
-                        float xpG = (c2.g + c2.g*0.2f*f)*255;
-                        float xpB = (c2.b + c2.b*0.4f*f)*255;
+                        float xpR = (c2.r + c2.r*0.25f*f);
+                        float xpG = (c2.g + c2.g*0.2f*f);
+                        float xpB = (c2.b + c2.b*0.4f*f);
 
-                        xpR = xpR > 255 ? 255 : xpR;
-                        xpG = xpG > 255 ? 255 : xpG;
-                        xpB = xpB > 255 ? 255 : xpB;
+                        xpR = xpR > 1 ? 1 : xpR;
+                        xpG = xpG > 1 ? 1 : xpG;
+                        xpB = xpB > 1 ? 1 : xpB;
 
-
-                        c2 = al_map_rgb(xpR,xpG ,xpB);
+                        c2 = al_map_rgb_f(xpR,xpG,xpB);
                         al_put_pixel(x2,y2,c2);
-                        touched[touchedCoordX][touchedCoordY] = true;
                     }
                 }
             }
@@ -2132,13 +2114,14 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
       if (r <= y) 
       {
         y++;
-        err += y * 2 + 1;       
+        err += (y << 1) + 1;       
 
       }
       if (r > x || err > y) 
       {
         x++;
-        err += x * 2 + 1;
+        //x*2
+        err += (x << 1) + 1;
       }
 
 

@@ -346,12 +346,16 @@ Point Towards_Angled(Point from, Point target, float maxDist)
     return end;
 }
 
-
 float PointsToAngleRad(float x1, float y1, float x2, float y2)
 {
     float dx = x2 - x1;
     float dy = y2 - y1;
     return atan2(dy, dx); 
+}
+int PointsToAngleDeg(int x1, int y1, int x2, int y2)
+{
+    float f = PointsToAngleRad(x1,y1,x2,y2);
+    return RadToDeg(f);
 }
 //based on https://easings.net/#easeInOutCubic
 float EaseInOutCubic(float f)

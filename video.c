@@ -40,6 +40,17 @@ void InitVideo()
     memset(mapLightFactorLUT,0,sizeof(float*)*MAX_LIGHT_SIZE);
 
 
+    for (int a = -360; a < 360; a++)
+    {
+        float rad = DegToRad(a);
+        __sinTable[a+360] = sin(rad);
+        __cosTable[a+360] = cos(rad);
+    }
+    sinTable = &__sinTable[360];
+    cosTable = &__cosTable[360];
+
+
+
 }
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)
 {
