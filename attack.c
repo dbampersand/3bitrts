@@ -625,7 +625,7 @@ void UpdateAttacks(float dt)
 }
 void DrawAttacks(float dt)
 {
-    al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+    //al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
     for (int i = 0; i < MAX_ATTACKS; i++)
     {
         Attack* a = &attacks[i];
@@ -634,7 +634,7 @@ void DrawAttacks(float dt)
             DrawAttack(a,dt);
         }
     }   
-    al_unlock_bitmap(al_get_target_bitmap());
+    //al_unlock_bitmap(al_get_target_bitmap());
 
 }
 bool AttackIsActive(Attack* a)
