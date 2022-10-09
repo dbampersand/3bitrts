@@ -130,20 +130,17 @@ void CastAbilityOnMouse(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState
         players[0].clickedThisFrame = target;
 
         //Attack/move command with all other objs
-        if (GetPlayerOwnedBy(target) == TYPE_ENEMY)
             for (int i = 0; i < MAXUNITSSELECTED; i++)
             {
                 GameObject* g = players[0].selection[i];
                 if (g != currGameObjRunning)
                 {
-                    if (target)
+                    if (target && GetPlayerOwnedBy(target) == TYPE_ENEMY)
                         AttackCommand(g,target,IsBindDown(keyState,currSettings.keymap.key_Shift));
                     else
-                        MoveCommand(g,mouseState->worldX,mouseState->worldY,IsBindDown(keyState,currSettings.keymap.key_Shift));
+                        AttackMoveCommand(g,mouseState->worldX,mouseState->worldY,IsBindDown(keyState,currSettings.keymap.key_Shift));
                 }
-
             }
-
     }
 
 }
