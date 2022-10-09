@@ -213,7 +213,11 @@ float* cosTable;// = &__cosTable[360];
 
 
 
-float* mapLightFactorLUT[MAX_LIGHT_SIZE];
+float** mapLightFactorLUTR[MAX_LIGHT_SIZE];
+float** mapLightFactorLUTG[MAX_LIGHT_SIZE];
+float** mapLightFactorLUTB[MAX_LIGHT_SIZE];
+
+
 
 
 

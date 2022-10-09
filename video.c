@@ -37,7 +37,6 @@ void InitVideo()
     }
     numStringsToDraw = 0;
 
-    memset(mapLightFactorLUT,0,sizeof(float*)*MAX_LIGHT_SIZE);
 
 
     for (int a = -360; a < 360; a++)

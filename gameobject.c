@@ -345,6 +345,7 @@ void InitObjects()
     prefabs = calloc(1,sizeof(GameObject*));
     numPrefabs = 0;
     numPrefabsAllocated = 1;
+    
 }
 void GetControlGroup(ALLEGRO_KEYBOARD_STATE* keyState)
 {
@@ -1883,6 +1884,7 @@ void DrawMapHighlights()
     al_lock_bitmap(sprites[currMap->spriteIndex].sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READONLY);
     al_lock_bitmap(screen,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
 
+    clock_t begin = clock();
 
     for (int i = 0; i < MAX_OBJS; i++)
     {
@@ -1892,7 +1894,11 @@ void DrawMapHighlights()
             DrawMapHighlight(g,30,screen);
         }
     }
+    
+    clock_t end = clock();
+    double time = (double)(end - begin) / CLOCKS_PER_SEC;
 
+    printf("%f\n",time);
     al_unlock_bitmap(sprites[currMap->spriteIndex].sprite);
     al_unlock_bitmap(screen);
 
@@ -2010,14 +2016,24 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
     //Then go from g to that point
 
     //ALLEGRO_BITMAP* screen = al_get_target_bitmap();
-
+    //al_set_target_bitmap(screen);
     //Generate LUT for given lightsize if it doesn't exist
 
-    if (mapLightFactorLUT[lightSize] == NULL)
+
+    if (!mapLightFactorLUTR[lightSize])
     {
-        mapLightFactorLUT[lightSize] = malloc(lightSize*sizeof(float));
+        mapLightFactorLUTR[lightSize] = malloc(lightSize*sizeof(float*));
+        mapLightFactorLUTG[lightSize] = malloc(lightSize*sizeof(float*));
+        mapLightFactorLUTB[lightSize] = malloc(lightSize*sizeof(float*));
+
+
         for (int i = 0; i < lightSize; i++)
         {
+            mapLightFactorLUTR[lightSize][i] = malloc(256*sizeof(float));
+            mapLightFactorLUTG[lightSize][i] = malloc(256*sizeof(float));
+            mapLightFactorLUTB[lightSize][i] = malloc(256*sizeof(float));
+
+
             int steps = i;
             float fac = (float)(lightSize-steps+1);
             float f = 1/(lightSize/(fac*fac));
@@ -2025,7 +2041,24 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
             //make effect more subtle
             f *= LIGHT_FACTOR;
 
-            mapLightFactorLUT[lightSize][i] = f;//*255.0f;
+            for (int c = 0; c < 256; c++)
+            {
+                float col = c/256.0f;
+
+                float xpR = (col + col*0.25f*f);
+                float xpG = (col + col*0.2f*f);
+                float xpB = (col + col*0.4f*f);
+
+                xpR = xpR > 1 ? 1 : xpR;
+                xpG = xpG > 1 ? 1 : xpG;
+                xpB = xpB > 1 ? 1 : xpB;
+
+
+                mapLightFactorLUTR[lightSize][i][c] = xpR;
+                mapLightFactorLUTG[lightSize][i][c] = xpG;
+                mapLightFactorLUTB[lightSize][i][c] = xpB;
+
+            }
         }
     }
 
@@ -2040,9 +2073,13 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
     int y = 0;
     int err = 2-2*r;
 
+    int touchedArrSize = (lightSize+1)*2;
+    bool touched[touchedArrSize][touchedArrSize];
+    memset(touched,0,touchedArrSize*touchedArrSize*sizeof(bool));
+
+
     while (x < 0)
     {
-        //TODO: if we pivot this around (0,0) we can use a lut for PointsToAngleRad
         PointI points[4];
         points[0].x = cx-x;  points[0].y = cy+y;
         points[1].x = cx-y;  points[1].y = cy-x;
@@ -2050,7 +2087,6 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
         points[3].x = cx+y;  points[3].y = cy+x; 
 
         int angles[4];
-
         angles[0] = PointsToAngleDeg(cx,cy,points[0].x,points[0].y);
         angles[1] = angles[0] + 90;
         angles[2] = PointsToAngleDeg(cx,cy,points[2].x,points[2].y);
@@ -2063,15 +2099,18 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
             float moveY = sinTable[angle];
 
 
-            float mX = (cx);
-            float mY = (cy);
+            float mX = cx;
+            float mY = cy;
 
             for (int steps = 0; steps < lightSize; steps++)
             {
                 mX += moveX;
                 mY += moveY;
 
-
+                int touchedCoordX = ((mX-cx)+lightSize);
+                int touchedCoordY = ((mY-cy)+lightSize);
+                
+                if (!touched[touchedCoordX][touchedCoordY])
                 {
                     ALLEGRO_COLOR col = al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
 
@@ -2093,7 +2132,7 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
                         colGround = al_get_pixel(screen,x2,y2);
 
                         ALLEGRO_COLOR c2 = colGround;
-                        
+                        /*
                         float f = mapLightFactorLUT[lightSize][steps];
                         
                         float xpR = (c2.r + c2.r*0.25f*f);
@@ -2103,9 +2142,16 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
                         xpR = xpR > 1 ? 1 : xpR;
                         xpG = xpG > 1 ? 1 : xpG;
                         xpB = xpB > 1 ? 1 : xpB;
+                        */
+                        float xpR = mapLightFactorLUTR[lightSize][steps][(int)(c2.r*255)];
+                        float xpG = mapLightFactorLUTR[lightSize][steps][(int)(c2.g*255)];
+                        float xpB = mapLightFactorLUTR[lightSize][steps][(int)(c2.b*255)];
+
+                        //mapLightFactorLUTR[lightSize][i][c] = xpR;
 
                         c2 = al_map_rgb_f(xpR,xpG,xpB);
                         al_put_pixel(x2,y2,c2);
+                        touched[touchedCoordX][touchedCoordY] = true;
                     }
                 }
             }

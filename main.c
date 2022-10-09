@@ -468,6 +468,8 @@ int main(int argc, char* args[])
         }
         if (event.type == ALLEGRO_EVENT_TIMER) {
             
+            clock_t begin = clock();
+
             ResetSoundsThisFrame();
 
             int displayW = al_get_display_width(display);
@@ -509,6 +511,11 @@ int main(int argc, char* args[])
             mouseStateLastFrame = mouseState;
             keyStateLastFrame = keyState;
             _FRAMES++;
+            clock_t end = clock();
+            double time = (double)(end - begin) / CLOCKS_PER_SEC;
+
+            printf("Total time: %f\n",time);
+
             fflush(stdout);
         }
     }
