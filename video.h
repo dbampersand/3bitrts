@@ -14,6 +14,7 @@ typedef struct MouseState
     int worldX; int worldY;
     int screenX; int screenY;
 } MouseState;
+
 unsigned long long _FRAMES;
 
 typedef struct PointSpace

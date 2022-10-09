@@ -67,6 +67,7 @@ void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)
 }
 void DrawFilledRect_Dithered(Rect r, ALLEGRO_COLOR color)
 {
+    al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
     int dither = 2;
     for (int x = r.x; x < r.x+r.w; x++)
     {
@@ -78,12 +79,15 @@ void DrawFilledRect_Dithered(Rect r, ALLEGRO_COLOR color)
             }
         }
     }
+    al_unlock_bitmap(al_get_target_bitmap());
+
 
 }
 void DrawOutlinedRect_Dithered(Rect* r, ALLEGRO_COLOR color)
 {
     if (!r) return;
-    
+    al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+       
     for (int y = r->y; y < r->y+r->h; y++)
     {
         if (y%2==0)
@@ -119,6 +123,8 @@ void DrawOutlinedRect_Dithered(Rect* r, ALLEGRO_COLOR color)
     al_draw_pixel(r->x+r->w,r->y+r->h,color);
     al_draw_pixel(r->x+r->w-1,r->y+r->h,color);
     al_draw_pixel(r->x+r->w,r->y+r->h-1,color);
+    al_unlock_bitmap(al_get_target_bitmap());
+
 }
 int GetBarycentricCoord(int x0, int y0, int x1, int y1, int pX, int pY)
 {
@@ -252,6 +258,7 @@ bool isInsideSector(int x, int y, int cx, int cy, float startX, float startY, fl
 }
 void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO_COLOR col, float length)
 {
+    al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
     
     start = Normalise(start,0, M_PI*2);
     end = Normalise(end, 0, M_PI*2);
@@ -291,6 +298,7 @@ void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO
         }
 
     }
+    al_unlock_bitmap(al_get_target_bitmap());
 
 }
 

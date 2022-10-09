@@ -55,6 +55,7 @@ void InitParticles()
 }
 void DrawParticles()
 {
+    al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
     for (int i = 0; i < MAX_PARTICLES; i++)
     {
         if (particle_properties[i] & PARTICLE_ENABLED)
@@ -63,6 +64,7 @@ void DrawParticles()
             al_draw_pixel(ToScreenSpace_X(particle_x[i]),ToScreenSpace_Y(particle_y[i]),col);
         }
     }
+    al_unlock_bitmap(al_get_target_bitmap());
 }
 void RandParticleAroundEdgeOfCircle(float cx, float cy, float r, short lifetime, float maxspeed, Color col)
 {

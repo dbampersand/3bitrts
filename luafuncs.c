@@ -1667,9 +1667,47 @@ int L_SetSprite(lua_State* l)
         currGameObjRunning->channelingSpriteIndex = currGameObjRunning->spriteIndex;
     return 0;
 }
+int L_SetLightColour(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    GameObject* g = &objects[index];
+    
+    g->lightR = lua_tonumber(l,2)/255.0f;
+    g->lightG = lua_tonumber(l,3)/255.0f;
+    g->lightB = lua_tonumber(l,4)/255.0f;
+
+    return 0;
+}
+
+int L_SetLightSize(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    GameObject* g = &objects[index];
+
+    int size = lua_tonumber(l,2);
+    SetLightSize(g,size);
+    return 0;
+}
+int L_SetLightIntensity(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    GameObject* g = &objects[index];
+
+    float intensity = lua_tonumber(l,2);
+    g->lightSize = intensity;
+    return 0;
+}
+
+
 int L_SetMapSprite(lua_State* l)
 {
-    currMap->spriteIndex = LoadSprite(lua_tostring(l,-1),false);
+    currMap->spriteIndex = LoadSprite(lua_tostring(l,-1),true);
     PreprocessMap(currMap);
     return 0;
 }
@@ -3402,5 +3440,11 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_SetObjIsBoss);
     lua_setglobal(luaState, "SetObjIsBoss");
 
-}
+    lua_pushcfunction(luaState, L_SetLightSize);
+    lua_setglobal(luaState, "SetLightSize");
+    lua_pushcfunction(luaState, L_SetLightIntensity);
+    lua_setglobal(luaState, "SetLightIntensity");
+    lua_pushcfunction(luaState, L_SetLightColour);
+    lua_setglobal(luaState, "SetLightColour");
 
+}

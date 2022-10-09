@@ -61,6 +61,7 @@ typedef struct Player Player;
 #define MAX_ABILITIES 8
 #define FLASH_TIMER 0.1
 #define HEALTHBAR_HEIGHT 2
+
 typedef struct GameObject
 {    
     struct GameObject* prefab;
@@ -80,6 +81,13 @@ typedef struct GameObject
     Command queue[MAX_QUEUED_CMD];
 
     int numAbilities;
+
+    int lightSize;
+    float lightR;
+    float lightG;
+    float lightB;
+    float lightIntensity;
+
 
 
     PointSpace position;
@@ -202,7 +210,10 @@ typedef struct CollisionEvent
 CollisionEvent collisionEvents[MAX_OBJS];
 
 #define MAX_LIGHT_SIZE 90
-#define LIGHT_FACTOR 0.03f
+#define LIGHT_FACTOR 0.01f;
+
+ALLEGRO_BITMAP* lights[MAX_LIGHT_SIZE];
+
 
 
 float __sinTable[360*2];
@@ -210,13 +221,6 @@ float __cosTable[360*2];
 
 float* sinTable;// = &__sinTable[360];
 float* cosTable;// = &__cosTable[360];
-
-
-
-float** mapLightFactorLUTR[MAX_LIGHT_SIZE];
-float** mapLightFactorLUTG[MAX_LIGHT_SIZE];
-float** mapLightFactorLUTB[MAX_LIGHT_SIZE];
-
 
 
 
@@ -329,3 +333,5 @@ void UpdateObjPosition_Y(GameObject* g, float y);
 void UpdateScreenPositions(GameObject* g);
 void GetCentre_Screen(GameObject* g, float* x, float* y);
 
+void GenerateCircleHighlight(int lightSize);
+void SetLightSize(GameObject* g, int size);

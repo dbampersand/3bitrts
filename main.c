@@ -160,8 +160,9 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             UpdateScreenPositionsAttack(&attacks[i]);
     }
 
-    DrawMap();
-    
+    DrawMap(false);
+    DrawMapHighlights();
+
     DrawCommandQueue(players[0].selection[players[0].indexSelectedUnit]);
     
     DrawAttacks(dt);
@@ -195,7 +196,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             }
         }
     }
-    DrawMapHighlights();
     DrawObjShadows();
     for (int i = 0; i < numObjects; i++)
     {
@@ -433,7 +433,7 @@ int main(int argc, char* args[])
 
     fflush(stdout);
 
-    printf("%lu\n",sizeof(Attack));
+    //printf("%lu\n",sizeof(Attack));
 
 
     while (gameState != GAMESTATE_EXIT) {

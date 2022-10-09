@@ -274,12 +274,17 @@ void InitMaps()
 {
     numMaps = 0;
 }
-void DrawMap()
+void DrawMap(bool invert)
 {
+    ALLEGRO_COLOR c = GROUND;
+    if (invert)
+    {
+        c = BG;
+    }
     int x = -players[0].cameraPos.x;
     int y = -players[0].cameraPos.y;
 
-    DrawSprite(&sprites[currMap->spriteIndex],x,y,0.5f,0.5f,0,GROUND,false);
+    DrawSprite(&sprites[currMap->spriteIndex],x,y,0.5f,0.5f,0,c,invert);
     DrawSprite(&sprites[currMap->secondLayerSpriteIndex],x,y,0.5f,0.5f,0,GROUND_DARK,false);
 
 }

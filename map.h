@@ -40,7 +40,7 @@ void PreprocessMap(Map* map);
 Map* LoadMap(char* path);
 void SetMap(Map* m);
 void InitMaps();
-void DrawMap();
+void DrawMap(bool invert);
 void UpdateMap(Map* m, float dt);
 void RedrawMapSegmentUnderObj(GameObject* g);
 int GetMapWidth();
