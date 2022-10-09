@@ -58,6 +58,10 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     }
     if (e->effectType == EFFECT_SPEED)
     {
+        if (sign==false)
+        {
+
+        }
         AddSpeed(target,value*sign);
     }
     if (e->effectType == EFFECT_SHIELD)
@@ -141,7 +145,13 @@ void CureEffect(GameObject* g, int numEffects, bool removeAllStacks)
 }
 void CureAll(GameObject* g)
 {
-    CureEffect(g,MAX_EFFECTS,true);
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        if (RemoveEffect(&g->effects[i],g,true))
+            i--;
+
+    }
+    //CureEffect(g,MAX_EFFECTS,true);
 }
 bool EffectIsEnabled(Effect* e)
 {
@@ -166,6 +176,14 @@ bool RemoveEffect(Effect* e, GameObject* from, bool removeAllStacks)
     }
     e->enabled = false;
     e->stacks = 0;
+    if (e->name)
+        free(e->name);
+    if (e->description)
+        free(e->description);
+    e->description = NULL;
+    e->name = NULL;
+    e->enabled = false;
+
     if (from)
     {
         for (int i = e - from->effects; i < MAX_EFFECTS-1; i++)
@@ -174,13 +192,6 @@ bool RemoveEffect(Effect* e, GameObject* from, bool removeAllStacks)
         }
 
     }
-    if (e->name)
-        free(e->name);
-    if (e->description)
-        free(e->description);
-    e->description = NULL;
-    e->name = NULL;
-    e->enabled = false;
     return true;
 
 }
@@ -208,14 +219,22 @@ void ProcessEffects(GameObject* g, float dt)
                 }
                 else
                 {
-                    RemoveEffect(e,g,false);
+                    if (RemoveEffect(e,g,false))
+                    {
+                        i--;
+                        continue;
+                    }
                 }
             }
             if (e->trigger == TRIGGER_CONST)
             {
                 if (e->timer > e->duration)
                 {
-                    RemoveEffect(e,g,false);
+                    if (RemoveEffect(e,g,false))
+                    {
+                        i--;
+                        continue;
+                    }
                 }
             }
         }
