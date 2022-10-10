@@ -125,6 +125,14 @@ void FinishTransition()
                     camPos.y = yPos;
                 }
             }
+
+        for (int i = 0; i < MAX_OBJS; i++)
+        {
+            if (IsActive(&objects[i]) && IsOwnedByPlayer(&objects[i]))
+            {
+                HoldCommand(&objects[i],false);
+            }
+        }
         FocusCameraOnPos(camPos.x,camPos.y);
         memset(&gameStats,0,sizeof(GameState));
 
@@ -197,6 +205,8 @@ void FinishTransition()
     }
     if (transitioningTo == GAMESTATE_CHANGE_MAP)
     {
+        combatStarted = true;
+
         gameState = GAMESTATE_INGAME;
         transitioningTo = GAMESTATE_INGAME;
 
@@ -242,7 +252,13 @@ void FinishTransition()
                 CureAll(&objects[i]);
             }   
         }
-
+        for (int i = 0; i < MAX_OBJS; i++)
+        {
+            if (IsActive(&objects[i]) && IsOwnedByPlayer(&objects[i]))
+            {
+                HoldCommand(&objects[i],false);
+            }
+        }
         free(pathToNextMap);
         pathToNextMap = NULL;
         ClearSelection();

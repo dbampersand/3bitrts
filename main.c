@@ -321,10 +321,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             free(list);
         }
     }
-    if (gameState == GAMESTATE_END)
-    {
-        DrawEndScreen(mouseState,mouseStateLastFrame);
-    }
     if (gameState == GAMESTATE_WATCHING_REPLAY)
     {
         PlayReplay(al_get_target_bitmap());
@@ -363,10 +359,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         }
 
     }
-    if (gameState == GAMESTATE_IN_SHOP)
-    {
-        DrawShop(dt,*mouseState);
-    }
 
     if (gameState == GAMESTATE_CHOOSING_ENCOUNTER)
     {
@@ -382,6 +374,15 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     if (gameState != GAMESTATE_MAIN_MENU)
          DrawUI(keyState, keyStateLastFrame, mouseState);
+    if (gameState == GAMESTATE_IN_SHOP)
+    {
+        DrawShop(dt,*mouseState);
+    }
+    if (gameState == GAMESTATE_END)
+    {
+        DrawEndScreen(mouseState,mouseStateLastFrame);
+    }
+
 
     DrawMenus(mouseState);
     DrawWidgets(gameState, DRAWORDER_AFTERUI);
