@@ -38,7 +38,7 @@ function casted(x,y,obj,headingx,headingy)
     y = RandRange(yMin,yMax);
 
     atk = CreateAOE(x,y,"", 50, 0.1, 12, true, ATTACK_HITS_ENEMIES, COLOR_POISON, DITHER_NONE, false, GetObjRef(), {f1})
-
+    return true;
 end
 
 function onhit(x,y,objhit)

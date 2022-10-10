@@ -4,7 +4,7 @@ local adds = {}
 function setup()
     SetAbilityRange(999)
     SetCooldown(15)
-    AbilitySetPortrait("assets/enemies/minotaur/ability_charge.png");
+    AbilitySetPortrait("assets/enemies/minotaur/ability_summon_adds.png");
     SetDescription("[b]Call\n\nCalls for help, summoning extra enemies.")
     SetAbilityHint(HINT_CIRCLE);
 

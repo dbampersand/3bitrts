@@ -2,7 +2,7 @@ function setup()
     SetAbilityRange(999)
     SetCooldown(15)
     AbilitySetPortrait("assets/enemies/minotaur/ability_charge.png");
-    SetDescription("[b]Charge\n\nRushes the target, dealing damage around")
+    SetDescription("[b]Charge\n\nRushes the target, dealing damage around it.")
     SetAbilityHint(HINT_LINE);
     SetAbilityTargetHint(Bor(ABILITY_POINT,ABILITY_TARGET_FRIENDLY));
 end

@@ -792,8 +792,26 @@ void CreateProjectile(lua_State* l, float x, float y, const char* portrait, int 
     }
     a.targx = x2;
     a.targy = y2;
+
     a.effects = calloc(len,sizeof(Effect));
-    memcpy(a.effects,effects,sizeof(Effect)*len);
+    for (int i = 0; i < len; i++)
+    {
+        Effect e2 = effects[i];
+        if (effects[i].name)
+        {
+            e2.name = calloc(strlen(effects[i].name)+1,sizeof(char));
+            strcpy(e2.name,effects[i].name);
+        }
+        if (effects[i].description)
+        {
+            e2.description = calloc(strlen(effects[i].description)+1,sizeof(char));
+            strcpy(e2.description,effects[i].description);
+        }
+        a.effects[i] = e2;
+        
+    }
+    
+    // memcpy(a.effects,effects,sizeof(Effect)*len);
     a.numEffects = len;
     a.attackType = attackType;
     a.properties = properties;
@@ -857,6 +875,14 @@ int L_CreateCircularProjectiles(lua_State* l)
         float angle = M_PI / (float)numProjectiles*i*2; 
         CreateProjectile(l, x+sin(angle), y+cos(angle), portrait, attackType, speed, duration, shouldCallback, properties, targ,color, effects, len);
 
+    }
+    for (int i = 0; i < len; i++)
+    {
+        Effect* e = &effects[i];
+        if (e->name)
+            free(e->name);
+        if (e->description)
+            free(e->description);
     }
     return 0;
 }
@@ -923,6 +949,15 @@ int L_CreateProjectile(lua_State* l)
         effects[i-1] = e;
     }       
     CreateProjectile(l, x, y, portrait, attackType, speed, duration, shouldCallback, properties, targ, color, effects, len);
+    
+    for (int i = 0; i < len; i++)
+    {
+        Effect* e = &effects[i];
+        if (e->name)
+            free(e->name);
+        if (e->description)
+            free(e->description);
+    }
 
     return 1;
 }

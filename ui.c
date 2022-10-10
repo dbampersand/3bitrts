@@ -834,10 +834,10 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     mousedOver = DrawAbility(&e->abilities[1], 136+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[1] : mousedOver;
     mousedOver = DrawAbility(&e->abilities[2], 175+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[2] : mousedOver;
     mousedOver = DrawAbility(&e->abilities[3], 214+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[3] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[4], 96+offsetX, 134, ENEMY, mouseState) == true ? &e->abilities[4] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[5], 136+offsetX, 134, ENEMY, mouseState) == true ? &e->abilities[5] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[6], 175+offsetX, 134, ENEMY, mouseState) == true ? &e->abilities[6] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[7], 214+offsetX, 134, ENEMY, mouseState) == true ? &e->abilities[7] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[4], 96+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[4] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[5], 136+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[5] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[6], 175+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[6] : mousedOver;
+    mousedOver = DrawAbility(&e->abilities[7], 214+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[7] : mousedOver;
 
 
     char* descriptionToDraw;

@@ -262,8 +262,8 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
     //make a copy of the effect as otherwise we're using the same pointers for name/desc as the Attack
     //which causes a crash when freed
     //not an elegant solution but it works
-    Effect e2 = CopyEffect(e);
-    e = &e2;
+    Effect eNew = CopyEffect(e);
+    e = &eNew;
     
     if (HasAugment(currEncounterRunning,AUGMENT_BAD_EFFECT_TIME))
     {
@@ -346,5 +346,5 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
         }
     }
     //if we get here then we haven't applied it to anything
-    //RemoveEffect(e,target,false);
+    RemoveEffect(e,NULL,false);
 }

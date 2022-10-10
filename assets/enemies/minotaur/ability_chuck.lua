@@ -1,8 +1,8 @@
-function setup()
+    function setup()
     SetAbilityRange(999)
     SetCooldown(12)
     AbilitySetPortrait("assets/enemies/minotaur/ability_chuck.png");
-    SetDescription("[b]Chuck\n\n Throws a club at the target, stunning them.")
+    SetDescription("[b]Chuck\n\nThrows a club at the target, stunning them.")
     SetAbilityHint(HINT_LINE);
 end
 
