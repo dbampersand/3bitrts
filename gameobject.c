@@ -1025,6 +1025,7 @@ void KillObj(GameObject* g, bool trigger)
     if (g->shields)
     {
         free(g->shields);
+        g->numShields = 0;
         g->shields = NULL;
     }
     if (g->onAttackEffectsIndices)
