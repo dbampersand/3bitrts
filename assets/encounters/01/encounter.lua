@@ -11,7 +11,6 @@ function setup()
 
     SetEncounterMapPath("assets/encounters/01/map_1.lua");
     SetEncounterDifficulty(DIFFICULTY_EASY);
-    SetEncounterMusic("assets/audio/first_boss.wav");
     EncounterSetNumUnitsToSelect(3);
 
     SetEncounterLoadScreen("assets/encounters/01/loadscreen.png")

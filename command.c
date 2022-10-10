@@ -180,6 +180,10 @@ void FindEnemiesToAttack(GameObject* g)
 
     }
 }
+bool IsIdle(GameObject* g)
+{
+    return g->queue[0].commandType == COMMAND_NONE;
+}
 void DoCommands(GameObject* g)
 {
     if (!g) return;
@@ -224,12 +228,19 @@ void DoCommands(GameObject* g)
 
     if (c->commandType == COMMAND_ATTACK)
     {
+        float targX = c->target->position.worldX;
+        float targY = c->target->position.worldY;
+        
         g->targObj = c->target;
 
         //if target dies
         if (!IsActive(c->target))
         {
             NextCommand(g);
+            if (IsIdle(g))
+            {
+                AttackMoveCommand(g,targX,targY,false);
+            }
             return;
         }
     }

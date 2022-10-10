@@ -274,8 +274,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     DrawWidgets(gameState, DRAWORDER_BEFOREUI);
 
-    if (gameState != GAMESTATE_MAIN_MENU)
-         DrawUI(keyState, keyStateLastFrame, mouseState);
 
     DrawMenus(mouseState);
     DrawAnimationEffects();
@@ -382,11 +380,14 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
         return;
     }
+    if (gameState != GAMESTATE_MAIN_MENU)
+         DrawUI(keyState, keyStateLastFrame, mouseState);
 
     DrawMenus(mouseState);
     DrawWidgets(gameState, DRAWORDER_AFTERUI);
     DrawMouse(mouseState, mousedOver);
     players[0].clickedThisFrame = NULL;
+
     if (gameState == GAMESTATE_LOAD_SCREEN || gameState == GAMESTATE_LOAD_ENCOUNTER) 
     {
         DrawLoadscreen();

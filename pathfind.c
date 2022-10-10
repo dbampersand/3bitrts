@@ -153,7 +153,7 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w
 
             if (RectIsFree(nx,ny,w,h,caresAboutUnits)) 
             {
-                float distance = dist(nx,ny,target.x,target.y) + dist(nx,ny,current.x,current.y);
+                float distance = dist(nx,ny,target.x,target.y);// + dist(nx,ny,current.x,current.y);
                 if (distance < closest)
                 {
                     closest = distance;
