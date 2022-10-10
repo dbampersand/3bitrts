@@ -609,10 +609,10 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                             {
                                 //if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
                                   //  ClearCommandQueue(players[0].selection[i]);
-                                if (!ObjIsInvincible(g))
-                                    AttackCommand(players[0].selection[i],g,IsBindDown(keyState,currSettings.keymap.key_Shift));
-                                else
-                                    MoveCommand(players[0].selection[i],mouseState->worldX,mouseState->worldY,IsBindDown(keyState,currSettings.keymap.key_Shift));
+                                    if (!ObjIsInvincible(g) && !IsOwnedByPlayer(g))
+                                        AttackCommand(players[0].selection[i],g,IsBindDown(keyState,currSettings.keymap.key_Shift));
+                                    else
+                                        MoveCommand(players[0].selection[i],mouseState->worldX-GetWidth(g)/2,mouseState->worldY-GetHeight(g)/2,IsBindDown(keyState,currSettings.keymap.key_Shift));
                             }
                             break;
                         }
