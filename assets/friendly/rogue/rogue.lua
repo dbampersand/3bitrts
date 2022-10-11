@@ -8,6 +8,7 @@ function setup()
     AddAbility(GetObjRef(),"assets/friendly/rogue/backstab.lua",2)
     AddAbility(GetObjRef(),"assets/friendly/rogue/toxic.lua",3)
     AddAbility(GetObjRef(),"assets/friendly/rogue/summon_cabal.lua",4)
+    --AddAbility(GetObjRef(),"assets/friendly/rogue/dash.lua",4)
 
 
     AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05);

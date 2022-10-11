@@ -2446,6 +2446,8 @@ void Teleport(GameObject* g, float x, float y)
     
     //g->position.worldX = move.x*_GRAIN;
     //g->position.worldY = move.y*_GRAIN;
+    SetMapCollisionRect(g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g),false);
+
 
     UpdateObjPosition(g, move.x*_GRAIN, move.y*_GRAIN);
 

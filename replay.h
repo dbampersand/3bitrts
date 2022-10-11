@@ -4,6 +4,7 @@
 #include "ui.h"
 #include "sound.h"
 #include <stdio.h>
+#include "gameobject.h"
 
 #define REPLAY_PREALLOC 39321600
 //10 seconds worth @ 60fps 
@@ -27,6 +28,31 @@ int soundPlayedThisFramePosition;
 
 FILE* tempFile;
 
+
+//TODO: move replay code to this kind of structure
+/*
+
+typedef struct GameStateFrame
+{
+    int numObjects;
+    GameObject* objects[MAX_OBJS];
+
+} GameStateFrame;
+
+typedef struct GameStateReplay
+{
+    int numSprites;
+    Sprite* sprites;
+
+    GameStateFrame* frames;
+    uint32_t numFrames; 
+    uint32_t framePlayPosition;
+    bool playing;
+
+    uint32_t totalFrames;
+
+} GameStateReplay;
+*/
 
 typedef struct ReplayFrame
 {

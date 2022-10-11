@@ -935,7 +935,7 @@ int L_CreateProjectile(lua_State* l)
                 targ = &objects[i];
                 break;
             }
-        }
+        }   
 
     }
     Effect effects[len];    
