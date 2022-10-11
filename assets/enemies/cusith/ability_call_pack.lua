@@ -1,6 +1,6 @@
 function setup()
     AbilitySetCastType(ABILITY_INSTANT);
-    AbilitySetPortrait("assets/enemies/wyrm_boss/ability_summon_adds.png");
+    AbilitySetPortrait("assets/enemies/cusith/ability_call_pack.png");
     SetDescription("[b]Call Pack\nSummons adds");
     SetCooldown(40)
 

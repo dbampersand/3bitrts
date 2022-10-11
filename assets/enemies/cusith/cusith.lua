@@ -7,7 +7,7 @@ local callPack = 0
 local spin = 0
 local focus = 0
 
-local howlTimer = 30
+local howlTimer = 0
 local howlCD = 30
 
 function setup()

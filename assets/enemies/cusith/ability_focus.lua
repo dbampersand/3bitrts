@@ -9,7 +9,7 @@ local yMax = 220
 function setup()
     SetAbilityRange(20)
     SetCooldown(20);
-    AbilitySetPortrait("assets/enemies/minotaur/ability_quake.png");
+    AbilitySetPortrait("assets/enemies/cusith/ability_focus.png");
     SetDescription("[b]Focus\n\nLowers movement speed in an area.")
     
 end

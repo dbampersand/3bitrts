@@ -8,7 +8,7 @@ function setup()
     --AbilitySetCastType(ABILITY_CONE);
     SetAbilityHint(HINT_CONE,radius);
     SetCooldown(2); 
-    AbilitySetPortrait("assets/enemies/wyrm_boss/ability_firebreath.png");
+    AbilitySetPortrait("assets/enemies/cusith/ability_bite.png");
     SetDescription("[b]Bite\n\nDeals damage in a cone.")
 
 end

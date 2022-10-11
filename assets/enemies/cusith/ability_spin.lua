@@ -8,7 +8,7 @@ local dotTime = 10
 function setup()
     SetAbilityRange(256)
     SetCooldown(60);
-    AbilitySetPortrait("assets/enemies/minotaur/ability_rampage.png");
+    AbilitySetPortrait("assets/enemies/cusith/ability_spin.png");
     SetDescription("[b]Spin\n\nSpins around, whipping targets with its tail, causing a bleed effect.")
 
 end
