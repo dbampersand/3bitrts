@@ -1823,7 +1823,7 @@ float GetTotalDotted(GameObject* g)
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
         Effect* e = &g->effects[i];
-        if (e->trigger == TRIGGER_TIMER)
+        if (EffectIsEnabled(e) && e->trigger == TRIGGER_TIMER)
         {
             if (e->effectType == EFFECT_HURT)
             {
@@ -1879,7 +1879,35 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
         al_draw_filled_rectangle((int)r.x,(int)r.y+1,(int)r.x+(r.w*percentPoisoned),(int)r.y+r.h,POISON);
 
         
+    //Draw indicator for bad effects
+    int x = g->position.screenX;
+    int y = g->position.screenY;
+    int numEffects = 0;
+    
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        Effect* e = &g->effects[i];
+        if (EffectIsEnabled(e) && e->from)
+        {
+            //if (!IsOwnedByPlayer(e->from))
+            {
+                al_draw_pixel(x,y,GetColor(EffectColors[e->effectType],0));
+                numEffects++;
+                if (numEffects == GetWidth(g)-1)
+                {
+                    //too many effects to display
+                    if (y == g->position.screenY + GetHeight(g))
+                    {
+                        break;
+                    }
 
+                    x = g->position.screenX;
+                    y = g->position.screenY + GetHeight(g);
+                }
+                x++;
+            }
+        }        
+    }
 
 }
 
