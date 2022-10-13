@@ -335,3 +335,4 @@ void GetCentre_Screen(GameObject* g, float* x, float* y);
 
 void GenerateCircleHighlight(int lightSize);
 void SetLightSize(GameObject* g, int size);
+float GetTotalDotted(GameObject* g);

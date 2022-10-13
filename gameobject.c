@@ -1817,8 +1817,29 @@ float GetSummonPercent(GameObject* g)
     return summPercent;
 
 }
+float GetTotalDotted(GameObject* g)
+{
+    float totalDamage = 0;
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        Effect* e = &g->effects[i];
+        if (e->trigger == TRIGGER_TIMER)
+        {
+            if (e->effectType == EFFECT_HURT)
+            {
+                float v = e->value * e->numTriggers;
+                totalDamage += v;
+            }
+        }
+    }
+    return totalDamage;
+}
 void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
 {
+    //potential for division by 0 here
+    if (g->maxHP == 0)
+        return;
+
     float summPercent = GetSummonPercent(g);
     Sprite* s = &sprites[g->spriteIndex];
     int padding = HEALTHBAR_HEIGHT * 2;
@@ -1844,7 +1865,22 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
     al_draw_filled_rectangle((int)r.x,(int)r.y,(int)(r.x+numPixels),(int)(r.y+r.h),col);
     al_draw_filled_rectangle((int)r.x,(int)r.y-7,(int)(r.x+numPixelsShield),(int)((r.y-7)+r.h-1),col);
 
-    
+
+
+    //Draw amount of HP which has a DoT effect on it if they're all summed
+    float amtPoisoned = GetTotalDotted(g);
+
+    float percentPoisoned = amtPoisoned/g->maxHP;
+    if (amtPoisoned > g->maxHP)
+        percentPoisoned = 1;
+    if (amtPoisoned > percent)
+        amtPoisoned = percent;
+    if (percentPoisoned > 0)
+        al_draw_filled_rectangle((int)r.x,(int)r.y+1,(int)r.x+(r.w*percentPoisoned),(int)r.y+r.h,POISON);
+
+        
+
+
 }
 
 void DrawArrow(int cx, int cy, int targetx, int targety, ALLEGRO_COLOR color)
