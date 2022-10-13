@@ -83,7 +83,7 @@ void InitColors()
     HEAL = al_map_rgba(119,249,26,255);
     POISON = al_map_rgba(237,66,229,255);
     DAMAGE = al_map_rgba(250,95,95,255);
-    GROUND_DARK = al_map_rgba(43,30,94,255);
+    GROUND_DARK = al_map_rgba(53,40,84,255);
     EDGE_HIGHLIGHT = al_map_rgba(106,106,212,255);
 
 

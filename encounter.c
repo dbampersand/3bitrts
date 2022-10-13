@@ -56,6 +56,12 @@ void LoadEncounter(char* dirPath, lua_State* l)
                                 funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
                                 e->luafunc_update = funcIndex;
                             }
+                            if (CheckFuncExists("updateloadscreen",e->lua_buffer))
+                            {
+                                lua_getglobal(l, "updateloadscreen");
+                                funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+                                e->luafunc_updateloadscreen = funcIndex;
+                            }
 
                         }
                     }

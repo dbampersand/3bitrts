@@ -346,6 +346,7 @@ Point Towards_Angled(Point from, Point target, float maxDist)
     return end;
 }
 
+
 float PointsToAngleRad(float x1, float y1, float x2, float y2)
 {
     float dx = x2 - x1;

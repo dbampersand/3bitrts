@@ -70,7 +70,7 @@ void init()
     InitAbilities();
     InitParticles();
     InitUI();
-    InitLoadscreen("assets/ui/fullstartscreen.png");
+    InitLoadscreen("assets/ui/startscreen/fullstartscreen.png","assets/ui/startscreen/mask.png");
     LoadEncounters("assets/encounters",luaState);
 
     Map* m = LoadMap("assets/ui/map_unitselect.lua");  

@@ -8,11 +8,31 @@
 #include "allegro5/allegro_ttf.h"
 #include "allegro5/allegro.h"
 #include "ui.h"
+#include "encounter.h"
+#include "luafuncs.h"
+#include "helperfuncs.h"
 
-void InitLoadscreen(char* initialPath)
+void InitLoadscreen(char* initialPath, char* mask)
 {
     memset(&loadScreen,0,sizeof(LoadScreen));
-    SetLoadscreen(initialPath,1,3.5,0,2,3,GAME_NAME,"Press any key to continue.");
+    SetLoadscreen(initialPath,mask,1,3.5,0,2,3,GAME_NAME,"Press any key to continue.");
+    const char* clouds[] =  {
+                    "assets/ui/startscreen/clouds/cloud_01.png",
+                    "assets/ui/startscreen/clouds/cloud_02.png",
+                    "assets/ui/startscreen/clouds/cloud_03.png"
+                    };
+    for (int i = 0; i < 8; i++)
+    {
+        LoadScreenSprite* sp = &loadScreen.sprites[i];
+        printf("%lu\n",sizeof(clouds));
+        sp->spriteIndex = LoadSprite(clouds[rand()%(sizeof(clouds)/sizeof(clouds[0]))],false);
+        sp->position.x = -GetWidthSprite(&sprites[sp->spriteIndex]) + rand()%128;
+        sp->position.y = ((rand() % 100));
+        sp->v = RandRange(2,20);
+        sp->angle = 0;
+        sp->draw = rand() % 2;
+        sp->initialized = true;
+    }
 }
 float Transition_EaseOutCirc(float timer) {
     return sqrt(1 - pow(timer - 1, 2));
@@ -37,7 +57,7 @@ float Transition_EaseInOutQuad(float timer)
     }
     return percent;
 }
-void SetLoadscreen(char* path, float transitionInTime, float moveTime, float pauseTime, float textInTime, float textHoldTime, char* header, char* description)
+void SetLoadscreen(char* path, char* mask, float transitionInTime, float moveTime, float pauseTime, float textInTime, float textHoldTime, char* header, char* description)
 {
     if (loadScreen.header)
         free(loadScreen.header);
@@ -46,6 +66,8 @@ void SetLoadscreen(char* path, float transitionInTime, float moveTime, float pau
 
     memset(&loadScreen,0,sizeof(LoadScreen));
     loadScreen.spriteIndex = LoadSprite(path,false);
+    if (mask)
+        loadScreen.maskSpriteIndex = LoadSprite(mask,false);
     loadScreen.state = LOADSCREEN_TRANSITON_IN;
 
     loadScreen.transitionTimers[LOADSCREEN_TRANSITON_IN] = transitionInTime;
@@ -68,10 +90,13 @@ void SetLoadscreen(char* path, float transitionInTime, float moveTime, float pau
         strcpy(loadScreen.description,description);
     }
 }
+
 void DrawLoadscreen()
 {
     al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+    DrawLoadScreenSprites(ORDER_BEFORESPRITE);
 
+    DrawSprite(&sprites[loadScreen.maskSpriteIndex],loadScreen.x,loadScreen.y,0.5f,0.5f,0,BG,false);
     DrawSprite(&sprites[loadScreen.spriteIndex],loadScreen.x,loadScreen.y,0.5f,0.5f,0,FRIENDLY,false);
 
     if (loadScreen.state == LOADSCREEN_TRANSITON_IN)
@@ -81,6 +106,7 @@ void DrawLoadscreen()
         ALLEGRO_COLOR c = al_premul_rgba(r,g,b,255- 255*loadScreen.timer/loadScreen.transitionTimers[loadScreen.state]);//al_map_rgba_f(BG.r/255.0f,BG.g/255.0f,BG.b/255.0f,1-loadScreen.timer/loadScreen.transitionTimers[loadScreen.state]);
         al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,c);
     }
+    DrawLoadScreenSprites(ORDER_AFTERSPRITE);
     if (loadScreen.state >= LOADSCREEN_TEXT_TRANSITION_IN)
     {
         int x = loadScreen.textBoxX-LOADSCREEN_TEXTBOXW/2.0f;
@@ -102,9 +128,45 @@ void FinishLoadScreen()
     if (gameState == GAMESTATE_LOAD_ENCOUNTER)
         SetGameStateToInGame();
 }
+
+void UpdateLoadscreenSprites(float dt)
+{
+    for (int i = 0; i < MAX_LOADSCREEN_SPRITES; i++)
+    {
+        LoadScreenSprite* sp = &loadScreen.sprites[i];
+        if (!sp->initialized)
+            continue;
+
+        float vX =  cos(sp->angle) * sp->v * dt;
+        float vY =  sin(sp->angle) * sp->v * dt;
+        sp->position.x += vX;
+        sp->position.y += vY;
+
+        if (sp->position.x  > _SCREEN_SIZE)
+            sp->position.x = -GetWidthSprite(&sprites[sp->spriteIndex]);     
+        if (sp->position.x  + GetWidthSprite(&sprites[sp->spriteIndex]) < 0)
+            sp->position.x = _SCREEN_SIZE;        
+   
+    }
+}
+void DrawLoadScreenSprites(LoadScreenDrawOrder order)
+{
+    
+    for (int i = 0; i < MAX_LOADSCREEN_SPRITES; i++)
+    {
+        LoadScreenSprite* sp = &loadScreen.sprites[i];
+        
+        if (sp->draw == order)
+        {
+            DrawSprite(&sprites[sp->spriteIndex],sp->position.x+loadScreen.x,sp->position.y+loadScreen.y,0,0,0,GROUND_DARK,false);
+        }
+    }
+}
+
 void UpdateLoadscreen(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState)
 {
 
+    UpdateLoadscreenSprites(dt);
     loadScreen.timer += dt;
 
     if (loadScreen.timer >= loadScreen.transitionTimers[loadScreen.state])
@@ -140,6 +202,21 @@ void UpdateLoadscreen(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mo
         {
             FinishLoadScreen();
         }
+    }
+    if (gameState == GAMESTATE_LOAD_SCREEN)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+
+        }
+    }
+    
+    if (currEncounterRunning)
+    {
+        //TODO: functionality for spawning LoadScreenSprites
+        lua_rawgeti(luaState, LUA_REGISTRYINDEX, currEncounterRunning->luafunc_updateloadscreen);
+        lua_pushnumber(luaState,dt);
+        lua_pcall(luaState,1,0,0);
     }
 
 }

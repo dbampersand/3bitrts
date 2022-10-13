@@ -52,7 +52,7 @@ void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Enco
     //transitionTimer = 0;
     TransitionTo(GAMESTATE_LOAD_ENCOUNTER);
 
-    SetLoadscreen(sprites[currEncounterRunning->loadScreen_spriteIndex].path,1,1,1,1,1,e->name,"Press any key to begin.");
+    SetLoadscreen(sprites[currEncounterRunning->loadScreen_spriteIndex].path,NULL,1,1,1,1,1,e->name,"Press any key to begin.");
 
     if (toSpawn)
             free(toSpawn);
