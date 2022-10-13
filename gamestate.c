@@ -187,6 +187,10 @@ void FinishTransition()
     {
         gameState = GAMESTATE_CHOOSING_UNITS;
         transitioningTo = GAMESTATE_CHOOSING_UNITS;
+        //SetMap(&maps[0]);
+        players[0].cameraPos.x = 0;
+        players[0].cameraPos.y = 0;
+
     }
     if (transitioningTo == GAMESTATE_END)
     {

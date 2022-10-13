@@ -24,7 +24,6 @@ void InitLoadscreen(char* initialPath, char* mask)
     for (int i = 0; i < 8; i++)
     {
         LoadScreenSprite* sp = &loadScreen.sprites[i];
-        printf("%lu\n",sizeof(clouds));
         sp->spriteIndex = LoadSprite(clouds[rand()%(sizeof(clouds)/sizeof(clouds[0]))],false);
         sp->position.x = -GetWidthSprite(&sprites[sp->spriteIndex]) + rand()%128;
         sp->position.y = ((rand() % 100));
