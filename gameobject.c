@@ -1891,7 +1891,7 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
         {
             //if (!IsOwnedByPlayer(e->from))
             {
-                al_draw_pixel(x,y,GetColor(EffectColors[e->effectType],0));
+                al_put_pixel(x,y,GetColor(EffectColors[e->effectType],0));
                 numEffects++;
                 if (numEffects == GetWidth(g)-1)
                 {
@@ -2265,7 +2265,7 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
                 {
                     float screenSpaceX = mX; float screenSpaceY = mY;
                     ToScreenSpace(&screenSpaceX,&screenSpaceY);
-                    al_draw_pixel(screenSpaceX - moveX,screenSpaceY - moveY,EDGE_HIGHLIGHT);
+                    al_put_pixel(screenSpaceX - moveX,screenSpaceY - moveY,EDGE_HIGHLIGHT);
                     break;
                 }
 

@@ -220,6 +220,7 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
     }
     if (dither == DITHER_HALF || dither == DITHER_QUARTER || dither == DITHER_EIGTH)
     {
+        al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
         for (int x = cX-radius; x < cX+radius; x++)
         {
             for (int y = cY-radius; y < cY+radius; y++)
@@ -228,12 +229,13 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
                 {
                     if (y%dither==0 && x%dither == 0)
                     {
-                        al_draw_pixel(x,y,color);
+                        al_put_pixel(x,y,color);
                     }
                 }
             }
 
         }
+        al_unlock_bitmap(al_get_target_bitmap());
     }
     //todo: could make this one more efficient
     if (dither == DITHER_VERTICAL_HALF || dither == DITHER_VERTICAL_QUARTER || dither == DITHER_VERTICAL_EIGTH)
@@ -245,19 +247,25 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
             pattern=4;
         if (dither == DITHER_VERTICAL_EIGTH)
             pattern=8;
+        al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+        
         for (int x = cX-radius; x < cX+radius; x+=pattern)
         {
             for (int y = cY-radius; y < cY+radius; y++)
             {
                 if (PointInCircle(x,y,cX,cY,radius))
                 {
-                    al_draw_pixel(x,y,color);
+                    al_put_pixel(x,y,color);
                 }
             }
         }
+        al_unlock_bitmap(al_get_target_bitmap());
+
     }
     if (dither == DITHER_HORIZONTAL_HALF || dither == DITHER_HORIZONTAL_QUARTER || dither == DITHER_HORIZONTAL_EIGTH)
     {
+        al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+
         int pattern;
         if (dither == DITHER_HORIZONTAL_HALF)
             pattern=2;
@@ -265,16 +273,19 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
             pattern=4;
         if (dither == DITHER_HORIZONTAL_EIGTH)
             pattern=8;
+            
         for (int y = cY-radius; y < cY+radius; y+=pattern)
         {
             for (int x = cX-radius; x < cX+radius; x++)
             {
                 if (PointInCircle(x,y,cX,cY,radius))
                 {   
-                    al_draw_pixel(x,y,color);
+                    al_put_pixel(x,y,color);
                 }
             }
         }
+        al_unlock_bitmap(al_get_target_bitmap());
+
     }
     if (dither == DITHER_STAR_HALF || dither == DITHER_STAR_QUARTER || dither == DITHER_STAR_EIGTH)
     {
@@ -285,20 +296,23 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
             pattern=4;
         if (dither == DITHER_STAR_EIGTH)
             pattern=8;
+        al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+
         for (int x = cX-radius-pattern*2; x < cX+radius; x+=pattern*2)
         {
             for (int y = cY-radius-pattern*2; y < cY+radius; y+=pattern*2)
             {
                 if (PointInCircle(x,y,cX,cY,radius))
-                    al_draw_pixel(x,y,color);
+                    al_put_pixel(x,y,color);
                 if (PointInCircle(x-1,y+1,cX,cY,radius))
-                    al_draw_pixel(x-1,y+1,color);
+                    al_put_pixel(x-1,y+1,color);
                 if (PointInCircle(x+1,y+1,cX,cY,radius))
-                    al_draw_pixel(x+1,y+1,color);
+                    al_put_pixel(x+1,y+1,color);
                 if (PointInCircle(x,y+2,cX,cY,radius))
-                    al_draw_pixel(x,y+2,color);
+                    al_put_pixel(x,y+2,color);
             }
         }
+        al_unlock_bitmap(al_get_target_bitmap());
     }
 }
 void DrawAttack(Attack* a, float dt)
@@ -349,7 +363,7 @@ void DrawAttack(Attack* a, float dt)
             Normalize(&x2,&y2);
             x2 *= a->screenX + a->range;
             y2 *= a->screenY + a->range;
-            //al_draw_pixel(x2,y2,POISON);
+            //al_put_pixel(x2,y2,POISON);
         }
         float angle = RadToDeg(atan2(y2-a->y,x2-a->x));
         DrawCone((a->x),(a->y),angle,a->radius,a->range,FRIENDLY);

@@ -143,7 +143,7 @@ void PreprocessMap(Map* map)
       for (int x = 0; x < w; x++) {
         ALLEGRO_COLOR pixel = al_get_pixel(sprite, x, y);
         if (pixel.a && pixel.r <= bgThreshhold && pixel.g <= bgThreshhold && pixel.b <= bgThreshhold) {
-            al_draw_pixel(x,y,WHITE);
+            al_put_pixel(x,y,WHITE);
         }
         }
     }

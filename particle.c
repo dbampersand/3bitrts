@@ -61,7 +61,7 @@ void DrawParticles()
         if (particle_properties[i] & PARTICLE_ENABLED)
         {
             ALLEGRO_COLOR col = GetColor(particle_colors[i],0);
-            al_draw_pixel(ToScreenSpace_X(particle_x[i]),ToScreenSpace_Y(particle_y[i]),col);
+            al_put_pixel(ToScreenSpace_X(particle_x[i]),ToScreenSpace_Y(particle_y[i]),col);
         }
     }
     al_unlock_bitmap(al_get_target_bitmap());

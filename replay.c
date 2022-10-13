@@ -65,7 +65,7 @@ void LoadFrame(ALLEGRO_BITMAP* screen, ReplayFrame* frame)
 
         while (size > 0)
         {
-            al_draw_pixel(x,y,GetColor(c,0));
+            al_put_pixel(x,y,GetColor(c,0));
             x++;
             size--;
             if (x >= _SCREEN_SIZE)
