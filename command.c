@@ -228,6 +228,8 @@ void DoCommands(GameObject* g)
 
     if (c->commandType == COMMAND_ATTACK)
     {
+        if (!c->target)
+            NextCommand(g);
         float targX = c->target->position.worldX;
         float targY = c->target->position.worldY;
         
