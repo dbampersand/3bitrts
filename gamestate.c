@@ -569,7 +569,7 @@ float easeInOutBack(float x)
 #define LATTICE_DISTANCE 20
 void DrawTransition(float dt)
 {
-    float h = (_SCREEN_SIZE+1) * (easeInOutBack(transitionTimer)) - 1;
+    float h = (_SCREEN_SIZE+10) * (easeInOutBack(transitionTimer)) - 1;
     al_draw_filled_rectangle(0,0,_SCREEN_SIZE,h,BG);
     al_draw_line(0,h,_SCREEN_SIZE,h,FRIENDLY,1);
     
