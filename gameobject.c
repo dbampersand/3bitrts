@@ -1972,7 +1972,6 @@ void DrawMapHighlights()
     clock_t end = clock();
     double time = (double)(end - begin) / CLOCKS_PER_SEC;
 
-    //printf("%f\n",time);
     al_unlock_bitmap(sprites[currMap->spriteIndex].sprite);
     al_unlock_bitmap(screen);
 
@@ -2007,7 +2006,7 @@ void DrawMapHighlights()
 
     DrawMap(true);
 
-    al_set_target_bitmap(screen);
+   // al_set_target_bitmap(screen);
 
 }
 void DrawSummonEffect(GameObject* g)

@@ -83,6 +83,7 @@ void RecordReplay(ALLEGRO_BITMAP* screen)
     //create new frame
     ReplayFrame rf = SaveFrame(screen);
     replay.numFrames++;
+
     //if (replay.frames)
       //  replay.frames = realloc(replay.frames,replay.numFrames*sizeof(ReplayFrame));
     //else
@@ -198,6 +199,8 @@ ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
         SerializeSection(&replay,false);
    }
     ReplayFrame rf = {0};
+    return rf;
+
     rf.compressedData =  &replayBuffer[bufferPosition];//malloc(_SCREEN_SIZE * _SCREEN_SIZE*(sizeof(char)+sizeof(uint16_t)));
     int toGetTo = _SCREEN_SIZE * _SCREEN_SIZE;
     int count = 0;

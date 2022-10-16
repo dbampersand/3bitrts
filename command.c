@@ -199,6 +199,7 @@ void DoCommands(GameObject* g)
     if (c->commandType == COMMAND_NONE)
     {
         FindEnemiesToAttack(g);
+        return;
     }
     if (c->commandType == COMMAND_MOVE)
     {
@@ -230,7 +231,10 @@ void DoCommands(GameObject* g)
     if (c->commandType == COMMAND_ATTACK)
     {
         if (!c->target)
+        {
             NextCommand(g);
+            return;
+        }
         float targX = c->target->position.worldX;
         float targY = c->target->position.worldY;
         

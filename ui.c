@@ -435,27 +435,27 @@ Rect GetAbilityPortraitRect(int index)
     if (index == 0)
     {
         r.x = 33;
-        r.y = 221;
+        r.y = UI_ABILITY_START_Y;
     }
     if (index == 1)
     {
         r.x = 65;
-        r.y = 221;
+        r.y = UI_ABILITY_START_Y;
     }
     if (index == 2)
     {
         r.x = 97;
-        r.y = 221;
+        r.y = UI_ABILITY_START_Y;
     }
     if (index == 3)
     {
         r.x = 129;
-        r.y = 221;
+        r.y = UI_ABILITY_START_Y;
     }
     if (index == 4)
     {
         r.x = 161;
-        r.y = 221;
+        r.y = UI_ABILITY_START_Y;
     }
 
     return r;
@@ -684,32 +684,32 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         if (selected->numAbilities <= 4)
         {
 
-            mousedOver = DrawEffectPortrait(162,221,&selected->effects[0],FRIENDLY,mouseState) == true ? &selected->effects[0] : mousedOver;
-            mousedOver = DrawEffectPortrait(178,221,&selected->effects[1],FRIENDLY,mouseState)== true ? &selected->effects[1] : mousedOver;
-            mousedOver = DrawEffectPortrait(194,221,&selected->effects[2],FRIENDLY,mouseState)== true ? &selected->effects[2] : mousedOver;
-            mousedOver = DrawEffectPortrait(209,221,&selected->effects[3],FRIENDLY,mouseState)== true ? &selected->effects[3] : mousedOver;
-            mousedOver = DrawEffectPortrait(225,221,&selected->effects[4],FRIENDLY,mouseState)== true ? &selected->effects[4] : mousedOver;
-            mousedOver = DrawEffectPortrait(241,221,&selected->effects[5],FRIENDLY,mouseState)== true ? &selected->effects[5] : mousedOver;
+            mousedOver = DrawEffectPortrait(162,UI_ABILITY_START_Y,&selected->effects[0],FRIENDLY,mouseState) == true ? &selected->effects[0] : mousedOver;
+            mousedOver = DrawEffectPortrait(178,UI_ABILITY_START_Y,&selected->effects[1],FRIENDLY,mouseState)== true ? &selected->effects[1] : mousedOver;
+            mousedOver = DrawEffectPortrait(194,UI_ABILITY_START_Y,&selected->effects[2],FRIENDLY,mouseState)== true ? &selected->effects[2] : mousedOver;
+            mousedOver = DrawEffectPortrait(209,UI_ABILITY_START_Y,&selected->effects[3],FRIENDLY,mouseState)== true ? &selected->effects[3] : mousedOver;
+            mousedOver = DrawEffectPortrait(225,UI_ABILITY_START_Y,&selected->effects[4],FRIENDLY,mouseState)== true ? &selected->effects[4] : mousedOver;
+            mousedOver = DrawEffectPortrait(241,UI_ABILITY_START_Y,&selected->effects[5],FRIENDLY,mouseState)== true ? &selected->effects[5] : mousedOver;
 
-            mousedOver = DrawEffectPortrait(162,239,&selected->effects[6],FRIENDLY,mouseState)== true ? &selected->effects[6] : mousedOver;
-            mousedOver = DrawEffectPortrait(178,239,&selected->effects[7],FRIENDLY,mouseState)== true ? &selected->effects[7] : mousedOver;
-            mousedOver = DrawEffectPortrait(194,239,&selected->effects[8],FRIENDLY,mouseState)== true ? &selected->effects[8] : mousedOver;
-            mousedOver = DrawEffectPortrait(209,239,&selected->effects[9],FRIENDLY,mouseState)== true ? &selected->effects[9] : mousedOver;
-            mousedOver = DrawEffectPortrait(225,239,&selected->effects[10],FRIENDLY,mouseState)== true ? &selected->effects[10] : mousedOver;
-            mousedOver = DrawEffectPortrait(241,239,&selected->effects[11],FRIENDLY,mouseState)== true ? &selected->effects[11] : mousedOver;
+            mousedOver = DrawEffectPortrait(162,UI_ABILITY_START_Y+18,&selected->effects[6],FRIENDLY,mouseState)== true ? &selected->effects[6] : mousedOver;
+            mousedOver = DrawEffectPortrait(178,UI_ABILITY_START_Y+18,&selected->effects[7],FRIENDLY,mouseState)== true ? &selected->effects[7] : mousedOver;
+            mousedOver = DrawEffectPortrait(194,UI_ABILITY_START_Y+18,&selected->effects[8],FRIENDLY,mouseState)== true ? &selected->effects[8] : mousedOver;
+            mousedOver = DrawEffectPortrait(209,UI_ABILITY_START_Y+18,&selected->effects[9],FRIENDLY,mouseState)== true ? &selected->effects[9] : mousedOver;
+            mousedOver = DrawEffectPortrait(225,UI_ABILITY_START_Y+18,&selected->effects[10],FRIENDLY,mouseState)== true ? &selected->effects[10] : mousedOver;
+            mousedOver = DrawEffectPortrait(241,UI_ABILITY_START_Y+18,&selected->effects[11],FRIENDLY,mouseState)== true ? &selected->effects[11] : mousedOver;
         }
         else //5-ability UI
         {
-            mousedOver = DrawEffectPortrait(195,221,&selected->effects[0],FRIENDLY,mouseState) == true ? &selected->effects[0] : mousedOver;
-            mousedOver = DrawEffectPortrait(211,221,&selected->effects[1],FRIENDLY,mouseState)== true ? &selected->effects[1] : mousedOver;
-            mousedOver = DrawEffectPortrait(226,221,&selected->effects[2],FRIENDLY,mouseState)== true ? &selected->effects[2] : mousedOver;
-            mousedOver = DrawEffectPortrait(240,221,&selected->effects[3],FRIENDLY,mouseState)== true ? &selected->effects[3] : mousedOver;
+            mousedOver = DrawEffectPortrait(195,UI_ABILITY_START_Y,&selected->effects[0],FRIENDLY,mouseState) == true ? &selected->effects[0] : mousedOver;
+            mousedOver = DrawEffectPortrait(211,UI_ABILITY_START_Y,&selected->effects[1],FRIENDLY,mouseState)== true ? &selected->effects[1] : mousedOver;
+            mousedOver = DrawEffectPortrait(226,UI_ABILITY_START_Y,&selected->effects[2],FRIENDLY,mouseState)== true ? &selected->effects[2] : mousedOver;
+            mousedOver = DrawEffectPortrait(240,UI_ABILITY_START_Y,&selected->effects[3],FRIENDLY,mouseState)== true ? &selected->effects[3] : mousedOver;
             
             
-            mousedOver = DrawEffectPortrait(195,239,&selected->effects[4],FRIENDLY,mouseState)== true ? &selected->effects[4] : mousedOver;
-            mousedOver = DrawEffectPortrait(211,239,&selected->effects[5],FRIENDLY,mouseState)== true ? &selected->effects[5] : mousedOver;
-            mousedOver = DrawEffectPortrait(226,239,&selected->effects[6],FRIENDLY,mouseState)== true ? &selected->effects[6] : mousedOver;
-            mousedOver = DrawEffectPortrait(240,239,&selected->effects[7],FRIENDLY,mouseState)== true ? &selected->effects[7] : mousedOver;
+            mousedOver = DrawEffectPortrait(195,UI_ABILITY_START_Y+18,&selected->effects[4],FRIENDLY,mouseState)== true ? &selected->effects[4] : mousedOver;
+            mousedOver = DrawEffectPortrait(211,UI_ABILITY_START_Y+18,&selected->effects[5],FRIENDLY,mouseState)== true ? &selected->effects[5] : mousedOver;
+            mousedOver = DrawEffectPortrait(226,UI_ABILITY_START_Y+18,&selected->effects[6],FRIENDLY,mouseState)== true ? &selected->effects[6] : mousedOver;
+            mousedOver = DrawEffectPortrait(240,UI_ABILITY_START_Y+18,&selected->effects[7],FRIENDLY,mouseState)== true ? &selected->effects[7] : mousedOver;
         }
 
         if (mousedOver && EffectIsEnabled(mousedOver))

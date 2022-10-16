@@ -15,6 +15,9 @@
         "environment": [],
         "externalConsole": false,
         "MIMode": "gdb",
+        "logging": {
+          "engineLogging": true,
+       }  
       }
     ]
   }

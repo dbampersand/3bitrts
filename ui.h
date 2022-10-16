@@ -171,7 +171,8 @@ typedef struct UI
     ALLEGRO_FONT* tinyFont;
 
     bool escMenuEnabled;
-    #define UI_START_Y 217
+    #define UI_START_Y _SCREEN_SIZE-39
+    #define UI_ABILITY_START_Y UI_START_Y + 4
     #define UI_MAIN_MENU_W 160
     #define UI_MAIN_MENU_H 112
 
