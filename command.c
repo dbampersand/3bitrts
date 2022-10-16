@@ -9,6 +9,7 @@
 #include "player.h"
 #include "map.h"
 #include <math.h>
+
 void DrawCommand(Command* c, int x, int y)
 {
     if (c->commandType == COMMAND_NONE)

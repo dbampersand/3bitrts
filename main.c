@@ -477,8 +477,8 @@ int main(int argc, char* args[])
             int displayW = al_get_display_width(display);
             int displayH = al_get_display_height(display);
 
-            int drawposx = displayW/2 - (_RENDERSIZE*256)/2; 
-            int drawposy = displayH/2 - (_RENDERSIZE*256)/2;
+            int drawposx = displayW/2 - (_RENDERSIZE*_SCREEN_SIZE)/2; 
+            int drawposy = displayH/2 - (_RENDERSIZE*_SCREEN_SIZE)/2;
 
 
             al_get_keyboard_state(&keyState);

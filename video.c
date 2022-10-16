@@ -19,15 +19,15 @@ void InitVideo()
     ALLEGRO_MONITOR_INFO monitor;
     al_get_monitor_info(0, &monitor);
 
-    _RENDERSIZE = _MIN(monitor.x2,monitor.y2)/256 - 1;
+    _RENDERSIZE = _MIN(monitor.x2,monitor.y2)/_SCREEN_SIZE - 1;
     background_screen = al_create_bitmap(monitor.x2,monitor.y2);
     al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
     display = al_create_display(monitor.x2,monitor.y2);
 
-    int resX = 256*_RENDERSIZE;
-    int resY = 256*_RENDERSIZE;
+    int resX = _SCREEN_SIZE*_RENDERSIZE;
+    int resY = _SCREEN_SIZE*_RENDERSIZE;
 
-    SCREEN = al_create_bitmap(256,256);
+    SCREEN = al_create_bitmap(_SCREEN_SIZE,_SCREEN_SIZE);
     backbuffer = al_get_backbuffer(display);
     _FRAMES = 0;
     

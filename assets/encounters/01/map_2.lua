@@ -1,30 +1,38 @@
+local timer = 0
+
 function setup()
-    SetMapSprite("assets/encounters/01/map.png")
-    CreateObject("assets/encounters/01/boss.lua",144,0,TYPE_ENEMY);
-    SetAutoWin(true);
-    SetEncounterMusic("assets/audio/first_boss.wav");
+    SetMapSprite("assets/encounters/01/map_2.png")
 
+    CreateObject("assets/enemies/viper/viper.lua",221,102,TYPE_ENEMY,0);
+    CreateObject("assets/enemies/cobra/cobra.lua",209,134, TYPE_ENEMY,0);
 
+    CreateObject("assets/enemies/viper/viper.lua",209,134,TYPE_ENEMY,0) ;
+   
+    CreateObject("assets/enemies/cobra/cobra.lua",164,184,TYPE_ENEMY,0);
+
+    CreateObject("assets/enemies/caduceus/caduceus.lua",180,147,TYPE_ENEMY,0);
+
+    SetAutoWin(false);
+    SetSpawnPoint(120,460)
+    
 end
-local timer = 10;
-local numAoesMade = 0;
-function update(dt)
 
+function update(dt)
+    --ChangeMap("assets/encounters/01/map_2.lua")
+        
+    if (NumObjectsOwnedByPlayer(TYPE_ENEMY) == 0) then
+        ChangeMap("assets/encounters/01/map_final.lua")
+    end
     timer = timer + dt;
-    if (timer > 10) then
+    if (timer > 5) then
         f1 = {};
         f1["trigger"] = TRIGGER_INSTANT;
         f1["type"] = EFFECT_CURE;
         f1["value"] = 1;
         timer = 0
-        local aoe = -1;
-        if (math.fmod(numAoesMade, 2) == 0) then
-            aoe = CreateAOE(63.5,63.5,"",20,0.25,10,false,ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_VERTICAL_HALF,false,-1,{f1});
-        else
-            aoe = CreateAOE(223.5,159.5,"",20,0.25,10,false,ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_VERTICAL_HALF,false,-1,{f1});
-        end
-        numAoesMade = numAoesMade + 1;
-        SetAttackCircle(aoe,true);
+        --local aoe = CreateAOE(RandRange(72,160),RandRange(32,215),"",20,0.25,5,false,ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_VERTICAL_HALF,false,-1,{f1});
+        --SetAttackCircle(aoe,true);
+
     end
 
 end

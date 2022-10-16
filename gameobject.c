@@ -1489,7 +1489,7 @@ GameObject* GetCollidedWith(GameObject* g)
 }
 int GetUIStartHeight()
 {
-    return (GetMapHeight() - (_SCREEN_SIZE-UI_START_Y)) + 1;
+    return (_MAX(GetMapHeight(),_SCREEN_SIZE) - (_SCREEN_SIZE - UI_START_Y)) + 1;
 
 }
 bool ObjectIsInUI(GameObject* g)
