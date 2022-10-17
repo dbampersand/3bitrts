@@ -144,6 +144,11 @@ void MoveAngle(float* x, float* y, float dx, float dy, float speed, float delta)
 void Normalize(float* x, float* y)
 {
     float mag = sqrt((*x**x)+(*y**y));
+    if (mag == 0)
+    {
+        x = 0; y = 0;
+        return;
+    }
     *x /= mag;
     *y /= mag;
 }

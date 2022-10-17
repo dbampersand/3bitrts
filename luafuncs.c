@@ -773,18 +773,21 @@ int L_AddAttackSprite(lua_State* l)
     currGameObjRunning->onAttackEffectsIndices[currGameObjRunning->numAttackEffectIndices-1] = index;
     return 0;
 }
-void CreateProjectile(lua_State* l, float x, float y, const char* portrait, int attackType, int speed, int duration, bool shouldCallback, int properties, GameObject* targ, uint32_t color, Effect* effects, size_t len)
+void CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const char* portrait, int attackType, int speed, int duration, bool shouldCallback, int properties, GameObject* targ, uint32_t color, Effect* effects, size_t len)
 {
 
     int w=0; int h=0;
-    if (currGameObjRunning->spriteIndex)
+    if (currGameObjRunning && currGameObjRunning->spriteIndex)
     {
         w = al_get_bitmap_width(sprites[currGameObjRunning->spriteIndex].sprite);
         h = al_get_bitmap_height(sprites[currGameObjRunning->spriteIndex].sprite);
     }
+        
     Attack a;
-    a.x = currGameObjRunning->position.worldX + w/2;
-    a.y = currGameObjRunning->position.worldY + h/2;
+    //a.x = currGameObjRunning->position.worldX + w/2;
+    //a.y = currGameObjRunning->position.worldY + h/2;
+    a.x = x;
+    a.y = y;
     a.radius = 1;
     a.easing=0;
     a.targetRadius = a.radius;
@@ -792,8 +795,9 @@ void CreateProjectile(lua_State* l, float x, float y, const char* portrait, int 
     float x2 = x; float y2 = y;
     if (attackType == ATTACK_PROJECTILE_ANGLE)
     {
-        x2 = x - a.x;  y2 = y - a.y;
-        Normalize(&x2,&y2);
+        x2 = cx - a.x;  y2 = cy - a.y;
+        if (x2 != 0 && y2 != 0)
+            Normalize(&x2,&y2);
     }
     a.targx = x2;
     a.targy = y2;
@@ -878,7 +882,7 @@ int L_CreateCircularProjectiles(lua_State* l)
     for (int i = 0; i < numProjectiles; i++)
     {
         float angle = M_PI / (float)numProjectiles*i*2; 
-        CreateProjectile(l, x+sin(angle), y+cos(angle), portrait, attackType, speed, duration, shouldCallback, properties, targ,color, effects, len);
+        CreateProjectile(l,x,y, x+sin(angle), y+cos(angle), portrait, attackType, speed, duration, shouldCallback, properties, targ,color, effects, len);
 
     }
     for (int i = 0; i < len; i++)
@@ -916,16 +920,18 @@ int L_NumObjectsOwnedByPlayer(lua_State* l)
 }
 int L_CreateProjectile(lua_State* l)
 {
-    const float x = lua_tonumber(l,1);
-    const float y = lua_tonumber(l,2);
-    const char* portrait = lua_tostring(l,3);
-    const int attackType = lua_tonumber(l,4);
-    const int speed = lua_tonumber(l,5);
-    const int duration = lua_tonumber(l,6);
-    const bool shouldCallback = lua_toboolean(l, 7);
-    const int properties = lua_tonumber(l,8);
-    const uint32_t color = lua_tonumber(l,9);
-    size_t len =  lua_rawlen(l,10);
+    const float fromX = lua_tonumber(l,1);
+    const float fromY = lua_tonumber(l,2);
+    const float targX = lua_tonumber(l,3);
+    const float targY = lua_tonumber(l,4);
+    const char* portrait = lua_tostring(l,5);
+    const int attackType = lua_tonumber(l,6);
+    const int speed = lua_tonumber(l,7);
+    const int duration = lua_tonumber(l,8);
+    const bool shouldCallback = lua_toboolean(l, 9);
+    const int properties = lua_tonumber(l,10);
+    const uint32_t color = lua_tonumber(l,11);
+    size_t len =  lua_rawlen(l,12);
 
     MouseState mouseState = GetMouseClamped();
     GameObject* targ = NULL;
@@ -935,7 +941,7 @@ int L_CreateProjectile(lua_State* l)
         {
             Rect r = GetObjRect(&objects[i]);
 
-            if (PointInRect(x,y,r))
+            if (PointInRect(targX,targY,r))
             {
                 targ = &objects[i];
                 break;
@@ -953,7 +959,7 @@ int L_CreateProjectile(lua_State* l)
         lua_remove(l,-1);
         effects[i-1] = e;
     }       
-    CreateProjectile(l, x, y, portrait, attackType, speed, duration, shouldCallback, properties, targ, color, effects, len);
+    CreateProjectile(l, fromX, fromY, targX, targY, portrait, attackType, speed, duration, shouldCallback, properties, targ, color, effects, len);
     
     for (int i = 0; i < len; i++)
     {
