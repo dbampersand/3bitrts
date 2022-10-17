@@ -1943,7 +1943,7 @@ int L_GetStacks(lua_State* l)
     GameObject* obj = &objects[objIndex];
     Ability* a = &obj->abilities[abilityIndex];
     lua_pushnumber(l,a->stacks);
-    return 0;
+    return 1;
 }
 int L_Normalize(lua_State* l)
 {
@@ -2419,12 +2419,13 @@ int L_CastAbility(lua_State* l)
     if (index >= MAX_ABILITIES) 
         index = MAX_ABILITIES-1;
 
-    if (AbilityIsOnCooldown(&currGameObjRunning->abilities[index]))//.cdTimer > 0.001f)
+    Ability* ability = &currGameObjRunning->abilities[index];
+    if (ability->stacks == 0 && AbilityIsOnCooldown(ability))//.cdTimer > 0.001f)
     {
         lua_pushboolean(l,false);
         return 1;
     }
-    if (!AbilityIsInitialised(&currGameObjRunning->abilities[index]))
+    if (!AbilityIsInitialised(ability))
     {
         lua_pushboolean(l,false);
         return 1;

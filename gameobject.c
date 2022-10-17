@@ -268,7 +268,10 @@ void UpdateObject(GameObject* g, float dt)
     {
         lua_rawgeti(luaState,LUA_REGISTRYINDEX,g->luafunc_update);
         lua_pushnumber(luaState,dt);
-        lua_pcall(luaState,1,0,0);
+        if (lua_pcall(luaState,1,0,0) != LUA_OK)
+        {
+            printf("Error from %s: %s\n,",currGameObjRunning->name ? currGameObjRunning->name : "", lua_tostring(luaState,-1));
+        }
     }
 
     if (currGameObjRunning->targObj && currGameObjRunning->queue[0].commandType == COMMAND_ATTACK) 
