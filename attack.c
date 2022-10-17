@@ -17,7 +17,10 @@
 #include "player.h"
 #include "map.h"
 
+Attack attacks[MAX_ATTACKS] = {0};
+unsigned char freeAttacks[MAX_ATTACKS] = {0}; 
 int attack_top = 0;
+
 
 void InitAttacks()
 {

@@ -20,7 +20,6 @@ typedef enum GameState {
 
     NUMGAMESTATES = 12
 } GameState;
-GameState gameState;
 
 typedef enum Option_HealthBar
 {
@@ -38,19 +37,23 @@ typedef struct GameStats
     float timeTaken;
 }GameStats;
 
-GameStats gameStats;
-bool combatStarted;
-ALLEGRO_EVENT_QUEUE* queue;
 typedef struct GameObject GameObject;
 typedef struct Encounter Encounter;
 
-GameState transitioningTo;
-float transitionTimer;
+extern GameStats gameStats;
+extern bool combatStarted;
+extern ALLEGRO_EVENT_QUEUE* queue;
 
-GameObject** toSpawn;
+extern GameState transitioningTo;
+extern float transitionTimer;
 
-Encounter* encounterGoingTo;
-char* pathToNextMap;
+extern GameObject** toSpawn;
+
+extern Encounter* encounterGoingTo;
+extern char* pathToNextMap;
+
+extern GameState gameState;
+
 
 bool TransitionTo(GameState state);
 

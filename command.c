@@ -10,6 +10,9 @@
 #include "map.h"
 #include <math.h>
 
+Color queueCommandColors[COMMAND_ALL] = {0}; 
+
+
 void DrawCommand(Command* c, int x, int y)
 {
     if (c->commandType == COMMAND_NONE)

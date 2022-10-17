@@ -65,13 +65,13 @@ typedef struct Ability
 } Ability;
 
 
-Ability* abilities;
-int numAbilities;
-int numAbilitiesAllocated; 
+extern Ability* abilities;
+extern int numAbilities;
+extern int numAbilitiesAllocated; 
 
 
-SoundIndex ability_UI_click_sound;
-SoundIndex ability_UI_click_up_sound;   
+extern SoundIndex ability_UI_click_sound;
+extern SoundIndex ability_UI_click_up_sound;   
 
 
 

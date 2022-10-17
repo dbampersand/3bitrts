@@ -52,15 +52,15 @@ typedef struct ItemPool
     int numItems;
 } ItemPool;
 
-Item* items;
-int numItems;
-int numItemsAllocated;
+extern Item* items;
+extern int numItems;
+extern int numItemsAllocated;
 
-ItemPool itemPools[NUM_ITEM_POOLS];
+extern ItemPool itemPools[NUM_ITEM_POOLS];
 
-bool propagateItemEffects;
+extern bool propagateItemEffects;
 
-Item* currItemRunning;
+extern Item* currItemRunning;
 
 typedef struct lua_State lua_State;
 

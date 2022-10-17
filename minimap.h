@@ -5,9 +5,9 @@
 
 typedef struct Minimap
 {
-
+    int x;
 } Minimap;
 
-Minimap minimap;
+extern Minimap minimap;
 
 void DrawMinimap(MouseState mouseState);

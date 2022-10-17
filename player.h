@@ -30,15 +30,17 @@ typedef struct Player
     char* goldText;
 } Player;
 
-Player* players;
+//The point (8, SCREEN_SIZE-8, 8, SCREEN_SIZE-8) at which the camera starts to pan
+#define SCREEN_EDGE 8
+extern float cameraSpeed;
+
+
+extern Player* players;
 
 typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE;
 typedef struct MouseState MouseState; 
 typedef struct Item Item;
 
-//The point (8, SCREEN_SIZE-8, 8, SCREEN_SIZE-8) at which the camera starts to pan
-#define SCREEN_EDGE 8
-float cameraSpeed;
 
 void RemoveFromSelection(Player* p, int index);
 void RemoveGameObjectFromSelection(Player* p, GameObject* g);

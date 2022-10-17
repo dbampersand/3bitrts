@@ -28,6 +28,30 @@
 
 #include "pathfind.h"
 
+ GameObject* objects = NULL;
+ int numObjects = 0;
+ int objectsAllocated = 0; 
+
+ GameObject** freeObjs = NULL;
+ int numFreeObjs = 0;
+
+
+ GameObject** prefabs = NULL;
+ int numPrefabs = 0;
+ int numPrefabsAllocated = 0;
+
+ ALLEGRO_BITMAP* lights[MAX_LIGHT_SIZE] = {0};
+
+
+ CollisionEvent collisionEvents[MAX_OBJS] = {0};
+
+float __sinTable[360*2] = {0};
+float __cosTable[360*2] = {0};
+
+float* sinTable = NULL; // = &__sinTable[360];
+float* cosTable = NULL;// = &__cosTable[360];
+
+
 
 GameObject* GetMousedOver(MouseState* mouseState)
 {

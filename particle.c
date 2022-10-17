@@ -6,6 +6,16 @@
 #include "helperfuncs.h"
 #include "player.h"
 
+ float particle_x[MAX_PARTICLES] = {0};
+ float particle_y[MAX_PARTICLES] = {0};
+ float particle_dir[MAX_PARTICLES] = {0};
+ float particle_lifetime[MAX_PARTICLES] = {0};
+ char particle_properties[MAX_PARTICLES] = {0};
+ float particle_speed[MAX_PARTICLES] = {0}; 
+ Color particle_colors[MAX_PARTICLES] = {0};
+ int PARTICLES_TOP = 0;
+
+
 void UpdateParticles(float dt)
 {
     for (int i = 0; i < MAX_PARTICLES; i++)

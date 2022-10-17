@@ -41,7 +41,7 @@ typedef struct Shop
 } Shop;
 
 
-Shop shop;
+extern Shop shop;
 
 void DrawShop(float dt, MouseState mouseState);
 void LoadShop();

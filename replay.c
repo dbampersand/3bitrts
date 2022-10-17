@@ -12,6 +12,19 @@
 
 const char* REPLAY_HEADER = "REP";
 
+ Replay replay = {0};
+ UIElement replayPlayButton = {0}; 
+ UIElement replayBackButton = {0}; 
+ 
+
+ long bufferPosition = 0;
+ char* replayBuffer = NULL;
+
+ int soundPlayedThisFramePosition = 0;
+
+ FILE* tempFile = NULL;
+
+
 //zlib defines
 #define CHUNK 16384
 #if defined(MSDOS) || defined(OS2) || defined(WIN32) || defined(__CYGWIN__)

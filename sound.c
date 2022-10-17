@@ -10,6 +10,28 @@
 #include "encounter.h"
 #include "settings.h"
 #include "replay.h"
+
+ALLEGRO_AUDIO_STREAM* music = NULL;
+ALLEGRO_AUDIO_STREAM* musicFadingTo = NULL;
+
+float musicVolMixer1 = 0;
+float musicVolMixer2 = 0;
+
+ALLEGRO_VOICE* musicVoice1 = NULL;
+ALLEGRO_VOICE* musicVoice2 = NULL;
+
+ALLEGRO_MIXER* musicMixer1 = NULL;
+ALLEGRO_MIXER* musicMixer2 = NULL;
+
+char* musicPath = NULL;
+
+Sound* sounds = NULL;
+int numSoundsAllocated = 0;
+int numSounds = 0;
+
+ MusicState musicState = {0};  
+
+
 void InitSound()
 {
     if (    al_install_audio())
@@ -47,7 +69,7 @@ void ResetSoundsThisFrame()
     //memset(soundsPlayedThisFrame,0,NUM_SOUNDS_TO_SAVE*sizeof(Sound));
     soundPlayedThisFramePosition = 0;
 }
-int LoadSound(char* path)
+int LoadSound(const char* path)
 {
     if (!sounds)
     {

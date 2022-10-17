@@ -5,6 +5,13 @@
 #include "gameobject.h"
 #include "player.h"
 
+ AnimationEffect animationEffects[MAX_ANIMATIONEFFECTS] = {0};
+ int animationEffect_TOP = 0;
+ AnimationEffect* animationEffectsPrefabs = NULL;
+ int numAnimationEffectsPrefabs = 0;
+ int allocatedEffectPrefabs = 0;
+
+
 void AddAnimationEffect_Prefab(AnimationEffect* animEffect, bool ownedBy, int x, int y)
 {
    AnimationEffect* a = &animationEffects[animationEffect_TOP];

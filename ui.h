@@ -14,6 +14,9 @@
 #define DIALOGUE_H 40
 #define DIALOGUE_Y 10
 
+#define NUMSPRITESTATESTOALLOC 16
+
+#define UI_PADDING 5
 
 
 typedef struct ALLEGRO_FONT ALLEGRO_FONT;
@@ -228,19 +231,17 @@ typedef struct Widget
     float timer; 
     void (*updateFunc)(struct Widget* self, float dt);
 } Widget;
-Widget* Widgets_States[NUMGAMESTATES-1];
-int numSprites_States[NUMGAMESTATES-1];
+extern Widget* Widgets_States[NUMGAMESTATES-1];
+extern  int numSprites_States[NUMGAMESTATES-1];
 
-#define NUMSPRITESTATESTOALLOC 16
-Chatbox* chatboxes;
-int numChatboxes;
+extern Chatbox* chatboxes;
+extern int numChatboxes;
 
-Chatbox* chatboxShowing;
+extern Chatbox* chatboxShowing;
 
-UI ui;
-char* stackDrawBuffer;
+extern UI ui;
+extern char* stackDrawBuffer;
 
-#define UI_PADDING 5
 typedef struct MouseState MouseState;
 typedef struct Ability Ability;
 typedef struct Replay Replay;
@@ -282,7 +283,7 @@ Button* GetButtonB(Panel* p, char* name);
 void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState,ALLEGRO_COLOR bgColor); 
 void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent);
 void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, int index, int offsetX);
-void DrawAllLevelSelects();
+void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame);
 void ChangeUIPanel(Panel* to);
 bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, MouseState* mouse);
 void InitButton(UIElement* u, char* name, char* description, int x, int y, int w, int h, int sprite);

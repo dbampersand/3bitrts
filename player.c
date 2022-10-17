@@ -8,7 +8,10 @@
 #include "settings.h"
 #include "item.h"
 #include "allegro5/allegro_ttf.h"
+
 float cameraSpeed = 200;
+Player* players  = NULL;
+
 void RemoveIndexFromSelection(Player* p, int index)
 {
     for (int i = index; i < MAXUNITSSELECTED-1; i++)

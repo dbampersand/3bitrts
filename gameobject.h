@@ -187,19 +187,26 @@ typedef struct GameObject
     bool isBoss;
 } GameObject;
 
+#define MAX_LIGHT_SIZE 90 
+#define LIGHT_FACTOR 0.01f;
+
+
 
 #define MAX_OBJS 64
-GameObject* objects;
-int numObjects;
-int objectsAllocated;
+extern GameObject* objects;
+extern int numObjects;
+extern int objectsAllocated;
 
-GameObject** freeObjs;
-int numFreeObjs;
+extern GameObject** freeObjs;
+extern int numFreeObjs;
 
 
-GameObject** prefabs;
-int numPrefabs;
-int numPrefabsAllocated;
+extern GameObject** prefabs;
+extern int numPrefabs;
+extern int numPrefabsAllocated;
+
+extern ALLEGRO_BITMAP* lights[MAX_LIGHT_SIZE];
+
 typedef struct CollisionEvent
 {
     GameObject* obj;
@@ -207,20 +214,16 @@ typedef struct CollisionEvent
     int direction;
 }CollisionEvent;
 
-CollisionEvent collisionEvents[MAX_OBJS];
-
-#define MAX_LIGHT_SIZE 90
-#define LIGHT_FACTOR 0.01f;
-
-ALLEGRO_BITMAP* lights[MAX_LIGHT_SIZE];
+extern CollisionEvent collisionEvents[MAX_OBJS];
 
 
 
-float __sinTable[360*2];
-float __cosTable[360*2];
 
-float* sinTable;// = &__sinTable[360];
-float* cosTable;// = &__cosTable[360];
+extern float __sinTable[360*2];
+extern float __cosTable[360*2];
+
+extern float* sinTable;// = &__sinTable[360];
+extern float* cosTable;// = &__cosTable[360];
 
 
 

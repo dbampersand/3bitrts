@@ -13,6 +13,12 @@
     #include <mach-o/dyld.h>
     #include <unistd.h>
 #endif
+
+Settings currSettings = {0};
+Settings defaultSettings = {0};
+char* settingFilePath = NULL;
+
+
 void InitPath()
 {
     #ifdef __APPLE__

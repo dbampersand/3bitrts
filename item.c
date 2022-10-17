@@ -14,6 +14,16 @@
 #include "effect.h"
 #include "helperfuncs.h"
 
+Item* items = NULL;
+int numItems = 0;
+int numItemsAllocated = 0; 
+
+ItemPool itemPools[NUM_ITEM_POOLS] = {0};
+
+bool propagateItemEffects = false;
+
+Item* currItemRunning = NULL;
+
 void InitItems()
 {
     propagateItemEffects = true;

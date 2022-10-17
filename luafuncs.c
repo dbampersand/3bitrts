@@ -24,6 +24,11 @@
 #include "item.h"
 #include "shop.h"
 
+ lua_State* luaState = NULL;
+ GameObject* currGameObjRunning = NULL; 
+ Ability* currAbilityRunning = NULL;
+ Attack* currAttackRunning = NULL;
+ ALLEGRO_KEYBOARD_STATE* keyStateLua = NULL;
 
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);

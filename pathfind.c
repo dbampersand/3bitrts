@@ -7,6 +7,9 @@
 #include "player.h"
 #include "allegro5/allegro_primitives.h"
 
+ Queue openSet = {0};
+ Queue closedSet = {0};
+ PathfindMap pathfindmap = {0};
 
 void DebugDrawPathfinding()
 {

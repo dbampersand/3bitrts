@@ -15,14 +15,14 @@ typedef enum PARTICLE_PROPERTIES
     PARTICLE_ENABLED = 1,
 } PARTICLE_PROPERTIES;
 
-float particle_x[MAX_PARTICLES];
-float particle_y[MAX_PARTICLES];
-float particle_dir[MAX_PARTICLES];
-float particle_lifetime[MAX_PARTICLES];
-char particle_properties[MAX_PARTICLES];
-float particle_speed[MAX_PARTICLES]; 
-Color particle_colors[MAX_PARTICLES];
-int PARTICLES_TOP;
+extern float particle_x[MAX_PARTICLES];
+extern float particle_y[MAX_PARTICLES];
+extern float particle_dir[MAX_PARTICLES];
+extern float particle_lifetime[MAX_PARTICLES];
+extern char particle_properties[MAX_PARTICLES];
+extern float particle_speed[MAX_PARTICLES]; 
+extern Color particle_colors[MAX_PARTICLES];
+extern int PARTICLES_TOP;
 
 
 void UpdateParticles(float dt);

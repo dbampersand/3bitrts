@@ -18,6 +18,16 @@
 #include "sound.h"
 #include "settings.h"
 
+
+
+Ability* abilities = NULL;
+int numAbilities = 0;
+int numAbilitiesAllocated = 0; 
+
+
+SoundIndex ability_UI_click_sound = {0};
+SoundIndex ability_UI_click_up_sound ={0};   
+
 void InitAbilities()
 {
     ability_UI_click_sound = LoadSound("assets/audio/ability_down.wav");

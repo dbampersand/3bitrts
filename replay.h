@@ -13,21 +13,7 @@
 #define NUM_SOUNDS_TO_SAVE 32
 #define REP_UI_PLAY_SCRUBBER_SIZE 204   
 
-const char* REPLAY_HEADER;
-
-
-long bufferPosition;
-char* replayBuffer;
-
-
-//for saving in replay
-int soundPlayedThisFramePosition;
-//num frames before flushing to disk
 #define TEMP_REPLAY_NAME "CURRREP"
-
-
-FILE* tempFile;
-
 
 //TODO: move replay code to this kind of structure
 /*
@@ -71,9 +57,19 @@ typedef struct Replay
     uint32_t totalFrames;
 }Replay;
 
-Replay replay;
-UIElement replayPlayButton; 
-UIElement replayBackButton; 
+extern Replay replay;
+extern UIElement replayPlayButton; 
+extern UIElement replayBackButton; 
+ 
+extern const char* REPLAY_HEADER;
+
+
+extern long bufferPosition;
+extern char* replayBuffer;
+
+extern int soundPlayedThisFramePosition;
+
+extern FILE* tempFile;
 
 
 typedef struct ALLEGRO_BITMAP ALLEGRO_BITMAP;

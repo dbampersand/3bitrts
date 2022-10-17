@@ -2,6 +2,25 @@
 #include "command.h"
 #include "gameobject.h"
 #include <stdio.h>
+
+ALLEGRO_COLOR BG = {0};
+ALLEGRO_COLOR FRIENDLY = {0};
+ALLEGRO_COLOR ENEMY = {0};
+ALLEGRO_COLOR GROUND = {0};
+ALLEGRO_COLOR GROUND_DARK = {0};
+ALLEGRO_COLOR EDGE_HIGHLIGHT = {0};
+
+ALLEGRO_COLOR WHITE = {0};
+
+ALLEGRO_COLOR POISON = {0};
+ALLEGRO_COLOR HEAL = {0};
+ALLEGRO_COLOR DAMAGE = {0};
+
+
+ALLEGRO_COLOR* ALColorLookup[COLOR_ALL] = {0};
+Color ColorHashTable[256] = {0};
+Color EffectColors[EFFECT_ALL] = {0};
+
 ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy)
 {
     if (c >= COLOR_ALL)
@@ -120,6 +139,9 @@ void InitColors()
     queueCommandColors[COMMAND_CAST] = COLOR_GROUND_DARK;
     queueCommandColors[COMMAND_STOP] = COLOR_FRIENDLY;
     queueCommandColors[COMMAND_ATTACKMOVE] = COLOR_DAMAGE;
+    queueCommandColors[COMMAND_FOLLOW] = COLOR_FRIENDLY;
+    queueCommandColors[COMMAND_HOLD] = COLOR_FRIENDLY;
+
 
     EffectColors[EFFECT_NONE] = COLOR_BG;
     EffectColors[EFFECT_MAXHP] = COLOR_HEAL;

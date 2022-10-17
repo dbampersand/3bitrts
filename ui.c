@@ -26,6 +26,17 @@
 #include "dirent.h"
 #include "replay.h"
 
+Widget* Widgets_States[NUMGAMESTATES-1] = {0};
+int numSprites_States[NUMGAMESTATES-1] = {0};
+
+Chatbox* chatboxes = NULL;
+int numChatboxes = 0;
+
+Chatbox* chatboxShowing = NULL; 
+
+UI ui = {0};
+char* stackDrawBuffer = NULL;
+
 void DrawTimer(bool enabled)
 {   
     if (enabled)

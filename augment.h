@@ -51,7 +51,7 @@ typedef struct GameObject GameObject;
 typedef struct ALLEGRO_COLOR ALLEGRO_COLOR;
 typedef struct MouseState MouseState;
 
-Augment AllAugments[AUGMENT_ALL];
+extern Augment AllAugments[AUGMENT_ALL];
 
 int GetNumBadAugments(int augmentLevel);
 int GetNumGoodAugments(int augmentLevel);

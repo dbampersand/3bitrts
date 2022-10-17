@@ -65,14 +65,14 @@ void PreviousEncounter();
 Encounter* GetEncounterByName(char* name);
 void UpdateEncounter(float dt);
 
-Encounter** encounters;
-int numEncounters;
-int numEncountersAlloced;
+extern Encounter** encounters;
+extern int numEncounters;
+extern int numEncountersAlloced;
 
-float encounterMoveTimer;
-float encounterOffset;
-float encounterMoveTo;
+extern float encounterMoveTimer;
+extern float encounterOffset;
+extern float encounterMoveTo;
 
-Encounter* currEncounterRunning;
+extern Encounter* currEncounterRunning;
 
-int selectedEncounterIndex;
+extern int selectedEncounterIndex;

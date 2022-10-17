@@ -9,6 +9,10 @@
 #include "gameobject.h"
 #include "colors.h"
 
+unsigned int _RENDERSIZE = 0;
+int numSprites = 0; 
+int maxSprites = 0; 
+Sprite* sprites = NULL;
 
 int GetWidthSprite(Sprite* s)
 {

@@ -13,6 +13,9 @@
 #include "allegro5/allegro_primitives.h"
 #include "allegro5/allegro.h"
 #include "rect.h"
+
+Augment AllAugments[AUGMENT_ALL] = {0};
+
 void InitAugments()
 {
     for (int i = 0; i < AUGMENT_ALL; i++)

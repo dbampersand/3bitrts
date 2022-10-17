@@ -12,6 +12,8 @@
 #include "luafuncs.h"
 #include "helperfuncs.h"
 
+LoadScreen loadScreen = {0};
+
 void InitLoadscreen(char* initialPath, char* mask)
 {
     memset(&loadScreen,0,sizeof(LoadScreen));

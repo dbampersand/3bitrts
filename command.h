@@ -11,7 +11,10 @@ typedef enum QueueCommand
     COMMAND_STOP,
     COMMAND_ATTACKMOVE,
     COMMAND_FOLLOW,
-    COMMAND_HOLD
+    COMMAND_HOLD,
+
+
+    COMMAND_ALL
 } QueueCommand;
 
 typedef struct GameObject GameObject;
@@ -26,7 +29,7 @@ typedef struct Command
     float x; float y;
 } Command;
 
-Color queueCommandColors[COMMAND_ATTACKMOVE+1];
+extern Color queueCommandColors[COMMAND_ALL];
 
 
 void AddCommand(GameObject* g, Command c, bool shiftHeld);

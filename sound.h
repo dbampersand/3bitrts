@@ -14,9 +14,11 @@ typedef enum MusicState {
     MUSICSTATE_FADINGIN
 
 }MusicState;
-MusicState musicState;
+
+
+
 void InitSound();
-int LoadSound();
+int LoadSound(const char* path);
 void PlaySound(Sound* s, float relativeVolume);
 void PlayMusic(const char* path);
 void UpdateMusic(float dt);
@@ -29,21 +31,22 @@ void ResetSoundsThisFrame();
 #define RESERVED_SAMPLES 16
 #define NUMSOUNDSTOPREALLOC 32
 
-ALLEGRO_AUDIO_STREAM* music;
-ALLEGRO_AUDIO_STREAM* musicFadingTo;
+extern ALLEGRO_AUDIO_STREAM* music;
+extern ALLEGRO_AUDIO_STREAM* musicFadingTo;
 
-float musicVolMixer1;
-float musicVolMixer2;
+extern float musicVolMixer1;
+extern float musicVolMixer2;
 
-ALLEGRO_VOICE* musicVoice1;
-ALLEGRO_VOICE* musicVoice2;
+extern ALLEGRO_VOICE* musicVoice1;
+extern ALLEGRO_VOICE* musicVoice2;
 
-ALLEGRO_MIXER* musicMixer1;
-ALLEGRO_MIXER* musicMixer2;
+extern ALLEGRO_MIXER* musicMixer1;
+extern ALLEGRO_MIXER* musicMixer2;
 
-char* musicPath;
+extern char* musicPath;
 
-Sound* sounds;
-int numSoundsAllocated;
-int numSounds;
+extern Sound* sounds;
+extern int numSoundsAllocated;
+extern int numSounds;
 
+extern MusicState musicState;

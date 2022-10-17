@@ -38,9 +38,9 @@ typedef struct PathfindMap
     int sizex; int sizey;
 } PathfindMap;
 
-Queue openSet;
-Queue closedSet;
-PathfindMap pathfindmap;
+extern Queue openSet;
+extern Queue closedSet;
+extern PathfindMap pathfindmap;
 
 
 

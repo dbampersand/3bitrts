@@ -10,6 +10,8 @@
 #include "allegro5/allegro.h"
 #include "gameobject.h"
 
+Minimap minimap = {0};
+
 void DrawMinimap(MouseState mouseState)
 {
     Sprite* s = &sprites[currMap->spriteIndex];

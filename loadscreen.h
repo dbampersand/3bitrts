@@ -56,7 +56,7 @@ typedef struct LoadScreen
 typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE;
 typedef struct MouseState MouseState;
 
-LoadScreen loadScreen;
+extern LoadScreen loadScreen;
 
 #define GAME_NAME "MON IOCHDAR"
 

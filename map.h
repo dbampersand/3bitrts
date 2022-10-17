@@ -32,9 +32,9 @@ typedef struct Map
 
 } Map;
 
-Map* currMap;
-Map* maps;
-int numMaps;
+extern Map* currMap;
+extern Map* maps;
+extern int numMaps;
 
 void PreprocessMap(Map* map);
 Map* LoadMap(char* path);

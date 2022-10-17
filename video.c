@@ -14,6 +14,23 @@
 #include "gameobject.h"
 #include "allegro5/allegro_font.h"
 
+Point DEBUG_P1 = {0};
+Point DEBUG_P2 = {0};
+Point DEBUG_P3 = {0};
+Point DEBUG_P4 = {0};
+float DEBUG_EXTRA = 0;
+
+ALLEGRO_BITMAP* backbuffer = NULL;
+ALLEGRO_BITMAP* SCREEN = NULL; 
+ALLEGRO_BITMAP* background_screen = NULL;
+ALLEGRO_DISPLAY* display = NULL;
+
+unsigned long long _FRAMES = 1;
+
+ TextDisplay textDisplays[NUM_TEXT_DISPLAYS] = {0};
+ int numStringsToDraw = 0;
+
+
 void InitVideo()
 {
     ALLEGRO_MONITOR_INFO monitor;

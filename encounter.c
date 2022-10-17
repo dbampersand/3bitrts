@@ -9,6 +9,19 @@
 #include "gameobject.h"
 #include "map.h"
 
+
+Encounter** encounters = NULL;
+int numEncounters = 0;
+int numEncountersAlloced = 0;
+
+float encounterMoveTimer = 0;
+float encounterOffset = 0;
+float encounterMoveTo = 0;
+
+Encounter* currEncounterRunning = NULL;
+
+int selectedEncounterIndex = 0;
+
 void LoadEncounter(char* dirPath, lua_State* l)
 {
     DIR *d;

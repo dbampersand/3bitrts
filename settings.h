@@ -2,7 +2,6 @@
 #include "gamestate.h"
 #include "stdbool.h"
 
-char* settingFilePath;
 
 typedef int KEY;
 typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE; 
@@ -62,8 +61,10 @@ typedef struct Settings
     //
 
 } Settings;
-Settings currSettings;
-Settings defaultSettings;
+
+extern Settings currSettings;
+extern Settings defaultSettings;
+extern char* settingFilePath;
 
 
 typedef struct UIElement UIElement;

@@ -12,6 +12,9 @@
 #include "gameobject.h"
 #include "player.h"
 
+DamageNumber damageNumbers[MAX_DAMAGE_NUMBERS] = {0};
+int currDamageNumber = 0;
+
 void InitDamageNumbers()
 {
     memset(damageNumbers,0,sizeof(DamageNumber)*MAX_DAMAGE_NUMBERS);

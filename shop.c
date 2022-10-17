@@ -11,6 +11,9 @@
 #include "allegro5/allegro_ttf.h"
 #include "ui.h"
 
+
+Shop shop = {0};
+
 void LoadShop()
 {
     int numIdleSprites = 4;

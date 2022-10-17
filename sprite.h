@@ -4,7 +4,6 @@
 
 #include "allegro5/allegro.h"
 
-unsigned int _RENDERSIZE;
 #define _SCREEN_SIZE 256
 
 typedef struct ALLEGRO_BITMAP ALLEGRO_BITMAP;
@@ -17,9 +16,10 @@ typedef struct Sprite
     char* path;
 } Sprite;
 
-int numSprites; 
-int maxSprites; //will dynamically change 
-Sprite* sprites;
+extern unsigned int _RENDERSIZE;
+extern int numSprites; 
+extern int maxSprites; //will dynamically change 
+extern Sprite* sprites;
 
 unsigned int LoadSprite(const char* path, bool needsInverted);
 void DrawSprite(Sprite* sprite, int x, int y, float originX, float originY, float angle, ALLEGRO_COLOR tint, bool invert);

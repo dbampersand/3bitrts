@@ -14,6 +14,11 @@
 #include "helperfuncs.h"
 #include "colors.h"
 #include "player.h"
+
+ Map* currMap = NULL;
+ Map* maps = NULL;
+ int numMaps = 0;
+
 void DisplayCollision()
 {
     for (int x = 0; x < GetMapWidth(); x += _GRAIN)

@@ -15,7 +15,7 @@ typedef struct MouseState
     int screenX; int screenY;
 } MouseState;
 
-unsigned long long _FRAMES;
+extern unsigned long long _FRAMES;
 
 typedef struct PointSpace
 {
@@ -25,10 +25,10 @@ typedef struct PointSpace
 
 #define _TARGET_FPS 60
 
-ALLEGRO_BITMAP* backbuffer;
-ALLEGRO_BITMAP* SCREEN;
-ALLEGRO_BITMAP* background_screen;
-ALLEGRO_DISPLAY* display;
+extern ALLEGRO_BITMAP* backbuffer;
+extern ALLEGRO_BITMAP* SCREEN;
+extern ALLEGRO_BITMAP* background_screen;
+extern ALLEGRO_DISPLAY* display;
 
 
 #define NUM_TEXT_DISPLAYS 30
@@ -39,15 +39,16 @@ typedef struct TextDisplay
     char str[TEXT_DISPLAY_MAX_SIZE+1];
     int x; int y;
 } TextDisplay;
-TextDisplay textDisplays[NUM_TEXT_DISPLAYS];
-int numStringsToDraw;
+
+extern TextDisplay textDisplays[NUM_TEXT_DISPLAYS];
+extern int numStringsToDraw;
 
 
-Point DEBUG_P1;
-Point DEBUG_P2;
-Point DEBUG_P3;
-Point DEBUG_P4;
-float DEBUG_EXTRA;
+extern Point DEBUG_P1;
+extern Point DEBUG_P2;
+extern Point DEBUG_P3;
+extern Point DEBUG_P4;
+extern float DEBUG_EXTRA;
 
 void DrawBufferedStrings();
 

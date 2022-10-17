@@ -37,8 +37,8 @@ int AddAnimationEffectPrefab(char* path, int w, int h, float cd);
 
 #define MAX_ANIMATIONEFFECTS 64
 
-AnimationEffect animationEffects[MAX_ANIMATIONEFFECTS];
-int animationEffect_TOP;
-AnimationEffect* animationEffectsPrefabs;
-int numAnimationEffectsPrefabs;
-int allocatedEffectPrefabs;
+extern AnimationEffect animationEffects[MAX_ANIMATIONEFFECTS];
+extern int animationEffect_TOP;
+extern AnimationEffect* animationEffectsPrefabs;
+extern int numAnimationEffectsPrefabs;
+extern int allocatedEffectPrefabs;

@@ -21,6 +21,22 @@
     #define M_PI 3.14159265358979323846
 #endif
 
+
+ GameStats gameStats = {0};
+ bool combatStarted = false;
+ ALLEGRO_EVENT_QUEUE* queue = {0};
+
+ GameState transitioningTo = {0};
+ float transitionTimer = 0;
+
+ GameObject** toSpawn = NULL;
+
+ Encounter* encounterGoingTo = NULL;
+ char* pathToNextMap = NULL;
+
+GameState gameState = {0};
+
+
 bool TransitionTo(GameState state)
 {
     if (transitioningTo == state)

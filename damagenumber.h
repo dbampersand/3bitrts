@@ -14,8 +14,8 @@ typedef struct DamageNumber
 } DamageNumber;
 
 #define MAX_DAMAGE_NUMBERS 16
-DamageNumber damageNumbers[MAX_DAMAGE_NUMBERS];
-int currDamageNumber;
+extern DamageNumber damageNumbers[MAX_DAMAGE_NUMBERS];
+extern int currDamageNumber;
 
 void DrawDamageNumbers();
 void InitDamageNumbers();
