@@ -67,9 +67,17 @@ typedef struct Attack
 } Attack;
 
 #define MAX_ATTACKS 1024
+#define MAX_AOE_SIZE 255
+#define MAX_AOE_CIRCUMFERENCE_SIZE MAX_AOE_SIZE * 2
+
+
 extern Attack attacks[MAX_ATTACKS];
 extern unsigned char freeAttacks[MAX_ATTACKS]; //indices for attacks
 extern int attack_top;
+
+//~500kb on 64bit systems
+extern ALLEGRO_BITMAP* cachedAttackSprites[MAX_AOE_CIRCUMFERENCE_SIZE+1][DITHER_ALL];
+
 
 #define AOE_PARTICLES_PER_SECOND 1.0f
 

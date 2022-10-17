@@ -20,6 +20,7 @@
 Attack attacks[MAX_ATTACKS] = {0};
 unsigned char freeAttacks[MAX_ATTACKS] = {0}; 
 int attack_top = 0;
+ALLEGRO_BITMAP* cachedAttackSprites[MAX_AOE_CIRCUMFERENCE_SIZE+1][DITHER_ALL] = {0};
 
 
 void InitAttacks()
@@ -213,6 +214,22 @@ void ApplyAttack(Attack* a, GameObject* target)
 }
 void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color, DITHER_PATTERN dither)
 {
+    int circum = radius*2;
+    if (circum > MAX_AOE_CIRCUMFERENCE_SIZE)
+        circum = MAX_AOE_CIRCUMFERENCE_SIZE;
+
+    if (cachedAttackSprites[(int)circum][dither])
+    {
+        al_draw_bitmap(cachedAttackSprites[(int)circum][dither],cX-radius,cY-radius,0);
+        return;
+    }
+
+    cachedAttackSprites[(int)circum][dither] = al_create_bitmap(circum,circum);
+    ALLEGRO_BITMAP* before = al_get_target_bitmap();
+    al_set_target_bitmap(cachedAttackSprites[(int)circum][dither]);
+    al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+
+
     if (dither == DITHER_NONE)
     {
         return;
@@ -223,12 +240,15 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
     }
     if (dither == DITHER_HALF || dither == DITHER_QUARTER || dither == DITHER_EIGTH)
     {
+
         al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
-        for (int x = cX-radius; x < cX+radius; x++)
+
+
+        for (int x = 0; x < circum; x++)
         {
-            for (int y = cY-radius; y < cY+radius; y++)
+            for (int y = 0; y < circum; y++)
             {
-                if (PointInCircle(x,y,cX,cY,radius))
+                if (PointInCircle(x,y,radius,radius,radius))
                 {
                     if (y%dither==0 && x%dither == 0)
                     {
@@ -238,7 +258,7 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
             }
 
         }
-        al_unlock_bitmap(al_get_target_bitmap());
+
     }
     //todo: could make this one more efficient
     if (dither == DITHER_VERTICAL_HALF || dither == DITHER_VERTICAL_QUARTER || dither == DITHER_VERTICAL_EIGTH)
@@ -250,24 +270,21 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
             pattern=4;
         if (dither == DITHER_VERTICAL_EIGTH)
             pattern=8;
-        al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
         
-        for (int x = cX-radius; x < cX+radius; x+=pattern)
+        for (int x = 0; x < circum; x+=pattern)
         {
-            for (int y = cY-radius; y < cY+radius; y++)
+            for (int y = 0; y < circum; y++)
             {
-                if (PointInCircle(x,y,cX,cY,radius))
+                if (PointInCircle(x,y,radius,radius,radius))
                 {
                     al_put_pixel(x,y,color);
                 }
             }
         }
-        al_unlock_bitmap(al_get_target_bitmap());
 
     }
     if (dither == DITHER_HORIZONTAL_HALF || dither == DITHER_HORIZONTAL_QUARTER || dither == DITHER_HORIZONTAL_EIGTH)
     {
-        al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
 
         int pattern;
         if (dither == DITHER_HORIZONTAL_HALF)
@@ -277,17 +294,16 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
         if (dither == DITHER_HORIZONTAL_EIGTH)
             pattern=8;
             
-        for (int y = cY-radius; y < cY+radius; y+=pattern)
+        for (int y = 0; y < circum; y+=pattern)
         {
-            for (int x = cX-radius; x < cX+radius; x++)
+            for (int x = 0; x < circum; x++)
             {
-                if (PointInCircle(x,y,cX,cY,radius))
+                if (PointInCircle(x,y,radius,radius,radius))
                 {   
                     al_put_pixel(x,y,color);
                 }
             }
         }
-        al_unlock_bitmap(al_get_target_bitmap());
 
     }
     if (dither == DITHER_STAR_HALF || dither == DITHER_STAR_QUARTER || dither == DITHER_STAR_EIGTH)
@@ -299,24 +315,26 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
             pattern=4;
         if (dither == DITHER_STAR_EIGTH)
             pattern=8;
-        al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
 
-        for (int x = cX-radius-pattern*2; x < cX+radius; x+=pattern*2)
+        for (int x = 0; x < circum; x+=pattern*2)
         {
-            for (int y = cY-radius-pattern*2; y < cY+radius; y+=pattern*2)
+            for (int y = 0; y < circum; y+=pattern*2)
             {
-                if (PointInCircle(x,y,cX,cY,radius))
+                if (PointInCircle(x,y,radius,radius,radius))
                     al_put_pixel(x,y,color);
-                if (PointInCircle(x-1,y+1,cX,cY,radius))
+                if (PointInCircle(x-1,y+1,radius,radius,radius))
                     al_put_pixel(x-1,y+1,color);
-                if (PointInCircle(x+1,y+1,cX,cY,radius))
+                if (PointInCircle(x+1,y+1,radius,radius,radius))
                     al_put_pixel(x+1,y+1,color);
-                if (PointInCircle(x,y+2,cX,cY,radius))
+                if (PointInCircle(x,y+2,radius,radius,radius))
                     al_put_pixel(x,y+2,color);
             }
         }
-        al_unlock_bitmap(al_get_target_bitmap());
     }
+
+    al_unlock_bitmap(al_get_target_bitmap());
+
+    al_set_target_bitmap(before);
 }
 void DrawAttack(Attack* a, float dt)
 {

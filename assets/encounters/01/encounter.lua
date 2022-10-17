@@ -9,7 +9,7 @@ function setup()
     AddEncounterAbility("assets/enemies/wyrm_boss/ability_nuke.lua",3,0);
 
 
-    SetEncounterMapPath("assets/encounters/01/map_1.lua");
+    SetEncounterMapPath("assets/encounters/01/map_2.lua");
     SetEncounterDifficulty(DIFFICULTY_EASY);
     EncounterSetNumUnitsToSelect(3);
 

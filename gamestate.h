@@ -18,7 +18,7 @@ typedef enum GameState {
     GAMESTATE_IN_SHOP = 11,
     GAMESTATE_EXIT = 12,
 
-    NUMGAMESTATES = 12
+    NUMGAMESTATES = 13
 } GameState;
 
 typedef enum Option_HealthBar

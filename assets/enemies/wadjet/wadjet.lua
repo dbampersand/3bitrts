@@ -18,7 +18,6 @@ function update(dt)
     target["target"] = threatlist[1];
     if (target["target"] ~= nil) then
         if (GetStacks(GetObjRef(),sunDisc)==3) then
-            Print("gg")
             CastAbility(0,0,{{target = threatlist[1]}});
             CastAbility(0,0,{{target = threatlist[2]}});
             CastAbility(0,0,{{target = threatlist[3]}});

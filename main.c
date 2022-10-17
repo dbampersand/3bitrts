@@ -411,6 +411,8 @@ int main(int argc, char* args[])
 {
     init();
 
+
+    
     ALLEGRO_TIMER* _FPS_TIMER = al_create_timer(1.0f / (double)_TARGET_FPS);
 
     al_start_timer(_FPS_TIMER);

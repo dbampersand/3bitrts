@@ -6,14 +6,16 @@ function setup()
     CreateObject("assets/enemies/viper/viper.lua",221,102,TYPE_ENEMY,0);
     CreateObject("assets/enemies/cobra/cobra.lua",209,134, TYPE_ENEMY,0);
 
-    CreateObject("assets/enemies/viper/viper.lua",209,134,TYPE_ENEMY,0) ;
-   
-    CreateObject("assets/enemies/cobra/cobra.lua",164,184,TYPE_ENEMY,0);
+    CreateObject("assets/enemies/viper/viper.lua",344,211,TYPE_ENEMY,0) ;
+    CreateObject("assets/enemies/cobra/cobra.lua",400,211,TYPE_ENEMY,0);
+    CreateObject("assets/enemies/viper/viper.lua",324,265,TYPE_ENEMY,0) ;
+    CreateObject("assets/enemies/cobra/cobra.lua",389,283,TYPE_ENEMY,0);
 
-    CreateObject("assets/enemies/caduceus/caduceus.lua",180,147,TYPE_ENEMY,0);
+
+    CreateObject("assets/enemies/wadjet/wadjet.lua",180,344,TYPE_ENEMY,0);
 
     SetAutoWin(false);
-    SetSpawnPoint(120,460)
+    SetSpawnPoint(35,115)
     
 end
 
