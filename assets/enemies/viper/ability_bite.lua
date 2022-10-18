@@ -14,7 +14,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["canStack"] = true;  
     f1["trigger"] = TRIGGER_TIMER;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 2;
+    f1["value"] = 1.5;
     f1["triggersPerSecond"] = 5;  
     f1["duration"] = 40;
     f1["portrait"] = "assets/enemies/wyrm_boss/ability_bite_effect_portrait.png"

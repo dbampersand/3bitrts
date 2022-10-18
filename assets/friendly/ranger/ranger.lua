@@ -15,7 +15,7 @@ function setup()
     AddAttackSprite("assets/ui/slash_fx.png",32,32,0.05);
 
     SetDamage(15);
-    SetRange(30)
+    SetRange(75)
     SetSpeed(60)
     SetMaxHP(maxHP,true);
 

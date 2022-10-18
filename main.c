@@ -412,8 +412,9 @@ int main(int argc, char* args[])
     init();
 
 
+    double dt = 1 / (double)_TARGET_FPS;
     
-    ALLEGRO_TIMER* _FPS_TIMER = al_create_timer(1.0f / (double)_TARGET_FPS);
+    ALLEGRO_TIMER* _FPS_TIMER = al_create_timer(dt);
 
     al_start_timer(_FPS_TIMER);
     queue = al_create_event_queue();
@@ -495,16 +496,16 @@ int main(int argc, char* args[])
             al_clear_to_color(BG);
 
             
-            UpdateMusic(1/(float)_TARGET_FPS);
+            UpdateMusic(dt);
 
-            UpdateTransition(1/(float)_TARGET_FPS);
+            UpdateTransition(dt);
 
             //if (!ui.currentPanel)
-                Update(1/(float)_TARGET_FPS,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
-            UpdateInterface(1/(float)_TARGET_FPS,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
+                Update(dt,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
+            UpdateInterface(dt,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
             if (gameState == GAMESTATE_EXIT)
                 break;
-            Render(1/(float)_TARGET_FPS, &mouseState, &mouseStateLastFrame, &keyState, &keyStateLastFrame);
+            Render(dt, &mouseState, &mouseStateLastFrame, &keyState, &keyStateLastFrame);
             if (gameState == GAMESTATE_INGAME)
                 RecordReplay(SCREEN);
 

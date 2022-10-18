@@ -220,18 +220,22 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
 
     if (cachedAttackSprites[(int)circum][dither])
     {
-        al_draw_bitmap(cachedAttackSprites[(int)circum][dither],cX-radius,cY-radius,0);
+        al_draw_tinted_bitmap(cachedAttackSprites[(int)circum][dither],color,cX-radius,cY-radius,0);
         return;
     }
 
-    cachedAttackSprites[(int)circum][dither] = al_create_bitmap(circum,circum);
     ALLEGRO_BITMAP* before = al_get_target_bitmap();
+    
+    cachedAttackSprites[(int)circum][dither] = al_create_bitmap(circum,circum);
     al_set_target_bitmap(cachedAttackSprites[(int)circum][dither]);
+    al_clear_to_color(al_map_rgba(0,0,0,0));
     al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
 
 
     if (dither == DITHER_NONE)
     {
+        al_unlock_bitmap(al_get_target_bitmap());
+        al_set_target_bitmap(before);
         return;
     }
     if (dither == DITHER_FILL)
@@ -252,7 +256,7 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
                 {
                     if (y%dither==0 && x%dither == 0)
                     {
-                        al_put_pixel(x,y,color);
+                        al_put_pixel(x,y,WHITE);
                     }
                 }
             }
@@ -277,7 +281,7 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
             {
                 if (PointInCircle(x,y,radius,radius,radius))
                 {
-                    al_put_pixel(x,y,color);
+                    al_put_pixel(x,y,WHITE);
                 }
             }
         }
@@ -300,7 +304,7 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
             {
                 if (PointInCircle(x,y,radius,radius,radius))
                 {   
-                    al_put_pixel(x,y,color);
+                    al_put_pixel(x,y,WHITE);
                 }
             }
         }
@@ -321,13 +325,13 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
             for (int y = 0; y < circum; y+=pattern*2)
             {
                 if (PointInCircle(x,y,radius,radius,radius))
-                    al_put_pixel(x,y,color);
+                    al_put_pixel(x,y,WHITE);
                 if (PointInCircle(x-1,y+1,radius,radius,radius))
-                    al_put_pixel(x-1,y+1,color);
+                    al_put_pixel(x-1,y+1,WHITE);
                 if (PointInCircle(x+1,y+1,radius,radius,radius))
-                    al_put_pixel(x+1,y+1,color);
+                    al_put_pixel(x+1,y+1,WHITE);
                 if (PointInCircle(x,y+2,radius,radius,radius))
-                    al_put_pixel(x,y+2,color);
+                    al_put_pixel(x,y+2,WHITE);
             }
         }
     }

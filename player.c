@@ -231,6 +231,4 @@ void DrawGoldCount()
 void ClearGold()
 {
     AddGold(-GetGold());
-    AddGold(1000);
-
 }

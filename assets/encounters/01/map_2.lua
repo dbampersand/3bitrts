@@ -14,6 +14,10 @@ function setup()
 
     CreateObject("assets/enemies/wadjet/wadjet.lua",180,344,TYPE_ENEMY,0);
 
+    CreateObject("assets/decor/curebox.lua",374,307,TYPE_ENEMY,0);
+    CreateObject("assets/decor/curebox.lua",284,251,TYPE_ENEMY,0);
+
+
     SetAutoWin(false);
     SetSpawnPoint(35,115)
     

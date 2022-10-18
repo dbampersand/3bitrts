@@ -497,16 +497,28 @@ int L_GetBetween(lua_State* l)
     }
     return 1;
 }
-int L_GetMouseX(lua_State* l)
+int L_GetMouseScreenX(lua_State* l)
 {
     MouseState mouseState = GetMouseClamped();
     lua_pushnumber(l,mouseState.screenX);
     return 1;
 }
-int L_GetMouseY(lua_State* l)
+int L_GetMouseScreenY(lua_State* l)
 {
     MouseState mouseState = GetMouseClamped();
     lua_pushnumber(l,mouseState.screenY);
+    return 1;
+}
+int L_GetMouseWorldX(lua_State* l)
+{
+    MouseState mouseState = GetMouseClamped();
+    lua_pushnumber(l,mouseState.worldX);
+    return 1;
+}
+int L_GetMouseWorldY(lua_State* l)
+{
+    MouseState mouseState = GetMouseClamped();
+    lua_pushnumber(l,mouseState.worldY);
     return 1;
 }
 float GetTableField(lua_State* l, int tableIndex, const char* name, bool* isAField)
@@ -776,12 +788,6 @@ int L_AddAttackSprite(lua_State* l)
 void CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const char* portrait, int attackType, int speed, int duration, bool shouldCallback, int properties, GameObject* targ, uint32_t color, Effect* effects, size_t len)
 {
 
-    int w=0; int h=0;
-    if (currGameObjRunning && currGameObjRunning->spriteIndex)
-    {
-        w = al_get_bitmap_width(sprites[currGameObjRunning->spriteIndex].sprite);
-        h = al_get_bitmap_height(sprites[currGameObjRunning->spriteIndex].sprite);
-    }
         
     Attack a;
     //a.x = currGameObjRunning->position.worldX + w/2;
@@ -3029,10 +3035,16 @@ void SetLuaFuncs()
 
 
 
-    lua_pushcfunction(luaState, L_GetMouseX);
-    lua_setglobal(luaState, "GetMouseX");
-    lua_pushcfunction(luaState, L_GetMouseY);
-    lua_setglobal(luaState, "GetMouseY");
+    lua_pushcfunction(luaState, L_GetMouseScreenX);
+    lua_setglobal(luaState, "GetMouseScreenX");
+    lua_pushcfunction(luaState, L_GetMouseScreenY);
+    lua_setglobal(luaState, "GetMouseScreenY");
+        lua_pushcfunction(luaState, L_GetMouseWorldX);
+    lua_setglobal(luaState, "GetMouseWorldX");
+    lua_pushcfunction(luaState, L_GetMouseWorldY);
+    lua_setglobal(luaState, "GetMouseWorldY");
+
+
 
 
     lua_pushcfunction(luaState, L_CreateProjectile);

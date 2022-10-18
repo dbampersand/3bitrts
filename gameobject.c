@@ -1897,11 +1897,9 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
     //Draw amount of HP which has a DoT effect on it if they're all summed
     float amtPoisoned = GetTotalDotted(g);
 
-    float percentPoisoned = amtPoisoned/g->maxHP;
-    if (amtPoisoned > g->maxHP)
-        percentPoisoned = 1;
-    if (amtPoisoned > percent)
-        amtPoisoned = percent;
+    float percentPoisoned = amtPoisoned/g->health;
+    percentPoisoned = clamp(percentPoisoned,0,percent);
+
     if (percentPoisoned > 0)
         al_draw_filled_rectangle((int)r.x,(int)r.y+1,(int)r.x+(r.w*percentPoisoned),(int)r.y+r.h,POISON);
 
