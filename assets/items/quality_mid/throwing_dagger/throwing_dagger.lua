@@ -23,6 +23,7 @@ end
 
 function OnAttack(item,obj,target,dt,value)
     local v = value + 1
+    return v;
 end
 
 function OnEffect(item,obj,target,trigger,effectType,stacks,value,duration,value)

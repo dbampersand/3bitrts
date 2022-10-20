@@ -12,7 +12,7 @@ function setup()
 
     packAnimal = AddAbility(GetObjRef(),"assets/enemies/wolf/ability_pack_animal.lua",0);
 
-    local targ = GetRandomUnit(TYPE_ENEMY,Bor(TYPE_HEALER,TYPE_RANGEDDPS))
+    local targ = GetRandomUnit(TYPE_ENEMY,Bor(TYPE_HEALER,TYPE_RANGEDDPS),999)
 
 end
 

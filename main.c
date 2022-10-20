@@ -33,6 +33,7 @@
 #include "pathfind.h"
 #include "shop.h"
 #include "item.h"
+#include "console.h"
 
 void init()
 {
@@ -70,6 +71,8 @@ void init()
     InitAbilities();
     InitParticles();
     InitUI();
+    InitConsole();
+
     InitLoadscreen("assets/ui/startscreen/fullstartscreen.png","assets/ui/startscreen/mask.png");
     LoadEncounters("assets/encounters",luaState);
 
@@ -99,6 +102,8 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
     
     if (!GameIsPaused())
     {
+        if (IsBindDownThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Console))
+            ToggleConsole();
         MoveCamera(*mouseState,keyState,dt);
         UpdateItems(dt);
         lua_settop(luaState,0);
@@ -420,9 +425,11 @@ int main(int argc, char* args[])
     queue = al_create_event_queue();
 
     al_register_event_source(queue, al_get_display_event_source(display));
+   //al_register_event_source(queue, al_get_keyboard_event_source());
    al_register_event_source(queue, al_get_timer_event_source(_FPS_TIMER));
-   al_register_event_source(queue, al_get_keyboard_event_source());
 
+    ALLEGRO_EVENT_QUEUE* queue_KeyEvents = al_create_event_queue();
+al_register_event_source(queue_KeyEvents, al_get_keyboard_event_source());
 
    ALLEGRO_KEYBOARD_STATE keyStateLastFrame;
    al_get_keyboard_state(&keyStateLastFrame);
@@ -442,24 +449,58 @@ int main(int argc, char* args[])
 
 
     while (gameState != GAMESTATE_EXIT) {
-        //al_set_mouse_xy(display, 128,128);
 
         
+
         ALLEGRO_EVENT event;
         al_wait_for_event(queue, &event);
 
-        if (gameState == GAMESTATE_LOAD_SCREEN || gameState == GAMESTATE_LOAD_ENCOUNTER)
+        while (!al_is_event_queue_empty(queue_KeyEvents))
         {
-            if (event.type == ALLEGRO_EVENT_KEY_DOWN)
+            ALLEGRO_EVENT keyEvent;
+            al_get_next_event(queue_KeyEvents, &keyEvent);
+
+            if (gameState == GAMESTATE_LOAD_SCREEN || gameState == GAMESTATE_LOAD_ENCOUNTER)
             {
-                if (!IsModifierDown(&keyState))
-                    FinishLoadScreen();
+                if (keyEvent.type == ALLEGRO_EVENT_KEY_DOWN)
+                {
+                    if (!IsModifierDown(&keyState))
+                        FinishLoadScreen();
+                }
             }
+
+            if (keyEvent.keyboard.type != ALLEGRO_EVENT_KEY_CHAR)
+                continue;
+
+            switch (keyEvent.keyboard.keycode) {
+                case ALLEGRO_KEY_ENTER:
+                    RunLine();
+                break;
+
+                case ALLEGRO_KEY_BACKSPACE:
+                    //Two events can be generated, filtering to only one
+                    if (keyEvent.keyboard.type == ALLEGRO_EVENT_KEY_CHAR)
+                        RemoveCharacter();
+                break;
+
+                case ALLEGRO_KEY_DELETE:
+
+                break;
+
+                default:
+                    AddCharacter(keyEvent.keyboard.keycode, keyEvent.keyboard.unichar);
+                break;
+            }
+
+            
+
         }
+
+
         if (gameState == GAMESTATE_IN_CHATBOX)
         {
             mouseState = GetMouseClamped();
-
+            
             if (event.type == ALLEGRO_EVENT_KEY_DOWN || (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1)))
             {
                 if (chatboxes)
@@ -470,6 +511,28 @@ int main(int argc, char* args[])
                 }
 
             }
+        }
+        if (event.type == ALLEGRO_EVENT_KEY_CHAR) {
+            /*
+            switch (event.keyboard.keycode) {
+                case ALLEGRO_KEY_ENTER:
+                    RunLine();
+                break;
+
+                case ALLEGRO_KEY_BACKSPACE:
+                    RemoveCharacter();
+                break;
+
+                case ALLEGRO_KEY_DELETE:
+
+                break;
+
+                default:
+                    printf("gg\n");
+                    AddCharacter(event.keyboard.keycode, event.keyboard.unichar);
+                break;
+              }
+              */
         }
         if (event.type == ALLEGRO_EVENT_TIMER) {
             
@@ -508,6 +571,7 @@ int main(int argc, char* args[])
             Render(dt, &mouseState, &mouseStateLastFrame, &keyState, &keyStateLastFrame);
             if (gameState == GAMESTATE_INGAME)
                 RecordReplay(SCREEN);
+                DrawConsole();
 
             al_set_target_bitmap(backbuffer);
             al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE, drawposx, drawposy,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
@@ -519,7 +583,7 @@ int main(int argc, char* args[])
             clock_t end = clock();
             double time = (double)(end - begin) / CLOCKS_PER_SEC;
 
-            printf("Total time: %f\n",time);
+            //printf("Total time: %f\n",time);
 
             fflush(stdout);
         }

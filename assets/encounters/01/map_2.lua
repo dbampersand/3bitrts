@@ -10,6 +10,9 @@ function setup()
     CreateObject("assets/enemies/cobra/cobra.lua",400,211,TYPE_ENEMY,0);
     CreateObject("assets/enemies/viper/viper.lua",324,265,TYPE_ENEMY,0) ;
     CreateObject("assets/enemies/cobra/cobra.lua",389,283,TYPE_ENEMY,0);
+    
+    CreateObject("assets/enemies/scorpion/scorpion.lua",389,262,TYPE_ENEMY,0);
+    CreateObject("assets/enemies/scorpion/scorpion.lua",422,260,TYPE_ENEMY,0);
 
 
     CreateObject("assets/enemies/wadjet/wadjet.lua",180,344,TYPE_ENEMY,0);

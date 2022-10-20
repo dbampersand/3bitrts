@@ -40,8 +40,7 @@ typedef struct Keymap
 
     Key key_ctrlgroups[10];
 
-
-
+    Key key_Console;
 
 } Keymap;
 

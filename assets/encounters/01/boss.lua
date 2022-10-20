@@ -71,7 +71,7 @@ function update(dt)
         end
 
         local bombtarg = {}
-        bombtarg["target"] = GetRandomUnit(TYPE_ENEMY,Bor(Bor(TYPE_HEALER,TYPE_RANGEDDPS),TYPE_MELEEDPS))
+        bombtarg["target"] = GetRandomUnit(TYPE_ENEMY,Bor(Bor(TYPE_HEALER,TYPE_RANGEDDPS),TYPE_MELEEDPS),999)
     
         CastAbility(bomb,0.1,{bombtarg});
     
@@ -82,18 +82,18 @@ function update(dt)
 
         if (AbilityIsOnCooldown(GetObjRef(),1) == false) then
 
-            aoeTarget = GetRandomUnit(TYPE_ENEMY,TYPE_HEALER)
+            aoeTarget = GetRandomUnit(TYPE_ENEMY,TYPE_HEALER,999)
             targ1 = {};
             targ1["target"] = aoeTarget;
             --CastAbility(fire,0.1,{targ1});
         end
         
         targ2 = {}
-        targ2["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL);
+        targ2["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999);
         CastAbility(nuke,0.1,{targ2});
 
         targ3 = {};
-        targ3["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_TANK)
+        targ3["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_TANK,999)
         --CastAbility(firebreath,4,{targ3});
 
 

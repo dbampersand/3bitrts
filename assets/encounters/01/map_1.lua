@@ -13,6 +13,7 @@ function setup()
     CreateObject("assets/enemies/cobra/cobra.lua",80,184, TYPE_ENEMY,0);
     CreateObject("assets/enemies/cobra/cobra.lua",164,184,TYPE_ENEMY,0);
 
+
     CreateObject("assets/enemies/caduceus/caduceus.lua",156,48,TYPE_ENEMY,0);
 
     SetAutoWin(false);

@@ -203,30 +203,36 @@ int L_GetRandomUnit(lua_State* l)
 {
     OBJ_FRIENDLINESS friend = lua_tonumber(l,1);
     GAMEOBJ_TYPE_HINT typeHint = lua_tonumber(l,2);
+    float range = lua_tonumber(l,3);
 
     GameObject** list = calloc(MAX_OBJS,sizeof(GameObject*));
     int numObjs=0;
     for (int i = 0; i < MAX_OBJS; i++)
     {
         GameObject* g = &objects[i];
+        if (ObjIsDecoration(g) && friend != TYPE_DECORATION)
+            continue;
         if (IsActive(g))
         {
-            if (ObjHasType(g,typeHint))
+            if (GetDist(g,currGameObjRunning) < range)
             {
-                if (friend == TYPE_ENEMY)
+                if (ObjHasType(g,typeHint))
                 {
-                    if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(currGameObjRunning))
+                    if (friend == TYPE_ENEMY)
                     {
-                        list[numObjs] = g;
-                        numObjs++;
+                        if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(currGameObjRunning))
+                        {
+                            list[numObjs] = g;
+                            numObjs++;
+                        }
                     }
-                }
-                if (friend == TYPE_FRIENDLY)
-                {
-                    if (GetPlayerOwnedBy(g) == GetPlayerOwnedBy(currGameObjRunning))
+                    if (friend == TYPE_FRIENDLY)
                     {
-                        list[numObjs] = g;
-                        numObjs++;
+                        if (GetPlayerOwnedBy(g) == GetPlayerOwnedBy(currGameObjRunning))
+                        {
+                            list[numObjs] = g;
+                            numObjs++;
+                        }
                     }
                 }
             }
@@ -235,8 +241,9 @@ int L_GetRandomUnit(lua_State* l)
     if (numObjs > 0)
     {
         GameObject* randObj = list[rand()%numObjs];
-         lua_pushnumber(l,randObj-objects);
-
+        lua_pushnumber(l,randObj-objects);
+        free(list);
+        return 1;
     }
     //There are no objects tagged - pick a random object that follows the friendliness
     else 
@@ -244,35 +251,44 @@ int L_GetRandomUnit(lua_State* l)
         for (int i = 0; i < MAX_OBJS; i++)
         {
             GameObject* g = &objects[i];
+            if (ObjIsDecoration(g) && friend != TYPE_DECORATION)
+                continue;
+
             if (IsActive(g))
             {
-                if (friend == TYPE_ENEMY)
+                if (GetDist(g,currGameObjRunning) < range)
                 {
-                    if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(currGameObjRunning))
+                    if (friend == TYPE_ENEMY)
                     {
-                        list[numObjs] = g;
-                        numObjs++;
+                        if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(currGameObjRunning))
+                        {
+                            list[numObjs] = g;
+                            numObjs++;
+                        }
                     }
-                }
-                if (friend == TYPE_FRIENDLY)
-                {
-                    if (GetPlayerOwnedBy(g) == GetPlayerOwnedBy(currGameObjRunning))
+                    if (friend == TYPE_FRIENDLY)
                     {
-                        list[numObjs] = g;
-                        numObjs++;
+                        if (GetPlayerOwnedBy(g) == GetPlayerOwnedBy(currGameObjRunning))
+                        {
+                            list[numObjs] = g;
+                            numObjs++;
+                        }
                     }
-                }
 
+                }
             }
         }
         if (numObjs > 0)
         {
+            
             GameObject* randObj = list[rand()%numObjs];
             lua_pushnumber(l,randObj-objects);
+            free(list);
+            return 1;
         }
     }
     //there are no objects with the friendliness specified so let's just pick a completely random object
-    if (numObjs <= 0)
+    /*if (numObjs <= 0)
     {
         for (int i = 0; i < MAX_OBJS; i++)
         {
@@ -286,7 +302,7 @@ int L_GetRandomUnit(lua_State* l)
         GameObject* randObj = list[rand()%numObjs];
         lua_pushnumber(l,randObj-objects);
 
-    }
+    }*/
     //if we still have no objects
     if (numObjs <= 0)
     {
@@ -746,7 +762,8 @@ int L_SetAbilityRange(lua_State* l)
 int L_SetDamage(lua_State* l)
 {
     float damage = lua_tonumber(l,1);
-    currGameObjRunning->baseDamage = damage + GetAugmentDamageBonus(damage,currEncounterRunning->augment);
+    if (currGameObjRunning)
+        currGameObjRunning->baseDamage = damage + GetAugmentDamageBonus(damage,currEncounterRunning->augment);
     return 0;
 }
 int L_SetAttackSpeed(lua_State* l)
@@ -2219,6 +2236,7 @@ void SetGlobals(lua_State* l)
     
     lua_pushinteger(l,DITHER_VERTICAL_HALF);
     lua_setglobal(l,"DITHER_VERTICAL_HALF");
+
     lua_pushinteger(l,DITHER_VERTICAL_QUARTER);
     lua_setglobal(l,"DITHER_VERTICAL_QUARTER");
     lua_pushinteger(l,DITHER_VERTICAL_EIGTH);

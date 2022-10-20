@@ -151,6 +151,8 @@ void SetDefaultSettings(Settings* setting)
 
     setting->keymap.key_HoldPosition = (Key){"Hold Position",ALLEGRO_KEY_H};
 
+    setting->keymap.key_Console = (Key){"Activate Console",ALLEGRO_KEY_OPENBRACE};
+
 }
 
 void EndSettings()
