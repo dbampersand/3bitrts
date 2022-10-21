@@ -736,6 +736,8 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
    // memset(found->abilities,0,sizeof(Ability)*4);
     memset(currGameObjRunning,0,sizeof(GameObject));
 
+    currGameObjRunning->objectIsStunnable = true;
+
     currGameObjRunning->lua_buffer = prefab->lua_buffer; 
     currGameObjRunning->path = prefab->path;
     currGameObjRunning->name = prefab->name;
