@@ -95,15 +95,19 @@ void init()
 }
 
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseStateLastFrame)
-{
+{   
 
     if (gameState == GAMESTATE_IN_SHOP)
         UpdateShop(dt,*mouseState,*mouseStateLastFrame);
-    
-    if (!GameIsPaused())
+
+    if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS)
     {
         if (IsBindDownThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Console))
             ToggleConsole();
+    }    
+
+    if (!GameIsPaused())
+    {
         MoveCamera(*mouseState,keyState,dt);
         UpdateItems(dt);
         lua_settop(luaState,0);
@@ -429,7 +433,7 @@ int main(int argc, char* args[])
    al_register_event_source(queue, al_get_timer_event_source(_FPS_TIMER));
 
     ALLEGRO_EVENT_QUEUE* queue_KeyEvents = al_create_event_queue();
-al_register_event_source(queue_KeyEvents, al_get_keyboard_event_source());
+    al_register_event_source(queue_KeyEvents, al_get_keyboard_event_source());
 
    ALLEGRO_KEYBOARD_STATE keyStateLastFrame;
    al_get_keyboard_state(&keyStateLastFrame);
@@ -565,7 +569,8 @@ al_register_event_source(queue_KeyEvents, al_get_keyboard_event_source());
 
             //if (!ui.currentPanel)
                 Update(dt,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
-            UpdateInterface(dt,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
+            if (!console.active)
+                UpdateInterface(dt,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
             if (gameState == GAMESTATE_EXIT)
                 break;
             Render(dt, &mouseState, &mouseStateLastFrame, &keyState, &keyStateLastFrame);

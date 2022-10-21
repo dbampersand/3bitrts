@@ -756,7 +756,8 @@ int L_GetHeight(lua_State* l)
 }
 int L_SetAbilityRange(lua_State* l)
 {
-    currAbilityRunning->range = lua_tonumber(l,1);
+    if (currAbilityRunning)
+        currAbilityRunning->range = lua_tonumber(l,1);
     return 0;
 }
 int L_SetDamage(lua_State* l)

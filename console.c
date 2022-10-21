@@ -11,7 +11,7 @@
 #include "luafuncs.h"
 #include "player.h"
 
-Console console = {.x = 0, .y = _SCREEN_SIZE-CONSOLE_H, .w = _SCREEN_SIZE, .h = CONSOLE_H, .previousLines = {0}};
+Console console = {.x = 0, .y = _SCREEN_SIZE-CONSOLE_H, .w = _SCREEN_SIZE, .h = CONSOLE_H, };
 
 void InitConsole()
 {
@@ -21,21 +21,22 @@ void ToggleConsole()
 {
     console.active = !console.active;
     if (console.active)
+    {
         RemoveCharacter();
+    }
+    else
+    {
+        al_ustr_truncate(console.currentLine,0);
+    }
 }
 
 void DrawConsole()
 {
     if (console.active)
     {
-        char* cstr =  al_cstr_dup(console.currentLine);
-
         al_draw_filled_rectangle(console.x,console.y,console.x + console.w, console.y + console.h, BG);
-        al_draw_multiline_text(ui.font,FRIENDLY,5,(console.y+console.h)-(LINE_SIZE*3),console.w-5,5,ALLEGRO_ALIGN_LEFT,cstr);
-
-        al_free(cstr);
+        al_draw_multiline_ustr(ui.font,FRIENDLY,5,console.y+5,console.w-5,8,ALLEGRO_ALIGN_LEFT,console.currentLine);
     }
-
 }
 void AddCharacter(int keycode, int unichar)
 {
@@ -55,7 +56,7 @@ void RemoveCharacter()
 {
     if (console.active)
     {
-            al_ustr_truncate(console.currentLine,al_ustr_length(console.currentLine)-1);
+        al_ustr_truncate(console.currentLine,al_ustr_length(console.currentLine)-1);
        // int len = strlen(console.currentLine);
         //if (len == 0)
           //  return;
@@ -68,8 +69,11 @@ void RunLine()
     {
         char* cstr =  al_cstr_dup(console.currentLine);
         currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
-        luaL_loadbuffer(luaState,cstr,strlen(cstr   ),NULL);
+        luaL_loadbuffer(luaState,cstr,strlen(cstr),NULL);
         lua_pcall(luaState,0,0,0);
         al_free(cstr);
+
+        al_ustr_truncate(console.currentLine,0);
+
     }
 }

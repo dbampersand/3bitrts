@@ -13,7 +13,6 @@ typedef struct Console
 {
     int x; int y;
     int w; int h;
-    ALLEGRO_USTR* previousLines[MAX_CONSOLE_LINES];
     ALLEGRO_USTR* currentLine;
 
     bool active;
