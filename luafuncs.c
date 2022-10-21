@@ -810,8 +810,8 @@ void CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const 
     Attack a;
     //a.x = currGameObjRunning->position.worldX + w/2;
     //a.y = currGameObjRunning->position.worldY + h/2;
-    a.x = x;
-    a.y = y;
+    a.x = cx;
+    a.y = cy;
     a.radius = 1;
     a.easing=0;
     a.targetRadius = a.radius;
@@ -819,7 +819,7 @@ void CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const 
     float x2 = x; float y2 = y;
     if (attackType == ATTACK_PROJECTILE_ANGLE)
     {
-        x2 = cx - a.x;  y2 = cy - a.y;
+        x2 = cx - x;  y2 = cy - y;
         if (x2 != 0 && y2 != 0)
             Normalize(&x2,&y2);
     }
@@ -978,7 +978,7 @@ int L_CreateProjectile(lua_State* l)
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 10, i);
+        e = GetEffectFromTable(l, 12, i);
         e.from = currGameObjRunning;
         lua_remove(l,-1);
         effects[i-1] = e;
