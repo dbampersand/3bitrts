@@ -1880,6 +1880,8 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
     r.y = g->position.screenY - padding + g->offset.y + (HEALTHBAR_HEIGHT * (1-summPercent));
     //ToScreenSpace(&r.x,&r.y);
 
+    al_draw_filled_rectangle((int)r.x-1,(int)r.y-1,(int)r.x+r.w+1,(int)r.y+r.h+1,GROUND);
+
     al_draw_rectangle((int)r.x-1,(int)r.y-1,(int)r.x+r.w+1,(int)r.y+r.h+1,BG,1);
     al_draw_rectangle((int)r.x,(int)r.y,(int)r.x+r.w,(int)r.y+r.h,col,1);
 
