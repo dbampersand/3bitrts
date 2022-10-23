@@ -2905,3 +2905,14 @@ void SetObjIsBoss(GameObject* g, bool value)
 {
     g->isBoss = value;
 }
+
+int GetNumActiveObjects()
+{
+    int numObjs = 0;
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        if (IsActive(&objects[i]))
+            numObjs++;
+    }
+    return numObjs;
+}

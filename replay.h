@@ -5,6 +5,7 @@
 #include "sound.h"
 #include <stdio.h>
 #include "gameobject.h"
+#include "attack.h"
 
 #define REPLAY_PREALLOC 39321600
 //10 seconds worth @ 60fps 
@@ -14,6 +15,8 @@
 #define REP_UI_PLAY_SCRUBBER_SIZE 204   
 
 #define TEMP_REPLAY_NAME "CURRREP"
+
+
 
 //TODO: move replay code to this kind of structure
 /*
@@ -42,6 +45,12 @@ typedef struct GameStateReplay
 
 typedef struct ReplayFrame
 {
+    int32_t numObjects;
+    GameObject objects[MAX_OBJS];
+    int32_t numAttacks;
+    Attack attacks[MAX_ATTACKS];
+
+
     char* compressedData;
     uint16_t dataLen;
     Sound soundsPlayedThisFrame[NUM_SOUNDS_TO_SAVE];

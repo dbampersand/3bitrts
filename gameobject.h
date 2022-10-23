@@ -13,6 +13,7 @@
 #include "gameobject.h"
 #include "stdbool.h"
 #include "video.h"
+#include <stdint.h>
 
 
 #define MAX_PATHFINDING_NODES_HELD 20
@@ -105,8 +106,8 @@ typedef struct GameObject
     float manaRegen;
     float maxMana;
 
-    unsigned int spriteIndex;
-    unsigned int selectedSpriteIndex;
+    uint32_t spriteIndex;
+    uint32_t selectedSpriteIndex;
     unsigned int channelingSpriteIndex;
 
     int luafunc_update;
@@ -339,3 +340,5 @@ void GetCentre_Screen(GameObject* g, float* x, float* y);
 void GenerateCircleHighlight(int lightSize);
 void SetLightSize(GameObject* g, int size);
 float GetTotalDotted(GameObject* g);
+
+int GetNumActiveObjects();

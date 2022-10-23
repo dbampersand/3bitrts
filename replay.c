@@ -139,21 +139,14 @@ void SerializeSection(Replay* r, bool finished)
 
         //fwrite overwrites
         char* z = "\0";
-        fwrite(&z,sizeof(char),1,tempFile);
-        fwrite(&z,sizeof(char),1,tempFile);
-        fwrite(&z,sizeof(char),1,tempFile);
-
-        fwrite(&z,sizeof(char),1,tempFile);
-        fwrite(&z,sizeof(char),1,tempFile);
-        fwrite(&z,sizeof(char),1,tempFile);
-        fwrite(&z,sizeof(char),1,tempFile);
-
-
+        for (int i = 0; i < strlen(REPLAY_HEADER); i++)
+            fwrite(&z,sizeof(char),1,tempFile);
    } 
 
    for (int i = 0; i < r->numFrames; i++)
    {
         ReplayFrame* rf = &r->frames[i];
+        /*
         fwrite(&rf->dataLen, sizeof(rf->dataLen),1,tempFile);
         fwrite(rf->compressedData,sizeof(char),rf->dataLen,tempFile);
         char numSounds = 0;
@@ -163,7 +156,44 @@ void SerializeSection(Replay* r, bool finished)
             {
                 numSounds++;
             }
+        }*/
+        fwrite(&rf->numObjects, sizeof(rf->numObjects),1,tempFile);
+        for (int i = 0; i < rf->numObjects; i++)
+        {
+            GameObject* g = &rf->objects[i];
+            fwrite(&g->position.worldX, sizeof(g->position.worldX),1,tempFile);
+            fwrite(&g->position.worldY, sizeof(g->position.worldY),1,tempFile);
+            fwrite(&g->health, sizeof(g->health),1,tempFile);
+            fwrite(&g->maxHP, sizeof(g->maxHP),1,tempFile);
+
+            fwrite(&g->spriteIndex, sizeof(g->spriteIndex),1,tempFile);
         }
+        fwrite(&rf->numAttacks, sizeof(rf->numAttacks),1,tempFile);
+        for (int i = 0; i < rf->numObjects; i++)
+        {
+            Attack* a = &rf->attacks[i];
+            fwrite(&a->x, sizeof(a->x),1,tempFile);
+            fwrite(&a->y, sizeof(a->y),1,tempFile);
+
+            fwrite(&a->dither, sizeof(a->dither),1,tempFile);
+            fwrite(&a->attackType, sizeof(a->attackType),1,tempFile);
+            fwrite(&a->properties, sizeof(a->properties),1,tempFile);
+    
+            fwrite(&a->radius, sizeof(a->radius),1,tempFile);
+        }
+
+
+
+        char numSounds = 0;
+        for (int i = 0; i < NUM_SOUNDS_TO_SAVE; i++)
+        {
+            if (rf->soundsPlayedThisFrame[i].path)
+            {
+                numSounds++;
+            }
+        }
+
+
         fwrite(&numSounds,sizeof(numSounds),1,tempFile);
         for (int i = 0; i < NUM_SOUNDS_TO_SAVE; i++)
         {
@@ -201,17 +231,42 @@ void SerializeSection(Replay* r, bool finished)
    
 
 }
+
+
 ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
 {
    // if (!frameTest)
     //{
     //    frameTest = malloc(_SCREEN_SIZE * _SCREEN_SIZE*(sizeof(char)+sizeof(uint16_t)));
    // }
+    int numObjs = GetNumActiveObjects();
+
+
    if (replay.numFrames >= FRAMES_PREALLOC || bufferPosition + _SCREEN_SIZE*_SCREEN_SIZE*sizeof(char) +  sizeof(uint32_t) + (sizeof(ReplayFrame)-sizeof(char*)) >= REPLAY_PREALLOC)
    {
         SerializeSection(&replay,false);
    }
     ReplayFrame rf = {0};
+    rf.numObjects = numObjs;
+    int index = 0;
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        if (IsActive(&objects[i]))
+        {
+            rf.objects[index] = objects[i];
+            index++;
+        }
+    }
+    index = 0;
+    for (int i = 0; i < MAX_ATTACKS; i++)
+    {
+        if (AttackIsActive(&attacks[i]))
+        {
+            rf.attacks[index] = attacks[i];
+            index++;
+        }
+
+    }
     return rf;
 
     rf.compressedData =  &replayBuffer[bufferPosition];//malloc(_SCREEN_SIZE * _SCREEN_SIZE*(sizeof(char)+sizeof(uint16_t)));
@@ -415,6 +470,7 @@ void RemoveReplay(Replay* r)
     memset(r,0,sizeof(Replay));
     remove("replays/" TEMP_REPLAY_NAME);
 }
+
 bool LoadReplay(char* path)
 {
     FILE* f = fopen(path, "rb");
@@ -544,6 +600,56 @@ bool LoadReplay(char* path)
     return true;
     
 }
+void SaveSpriteReplay(FILE* f, Sprite* s)
+{
+    uint32_t w = GetWidthSprite(s);
+    uint32_t h = GetHeightSprite(s);
+
+    fwrite(&w,sizeof(w),1,f);
+    fwrite(&h,sizeof(h),1,f);
+
+    al_lock_bitmap(s->sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READONLY);
+    for (int x = 0; x < w; x++)
+    {
+        for (int y = 0; x < h; y++)
+        {
+            ALLEGRO_COLOR pixel = al_get_pixel(s->sprite,x,y);
+            fwrite(&pixel,sizeof(ALLEGRO_COLOR),1,f);
+        }
+    }
+    al_unlock_bitmap(s->sprite);
+}
+void SaveReplaySpriteTable(FILE* f, FILE* to)
+{
+    fseek(f,strlen(REPLAY_HEADER),0);
+
+    int32_t spritesIndices[numSprites] = {0};
+    int32_t numObjects;
+    fread(&numObjects,sizeof(int32_t),1,f);
+
+    GameObject* g = &objects[0];
+    int offset = sizeof(int32_t);
+    for (int i = 0; i < numObjects; i++)
+    {
+        const int positionOffset = sizeof(g->position.worldX) + sizeof(g->position.worldY) + sizeof(g->health) + sizeof(g->maxHP);
+        fseek(f,positionOffset,offset);
+        int spriteIndex = 0;
+        fread(&spriteIndex,sizeof(g->spriteIndex),1,f);
+
+        spriteIndices[spriteIndex] = spriteIndex;
+
+        offset += positionOffset + sizeof(g->spriteIndex);
+
+    }
+
+    fwrite(&numSprites,sizeof(numSprites),1,f);
+    for (int i = 0; i < numSprites; i++)
+    {
+        SaveSpriteReplay(to,&sprites[spritesIndices[i]]); 
+    }
+
+    
+}
 void ReplayToDisk(Replay* r)
 {
     //zlib to compress
@@ -555,6 +661,8 @@ void ReplayToDisk(Replay* r)
     size_t buffsiz = snprintf(NULL,0, "replays/%d%02d%02d_%02d%02d%02d_.rep", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
     char* filename = calloc(buffsiz+1,sizeof(char));
     sprintf(filename,"replays/%d%02d%02d_%02d%02d%02d_.rep", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+    
 
    // FILE* f = fopen(filename, "wb+");
     //fwrite(header,sizeof(char),strlen(header),f);
@@ -594,6 +702,9 @@ void ReplayToDisk(Replay* r)
     char* compressedFilename = calloc(buffsiz+1,sizeof(char));
     sprintf(compressedFilename,"replays/%d%02d%02d_%02d%02d%02d.rep", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
     FILE* compressed = fopen(compressedFilename, "wb+");
+
+    SaveReplaySpriteTable(f,compressed);
+
 
     SET_BINARY_MODE(f);
     SET_BINARY_MODE(compressed);

@@ -5,6 +5,7 @@
 #include "colors.h"
 #include "video.h"
 
+
 typedef struct GameObject GameObject;
 typedef struct Effect Effect;
 typedef struct Ability Ability;
