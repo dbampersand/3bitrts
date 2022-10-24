@@ -20,6 +20,7 @@
 Attack attacks[MAX_ATTACKS] = {0};
 unsigned char freeAttacks[MAX_ATTACKS] = {0}; 
 int attack_top = 0;
+int numActiveAttacks = 0;
 ALLEGRO_BITMAP* cachedAttackSprites[MAX_AOE_CIRCUMFERENCE_SIZE+1][DITHER_ALL] = {0};
 
 
@@ -69,6 +70,7 @@ Attack* AddAttack(Attack* a)
     attacks[freeAttacks[attack_top]] = *a;
     attacks[freeAttacks[attack_top]].properties |= ATTACK_ACTIVE;
     attack_top++;   
+    numActiveAttacks++;
     return &attacks[index];
 }
 void RemoveAttack(int attackindex)
@@ -76,6 +78,7 @@ void RemoveAttack(int attackindex)
     if (attackindex < 0 || attackindex >= MAX_ATTACKS)
         return;
     
+
     Attack* a = &attacks[attackindex];
     if (a->cameFrom)
     {
@@ -91,6 +94,7 @@ void RemoveAttack(int attackindex)
     if (attack_top <= 0)
         return;
     attack_top--;
+    numActiveAttacks--;
     freeAttacks[attack_top] = attackindex;
     if (a->effects)
     {
@@ -684,4 +688,8 @@ void UpdateScreenPositionsAttack(Attack* a)
 {
     a->screenX = ToScreenSpace_X(a->x);
     a->screenY = ToScreenSpace_Y(a->y);
+}
+int GetNumActiveAttacks()
+{
+    return numActiveAttacks;
 }

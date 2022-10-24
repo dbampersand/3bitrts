@@ -187,17 +187,6 @@ void SerializeSection(Replay* r, bool finished)
    for (int i = 0; i < r->numFrames; i++)
    {
         ReplayFrame* rf = &r->frames[i];
-        /*
-        fwrite(&rf->dataLen, sizeof(rf->dataLen),1,tempFile);
-        fwrite(rf->compressedData,sizeof(char),rf->dataLen,tempFile);
-        char numSounds = 0;
-        for (int i = 0; i < NUM_SOUNDS_TO_SAVE; i++)
-        {
-            if (rf->soundsPlayedThisFrame[i].path)
-            {
-                numSounds++;
-            }
-        }*/
         fwrite(&rf->numObjects, sizeof(rf->numObjects),1,tempFile);
         for (int i = 0; i < rf->numObjects; i++)
         {
@@ -236,7 +225,7 @@ void SerializeSection(Replay* r, bool finished)
         }
 
 
-       /* fwrite(&numSounds,sizeof(numSounds),1,tempFile);
+        fwrite(&numSounds,sizeof(numSounds),1,tempFile);
         for (int i = 0; i < NUM_SOUNDS_TO_SAVE; i++)
         {
             if (rf->soundsPlayedThisFrame[i].path)
@@ -245,7 +234,7 @@ void SerializeSection(Replay* r, bool finished)
                 fwrite(&len,sizeof(len),1,tempFile);
                 fwrite(rf->soundsPlayedThisFrame[i].path,sizeof(char),len,tempFile);
             }
-        }*/
+        }
 
    }
 
@@ -296,17 +285,17 @@ ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
     }
     index = 0;
 
-    rf.numAttacks = 0;
+    rf.numAttacks = GetNumActiveAttacks();
+    rf.attacks = calloc(rf.numAttacks,sizeof(Attack));
+
     for (int i = 0; i < MAX_ATTACKS; i++)
     {
         if (AttackIsActive(&attacks[i]))
         {
             rf.attacks[index] = attacks[i];
             index++;
-            rf.numAttacks++;
         }
     }
-    rf.attacks = calloc(rf.numAttacks,sizeof(Attack));
 
     rf.mapSpriteIndex = currMap->spriteIndex;
 
@@ -582,6 +571,18 @@ bool LoadReplay(char* path)
                 fread(&rf->mapSpriteIndex,sizeof(rf->mapSpriteIndex),1,temp);
 
 
+                char numSounds = 0;
+                fread(&numSounds,sizeof(numSounds),1,temp);
+                memset(rf->soundsPlayedThisFrame,0,NUM_SOUNDS_TO_SAVE*sizeof(Sound));
+                for (int i = 0; i < numSounds; i++)
+                {
+                        uint16_t len = 0;
+                        fread(&len,sizeof(len),1,temp);
+                        rf->soundsPlayedThisFrame[i].path = calloc(len+1,sizeof(char));
+                        fread(rf->soundsPlayedThisFrame[i].path,sizeof(char),len,temp);
+                }
+
+
             }
             int32_t numSprRep = 0;
             fread(&numSprRep,sizeof(numSprRep),1,temp);
@@ -791,6 +792,22 @@ void SaveReplaySpriteTable(FILE* f, FILE* to)
 
         int32_t mapSprite=0;
         offset += sizeof(rf->mapSpriteIndex);
+
+
+        fseek(f,offset,SEEK_SET);
+        int numSounds = 0;
+        fread(&numSounds,sizeof(numSounds),1,f);
+        offset += sizeof(numSounds);
+
+        memset(rf->soundsPlayedThisFrame,0,NUM_SOUNDS_TO_SAVE*sizeof(Sound));
+        for (int i = 0; i < numSounds; i++)
+        {
+            uint16_t len = 0;
+            fread(&len,sizeof(len),1,f);
+            offset += sizeof(len);
+            offset += len;
+            fseek(f,offset,SEEK_SET);
+        }
 
 
         //fseek(f,offset,SEEK_SET);

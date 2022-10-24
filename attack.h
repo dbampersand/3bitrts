@@ -95,7 +95,7 @@ Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float ti
 bool AttackIsSoak(Attack* a);
 bool AttackIsProjectile(Attack* a);
 void AttackCanHitTarget(Attack* a, GameObject* g);
-
+int GetNumActiveAttacks();
 
 int NumUnitsInsideAttack(Attack* a);
 bool AttackIsActive(Attack* a);
