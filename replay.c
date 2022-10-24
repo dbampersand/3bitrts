@@ -69,7 +69,7 @@ void LoadFrame(ALLEGRO_BITMAP* screen, ReplayFrame* frame)
 {
     if (!frame) return;
     int x=0; int y=0;
-    al_lock_bitmap(screen,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_WRITEONLY);
+    /*al_lock_bitmap(screen,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_WRITEONLY);
     for (int i = 0; i < frame->dataLen; i += (sizeof(uint16_t)+sizeof(char)))
     {
         uint16_t size; 
@@ -89,7 +89,17 @@ void LoadFrame(ALLEGRO_BITMAP* screen, ReplayFrame* frame)
         }
 
     }
-   al_unlock_bitmap(screen);
+   al_unlock_bitmap(screen);*/
+   al_clear_to_color(BG);
+   for (int i = 0; i < frame->numObjects; i++)
+   {
+        GameObject* g = &frame->objects[i];
+        UpdateScreenPositions(g);
+        g->properties |= OBJ_ACTIVE;
+        DrawGameObj(g,false);
+        //objects[i] = frame->objects[i];
+   }
+
 }
 void RecordReplay(ALLEGRO_BITMAP* screen)
 {
@@ -105,6 +115,11 @@ void RecordReplay(ALLEGRO_BITMAP* screen)
     //    replay.frames = calloc(replay.numFrames,sizeof(ReplayFrame));
     //}
     replay.frames[replay.numFrames-1] = rf;
+   if (replay.numFrames >= FRAMES_PREALLOC || bufferPosition + _SCREEN_SIZE*_SCREEN_SIZE*sizeof(char) +  sizeof(uint32_t) + (sizeof(ReplayFrame)-sizeof(char*)) >= REPLAY_PREALLOC)
+   {
+        SerializeSection(&replay,false);
+   }
+
 
 }
 void PlayReplay(ALLEGRO_BITMAP* screen)
@@ -137,11 +152,14 @@ void SerializeSection(Replay* r, bool finished)
         remove("replays/" TEMP_REPLAY_NAME);
         tempFile = fopen("replays/" TEMP_REPLAY_NAME , "wb+");
 
-        //fwrite overwrites
         char* z = "\0";
         for (int i = 0; i < strlen(REPLAY_HEADER); i++)
             fwrite(&z,sizeof(char),1,tempFile);
+        uint32_t frames = r->numFrames; uint32_t totalFrames = r->totalFrames;
+        fwrite(&frames,sizeof(frames),1,tempFile);
+
    } 
+   
 
    for (int i = 0; i < r->numFrames; i++)
    {
@@ -169,7 +187,7 @@ void SerializeSection(Replay* r, bool finished)
             fwrite(&g->spriteIndex, sizeof(g->spriteIndex),1,tempFile);
         }
         fwrite(&rf->numAttacks, sizeof(rf->numAttacks),1,tempFile);
-        for (int i = 0; i < rf->numObjects; i++)
+        for (int i = 0; i < rf->numAttacks; i++)
         {
             Attack* a = &rf->attacks[i];
             fwrite(&a->x, sizeof(a->x),1,tempFile);
@@ -181,9 +199,10 @@ void SerializeSection(Replay* r, bool finished)
     
             fwrite(&a->radius, sizeof(a->radius),1,tempFile);
         }
+        printf("%i\n",rf->numAttacks);
 
 
-
+        
         char numSounds = 0;
         for (int i = 0; i < NUM_SOUNDS_TO_SAVE; i++)
         {
@@ -194,7 +213,7 @@ void SerializeSection(Replay* r, bool finished)
         }
 
 
-        fwrite(&numSounds,sizeof(numSounds),1,tempFile);
+       /* fwrite(&numSounds,sizeof(numSounds),1,tempFile);
         for (int i = 0; i < NUM_SOUNDS_TO_SAVE; i++)
         {
             if (rf->soundsPlayedThisFrame[i].path)
@@ -203,7 +222,7 @@ void SerializeSection(Replay* r, bool finished)
                 fwrite(&len,sizeof(len),1,tempFile);
                 fwrite(rf->soundsPlayedThisFrame[i].path,sizeof(char),len,tempFile);
             }
-        }
+        }*/
 
    }
 
@@ -240,12 +259,6 @@ ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
     //    frameTest = malloc(_SCREEN_SIZE * _SCREEN_SIZE*(sizeof(char)+sizeof(uint16_t)));
    // }
     int numObjs = GetNumActiveObjects();
-
-
-   if (replay.numFrames >= FRAMES_PREALLOC || bufferPosition + _SCREEN_SIZE*_SCREEN_SIZE*sizeof(char) +  sizeof(uint32_t) + (sizeof(ReplayFrame)-sizeof(char*)) >= REPLAY_PREALLOC)
-   {
-        SerializeSection(&replay,false);
-   }
     ReplayFrame rf = {0};
     rf.numObjects = numObjs;
     int index = 0;
@@ -258,15 +271,19 @@ ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
         }
     }
     index = 0;
+
+    rf.numAttacks = 0;
     for (int i = 0; i < MAX_ATTACKS; i++)
     {
         if (AttackIsActive(&attacks[i]))
         {
             rf.attacks[index] = attacks[i];
             index++;
+            rf.numAttacks++;
         }
-
     }
+
+
     return rf;
 
     rf.compressedData =  &replayBuffer[bufferPosition];//malloc(_SCREEN_SIZE * _SCREEN_SIZE*(sizeof(char)+sizeof(uint16_t)));
@@ -489,8 +506,76 @@ bool LoadReplay(char* path)
             fseek(temp, 0, SEEK_END);
             int numBytes = ftell(temp);
             rewind(temp);
+            
+            fseek(temp,strlen(REPLAY_HEADER),SEEK_SET);
+            fread(&r->totalFrames,sizeof(r->numFrames),1,temp);
+            r->numFrames = r->totalFrames;
+            r->frames = calloc(r->totalFrames,sizeof(ReplayFrame));
+            for (int i = 0; i < r->totalFrames; i++)
+            {
+                ReplayFrame* rf = &r->frames[i];
+                fread(&rf->numObjects,sizeof(rf->numObjects),1,temp);
+                for (int j = 0; j < rf->numObjects; j++)
+                {
+                    GameObject* g = &rf->objects[j];
+                    fread(&g->position.worldX,sizeof(g->position.worldX),1,temp);
+                    fread(&g->position.worldY,sizeof(g->position.worldY),1,temp);
+                    fread(&g->health,sizeof(g->health),1,temp);
+                    fread(&g->maxHP,sizeof(g->maxHP),1,temp);
+                    fread(&g->spriteIndex,sizeof(g->spriteIndex),1,temp);
+                
+                }
+                fread(&rf->numAttacks,sizeof(rf->numAttacks),1,temp);
+                for (int j = 0; j < rf->numAttacks; j++)
+                {
+                    Attack* a = &rf->attacks[j];
+                    fread(&a->x,sizeof(a->x),1,temp);
+                    fread(&a->y,sizeof(a->y),1,temp);
 
-            char* repBuffer = calloc(numBytes,sizeof(char));
+                    fread(&a->dither,sizeof(a->dither),1,temp);
+                    fread(&a->attackType,sizeof(a->attackType),1,temp);
+                    fread(&a->properties,sizeof(a->properties),1,temp);
+                    fread(&a->radius,sizeof(a->radius),1,temp);
+                }
+
+            }
+            int32_t numSprRep = 0;
+            fread(&numSprRep,sizeof(numSprRep),1,temp);
+
+            r->sprites = calloc(numSprRep,sizeof(Sprite));
+            r->numSprites = numSprRep;
+
+
+            ALLEGRO_BITMAP* before = al_get_target_bitmap();
+            for (int i = 0; i < numSprRep; i++)
+            {
+                uint32_t w = 0;
+                uint32_t h = 0;
+
+                fread(&w,sizeof(w),1,temp);
+                fread(&h,sizeof(h),1,temp);
+
+                r->sprites[i].sprite = al_create_bitmap(w,h);
+                al_lock_bitmap(r->sprites[i].sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_WRITEONLY);
+                al_set_target_bitmap(r->sprites[i].sprite);
+
+                for (int x = 0; x < w; x++)
+                {
+                    for (int y = 0; y < h; y++)
+                    {
+                        ALLEGRO_COLOR pixel;
+                        fread(&pixel,sizeof(ALLEGRO_COLOR),1,temp);
+                        al_put_pixel(x,y,pixel);
+                    }
+                }
+                al_unlock_bitmap(r->sprites[i].sprite);
+
+            }
+            al_set_target_bitmap(before);
+
+
+
+            /*char* repBuffer = calloc(numBytes,sizeof(char));
             fread(repBuffer, 1, numBytes, temp);
             
             if (replayBuffer)
@@ -589,7 +674,7 @@ bool LoadReplay(char* path)
 
 
 
-            }
+            }*/
             remove("replays/temp");
         }
     }
@@ -611,7 +696,7 @@ void SaveSpriteReplay(FILE* f, Sprite* s)
     al_lock_bitmap(s->sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READONLY);
     for (int x = 0; x < w; x++)
     {
-        for (int y = 0; x < h; y++)
+        for (int y = 0; y < h; y++)
         {
             ALLEGRO_COLOR pixel = al_get_pixel(s->sprite,x,y);
             fwrite(&pixel,sizeof(ALLEGRO_COLOR),1,f);
@@ -621,28 +706,54 @@ void SaveSpriteReplay(FILE* f, Sprite* s)
 }
 void SaveReplaySpriteTable(FILE* f, FILE* to)
 {
-    fseek(f,strlen(REPLAY_HEADER),0);
 
-    int32_t spritesIndices[numSprites] = {0};
-    int32_t numObjects;
-    fread(&numObjects,sizeof(int32_t),1,f);
+    int32_t spritesIndices[numSprites];
+    memset(spritesIndices,0,numSprites*sizeof(int32_t));
+
 
     GameObject* g = &objects[0];
-    int offset = sizeof(int32_t);
-    for (int i = 0; i < numObjects; i++)
+    int offset = strlen(REPLAY_HEADER) + sizeof(uint32_t);
+    for (int i = 0; i < replay.totalFrames; i++)
     {
-        const int positionOffset = sizeof(g->position.worldX) + sizeof(g->position.worldY) + sizeof(g->health) + sizeof(g->maxHP);
-        fseek(f,positionOffset,offset);
-        int spriteIndex = 0;
-        fread(&spriteIndex,sizeof(g->spriteIndex),1,f);
+        fseek(f,offset,SEEK_SET);
 
-        spriteIndices[spriteIndex] = spriteIndex;
+        int32_t numObjects; 
+        fread(&numObjects,sizeof(numObjects),1,f);
+        offset += sizeof(numObjects);
 
-        offset += positionOffset + sizeof(g->spriteIndex);
+        for (int j = 0; j < numObjects; j++)
+        {
+            const int positionOffset = sizeof(g->position.worldX) + sizeof(g->position.worldY) + sizeof(g->health) + sizeof(g->maxHP);
+            fseek(f, offset + positionOffset, SEEK_SET);
 
+            uint32_t spriteIndex = 0;
+            fread(&spriteIndex,sizeof(g->spriteIndex),1,f);
+
+            spritesIndices[spriteIndex] = spriteIndex;
+
+            offset += positionOffset + sizeof(g->spriteIndex);
+        }  
+        ReplayFrame* rf = &replay.frames[0];
+        Attack* a = &rf->attacks[0];
+
+        int32_t numAttacks = 0;
+        fread(&numAttacks,sizeof(rf->numAttacks),1,f);
+
+        int attackOffset = sizeof(rf->numAttacks) + ((sizeof(a->x) + sizeof(a->y) + sizeof(a->dither) + sizeof(a->attackType) + sizeof(a->properties) + sizeof(a->radius)) * numAttacks);
+        offset += attackOffset;
+
+        //fseek(f,offset,SEEK_SET);
+        //char numSounds = 0; 
+
+        //int soundOffset = sizeof(rf->numSounds) + ((sizeof(a->x) + sizeof(a->y) + sizeof(a->dither) + sizeof(a->attackType) + sizeof(a->properties) + sizeof(a->radius)) * numAttacks);
+
+
+       // offset += sizeof(numSounds);
     }
 
-    fwrite(&numSprites,sizeof(numSprites),1,f);
+    fseek(to,0,SEEK_END);
+    
+    fwrite(&numSprites,sizeof(numSprites),1,to);
     for (int i = 0; i < numSprites; i++)
     {
         SaveSpriteReplay(to,&sprites[spritesIndices[i]]); 
@@ -697,13 +808,21 @@ void ReplayToDisk(Replay* r)
     fclose(f);
     */
 
-    FILE* f = fopen("replays/" TEMP_REPLAY_NAME, "rb");
+    FILE* f = fopen("replays/" TEMP_REPLAY_NAME, "r+b");
+    fseek(f,strlen(REPLAY_HEADER),SEEK_SET);
+    fwrite(&replay.totalFrames,sizeof(replay.totalFrames),1,f);
+    fseek(f,0,SEEK_SET);
+
+    fseek(f,0,SEEK_END);
+    SaveReplaySpriteTable(f,f);
+    fseek(f,0,SEEK_SET);
+
+
 
     char* compressedFilename = calloc(buffsiz+1,sizeof(char));
     sprintf(compressedFilename,"replays/%d%02d%02d_%02d%02d%02d.rep", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
     FILE* compressed = fopen(compressedFilename, "wb+");
 
-    SaveReplaySpriteTable(f,compressed);
 
 
     SET_BINARY_MODE(f);

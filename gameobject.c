@@ -27,6 +27,7 @@
 #include "settings.h"
 
 #include "pathfind.h"
+#include "replay.h"
 
  GameObject* objects = NULL;
  int numObjects = 0;
@@ -1239,7 +1240,7 @@ void SetOwnedBy(GameObject* g, int i)
     }
 }
 void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
-{
+    {
     if (!g)
         return;
     if (dV == 0) return;
@@ -2040,6 +2041,8 @@ void DrawMapHighlights()
 }
 void DrawSummonEffect(GameObject* g)
 {
+    if (gameState == GAMESTATE_WATCHING_REPLAY)
+        return;
     ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
     float fxtimer = GetSummonPercent(g);
     if (g->summonTime > g->summonMax)
@@ -2077,10 +2080,14 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     ALLEGRO_COLOR c = GetColor(GameObjToColor(g),GetPlayerOwnedBy(g));
     DrawSummonEffect(g);
 
-    if (g->summonTime >= g->summonMax)
+
+    if (g->summonTime >= g->summonMax && gameState != GAMESTATE_WATCHING_REPLAY)
         RedrawMapSegmentUnderObj(g);
-        
-    Sprite* s = ObjIsChannelling(g) ? &sprites[g->channelingSpriteIndex] :  &sprites[g->spriteIndex];
+    Sprite* s;
+    if (gameState == GAMESTATE_WATCHING_REPLAY) 
+        s = &replay.sprites[g->spriteIndex];
+    else   
+        s = ObjIsChannelling(g) ? &sprites[g->channelingSpriteIndex] :  &sprites[g->spriteIndex];
     bool isReversed = IsSelected(g) || forceInverse;
     isReversed = g->flashTimer > 0 ? !isReversed : isReversed;
 
@@ -2697,10 +2704,15 @@ void UnsetAll()
 }
 int GetWidth(GameObject* g)
 {
+    if (gameState == GAMESTATE_WATCHING_REPLAY)
+        return al_get_bitmap_width(replay.sprites[g->spriteIndex].sprite);
+
     return al_get_bitmap_width(sprites[g->spriteIndex].sprite);
 }
 int GetHeight(GameObject* g)
 {
+    if (gameState == GAMESTATE_WATCHING_REPLAY)
+        return al_get_bitmap_height(replay.sprites[g->spriteIndex].sprite);
     return al_get_bitmap_height(sprites[g->spriteIndex].sprite);
 }
 

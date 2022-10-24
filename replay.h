@@ -58,6 +58,9 @@ typedef struct ReplayFrame
 
 typedef struct Replay
 {
+    Sprite* sprites;
+    int numSprites;
+
     ReplayFrame* frames;
     uint32_t numFrames; 
     uint32_t framePlayPosition;

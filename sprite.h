@@ -10,14 +10,14 @@ typedef struct ALLEGRO_BITMAP ALLEGRO_BITMAP;
 typedef struct GameObject GameObject;
 typedef struct Sprite
 {
-    ALLEGRO_BITMAP* sprite;
+    ALLEGRO_BITMAP* sprite; 
     ALLEGRO_BITMAP* inverseSprite;
 
     char* path;
 } Sprite;
 
 extern unsigned int _RENDERSIZE;
-extern int numSprites; 
+extern int32_t numSprites; 
 extern int maxSprites; //will dynamically change 
 extern Sprite* sprites;
 
