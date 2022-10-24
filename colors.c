@@ -18,12 +18,13 @@ ALLEGRO_COLOR DAMAGE = {0};
 
 
 ALLEGRO_COLOR* ALColorLookup[COLOR_ALL] = {0};
-Color ColorHashTable[256] = {0};
 Color EffectColors[EFFECT_ALL] = {0};
 
 ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy)
 {
     if (c >= COLOR_ALL)
+        return BG;
+    if (c < 0)
         return BG;
 
     if (c ==  COLOR_DEFAULT)
@@ -65,9 +66,8 @@ bool AlColIsEq(ALLEGRO_COLOR c, ALLEGRO_COLOR c2)
 
 Color ALColorToCol(ALLEGRO_COLOR c)
 {
-    unsigned char hash = HashColor(c);//(int)c.r ^ (int)c.g ^ (int)c.b ^ (int)c.a;
-    return ColorHashTable[hash];
-    /*if (AlColIsEq(c,BG))
+
+    if (AlColIsEq(c,BG))
         return COLOR_BG;
     if (AlColIsEq(c,FRIENDLY))
         return COLOR_FRIENDLY;
@@ -81,8 +81,16 @@ Color ALColorToCol(ALLEGRO_COLOR c)
         return COLOR_HEAL;
     if (AlColIsEq(c,DAMAGE))
         return COLOR_DAMAGE;
+    if (AlColIsEq(c,WHITE))
+        return COLOR_WHITE;
+    if (AlColIsEq(c,GROUND_DARK))
+        return COLOR_GROUND_DARK;
+    if (AlColIsEq(c,EDGE_HIGHLIGHT))
+        return COLOR_EDGE_HIGHLIGHT;
+
+
     
-    return COLOR_DEFAULT;*/
+    return COLOR_DEFAULT;
 }
 unsigned char HashColor(ALLEGRO_COLOR c)
 {
@@ -105,7 +113,7 @@ void InitColors()
     GROUND_DARK = al_map_rgba(53,40,84,255);
     EDGE_HIGHLIGHT = al_map_rgba(106,106,212,255);
 
-
+    ALColorLookup[COLOR_DEFAULT] = &BG;
     ALColorLookup[COLOR_BG] = &BG;
     ALColorLookup[COLOR_GROUND] = &GROUND;
     ALColorLookup[COLOR_GROUND_DARK] = &GROUND_DARK;
@@ -117,20 +125,6 @@ void InitColors()
     ALColorLookup[COLOR_DAMAGE] = &DAMAGE;
     ALColorLookup[COLOR_EDGE_HIGHLIGHT] = &EDGE_HIGHLIGHT;
 
-
-    memset(ColorHashTable,0,256*sizeof(ColorHashTable[0]));
-    
-
-    for (int i = 1; i < COLOR_ALL; i++)
-    {
-        ALLEGRO_COLOR c = *ALColorLookup[i];
-        unsigned char hash = HashColor(c);
-        if (ColorHashTable[hash])
-        {
-            printf("HASH COLLISION");
-        }
-        ColorHashTable[hash] = i;
-    }
 
 
     queueCommandColors[COMMAND_NONE] = COLOR_BG;

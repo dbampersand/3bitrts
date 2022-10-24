@@ -59,7 +59,6 @@ extern ALLEGRO_COLOR DAMAGE;
 
 
 extern ALLEGRO_COLOR* ALColorLookup[COLOR_ALL];
-extern Color ColorHashTable[256];
 extern Color EffectColors[EFFECT_ALL];
 
 

@@ -100,6 +100,12 @@ void LoadFrame(ALLEGRO_BITMAP* screen, ReplayFrame* frame)
     m.spriteIndex = frame->mapSpriteIndex;
     DrawMap(&m,false);
 
+   for (int i = 0; i < frame->numAttacks; i++)
+   {
+        UpdateScreenPositionsAttack(&frame->attacks[i]);
+        DrawAttack(&frame->attacks[i],0);
+   }
+
    for (int i = 0; i < frame->numObjects; i++)
    {
         GameObject* g = &frame->objects[i];
