@@ -14,6 +14,7 @@
 #include "helperfuncs.h"
 #include "colors.h"
 #include "player.h"
+#include "replay.h"
 
  Map* currMap = NULL;
  Map* maps = NULL;
@@ -279,7 +280,7 @@ void InitMaps()
 {
     numMaps = 0;
 }
-void DrawMap(bool invert)
+void DrawMap(Map* m, bool invert)
 {
     ALLEGRO_COLOR c = GROUND;
     if (invert)
@@ -289,8 +290,15 @@ void DrawMap(bool invert)
     int x = -players[0].cameraPos.x;
     int y = -players[0].cameraPos.y;
 
-    DrawSprite(&sprites[currMap->spriteIndex],x,y,0.5f,0.5f,0,c,invert);
-    DrawSprite(&sprites[currMap->secondLayerSpriteIndex],x,y,0.5f,0.5f,0,GROUND_DARK,false);
+    Sprite* s = &sprites[m->spriteIndex];
+    Sprite* s2 = &sprites[m->secondLayerSpriteIndex];
+    if (gameState == GAMESTATE_WATCHING_REPLAY)
+    {
+        s = &replay.sprites[m->spriteIndex];
+        s2 = &replay.sprites[m->secondLayerSpriteIndex];
+    }
+    DrawSprite(s,x,y,0.5f,0.5f,0,c,invert);
+    DrawSprite(s2,x,y,0.5f,0.5f,0,GROUND_DARK,false);
 
 }
 void UpdateMap(Map* m, float dt)
@@ -324,9 +332,20 @@ void RedrawMapSegmentUnderObj(GameObject* g)
 }
 int GetMapWidth()
 {
+    if (gameState == GAMESTATE_WATCHING_REPLAY)
+    {
+        ReplayFrame* current = &replay.frames[replay.framePlayPosition];
+        return GetWidthSprite(&replay.sprites[current->mapSpriteIndex]);
+    }
     return GetWidthSprite(&sprites[currMap->spriteIndex]);
 }
 int GetMapHeight()
 {
+        if (gameState == GAMESTATE_WATCHING_REPLAY)
+    {
+        ReplayFrame* current = &replay.frames[replay.framePlayPosition];
+        return GetHeightSprite(&replay.sprites[current->mapSpriteIndex]);
+    }
+
     return GetHeightSprite(&sprites[currMap->spriteIndex]);
 }

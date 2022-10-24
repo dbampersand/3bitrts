@@ -149,7 +149,7 @@ void MoveCam(float x, float y)
         players[0].cameraPos.x = 0;
     if (y < 0)
         players[0].cameraPos.y = 0;
-
+    
     if (x + _SCREEN_SIZE > _MAX(GetMapWidth(),_SCREEN_SIZE))
     {
         players[0].cameraPos.x = _MAX(GetMapWidth(),_SCREEN_SIZE) - _SCREEN_SIZE;

@@ -169,7 +169,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             UpdateScreenPositionsAttack(&attacks[i]);
     }
 
-    DrawMap(false);
+    DrawMap(currMap,false);
     DrawMapHighlights();
 
     DrawCommandQueue(players[0].selection[players[0].indexSelectedUnit]);
@@ -419,6 +419,7 @@ void DrawMainMenu()
 int main(int argc, char* args[])
 {
     init();
+    printf("%lu\n",sizeof(ReplayFrame));
 
 
     double dt = 1 / (double)_TARGET_FPS;

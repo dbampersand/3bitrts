@@ -46,9 +46,11 @@ typedef struct GameStateReplay
 typedef struct ReplayFrame
 {
     int32_t numObjects;
-    GameObject objects[MAX_OBJS];
+    GameObject* objects;
     int32_t numAttacks;
-    Attack attacks[MAX_ATTACKS];
+    Attack* attacks;
+
+    int32_t mapSpriteIndex;
 
 
     char* compressedData;

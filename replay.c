@@ -9,6 +9,7 @@
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_primitives.h"
 #include "colors.h"
+#include "map.h"
 
 const char* REPLAY_HEADER = "REP";
 
@@ -91,6 +92,14 @@ void LoadFrame(ALLEGRO_BITMAP* screen, ReplayFrame* frame)
     }
    al_unlock_bitmap(screen);*/
    al_clear_to_color(BG);
+
+    //TODO: would be nice to just hook this up to be able to run in Render
+    //instead of drawing everything manually here
+    //but this works for now 
+    Map m = {0};
+    m.spriteIndex = frame->mapSpriteIndex;
+    DrawMap(&m,false);
+
    for (int i = 0; i < frame->numObjects; i++)
    {
         GameObject* g = &frame->objects[i];
@@ -98,6 +107,20 @@ void LoadFrame(ALLEGRO_BITMAP* screen, ReplayFrame* frame)
         g->properties |= OBJ_ACTIVE;
         DrawGameObj(g,false);
         //objects[i] = frame->objects[i];
+        Sprite* s = &replay.sprites[g->spriteIndex];
+        float x = g->position.screenX + g->offset.x; 
+        float y = g->position.screenY + g->offset.y;
+
+        ALLEGRO_COLOR c = GetColor(GameObjToColor(g),GetPlayerOwnedBy(g));
+
+        Rect selectRect;
+        selectRect.w = al_get_bitmap_width(s->sprite);
+        selectRect.h = (al_get_bitmap_height(s->sprite));
+        selectRect.x = x;
+        selectRect.y = (y + (al_get_bitmap_height(s->sprite) - selectRect.h));
+        if (g->stunTimer == 0)
+            DrawRoundedRect(selectRect, c,false);
+
    }
 
 }
@@ -199,7 +222,7 @@ void SerializeSection(Replay* r, bool finished)
     
             fwrite(&a->radius, sizeof(a->radius),1,tempFile);
         }
-        printf("%i\n",rf->numAttacks);
+        fwrite(&rf->mapSpriteIndex,sizeof(rf->mapSpriteIndex),1,tempFile);
 
 
         
@@ -261,6 +284,7 @@ ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
     int numObjs = GetNumActiveObjects();
     ReplayFrame rf = {0};
     rf.numObjects = numObjs;
+    rf.objects = calloc(rf.numObjects,sizeof(GameObject));
     int index = 0;
     for (int i = 0; i < MAX_OBJS; i++)
     {
@@ -282,6 +306,9 @@ ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
             rf.numAttacks++;
         }
     }
+    rf.attacks = calloc(rf.numAttacks,sizeof(Attack));
+
+    rf.mapSpriteIndex = currMap->spriteIndex;
 
 
     return rf;
@@ -476,16 +503,29 @@ void RemoveReplay(Replay* r)
         for (int i = 0; i < r->numFrames; i++)
         {
             ReplayFrame* rf = &r->frames[i];
+            if (rf->objects)
+                free(rf->objects);
+            if (rf->attacks)
+                free(rf->attacks);
            // if (rf->compressedData)
              //   free(rf->compressedData);
         }
         free(r->frames);
+        r->frames = NULL;
     }
+
     if (replayBuffer)
         free(replayBuffer);
     replayBuffer = NULL;
     memset(r,0,sizeof(Replay));
     remove("replays/" TEMP_REPLAY_NAME);
+
+    for (int i = 0; i < r->numSprites; i++)
+    {
+        al_destroy_bitmap(r->sprites[i].sprite);
+    }
+    if (r->sprites)
+        free(r->sprites);
 }
 
 bool LoadReplay(char* path)
@@ -515,6 +555,7 @@ bool LoadReplay(char* path)
             {
                 ReplayFrame* rf = &r->frames[i];
                 fread(&rf->numObjects,sizeof(rf->numObjects),1,temp);
+                rf->objects = calloc(rf->numObjects,sizeof(GameObject));
                 for (int j = 0; j < rf->numObjects; j++)
                 {
                     GameObject* g = &rf->objects[j];
@@ -526,6 +567,7 @@ bool LoadReplay(char* path)
                 
                 }
                 fread(&rf->numAttacks,sizeof(rf->numAttacks),1,temp);
+                rf->attacks = calloc(rf->numAttacks,sizeof(Attack));
                 for (int j = 0; j < rf->numAttacks; j++)
                 {
                     Attack* a = &rf->attacks[j];
@@ -537,6 +579,8 @@ bool LoadReplay(char* path)
                     fread(&a->properties,sizeof(a->properties),1,temp);
                     fread(&a->radius,sizeof(a->radius),1,temp);
                 }
+                fread(&rf->mapSpriteIndex,sizeof(rf->mapSpriteIndex),1,temp);
+
 
             }
             int32_t numSprRep = 0;
@@ -741,6 +785,13 @@ void SaveReplaySpriteTable(FILE* f, FILE* to)
 
         int attackOffset = sizeof(rf->numAttacks) + ((sizeof(a->x) + sizeof(a->y) + sizeof(a->dither) + sizeof(a->attackType) + sizeof(a->properties) + sizeof(a->radius)) * numAttacks);
         offset += attackOffset;
+
+        spritesIndices[rf->mapSpriteIndex] = rf->mapSpriteIndex;
+
+
+        int32_t mapSprite=0;
+        offset += sizeof(rf->mapSpriteIndex);
+
 
         //fseek(f,offset,SEEK_SET);
         //char numSounds = 0; 

@@ -2034,7 +2034,7 @@ void DrawMapHighlights()
 
     al_set_blender(beforeOp, beforeSrc, beforeDst);
 
-    DrawMap(true);
+    DrawMap(currMap, true);
 
    // al_set_target_bitmap(screen);
 
