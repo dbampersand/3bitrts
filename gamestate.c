@@ -179,6 +179,7 @@ void FinishTransition()
         RemoveAllAttacks();
 
         ClearSelection();
+        RemoveAllGameObjects();
         //ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
 
     }
