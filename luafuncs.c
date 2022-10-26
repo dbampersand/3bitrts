@@ -319,6 +319,16 @@ void LoadLuaFile(const char* filename, GameObject* g)
         g->lua_buffer = readFile(filename);
      }
 }
+int L_SetObjectCompletionPercent(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    GameObject* g = &objects[index];
+    g->completionPercent = lua_tonumber(l,2);
+
+    return 0;
+}
 int L_GetNumberOfUnitsSelected(lua_State* l)
 {
     lua_pushnumber(l,players[0].numUnitsSelected);
@@ -1613,7 +1623,7 @@ int L_CreateObject(lua_State* l)
     for (int i = 0; i < numPrefabs; i++)
     {
         
-        if (strcasecmp(prefabs[i]->path,l_path) == 0)
+        if (prefabs[i]->path && strcasecmp(prefabs[i]->path,l_path) == 0)
         {
             g = prefabs[i];
             prefabFound = true;
@@ -1632,6 +1642,8 @@ int L_CreateObject(lua_State* l)
         g = AddGameobject(g,x,y);
         SetOwnedBy(g, PLAYER);
     }
+    if (!g)
+        return 0;
     g->summonTime = 0;
     g->summonMax = summonTime;
 
@@ -2524,17 +2536,9 @@ int L_SetAbilityHint(lua_State* l)
 int L_ChangeMap(lua_State* l)
 {
     //if we're already in the shop
-    if (gameState == GAMESTATE_IN_SHOP)
-        return 0;
 
     const char* path = lua_tostring(l,1);
-    //SetGameStateToChangingMap(path);
-    SetGameStateToInShop();
-
-    if (pathToNextMap)
-        free(pathToNextMap);
-    pathToNextMap = calloc(strlen(path)+1,sizeof(char));
-    strcpy(pathToNextMap,path);
+    ChangeMap(path);
 
     return 0;
 }
@@ -2834,7 +2838,7 @@ int L_GetAttackPosition(lua_State* l)
     int atk = lua_tonumber(l,1);
     if (atk < 0 || atk >= MAX_ATTACKS)
         return 0;
-        lua_newtable(l);
+    lua_newtable(l);
 
     Attack* a = &attacks[atk];
     lua_pushstring(l,"x");
@@ -3524,5 +3528,8 @@ void SetLuaFuncs()
     lua_setglobal(luaState, "SetLightIntensity");
     lua_pushcfunction(luaState, L_SetLightColour);
     lua_setglobal(luaState, "SetLightColour");
+
+    lua_pushcfunction(luaState, L_SetObjectCompletionPercent);
+    lua_setglobal(luaState, "SetObjectCompletionPercent");
 
 }

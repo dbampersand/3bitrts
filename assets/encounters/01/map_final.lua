@@ -32,3 +32,7 @@ end
 function kill()
 
 end
+
+function mapend()
+    return true;
+end

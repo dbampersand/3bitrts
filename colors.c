@@ -15,6 +15,8 @@ ALLEGRO_COLOR WHITE = {0};
 ALLEGRO_COLOR POISON = {0};
 ALLEGRO_COLOR HEAL = {0};
 ALLEGRO_COLOR DAMAGE = {0};
+ALLEGRO_COLOR TRANSPARENT = {0};
+
 
 
 ALLEGRO_COLOR* ALColorLookup[COLOR_ALL] = {0};
@@ -112,6 +114,8 @@ void InitColors()
     DAMAGE = al_map_rgba(250,95,95,255);
     GROUND_DARK = al_map_rgba(53,40,84,255);
     EDGE_HIGHLIGHT = al_map_rgba(106,106,212,255);
+    TRANSPARENT = al_map_rgba(0,0,0,0);
+
 
     ALColorLookup[COLOR_DEFAULT] = &BG;
     ALColorLookup[COLOR_BG] = &BG;
@@ -124,6 +128,7 @@ void InitColors()
     ALColorLookup[COLOR_POISON] = &POISON;
     ALColorLookup[COLOR_DAMAGE] = &DAMAGE;
     ALColorLookup[COLOR_EDGE_HIGHLIGHT] = &EDGE_HIGHLIGHT;
+    ALColorLookup[COLOR_TRANSPARENT] = &TRANSPARENT;
 
 
 

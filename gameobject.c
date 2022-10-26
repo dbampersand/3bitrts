@@ -728,14 +728,13 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     }
     if (!found)
         return NULL;
-
-    
     *found = *prefab;
     currGameObjRunning = found; 
 
 
    // memset(found->abilities,0,sizeof(Ability)*4);
     memset(currGameObjRunning,0,sizeof(GameObject));
+
 
     currGameObjRunning->objectIsStunnable = true;
 
@@ -772,6 +771,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     SetLightSize(currGameObjRunning,30);
     
     //currGameObjRunning->speed = 50;
+    currGameObjRunning->completionPercent = DEFAULT_COMPLETION_PERCENT;
 
     loadLuaGameObj(luaState, found->path, found); 
     found->properties |= OBJ_ACTIVE;
@@ -877,6 +877,7 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
     {
 
     }
+
     if (luaL_loadbuffer(l, g->lua_buffer,strlen(g->lua_buffer),NULL) || lua_pcall(l, 0, 0, 0))
      {
          printf("%s\n\n---\nCan't load lua file:\n %s Filename: %s\n---\n\n\n",COL_ERR,lua_tostring(l,-1),filename);
@@ -1083,6 +1084,8 @@ void KillObj(GameObject* g, bool trigger)
     }
     if (!IsOwnedByPlayer(g) && gameState == GAMESTATE_INGAME)
         AddGold(g->bounty);
+
+    AddCompletionPercent(g->completionPercent);
 }   
 
 
@@ -1126,7 +1129,7 @@ GameObject* LoadPrefab(const char* path)
 {
     for (int i = 0; i < numPrefabs; i++)
     {
-        if (strcasecmp(prefabs[i]->path,path)==0)
+        if (prefabs[i]->path && strcasecmp(prefabs[i]->path,path)==0)
         {
             return prefabs[i];
         }
@@ -1230,6 +1233,7 @@ int GetPlayerOwnedBy(GameObject* g)
 }
 void SetOwnedBy(GameObject* g, int i)
 {
+    if (!g) return;
     if (i == TYPE_FRIENDLY)
     {
         g->properties &= ~OBJ_OWNED_BY;
@@ -1240,7 +1244,7 @@ void SetOwnedBy(GameObject* g, int i)
     }
 }
 void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
-    {
+{
     if (!g)
         return;
     if (dV == 0) return;
@@ -1991,6 +1995,7 @@ void DrawMapHighlights()
     for (int i = 0; i < MAX_OBJS; i++)
     {
         GameObject* g = &objects[i];
+        if (g->lightSize > 0)
         if (IsActive(g) && IsOwnedByPlayer(g))
         {
             al_set_target_bitmap(screen);
@@ -2028,7 +2033,8 @@ void DrawMapHighlights()
 
 
             ALLEGRO_COLOR col = al_map_rgba_f(re,gr,bl,g->lightIntensity);
-            al_draw_tinted_bitmap(lights[g->lightSize],col,g->position.screenX-g->lightSize+GetWidth(g)/2,g->position.screenY-g->lightSize+GetHeight(g)/2,0);
+            if (g->lightSize > 0 && g->lightSize < MAX_LIGHT_SIZE)
+                al_draw_tinted_bitmap(lights[g->lightSize],col,g->position.screenX-g->lightSize+GetWidth(g)/2,g->position.screenY-g->lightSize+GetHeight(g)/2,0);
         }
     }
 
@@ -2831,7 +2837,10 @@ void RemoveAllGameObjects()
     }
 }
 
-
+int GetNumEnemyObjects()
+{
+    return GetNumPlayerControlledObjs(&players[1]);
+}
 int GetNumPlayerControlledObjs(Player* p)
 {
     int count = 0;

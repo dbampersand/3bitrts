@@ -6,6 +6,7 @@
 #include "gamestate.h"
 #include "sound.h"
 #include "settings.h"
+#include "colors.h"
 //error printf colour
 #define COL_ERR  "\x1B[31m"
 
@@ -114,6 +115,7 @@ typedef struct UIElement
     bool enabled;
     SoundIndex sound_clickDown_Index;
     SoundIndex sound_clickUp_Index;
+    Color bgColor;
 
 } UIElement;
 
@@ -210,7 +212,10 @@ typedef struct UI
     UIElement endScreen_Retry;
     UIElement endScreen_SaveReplay;
 
+
+    //ingame elements
     UIElement menuButton;
+    UIElement nextLevelButton;
 
     
 
@@ -280,7 +285,7 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_
 bool GetButton(Panel* p, char* name);
 KeyInput* GetKeyInput(Panel* p, char* name);
 Button* GetButtonB(Panel* p, char* name);
-void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState,ALLEGRO_COLOR bgColor); 
+void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState,Color bgColor); 
 void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent);
 void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, int index, int offsetX);
 void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame);

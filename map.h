@@ -27,8 +27,12 @@ typedef struct Map
 
     int luafunc_update;
     int luafunc_setup;
+    int luafunc_mapend;
+
     char* lua_buffer;
     char* name;
+
+    float percentComplete;
 
 } Map;
 
@@ -49,3 +53,5 @@ void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere);
 void DisplayCollision();
 bool PointIsFree(int x, int y, bool caresAboutUnits);
 bool RectIsFree(int x, int y, int w, int h, bool caresAboutUnits);
+void AddCompletionPercent(float percent);
+void ChangeMap(const char* path);

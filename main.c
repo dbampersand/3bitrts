@@ -352,7 +352,34 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         DrawDamageNumbers();
 
         UpdateButton(ui.menuButton.x,ui.menuButton.y,&ui.menuButton,*mouseState,*mouseStateLastFrame);
-        DrawUIElement(&ui.menuButton,ui.menuButton.x,ui.menuButton.y,mouseState,BG);
+        DrawUIElement(&ui.menuButton,ui.menuButton.x,ui.menuButton.y,mouseState,ui.menuButton.bgColor);
+
+        if (gameState == GAMESTATE_INGAME)
+        {
+            char percentCompletionStr[NumDigits(INT_MIN)+3];
+            if (GetNumEnemyObjects() == 0 || currMap->percentComplete >= 100)
+                ui.nextLevelButton.enabled = true;
+            else
+                ui.nextLevelButton.enabled = false;
+            
+            UpdateButton(ui.nextLevelButton.x,ui.nextLevelButton.y,&ui.nextLevelButton,*mouseState,*mouseStateLastFrame);
+            DrawUIElement(&ui.nextLevelButton,ui.nextLevelButton.x,ui.nextLevelButton.y,mouseState,ui.nextLevelButton.bgColor);
+
+            memset(percentCompletionStr,0,(NumDigits(INT_MIN)+3)*sizeof(char));
+            sprintf(percentCompletionStr,"%i%%",(int)floor(currMap->percentComplete));
+            al_draw_text(ui.font,FRIENDLY,ui.nextLevelButton.x+ui.nextLevelButton.w/2,ui.nextLevelButton.y+ui.nextLevelButton.h+5,ALLEGRO_ALIGN_CENTER,percentCompletionStr);
+
+            if (GetButtonIsClicked(&ui.nextLevelButton))
+            {
+                lua_rawgeti(luaState, LUA_REGISTRYINDEX, currMap->luafunc_mapend);
+                lua_pcall(luaState,0,1,0);
+                bool retValue = lua_toboolean(luaState,-1);
+                if (retValue)
+                {
+                    WinGame();
+                }
+            }
+        }
 
         if (GetButtonIsClicked(&ui.menuButton))
         {

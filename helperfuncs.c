@@ -323,6 +323,8 @@ int NumDigits(int i)
         negative = 1;
         i = -i;
     }
+    if (i == INT_MIN)
+        i = INT_MAX;
     return (int)ceil(log10(i)) + 1 + negative;
 }
 float Towards(float f, float to, float maxDist)

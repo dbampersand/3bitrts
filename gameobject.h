@@ -21,6 +21,7 @@
 #define SHIELD_EFFECT_TIME 0.5f
 #define INVENTORY_SLOTS 3
 #define DEFAULT_BOUNTY 5
+#define DEFAULT_COMPLETION_PERCENT 5
 
 typedef enum GAMEOBJ_PROPERTIES
 {
@@ -186,6 +187,8 @@ typedef struct GameObject
     int bounty;
 
     bool isBoss;
+
+    float completionPercent;
 } GameObject;
 
 #define MAX_LIGHT_SIZE 90 
@@ -342,3 +345,5 @@ void SetLightSize(GameObject* g, int size);
 float GetTotalDotted(GameObject* g);
 
 int GetNumActiveObjects();
+
+int GetNumEnemyObjects();

@@ -218,8 +218,8 @@ void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame)
         {
             ui.choosingUnits_GO.enabled = false;
         }
-        DrawUIElement(&ui.choosingUnits_Back,45,194,mouseState,BG);
-        DrawUIElement(&ui.choosingUnits_GO,109,194,mouseState,BG);
+        DrawUIElement(&ui.choosingUnits_Back,45,194,mouseState,ui.choosingUnits_Back.bgColor);
+        DrawUIElement(&ui.choosingUnits_GO,109,194,mouseState,ui.choosingUnits_Back.bgColor);
 
 
         char* number = calloc(log10(INT_MAX)*2+2,sizeof(char));
@@ -782,7 +782,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     int column = 16;
 
     UpdateButton(column+offsetX,row,&e->encounter_RerollAugments,*mouseState,*mouseStateLastFrame);
-    DrawUIElement(&e->encounter_RerollAugments,column+offsetX,row,mouseState,BG);
+    DrawUIElement(&e->encounter_RerollAugments,column+offsetX,row,mouseState,e->encounter_RerollAugments.bgColor);
     column += 32;
     if (GetButtonIsClicked(&e->encounter_RerollAugments))
     {
@@ -893,9 +893,9 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
         e->encounter_ButtonRight.enabled = false;
     }
 
-    DrawUIElement(&e->encounter_ButtonLeft,16+offsetX,224,mouseState,BG);
-    DrawUIElement(&e->encounter_ButtonConfirm,80+offsetX,224,mouseState,BG);
-    DrawUIElement(&e->encounter_ButtonRight,192+offsetX,224,mouseState,BG);
+    DrawUIElement(&e->encounter_ButtonLeft,16+offsetX,224,mouseState,e->encounter_ButtonLeft.bgColor);
+    DrawUIElement(&e->encounter_ButtonConfirm,80+offsetX,224,mouseState,e->encounter_ButtonConfirm.bgColor);
+    DrawUIElement(&e->encounter_ButtonRight,192+offsetX,224,mouseState,e->encounter_ButtonRight.bgColor);
 
 
     if (GetButtonIsClicked(&e->encounter_ButtonLeft))
@@ -955,6 +955,7 @@ void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, i
     u.enabled = true;
     u.sound_clickDown_Index = ui.uiClickedSound_Index;
     u.sound_clickUp_Index = ui.uiClickedUpSound_Index;
+    u.bgColor = COLOR_BG;
     AddElement(p,&u);
     UpdateBind(&u);
 
@@ -978,6 +979,8 @@ void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int
     u.enabled = true;
     u.sound_clickDown_Index = ui.uiClickedSound_Index;
     u.sound_clickUp_Index = ui.uiClickedUpSound_Index;
+    u.bgColor = COLOR_BG;
+
     AddElement(p,&u);
 }
 void UpdateSlider(Slider* s, int x, int y, int w, int h, MouseState mouseState, MouseState mouseStateLastFrame)
@@ -1071,6 +1074,7 @@ void InitButton(UIElement* u, char* name, char* description, int x, int y, int w
     u->sound_clickDown_Index = ui.uiClickedSound_Index;
     u->sound_clickUp_Index = ui.uiClickedUpSound_Index;
     u->enabled = true;
+    u->bgColor = COLOR_BG;
 
 }
 void ChangeButtonText(Button* b, char* newstr)
@@ -1216,6 +1220,7 @@ void AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool* activat
     u.enabled = true;
     u.elementType = ELEMENT_CHECKBOX;
     u.enabled = true;
+    u.bgColor = COLOR_BG;
     
     AddElement(p,&u);
 }
@@ -1234,6 +1239,8 @@ void AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled, f
     strcpy(u.name,name);
     u.data = (void*)s;
     u.elementType = ELEMENT_SLIDER;
+    u.bgColor = COLOR_BG;
+
     AddElement(p,&u);
 }
 void AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int startIndex, int numElements, ...)
@@ -1266,6 +1273,7 @@ void AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int s
 
     u.data = (void*)p;
     u.elementType = ELEMENT_PULLDOWN;
+    u.bgColor = COLOR_BG;
 
     AddElement(panel,&u);
 
@@ -1605,6 +1613,11 @@ void InitEndScreen()
 void InitGameUI()
 {
     InitButton(&ui.menuButton,"Menu","Menu",213,4,40,11,0);
+
+    int w = 80;
+    InitButton(&ui.nextLevelButton,"Descend","Descend",_SCREEN_SIZE/2-w/2,10,w,10,0);
+    ui.nextLevelButton.enabled = false;
+    ui.nextLevelButton.bgColor =  COLOR_TRANSPARENT; 
 
     ui.gold_element_sprite_index = LoadSprite("assets/ui/gold.png",false);
 
@@ -2300,11 +2313,12 @@ void DrawKeyInput(UIElement* u, int x, int y, MouseState mouseState, bool isActi
     }
 
 }
-void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, ALLEGRO_COLOR bgColor)
+void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, Color bgColor)
 {
+    ALLEGRO_COLOR col = GetColor(bgColor,0);
     if (u->elementType == ELEMENT_BUTTON)
     {
-        DrawButton(u,x,y,*mouseState,u->enabled,bgColor,((Button*)(u->data))->drawLine);
+        DrawButton(u,x,y,*mouseState,u->enabled,col,((Button*)(u->data))->drawLine);
     }
     if (u->elementType == ELEMENT_TEXT)
     {
@@ -2312,19 +2326,19 @@ void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, ALLEGRO_C
     }
     if (u->elementType == ELEMENT_SLIDER)
     {
-        DrawSlider(u,x,y,mouseState,u->enabled,bgColor);
+        DrawSlider(u,x,y,mouseState,u->enabled,col);
     }
     if (u->elementType == ELEMENT_CHECKBOX)
     {
-        DrawCheckbox((Checkbox*)u->data,x,y,u->w,u->h,u->enabled,*mouseState,bgColor);
+        DrawCheckbox((Checkbox*)u->data,x,y,u->w,u->h,u->enabled,*mouseState,col);
     }
     if (u->elementType == ELEMENT_PULLDOWN)
     {
-        DrawPullDownMenu((Pulldown*)u->data,x,y,u->w,u->h,u->enabled,mouseState,bgColor);
+        DrawPullDownMenu((Pulldown*)u->data,x,y,u->w,u->h,u->enabled,mouseState,col);
     }
     if (u->elementType == ELEMENT_KEYINPUT)
     {
-        DrawKeyInput(u,x,y,*mouseState,u->enabled,bgColor);
+        DrawKeyInput(u,x,y,*mouseState,u->enabled,col);
     }
 
 
@@ -2437,7 +2451,7 @@ void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent)
         UIElement* u = ((UIElement*)&p->elements[i]);
         int x; int y;
         GetUILocation(p, u, &x, &y);
-        DrawUIElement(u,x,y,mouseState,BG);
+        DrawUIElement(u,x,y,mouseState,u->bgColor);
 
     }
     if (p->tabs)
@@ -2746,9 +2760,9 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
     UpdateButton(ui.endScreen_Retry.x,ui.endScreen_Retry.y,&ui.endScreen_Retry,*mouseState,*mouseStateLastFrame);
     UpdateButton(ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,&ui.endScreen_SaveReplay,*mouseState,*mouseStateLastFrame);
 
-    DrawUIElement(&ui.endScreen_Back,ui.endScreen_Back.x,ui.endScreen_Back.y,mouseState,BG);
-    DrawUIElement(&ui.endScreen_Retry,ui.endScreen_Retry.x,ui.endScreen_Retry.y,mouseState,BG);
-    DrawUIElement(&ui.endScreen_SaveReplay,ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,mouseState,BG);
+    DrawUIElement(&ui.endScreen_Back,ui.endScreen_Back.x,ui.endScreen_Back.y,mouseState,ui.endScreen_Back.bgColor);
+    DrawUIElement(&ui.endScreen_Retry,ui.endScreen_Retry.x,ui.endScreen_Retry.y,mouseState,ui.endScreen_Retry.bgColor);
+    DrawUIElement(&ui.endScreen_SaveReplay,ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,mouseState,ui.endScreen_SaveReplay.bgColor);
     
     int x = 86;
     int y = 139;

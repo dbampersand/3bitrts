@@ -423,7 +423,7 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         lua_pcall(luaState,5,1,0);
         bool b = lua_toboolean(luaState,-1);
         if (b)
-        {
+        {   
             a->cdTimer = a->cooldown;
             a->stacks--;
             if (a->stacks < 0)

@@ -487,6 +487,7 @@ void SetGameStateToChoosingParty()
             }   
         }
     }
+
 }
 void Quit()
 {

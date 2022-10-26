@@ -189,6 +189,13 @@ void loadLuaGameMap(lua_State* l, const char* filename, Map* m)
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
             m->luafunc_setup = funcIndex;
         }
+        if (CheckFuncExists("mapend",m->lua_buffer))
+        {
+            lua_getglobal(l, "mapend");
+            funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+            m->luafunc_mapend = funcIndex;
+        }
+
 
         char* strSplit;
         char* svPtr;
@@ -348,4 +355,29 @@ int GetMapHeight()
     }
 
     return GetHeightSprite(&sprites[currMap->spriteIndex]);
+}
+void AddCompletionPercent(float percent)
+{
+    currMap->percentComplete += percent;
+    if (currMap->percentComplete > 100)
+        currMap->percentComplete = 100;
+    if (currMap->percentComplete < 0)
+        currMap->percentComplete = 0;
+
+}
+void ChangeMap(const char* path)
+{
+    //if we're already in the shop
+    if (gameState == GAMESTATE_IN_SHOP)
+        return;
+
+    //SetGameStateToChangingMap(path);
+    SetGameStateToInShop();
+
+    if (pathToNextMap)
+        free(pathToNextMap);
+    pathToNextMap = calloc(strlen(path)+1,sizeof(char));
+    strcpy(pathToNextMap,path);
+
+
 }

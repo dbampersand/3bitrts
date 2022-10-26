@@ -16,3 +16,7 @@ function setup()
     SetEncounterLoadScreen("assets/encounters/03/loadscreen.png")
     
 end
+
+function mapend()
+    return true;
+end

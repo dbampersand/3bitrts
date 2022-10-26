@@ -40,6 +40,7 @@ typedef enum Color
     COLOR_WHITE,
     COLOR_GROUND_DARK,
     COLOR_EDGE_HIGHLIGHT,
+    COLOR_TRANSPARENT,
 
     COLOR_ALL //used to get the number of elements in enum
 } Color;
@@ -56,6 +57,7 @@ extern ALLEGRO_COLOR WHITE;
 extern ALLEGRO_COLOR POISON;
 extern ALLEGRO_COLOR HEAL;
 extern ALLEGRO_COLOR DAMAGE;
+extern ALLEGRO_COLOR TRANSPARENT;
 
 
 extern ALLEGRO_COLOR* ALColorLookup[COLOR_ALL];

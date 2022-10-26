@@ -19,12 +19,17 @@ end
 function update(dt)
     --ChangeMap("assets/encounters/01/map_2.lua")
         
-    if (NumObjectsOwnedByPlayer(TYPE_ENEMY) == 0) then
-        ChangeMap("assets/encounters/01/map_final.lua")
-    end
+    --if (NumObjectsOwnedByPlayer(TYPE_ENEMY) == 0) then
+      --  ChangeMap("assets/encounters/01/map_final.lua")
+    --end
 
 end
 
 function kill()
 
+end
+
+function mapend()
+    ChangeMap("assets/encounters/01/map_final.lua")
+    return false;
 end
