@@ -2,6 +2,7 @@
 #include "command.h"
 #include "gameobject.h"
 #include <stdio.h>
+#include "helperfuncs.h"
 
 ALLEGRO_COLOR BG = {0};
 ALLEGRO_COLOR FRIENDLY = {0};
@@ -15,7 +16,17 @@ ALLEGRO_COLOR WHITE = {0};
 ALLEGRO_COLOR POISON = {0};
 ALLEGRO_COLOR HEAL = {0};
 ALLEGRO_COLOR DAMAGE = {0};
+ALLEGRO_COLOR SPEED = {0};
+ALLEGRO_COLOR SHIELD = {0};
+
 ALLEGRO_COLOR TRANSPARENT = {0};
+
+ALLEGRO_COLOR FRIENDLY_POISON;
+ALLEGRO_COLOR FRIENDLY_HEAL;
+ALLEGRO_COLOR FRIENDLY_DAMAGE;
+ALLEGRO_COLOR FRIENDLY_SPEED;
+ALLEGRO_COLOR FRIENDLY_SHIELD;
+
 
 
 
@@ -109,13 +120,23 @@ void InitColors()
 
     WHITE = al_map_rgba(255,255,255,255);
   
+    //Specific effect colours
     HEAL = al_map_rgba(119,249,26,255);
     POISON = al_map_rgba(237,66,229,255);
     DAMAGE = al_map_rgba(250,95,95,255);
+    SPEED = al_map_rgba(248,232,22,255);
+    SHIELD = al_map_rgba(106,171,235,255); 
+
     GROUND_DARK = al_map_rgba(53,40,84,255);
     EDGE_HIGHLIGHT = al_map_rgba(106,106,212,255);
     TRANSPARENT = al_map_rgba(0,0,0,0);
 
+    
+    FRIENDLY_HEAL = al_map_rgba(clamp((HEAL.r*255)+60,0,255),clamp((HEAL.g*255)+60,0,255),clamp((HEAL.b*255)+60,0,255),255);
+    FRIENDLY_POISON = al_map_rgba(clamp((POISON.r*255)+60,0,255),clamp((POISON.g*255)+60,0,255),clamp((POISON.b*255)+60,0,255),255);
+    FRIENDLY_DAMAGE = al_map_rgba(clamp((DAMAGE.r*255) + 60,0,255),clamp((DAMAGE.g*255)+60,0,255),clamp((DAMAGE.b*255)+60,0,255),255);
+    FRIENDLY_SPEED = al_map_rgba(clamp((SPEED.r*255) + 60,0,255),clamp((SPEED.g*255)+60,0,255),clamp((SPEED.b*255)+60,0,255),255);
+    FRIENDLY_SHIELD = al_map_rgba(clamp((SHIELD.r*255) + 60,0,255),clamp((SHIELD.g*255)+60,0,255),clamp((SHIELD.b*255)+60,0,255),255);
 
     ALColorLookup[COLOR_DEFAULT] = &BG;
     ALColorLookup[COLOR_BG] = &BG;
@@ -124,11 +145,23 @@ void InitColors()
     ALColorLookup[COLOR_ENEMY] = &ENEMY;
     ALColorLookup[COLOR_FRIENDLY] = &FRIENDLY;
     ALColorLookup[COLOR_WHITE] = &WHITE;
+
     ALColorLookup[COLOR_HEAL] = &HEAL;
     ALColorLookup[COLOR_POISON] = &POISON;
     ALColorLookup[COLOR_DAMAGE] = &DAMAGE;
+    ALColorLookup[COLOR_SPEED] = &SPEED;
+    ALColorLookup[COLOR_SHIELD] = &SHIELD;
+
+    ALColorLookup[COLOR_FRIENDLY_HEAL] = &FRIENDLY_HEAL;
+    ALColorLookup[COLOR_FRIENDLY_POISON] = &FRIENDLY_POISON;
+    ALColorLookup[COLOR_FRIENDLY_DAMAGE] = &FRIENDLY_DAMAGE;
+    ALColorLookup[COLOR_FRIENDLY_SPEED] = &FRIENDLY_SPEED;
+    ALColorLookup[COLOR_FRIENDLY_SHIELD] = &FRIENDLY_SHIELD;
+
+
     ALColorLookup[COLOR_EDGE_HIGHLIGHT] = &EDGE_HIGHLIGHT;
     ALColorLookup[COLOR_TRANSPARENT] = &TRANSPARENT;
+
 
 
 
@@ -150,15 +183,15 @@ void InitColors()
     EffectColors[EFFECT_HEAL] = COLOR_HEAL;
     EffectColors[EFFECT_POSITION] = COLOR_GROUND_DARK;
     EffectColors[EFFECT_THREAT] = COLOR_FRIENDLY;
-    EffectColors[EFFECT_SPEED] = COLOR_FRIENDLY;
-    EffectColors[EFFECT_SHIELD] = COLOR_HEAL;
+    EffectColors[EFFECT_SPEED] = COLOR_SPEED;
+    EffectColors[EFFECT_SHIELD] = COLOR_SHIELD;
     EffectColors[EFFECT_ATTACKDAMAGE] = COLOR_DAMAGE;
-    EffectColors[EFFECT_ATTACKSPEED] = COLOR_DAMAGE;
+    EffectColors[EFFECT_ATTACKSPEED] = COLOR_SPEED;
     EffectColors[EFFECT_ATTACKRANGE] = COLOR_DAMAGE;
     EffectColors[EFFECT_INVULN] = COLOR_HEAL;
     EffectColors[EFFECT_CURE] = COLOR_HEAL;
     EffectColors[EFFECT_ADD_MANA] = COLOR_HEAL;
-    EffectColors[EFFECT_ARMOR] = COLOR_HEAL;
+    EffectColors[EFFECT_ARMOR] = COLOR_SHIELD;
     EffectColors[EFFECT_LIFESTEAL] = COLOR_HEAL;
 
 

@@ -2236,6 +2236,28 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,COLOR_DAMAGE);
     lua_setglobal(l,"COLOR_DAMAGE");
 
+    lua_pushinteger(l,COLOR_SPEED);
+    lua_setglobal(l,"COLOR_SPEED");
+    
+    lua_pushinteger(l,COLOR_SHIELD);
+    lua_setglobal(l,"COLOR_SHIELD");
+
+    lua_pushinteger(l,COLOR_FRIENDLY_POISON);
+    lua_setglobal(l,"COLOR_FRIENDLY_POISON");
+
+    lua_pushinteger(l,COLOR_FRIENDLY_HEAL);
+    lua_setglobal(l,"COLOR_FRIENDLY_HEAL");
+
+    lua_pushinteger(l,COLOR_FRIENDLY_DAMAGE);
+    lua_setglobal(l,"COLOR_FRIENDLY_DAMAGE");
+
+    lua_pushinteger(l,COLOR_FRIENDLY_SPEED);
+    lua_setglobal(l,"COLOR_FRIENDLY_SPEED");
+
+    lua_pushinteger(l,COLOR_FRIENDLY_SHIELD);
+    lua_setglobal(l,"COLOR_FRIENDLY_SHIELD");
+
+
     lua_pushinteger(l,DITHER_NONE);
     lua_setglobal(l,"DITHER_NONE");
     lua_pushinteger(l,DITHER_FILL);

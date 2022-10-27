@@ -37,7 +37,7 @@ function casted(x,y,obj,headingx,headingy)
     f3["duration"] = 1
     f3["value"] = 15;  
 
-    local atk = CreateAOE(x,y,"", radius, 1, 4, false, ATTACK_HITS_FRIENDLIES, COLOR_HEAL, DITHER_HORIZONTAL_QUARTER, false, -1, {f1,f2,f3})
+    local atk = CreateAOE(x,y,"", radius, 1, 4, false, ATTACK_HITS_FRIENDLIES, COLOR_FRIENDLY_SHIELD, DITHER_HORIZONTAL_QUARTER, false, -1, {f1,f2,f3})
     SetAttackCircle(atk,true);
     
     return true; 

@@ -17,7 +17,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 1200;  
 
 
-    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",120,0.1,0.1,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_VERTICAL_HALF,false,-1,{f1});
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",120,0.1,0.1,false,ATTACK_HITS_ENEMIES,COLOR_FRIENDLY_DAMAGE,DITHER_NONE,false,-1,{f1});
     
     PlaySound("assets/friendly/warrior/audio/taunt.wav",0.5);
 

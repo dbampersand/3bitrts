@@ -10,6 +10,7 @@
  float particle_y[MAX_PARTICLES] = {0};
  float particle_dir[MAX_PARTICLES] = {0};
  float particle_lifetime[MAX_PARTICLES] = {0};
+ float particle_lifetime_total[MAX_PARTICLES] = {0};
  char particle_properties[MAX_PARTICLES] = {0};
  float particle_speed[MAX_PARTICLES] = {0}; 
  Color particle_colors[MAX_PARTICLES] = {0};
@@ -20,12 +21,15 @@ void UpdateParticles(float dt)
 {
     for (int i = 0; i < MAX_PARTICLES; i++)
     {
-        particle_x[i] += cosf(particle_dir[i]) * particle_speed[i];
-        particle_y[i] += sinf(particle_dir[i]) * particle_speed[i];
+        if (particle_properties[i] | PARTICLE_ENABLED)
+        {
+            particle_x[i] += cosf(particle_dir[i]) * particle_speed[i];
+            particle_y[i] += sinf(particle_dir[i]) * particle_speed[i];
 
-        particle_lifetime[i] -= dt;
-        if (particle_lifetime[i] < 0)
-            particle_properties[i] &= ~PARTICLE_ENABLED;
+            particle_lifetime[i] -= dt;
+            if (particle_lifetime[i] < 0)
+                particle_properties[i] &= ~PARTICLE_ENABLED;
+        }
     }
 }
 void AddMouseRandomParticles(MouseState mouseState, int numParticles)
@@ -42,6 +46,7 @@ void AddParticle(float x, float y, short lifetime, float speed, float angle, Col
     particle_x[PARTICLES_TOP] = x;
     particle_y[PARTICLES_TOP] = y;
     particle_lifetime[PARTICLES_TOP] = lifetime - RandRange(0,lifetime/2.0f);
+    particle_lifetime_total[PARTICLES_TOP] = particle_lifetime[PARTICLES_TOP];
     particle_colors[PARTICLES_TOP] = colour;
     particle_properties[PARTICLES_TOP] |= PARTICLE_ENABLED;
     particle_dir[PARTICLES_TOP] = angle;
@@ -65,16 +70,28 @@ void InitParticles()
 }
 void DrawParticles()
 {
+    int beforeOp; int beforeSrc; int beforeDst;
+    al_get_blender(&beforeOp, &beforeSrc, &beforeDst);
+
+    al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_ONE);
+
+
     al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
     for (int i = 0; i < MAX_PARTICLES; i++)
     {
         if (particle_properties[i] & PARTICLE_ENABLED)
         {
             ALLEGRO_COLOR col = GetColor(particle_colors[i],0);
-            al_put_pixel(ToScreenSpace_X(particle_x[i]),ToScreenSpace_Y(particle_y[i]),col);
+            //col.a = particle_lifetime[i] / (float)particle_lifetime_total[i];
+            float a = particle_lifetime[i] / (float)particle_lifetime_total[i];
+            col = al_map_rgba_f(col.r*a,col.g*a,col.b*a,a);
+            al_put_blended_pixel(ToScreenSpace_X(particle_x[i]),ToScreenSpace_Y(particle_y[i]),col);
         }
     }
     al_unlock_bitmap(al_get_target_bitmap());
+
+    al_set_blender(beforeOp, beforeSrc, beforeDst);
+
 }
 void RandParticleAroundEdgeOfCircle(float cx, float cy, float r, short lifetime, float maxspeed, Color col)
 {

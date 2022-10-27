@@ -27,17 +27,17 @@ function casted(x,y,obj,headingx,headingy)
     x = RandRange(xMin,xMax);
     y = RandRange(yMin,yMax);
 
-    atk = CreateAOE(x,y,"", 50, 0.1, 12, true, ATTACK_HITS_ENEMIES, COLOR_POISON, DITHER_NONE, false, GetObjRef(), {f1})
+    atk = CreateAOE(x,y,"", 50, 0.1, 12, true, ATTACK_HITS_ENEMIES, COLOR_SPEED, DITHER_NONE, false, GetObjRef(), {f1})
     
     x = RandRange(xMin,xMax);
     y = RandRange(yMin,yMax);
 
-    atk = CreateAOE(x,y,"", 50, 0.1, 12, true, ATTACK_HITS_ENEMIES, COLOR_POISON, DITHER_NONE, false, GetObjRef(), {f1})
+    atk = CreateAOE(x,y,"", 50, 0.1, 12, true, ATTACK_HITS_ENEMIES, COLOR_SPEED, DITHER_NONE, false, GetObjRef(), {f1})
    
     x = RandRange(xMin,xMax);
     y = RandRange(yMin,yMax);
 
-    atk = CreateAOE(x,y,"", 50, 0.1, 12, true, ATTACK_HITS_ENEMIES, COLOR_POISON, DITHER_NONE, false, GetObjRef(), {f1})
+    atk = CreateAOE(x,y,"", 50, 0.1, 12, true, ATTACK_HITS_ENEMIES, COLOR_SPEED, DITHER_NONE, false, GetObjRef(), {f1})
     return true;
 end
 

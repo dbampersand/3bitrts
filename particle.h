@@ -19,6 +19,7 @@ extern float particle_x[MAX_PARTICLES];
 extern float particle_y[MAX_PARTICLES];
 extern float particle_dir[MAX_PARTICLES];
 extern float particle_lifetime[MAX_PARTICLES];
+extern float particle_lifetime_total[MAX_PARTICLES];
 extern char particle_properties[MAX_PARTICLES];
 extern float particle_speed[MAX_PARTICLES]; 
 extern Color particle_colors[MAX_PARTICLES];

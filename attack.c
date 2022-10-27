@@ -359,10 +359,12 @@ void DrawAttack(Attack* a, float dt)
                 c = COLOR_GROUND_DARK;
             }
         }
-
         if (a->dither == DITHER_NONE || a->properties &  ATTACK_DRAW_CIRCLE)
-        al_draw_circle((a->screenX),(a->screenY),a->radius,GetColor(c,GetPlayerOwnedBy(a->ownedBy)),1);
+        {
+            al_draw_circle((a->screenX),(a->screenY),a->radius,GetColor(c,GetPlayerOwnedBy(a->ownedBy)),1.5f);
+        }
         draw_circle_dithered(a->screenX,a->screenY,a->radius,GetColor(c,GetPlayerOwnedBy(a->ownedBy)),a->dither);
+
         if (AttackIsSoak(a))
         {
             float move = ((_FRAMES)%10)/4.0f;

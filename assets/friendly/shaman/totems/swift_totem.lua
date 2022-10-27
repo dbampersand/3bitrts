@@ -27,7 +27,7 @@ function update(dt)
         f1["trigger"] = TRIGGER_CONST;
         f1["type"] = EFFECT_SPEED;
         f1["value"] = 40;
-        f1["duration"] = 0.5
+        f1["duration"] = 0.5    
         f1["overwrites"] = true;
         f1["name"] = "Swiftness"
 
@@ -39,7 +39,7 @@ function update(dt)
         f2["overwrites"] = true;
         f2["name"] = "Swift Attack"
 
-        aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef(y)),"",60,0.1,10,false,ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_VERTICAL_HALF,false,-1,{f1,f2});
+        aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef(y)),"",60,0.1,10,false,ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_SPEED,DITHER_QUARTER,false,-1,{f1,f2});
 
     end
     SetAttackLifetime(aoe,10);

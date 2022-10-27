@@ -4,6 +4,10 @@
 #include "shield.h"
 #include "augment.h"
 #include "encounter.h"
+#include "particle.h"
+
+#include <math.h>
+
 
 bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
 {
@@ -22,7 +26,15 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     if (e->trigger == TRIGGER_CONST)
         value = e->value;
 
-    
+    if (!remove)
+        for (int i = 0; i < ceil(value/4.0f); i++)
+        {
+            float x; float y;
+            GetCentre_Screen(target,&x,&y);
+            AddParticleWithRandomProperties(x,y,EffectColors[e->effectType],0.1f,2.5f,1,1.5f);
+        }
+
+        
     if (!IsOwnedByPlayer(from))
     {
         if (currEncounterRunning)

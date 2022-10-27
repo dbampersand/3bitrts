@@ -25,7 +25,7 @@ function casted()
     f1["name"] = "Song of Shielding"
     f1["overwrites"] = true;
 
-    aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_DAMAGE,DITHER_STAR_HALF, false, -1, {f1})
+    aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_SHIELD,DITHER_STAR_HALF, false, -1, {f1})
     SetAttackCircle(aoe,true);
    
     return true;
