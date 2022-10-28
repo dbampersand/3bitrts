@@ -11,7 +11,6 @@ local thirdWave = false
 
 function setup()
     SetMapSprite("assets/encounters/02/map.png")
-    SetAutoWin(false);
     if (_DEBUG == false) then
         local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,54,TYPE_ENEMY,2);
         SetObjAggroRadius(ob,999)

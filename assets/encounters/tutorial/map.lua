@@ -66,7 +66,6 @@ function setup()
     
     --CreateObject("assets/encounters/01/boss.lua",32,32,TYPE_ENEMY);
     warrior = CreateObject("assets/friendly/warrior/warrior.lua",128,170,TYPE_FRIENDLY);
-    SetAutoWin(false);
 
     textbox.x = DIALOGUE_X;
     textbox.w = DIALOGUE_W;

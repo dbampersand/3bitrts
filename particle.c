@@ -86,6 +86,8 @@ void DrawParticles()
             float a = particle_lifetime[i] / (float)particle_lifetime_total[i];
             col = al_map_rgba_f(col.r*a,col.g*a,col.b*a,a);
             al_put_blended_pixel(ToScreenSpace_X(particle_x[i]),ToScreenSpace_Y(particle_y[i]),col);
+            al_put_blended_pixel(ToScreenSpace_X(particle_x[i])+2,ToScreenSpace_Y(particle_y[i])+2,GROUND_DARK);
+
         }
     }
     al_unlock_bitmap(al_get_target_bitmap());

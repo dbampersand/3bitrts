@@ -259,7 +259,7 @@ void DrawShopObjects(MouseState mouseState)
             if (NumAttachedItems(g) == INVENTORY_SLOTS)
             {
                 Rect r = (Rect){x-1,y-1,1+slotX-x,25};
-                DrawOutlinedRect_Dithered(&r,FRIENDLY);
+                DrawOutlinedRect_Dithered(r,FRIENDLY);
             }
             else
                 al_draw_rectangle(r.x, r.y, r.x + r.w, r.y + r.h,FRIENDLY,1);

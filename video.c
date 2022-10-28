@@ -100,46 +100,55 @@ void DrawFilledRect_Dithered(Rect r, ALLEGRO_COLOR color)
 
 
 }
-void DrawOutlinedRect_Dithered(Rect* r, ALLEGRO_COLOR color)
+void DrawOutlinedRect_Dithered(Rect r, ALLEGRO_COLOR color)
 {
-    if (!r) return;
     al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+    r.x = (int)r.x;
+    r.y = (int)r.y;    
+    r.w = (int)r.w;    
+    r.h = (int)r.h;    
+
+
+    //if ((int)r.x % 2 == 0)
+      //  r.x--;
+    r.x--;
        
-    for (int y = r->y; y < r->y+r->h; y++)
+
+    for (int y = r.y; y < r.y+r.h; y++)
     {
         if (y%2==0)
         {
-            al_put_pixel(r->x,y,color);
-            al_put_pixel(r->x+r->w,y,color);
+            al_put_pixel(r.x,y,color);
+            al_put_pixel(r.x+r.w,y,color);
         }
 
     }
-    for (int x = r->x; x < r->x+r->w; x++)
+    for (int x = r.x; x < r.x+r.w; x++)
     {
         if (x%2==1)
         {
-            al_put_pixel(x,r->y,color);
-            al_put_pixel(x,r->y+r->h,color);
+            al_put_pixel(x,r.y,color);
+            al_put_pixel(x,r.y+r.h,color);
         }
 
     }
 
     //Draw corner details
-    al_put_pixel(r->x,r->y,color);
-    al_put_pixel(r->x+1,r->y,color);
-    al_put_pixel(r->x,r->y+1,color);
+    al_put_pixel(r.x,r.y,color);
+    al_put_pixel(r.x+1,r.y,color);
+    al_put_pixel(r.x,r.y+1,color);
 
-    al_put_pixel(r->x+r->w,r->y,color);
-    al_put_pixel(r->x+r->w-1,r->y,color);
-    al_put_pixel(r->x+r->w,r->y+1,color);
+    al_put_pixel(r.x+r.w,r.y,color);
+    al_put_pixel(r.x+r.w-1,r.y,color);
+    al_put_pixel(r.x+r.w,r.y+1,color);
 
-    al_put_pixel(r->x,r->y+r->h,color);
-    al_put_pixel(r->x,r->y+r->h-1,color);
-    al_put_pixel(r->x+1,r->y+r->h,color);
+    al_put_pixel(r.x,r.y+r.h,color);
+    al_put_pixel(r.x,r.y+r.h-1,color);
+    al_put_pixel(r.x+1,r.y+r.h,color);
 
-    al_put_pixel(r->x+r->w,r->y+r->h,color);
-    al_put_pixel(r->x+r->w-1,r->y+r->h,color);
-    al_put_pixel(r->x+r->w,r->y+r->h-1,color);
+    al_put_pixel(r.x+r.w,r.y+r.h,color);
+    al_put_pixel(r.x+r.w-1,r.y+r.h,color);
+    al_put_pixel(r.x+r.w,r.y+r.h-1,color);
     al_unlock_bitmap(al_get_target_bitmap());
 
 }

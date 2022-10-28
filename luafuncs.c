@@ -1390,7 +1390,12 @@ int L_CreateAOE(lua_State* l)
 int L_SetAutoWin(lua_State* l)
 {
     bool b = lua_toboolean(l,1);
-    currEncounterRunning->automaticWinCheck = b;
+    currMap->automaticWinCheck = b;
+    return 0;
+}
+int L_EnableNextLevelButton(lua_State* l)
+{
+    currMap->forceNextLevelButtonEnabled = lua_toboolean(l,1);
     return 0;
 }
 int L_Win(lua_State* l)
@@ -3553,5 +3558,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetObjectCompletionPercent);
     lua_setglobal(luaState, "SetObjectCompletionPercent");
+
+    lua_pushcfunction(luaState, L_EnableNextLevelButton);
+    lua_setglobal(luaState, "EnableNextLevelButton");
+
 
 }

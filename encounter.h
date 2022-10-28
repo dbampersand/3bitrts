@@ -48,7 +48,6 @@ typedef struct Encounter
 
     bool encounterShouldBeSkipped;
 
-    bool automaticWinCheck;
 
     UIElement encounter_ButtonLeft;
     UIElement encounter_ButtonConfirm;

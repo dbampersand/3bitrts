@@ -34,6 +34,9 @@ typedef struct Map
 
     float percentComplete;
 
+    bool automaticWinCheck;
+    bool forceNextLevelButtonEnabled;
+
 } Map;
 
 extern Map* currMap;

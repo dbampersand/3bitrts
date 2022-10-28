@@ -1,7 +1,6 @@
 function setup()
     SetMapSprite("assets/encounters/01/map_final.png")
     CreateObject("assets/encounters/01/boss.lua",144,0,TYPE_ENEMY);
-    SetAutoWin(true);
     SetEncounterMusic("assets/audio/first_boss.wav");
 
 

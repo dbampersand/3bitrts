@@ -309,6 +309,8 @@ void UpdateWidget(Widget* w, float dt);
 void ClearPanelElements(Panel* p);
 void GenerateFileListButtons(char* path, Panel* p);
 void DrawReplayUI(Replay* r, MouseState* mouseState, MouseState* mouseStateLastFrame);
+void DrawButtonText(UIElement* u,int x, int y, ALLEGRO_COLOR col);
 void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected);
 void ChangeButtonImage(UIElement* u, int spriteIndex);
 void DrawTimer(bool enabled);
+char* GetButtonText(UIElement* u);

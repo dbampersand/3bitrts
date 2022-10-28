@@ -1195,7 +1195,7 @@ void DrawCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive,MouseSt
         }
         else
         {
-            DrawOutlinedRect_Dithered(&checkbox,FRIENDLY);
+            DrawOutlinedRect_Dithered(checkbox,FRIENDLY);
         }
     }
     if (PointInRect(mouseState.screenX,mouseState.screenY,checkbox))
@@ -2211,13 +2211,29 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_
 
 
 }
+void DrawButtonText(UIElement* u,int x, int y, ALLEGRO_COLOR col)
+{
+    Button* b = (Button*)u->data;
+    int align = b->drawLine ? ALLEGRO_ALIGN_CENTRE : ALLEGRO_ALIGN_LEFT;
+    int textX; int textY;
+    if (align == ALLEGRO_ALIGN_CENTRE)
+    {
+        textX = x + u->w/2;
+        textY = y + u->h/2 - al_get_font_line_height(ui.font)/2.0;
+    }
+    if (align == ALLEGRO_ALIGN_LEFT)
+    {
+        textX = x+3;
+        textY = y + u->h/2 - al_get_font_line_height(ui.font)/2.0;
+    }
+    al_draw_text(ui.font,col,textX,textY,align,b->description);
+}   
 void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected)
 {
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     Button* b = (Button*)u->data;
     ALLEGRO_FONT* font = ui.font;
-    Rect button = (Rect){x,y,u->w,u->h};
-    Rect r = (Rect){x,y,u->w,u->h};
+    Rect button = (Rect){x,y,(int)u->w,(int)u->h};
 
     int align = b->drawLine ? ALLEGRO_ALIGN_CENTRE : ALLEGRO_ALIGN_LEFT;
     int textX; int textY;
@@ -2245,15 +2261,15 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
             al_draw_filled_rectangle(x,y,x+u->w,y+u->h,bgColor);
             if (isActive)
             {
-                    al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
+                al_draw_rectangle(x, y, x + button.w, y + button.h, FRIENDLY,1);
             }
             else
             {
-                DrawOutlinedRect_Dithered(&button,FRIENDLY);
+                DrawOutlinedRect_Dithered(button,FRIENDLY);
             }
         }
-        al_draw_text(ui.font,FRIENDLY,textX,textY,align,b->description);
-
+        //al_draw_text(ui.font,FRIENDLY,textX,textY,align,b->description);
+        DrawButtonText(u,x,y,FRIENDLY);
     }
     if (PointInRect(mouseState.screenX,mouseState.screenY,button) && isActive && !b->clicked)
     {
@@ -2302,7 +2318,7 @@ void DrawKeyInput(UIElement* u, int x, int y, MouseState mouseState, bool isActi
         }
         else
         {   
-            DrawOutlinedRect_Dithered(&button,FRIENDLY);
+            DrawOutlinedRect_Dithered(button,FRIENDLY);
         }
         al_draw_text(ui.tinyFont,FRIENDLY,x+u->w/2,y + u->h / 2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,k->text);
 
@@ -2655,7 +2671,7 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, ALLEGRO
     r.w+=padding;
     r.h+=padding;
     if (dither)
-        DrawOutlinedRect_Dithered(&r,color);
+        DrawOutlinedRect_Dithered(r,color);
     else
     {
        // al_draw_rectangle(r.x+1,r.y+1,r.w+padding,r.h+padding,color,1);
@@ -2800,4 +2816,11 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
     }
 
     free(buffer);
+}
+char* GetButtonText(UIElement* u)
+{
+    if (u->elementType != ELEMENT_BUTTON)
+        return NULL;
+    Button* b = (Button*)u->data;
+    return b->description;
 }

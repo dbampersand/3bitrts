@@ -357,17 +357,50 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         if (gameState == GAMESTATE_INGAME)
         {
             char percentCompletionStr[NumDigits(INT_MIN)+3];
-            if (GetNumEnemyObjects() == 0 || currMap->percentComplete >= 100)
-                ui.nextLevelButton.enabled = true;
+            if (currMap->automaticWinCheck)
+            {
+                if (GetNumEnemyObjects() == 0 || currMap->percentComplete >= 100 || currMap->forceNextLevelButtonEnabled)
+                    ui.nextLevelButton.enabled = true;
+                else
+                    ui.nextLevelButton.enabled = false;
+            }
             else
-                ui.nextLevelButton.enabled = false;
-            
+            {
+                if (currMap->forceNextLevelButtonEnabled)
+                {
+                    ui.nextLevelButton.enabled = true;
+                }
+                else
+                {
+                    ui.nextLevelButton.enabled = false;
+                }
+            }
+
+            Rect r = (Rect){ui.nextLevelButton.x+1,ui.nextLevelButton.y+2,ui.nextLevelButton.w-3,ui.nextLevelButton.h-3};
             UpdateButton(ui.nextLevelButton.x,ui.nextLevelButton.y,&ui.nextLevelButton,*mouseState,*mouseStateLastFrame);
+
+            float nrmPercentComplete = currMap->percentComplete/100.0f;
+
+            if (currMap->percentComplete > 100) 
+                nrmPercentComplete = 1;
+            if (currMap->percentComplete <= 0) 
+                nrmPercentComplete = 0;
+            
+                
+            al_draw_filled_rectangle(r.x,r.y,r.x + (r.w * nrmPercentComplete),r.y+r.h,FRIENDLY);
+            
             DrawUIElement(&ui.nextLevelButton,ui.nextLevelButton.x,ui.nextLevelButton.y,mouseState,ui.nextLevelButton.bgColor);
 
             memset(percentCompletionStr,0,(NumDigits(INT_MIN)+3)*sizeof(char));
             sprintf(percentCompletionStr,"%i%%",(int)floor(currMap->percentComplete));
-            al_draw_text(ui.font,FRIENDLY,ui.nextLevelButton.x+ui.nextLevelButton.w/2,ui.nextLevelButton.y+ui.nextLevelButton.h+5,ALLEGRO_ALIGN_CENTER,percentCompletionStr);
+
+            //al_draw_text(ui.font,FRIENDLY,ui.nextLevelButton.x+ui.nextLevelButton.w/2,ui.nextLevelButton.y+ui.nextLevelButton.h/2,ALLEGRO_ALIGN_CENTER,GetButtonText(&ui.nextLevelButton));
+            DrawButtonText(&ui.nextLevelButton,ui.nextLevelButton.x,ui.nextLevelButton.y,FRIENDLY);
+            al_set_clipping_rectangle(r.x, r.y, r.w*nrmPercentComplete, r.h);
+            DrawButtonText(&ui.nextLevelButton,ui.nextLevelButton.x,ui.nextLevelButton.y,BG);
+            
+            //al_draw_text(ui.font,BG,ui.nextLevelButton.x+ui.nextLevelButton.w/2,ui.nextLevelButton.y+ui.nextLevelButton.h/2,ALLEGRO_ALIGN_CENTER,GetButtonText(&ui.nextLevelButton));
+            al_reset_clipping_rectangle();
 
             if (GetButtonIsClicked(&ui.nextLevelButton))
             {
@@ -434,9 +467,11 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
     if (al_key_down(keyState,ALLEGRO_KEY_MINUS))
         DisplayCollision();
+    if (al_key_down(keyState,ALLEGRO_KEY_O) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_O))
+        AddCompletionPercent(5);
     //GameObjDebugDraw();
     //DebugDrawPathfinding();   
-    //al_draw_filled_rectangle(0,0,255,255,BG);
+    
 }
 
 void DrawMainMenu()

@@ -249,6 +249,7 @@ Map* LoadMap(char* path)
 {
   Map m;
   memset(&m,0,sizeof(Map));
+  m.automaticWinCheck = true;
   m.spawnPoint.x = 80;
   m.spawnPoint.y = 180;
   loadLuaGameMap(luaState,path,&m);

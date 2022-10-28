@@ -506,8 +506,6 @@ void LoseGame()
 }
 void CheckIfGameIsWon()
 {
-    if (!currEncounterRunning->automaticWinCheck)
-        return;
 
     if (GameStateIsTransition(&gameState)) 
         return;
@@ -520,8 +518,6 @@ void CheckIfGameIsWon()
 }
 void CheckIfGameIsLost()
 {
-    if (!currEncounterRunning->automaticWinCheck)
-        return;
     if (GameStateIsTransition(&gameState)) 
         return;
     if (GetNumPlayerControlledObjs(&players[0]) == 0 && gameState == GAMESTATE_INGAME)

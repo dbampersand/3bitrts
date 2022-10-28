@@ -2602,7 +2602,7 @@ void GetCentre_Screen(GameObject* g, float* x, float* y)
 {
     if (!g)
     {
-        *x = 0;
+        *x = 0;     
         *y = 0;
          return;
     }
