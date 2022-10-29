@@ -23,9 +23,6 @@ end
 function update(dt)
     --ChangeMap("assets/encounters/01/map_2.lua")
         
-    if (NumObjectsOwnedByPlayer(TYPE_ENEMY) == 0) then
-        ChangeMap("assets/encounters/01/map_2.lua")
-    end
     timer = timer + dt;
     if (timer > 5) then
         f1 = {};

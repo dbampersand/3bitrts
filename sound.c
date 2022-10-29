@@ -115,12 +115,15 @@ void PlaySound(Sound* s, float relativeVolume)
         {
             int i = LoadSound(s->path);
             s->sample = sounds[i].sample;
+            s->path = sounds[i].path;
+            printf("LOAD\n");
         }   
     }
-    if (gameState == GAMESTATE_INGAME && soundPlayedThisFramePosition < NUM_SOUNDS_TO_SAVE)
+    if (gameState == GAMESTATE_INGAME && soundPlayedThisFramePosition <= NUM_SOUNDS_TO_SAVE && replay.numFrames > 0)
     {
         {
-            replay.frames[replay.numFrames-1].soundsPlayedThisFrame[soundPlayedThisFramePosition] = *s;
+
+            replay.frames[replay.numFrames].soundsPlayedThisFrame[soundPlayedThisFramePosition] = *s;
             soundPlayedThisFramePosition++;
         }
     }

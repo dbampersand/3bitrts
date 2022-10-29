@@ -108,6 +108,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
 
     if (!GameIsPaused())
     {
+
         MoveCamera(*mouseState,keyState,dt);
         UpdateItems(dt);
         lua_settop(luaState,0);
@@ -128,7 +129,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
         UpdateAbilityInteractions(keyState, keyStateLastFrame,*mouseState,*mouseStateLastFrame);
 
         CheckIfGameIsLost();
-        CheckIfGameIsWon();
+        //CheckIfGameIsWon();
 
 
         if (gameState == GAMESTATE_INGAME)
@@ -360,7 +361,10 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             if (currMap->automaticWinCheck)
             {
                 if (GetNumEnemyObjects() == 0 || currMap->percentComplete >= 100 || currMap->forceNextLevelButtonEnabled)
+                {
                     ui.nextLevelButton.enabled = true;
+                    currMap->percentComplete = 100;
+                }
                 else
                     ui.nextLevelButton.enabled = false;
             }

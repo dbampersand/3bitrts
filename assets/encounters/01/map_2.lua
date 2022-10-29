@@ -21,7 +21,7 @@ function setup()
     CreateObject("assets/decor/curebox.lua",284,251,TYPE_ENEMY,0);
 
 
-    SetSpawnPoint(35,115)
+        SetSpawnPoint(35,115)
     
 end
 

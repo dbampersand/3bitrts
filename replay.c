@@ -259,7 +259,7 @@ void SerializeSection(Replay* r, bool finished)
         return;
 
    }
-   r->numFrames=0;
+   r->numFrames=1;
    r->framePlayPosition=0;
 
    bufferPosition = 0;

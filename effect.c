@@ -30,7 +30,7 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
         for (int i = 0; i < ceil(value/4.0f); i++)
         {
             float x; float y;
-            GetCentre_Screen(target,&x,&y);
+            GetCentre(target,&x,&y);
             AddParticleWithRandomProperties(x,y,EffectColors[e->effectType],0.1f,2.5f,1,1.5f);
         }
 
