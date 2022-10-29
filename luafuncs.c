@@ -2295,6 +2295,50 @@ void SetGlobals(lua_State* l)
     lua_setglobal(l,"DITHER_STAR_QUARTER");
     lua_pushinteger(l,DITHER_STAR_EIGTH);
     lua_setglobal(l,"DITHER_STAR_EIGTH");
+    
+    lua_pushinteger(l,DITHER_HEAL_HALF);
+    lua_setglobal(l,"DITHER_HEAL_HALF");
+    lua_pushinteger(l,DITHER_HEAL_QUARTER);
+    lua_setglobal(l,"DITHER_HEAL_QUARTER");
+    lua_pushinteger(l,DITHER_HEAL_EIGTH);
+    lua_setglobal(l,"DITHER_HEAL_EIGTH");
+
+    lua_pushinteger(l,DITHER_POISON_HALF);
+    lua_setglobal(l,"DITHER_POISON_HALF");
+    lua_pushinteger(l,DITHER_POISON_QUARTER);
+    lua_setglobal(l,"DITHER_POISON_QUARTER");
+    lua_pushinteger(l,DITHER_POISON_EIGTH);
+    lua_setglobal(l,"DITHER_POISON_EIGTH");
+
+    lua_pushinteger(l,DITHER_SPEED_HALF);
+    lua_setglobal(l,"DITHER_SPEED_HALF");
+    lua_pushinteger(l,DITHER_SPEED_QUARTER);
+    lua_setglobal(l,"DITHER_SPEED_QUARTER");
+    lua_pushinteger(l,DITHER_SPEED_EIGTH);
+    lua_setglobal(l,"DITHER_SPEED_EIGTH");
+
+    lua_pushinteger(l,DITHER_SHIELD_HALF);
+    lua_setglobal(l,"DITHER_SHIELD_HALF");
+    lua_pushinteger(l,DITHER_SHIELD_QUARTER);
+    lua_setglobal(l,"DITHER_SHIELD_QUARTER");
+    lua_pushinteger(l,DITHER_SHIELD_EIGTH);
+    lua_setglobal(l,"DITHER_SHIELD_EIGTH");
+
+
+    lua_pushinteger(l,DITHER_DAMAGE_HALF);
+    lua_setglobal(l,"DITHER_DAMAGE_HALF");
+    lua_pushinteger(l,DITHER_DAMAGE_QUARTER);
+    lua_setglobal(l,"DITHER_DAMAGE_QUARTER");
+    lua_pushinteger(l,DITHER_DAMAGE_EIGTH);
+    lua_setglobal(l,"DITHER_DAMAGE_EIGTH");
+
+    lua_pushinteger(l,DITHER_ATTACK_DAMAGE_HALF);
+    lua_setglobal(l,"DITHER_ATTACK_DAMAGE_HALF");
+    lua_pushinteger(l,DITHER_ATTACK_DAMAGE_QUARTER);
+    lua_setglobal(l,"DITHER_ATTACK_DAMAGE_QUARTER");
+    lua_pushinteger(l,DITHER_ATTACK_DAMAGE_EIGTH);
+    lua_setglobal(l,"DITHER_ATTACK_DAMAGE_EIGTH");
+
 
     lua_pushinteger(l,TYPE_ALL);
     lua_setglobal(l,"TYPE_ALL");

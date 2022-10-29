@@ -216,6 +216,7 @@ void ApplyAttack(Attack* a, GameObject* target)
         }
     }
 }
+//TODO: replace the long strings of put_pixel with a for loop iterating over bitmap
 void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color, DITHER_PATTERN dither)
 {
     int circum = radius*2;
@@ -252,9 +253,9 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
         al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
 
 
-        for (int x = 0; x < circum; x++)
+        for (int x = 0; x < circum+dither; x++)
         {
-            for (int y = 0; y < circum; y++)
+            for (int y = 0; y < circum+dither; y++)
             {
                 if (PointInCircle(x,y,radius,radius,radius))
                 {
@@ -279,9 +280,9 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
         if (dither == DITHER_VERTICAL_EIGTH)
             pattern=8;
         
-        for (int x = 0; x < circum; x+=pattern)
+        for (int x = 0; x < circum+pattern; x+=pattern)
         {
-            for (int y = 0; y < circum; y++)
+            for (int y = 0; y < circum+pattern; y++)
             {
                 if (PointInCircle(x,y,radius,radius,radius))
                 {
@@ -302,9 +303,9 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
         if (dither == DITHER_HORIZONTAL_EIGTH)
             pattern=8;
             
-        for (int y = 0; y < circum; y+=pattern)
+        for (int y = 0; y < circum+pattern; y+=pattern)
         {
-            for (int x = 0; x < circum; x++)
+            for (int x = 0; x < circum+pattern; x++)
             {
                 if (PointInCircle(x,y,radius,radius,radius))
                 {   
@@ -324,9 +325,9 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
         if (dither == DITHER_STAR_EIGTH)
             pattern=8;
 
-        for (int x = 0; x < circum; x+=pattern*2)
+        for (int x = 0; x < circum+pattern; x+=pattern*2)
         {
-            for (int y = 0; y < circum; y+=pattern*2)
+            for (int y = 0; y < circum+pattern; y+=pattern*2)
             {
                 if (PointInCircle(x,y,radius,radius,radius))
                     al_put_pixel(x,y,WHITE);
@@ -339,7 +340,191 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
             }
         }
     }
+    if (dither == DITHER_HEAL_HALF || dither == DITHER_HEAL_QUARTER || dither == DITHER_HEAL_EIGTH)
+    {
+        int pattern;
+        if (dither == DITHER_HEAL_HALF)
+            pattern=2;
+        if (dither == DITHER_HEAL_QUARTER)
+            pattern=4;
+        if (dither == DITHER_HEAL_EIGTH)
+            pattern=8;
 
+        for (int x = 0; x < circum+pattern; x+=pattern*2)
+        {
+            for (int y = 0; y < circum+pattern; y+=pattern*2)
+            {
+                //middle
+                if (PointInCircle(x,y,radius,radius,radius))
+                    al_put_pixel(x,y,WHITE);
+                
+                //horizontal
+                if (PointInCircle(x-1,y,radius,radius,radius))
+                    al_put_pixel(x-1,y,WHITE);
+                if (PointInCircle(x+1,y,radius,radius,radius))
+                    al_put_pixel(x+1,y,WHITE);
+
+                //vertical
+                if (PointInCircle(x,y-1,radius,radius,radius))
+                    al_put_pixel(x,y-1,WHITE);
+                if (PointInCircle(x,y+1,radius,radius,radius))
+                    al_put_pixel(x,y+1,WHITE);
+            }
+        }
+    }
+    if (dither == DITHER_POISON_HALF || dither == DITHER_POISON_QUARTER || dither == DITHER_POISON_EIGTH)
+    {
+        int pattern;
+        if (dither == DITHER_POISON_HALF)
+            pattern=2;
+        if (dither == DITHER_POISON_QUARTER)
+            pattern=4;
+        if (dither == DITHER_POISON_EIGTH)
+            pattern=8;
+
+        float rad = 3;
+
+        float midX = radius;
+        float midY = radius;
+
+        int index = 0;
+        for (int x = 0; x < circum; x+=pattern*2)
+        {
+            index++;
+            for (int y = 0; y < circum; y+=pattern*2)
+            {
+                float add = 0;
+                if (index % 2 == 0)
+                    add = rad;
+
+                float distance = dist(x,y+add,midX,midY) + rad/2.0f;
+                if (distance < radius-1.25f)
+                {
+                    al_draw_circle(x,y+add,rad,WHITE,0);
+                }
+            }
+        }
+    }
+    if (dither == DITHER_SPEED_HALF || dither == DITHER_SPEED_QUARTER || dither == DITHER_SPEED_EIGTH)
+    {
+        int pattern;
+        if (dither == DITHER_SPEED_HALF)
+            pattern=3;
+        if (dither == DITHER_SPEED_QUARTER)
+            pattern=4;
+        if (dither == DITHER_SPEED_EIGTH)
+            pattern=5;
+
+        int index = 0;
+        for (int x = 0; x < circum+pattern; x+=pattern*2)
+        {
+            index++;
+            for (int y = 0; y < circum+pattern; y+=pattern*2)
+            {
+                float add = 0;
+                if (index % 2 == 0)
+                    add = pattern;
+
+                //tail
+                if (PointInCircle(x,y+add,radius,radius,radius))
+                    al_put_pixel(x,y+add,WHITE);
+                if (PointInCircle(x+1,y-1+add,radius,radius,radius))
+                    al_put_pixel(x+1,y-1+add,WHITE);
+                if (PointInCircle(x+2,y-2+add,radius,radius,radius))
+                    al_put_pixel(x+2,y-2+add,WHITE);
+                    
+                //head
+                if (PointInCircle(x+3,y-3+add,radius,radius,radius))
+                    al_put_pixel(x+3,y-3+add,WHITE);
+                if (PointInCircle(x+4,y-4+add,radius,radius,radius))
+                    al_put_pixel(x+4,y-4+add,WHITE);
+
+                //head left
+                if (PointInCircle(x+3,y-4+add,radius,radius,radius))
+                    al_put_pixel(x+3,y-4+add,WHITE);
+                if (PointInCircle(x+2,y-4+add,radius,radius,radius))
+                    al_put_pixel(x+2,y-4+add,WHITE);
+
+                //head right
+                if (PointInCircle(x+4,y-3+add,radius,radius,radius))
+                    al_put_pixel(x+4,y-3+add,WHITE);
+                if (PointInCircle(x+4,y-2+add,radius,radius,radius))
+                    al_put_pixel(x+4,y-2+add,WHITE);
+
+
+            }
+        }
+    }
+    if (dither == DITHER_ATTACK_DAMAGE_HALF || dither == DITHER_ATTACK_DAMAGE_QUARTER || dither == DITHER_ATTACK_DAMAGE_EIGTH)
+    {
+        int pattern;
+        if (dither == DITHER_ATTACK_DAMAGE_HALF)
+            pattern=3;
+        if (dither == DITHER_ATTACK_DAMAGE_QUARTER)
+            pattern=5;
+        if (dither == DITHER_ATTACK_DAMAGE_EIGTH)
+            pattern=7;
+
+        int index = 0;
+        for (int x = 0; x < circum+pattern; x+=pattern*2)
+        {
+            index++;
+            for (int y = 0; y < circum+pattern; y+=pattern*2)
+            {
+                float add = 0;
+                if (index % 2 == 0)
+                    add = pattern;
+
+                if (PointInCircle(x+2,y+add,radius,radius,radius))
+                    al_put_pixel(x+2,y+add,WHITE);
+                if (PointInCircle(x+1,y+1+add,radius,radius,radius))
+                    al_put_pixel(x+1,y+1+add,WHITE);
+                if (PointInCircle(x,y+2+add,radius,radius,radius))
+                    al_put_pixel(x,y+2+add,WHITE);
+                if (PointInCircle(x+3,y+1+add,radius,radius,radius))
+                    al_put_pixel(x+3,y+1+add,WHITE);
+                if (PointInCircle(x+4,y+2+add,radius,radius,radius))
+                    al_put_pixel(x+4,y+2+add,WHITE);
+
+
+                if (PointInCircle(x+2,y+2+add,radius,radius,radius))
+                    al_put_pixel(x+2,y+2+add,WHITE);
+                if (PointInCircle(x+2,y+3+add,radius,radius,radius))
+                    al_put_pixel(x+2,y+3+add,WHITE);
+                if (PointInCircle(x+2,y+4+add,radius,radius,radius))
+                    al_put_pixel(x+2,y+4+add,WHITE);
+
+
+            }
+        }
+    }
+        if (dither == DITHER_DAMAGE_HALF || dither == DITHER_DAMAGE_QUARTER || dither == DITHER_DAMAGE_EIGTH)
+    {
+        int pattern;
+        if (dither == DITHER_DAMAGE_HALF)
+            pattern=3;
+        if (dither == DITHER_DAMAGE_QUARTER)
+            pattern=5;
+        if (dither == DITHER_DAMAGE_EIGTH)
+            pattern=7;
+
+        int index = 0;
+        for (int x = 0; x < circum+pattern; x+=pattern*2)
+        {
+            index++;
+            for (int y = 0; y < circum+pattern; y+=pattern*2)
+            {
+                float add = 0;
+                if (index % 2 == 0)
+                    add = pattern;
+
+                if (PointInCircle(x,y+add,radius,radius,radius))
+                    al_put_pixel(x,y+add,WHITE);
+          
+
+            }
+        }
+    }
     al_unlock_bitmap(al_get_target_bitmap());
 
     al_set_target_bitmap(before);

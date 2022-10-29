@@ -20,7 +20,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HEAL;
     f1["value"] = 100;  
 
-    local aoe = CreateAOE(GetX(obj),GetY(obj),"", radius, 0.25, 0.25, false, ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_HEAL,DITHER_HALF,false, -1, {f1})
+    local aoe = CreateAOE(GetX(obj),GetY(obj),"", radius, 0.25, 0.25, false, ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_HEAL,DITHER_HEAL_EIGTH,false, -1, {f1})
     SetAttackCircle(aoe,true);
     
 

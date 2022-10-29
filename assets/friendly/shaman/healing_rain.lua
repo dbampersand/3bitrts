@@ -27,7 +27,7 @@ function casted(x,y,obj,headingx,headingy)
     f2["value"] = totalHeal / duration;
 
 
-    local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",120,1,duration,false,ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_HEAL,DITHER_STAR_EIGTH,false,-1,{f2});
+    local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",120,1,duration,false,ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_HEAL,DITHER_HEAL_EIGTH,false,-1,{f2});
     return true;
 end
 function onhit(x,y,objhit)
