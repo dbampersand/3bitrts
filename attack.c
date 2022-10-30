@@ -690,7 +690,7 @@ void UpdateAttack(Attack* a, float dt)
         }
 
 
-        for (int i = 0; i < numObjects; i++)
+        for (int i = 0; i < MAX_OBJS; i++)
         {
             if (!IsActive(&objects[i]))
                 continue;

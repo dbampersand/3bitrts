@@ -198,11 +198,8 @@ typedef struct GameObject
 
 #define MAX_OBJS 64
 extern GameObject* objects;
-extern int numObjects;
 extern int objectsAllocated;
 
-extern GameObject** freeObjs;
-extern int numFreeObjs;
 
 
 extern GameObject** prefabs;

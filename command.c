@@ -169,7 +169,7 @@ void NextCommand(GameObject* g)
 }
 void FindEnemiesToAttack(GameObject* g)
 {
-    for (int i = 0; i < numObjects; i++)
+    for (int i = 0; i < MAX_OBJS; i++)
     {
         GameObject* g2 = &objects[i];  
         if (IsActive(g2) && GetPlayerOwnedBy(g) != GetPlayerOwnedBy(g2) && !ObjIsDecoration(g2))
@@ -331,7 +331,7 @@ void DoCommands(GameObject* g)
             NextCommand(g);
             return;
         }
-        for (int i = 0; i < numObjects; i++)
+        for (int i = 0; i < MAX_OBJS; i++)
         {
             GameObject* g2 = &objects[i];  
             if (IsActive(g2))

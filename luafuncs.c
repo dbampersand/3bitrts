@@ -889,7 +889,7 @@ int L_CreateCircularProjectiles(lua_State* l)
     GameObject* targ = NULL;
     if (attackType == ATTACK_PROJECTILE_TARGETED)
     {   
-        for (int i = 0; i < numObjects; i++)
+        for (int i = 0; i < MAX_OBJS; i++)
         {
             Rect r = GetObjRect(&objects[i]);
 
@@ -971,7 +971,7 @@ int L_CreateProjectile(lua_State* l)
     GameObject* targ = NULL;
     if (attackType == ATTACK_PROJECTILE_TARGETED)
     {   
-        for (int i = 0; i < numObjects; i++)
+        for (int i = 0; i < MAX_OBJS; i++)
         {
             Rect r = GetObjRect(&objects[i]);
 

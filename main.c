@@ -119,7 +119,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
         GetControlGroup(keyState);
         UpdateDamageNumbers(dt);
         UpdatePlayerObjectInteractions(keyState,keyStateLastFrame,mouseState);
-        for (int i = 0; i < numObjects; i++)
+        for (int i = 0; i < MAX_OBJS; i++)
         {
             UpdateObject(&objects[i],dt);
         }
@@ -194,7 +194,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     if ((mouseStateLastFrame->mouse.buttons & 2 || mouseState->mouse.buttons & 2) || abilityCastOnTarget)
     {
-        for (int i = 0; i < numObjects; i++)
+        for (int i = 0; i < MAX_OBJS; i++)
         {
             GameObject* g = &objects[i];
             if (g->properties & OBJ_ACTIVE && (g->properties & OBJ_OWNED_BY || abilityCastOnTarget))
@@ -207,7 +207,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         }
     }
     DrawObjShadows();
-    for (int i = 0; i < numObjects; i++)
+    for (int i = 0; i < MAX_OBJS; i++)
     {
         DrawChannelHint(&objects[i]);
         if ((i == objSelected || &objects[i] == players[0].clickedThisFrame) && !ObjIsInvincible(&objects[i]))
@@ -221,7 +221,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         }
     }
     //Draw health bars on top of all objects
-    for (int i = 0; i < numObjects; i++)
+    for (int i = 0; i < MAX_OBJS; i++)
     {
         GameObject* g = &objects[i];
         if (!IsActive(g))
@@ -472,7 +472,11 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     if (al_key_down(keyState,ALLEGRO_KEY_MINUS))
         DisplayCollision();
     if (al_key_down(keyState,ALLEGRO_KEY_O) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_O))
-        AddCompletionPercent(5);
+    {
+        GameObject* g = AddGameobject(prefabs[0],mouseState->worldX,mouseState->worldY);
+        KillObj(g,true);
+    }
+
     //GameObjDebugDraw();
     //DebugDrawPathfinding();   
     

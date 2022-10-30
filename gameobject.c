@@ -30,11 +30,8 @@
 #include "replay.h"
 
  GameObject* objects = NULL;
- int numObjects = 0;
  int objectsAllocated = 0; 
 
- GameObject** freeObjs = NULL;
- int numFreeObjs = 0;
 
 
  GameObject** prefabs = NULL;
@@ -56,7 +53,7 @@ float* cosTable = NULL;// = &__cosTable[360];
 
 GameObject* GetMousedOver(MouseState* mouseState)
 {
-    for (int i = 0; i < numObjects; i++)
+    for (int i = 0; i < MAX_OBJS; i++)
     {
         GameObject* g = &objects[i];
         if (g->properties & OBJ_ACTIVE)
@@ -92,7 +89,7 @@ void ProcessAttackMoveMouseCommand(MouseState* mouseState, ALLEGRO_KEYBOARD_STAT
     if (players[0].amoveSelected)
     {
         players[0].amoveSelected = false;   
-        for (int i = 0; i < numObjects; i++)
+        for (int i = 0; i < MAX_OBJS; i++)
         {
             GameObject* g = &objects[i];
             if (IsSelected(g))
@@ -359,15 +356,7 @@ void UpdateObject(GameObject* g, float dt)
 void InitObjects()
 {
     objects = calloc(MAX_OBJS,sizeof(GameObject));
-    numObjects = 0;
     objectsAllocated = MAX_OBJS;
-
-    freeObjs = calloc(MAX_OBJS,sizeof(GameObject*));
-    numFreeObjs = MAX_OBJS;
-    for (int i = 0; i < MAX_OBJS; i++)
-    {
-        freeObjs[i] = &objects[i];
-    }
 
 
     prefabs = calloc(1,sizeof(GameObject*));
@@ -531,7 +520,7 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
             r.h = _MAX(endSelection.y,players[0].selectionStart.y) - _MIN(endSelection.y,players[0].selectionStart.y);
             bool hasSelected = false;
             
-            for (int i = 0; i < numObjects; i++)
+            for (int i = 0; i < MAX_OBJS; i++)
             {
                 GameObject* obj = &objects[i];
                 if (!IsOwnedByPlayer(obj) || !IsActive(obj) || ObjIsDecoration(obj))
@@ -544,7 +533,7 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                     if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
                     if (!hasSelected)
                     {
-                        for (int j = 0; j < numObjects; j++)
+                        for (int j = 0; j < MAX_OBJS; j++)
                         {
                             SetSelected(&objects[j],false);
                             ClearSelection();
@@ -709,20 +698,16 @@ void RemoveObjFromSelection(GameObject* g)
 
     }
 }
+int numObjsAddedEver = 0;
 GameObject* AddGameobject(GameObject* prefab, float x, float y)
 {
     GameObject* found = NULL;
 
-    for (int i = 0; i < numFreeObjs; i++)
+    for (int i = 0; i < MAX_OBJS; i++)
     {
-        if (freeObjs[i])
-        {       
-            found = freeObjs[i];
-            for (int j = i; j < numFreeObjs-1; j++)
-            {
-                freeObjs[j] = freeObjs[j+1];
-            }
-            freeObjs[numFreeObjs-1] = NULL;
+        if (!IsActive(&objects[i]))
+        {
+            found = &objects[i];
             break;
         }
     }
@@ -730,7 +715,8 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
         return NULL;
     *found = *prefab;
     currGameObjRunning = found; 
-
+    numObjsAddedEver++;
+    printf("%i\n",numObjsAddedEver);
 
    // memset(found->abilities,0,sizeof(Ability)*4);
     memset(currGameObjRunning,0,sizeof(GameObject));
@@ -789,8 +775,6 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
 
     found->attackSpeed = 1;
     currGameObjRunning->prefab = prefab;
-
-    numObjects++;
 
     return found;
 }
@@ -1086,6 +1070,7 @@ void KillObj(GameObject* g, bool trigger)
         AddGold(g->bounty);
 
     AddCompletionPercent(g->completionPercent);
+    
 }   
 
 
@@ -1253,7 +1238,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
         dV = -dV;
     int numEvents = 0;
 
-    for (int i = 0; i < numObjects; i++)
+    for (int i = 0; i < MAX_OBJS; i++)
     {
         Rect rG = (Rect){g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g)};
 
@@ -1504,7 +1489,7 @@ GameObject* GetCollidedWith(GameObject* g)
 {
     Sprite* s = &sprites[g->spriteIndex];
     Rect rG = (Rect){g->position.worldX,g->position.worldY,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)};
-    for (int i = 0; i < numObjects; i++)
+    for (int i = 0; i < MAX_OBJS; i++)
     {
         GameObject* g2 = &objects[i];
         if (g2 == g || !IsActive(g2)) 
