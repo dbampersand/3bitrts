@@ -7,7 +7,7 @@ function setup(obj)
     SetItemIcon(obj, "assets/items/quality_high/barbed_wire/barbed_wire.png");
 end
 
-function Attached(item,obj)
+function attached(obj)
 
 end
 

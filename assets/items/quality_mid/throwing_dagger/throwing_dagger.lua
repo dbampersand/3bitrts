@@ -8,7 +8,7 @@ function setup(obj)
 
 end
 
-function Attached(item,obj)
+function attached(obj)
     f1 = {};
     f1["trigger"] = TRIGGER_PERMANENT;
     f1["type"] = EFFECT_ATTACKRANGE

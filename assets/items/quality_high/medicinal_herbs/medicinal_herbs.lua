@@ -8,7 +8,7 @@ function setup(obj)
     SetItemIcon(obj, "assets/items/quality_high/medicinal_herbs/medicinal_herbs.png");
 end
 
-function Attached(item,obj)
+function attached(obj)
 
 end
 

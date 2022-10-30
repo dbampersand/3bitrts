@@ -1,4 +1,4 @@
-local moveSpeed = 20
+local moveSpeed = 200
 
 function setup(obj)
     SetItemName(obj,"Hermes' Boots")
@@ -9,14 +9,14 @@ function setup(obj)
 
 end
 
-function Attached(item,obj)
-    f1 = {};
+function attached(obj)
+    local f1 = {};
     f1["trigger"] = TRIGGER_PERMANENT;
     f1["type"] = EFFECT_SPEED
     f1["value"] = moveSpeed
     f1["name"] = "Hermes' Boots"
 
-    ApplyEffect(obj,f1)
+    ApplyEffect(obj,{f1})
 end
 
 function update(dt)

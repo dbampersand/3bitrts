@@ -8,6 +8,7 @@ function setup()
     AddAbility(GetObjRef(),"assets/friendly/herbalist/dissolve.lua",3)    
     AddAbility(GetObjRef(),"assets/friendly/herbalist/mix.lua",4)    
 
+    AddItem(GetObjRef(),"assets/items/quality_mid/hermes_boots/hermes_boots.lua");
 
     AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05);
     AddAttackSprite("assets/ui/slash_fx2.png",16,16,0.05);

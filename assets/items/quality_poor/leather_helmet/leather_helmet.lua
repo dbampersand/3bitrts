@@ -9,7 +9,7 @@ function setup(obj)
     
 end
 
-function Attached(item,obj)
+function attached(obj)
     AddArmor(obj,1)
 end
 

@@ -8,7 +8,7 @@ function setup(obj)
     SetItemIcon(obj, "assets/items/quality_high/venom_tipped_arrow/venom_tipped_arrow.png");
 end
 
-function Attached(item,obj)
+function attached(obj)
 
 end
 

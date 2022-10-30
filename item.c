@@ -47,6 +47,15 @@ Item* LoadItemFuncs(Item* i, lua_State* l)
     else
         i->luafunc_update = -1;
 
+    if (CheckFuncExists("attached",i->luaBuffer))
+    {
+        lua_getglobal(l, "attached");
+        funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+        i->luafunc_attached = funcIndex;
+    }
+    else
+        i->luafunc_attached = -1;
+
     if (CheckFuncExists("setup",i->luaBuffer))
     {
         lua_getglobal(l, "setup");
@@ -288,7 +297,7 @@ void AttachItem(GameObject* g, Item* i)
 
             lua_rawgeti(luaState, LUA_REGISTRYINDEX, new.luafunc_attached);
             lua_pushinteger(luaState,(int)(g-objects));    
-            lua_pcall(luaState,1,1,0);
+            lua_pcall(luaState,1,0,0);
         
 
             return;

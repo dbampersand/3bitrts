@@ -347,7 +347,7 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
                 target->effects[i] = *e;
                 target->effects[i].enabled = true;
                 target->effects[i].stacks = 1;
-                if (e->trigger == TRIGGER_CONST)
+                if (e->trigger == TRIGGER_CONST || e->trigger == TRIGGER_PERMANENT)
                 {
                     //processeffect returns true if the object died
                     if (ProcessEffect(e,from,target,false))

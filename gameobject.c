@@ -698,9 +698,9 @@ void RemoveObjFromSelection(GameObject* g)
 
     }
 }
-int numObjsAddedEver = 0;
 GameObject* AddGameobject(GameObject* prefab, float x, float y)
 {
+    GameObject* before = currGameObjRunning;
     GameObject* found = NULL;
 
     for (int i = 0; i < MAX_OBJS; i++)
@@ -715,8 +715,6 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
         return NULL;
     *found = *prefab;
     currGameObjRunning = found; 
-    numObjsAddedEver++;
-    printf("%i\n",numObjsAddedEver);
 
    // memset(found->abilities,0,sizeof(Ability)*4);
     memset(currGameObjRunning,0,sizeof(GameObject));
@@ -776,6 +774,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     found->attackSpeed = 1;
     currGameObjRunning->prefab = prefab;
 
+    currGameObjRunning = before;
     return found;
 }
 void NewObj(GameObject* g)
