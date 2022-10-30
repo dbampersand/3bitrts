@@ -527,7 +527,9 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
     }
     if (a->castType & ABILITY_POINT)
     {
-        if (dist(g->position.worldX,g->position.worldY,x,y) <= a->range)
+        float cx; float cy;
+        GetCentre(g,&cx,&cy);
+        if (dist(cx,cy,x,y) <= a->range)
             return true;
         else
             return false;
