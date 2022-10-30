@@ -250,6 +250,7 @@ extern char* stackDrawBuffer;
 typedef struct MouseState MouseState;
 typedef struct Ability Ability;
 typedef struct Replay Replay;
+typedef struct MouseState MouseState;
 
 void Chatbox_NextLine();
 void EndChatbox();
@@ -271,6 +272,7 @@ void LoadCursorSprite(UI* ui, int* index, char* path);
 void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, ALLEGRO_FONT* bold, int x, int y, int wTextbox, int minH, ALLEGRO_COLOR color, bool dither);
 int GetDescriptionBoxH(char* description, int wTextbox, ALLEGRO_FONT* f, int padding);
 bool IsInsideUI(int x, int y);
+bool MouseInsideUI(MouseState* mouse);
 int GetAbilityClicked(MouseState* mouseState,MouseState* mouseStateLastFrame);
 Rect GetAbilityPortraitRect(int index);
 void InitUI();  

@@ -575,7 +575,7 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
     }
     if (!(mouseState->mouse.buttons & 2) && (mouseLastFrame->mouse.buttons & 2))
     {
-        if (!IsInsideUI(mouseState->screenX,mouseState->screenY))
+        if (!MouseInsideUI(mouseState))
         {
             if (players[0].abilityHeld == NULL)
                     {

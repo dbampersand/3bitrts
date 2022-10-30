@@ -2685,6 +2685,10 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, ALLEGRO
     free(extra);
     free(size);
 }
+bool MouseInsideUI(MouseState* mouse)
+{
+    return mouse->screenY >= UI_START_Y;
+}
 bool IsInsideUI(int x, int y)
 {
 

@@ -3,6 +3,8 @@
 #include "allegro5/allegro.h"
 #include "effect.h"
 
+#define FRIENDLY_COLOR_ADD 80
+
 typedef enum DITHER_PATTERN
 {
     DITHER_NONE=0,

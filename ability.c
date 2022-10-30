@@ -74,7 +74,7 @@ void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD
     {
         currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
         currAbilityRunning = players[0].abilityHeld;
-        if (IsInsideUI(mouseState.worldX,mouseState.worldY))
+        if (MouseInsideUI(&mouseState))
         {
             GetAbilityClickedInsideUI(mouseState,mouseStateLastFrame);
         }

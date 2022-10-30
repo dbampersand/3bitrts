@@ -132,11 +132,11 @@ void InitColors()
     TRANSPARENT = al_map_rgba(0,0,0,0);
 
     
-    FRIENDLY_HEAL = al_map_rgba(clamp((HEAL.r*255)+60,0,255),clamp((HEAL.g*255)+60,0,255),clamp((HEAL.b*255)+60,0,255),255);
-    FRIENDLY_POISON = al_map_rgba(clamp((POISON.r*255)+60,0,255),clamp((POISON.g*255)+60,0,255),clamp((POISON.b*255)+60,0,255),255);
-    FRIENDLY_DAMAGE = al_map_rgba(clamp((DAMAGE.r*255) + 60,0,255),clamp((DAMAGE.g*255)+60,0,255),clamp((DAMAGE.b*255)+60,0,255),255);
-    FRIENDLY_SPEED = al_map_rgba(clamp((SPEED.r*255) + 60,0,255),clamp((SPEED.g*255)+60,0,255),clamp((SPEED.b*255)+60,0,255),255);
-    FRIENDLY_SHIELD = al_map_rgba(clamp((SHIELD.r*255) + 60,0,255),clamp((SHIELD.g*255)+60,0,255),clamp((SHIELD.b*255)+60,0,255),255);
+    FRIENDLY_HEAL = al_map_rgba(clamp((HEAL.r*255)+FRIENDLY_COLOR_ADD,0,255),clamp((HEAL.g*255)+FRIENDLY_COLOR_ADD,0,255),clamp((HEAL.b*255)+FRIENDLY_COLOR_ADD,0,255),255);
+    FRIENDLY_POISON = al_map_rgba(clamp((POISON.r*255)+FRIENDLY_COLOR_ADD,0,255),clamp((POISON.g*255)+FRIENDLY_COLOR_ADD,0,255),clamp((POISON.b*255)+FRIENDLY_COLOR_ADD,0,255),255);
+    FRIENDLY_DAMAGE = al_map_rgba(clamp((DAMAGE.r*255) + FRIENDLY_COLOR_ADD,0,255),clamp((DAMAGE.g*255)+FRIENDLY_COLOR_ADD,0,255),clamp((DAMAGE.b*255)+FRIENDLY_COLOR_ADD,0,255),255);
+    FRIENDLY_SPEED = al_map_rgba(clamp((SPEED.r*255) + FRIENDLY_COLOR_ADD,0,255),clamp((SPEED.g*255)+FRIENDLY_COLOR_ADD,0,255),clamp((SPEED.b*255)+FRIENDLY_COLOR_ADD,0,255),255);
+    FRIENDLY_SHIELD = al_map_rgba(clamp((SHIELD.r*255) + FRIENDLY_COLOR_ADD,0,255),clamp((SHIELD.g*255)+FRIENDLY_COLOR_ADD,0,255),clamp((SHIELD.b*255)+FRIENDLY_COLOR_ADD,0,255),255);
 
     ALColorLookup[COLOR_DEFAULT] = &BG;
     ALColorLookup[COLOR_BG] = &BG;
