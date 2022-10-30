@@ -1,4 +1,4 @@
-local moveSpeed = 200
+local moveSpeed = 20
 
 function setup(obj)
     SetItemName(obj,"Hermes' Boots")

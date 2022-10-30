@@ -4,7 +4,7 @@ function setup()
     SetSprite("assets/enemies/trainingdummy/trainingdummy.png");
 
     SetDamage(0);
-    SetRange(0)
+    SetRange(200)
     SetMaxHP(maxHP,true)
     SetSpeed(0)
     SetObjectPush(true);
@@ -49,7 +49,7 @@ function update(dt)
 
     ShowString(dpsStr,6,6);
 
-    ClearCommandQueue(GetObjRef());
+    --ClearCommandQueue(GetObjRef());
 end
 
 function kill()

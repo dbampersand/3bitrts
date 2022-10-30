@@ -289,7 +289,7 @@ void UpdateObject(GameObject* g, float dt)
             
             if (RectDist(currGameObjRunning,currGameObjRunning->targObj) < GetAttackRange(g))
             {
-                shouldMove = false;
+                    shouldMove = false;
                 shouldAttack = true;
             }
             else
@@ -1687,6 +1687,7 @@ void Move(GameObject* g, float delta)
     if (g->speed == 0)
         return;
     #define DIST_DELTA 1
+    
     PointSpace before = g->position;
     int w = GetWidth(g);//al_get_bitmap_width(sprites[g->spriteIndex].sprite);
     int h = GetHeight(g);//al_get_bitmap_height(sprites[g->spriteIndex].sprite);

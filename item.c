@@ -306,6 +306,7 @@ void AttachItem(GameObject* g, Item* i)
 }
 void UpdateItem(Item* i, GameObject* g, float dt)
 {
+
     currItemRunning = i;
     currGameObjRunning = g;
     lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_update);
@@ -337,11 +338,14 @@ void ItemOnAttack(Item* i, GameObject* g, float dt, float* value)
 }
 void ProcessItemsOnAttack(GameObject* g, float dt, float* value)
 {
+    GameObject* before = currGameObjRunning;
+
     for (int i = 0; i < INVENTORY_SLOTS; i++)
     {
         Item* it = &g->inventory[i];
         ItemOnAttack(it,g,dt,value);
     }
+    before = currGameObjRunning;
 }
 void ItemOnDamaged(Item* i, GameObject* src, GameObject* target, float* value)
 {
@@ -376,6 +380,8 @@ void ItemOnDamaged(Item* i, GameObject* src, GameObject* target, float* value)
 }
 void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value)
 {
+    GameObject* before = currGameObjRunning;
+
     propagateItemEffects = false;
     for (int i = 0; i < INVENTORY_SLOTS; i++)
     {
@@ -384,7 +390,8 @@ void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value)
     }
     propagateItemEffects = true;
     
-}
+    currGameObjRunning = before;
+}   
 
 void ItemOnEffect(Item* i, GameObject* g, Effect* e, float* value)
 {
@@ -417,16 +424,20 @@ void ItemOnEffect(Item* i, GameObject* g, Effect* e, float* value)
 }
 void ProcessItemsOnEffect(GameObject* g, Effect* e, float* value)
 {
+    GameObject* before = currGameObjRunning;
+
     for (int i = 0; i < INVENTORY_SLOTS; i++)
     {
         Item* it = &g->inventory[i];
         ItemOnEffect(it,g,e,value);
     }
+    currGameObjRunning = before;
 }
 
 
 void UpdateItems(float dt)
 {
+    GameObject* before = currGameObjRunning;
     for (int i = 0; i < MAX_OBJS; i++)
     {
         GameObject* g = &objects[i];
@@ -438,6 +449,8 @@ void UpdateItems(float dt)
             }
         }
     }
+    currGameObjRunning = before;
+
 }
 Item* GetRandomItem(ItemLevel i)
 {
