@@ -791,10 +791,11 @@ bool CheckFuncExists(const char* funcName, char* lua_buffer)
     char* c = strstr(lua_buffer,funcName);
     char* full = c + strlen(funcName);
 
-    if (c == NULL) return false;
-    while (c < lua_buffer + strlen(lua_buffer))
+    if (c == NULL) 
+        return false;
+    while (c >= lua_buffer)
     {
-        while (c > lua_buffer)
+        while (c >= lua_buffer)
         {
             //if we've hit a newline
             if (iscntrl(*c) || *c == '\n')
@@ -820,12 +821,12 @@ bool CheckFuncExists(const char* funcName, char* lua_buffer)
 
                 if (c == NULL)
                     return false;
-                continue;
+                continue;   
             }
-            c++;
+            c--;
         }
     }
-    return false;
+    return true;
 }
 bool ObjHasType(GameObject* g, GAMEOBJ_TYPE_HINT typeHint)
 {
@@ -1687,7 +1688,7 @@ void Move(GameObject* g, float delta)
     if (g->speed == 0)
         return;
     #define DIST_DELTA 1
-    
+        
     PointSpace before = g->position;
     int w = GetWidth(g);//al_get_bitmap_width(sprites[g->spriteIndex].sprite);
     int h = GetHeight(g);//al_get_bitmap_height(sprites[g->spriteIndex].sprite);

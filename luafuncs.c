@@ -774,7 +774,12 @@ int L_SetDamage(lua_State* l)
 {
     float damage = lua_tonumber(l,1);
     if (currGameObjRunning)
-        currGameObjRunning->baseDamage = damage + GetAugmentDamageBonus(damage,currEncounterRunning->augment);
+    {
+        float add = 0;
+        if (currEncounterRunning)
+            add = GetAugmentDamageBonus(damage,currEncounterRunning->augment);
+        currGameObjRunning->baseDamage = damage + add;
+    }
     return 0;
 }
 int L_SetAttackSpeed(lua_State* l)
