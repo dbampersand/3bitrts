@@ -238,6 +238,8 @@ void FinishTransition()
         gameState = GAMESTATE_INGAME;
         transitioningTo = GAMESTATE_INGAME;
 
+        //ending the map early map generate gold events from killing objs
+        int goldBefore = players[0].gold;
         for (int i = 0; i < MAX_OBJS; i++)
         {
             if (!IsOwnedByPlayer(&objects[i]))
@@ -245,6 +247,7 @@ void FinishTransition()
                 KillObj(&objects[i],false);
             }
         }
+        AddGold(goldBefore - players[0].gold);
 
         SetMap(LoadMap(pathToNextMap));
 
