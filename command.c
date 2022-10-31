@@ -334,6 +334,11 @@ void DoCommands(GameObject* g)
         for (int i = 0; i < MAX_OBJS; i++)
         {
             GameObject* g2 = &objects[i];  
+            if (ObjIsDecoration(g2))
+            {
+                if (!IsOwnedByPlayer(g))
+                    continue;
+            }
             if (IsActive(g2))
             {
                 if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(g2))
