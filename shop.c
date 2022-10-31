@@ -289,20 +289,32 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
             Sprite* ghost = &sprites[LoadSprite("assets/ui/shop/ghost.png",true)];
 
             Rect r = (Rect){x-1,y-1,(x + (x-_SCREEN_SIZE)-5),_MAX(GetHeightSprite(ghost),GetHeight(g)+1)};
-            al_draw_rectangle(r.x, r.y, r.x + r.w, r.y + r.h, FRIENDLY,1);
+            
+            if (players[0].gold >= g->ressurectionCost)
+                al_draw_rectangle(r.x, r.y, r.x + r.w, r.y + r.h, FRIENDLY,1);
 
-            DrawSprite(&sprites[g->spriteIndex],x,y,0,0,0,FRIENDLY,false);
+            DrawSprite(&sprites[g->spriteIndex],x,y,0,0,0,FRIENDLY,true);
             DrawSprite(ghost,x+GetWidthSprite(&sprites[g->spriteIndex])+10,y,0,0,0,FRIENDLY,false);
 
+            char textBuffer[NumDigits(INT_MAX)+3];
+            memset(textBuffer,0,sizeof(char)*NumDigits(INT_MAX)+3);
+            sprintf(textBuffer,"%i",g->ressurectionCost);
+            
+        
+            int textX = x+GetWidthSprite(&sprites[g->spriteIndex])+35;
+            int textY = y+_MAX(GetHeightSprite(ghost),GetHeight(g))/2 - al_get_font_line_height(ui.font)/2;
+            DrawSprite(&sprites[ui.gold_element_sprite_index],textX,textY,0,0,0,FRIENDLY,false);
+
+            al_draw_text(ui.font,FRIENDLY,textX+GetWidthSprite(&sprites[ui.gold_element_sprite_index])+1,textY,ALLEGRO_ALIGN_LEFT,textBuffer);
             y += GetHeight(g)+1;
 
             y += 24 + 4;
-            
-            if ((mouseStateLastFrame.mouse.buttons) & 1 && !(mouseState.mouse.buttons & 1) && PointInRect(mouseState.screenX,mouseState.screenY,r))
-            {
-                RessurectGameObject(g);
-            }
-            
+   
+            if (players[0].gold >= g->ressurectionCost)
+                 if ((mouseStateLastFrame.mouse.buttons) & 1 && !(mouseState.mouse.buttons & 1) && PointInRect(mouseState.screenX,mouseState.screenY,r))
+                {
+                    RessurectGameObject(g);
+                }
         }
     }
 
