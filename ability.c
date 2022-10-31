@@ -109,18 +109,20 @@ void CastAbilityOnMouse(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState
     if (players[0].abilityHeld)
     {
         GameObject* target = NULL;  
-        for (int i = 0; i < MAX_OBJS; i++)
-        {
-            if (IsActive(&objects[i]))
+        if (AbilityShouldBeCastOnTarget(players[0].abilityHeld))
+            for (int i = 0; i < MAX_OBJS; i++)
             {
-                if (PointInRect(mouseState->worldX,mouseState->worldY,GetObjRect(&objects[i])))
+                if (IsActive(&objects[i]))
                 {
-                    target = &objects[i];
-                    break;
+                    if (PointInRect(mouseState->worldX,mouseState->worldY,GetObjRect(&objects[i])))
+                    {
+                        target = &objects[i];
+                        break;
+                    }
                 }
             }
-        }
-            float midX=0; float midY=0;
+            
+        float midX=0; float midY=0;
         GetOffsetCenter(currGameObjRunning,&midX,&midY);
     
         //if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
