@@ -9,6 +9,8 @@
 
 typedef struct Item Item;
 
+
+
 typedef struct ShopItem
 {
     Item* item;
@@ -43,7 +45,7 @@ typedef struct Shop
 
 extern Shop shop;
 
-void DrawShop(float dt, MouseState mouseState);
+void DrawShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame);
 void LoadShop();
 void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame);
 void SwitchShopkeepAnimation(Animation* to);

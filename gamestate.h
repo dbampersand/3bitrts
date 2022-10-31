@@ -48,6 +48,8 @@ extern GameState transitioningTo;
 extern float transitionTimer;
 
 extern GameObject** toSpawn;
+ extern GameObject* deadFriendlyObjects;
+
 
 extern Encounter* encounterGoingTo;
 extern char* pathToNextMap;
@@ -79,6 +81,10 @@ void FinishTransition();
 bool GameStateIsTransition(GameState* g);
 bool GameIsPaused();
 bool GameIsIngame();
+
+
+void RessurectGameObject(GameObject* g);    
+void AddDeadGameObject(GameObject* g);
 
 void GoTutorial();
 void WinGame();

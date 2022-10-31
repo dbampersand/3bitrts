@@ -450,7 +450,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
          DrawUI(keyState, keyStateLastFrame, mouseState);
     if (gameState == GAMESTATE_IN_SHOP)
     {
-        DrawShop(dt,*mouseState);
+        DrawShop(dt,*mouseState,*mouseStateLastFrame);
     }
     if (gameState == GAMESTATE_END)
     {
@@ -474,8 +474,9 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         DisplayCollision();
     if (al_key_down(keyState,ALLEGRO_KEY_O) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_O))
     {
-        GameObject* g = AddGameobject(prefabs[0],mouseState->worldX,mouseState->worldY);
-        KillObj(g,true);
+        //GameObject* g = AddGameobject(prefabs[0],mouseState->worldX,mouseState->worldY);
+        //KillObj(g,true);
+        AddCompletionPercent(10);
     }
 
     //GameObjDebugDraw();

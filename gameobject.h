@@ -31,7 +31,7 @@ typedef enum GAMEOBJ_PROPERTIES
     OBJ_CAN_PUSH = 8,
     OBJ_IS_CHANNELLING = 16,
     OBJ_IS_DECORATION = 32,
-    OBJ_IS_INVINCIBLE = 64
+    OBJ_IS_INVINCIBLE = 64,
     //OBJ_ATTACKING_TARGET = 8
 } GAMEOBJ_PROPERTIES;
 
@@ -189,6 +189,8 @@ typedef struct GameObject
     bool isBoss;
 
     float completionPercent;
+
+    int ressurectionCost;
 } GameObject;
 
 #define MAX_LIGHT_SIZE 90 
@@ -205,6 +207,8 @@ extern int objectsAllocated;
 extern GameObject** prefabs;
 extern int numPrefabs;
 extern int numPrefabsAllocated;
+
+
 
 extern ALLEGRO_BITMAP* lights[MAX_LIGHT_SIZE];
 

@@ -752,10 +752,13 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     currGameObjRunning->lightG = 0.9f;
     currGameObjRunning->lightB = 0.9f;
     currGameObjRunning->lightIntensity = 0.25f;
+
     SetLightSize(currGameObjRunning,30);
     
     //currGameObjRunning->speed = 50;
     currGameObjRunning->completionPercent = DEFAULT_COMPLETION_PERCENT;
+
+    currGameObjRunning->ressurectionCost = 50;
 
     loadLuaGameObj(luaState, found->path, found); 
     found->properties |= OBJ_ACTIVE;
@@ -1009,6 +1012,10 @@ void KillObj(GameObject* g, bool trigger)
     CallLuaFunc(g->luafunc_kill);
     currGameObjRunning = before;
 
+    if (IsOwnedByPlayer(g) && g->playerChoosable)
+        AddDeadGameObject(g);
+
+
     if (trigger)
     {
         if (!IsOwnedByPlayer(g))
@@ -1070,6 +1077,8 @@ void KillObj(GameObject* g, bool trigger)
         AddGold(g->bounty);
 
     AddCompletionPercent(g->completionPercent);
+
+
     
 }   
 

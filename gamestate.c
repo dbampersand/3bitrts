@@ -31,6 +31,7 @@
  float transitionTimer = 0;
 
  GameObject** toSpawn = NULL;
+ GameObject* deadFriendlyObjects;
 
  Encounter* encounterGoingTo = NULL;
  char* pathToNextMap = NULL;
@@ -72,8 +73,11 @@ void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Enco
     SetLoadscreen(sprites[currEncounterRunning->loadScreen_spriteIndex].path,NULL,1,1,1,1,1,e->name,"Press any key to begin.");
 
     if (toSpawn)
-            free(toSpawn);
+        free(toSpawn);
     toSpawn = calloc(e->numUnitsToSelect,sizeof(GameObject*));
+    if (deadFriendlyObjects)
+        free(deadFriendlyObjects);
+    deadFriendlyObjects = calloc(e->numUnitsToSelect,sizeof(GameObject));
     for (int i = 0; i < numObjectsToAdd; i++)
     {
         toSpawn[i] = list[i];
@@ -112,8 +116,6 @@ void FinishTransition()
     }
     if (transitioningTo == GAMESTATE_INGAME)
     {
-        gameState = GAMESTATE_INGAME;
-        transitioningTo = GAMESTATE_INGAME;
         NewReplay();
 
         RemoveAllGameObjects();
@@ -167,6 +169,10 @@ void FinishTransition()
         RemoveAllAttacks();
 
         ClearSelection();
+
+        gameState = GAMESTATE_INGAME;
+        transitioningTo = GAMESTATE_INGAME;
+
         //free(toSpawn);
 
     }
@@ -580,6 +586,8 @@ float easeInOutBack(float x)
     }
 }
 
+
+
 #define TRANSITION_CHAIN_SIZE 5
 #define LATTICE_DISTANCE 20
 void DrawTransition(float dt)
@@ -650,7 +658,29 @@ bool GameIsIngame()
 {
     return (gameState == GAMESTATE_CHOOSING_UNITS || gameState == GAMESTATE_INGAME || gameState == GAMESTATE_IN_CHATBOX);
 }
+void RessurectGameObject(GameObject* g)
+{
+    int index = g - deadFriendlyObjects;
+    AddGameobject(g,0,0);
 
+    deadFriendlyObjects[index].properties = 0;
+
+}
+void AddDeadGameObject(GameObject* g)
+{
+    if (gameState == GAMESTATE_INGAME)
+    {
+        for (int i = 0; i < currEncounterRunning->numUnitsToSelect; i++)
+        {
+            if (!(deadFriendlyObjects[i].properties & OBJ_ACTIVE))
+            {
+                deadFriendlyObjects[i] = *g;
+                deadFriendlyObjects[i].properties |= OBJ_ACTIVE;   
+                return;
+            }
+        }
+    }
+}
 void GoTutorial()
 {
     currEncounterRunning = GetEncounterByName("Tutorial");

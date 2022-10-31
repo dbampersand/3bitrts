@@ -10,7 +10,7 @@
 #include "gameobject.h"
 #include "allegro5/allegro_ttf.h"
 #include "ui.h"
-
+#include "encounter.h"
 
 Shop shop = {0};
 
@@ -232,13 +232,16 @@ void DrawShopItems(float dt, MouseState mouseState)
 
     
 }
-void DrawShopObjects(MouseState mouseState)
+void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
 {
     int x = shop.startX * 2 + GetWidthSprite(&sprites[shop.spriteIndex_stall]);
     int y = shop.startY;
+
+
     for (int i = 0; i < MAX_OBJS; i++)
     {
         GameObject* g = &objects[i];
+
         if (!IsActive(g) || !IsOwnedByPlayer(g))
             continue;
 
@@ -278,11 +281,36 @@ void DrawShopObjects(MouseState mouseState)
 
     }
 
+    for (int i = 0; i < currEncounterRunning->numUnitsToSelect; i++)
+    {   
+        GameObject* g = &deadFriendlyObjects[i];
+        if (IsActive(g))
+        {
+            Sprite* ghost = &sprites[LoadSprite("assets/ui/shop/ghost.png",true)];
+
+            Rect r = (Rect){x-1,y-1,(x + (x-_SCREEN_SIZE)-5),_MAX(GetHeightSprite(ghost),GetHeight(g)+1)};
+            al_draw_rectangle(r.x, r.y, r.x + r.w, r.y + r.h, FRIENDLY,1);
+
+            DrawSprite(&sprites[g->spriteIndex],x,y,0,0,0,FRIENDLY,false);
+            DrawSprite(ghost,x+GetWidthSprite(&sprites[g->spriteIndex])+10,y,0,0,0,FRIENDLY,false);
+
+            y += GetHeight(g)+1;
+
+            y += 24 + 4;
+            
+            if ((mouseStateLastFrame.mouse.buttons) & 1 && !(mouseState.mouse.buttons & 1) && PointInRect(mouseState.screenX,mouseState.screenY,r))
+            {
+                RessurectGameObject(g);
+            }
+            
+        }
+    }
+
     if (!(mouseState.mouse.buttons & 1))
         shop.heldItem = NULL;
 
 }
-void DrawShop(float dt, MouseState mouseState)
+void DrawShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 {
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     int startX = shop.startX; int startY = shop.startY;
@@ -295,6 +323,6 @@ void DrawShop(float dt, MouseState mouseState)
     DrawAnimation(shop.currAnimation,startX + shopkeeperOffsetX,startY + shopkeeperOffsetY,COLOR_FRIENDLY,false);
     DrawButton(&shop.continueButton,shop.continueButton.x,shop.continueButton.y,mouseState,true,BG,true);
 
-    DrawShopObjects(mouseState);
+    DrawShopObjects(mouseState,mouseStateLastFrame);
     DrawShopItems(dt,mouseState);
 }
