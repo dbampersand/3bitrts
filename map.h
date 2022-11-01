@@ -33,6 +33,7 @@ typedef struct Map
     char* name;
 
     float percentComplete;
+    float percentCompleteShowing;
 
     bool automaticWinCheck;
     bool forceNextLevelButtonEnabled;

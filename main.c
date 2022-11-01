@@ -386,7 +386,10 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             Rect r = (Rect){ui.nextLevelButton.x+1,ui.nextLevelButton.y+2,ui.nextLevelButton.w-3,ui.nextLevelButton.h-3};
             UpdateButton(ui.nextLevelButton.x,ui.nextLevelButton.y,&ui.nextLevelButton,*mouseState,*mouseStateLastFrame);
 
-            float nrmPercentComplete = currMap->percentComplete/100.0f;
+            float distFrom = currMap->percentComplete - currMap->percentCompleteShowing;
+            currMap->percentCompleteShowing = Towards(currMap->percentCompleteShowing,currMap->percentComplete, dt*10*(distFrom));
+
+            float nrmPercentComplete = currMap->percentCompleteShowing/100.0f;
 
             if (currMap->percentComplete > 100) 
                 nrmPercentComplete = 1;
@@ -478,8 +481,8 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     {
         //GameObject* g = AddGameobject(prefabs[0],mouseState->worldX,mouseState->worldY);
         //KillObj(g,true);
-        AddGold(10);
-        //AddCompletionPercent(10);
+        //AddGold(10);
+        AddCompletionPercent(10);
     }
 
     //GameObjDebugDraw();
