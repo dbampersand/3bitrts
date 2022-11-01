@@ -1076,7 +1076,8 @@ void KillObj(GameObject* g, bool trigger)
     if (!IsOwnedByPlayer(g) && gameState == GAMESTATE_INGAME)
         AddGold(g->bounty);
 
-    AddCompletionPercent(g->completionPercent);
+    if (!ObjIsDecoration(g))
+        AddCompletionPercent(g->completionPercent);
 
 
     
