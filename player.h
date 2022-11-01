@@ -29,6 +29,8 @@ typedef struct Player
     int gold;
     char* goldText;
     float goldAnimationTimer;
+
+    float goldDisplaying;
 } Player;
 
 //The point (8, SCREEN_SIZE-8, 8, SCREEN_SIZE-8) at which the camera starts to pan

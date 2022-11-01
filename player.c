@@ -206,18 +206,19 @@ int GetGold()
 {
     return players[0].gold;
 }
-void UpdateGoldTextString()
+void UpdateGoldTextString(int gold)
 {
-    int numDigits = NumDigits(players[0].gold);
+    int numDigits = NumDigits(gold);
     if (!players[0].goldText)
     {
         players[0].goldText = calloc(numDigits+1,sizeof(char));
+        players[0].goldAnimationTimer = 1;   
     }
     else
     {
         players[0].goldText = realloc(players[0].goldText,(numDigits+1)*sizeof(char));
     }
-    sprintf(players[0].goldText,"%i",players[0].gold);
+    sprintf(players[0].goldText,"%i",gold);
     players[0].goldText[numDigits] = '\0';
 
 
@@ -228,7 +229,10 @@ void AddGold(int count)
 
 
     if (players[0].goldAnimationTimer >= 1)
+    {
         players[0].goldAnimationTimer = 0;
+        players[0].goldDisplaying = players[0].gold-count;
+    }
 }
 void UpdateGoldAnimationTimer(float dt)
 {
@@ -236,9 +240,11 @@ void UpdateGoldAnimationTimer(float dt)
     if (players[0].goldAnimationTimer > 1)
     {
         players[0].goldAnimationTimer = 1;
-        UpdateGoldTextString();
+        players[0].goldDisplaying = players[0].gold;
+        UpdateGoldTextString(players[0].goldDisplaying);
         return;
     }
+
     int x = 8; int y = 8;
     int startY = -GetWidthSprite(&sprites[ui.gold_element_sprite_index]);
     float percent = easeInOutBack(players[0].goldAnimationTimer);
@@ -246,6 +252,10 @@ void UpdateGoldAnimationTimer(float dt)
     float yEnd = (percent * y) - fabsf((1-percent) * startY);
 
     DrawSprite(&sprites[ui.gold_element_sprite_index],x,yEnd,0,0,0,FRIENDLY,false);
+
+    float goldShowingPercent = EaseInOutCubic(players[0].goldAnimationTimer*1.25f);
+    float goldDisplaying = players[0].gold-((players[0].gold - players[0].goldDisplaying)*(1-goldShowingPercent));
+    UpdateGoldTextString(goldDisplaying);
 
 }
 void DrawGoldCount()
