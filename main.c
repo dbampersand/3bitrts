@@ -344,7 +344,10 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             DrawMinimap(*mouseState);
         }
         DrawTimer(currSettings.displayTimer);
+
         DrawGoldCount();
+        UpdateGoldAnimationTimer(dt);
+
 
     }
 
@@ -352,7 +355,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS)
     {
         DrawDamageNumbers();
-
         UpdateButton(ui.menuButton.x,ui.menuButton.y,&ui.menuButton,*mouseState,*mouseStateLastFrame);
         DrawUIElement(&ui.menuButton,ui.menuButton.x,ui.menuButton.y,mouseState,ui.menuButton.bgColor);
 
@@ -476,7 +478,8 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     {
         //GameObject* g = AddGameobject(prefabs[0],mouseState->worldX,mouseState->worldY);
         //KillObj(g,true);
-        AddCompletionPercent(10);
+        AddGold(10);
+        //AddCompletionPercent(10);
     }
 
     //GameObjDebugDraw();

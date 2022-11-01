@@ -8,7 +8,7 @@
 #include "settings.h"
 #include "item.h"
 #include "allegro5/allegro_ttf.h"
-
+#include <math.h>
 float cameraSpeed = 200;
 Player* players  = NULL;
 
@@ -206,10 +206,8 @@ int GetGold()
 {
     return players[0].gold;
 }
-
-void AddGold(int count)
+void UpdateGoldTextString()
 {
-    players[0].gold += count;
     int numDigits = NumDigits(players[0].gold);
     if (!players[0].goldText)
     {
@@ -221,6 +219,34 @@ void AddGold(int count)
     }
     sprintf(players[0].goldText,"%i",players[0].gold);
     players[0].goldText[numDigits] = '\0';
+
+
+}
+void AddGold(int count)
+{
+    players[0].gold += count;
+
+
+    if (players[0].goldAnimationTimer >= 1)
+        players[0].goldAnimationTimer = 0;
+}
+void UpdateGoldAnimationTimer(float dt)
+{
+    players[0].goldAnimationTimer += dt;
+    if (players[0].goldAnimationTimer > 1)
+    {
+        players[0].goldAnimationTimer = 1;
+        UpdateGoldTextString();
+        return;
+    }
+    int x = 8; int y = 8;
+    int startY = -GetWidthSprite(&sprites[ui.gold_element_sprite_index]);
+    float percent = easeInOutBack(players[0].goldAnimationTimer);
+
+    float yEnd = (percent * y) - fabsf((1-percent) * startY);
+
+    DrawSprite(&sprites[ui.gold_element_sprite_index],x,yEnd,0,0,0,FRIENDLY,false);
+
 }
 void DrawGoldCount()
 {
