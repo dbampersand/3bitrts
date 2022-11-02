@@ -17,7 +17,7 @@ function setup()
     SetMaxHP(maxHP,true)
     SetSpeed(80)
     SetRange(40);
-    SetAttackSpeed(1)
+    SetAttackSpeed(GetObjRef(),1)
     SetObjIsBoss(GetObjRef(),true);
 
     howl = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_howl.lua",0)   

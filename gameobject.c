@@ -50,7 +50,17 @@ float* sinTable = NULL; // = &__sinTable[360];
 float* cosTable = NULL;// = &__cosTable[360];
 
 
+void PrintDiedFrom(GameObject* obj, GameObject* damageSource, Effect* effectSource, int damage)
+{
+    if (obj)
+        printf("GameObject %s died taking %i ",obj->name ? obj->name : "[No Name]",damage);
+    if (damageSource)
+        printf("from object %s ",damageSource->name ? damageSource->name : "[No Name]");
+    if (effectSource)
+        printf("from effect %s",effectSource->name ? effectSource->name : "[No Name]");
 
+    printf("\n");
+}
 GameObject* GetMousedOver(MouseState* mouseState)
 {
     for (int i = 0; i < MAX_OBJS; i++)
@@ -2138,6 +2148,19 @@ void DrawGameObj(GameObject* g, bool forceInverse)
         c2.y = c1.y + (headingY * 5);
 
         DrawArrow(ToScreenSpace_X(c1.x),ToScreenSpace_Y(c1.y),ToScreenSpace_X(c2.x),ToScreenSpace_Y(c2.y),c);
+
+        if (ObjIsBoss(g))
+        {
+            Point c3; GetCentre(g->queue[0].target,&c3.x,&c3.y);
+           // al_draw_circle(ToScreenSpace_X(c3.x),ToScreenSpace_Y(c3.y),_MAX(GetWidth(g->queue[0].target),GetHeight(g->queue[0].target))+2,c,1);
+           int offset = 4;
+           al_draw_triangle(
+                c3.x,                               c3.y - GetHeight(g)/2 - offset*2,
+                c3.x + GetWidth(g)/2 + offset,      c3.y+GetHeight(g)/2+offset,
+                c3.x - GetWidth(g)/2 - offset,      c3.y+GetHeight(g)/2+offset,
+                c, 1
+            );
+        }
     }
     if (g->queue[0].commandType == COMMAND_MOVE || g->queue[0].commandType == COMMAND_ATTACKMOVE)
     {
@@ -2390,6 +2413,7 @@ void AttackTarget(GameObject* g, float dt)
 
         if (Damage(g,g->targObj,damage,true,1))
         {
+            PrintDiedFrom(g,g->targObj,NULL,damage);
             g->targObj = NULL;
         }
 
@@ -2764,19 +2788,20 @@ void UpdateChannellingdObj(GameObject* g, float dt)
         
         currGameObjRunning = g;
         currAbilityRunning = g->channelledAbility;
-        
-        lua_rawgeti(luaState,LUA_REGISTRYINDEX,g->channelledAbility->luafunc_onchanneled);
-        lua_pushnumber(luaState,g-objects);
-        lua_pushnumber(luaState,g->channellingTime);
-        lua_pushnumber(luaState,g->channellingTotal);
-        lua_pushnumber(luaState,g->channelled_target - objects);
-        lua_pushnumber(luaState,g->channelled_x);
-        lua_pushnumber(luaState,g->channelled_y);
-        lua_pushnumber(luaState,g->target_heading_x);
-        lua_pushnumber(luaState,g->target_heading_y);
+        if (currAbilityRunning)
+        {
+            lua_rawgeti(luaState,LUA_REGISTRYINDEX,g->channelledAbility->luafunc_onchanneled);
+            lua_pushnumber(luaState,g-objects);
+            lua_pushnumber(luaState,g->channellingTime);
+            lua_pushnumber(luaState,g->channellingTotal);
+            lua_pushnumber(luaState,g->channelled_target - objects);
+            lua_pushnumber(luaState,g->channelled_x);
+            lua_pushnumber(luaState,g->channelled_y);
+            lua_pushnumber(luaState,g->target_heading_x);
+            lua_pushnumber(luaState,g->target_heading_y);
 
-        lua_pcall(luaState,8,0,0);
-
+            lua_pcall(luaState,8,0,0);
+        }
 
         g->channellingTime -= dt;
         if (g->channellingTime < 0)
@@ -2925,6 +2950,10 @@ void AddLifesteal(GameObject* g, float value)
 void SetObjIsBoss(GameObject* g, bool value)
 {
     g->isBoss = value;
+}
+bool ObjIsBoss(GameObject* g)
+{
+    return g->isBoss;
 }
 
 int GetNumActiveObjects()

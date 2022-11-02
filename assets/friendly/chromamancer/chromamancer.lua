@@ -21,7 +21,6 @@ function setup()
     SetMaxHP(maxHP,true);
     
     SetObjType(TYPE_HEALER)
-    SetThreatMultiplier(1);
 
     IsPlayerChoosable(true);
     SetCategory(TYPE_HEALER);

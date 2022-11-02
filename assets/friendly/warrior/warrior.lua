@@ -12,7 +12,7 @@ function setup()
     SetDamage(5);
 
     SetObjType(TYPE_TANK)
-    SetThreatMultiplier(5);
+    SetThreatMultiplier(10);
     IsPlayerChoosable(true);
     SetCategory(TYPE_TANK);
 

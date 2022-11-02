@@ -533,6 +533,9 @@ int main(int argc, char* args[])
 
     while (gameState != GAMESTATE_EXIT) {
 
+        //sometimes event isn't registering when alt tabbed/debug mode?
+        if (GameIsPaused()) 
+            al_register_event_source(queue_KeyEvents,al_get_keyboard_event_source());
         
 
         ALLEGRO_EVENT event;

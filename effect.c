@@ -48,7 +48,12 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     }
     if (e->effectType == EFFECT_HURT)
     {
-        return Damage(from,target,value*sign,propagateItemEffects,1);
+        bool objectDied =   Damage(from,target,value*sign,propagateItemEffects,1);
+        if (objectDied)
+        {
+            PrintDiedFrom(target,from,e,value);
+        }
+        return objectDied;
     }
     if (e->effectType == EFFECT_HURT_PERCENT)
     {
@@ -176,7 +181,10 @@ bool RemoveEffect(Effect* e, GameObject* from, bool removeAllStacks)
 
     if (e->trigger == TRIGGER_CONST && from)
     {
+        
         ProcessEffect(e,e->from,from,true);
+        
+        
         e->stacks = 0;
     }
 

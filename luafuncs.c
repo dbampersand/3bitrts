@@ -1949,7 +1949,9 @@ int L_HurtObj(lua_State* l)
     if (index < 0 || index >= MAX_OBJS)
         return 0;
     
-    Damage(currGameObjRunning,&objects[index],damage,false,0);
+    if (Damage(currGameObjRunning,&objects[index],damage,false,0))
+        PrintDiedFrom(&objects[index],currGameObjRunning,NULL,damage);
+    
     return 0;
 }
 int L_ShowString(lua_State* l)
@@ -2480,7 +2482,9 @@ int L_DealDamage(lua_State* l)
     if (objIndex >= MAX_OBJS) return -1;
 
     int dmg = lua_tonumber(l,2);
-    Damage(currGameObjRunning,&objects[objIndex],dmg,false,0);
+    
+    if (Damage(currGameObjRunning,&objects[objIndex],dmg,false,0))
+        PrintDiedFrom(&objects[objIndex],currGameObjRunning,NULL,dmg);
     return 1;
 }
 int L_ClearCommandQueue(lua_State* l)

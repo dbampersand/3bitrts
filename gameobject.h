@@ -354,3 +354,5 @@ float GetTotalDotted(GameObject* g);
 int GetNumActiveObjects();
 
 int GetNumEnemyObjects();
+void PrintDiedFrom(GameObject* obj, GameObject* damageSource, Effect* effectSource, int damage);
+bool ObjIsBoss(GameObject* g);
