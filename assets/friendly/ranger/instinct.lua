@@ -20,7 +20,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["name"] = "Instinct"
 
 
-    aoe = CreateAOE(x,y,"", 40, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_DAMAGE,DITHER_HALF, false,-1,{f1})
+    aoe = CreateAOE(x,y,"", 40, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_DAMAGE,DITHER_ATTACK_DAMAGE_QUARTER, false,-1,{f1})
     SetAttackCircle(aoe,true);
     return true;
 end

@@ -886,9 +886,10 @@ int L_CreateCircularProjectiles(lua_State* l)
     const int properties = lua_tonumber(l,8);
     const int numProjectiles = lua_tonumber(l,9);
     const int color = lua_tonumber(l,10);
+    const float angleOffset = DegToRad(lua_tonumber(l,11));
 
 
-    size_t len =  lua_rawlen(l,11);
+    size_t len =  lua_rawlen(l,12);
 
     MouseState mouseState = GetMouseClamped();
     GameObject* targ = NULL;
@@ -913,7 +914,7 @@ int L_CreateCircularProjectiles(lua_State* l)
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 11, i);
+        e = GetEffectFromTable(l, 12, i);
         e.from = currGameObjRunning;
         lua_remove(l,-1);
         effects[i-1] = e;
@@ -921,7 +922,7 @@ int L_CreateCircularProjectiles(lua_State* l)
     for (int i = 0; i < numProjectiles; i++)
     {
         float angle = M_PI / (float)numProjectiles*i*2; 
-        CreateProjectile(l,x,y, x+sin(angle), y+cos(angle), portrait, attackType, speed, duration, shouldCallback, properties, targ,color, effects, len);
+        CreateProjectile(l,x,y, x+sin(angle+angleOffset), y+cos(angle+angleOffset), portrait, attackType, speed, duration, shouldCallback, properties, targ,color, effects, len);
 
     }
     for (int i = 0; i < len; i++)
@@ -1628,6 +1629,10 @@ int L_CreateObject(lua_State* l)
     const int y = lua_tonumber(l,3);
     int PLAYER = lua_tonumber(l,4);
     float summonTime = lua_tonumber(l,5);
+    
+    GAMEOBJ_SOURCE source = SOURCE_SPAWNED_FROM_OBJ;
+    if (!currGameObjRunning)
+        source = SOURCE_SPAWNED_FROM_MAP;
 
     bool prefabFound = false;
     for (int i = 0; i < numPrefabs; i++)
@@ -1643,13 +1648,13 @@ int L_CreateObject(lua_State* l)
     if (!prefabFound)
     {
         GameObject* prefab = LoadPrefab(l_path);
-        g = AddGameobject(prefab,x,y);
+        g = AddGameobject(prefab,x,y,source);
         SetOwnedBy(g, PLAYER);
 
     }
     else
     {
-        g = AddGameobject(g,x,y);
+        g = AddGameobject(g,x,y,source);
         SetOwnedBy(g, PLAYER);
     }
     if (!g)
@@ -1944,7 +1949,7 @@ int L_HurtObj(lua_State* l)
     if (index < 0 || index >= MAX_OBJS)
         return 0;
     
-    Damage(currGameObjRunning,&objects[index],damage,false);
+    Damage(currGameObjRunning,&objects[index],damage,false,0);
     return 0;
 }
 int L_ShowString(lua_State* l)
@@ -2475,7 +2480,7 @@ int L_DealDamage(lua_State* l)
     if (objIndex >= MAX_OBJS) return -1;
 
     int dmg = lua_tonumber(l,2);
-    Damage(currGameObjRunning,&objects[objIndex],dmg,false);
+    Damage(currGameObjRunning,&objects[objIndex],dmg,false,0);
     return 1;
 }
 int L_ClearCommandQueue(lua_State* l)
@@ -2790,7 +2795,7 @@ int L_CopyObject(lua_State* l)
     }
     if (g)
     {
-        GameObject* g2 = AddGameobject(g,x,y);
+        GameObject* g2 = AddGameobject(g,x,y,SOURCE_SPAWNED_FROM_OBJ);
         for (int i = 0; i < MAX_ABILITIES; i++)
         {
             g2->abilities[i].cdTimer = g->abilities[i].cdTimer;

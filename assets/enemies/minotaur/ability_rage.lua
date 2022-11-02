@@ -14,7 +14,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 10;  
 
-    CreateCircularProjectiles(GetX(GetObjRef()),GetY(GetObjRef()),"",ATTACK_PROJECTILE_ANGLE,40,999,false,ATTACK_HITS_ENEMIES,10,COLOR_DAMAGE,{f1})
+    CreateCircularProjectiles(GetX(GetObjRef()),GetY(GetObjRef()),"",ATTACK_PROJECTILE_ANGLE,40,999,false,ATTACK_HITS_ENEMIES,10,COLOR_DAMAGE,0,{f1})
 
     return true; 
 end

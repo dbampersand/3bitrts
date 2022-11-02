@@ -72,15 +72,21 @@ MouseState GetMouseClamped()
     mouse.x = mouse.x/(float)_RENDERSIZE;
     mouse.y = mouse.y/(float)_RENDERSIZE;
 
+
+
     if (mouse.x + MOUSECURSORSIZE > (_SCREEN_SIZE))
     {
         //mouse.x = _SCREEN_SIZE - MOUSECURSORSIZE;
 
         //This function is giving very weird results on mac
         #if defined _WIN32 || defined __linux__
-            al_set_mouse_xy(display, (_SCREEN_SIZE*_RENDERSIZE)-MOUSECURSORSIZE*_RENDERSIZE, beforeY);
+            al_set_mouse_xy(display, (_SCREEN_SIZE*_RENDERSIZE) - (MOUSECURSORSIZE*_RENDERSIZE), beforeY);
+            //mouse.x =  ((_SCREEN_SIZE*_RENDERSIZE) - (MOUSECURSORSIZE*_RENDERSIZE)) / _RENDERSIZE;
         #endif
     }
+    mouse.x = clamp(mouse.x,0,_SCREEN_SIZE-MOUSECURSORSIZE);
+    mouse.y = clamp(mouse.y,0,_SCREEN_SIZE-MOUSECURSORSIZE);
+
     //ToWorldSpaceI(&mouse.x,&mouse.y);
 
     /*

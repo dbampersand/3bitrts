@@ -11,7 +11,7 @@ function setup()
     CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",250,340,TYPE_ENEMY,0);
     CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",250,340,TYPE_ENEMY,0);
 
-    SetSpawnPoint(62,8)
+    SetSpawnPoint(13,86)
     
 end
 

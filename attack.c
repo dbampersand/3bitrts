@@ -455,14 +455,14 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
             }
         }
     }
-    if (dither == DITHER_ATTACK_DAMAGE_HALF || dither == DITHER_ATTACK_DAMAGE_QUARTER || dither == DITHER_ATTACK_DAMAGE_EIGTH)
+    if (dither == DITHER_DAMAGE_HALF || dither == DITHER_DAMAGE_QUARTER || dither == DITHER_DAMAGE_EIGTH)
     {
         int pattern;
-        if (dither == DITHER_ATTACK_DAMAGE_HALF)
+        if (dither == DITHER_DAMAGE_HALF)
             pattern=3;
-        if (dither == DITHER_ATTACK_DAMAGE_QUARTER)
+        if (dither == DITHER_DAMAGE_QUARTER)
             pattern=5;
-        if (dither == DITHER_ATTACK_DAMAGE_EIGTH)
+        if (dither == DITHER_DAMAGE_EIGTH)
             pattern=7;
 
         int index = 0;
@@ -498,14 +498,14 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
             }
         }
     }
-        if (dither == DITHER_DAMAGE_HALF || dither == DITHER_DAMAGE_QUARTER || dither == DITHER_DAMAGE_EIGTH)
+        if (dither == DITHER_ATTACK_DAMAGE_HALF || dither == DITHER_ATTACK_DAMAGE_QUARTER || dither == DITHER_ATTACK_DAMAGE_EIGTH)
     {
         int pattern;
-        if (dither == DITHER_DAMAGE_HALF)
+        if (dither == DITHER_ATTACK_DAMAGE_HALF)
             pattern=3;
-        if (dither == DITHER_DAMAGE_QUARTER)
+        if (dither == DITHER_ATTACK_DAMAGE_QUARTER)
             pattern=5;
-        if (dither == DITHER_DAMAGE_EIGTH)
+        if (dither == DITHER_ATTACK_DAMAGE_EIGTH)
             pattern=7;
 
         int index = 0;
@@ -518,9 +518,27 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
                 if (index % 2 == 0)
                     add = pattern;
 
-                if (PointInCircle(x,y+add,radius,radius,radius))
-                    al_put_pixel(x,y+add,WHITE);
-          
+                if (PointInCircle(x+1,y+add,radius,radius,radius))
+                    al_put_pixel(x+1,y+add,WHITE);
+                if (PointInCircle(x+1,y+1+add,radius,radius,radius))
+                    al_put_pixel(x+1,y+1+add,WHITE);
+                if (PointInCircle(x+1,y+2+add,radius,radius,radius))
+                    al_put_pixel(x+1,y+2+add,WHITE);
+                if (PointInCircle(x+1,y+3+add,radius,radius,radius))
+                    al_put_pixel(x+1,y+3+add,WHITE);
+                if (PointInCircle(x+1,y+4+add,radius,radius,radius))
+                    al_put_pixel(x+1,y+4+add,WHITE);
+
+                //hilt
+                if (PointInCircle(x+1,y+5+add,radius,radius,radius))
+                    al_put_pixel(x+1,y+5+add,WHITE);
+                if (PointInCircle(x+1,y+6+add,radius,radius,radius))
+                    al_put_pixel(x+1,y+6+add,WHITE);
+                if (PointInCircle(x,y+5+add,radius,radius,radius))
+                    al_put_pixel(x,y+5+add,WHITE);
+                if (PointInCircle(x+2,y+5+add,radius,radius,radius))
+                    al_put_pixel(x+2,y+5+add,WHITE);
+
 
             }
         }

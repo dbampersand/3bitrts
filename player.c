@@ -9,7 +9,7 @@
 #include "item.h"
 #include "allegro5/allegro_ttf.h"
 #include <math.h>
-float cameraSpeed = 200;
+float cameraSpeed = 260;
 Player* players  = NULL;
 
 void RemoveIndexFromSelection(Player* p, int index)

@@ -698,7 +698,7 @@ void RemoveObjFromSelection(GameObject* g)
 
     }
 }
-GameObject* AddGameobject(GameObject* prefab, float x, float y)
+GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE source)
 {
     GameObject* before = currGameObjRunning;
     GameObject* found = NULL;
@@ -743,7 +743,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
 
     currGameObjRunning->manaRegen = 1;
 
-    currGameObjRunning->aggroRadius = 30;
+    currGameObjRunning->aggroRadius = 60;
 
     SetMoveSpeed(currGameObjRunning,50);
     SetHPRegen(currGameObjRunning,1);
@@ -756,7 +756,10 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y)
     SetLightSize(currGameObjRunning,30);
     
     //currGameObjRunning->speed = 50;
-    currGameObjRunning->completionPercent = DEFAULT_COMPLETION_PERCENT;
+    if (source == SOURCE_SPAWNED_FROM_MAP)
+        currGameObjRunning->completionPercent = DEFAULT_COMPLETION_PERCENT;
+    else
+        currGameObjRunning->completionPercent = 0;
 
     currGameObjRunning->ressurectionCost = 50;
 
@@ -2018,7 +2021,7 @@ void DrawMapHighlights()
         {
             g->lightR = 1;
             g->lightG = 0.9;
-            g->lightB = 0.9;
+            g->lightB = 0.6;
             g->lightIntensity = 0.5f;
 
             float re = g->lightR; float gr = g->lightG; float bl = g->lightB;
@@ -2385,7 +2388,7 @@ void AttackTarget(GameObject* g, float dt)
         }
 
 
-        if (Damage(g,g->targObj,damage,true))
+        if (Damage(g,g->targObj,damage,true,1))
         {
             g->targObj = NULL;
         }
@@ -2437,7 +2440,7 @@ void Stun(GameObject* source, GameObject* g, float value)
 }
 
 
-bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems)
+bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems, float min)
 {
     if (!g) return false;
 
@@ -2452,8 +2455,8 @@ bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems)
     if (triggerItems)
         ProcessItemsOnDamaged(source,g,&value);
     value -= g->armor;
-    if (value < 1)
-        value = 1;
+    if (value < min)
+        value = min;
     if (HasAugment(currEncounterRunning,AUGMENT_NEUTRAL_TOTALDAMAGE))
     {
         value += Neutral_GetAugmentAbilityDamage(value,currEncounterRunning->augment);

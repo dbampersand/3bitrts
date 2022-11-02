@@ -135,7 +135,7 @@ void FinishTransition()
                 if (toSpawn[i] == NULL)
                     continue;
                 GameObject* g = toSpawn[i];
-                GameObject* gNew = AddGameobject(g,xPos,yPos);   
+                GameObject* gNew = AddGameobject(g,xPos,yPos,SOURCE_SPAWNED_FROM_MAP);   
                 HoldCommand(gNew,false);
                 xPos += GetWidth(g)+4;
                 if (i == encounterGoingTo->numUnitsToSelect/2)
@@ -490,7 +490,7 @@ void SetGameStateToChoosingParty()
                 }
 
 
-                GameObject* gNew = AddGameobject(g,x,y);
+                GameObject* gNew = AddGameobject(g,x,y,SOURCE_SPAWNED_FROM_MAP);
                 HoldCommand(gNew,false);
                 
             }   
@@ -664,7 +664,7 @@ bool GameIsIngame()
 void RessurectGameObject(GameObject* g)
 {
     int index = g - deadFriendlyObjects;
-    AddGameobject(g,0,0);
+    AddGameobject(g,0,0,SOURCE_SPAWNED_FROM_MAP);
 
     deadFriendlyObjects[index].properties = 0;
 

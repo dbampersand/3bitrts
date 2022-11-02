@@ -1,3 +1,5 @@
+local casts = 0
+
 function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_summon_adds.png");
@@ -12,10 +14,14 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 10;  
+    f1["value"] = 40;  
 
-    CreateCircularProjectiles(GetX(GetObjRef()),GetY(GetObjRef()),"",ATTACK_PROJECTILE_ANGLE,40,999,false,ATTACK_HITS_ENEMIES,10,COLOR_DAMAGE,{f1})
-
+    local offset = 0;
+    if (math.fmod(casts,2) == 0) then
+        offset = 90;
+    end
+    CreateCircularProjectiles(GetX(GetObjRef()),GetY(GetObjRef()),"",ATTACK_PROJECTILE_ANGLE,40,999,false,ATTACK_HITS_ENEMIES,10,COLOR_DAMAGE,offset,{f1})
+    casts = casts + 1;
     return true; 
 end
 

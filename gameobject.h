@@ -35,6 +35,12 @@ typedef enum GAMEOBJ_PROPERTIES
     //OBJ_ATTACKING_TARGET = 8
 } GAMEOBJ_PROPERTIES;
 
+typedef enum GAMEOBJ_SOURCE
+{
+    SOURCE_SPAWNED_FROM_MAP,
+    SOURCE_SPAWNED_FROM_OBJ
+} GAMEOBJ_SOURCE;
+
 //a unit can be multiple of these
 typedef enum GAMEOBJ_TYPE_HINT
 {
@@ -247,7 +253,7 @@ void SetControlGroups(ALLEGRO_KEYBOARD_STATE* keyState);
 int GetCtrlGroup(int index);
 void SetCtrlGroup(int index, GameObject** list, int numUnitsSelected);
 void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
-GameObject* AddGameobject(GameObject* prefab, float x, float y);
+GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE source);
 bool CheckFuncExists(const char* funcName, char* lua_buffer);
 void loadLuaGameObj(lua_State* l,const char* filename, GameObject* g);
 GameObject* LoadPrefab(const char* path);
@@ -270,7 +276,7 @@ void NewObj(GameObject* g);
 Rect GetObjRect(GameObject* g);
 int GetPlayerOwnedBy(GameObject* g);
 
-bool Damage(GameObject* source, GameObject* g, float value,bool triggerItems);
+bool Damage(GameObject* source, GameObject* g, float value,bool triggerItems, float min);
 void Heal(GameObject* g, float value);
 void Stun(GameObject* source, GameObject* g, float value);
 

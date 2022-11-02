@@ -18,7 +18,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["name"] = "Howl"
     f1["overwrites"] = true
 
-    CreateCircularProjectiles(GetX(GetObjRef()),GetY(GetObjRef()),"",ATTACK_PROJECTILE_ANGLE,80,999,false,ATTACK_HITS_ENEMIES,128,COLOR_DAMAGE,{f1})
+    CreateCircularProjectiles(GetX(GetObjRef()),GetY(GetObjRef()),"",ATTACK_PROJECTILE_ANGLE,80,999,false,ATTACK_HITS_ENEMIES,128,COLOR_DAMAGE,0,{f1})
 
     return true; 
 end
