@@ -1013,12 +1013,40 @@ void ScatterEffect(GameObject* g)
 
 
 }
+void RemoveObjFromAllCommands(GameObject* g)
+{
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        if (IsActive(&objects[i]))
+        {
+            for (int j = 0; j < MAX_QUEUED_CMD; j++)
+            {
+                if (objects[i].queue[j].target == g)
+                {
+                    if (CountCommands(&objects[i]) == 1)
+                    {
+                        float cx; float cy;
+                        GetCentre(g,&cx,&cy);
+                        ClearCommandQueue(&objects[i]);
+                        AttackMoveCommand(&objects[i],cx,cy,false);      
+                        objects[i].targObj = NULL; 
+                    }
+                    else
+                    {
+                        NextCommand(&objects[i]);
+                    }
+                }
+            }
+        }
+    }
+}
 void KillObj(GameObject* g, bool trigger)
 {
     if (!g) return;
     ScatterEffect(g);
 
     RemoveObjFromAllThreatlists(g);
+    RemoveObjFromAllCommands(g);
     SetMapCollisionRect(g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g),false);
     GameObject* before = currGameObjRunning;
     currGameObjRunning = g;
@@ -1089,7 +1117,7 @@ void KillObj(GameObject* g, bool trigger)
     if (!IsOwnedByPlayer(g) && gameState == GAMESTATE_INGAME)
         AddGold(g->bounty);
 
-    if (!ObjIsDecoration(g))
+    if (!ObjIsDecoration(g) && GetPlayerOwnedBy(g) > 0)
         AddCompletionPercent(g->completionPercent);
 
 
@@ -2054,6 +2082,24 @@ void DrawMapHighlights()
    // al_set_target_bitmap(screen);
 
 }
+void DrawAggroIndicators()
+{
+    for (int i = 0; i < MAX_OBJS; i++)
+    {
+        GameObject* g = &objects[i];
+        if (IsActive(g) && GetPlayerOwnedBy(g) != 0)
+        if (g->targObj)
+        {
+            float cx; float cy; 
+            float cx2; float cy2;
+            GetCentre(g,&cx,&cy);
+            GetCentre(g->targObj,&cx2,&cy2);
+
+            al_draw_line(cx,cy,cx2,cy2,ENEMY,1);
+        }
+
+    }
+}
 void DrawSummonEffect(GameObject* g)
 {
     if (gameState == GAMESTATE_WATCHING_REPLAY)
@@ -2151,13 +2197,14 @@ void DrawGameObj(GameObject* g, bool forceInverse)
 
         if (ObjIsBoss(g))
         {
-            Point c3; GetCentre(g->queue[0].target,&c3.x,&c3.y);
+            GameObject* g2 = g->queue[0].target;
+            Point c3; GetCentre(g2,&c3.x,&c3.y);
            // al_draw_circle(ToScreenSpace_X(c3.x),ToScreenSpace_Y(c3.y),_MAX(GetWidth(g->queue[0].target),GetHeight(g->queue[0].target))+2,c,1);
            int offset = 4;
            al_draw_triangle(
-                c3.x,                               c3.y - GetHeight(g)/2 - offset*2,
-                c3.x + GetWidth(g)/2 + offset,      c3.y+GetHeight(g)/2+offset,
-                c3.x - GetWidth(g)/2 - offset,      c3.y+GetHeight(g)/2+offset,
+                c3.x,                               c3.y - GetHeight(g2)/2 - offset*2,
+                c3.x + GetWidth(g2)/2 + offset,      c3.y+GetHeight(g2)/2+offset,
+                c3.x - GetWidth(g2)/2 - offset,      c3.y+GetHeight(g2)/2+offset,
                 c, 1
             );
         }
@@ -2641,10 +2688,10 @@ void DoAI(GameObject* g)
         return;
     if (ObjIsDecoration(g))
         return;
-    if (g->threatList.obj && g->channellingTime <= 0)
+    if (g->channellingTime <= 0)
     {
         Threat* t = GetHighestThreat(&g->threatList);
-        if (t)
+        if (t && t->obj)
         {
             ClearCommandQueue(g);
             AttackCommand(g,t->obj,false);
@@ -2663,16 +2710,16 @@ void DoAI(GameObject* g)
                     if (GetDist(g,&objects[i]) < g->aggroRadius)
                     {
                         //also bring in the others
-                        for (int j = 0; j < MAX_OBJS; j++)
+                        /*for (int j = 0; j < MAX_OBJS; j++)
                         {
                             GameObject* jg = &objects[j];
-                            if (GetPlayerOwnedBy(g) == GetPlayerOwnedBy(&objects[j]) && !ObjIsDecoration(&objects[j]))
+                            if (GetPlayerOwnedBy(&objects[i]) == GetPlayerOwnedBy(&objects[j]) && !ObjIsDecoration(&objects[j]))
                             {
                                 if (GetDist(&objects[i],&objects[j]) < objects[j].aggroRadius)
                                     AddThreat(&objects[i],&objects[j],0);
                                 
                             }
-                        }
+                        }*/
                         AddThreat(&objects[i],g, 0);
                     }
 

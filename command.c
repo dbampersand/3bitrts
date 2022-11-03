@@ -153,6 +153,18 @@ bool CmdEqual(Command c1, Command c2)
 {
     return (c1.commandType == c2.commandType && c1.target == c2.target && c1.ability == c2.ability && c1.x == c2.x && c1.y == c2.y);
 }
+int CountCommands(GameObject* g)
+{
+    int numCommands = 0;
+    for (int i = 0; i < MAX_QUEUED_CMD; i++)
+    {
+        if (g->queue[i].commandType != COMMAND_NONE)
+            numCommands++;
+        else
+            break;
+    }
+    return numCommands;
+}
 void NextCommand(GameObject* g)
 {
     if (!g) return;

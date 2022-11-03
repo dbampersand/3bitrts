@@ -208,6 +208,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         }
     }
     DrawObjShadows();
+    DrawAggroIndicators();
     for (int i = 0; i < MAX_OBJS; i++)
     {
         DrawChannelHint(&objects[i]);
@@ -361,7 +362,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         if (gameState == GAMESTATE_INGAME)
         {
             char percentCompletionStr[NumDigits(INT_MIN)+3];
-            if (currMap->automaticWinCheck)
+            if (currMap->automaticWinCheck || currMap->percentComplete >= 100)
             {
                 if (GetNumEnemyObjects() == 0 || currMap->percentComplete >= 100 || currMap->forceNextLevelButtonEnabled)
                 {

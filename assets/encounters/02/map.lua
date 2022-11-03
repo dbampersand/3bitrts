@@ -12,10 +12,10 @@ local thirdWave = false
 function setup()
     SetMapSprite("assets/encounters/02/map.png")
     if (_DEBUG == false) then
-        local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,54,TYPE_ENEMY,2);
+        local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,54,TYPE_ENEMY,2,0);
         SetObjAggroRadius(ob,999)
 
-        ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2);
+        ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2,0);
         SetObjAggroRadius(ob,999)
 
 
@@ -36,8 +36,7 @@ function update(dt)
 
     timer = timer + dt
     if (spawnedBoss == false and timer > 75) then
-        local boss = CreateObject("assets/encounters/02/boss.lua",120,22,TYPE_ENEMY,5);
-        SetObjectCompletionPercent(boss,100);
+        local boss = CreateObject("assets/encounters/02/boss.lua",120,22,TYPE_ENEMY,5,100);
         spawnedBoss = true
     end
 
@@ -45,16 +44,16 @@ function update(dt)
         if (firstWave == false and timer > 12) then
             local enemyObjs = GetAllObjsByFriendliness(TYPE_ENEMY);
             local numObjs = #enemyObjs;
-            local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,54,TYPE_ENEMY,2);
+            local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,54,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
         
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2);
+            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)       
 
-            local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",36,93,TYPE_ENEMY,2);
+            local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",36,93,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
         
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",36,120,TYPE_ENEMY,2);
+            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",36,120,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)       
 
 
@@ -66,19 +65,19 @@ function update(dt)
         if (secondWave == false and timer > 24) then
             local enemyObjs = GetAllObjsByFriendliness(TYPE_ENEMY);
             local numObjs = #enemyObjs;
-            local ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2);
+            local ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
         
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2);
+            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)    
 
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",30,115,TYPE_ENEMY,2);
+            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",30,115,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)    
 
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",228,119,TYPE_ENEMY,2);
+            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",228,119,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)    
 
-            ob = CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",121,238,TYPE_ENEMY,2);
+            ob = CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",121,238,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
 
 
@@ -87,23 +86,19 @@ function update(dt)
         if (thirdWave == false and timer > 36) then
             local enemyObjs = GetAllObjsByFriendliness(TYPE_ENEMY);
             local numObjs = #enemyObjs;
-            local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,22,TYPE_ENEMY,2);
+            local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,22,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
         
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2);
+            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
             
-            ob = CreateObject("assets/enemies/drummer/drummer.lua",120,22,TYPE_ENEMY,5);
+            ob = CreateObject("assets/enemies/drummer/drummer.lua",120,22,TYPE_ENEMY,5,0);
             SetObjAggroRadius(ob,999)       
 
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",30,114,TYPE_ENEMY,2);
-            SetObjAggroRadius(ob,999)
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",45,114,TYPE_ENEMY,2);
+            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",45,114,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
 
-            ob = CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",121,238,TYPE_ENEMY,2);
-            SetObjAggroRadius(ob,999)
-            ob = CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",144,238,TYPE_ENEMY,2);
+            ob = CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",144,238,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
 
 
@@ -114,21 +109,19 @@ function update(dt)
         if (thirdWave == false and timer > 48) then
             local enemyObjs = GetAllObjsByFriendliness(TYPE_ENEMY);
             local numObjs = #enemyObjs;
-            local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,22,TYPE_ENEMY,2);
+            local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,22,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
         
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2);
+            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
             
-            ob = CreateObject("assets/enemies/drummer/drummer.lua",120,22,TYPE_ENEMY,5);
+            ob = CreateObject("assets/enemies/drummer/drummer.lua",120,22,TYPE_ENEMY,5,0);
             SetObjAggroRadius(ob,999)   
             
-             ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",230,108,TYPE_ENEMY,2);
-            SetObjAggroRadius(ob,999)
-             ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",250,108,TYPE_ENEMY,2);
+            ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",230,108,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
             
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",260,108,TYPE_ENEMY,2);
+            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",260,108,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
 
 
@@ -138,28 +131,24 @@ function update(dt)
         if ((thirdWave == false and timer > 60)) then
             local enemyObjs = GetAllObjsByFriendliness(TYPE_ENEMY);
             local numObjs = #enemyObjs;
-            local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,22,TYPE_ENEMY,2);
+            local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,22,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
         
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2);
+            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
             
-            ob = CreateObject("assets/enemies/drummer/drummer.lua",120,22,TYPE_ENEMY,5);
+            ob = CreateObject("assets/enemies/drummer/drummer.lua",120,22,TYPE_ENEMY,5,0);
             SetObjAggroRadius(ob,999)       
 
-             ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",230,108,TYPE_ENEMY,2);
+             ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",230,108,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
-             ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",250,108,TYPE_ENEMY,2);
-            SetObjAggroRadius(ob,999)
-
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",260,108,TYPE_ENEMY,2);
-            SetObjAggroRadius(ob,999)
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",250,108,TYPE_ENEMY,2);
+             ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",250,108,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
 
-            ob = CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",121,238,TYPE_ENEMY,2);
+            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",250,108,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
-            ob = CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",144,238,TYPE_ENEMY,2);
+
+            ob = CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",144,238,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
 
 

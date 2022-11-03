@@ -1629,7 +1629,14 @@ int L_CreateObject(lua_State* l)
     const int y = lua_tonumber(l,3);
     int PLAYER = lua_tonumber(l,4);
     float summonTime = lua_tonumber(l,5);
-    
+    float completionPercent = DEFAULT_COMPLETION_PERCENT; 
+    bool applyCompletion = false;
+    if (lua_isnumber(l,6))
+    {
+        completionPercent = lua_tonumber(l,6);
+        applyCompletion = true;
+    }
+
     GAMEOBJ_SOURCE source = SOURCE_SPAWNED_FROM_OBJ;
     if (!currGameObjRunning)
         source = SOURCE_SPAWNED_FROM_MAP;
@@ -1661,6 +1668,10 @@ int L_CreateObject(lua_State* l)
         return 0;
     g->summonTime = 0;
     g->summonMax = summonTime;
+
+    if (applyCompletion)
+        g->completionPercent = completionPercent;
+    
 
     lua_pushnumber(l,g-objects);
     return 1;

@@ -30,6 +30,7 @@ function setup()
     SetSpeed(10)
     SetObjectPush(true);
     ObjIsStunnable(GetObjRef(),false);
+    SetObjIsBoss(GetObjRef(),true);
 end
 
 local enrageTransitionTimer = 0

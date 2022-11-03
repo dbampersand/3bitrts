@@ -7,9 +7,13 @@
 
 void AddThreat(GameObject* source, GameObject* target, int damage)
 {
+    if (GetPlayerOwnedBy(source) == GetPlayerOwnedBy(target) || !IsActive(source) || !IsActive(target))
+        return;
+
     if (damage > 0)
         StartCombat();
     Threat* next = &target->threatList;
+
 
     if (!next->obj)
     {
@@ -51,7 +55,7 @@ void RemoveObjFromAllThreatlists(GameObject* g)
         GameObject* g2 = &objects[i];
         if (IsActive(g2))
         {
-            Threat* next = g2->threatList.next;
+            Threat* next = &g2->threatList;
             while (1)
             {
                 if (next)

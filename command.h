@@ -41,6 +41,7 @@ void FollowCommand(GameObject* g, GameObject* target, bool shiftHeld);
 void HoldCommand(GameObject* g, bool shiftHeld);
 void AttackMoveCommand(GameObject* g, float x, float y, bool shiftHeld);
 
+int CountCommands(GameObject* g);
 void DoCommands(GameObject* g);
 void NextCommand(GameObject* g);
 void ClearCommandQueue(GameObject* g);
