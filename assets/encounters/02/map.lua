@@ -140,8 +140,6 @@ function update(dt)
             ob = CreateObject("assets/enemies/drummer/drummer.lua",120,22,TYPE_ENEMY,5,0);
             SetObjAggroRadius(ob,999)       
 
-             ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",230,108,TYPE_ENEMY,2,0);
-            SetObjAggroRadius(ob,999)
              ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",250,108,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
 

@@ -3,6 +3,7 @@ local rampage = 0
 local smash = 0
 local quake = 0
 local chuck = 0
+local bellow = 0
 
 function setup()
     SetSprite("assets/encounters/02/minotaur/minotaur.png");
@@ -14,6 +15,7 @@ function setup()
     chuck = AddAbility(GetObjRef(),"assets/enemies/minotaur/ability_chuck.lua",3)    
     charge = AddAbility(GetObjRef(),"assets/enemies/minotaur/ability_charge.lua",4)    
     summon = AddAbility(GetObjRef(),"assets/enemies/minotaur/ability_summon.lua",5)    
+    bellow = AddAbility(GetObjRef(),"assets/enemies/minotaur/ability_bellow.lua",5)    
 
     SetDamage(10);
     SetMaxHP(10000,true)
@@ -51,6 +53,7 @@ function update(dt)
         target["target"] = j[1];
         
         CastAbility(smash,4,{target})
+        CastAbility(bellow,1,{})
 
     end
 

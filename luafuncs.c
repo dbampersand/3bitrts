@@ -630,7 +630,10 @@ int L_AbilityIsOnCooldown(lua_State* l)
 }
 int SortThreat(const void* a, const void* b)
 {
-    return (*(int*)a - *(int*)b);
+    Threat* t1 = (Threat*)a;
+    Threat* t2 = (Threat*)b;
+
+    return t2->threat - t1->threat;
 }
 
 int L_GetThreatRank(lua_State* l)
@@ -639,11 +642,11 @@ int L_GetThreatRank(lua_State* l)
     Threat* next = &currGameObjRunning->threatList;
     lua_newtable(l);
     
-    int* threats = calloc(j,sizeof(int));
+    Threat* threats = calloc(j,sizeof(Threat));
     for (int i = 0; i < j; i++)
     {
-        int threat = next->obj - objects;
-        threats[i] = next->obj-objects;
+        if (IsActive(next->obj))
+            threats[i] = *next;
         next = next->next;
 
         if (!next)
@@ -653,10 +656,12 @@ int L_GetThreatRank(lua_State* l)
     for (int i = 0; i < j; i++)
     {
         lua_pushnumber(l,i+1);
-        lua_pushnumber(l,threats[i]);
+        lua_pushnumber(l,threats[i].obj-objects);
+
 
         lua_settable(l,-3);
     }
+
     free(threats);
     return 1; 
 }
