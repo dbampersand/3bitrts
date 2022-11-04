@@ -35,7 +35,6 @@ void GenerateInvertedSprite(Sprite* s)
     ALLEGRO_BITMAP* newSprite = al_create_bitmap(w,h);
 
     ALLEGRO_COLOR white = al_map_rgba(255,255,255,255);//FRIENDLY;
-    ALLEGRO_COLOR transparent = al_map_rgba(0,0,0,0);
 
     ALLEGRO_BITMAP* before = al_get_target_bitmap();
 
@@ -47,7 +46,7 @@ void GenerateInvertedSprite(Sprite* s)
         ALLEGRO_COLOR pixel = al_get_pixel(s->sprite, x, y);
         if (pixel.a)
         {
-            al_put_pixel(x,y,transparent);
+            al_put_pixel(x,y,_TRANSPARENT);
         }
         else
         {
@@ -59,10 +58,10 @@ void GenerateInvertedSprite(Sprite* s)
     }
 
     //corners
-    al_put_pixel(0,0,transparent);
-    al_put_pixel(w-1,0,transparent);
-    al_put_pixel(w,h,transparent);
-    al_put_pixel(0,h,transparent);
+    al_put_pixel(0,0,_TRANSPARENT);
+    al_put_pixel(w-1,0,_TRANSPARENT);
+    al_put_pixel(w,h,_TRANSPARENT);
+    al_put_pixel(0,h,_TRANSPARENT);
 
 
     al_unlock_bitmap(newSprite);

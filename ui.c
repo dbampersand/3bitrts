@@ -1617,7 +1617,7 @@ void InitGameUI()
     int w = 80;
     InitButton(&ui.nextLevelButton,"Descend","Descend",_SCREEN_SIZE/2-w/2,10,w,10,0);
     ui.nextLevelButton.enabled = false;
-    ui.nextLevelButton.bgColor =  COLOR_TRANSPARENT; 
+    ui.nextLevelButton.bgColor =  COLOR__TRANSPARENT; 
 
     ui.gold_element_sprite_index = LoadSprite("assets/ui/gold.png",false);
 

@@ -74,7 +74,7 @@ typedef enum Color
     COLOR_FRIENDLY_SHIELD,
     COLOR_GROUND_DARK,
     COLOR_EDGE_HIGHLIGHT,
-    COLOR_TRANSPARENT,
+    COLOR__TRANSPARENT,
 
     COLOR_ALL //used to get the number of elements in enum
 } Color;
@@ -96,7 +96,7 @@ extern ALLEGRO_COLOR SHIELD;
 
 
 
-extern ALLEGRO_COLOR TRANSPARENT;
+extern ALLEGRO_COLOR _TRANSPARENT;
 
 
 extern ALLEGRO_COLOR FRIENDLY_POISON;
