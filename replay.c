@@ -281,11 +281,11 @@ ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
     rf.numObjects = numObjs;
     rf.objects = calloc(rf.numObjects,sizeof(GameObject));
     int index = 0;
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        if (IsActive(&objects[i]))
+        if (IsActive(activeObjects[i]))
         {
-            rf.objects[index] = objects[i];
+            rf.objects[index] = *activeObjects[i];
             index++;
         }
     }

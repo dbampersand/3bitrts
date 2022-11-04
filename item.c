@@ -438,9 +438,9 @@ void ProcessItemsOnEffect(GameObject* g, Effect* e, float* value)
 void UpdateItems(float dt)
 {
     GameObject* before = currGameObjRunning;
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g = &objects[i];
+        GameObject* g = activeObjects[i];
         if (IsActive(g))
         {
             for (int j = 0; j < INVENTORY_SLOTS; j++)

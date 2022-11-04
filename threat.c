@@ -50,9 +50,9 @@ void AddThreat(GameObject* source, GameObject* target, int damage)
 
 void RemoveObjFromAllThreatlists(GameObject* g)
 {
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g2 = &objects[i];
+        GameObject* g2 = activeObjects[i];
         if (IsActive(g2))
         {
             Threat* next = &g2->threatList;

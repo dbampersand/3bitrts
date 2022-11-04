@@ -7,6 +7,7 @@ local obsjToSpawn = 6
 local firstWave = false
 local secondWave = false
 local thirdWave = false
+local fourthWave = false
 
 
 function setup()
@@ -35,7 +36,10 @@ function update(dt)
     --end
 
     timer = timer + dt
-    if (spawnedBoss == false and timer > 75) then
+
+    local numEnemies = GetAllObjsByFriendliness(TYPE_ENEMY);
+
+    if (spawnedBoss == false and fourthWave == true and #numEnemies == 0) then
         local boss = CreateObject("assets/encounters/02/boss.lua",120,22,TYPE_ENEMY,5,100);
         spawnedBoss = true
     end
@@ -60,9 +64,11 @@ function update(dt)
             
 
             firstWave = true;    
+            do return end;
+
 
         end
-        if (secondWave == false and timer > 24) then
+        if (secondWave == false and firstWave == true and #numEnemies == 0) then
             local enemyObjs = GetAllObjsByFriendliness(TYPE_ENEMY);
             local numObjs = #enemyObjs;
             local ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2,0);
@@ -82,16 +88,14 @@ function update(dt)
 
 
             secondWave = true;    
+            do return end;
         end
-        if (thirdWave == false and timer > 36) then
+        if (thirdWave == false and secondWave == true and #numEnemies == 0) then
             local enemyObjs = GetAllObjsByFriendliness(TYPE_ENEMY);
             local numObjs = #enemyObjs;
             local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,22,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
         
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2,0);
-            SetObjAggroRadius(ob,999)
-            
             ob = CreateObject("assets/enemies/drummer/drummer.lua",120,22,TYPE_ENEMY,5,0);
             SetObjAggroRadius(ob,999)       
 
@@ -104,9 +108,11 @@ function update(dt)
 
 
             thirdWave = true;    
+            do return end;
+
         end
 
-        if (thirdWave == false and timer > 48) then
+        if (thirdWave == false and secondWave == true and #numEnemies == 0) then
             local enemyObjs = GetAllObjsByFriendliness(TYPE_ENEMY);
             local numObjs = #enemyObjs;
             local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,22,TYPE_ENEMY,2,0);
@@ -121,27 +127,20 @@ function update(dt)
             ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",230,108,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
             
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",260,108,TYPE_ENEMY,2,0);
-            SetObjAggroRadius(ob,999)
-
 
             thirdWave = true;    
+            do return end;
+
         end
 
-        if ((thirdWave == false and timer > 60)) then
+        if ((fourthWave == false and thirdWave == true and #numEnemies == 0)) then
             local enemyObjs = GetAllObjsByFriendliness(TYPE_ENEMY);
             local numObjs = #enemyObjs;
             local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,22,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
-        
-            ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2,0);
-            SetObjAggroRadius(ob,999)
             
             ob = CreateObject("assets/enemies/drummer/drummer.lua",120,22,TYPE_ENEMY,5,0);
             SetObjAggroRadius(ob,999)       
-
-             ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",250,108,TYPE_ENEMY,2,0);
-            SetObjAggroRadius(ob,999)
 
             ob = CreateObject("assets/enemies/berzerker/berzerker.lua",250,108,TYPE_ENEMY,2,0);
             SetObjAggroRadius(ob,999)
@@ -150,7 +149,9 @@ function update(dt)
             SetObjAggroRadius(ob,999)
 
 
-            thirdWave = true;    
+            fourthWave = true;    
+            do return end;
+
         end
 
 

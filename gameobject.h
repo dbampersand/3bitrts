@@ -208,6 +208,9 @@ typedef struct GameObject
 extern GameObject* objects;
 extern int objectsAllocated;
 
+extern GameObject** activeObjects;
+extern int numActiveObjects;
+
 
 
 extern GameObject** prefabs;

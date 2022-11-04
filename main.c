@@ -120,9 +120,9 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
         GetControlGroup(keyState);
         UpdateDamageNumbers(dt);
         UpdatePlayerObjectInteractions(keyState,keyStateLastFrame,mouseState);
-        for (int i = 0; i < MAX_OBJS; i++)
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            UpdateObject(&objects[i],dt);
+            UpdateObject(activeObjects[i],dt);
         }
         UpdateAttacks(dt);
 
@@ -160,10 +160,10 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     al_grab_mouse(display);
     al_set_target_bitmap(SCREEN);
 
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        if (IsActive(&objects[i]))
-            UpdateScreenPositions(&objects[i]);
+        if (IsActive(activeObjects[i]))
+            UpdateScreenPositions(activeObjects[i]);
     }
     for (int i = 0; i < MAX_ATTACKS; i++)
     {
@@ -195,12 +195,12 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     if ((mouseStateLastFrame->mouse.buttons & 2 || mouseState->mouse.buttons & 2) || abilityCastOnTarget)
     {
-        for (int i = 0; i < MAX_OBJS; i++)
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            GameObject* g = &objects[i];
+            GameObject* g = activeObjects[i];
             if (g->properties & OBJ_ACTIVE && (g->properties & OBJ_OWNED_BY || abilityCastOnTarget))
             {
-                if (PointInRect(mouseState->worldX,mouseState->worldY,GetObjRect(&objects[i])))
+                if (PointInRect(mouseState->worldX,mouseState->worldY,GetObjRect(activeObjects[i])))
                 {
                     objSelected = i;
                 }
@@ -209,23 +209,23 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     DrawObjShadows();
     DrawAggroIndicators();
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
         DrawChannelHint(&objects[i]);
-        if ((i == objSelected || &objects[i] == players[0].clickedThisFrame) && !ObjIsInvincible(&objects[i]))
+        if ((i == objSelected || activeObjects[i] == players[0].clickedThisFrame) && !ObjIsInvincible(activeObjects[i]))
         {
-            DrawGameObj(&objects[i],true);
+            DrawGameObj(activeObjects[i],true);
         }
         else
         {
-            DrawGameObj(&objects[i],false);
+            DrawGameObj(activeObjects[i],false);
 
         }
     }
     //Draw health bars on top of all objects
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g = &objects[i];
+        GameObject* g = activeObjects[i];
         if (!IsActive(g))
             continue;
         ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
@@ -480,12 +480,11 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         DisplayCollision();
     if (al_key_down(keyState,ALLEGRO_KEY_O) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_O))
     {
-        //GameObject* g = AddGameobject(prefabs[0],mouseState->worldX,mouseState->worldY);
+        //GameObject* g = AddGameobject(prefabs[0],mouseState->worldX,mouseState->worldY,SOURCE_SPAWNED_FROM_MAP);
         //KillObj(g,true);
         //AddGold(10);
-        AddCompletionPercent(10);
+        //AddCompletionPercent(10);
     }
-
     //GameObjDebugDraw();
     //DebugDrawPathfinding();   
     

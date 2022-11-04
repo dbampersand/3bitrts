@@ -145,11 +145,11 @@ void FinishTransition()
                 }
             }
 
-        for (int i = 0; i < MAX_OBJS; i++)
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            if (IsActive(&objects[i]) && IsOwnedByPlayer(&objects[i]))
+            if (IsActive(activeObjects[i]) && IsOwnedByPlayer(activeObjects[i]))
             {
-                HoldCommand(&objects[i],false);
+                HoldCommand(activeObjects[i],false);
             }
         }
         FocusCameraOnPos(camPos.x,camPos.y);
@@ -158,11 +158,11 @@ void FinishTransition()
         ClearGold();
 
 
-        for (int i = 0; i < MAX_OBJS; i++)
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            if (IsActive(&objects[i]))
+            if (IsActive(activeObjects[i]))
             {
-                CureAll(&objects[i]);
+                CureAll(activeObjects[i]);
             }   
         }
 
@@ -256,16 +256,16 @@ void FinishTransition()
 
         Point camPos = (Point){0,0};
 
-        for (int i = 0; i < MAX_OBJS; i++)
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            if (IsActive(&objects[i]) && IsOwnedByPlayer(&objects[i]))
+            if (IsActive(activeObjects[i]) && IsOwnedByPlayer(activeObjects[i]))
             {
                // objects[i].position.worldX = xPos;
                 //objects[i].position.worldY = yPos;
-                UpdateObjPosition(&objects[i],xPos,yPos);
-                SetTargetPosition(&objects[i],xPos,yPos);
+                UpdateObjPosition(activeObjects[i],xPos,yPos);
+                SetTargetPosition(activeObjects[i],xPos,yPos);
 
-                xPos += GetWidth(&objects[i]);
+                xPos += GetWidth(activeObjects[i]);
                 if (i == encounterGoingTo->numUnitsToSelect/2)
                 {
                     camPos.x = xPos;
@@ -276,18 +276,18 @@ void FinishTransition()
         FocusCameraOnPos(camPos.x,camPos.y);
 
         RemoveAllAttacks();
-        for (int i = 0; i < MAX_OBJS; i++)
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            if (IsActive(&objects[i]))
+            if (IsActive(activeObjects[i]))
             {
-                CureAll(&objects[i]);
+                CureAll(activeObjects[i]);
             }   
         }
-        for (int i = 0; i < MAX_OBJS; i++)
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            if (IsActive(&objects[i]) && IsOwnedByPlayer(&objects[i]))
+            if (IsActive(activeObjects[i]) && IsOwnedByPlayer(activeObjects[i]))
             {
-                HoldCommand(&objects[i],false);
+                HoldCommand(activeObjects[i],false);
             }
         }
         free(pathToNextMap);

@@ -372,9 +372,9 @@ char* GetAugmentDescription(AUGMENT_TYPES aug)
 }
 void Bad_AugmentDeathAddDamage(GameObject* g, int augmentLevel)
 {
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g2 = &objects[i];
+        GameObject* g2 = activeObjects[i];
         if (GetDist(g,g2) < 15)
         {
             if (GetPlayerOwnedBy(g) == GetPlayerOwnedBy(g2))

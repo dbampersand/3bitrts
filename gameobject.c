@@ -32,6 +32,8 @@
  GameObject* objects = NULL;
  int objectsAllocated = 0; 
 
+GameObject** activeObjects;
+int numActiveObjects;
 
 
  GameObject** prefabs = NULL;
@@ -41,7 +43,7 @@
  ALLEGRO_BITMAP* lights[MAX_LIGHT_SIZE] = {0};
 
 
- CollisionEvent collisionEvents[MAX_OBJS] = {0};
+CollisionEvent collisionEvents[MAX_OBJS] = {0};
 
 float __sinTable[360*2] = {0};
 float __cosTable[360*2] = {0};
@@ -63,9 +65,9 @@ void PrintDiedFrom(GameObject* obj, GameObject* damageSource, Effect* effectSour
 }
 GameObject* GetMousedOver(MouseState* mouseState)
 {
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g = &objects[i];
+        GameObject* g = activeObjects[i];
         if (g->properties & OBJ_ACTIVE)
         {
             if (PointInRect(mouseState->worldX,mouseState->worldY,GetObjRect(g)))
@@ -99,9 +101,9 @@ void ProcessAttackMoveMouseCommand(MouseState* mouseState, ALLEGRO_KEYBOARD_STAT
     if (players[0].amoveSelected)
     {
         players[0].amoveSelected = false;   
-        for (int i = 0; i < MAX_OBJS; i++)
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            GameObject* g = &objects[i];
+            GameObject* g = activeObjects[i];
             if (IsSelected(g))
             {
                 float w; float h; GetOffsetCenter(g,&w,&h);
@@ -308,9 +310,9 @@ void UpdateObject(GameObject* g, float dt)
                 //but something is still in range - temporarily attack that, but keep moving towards the original target
                 if (GetPlayerOwnedBy(currGameObjRunning) == 1)
                 {
-                    for (int i = 0; i < MAX_OBJS; i++)
+                    for (int i = 0; i < numActiveObjects; i++)
                     {
-                        GameObject* g2 = &objects[i];
+                        GameObject* g2 = activeObjects[i];
                         if (IsActive(g2) && !ObjIsDecoration(g2))
                         {
                             if (GetPlayerOwnedBy(g2) != GetPlayerOwnedBy(currGameObjRunning))
@@ -367,6 +369,10 @@ void InitObjects()
 {
     objects = calloc(MAX_OBJS,sizeof(GameObject));
     objectsAllocated = MAX_OBJS;
+
+    activeObjects = calloc(MAX_OBJS,sizeof(GameObject*));
+    numActiveObjects = 0;
+
 
 
     prefabs = calloc(1,sizeof(GameObject*));
@@ -530,9 +536,9 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
             r.h = _MAX(endSelection.y,players[0].selectionStart.y) - _MIN(endSelection.y,players[0].selectionStart.y);
             bool hasSelected = false;
             
-            for (int i = 0; i < MAX_OBJS; i++)
+            for (int i = 0; i < numActiveObjects; i++)
             {
-                GameObject* obj = &objects[i];
+                GameObject* obj = activeObjects[i];
                 if (!IsOwnedByPlayer(obj) || !IsActive(obj) || ObjIsDecoration(obj))
                     continue;
                 Sprite* sp = &sprites[obj->spriteIndex];
@@ -543,9 +549,9 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                     if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
                     if (!hasSelected)
                     {
-                        for (int j = 0; j < MAX_OBJS; j++)
+                        for (int j = 0; j < numActiveObjects; j++)
                         {
-                            SetSelected(&objects[j],false);
+                            SetSelected(activeObjects[j],false);
                             ClearSelection();
                             players[0].numUnitsSelected = 0;
                         }
@@ -608,9 +614,9 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                                 if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
                                     ClearCommandQueue(g);
                             bool found = false;
-                            for (int i = 0; i < MAX_OBJS; i++)
+                            for (int i = 0; i < numActiveObjects; i++)
                             {
-                                GameObject* g2 = &objects[i];
+                                GameObject* g2 = activeObjects[i];
                                 if (g == g2) continue;
 
                                 Rect r = GetObjRect(g2);
@@ -653,14 +659,14 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
 int GetNumObjectsInRect(Rect* r, bool onlyPlayerChoosable)
 {
     int j = 0;
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        if (!IsActive(&objects[i]) || ObjIsDecoration(&objects[i]))
+        if (!IsActive(activeObjects[i]) || ObjIsDecoration(activeObjects[i]))
             continue;
             
-        if (onlyPlayerChoosable && !objects[i].playerChoosable)
+        if (onlyPlayerChoosable && !activeObjects[i]->playerChoosable)
             continue;
-        Rect r2 = GetObjRect(&objects[i]);
+        Rect r2 = GetObjRect(activeObjects[i]);
         if (CheckIntersect(*r,r2))
         {
             j++;
@@ -790,7 +796,13 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
     found->attackSpeed = 1;
     currGameObjRunning->prefab = prefab;
 
+    activeObjects[numActiveObjects] = currGameObjRunning;
+    numActiveObjects++;
+
+
+
     currGameObjRunning = before;
+
     return found;
 }
 void NewObj(GameObject* g)
@@ -1015,25 +1027,25 @@ void ScatterEffect(GameObject* g)
 }
 void RemoveObjFromAllCommands(GameObject* g)
 {
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        if (IsActive(&objects[i]))
+        if (IsActive(activeObjects[i]))
         {
             for (int j = 0; j < MAX_QUEUED_CMD; j++)
             {
-                if (objects[i].queue[j].target == g)
+                if (activeObjects[i]->queue[j].target == g)
                 {
-                    if (CountCommands(&objects[i]) == 1)
+                    if (CountCommands(activeObjects[i]) == 1)
                     {
                         float cx; float cy;
                         GetCentre(g,&cx,&cy);
-                        ClearCommandQueue(&objects[i]);
-                        AttackMoveCommand(&objects[i],cx,cy,false);      
+                        ClearCommandQueue(activeObjects[i]);
+                        AttackMoveCommand(activeObjects[i],cx,cy,false);      
                         objects[i].targObj = NULL; 
                     }
                     else
                     {
-                        NextCommand(&objects[i]);
+                        NextCommand(activeObjects[i]);
                     }
                 }
             }
@@ -1043,6 +1055,8 @@ void RemoveObjFromAllCommands(GameObject* g)
 void KillObj(GameObject* g, bool trigger)
 {
     if (!g) return;
+    if (!IsActive(g))
+        return;
     ScatterEffect(g);
 
     RemoveObjFromAllThreatlists(g);
@@ -1119,6 +1133,21 @@ void KillObj(GameObject* g, bool trigger)
 
     if (!ObjIsDecoration(g) && GetPlayerOwnedBy(g) > 0)
         AddCompletionPercent(g->completionPercent);
+
+    int foundIndex = 0;
+    for (int i = 0; i < numActiveObjects; i++)
+    {
+        if (g == activeObjects[i])
+        {
+            foundIndex = i;
+        }
+    }
+    for (int i = foundIndex; i < numActiveObjects; i++)
+    {
+        activeObjects[i] = activeObjects[i+1];
+    }
+    numActiveObjects--;
+    
 
 
     
@@ -1289,11 +1318,11 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
         dV = -dV;
     int numEvents = 0;
 
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
         Rect rG = (Rect){g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g)};
 
-        GameObject* g2 = &objects[i];
+        GameObject* g2 = activeObjects[i];
         if ((!IsActive(g2) || g2 == g)) 
             continue;
         Sprite* s2 = &sprites[g2->spriteIndex];
@@ -1540,9 +1569,9 @@ GameObject* GetCollidedWith(GameObject* g)
 {
     Sprite* s = &sprites[g->spriteIndex];
     Rect rG = (Rect){g->position.worldX,g->position.worldY,al_get_bitmap_width(s->sprite),al_get_bitmap_height(s->sprite)};
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g2 = &objects[i];
+        GameObject* g2 = activeObjects[i];
         if (g2 == g || !IsActive(g2)) 
             continue;
         Sprite* s2 = &sprites[g2->spriteIndex];
@@ -2015,10 +2044,10 @@ void DrawObjShadow(GameObject* g)
 }
 void DrawObjShadows()
 {
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        if (IsActive(&objects[i]) && !ObjIsDecoration(&objects[i]) && objects[i].summonTime > objects[i].summonMax)
-            DrawObjShadow(&objects[i]);
+        if (IsActive(activeObjects[i]) && !ObjIsDecoration(activeObjects[i]) && objects[i].summonTime > objects[i].summonMax)
+            DrawObjShadow(activeObjects[i]);
     }
 }   
 void DrawMapHighlights()
@@ -2029,9 +2058,9 @@ void DrawMapHighlights()
 
     clock_t begin = clock();
 
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g = &objects[i];
+        GameObject* g = activeObjects[i];
         if (g->lightSize > 0)
         if (IsActive(g) && IsOwnedByPlayer(g))
         {
@@ -2052,9 +2081,9 @@ void DrawMapHighlights()
 
     al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_ONE);
 
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g = &objects[i];
+        GameObject* g = activeObjects[i];
         if (IsActive(g) && IsOwnedByPlayer(g))
         {
             g->lightR = 1;
@@ -2084,9 +2113,9 @@ void DrawMapHighlights()
 }
 void DrawAggroIndicators()
 {
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g = &objects[i];
+        GameObject* g = activeObjects[i];
         if (IsActive(g) && GetPlayerOwnedBy(g) != 0)
         if (g->targObj)
         {
@@ -2701,13 +2730,13 @@ void DoAI(GameObject* g)
     //do one of these per frame, just to save some cycles
     if (_FRAMES % MAX_OBJS  == g-objects)
     {
-        for (int i = 0; i < MAX_OBJS; i++)
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            if (objects[i].properties & OBJ_ACTIVE)
+            if (activeObjects[i]->properties & OBJ_ACTIVE)
             {
-                if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(&objects[i]) && !ObjIsDecoration(&objects[i]))
+                if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(activeObjects[i]) && !ObjIsDecoration(activeObjects[i]))
                 {
-                    if (GetDist(g,&objects[i]) < g->aggroRadius)
+                    if (GetDist(g,activeObjects[i]) < g->aggroRadius)
                     {
                         //also bring in the others
                         /*for (int j = 0; j < MAX_OBJS; j++)
@@ -2720,7 +2749,7 @@ void DoAI(GameObject* g)
                                 
                             }
                         }*/
-                        AddThreat(&objects[i],g, 0);
+                        AddThreat(activeObjects[i],g, 0);
                     }
 
                 }
@@ -2759,14 +2788,14 @@ float GetDist(GameObject* g1, GameObject* g2)
 }
 GameObject* GetClicked(float x, float y)
 {
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        if (!IsActive(&objects[i]))
+        if (!IsActive(activeObjects[i]))
             continue;
-        Rect r = GetObjRect(&objects[i]);
+        Rect r = GetObjRect(activeObjects[i]);
         if (PointInRect(x,y,r))
         {
-            return &objects[i];
+            return activeObjects[i];
         }
     }
     return NULL;
@@ -2774,9 +2803,9 @@ GameObject* GetClicked(float x, float y)
 }
 void UnsetAll()
 {
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        SetSelected(&objects[i], false);
+        SetSelected(activeObjects[i], false);
     }
 }
 int GetWidth(GameObject* g)
@@ -2916,9 +2945,9 @@ int GetNumEnemyObjects()
 int GetNumPlayerControlledObjs(Player* p)
 {
     int count = 0;
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g = &objects[i];
+        GameObject* g = activeObjects[i];
         if (IsActive(g))
         {
             if (GetPlayerOwnedBy(g) == (p-players))

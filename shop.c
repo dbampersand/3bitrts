@@ -238,9 +238,9 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
     int y = shop.startY;
 
 
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g = &objects[i];
+        GameObject* g = activeObjects[i];
 
         if (!IsActive(g) || !IsOwnedByPlayer(g) || !g->playerChoosable)
             continue;

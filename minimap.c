@@ -26,9 +26,9 @@ void DrawMinimap(MouseState mouseState)
     al_draw_tinted_scaled_bitmap(s->sprite,GROUND,0,0,w,h,x,y,w*scale,h*scale,0);
     al_draw_rectangle(x,y,x+w*scale,y+h*scale,FRIENDLY,1);
 
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g = &objects[i];
+        GameObject* g = activeObjects[i];
         if (IsActive(g))
         {
             float gX = x + (g->position.worldX * scale);

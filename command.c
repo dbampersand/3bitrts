@@ -181,9 +181,9 @@ void NextCommand(GameObject* g)
 }
 void FindEnemiesToAttack(GameObject* g)
 {
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g2 = &objects[i];  
+        GameObject* g2 = activeObjects[i];  
         if (IsActive(g2) && GetPlayerOwnedBy(g) != GetPlayerOwnedBy(g2) && !ObjIsDecoration(g2))
         {
             if (GetDist(g,g2) <= g->aggroRadius)
@@ -343,9 +343,9 @@ void DoCommands(GameObject* g)
             NextCommand(g);
             return;
         }
-        for (int i = 0; i < MAX_OBJS; i++)
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            GameObject* g2 = &objects[i];  
+            GameObject* g2 = activeObjects[i];  
             if (ObjIsDecoration(g2))
             {
                 if (!IsOwnedByPlayer(g))

@@ -207,9 +207,9 @@ int L_GetRandomUnit(lua_State* l)
 
     GameObject** list = calloc(MAX_OBJS,sizeof(GameObject*));
     int numObjs=0;
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g = &objects[i];
+        GameObject* g = activeObjects[i];
         if (ObjIsDecoration(g) && friend != TYPE_DECORATION)
             continue;
         if (IsActive(g))
@@ -248,9 +248,9 @@ int L_GetRandomUnit(lua_State* l)
     //There are no objects tagged - pick a random object that follows the friendliness
     else 
     {
-        for (int i = 0; i < MAX_OBJS; i++)
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            GameObject* g = &objects[i];
+            GameObject* g = activeObjects[i];
             if (ObjIsDecoration(g) && friend != TYPE_DECORATION)
                 continue;
 
@@ -508,9 +508,9 @@ int L_GetBetween(lua_State* l)
     GetCentre(g,&x1,&y1);
     int numObjs = 0;
     lua_newtable(l);
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g2 = &objects[i];
+        GameObject* g2 = activeObjects[i];
         if (IsActive(g2))
         if (LineIntersectsObj(g2,x1,y1,x2,y2))
         {
@@ -900,13 +900,13 @@ int L_CreateCircularProjectiles(lua_State* l)
     GameObject* targ = NULL;
     if (attackType == ATTACK_PROJECTILE_TARGETED)
     {   
-        for (int i = 0; i < MAX_OBJS; i++)
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            Rect r = GetObjRect(&objects[i]);
+            Rect r = GetObjRect(activeObjects[i]);
 
             if (PointInRect(x,y,r))
             {
-                targ = &objects[i];
+                targ = activeObjects[i];
                 break;
             }
         }
@@ -949,12 +949,12 @@ int L_NumObjectsOwnedByPlayer(lua_State* l)
 {
     int player = lua_tonumber(l,1);
     int numObjs = 0;
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g = &objects[i];
+        GameObject* g = activeObjects[i];
         if (IsActive(g))
         {
-            if (GetPlayerOwnedBy(&objects[i]) == player)
+            if (GetPlayerOwnedBy(activeObjects[i]) == player)
             {
                 numObjs++;
             }
@@ -982,13 +982,13 @@ int L_CreateProjectile(lua_State* l)
     GameObject* targ = NULL;
     if (attackType == ATTACK_PROJECTILE_TARGETED)
     {   
-        for (int i = 0; i < MAX_OBJS; i++)
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            Rect r = GetObjRect(&objects[i]);
+            Rect r = GetObjRect(activeObjects[i]);
 
             if (PointInRect(targX,targY,r))
             {
-                targ = &objects[i];
+                targ = activeObjects[i];
                 break;
             }
         }   
@@ -1690,15 +1690,15 @@ int L_GetClosestObjectInRange(lua_State* l)
     float closestDist = range;
     GameObject* closestObj = NULL;
 
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        if (!IsActive(&objects[i]))
+        if (!IsActive(activeObjects[i]))
             continue;
         float cx; float cy;
-        GetCentre(&objects[i],&cx,&cy);
+        GetCentre(activeObjects[i],&cx,&cy);
         if (dist(cx,cy,x,y) < closestDist)
         {
-            closestObj = &objects[i];
+            closestObj = activeObjects[i];
             closestDist = dist(cx,cy,x,y);
         }
     }
@@ -1715,9 +1715,9 @@ int L_GetObjectsInRange(lua_State* l)
 
     int index = 1;
     lua_newtable(l);
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g = &objects[i];
+        GameObject* g = activeObjects[i];
         if (!IsActive(g))
             continue;
         float cx; float cy;
@@ -1889,9 +1889,9 @@ int L_GetAllObjsByFriendliness(lua_State* l)
     
     lua_newtable(l);
     int index = 0;
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g = &objects[i];
+        GameObject* g = activeObjects[i];
 
         if (IsActive(g) && GetPlayerOwnedBy(g) == friendliness)
         {

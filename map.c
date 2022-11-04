@@ -272,9 +272,9 @@ void SetMap(Map* m)
     currMap = m;
     CallLuaFunc(m->luafunc_setup);
 
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g = &objects[i];
+        GameObject* g = activeObjects[i];
         if (IsActive(g))
         {
             CallLuaFunc(g->luafunc_onmapchange);

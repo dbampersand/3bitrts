@@ -115,12 +115,12 @@ bool AttackIsSoak(Attack* a)
 int NumUnitsInsideAttack(Attack* a)
 {
     int numObjects = 0;
-    for (int i = 0; i < MAX_OBJS; i++)
+    for (int i = 0; i < numActiveObjects; i++)
     {
-        GameObject* g = &objects[i];
+        GameObject* g = activeObjects[i];
         if (IsActive(g))
         {
-            Rect r = GetObjRect(&objects[i]);
+            Rect r = GetObjRect(activeObjects[i]);
             if (CircleInRect(a->x,a->y,a->targetRadius,r))
             {   
                 int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
@@ -128,7 +128,7 @@ int NumUnitsInsideAttack(Attack* a)
                 if (a->properties & ATTACK_HITS_ENEMIES)
                 {
                     int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
-                    int objOwnedBy = GetPlayerOwnedBy(&objects[i]);
+                    int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
 
                     if (a->ownedBy)
                     {
@@ -150,7 +150,7 @@ int NumUnitsInsideAttack(Attack* a)
                 else if (a->properties & ATTACK_HITS_FRIENDLIES)
                 {
                     int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
-                    int objOwnedBy = GetPlayerOwnedBy(&objects[i]);
+                    int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
                     if (a->ownedBy)
                     {
                         if (objOwnedBy == abilityOwnedBy)
@@ -708,9 +708,9 @@ void UpdateAttack(Attack* a, float dt)
         }
 
 
-        for (int i = 0; i < MAX_OBJS; i++)
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            if (!IsActive(&objects[i]))
+            if (!IsActive(activeObjects[i]))
                 continue;
             int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
 
@@ -721,7 +721,7 @@ void UpdateAttack(Attack* a, float dt)
             if (a->properties & ATTACK_HITS_ENEMIES)
             {
                 int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
-                int objOwnedBy = GetPlayerOwnedBy(&objects[i]);
+                int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
 
                 if (a->ownedBy && (!ObjIsDecoration(a->ownedBy)))
                 {
@@ -739,7 +739,7 @@ void UpdateAttack(Attack* a, float dt)
             else if (a->properties & ATTACK_HITS_FRIENDLIES)
             {
                 int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
-                int objOwnedBy = GetPlayerOwnedBy(&objects[i]);
+                int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
                 if (a->ownedBy && (!ObjIsDecoration(a->ownedBy)))
                 {
                     if (objOwnedBy != abilityOwnedBy)
@@ -756,15 +756,15 @@ void UpdateAttack(Attack* a, float dt)
             }
            // if (a->ownedBy == &objects[i])
              //   continue;
-            Rect r = GetObjRect(&objects[i]);
+            Rect r = GetObjRect(activeObjects[i]);
             if (a->attackType == ATTACK_AOE || a->attackType == ATTACK_PROJECTILE_TARGETED || a->attackType ==   ATTACK_PROJECTILE_POINT ||a->attackType == ATTACK_PROJECTILE_ANGLE)
             {
                 if (CircleInRect(a->x,a->y,a->targetRadius,r))
                 {   
                     if (isSoak)
-                        ApplyAttack(copied,&objects[i]);
+                        ApplyAttack(copied,activeObjects[i]);
                     else
-                        ApplyAttack(a,&objects[i]);
+                        ApplyAttack(a,activeObjects[i]);
 
                     if (a->attackType != ATTACK_AOE && a->attackType != ATTACK_CONE)
                     {  
@@ -793,10 +793,10 @@ void UpdateAttack(Attack* a, float dt)
                 angle = atan2(y2 - y, x2 - x);
                 float length = a->range;//dist(x,y,x2,y2);
                 
-                Rect r = GetObjRect(&objects[i]);
+                Rect r = GetObjRect(activeObjects[i]);
                 if (RectInCone(r,x,y,angle,a->targetRadius,length))
                 {
-                    ApplyAttack(a,&objects[i]);
+                    ApplyAttack(a,activeObjects[i]);
                 }
             }
         }
