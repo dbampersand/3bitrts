@@ -17,7 +17,7 @@ typedef enum PARTICLE_PROPERTIES
 
 extern float particle_x[MAX_PARTICLES];
 extern float particle_y[MAX_PARTICLES];
-extern float particle_dir[MAX_PARTICLES];
+extern int particle_dir[MAX_PARTICLES];
 extern float particle_lifetime[MAX_PARTICLES];
 extern float particle_lifetime_total[MAX_PARTICLES];
 extern char particle_properties[MAX_PARTICLES];
