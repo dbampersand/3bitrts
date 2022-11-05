@@ -21,7 +21,7 @@ typedef struct Map
     char* path;
     unsigned int spriteIndex;
     unsigned int secondLayerSpriteIndex;
-
+    bool* highlightMap;
 
     Point spawnPoint;
 
