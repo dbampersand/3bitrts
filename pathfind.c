@@ -147,9 +147,9 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w
     PointI closestP = current;
     *found = false;
 
-    for (int x = -16; x < 16; x++)
+    for (int x = -32; x < 32; x++)
     {
-        for (int y = -16; y < 16; y++)
+        for (int y = -32; y < 32; y++)
         {
             int nx = target.x + x;
             int ny = target.y + y;

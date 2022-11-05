@@ -1586,7 +1586,7 @@ int L_Teleport(lua_State* l)
     if (index >= 0 && index < MAX_OBJS)
     {
         GameObject* obj = &objects[index];
-        Teleport(obj,lua_tonumber(l,2),lua_tonumber(l,3));
+        Teleport(obj,lua_tonumber(l,2),lua_tonumber(l,3),true);
     }
     return 0;
 }

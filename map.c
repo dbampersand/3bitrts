@@ -48,6 +48,8 @@ bool RectIsFree(int x, int y, int w, int h, bool caresAboutUnits)
     {
         for (int y2 = y; y2 < y + h; y2++)
         {
+            if (x >= GetMapWidth()/_GRAIN || y >= GetMapHeight()/_GRAIN)
+                return false;
             if (!PointIsFree(x2,y2,caresAboutUnits))
                 return false;
         }
@@ -152,9 +154,10 @@ void PreprocessMap(Map* map)
 
     Sprite* secondLayer = NewSprite(w,h);
     secondLayer-> path = calloc(1,sizeof(char));    
+
     map->secondLayerSpriteIndex = secondLayer - sprites;
    al_set_target_bitmap(secondLayer->sprite);
-   al_lock_bitmap(secondLayer->sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_WRITEONLY);
+   al_lock_bitmap(secondLayer->sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
     for (int y = 0; y < h; y++) {
       for (int x = 0; x < w; x++) {
         ALLEGRO_COLOR pixel = al_get_pixel(sprite, x, y);

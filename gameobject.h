@@ -297,7 +297,7 @@ void AddArmor(GameObject* g, float armor);
 void AddLifesteal(GameObject* g, float value);
 void SetObjIsBoss(GameObject* g, bool value);
 
-void Teleport(GameObject* g, float x, float y);
+void Teleport(GameObject* g, float x, float y, bool updateold);
 void GetOffsetCenter(GameObject* g, float* x, float* y);
 float GetDistCentre(GameObject* g1, GameObject* g2);
 void GetCentre(GameObject* g, float* x, float* y);

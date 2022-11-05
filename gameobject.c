@@ -788,8 +788,8 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
 
     currGameObjRunning->shouldProcessAI = true;
 
-
-    Teleport(currGameObjRunning,x,y);
+    
+    Teleport(currGameObjRunning,x,y,false);
 
 
 
@@ -2638,7 +2638,7 @@ void SetObjectCanPush(GameObject* g, bool value)
     }
 }
 
-void Teleport(GameObject* g, float x, float y)
+void Teleport(GameObject* g, float x, float y, bool updateOld)
 {
     if (!currMap->collision)
         return;
@@ -2652,7 +2652,8 @@ void Teleport(GameObject* g, float x, float y)
     
     //g->position.worldX = move.x*_GRAIN;
     //g->position.worldY = move.y*_GRAIN;
-    SetMapCollisionRect(g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g),false);
+    if (updateOld)
+        SetMapCollisionRect(g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g),false);
 
 
     UpdateObjPosition(g, move.x*_GRAIN, move.y*_GRAIN);
