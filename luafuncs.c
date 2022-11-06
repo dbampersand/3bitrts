@@ -657,10 +657,12 @@ int L_GetThreatRank(lua_State* l)
     {
         lua_pushnumber(l,i+1);
         lua_pushnumber(l,threats[i].obj-objects);
+        printf("%s\n",threats[i].obj->name);
 
 
         lua_settable(l,-3);
     }
+        printf("\n");
 
     free(threats);
     return 1; 

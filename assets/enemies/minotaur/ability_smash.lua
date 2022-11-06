@@ -1,5 +1,5 @@
 function setup()
-    SetAbilityRange(40)
+    SetAbilityRange(999)
     SetCooldown(10)
     SetAbilityHint(HINT_CIRCLE,30);
     AbilitySetCastType(ABILITY_POINT);

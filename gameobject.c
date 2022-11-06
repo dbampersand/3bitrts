@@ -2393,13 +2393,17 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
             float mX = cx;
             float mY = cy;
 
+
             for (int steps = 0; steps < lightSize; steps++)
             {
                 mX += moveX;
                 mY += moveY;
 
+
                 //ALLEGRO_COLOR col = al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
                 int index = GetIndex(GetWidthSprite(&sprites[currMap->spriteIndex]),mX,mY);
+                if (index < 0 || index >= GetMapWidth()*GetMapHeight())
+                    break;
                 //if (col.a <= 0.001f)
                 if (currMap->highlightMap[index])
                 {

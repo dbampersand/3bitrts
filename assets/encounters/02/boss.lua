@@ -31,6 +31,12 @@ function update(dt)
         local chargeTarget = {}
         chargeTarget["target"] = GetRandomUnit(TYPE_ENEMY,Bor(TYPE_MELEEDPS,Bor(TYPE_RANGEDDPS,TYPE_HEALER)),999)
         CastAbility(charge,5,{chargeTarget})
+
+        j = GetThreatRank()
+        local target = {};
+        target["target"] = j[1];
+        CastAbility(smash,4,{target})
+
         local summonPosition = {}
         summonPosition["x"] = GetX();
         summonPosition["y"] = GetY();
@@ -47,12 +53,6 @@ function update(dt)
             CastAbility(rampage, 0.1, {})
         end
 
-        j = GetThreatRank()
-
-        target = {};
-        target["target"] = j[1];
-        
-        CastAbility(smash,4,{target})
         CastAbility(bellow,1,{})
 
     end
