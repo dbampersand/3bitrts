@@ -2904,11 +2904,11 @@ void DrawChannelHint(GameObject* g, float dt)
         {
             Ability* a  = g->channelledAbility;
 
-            a->hintTimer += dt/4.0f;
-            if (a->hintTimer > 1)
-                a->hintTimer = 0;
+            float hintTimer = 1 - g->channellingTime/g->channellingTotal;
+            if (hintTimer > 1)
+                hintTimer = 1;
 
-            float easedTimer = easeOutQuint(a->hintTimer);
+            float easedTimer = easeOutCirc(hintTimer);
 
             float x; float y; GetCentre(g,&x,&y);
             float x2; float y2;

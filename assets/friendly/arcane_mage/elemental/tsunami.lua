@@ -6,7 +6,7 @@ local speed = 40
 function setup()
     AbilitySetPortrait("assets/friendly/arcane_mage/elemental/icon_tsunami.png");
     AbilitySetCastType(ABILITY_ANGLE);
-    SetAbilityTargetHint(HINT_LINE);
+    SetAbilityHint(HINT_LINE);
     SetDescription("Tsunami\n\nDeals damage and slows in a moving tidal wave.");
     SetCooldown(1);
     SetAbilityRange(9999);    

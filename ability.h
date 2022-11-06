@@ -56,8 +56,7 @@ typedef struct Ability
 
     HINT targetingHint;
     float hintRadius;
-    float hintTimer;
-
+    
     int stacks;
     int maxStacks;
 

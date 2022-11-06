@@ -3,7 +3,7 @@ function setup()
     AbilitySetPortrait("assets/friendly/ranger/icon_flurry.png");
     AbilitySetCastType(ABILITY_INSTANT);
     SetDescription("Flurry\n\nIncreases attack speed and damage.")
-    SetAbilityTargetHint(HINT_NONE)
+    SetAbilityHint(HINT_NONE)
     SetCooldown(99999999);
     SetCooldownTimer(99999999);
     SetAbilityMaxStacks(5);

@@ -1826,9 +1826,9 @@ int L_SetMapSprite(lua_State* l)
     PreprocessMap(currMap);
     return 0;
 }
-int L_SetAbilityTargetHint(lua_State* l)
+int L_SetAbilityCastTypeHint(lua_State* l)
 {
-    currAbilityRunning->targetingHint = lua_tonumber(l,1);
+    currAbilityRunning->castType = lua_tonumber(l,1);
     return 0;
 }
 int L_SetSpeed(lua_State* l)
@@ -2606,7 +2606,6 @@ int L_CastAbility(lua_State* l)
         Ability* a = &currGameObjRunning->abilities[index];
         SetObjChannelling(currGameObjRunning,a,channelTime,x,y,target,headingx,headingy);
         lua_pushboolean(l,true);
-        ability->hintTimer = 0; 
         return 1;
 
     }
@@ -3270,8 +3269,8 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_GetOwnedBy);
     lua_setglobal(luaState, "GetOwnedBy");
 
-    lua_pushcfunction(luaState, L_SetAbilityTargetHint);
-    lua_setglobal(luaState, "SetAbilityTargetHint");
+    lua_pushcfunction(luaState, L_SetAbilityCastTypeHint);
+    lua_setglobal(luaState, "SetAbilityCastTypeHint");
 
     lua_pushcfunction(luaState, L_SetMaxHP);
     lua_setglobal(luaState, "SetMaxHP");

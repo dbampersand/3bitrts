@@ -4,7 +4,7 @@ function setup()
     AbilitySetCastType(ABILITY_ANGLE);
     SetAbilityRange(120)
     SetDescription("Dash\n\nDashes through enemies, dealing damage.")
-    SetAbilityTargetHint(HINT_LINE)
+    SetAbilityHint(HINT_LINE)
     SetCooldown(0);
 end
 function casted(x,y,obj,headingx,headingy)

@@ -3,7 +3,6 @@ function setup()
     AbilitySetPortrait("assets/friendly/monk/icon_fury.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetDescription("Fury\n\nA devastating single target attack. Uses all stacks of chi to deal proportional damage.")
-    SetAbilityTargetHint(HINT_NONE)
     SetCooldown(99999999);
     SetCooldownTimer(99999999);
     SetAbilityMaxStacks(5);

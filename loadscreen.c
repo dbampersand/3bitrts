@@ -35,9 +35,6 @@ void InitLoadscreen(char* initialPath, char* mask)
         sp->initialized = true;
     }
 }
-float Transition_EaseOutCirc(float timer) {
-    return sqrt(1 - pow(timer - 1, 2));
-}
 float Transition_EaseOutQuad(float timer) {
     return 1 - (1 - timer) * (1 - timer);
 }

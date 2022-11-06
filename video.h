@@ -66,3 +66,4 @@ void InitVideo();
 void DrawFilledRect_Dithered(Rect r, ALLEGRO_COLOR color);
 float easeOutQuint(float x);
 float easeInCirc(float x);
+float easeOutCirc(float x);

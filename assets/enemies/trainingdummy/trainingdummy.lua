@@ -24,9 +24,9 @@ local hpLastFrame = maxHP;
 local damageDone = 0
 function update(dt)
 
-    testTarget = {};
-    testTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999);
-    CastAbility(testAbility,999,{testTarget});
+   -- testTarget = {};
+    --testTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999);
+    --CastAbility(testAbility,4,{testTarget});
 
     if (GetHP(GetObjRef()) < maxHP) then
         timer = 0;
