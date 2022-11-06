@@ -645,7 +645,7 @@ int L_GetThreatRank(lua_State* l)
     Threat* threats = calloc(j,sizeof(Threat));
     for (int i = 0; i < j; i++)
     {
-        if (IsActive(next->obj))
+        if (next->obj && IsActive(next->obj))
             threats[i] = *next;
         next = next->next;
 
@@ -2606,6 +2606,7 @@ int L_CastAbility(lua_State* l)
         Ability* a = &currGameObjRunning->abilities[index];
         SetObjChannelling(currGameObjRunning,a,channelTime,x,y,target,headingx,headingy);
         lua_pushboolean(l,true);
+        ability->hintTimer = 0; 
         return 1;
 
     }

@@ -149,7 +149,8 @@ int GetNumThreats(Threat* threatList)
     }
     while (1)
     {
-        i++;
+        if (next->obj)
+            i++;
         next = next->next;
         if (next == NULL)
         {

@@ -16,14 +16,14 @@ function casted(x,y,obj,headingx,headingy)
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 250;  
+    f1["value"] = 100;  
 
-    localf2 = {};
+    local f2 = {};
     f2["trigger"] = TRIGGER_INSTANT;
     f2["type"] = EFFECT_STUN;
     f2["value"] = 2;  
 
-
+    ApplyEffect(obj,{f1});
     CreateAOE(GetX(obj),GetY(obj),"", 30, 0, 0, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj, {f1,f2})
     return true; 
 end

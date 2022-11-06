@@ -17,7 +17,7 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {}
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT
-    f1["value"] = 250 * GetAbilityStacks(GetObjRef(),GetAbilityRef());
+    f1["value"] = 200 * GetAbilityStacks(GetObjRef(),GetAbilityRef());
 
     ApplyEffect(obj,{f1});
 

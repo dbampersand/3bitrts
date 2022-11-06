@@ -12,15 +12,16 @@ local fourthWave = false
 
 function setup()
     SetMapSprite("assets/encounters/02/map.png")
-    if (_DEBUG == false) then
-        local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,54,TYPE_ENEMY,2,0);
-        SetObjAggroRadius(ob,999)
+    
+    --if (_DEBUG == false) then
+      --  local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,54,TYPE_ENEMY,2,0);
+        --SetObjAggroRadius(ob,999)
 
-        ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2,0);
-        SetObjAggroRadius(ob,999)
+       -- ob = CreateObject("assets/enemies/berzerker/berzerker.lua",120,22,TYPE_ENEMY,2,0);
+       -- SetObjAggroRadius(ob,999)
 
 
-    end
+    --end
     SetAutoWin(false);
     --CreateObject("assets/encounters/02/boss.lua",32,32,TYPE_ENEMY);
 end
@@ -39,10 +40,11 @@ function update(dt)
 
     local numEnemies = GetAllObjsByFriendliness(TYPE_ENEMY);
 
-    if (spawnedBoss == false and fourthWave == true and #numEnemies == 0) then
+    if (spawnedBoss == false) then-- and fourthWave == true and #numEnemies == 0) then
         local boss = CreateObject("assets/encounters/02/boss.lua",120,22,TYPE_ENEMY,5,100);
         spawnedBoss = true
     end
+    do return end
 
     if (spawnedBoss == false) then
         if (firstWave == false and timer > 12) then

@@ -148,10 +148,6 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
     UpdateWidgets(dt);
     UpdateChatbox(dt);
 }
-float easeOutQuint(float x) {
-    if (x > 1) return 1;
-    return 1 - pow(1 - x, 5);
-}
 float aefesfsd = 0;
 
 void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
@@ -211,7 +207,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     DrawAggroIndicators();
     for (int i = 0; i < numActiveObjects; i++)
     {
-        DrawChannelHint(&objects[i]);
+        DrawChannelHint(&objects[i],dt);
         if ((i == objSelected || activeObjects[i] == players[0].clickedThisFrame) && !ObjIsInvincible(activeObjects[i]))
         {
             DrawGameObj(activeObjects[i],true);

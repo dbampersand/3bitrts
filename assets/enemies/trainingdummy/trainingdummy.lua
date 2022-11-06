@@ -1,4 +1,5 @@
 local maxHP = 9999;
+local testAbility = 0
 
 function setup()
     SetSprite("assets/enemies/trainingdummy/trainingdummy.png");
@@ -11,6 +12,8 @@ function setup()
     ObjIsStunnable(GetObjRef(),false);
     SetObjIsBoss(GetObjRef(),true)
 
+    testAbility = AddAbility(GetObjRef(),"assets/enemies/scorpion/ability_spit.lua",0)   
+
 end 
 
 local timer = 0
@@ -20,6 +23,10 @@ local dpsStr = "DPS: 0.00";
 local hpLastFrame = maxHP;
 local damageDone = 0
 function update(dt)
+
+    testTarget = {};
+    testTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999);
+    CastAbility(testAbility,999,{testTarget});
 
     if (GetHP(GetObjRef()) < maxHP) then
         timer = 0;

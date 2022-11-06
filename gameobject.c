@@ -2895,13 +2895,21 @@ void UpdateChannellingdObj(GameObject* g, float dt)
     }
 }
 float ang = 0;
-void DrawChannelHint(GameObject* g)
+void DrawChannelHint(GameObject* g, float dt)
 {
     if (IsActive(g))
     {
+
         if (ObjIsChannelling(g) && g->channelledAbility)
         {
             Ability* a  = g->channelledAbility;
+
+            a->hintTimer += dt/4.0f;
+            if (a->hintTimer > 1)
+                a->hintTimer = 0;
+
+            float easedTimer = easeOutQuint(a->hintTimer);
+
             float x; float y; GetCentre(g,&x,&y);
             float x2; float y2;
             ALLEGRO_COLOR col = GetPlayerOwnedBy(g) == 0 ? FRIENDLY : ENEMY;
@@ -2912,15 +2920,58 @@ void DrawChannelHint(GameObject* g)
             else
             {
                 x2 = g->channelled_x;
-                x2 = g->channelled_y;
+                y2 = g->channelled_y;
             }
+
             if (a->targetingHint == HINT_LINE)
             {
+                float x3 = x2 - x;
+                float y3 = y2 - y;
+
+                float d = dist(x,y,x2,y2) * easedTimer;
+                Normalize(&x3,&y3);
+                
+                x2 = x + x3 * d;
+                y2 = y + y3 * d;
+
                 al_draw_line(ToScreenSpace_X(x),ToScreenSpace_Y(y),ToScreenSpace_X(x2),ToScreenSpace_Y(y2),col,1);
             }
             if (a->targetingHint == HINT_CIRCLE)
             {
-                al_draw_circle(ToScreenSpace_X(x2),ToScreenSpace_Y(y2),a->hintRadius,col,1);
+                //draw line leading up to the circle
+                #define HINT_CIRCLE_LINE_SPEED 2.0f
+
+                float cx = x2;
+                float cy = y2;
+
+                float x3 = x2 - x;
+                float y3 = y2 - y;
+
+                float lineTimer = easedTimer * HINT_CIRCLE_LINE_SPEED > 1 ? 1 : easedTimer * HINT_CIRCLE_LINE_SPEED;
+
+                if (lineTimer >= 1)
+                {
+                    float arcTimer = easeOutQuint((easedTimer-(1/HINT_CIRCLE_LINE_SPEED))*HINT_CIRCLE_LINE_SPEED);
+
+                    //divide by 2 as we draw both sides (passing negative to al_draw_arc)
+                    float arcAngleDraw = ((arcTimer)*2*M_PI)/2.0f;
+                    float startAngle = atan2(y-y2,x-x2);
+
+                    al_draw_arc(cx,cy,a->hintRadius,startAngle,arcAngleDraw,col,1);
+                    al_draw_arc(cx,cy,a->hintRadius,startAngle,-arcAngleDraw,col,1);
+
+
+                }
+
+                float d = (dist(x,y, x2 ,y2 )- a->hintRadius) * (lineTimer);
+                Normalize(&x3,&y3);
+                
+
+                x2 = x + x3 * d;
+                y2 = y + y3 * d;
+
+                al_draw_line(ToScreenSpace_X(x),ToScreenSpace_Y(y),ToScreenSpace_X(x2),ToScreenSpace_Y(y2),col,1);
+               // al_draw_circle(ToScreenSpace_X(cx),ToScreenSpace_Y(cy),a->hintRadius,col,1);
             }
             if (a->targetingHint == HINT_CONE)
             {

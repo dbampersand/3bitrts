@@ -460,3 +460,10 @@ void DrawBufferedStrings()
 
     numStringsToDraw = 0;
 }
+float easeOutQuint(float x) {
+    if (x > 1) return 1;
+    return 1 - pow(1 - x, 5);
+}
+float easeInCirc(float x) {
+    return 1 - sqrt(1 - pow(x, 2));
+}
