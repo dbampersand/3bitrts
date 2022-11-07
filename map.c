@@ -184,7 +184,8 @@ void loadLuaGameMap(lua_State* l, const char* filename, Map* m)
 
      if (luaL_loadfile(l, filename) || lua_pcall(l, 0, 0, 0))
      {
-         printf("Can't load lua file %s",lua_tostring(l,-1));
+         printf("Map: Can't load lua file %s",lua_tostring(l,-1));
+         return;
      }
      else
      {

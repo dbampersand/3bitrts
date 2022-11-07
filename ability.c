@@ -237,6 +237,12 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
     {
         memset(a,0,sizeof(Ability));
         char* file = readFile(path);
+        if (!file)
+        {
+            printf("Ability: could not load path: %s\n",path ? path : "null");
+            return;
+        }
+
         a->luabuffer = file;
 
         a->path = calloc(strlen(path)+1,sizeof(char));

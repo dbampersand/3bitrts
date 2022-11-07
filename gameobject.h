@@ -258,7 +258,7 @@ void SetCtrlGroup(int index, GameObject** list, int numUnitsSelected);
 void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
 GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE source);
 bool CheckFuncExists(const char* funcName, char* lua_buffer);
-void loadLuaGameObj(lua_State* l,const char* filename, GameObject* g);
+bool loadLuaGameObj(lua_State* l,const char* filename, GameObject* g);
 GameObject* LoadPrefab(const char* path);
 bool IsSelected(GameObject* g);
 void SetSelected(GameObject* g, bool select);

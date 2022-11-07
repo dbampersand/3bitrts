@@ -716,6 +716,8 @@ void RemoveObjFromSelection(GameObject* g)
 }
 GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE source)
 {
+    if (!prefab)
+        return NULL;
     GameObject* before = currGameObjRunning;
     GameObject* found = NULL;
 
@@ -779,7 +781,11 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
 
     currGameObjRunning->ressurectionCost = 50;
 
-    loadLuaGameObj(luaState, found->path, found); 
+    if (!loadLuaGameObj(luaState, found->path, found))
+    {
+        printf("GameObject: Could not load %s\n",found->path ? found->path : NULL); 
+        return NULL;
+    }
     found->properties |= OBJ_ACTIVE;
 
     //currGameObjRunning->position.worldX = _SCREEN_SIZE/2.0f;
@@ -865,7 +871,7 @@ bool ObjHasType(GameObject* g, GAMEOBJ_TYPE_HINT typeHint)
     return (g->objType & typeHint);
 }
 
-void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g) 
+bool loadLuaGameObj(lua_State* l, const char* filename, GameObject* g) 
 {
     char* cpy;
     cpy = calloc(strlen(filename)+1,sizeof(char));
@@ -883,6 +889,13 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
         {
             memset(g,0,sizeof(GameObject));    
             LoadLuaFile(filename,g);
+            if (!g->lua_buffer)
+            {
+                printf("GameObject: Could not load path %s\n",filename ? filename : "NULL");
+                free(cpy);
+                return false;
+            }
+
         }
     }
     else
@@ -996,6 +1009,7 @@ void loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
 
      }
      free(cpy);
+     return true;
 }
 void ScatterEffect(GameObject* g)
 {
@@ -1200,8 +1214,12 @@ GameObject* LoadPrefab(const char* path)
         }
     }
     GameObject* g = calloc(1,sizeof(GameObject));
-    loadLuaGameObj(luaState,path,g);
 
+    if (!loadLuaGameObj(luaState,path,g))
+    {
+        printf("Prefab: could not load: %s\n",path ? path : "NULL");
+        return NULL;
+    }
     if (numPrefabs  >= numPrefabsAllocated)
     {
         numPrefabsAllocated += BUFFER_PREALLOC_AMT;

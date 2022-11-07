@@ -4,7 +4,7 @@ function setup()
     AbilitySetPortrait("assets/enemies/minotaur/ability_charge.png");
     SetDescription("[b]Charge\n\nRushes the target, dealing damage around it.")
     SetAbilityHint(HINT_LINE);
-    SetAbilityCastTypeHint(Bor(ABILITY_POINT,ABILITY_TARGET_FRIENDLY));
+    SetAbilityCastTypeHint(Bor(ABILITY_POINT,ABILITY_TARGET_ENEMY));
 end
 
 function casted(x,y,obj,headingx,headingy)

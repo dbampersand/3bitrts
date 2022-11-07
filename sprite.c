@@ -182,6 +182,10 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
         return numSprites-1;
 
     }
+    else
+    {
+        printf("Sprite: could not load path: %s\n",path ? path : NULL);
+    }
 
     return 0;
 }

@@ -98,11 +98,19 @@ int LoadSound(const char* path)
         sounds = realloc(sounds,(numSoundsAllocated+NUMSOUNDSTOPREALLOC)*sizeof(Sound));
         numSoundsAllocated = numSounds + NUMSOUNDSTOPREALLOC;
     }
-
-    sounds[numSounds].sample = al_load_sample(path);
-    sounds[numSounds].path = calloc(strlen(path)+1,sizeof(char));
-    strcpy(sounds[numSounds].path,path);
-    numSounds++;
+    ALLEGRO_SAMPLE* sample = al_load_sample(path);
+    if (sample)
+    {
+        sounds[numSounds].sample = al_load_sample(path);
+        sounds[numSounds].path = calloc(strlen(path)+1,sizeof(char));
+        strcpy(sounds[numSounds].path,path);
+        numSounds++;
+    }
+    else
+    {
+        printf("Sound: could not load path: %s\n",path ? path : "NULL");
+        return 0;
+    }
 
     return numSounds-1;
 }
