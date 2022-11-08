@@ -184,20 +184,21 @@ void PlayEncounterMusic()
 }
 void UpdateMusic(float dt)
 {
+    float max = currSettings.musicVolume * currSettings.masterVolume;
     if (musicFadingTo)
     {
         musicVolMixer1 -= dt*2;
         musicVolMixer2 += dt*2;
 
-        musicVolMixer1 = clamp(musicVolMixer1,0,1);
-        musicVolMixer2 = clamp(musicVolMixer2,0,1);
+        musicVolMixer1 = clamp(musicVolMixer1,0,max);
+        musicVolMixer2 = clamp(musicVolMixer2,0,max);
 
         al_set_mixer_gain(musicMixer1,musicVolMixer1);
         al_set_mixer_gain(musicMixer2,musicVolMixer2);
-        if (musicVolMixer2 >= 0.99f)
+        if (musicVolMixer2 >= max)
         {
             musicVolMixer2 = 0.0f;
-            musicVolMixer1 = 1.0f;
+            musicVolMixer1 = max;
 
             if (music)
                 al_destroy_audio_stream(music);
@@ -215,5 +216,12 @@ void UpdateMusic(float dt)
 
         }
         
+    }
+    else
+    {
+        musicVolMixer1 = max;
+        al_set_mixer_gain(musicMixer1,musicVolMixer1);
+
+
     }
 }

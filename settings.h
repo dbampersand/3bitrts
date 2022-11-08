@@ -54,6 +54,8 @@ typedef struct Settings
     
     //AUDIO OPTIONS
     float masterVolume;
+    float musicVolume;
+
 
     //ACCESSIBILITY OPTIONS
     Keymap keymap;

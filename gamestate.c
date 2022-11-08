@@ -187,6 +187,7 @@ void FinishTransition()
         ClearSelection();
         RemoveAllGameObjects();
         //ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
+        combatStarted = false;
 
     }
         if (transitioningTo == GAMESTATE_WATCHING_REPLAY)
@@ -200,6 +201,8 @@ void FinishTransition()
         RemoveAllAttacks();
         gameState = GAMESTATE_LOAD_ENCOUNTER;
         transitioningTo = GAMESTATE_LOAD_ENCOUNTER;
+        combatStarted = false;
+
 
         //if (toSpawn)
          //   free(toSpawn);
@@ -214,6 +217,8 @@ void FinishTransition()
         //SetMap(&maps[0]);
         players[0].cameraPos.x = 0;
         players[0].cameraPos.y = 0;
+        combatStarted = false;
+
 
     }
     if (transitioningTo == GAMESTATE_END)
@@ -221,6 +226,8 @@ void FinishTransition()
         gameState = GAMESTATE_END;
         transitioningTo = GAMESTATE_END;
         StopMusic();
+        combatStarted = false;
+
         SetMap(&maps[0]);
 
     }
@@ -233,7 +240,7 @@ void FinishTransition()
     }
     if (transitioningTo == GAMESTATE_CHANGE_MAP)
     {
-        combatStarted = true;
+        combatStarted = false;
 
         gameState = GAMESTATE_INGAME;
         transitioningTo = GAMESTATE_INGAME;

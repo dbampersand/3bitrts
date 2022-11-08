@@ -113,6 +113,8 @@ void SetDefaultSettings(Settings* setting)
     setting->particlesEnabled = true;
     setting->displayHealthBar = OPTION_HPBAR_ALWAYS;
     setting->masterVolume = 1.0f;
+    setting->musicVolume = 1.0f;
+
     setting->displayTimer = false;
     
     setting->keymap.key_ctrlgroups[0] = (Key){"Ctrl Group 1",ALLEGRO_KEY_1};
@@ -170,6 +172,7 @@ void WriteSettingsFile(char* path)
         "particles_enabled %i;\n"
         "display_health_bar %i;\n"
         "volume %f;\n"
+        "musicVolume: %f;\n"
         "display_timer %i;\n"
         "key_Q %i;\n"
         "key_Q_Alt %i;\n"
@@ -231,6 +234,8 @@ void WriteSettingsFile(char* path)
         currSettings.displayHealthBar,
 
         currSettings.masterVolume,
+        currSettings.musicVolume,
+
         currSettings.displayTimer ? 1 : 0,
         
         currSettings.keymap.key_Q.keyMappedTo,
@@ -597,6 +602,12 @@ bool LoadSettingsFile(char* path)
             {
                 currSettings.masterVolume =  masterVol;
             }
+            float musicVolume  = FindToken(str,"musicVolume");
+            if (musicVolume >= 0)
+            {
+                currSettings.musicVolume =  musicVolume;
+            }
+
             float particlesEnabled  = FindToken(str,"particles_enabled");
             if (particlesEnabled >= 0)
             {

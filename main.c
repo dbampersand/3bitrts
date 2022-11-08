@@ -308,7 +308,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
         if (GetButtonIsClicked(&ui.choosingUnits_GO) && numUnitsSelected==encounters[selectedEncounterIndex]->numUnitsToSelect)
         {
-            combatStarted = false;
 
             //ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
 

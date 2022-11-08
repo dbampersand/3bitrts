@@ -1582,6 +1582,9 @@ void InitAudioOptionsPanel()
     ui.audioOptionsPanel = CreatePanel(48,48,180,160,15,true);
     AddText(&ui.audioOptionsPanel,33,41,"Tag_MasterVolume","Master Volume");
     AddSlider(&ui.audioOptionsPanel,34,52,110,10,"MasterVolume",currSettings.masterVolume,&currSettings.masterVolume);
+    AddText(&ui.audioOptionsPanel,33,90,"Tag_MusicVolume","Music Volume");
+    AddSlider(&ui.audioOptionsPanel,34,100,110,10,"MusicVolume",currSettings.musicVolume,&currSettings.musicVolume);
+
     InitButton(&ui.audioOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
     InitButton(&ui.audioOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/audio_tab_icon.png",true));
     ui.audioOptionsPanel.back = &ui.mainMenuPanel;
