@@ -54,6 +54,7 @@ typedef struct Settings
     
     //AUDIO OPTIONS
     float masterVolume;
+    float sfxVolume;
     float musicVolume;
 
 

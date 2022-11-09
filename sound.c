@@ -135,7 +135,7 @@ void PlaySound(Sound* s, float relativeVolume)
             soundPlayedThisFramePosition++;
         }
     }
-    al_play_sample(s->sample, currSettings.masterVolume * relativeVolume, 0, 1.0f, ALLEGRO_PLAYMODE_ONCE, NULL);
+    al_play_sample(s->sample, currSettings.masterVolume * relativeVolume * currSettings.sfxVolume, 0, 1.0f, ALLEGRO_PLAYMODE_ONCE, NULL);
 }
 void StopMusic()
 {

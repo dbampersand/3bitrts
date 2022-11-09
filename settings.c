@@ -114,6 +114,8 @@ void SetDefaultSettings(Settings* setting)
     setting->displayHealthBar = OPTION_HPBAR_ALWAYS;
     setting->masterVolume = 1.0f;
     setting->musicVolume = 1.0f;
+    setting->sfxVolume = 1.0f;
+
 
     setting->displayTimer = false;
     
@@ -172,6 +174,7 @@ void WriteSettingsFile(char* path)
         "particles_enabled %i;\n"
         "display_health_bar %i;\n"
         "volume %f;\n"
+        "sfxVolume: %f;\n"
         "musicVolume: %f;\n"
         "display_timer %i;\n"
         "key_Q %i;\n"
@@ -234,6 +237,7 @@ void WriteSettingsFile(char* path)
         currSettings.displayHealthBar,
 
         currSettings.masterVolume,
+        currSettings.sfxVolume,
         currSettings.musicVolume,
 
         currSettings.displayTimer ? 1 : 0,
@@ -602,6 +606,12 @@ bool LoadSettingsFile(char* path)
             {
                 currSettings.masterVolume =  masterVol;
             }
+            float sfxVolume  = FindToken(str,"sfxVolume");
+            if (sfxVolume >= 0)
+            {
+                currSettings.sfxVolume = sfxVolume;
+            }
+
             float musicVolume  = FindToken(str,"musicVolume");
             if (musicVolume >= 0)
             {
