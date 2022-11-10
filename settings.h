@@ -49,6 +49,7 @@ typedef struct Settings
     //VIDEO OPTIONS
     unsigned int* renderScale;
     bool particlesEnabled;
+    bool lightEffectEnabled;
     Option_HealthBar displayHealthBar;
     bool displayTimer;
     

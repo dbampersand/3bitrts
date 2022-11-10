@@ -1563,8 +1563,12 @@ void InitVideoOptionsPanel()
     AddCheckbox(&ui.videoOptionsPanel,131,72,13,13,"EnableParticles",&currSettings.particlesEnabled);
     AddText(&ui.videoOptionsPanel,33,105,"Display\nHealth Bar","Display\nHealth Bar");
     AddPulldownMenu(&ui.videoOptionsPanel,97,108,48,13,"HealthBarDisplay",0,3,"Always","Selected","Never");
-    AddText(&ui.videoOptionsPanel,33,132,"Display Timer","Display Timer");
-    AddCheckbox(&ui.videoOptionsPanel,132,132,11,11,"DisplayTimerButton",&currSettings.displayTimer);
+    
+    AddText(&ui.videoOptionsPanel,33,132,"Display\nLight Effect","Display\nLight Effect");
+    AddCheckbox(&ui.videoOptionsPanel,132,132,13,13,"EnableLightEffect",&currSettings.lightEffectEnabled);
+
+    AddText(&ui.videoOptionsPanel,33,156,"Display Timer","Display Timer");
+    AddCheckbox(&ui.videoOptionsPanel,132,156,11,11,"DisplayTimerButton",&currSettings.displayTimer);
 
     InitButton(&ui.videoOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
 

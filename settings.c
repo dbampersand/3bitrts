@@ -111,6 +111,8 @@ void SetDefaultSettings(Settings* setting)
 {
     setting->renderScale = &_RENDERSIZE;
     setting->particlesEnabled = true;
+    setting->lightEffectEnabled = true;
+
     setting->displayHealthBar = OPTION_HPBAR_ALWAYS;
     setting->masterVolume = 1.0f;
     setting->musicVolume = 1.0f;
@@ -172,6 +174,7 @@ void WriteSettingsFile(char* path)
         sprintf(str,
         "renderscale %i;\n"
         "particles_enabled %i;\n"
+        "light_effect_enabled %i;\n"
         "display_health_bar %i;\n"
         "volume %f;\n"
         "sfxVolume: %f;\n"
@@ -234,6 +237,8 @@ void WriteSettingsFile(char* path)
         ,
         *   currSettings.renderScale,
         currSettings.particlesEnabled == true ? 1 : 0,
+        currSettings.lightEffectEnabled == true ? 1 : 0,
+
         currSettings.displayHealthBar,
 
         currSettings.masterVolume,
@@ -623,6 +628,12 @@ bool LoadSettingsFile(char* path)
             {
                 currSettings.particlesEnabled = (int)particlesEnabled;
             }
+            float lightEffect  = FindToken(str,"light_effect_enabled");
+            if (lightEffect >= 0)
+            {
+                currSettings.lightEffectEnabled = (int)lightEffect;
+            }
+
             
             float displayHealthBar  = FindToken(str,"display_health_bar");
             if (displayHealthBar >= 0)

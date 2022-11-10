@@ -9,6 +9,7 @@ replays/*
 *.dll
 *.exe
 *.out
+*.cfg
 game.dSYM/Contents
 game
 game.dSYM

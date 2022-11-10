@@ -2070,6 +2070,8 @@ void DrawObjShadows()
 }   
 void DrawMapHighlights()
 {
+    if (!currSettings.lightEffectEnabled)
+        return;
     ALLEGRO_BITMAP* screen = al_get_target_bitmap();
     al_lock_bitmap(sprites[currMap->spriteIndex].sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READONLY);
     al_lock_bitmap(screen,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
