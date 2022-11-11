@@ -58,6 +58,9 @@ typedef struct Settings
     float sfxVolume;
     float musicVolume;
 
+    float slowdownPercent;
+    int targetFPS;
+
 
     //ACCESSIBILITY OPTIONS
     Keymap keymap;

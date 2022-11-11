@@ -282,6 +282,7 @@ void UpdateKeyInput(int rX, int rY, UIElement* u, MouseState mouseState, MouseSt
 void UpdateButton(int rX, int rY, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame);
 void UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame);
 void GetUILocation(Panel* p, UIElement* uF, int* x, int* y);
+UIElement* GetUIElement(Panel* p, char* name);
 void UpdatePanel(Panel* p, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame);
 void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseStateLastFrame, float dt);
 bool GetButton(Panel* p, char* name);

@@ -1570,13 +1570,17 @@ void InitVideoOptionsPanel()
     AddText(&ui.videoOptionsPanel,33,156,"Display Timer","Display Timer");
     AddCheckbox(&ui.videoOptionsPanel,132,156,11,11,"DisplayTimerButton",&currSettings.displayTimer);
 
+    AddText(&ui.videoOptionsPanel,33,180,"Label_TargetFPS","Target FPS");
+    AddPulldownMenu(&ui.videoOptionsPanel,97,180,48,13,"Target FPS",currSettings.targetFPS,5,"30","60","90","144","240");
+
+
     InitButton(&ui.videoOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
 
     InitButton(&ui.videoOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/video_tab_icon.png",true));
 
     ui.videoOptionsPanel.back = &ui.mainMenuPanel;
 
-        Pulldown* healthbar = (Pulldown*)GetUIElement(&ui.videoOptionsPanel,"HealthBarDisplay")->data;
+    Pulldown* healthbar = (Pulldown*)GetUIElement(&ui.videoOptionsPanel,"HealthBarDisplay")->data;
     currSettings.displayHealthBar = healthbar->selectedIndex;
 
 
@@ -1603,9 +1607,15 @@ void InitAccessibilityOptionsPanel()
     ui.accessibilityOptionsPanel = CreatePanel(48,48,180,160,15,true);
     //AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 132,29,96,16,true);
     //AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",132,29,96,16,true);
+
+    AddText(&ui.accessibilityOptionsPanel,33,41,"Tag_Slowdown","Percent slowdown");
+    AddSlider(&ui.accessibilityOptionsPanel,34,52,110,10,"Slider_Slowdown",currSettings.slowdownPercent,&currSettings.slowdownPercent);
+
+
     InitButton(&ui.accessibilityOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
     InitButton(&ui.accessibilityOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/accessiblity_tab_icon.png",true));
     ui.accessibilityOptionsPanel.back = &ui.mainMenuPanel;
+
 
 }
 void InitChoosingUnitButtons()

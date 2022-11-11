@@ -495,7 +495,7 @@ int main(int argc, char* args[])
     printf("%lu\n",sizeof(ReplayFrame));
 
 
-    double dt = 1 / (double)_TARGET_FPS;
+    double dt = 1 / (double)_TARGET_FPS * (1-currSettings.slowdownPercent);
     
     ALLEGRO_TIMER* _FPS_TIMER = al_create_timer(dt);
 
@@ -617,6 +617,39 @@ int main(int argc, char* args[])
         }
         if (event.type == ALLEGRO_EVENT_TIMER) {
             
+            int targetFPSIndex = ((Pulldown*)(GetUIElement(&ui.videoOptionsPanel,"Target FPS")->data))->selectedIndex;
+            currSettings.targetFPS = targetFPSIndex;
+            if (targetFPSIndex == OPTION_30FPS && _TARGET_FPS != 30)
+            {
+                _TARGET_FPS = 30;
+                al_set_timer_speed(_FPS_TIMER,1/(double)_TARGET_FPS);
+            }
+            if (targetFPSIndex == OPTION_60FPS && _TARGET_FPS != 60)
+            {
+                _TARGET_FPS = 60;
+                al_set_timer_speed(_FPS_TIMER,1/(double)_TARGET_FPS);
+
+            }
+            if (targetFPSIndex == OPTION_90FPS && _TARGET_FPS != 90)
+            {
+                _TARGET_FPS = 90;
+                al_set_timer_speed(_FPS_TIMER,1/(double)_TARGET_FPS);
+
+            }
+            if (targetFPSIndex == OPTION_144FPS && _TARGET_FPS != 144)
+            {
+                _TARGET_FPS = 144;
+                al_set_timer_speed(_FPS_TIMER,1/(double)_TARGET_FPS);
+
+            }
+            if (targetFPSIndex == OPTION_240FPS && _TARGET_FPS != 240)
+            {
+                _TARGET_FPS = 240;
+                al_set_timer_speed(_FPS_TIMER,1/(double)_TARGET_FPS);
+
+            }
+            dt = 1 / (double)_TARGET_FPS * (1-currSettings.slowdownPercent);
+
             clock_t begin = clock();
 
             ResetSoundsThisFrame();

@@ -23,7 +23,17 @@ typedef struct PointSpace
     float screenX; float screenY;
 } PointSpace;
 
-#define _TARGET_FPS 60
+//refers to an index in Target FPS pulldown in videoOptionsPanel
+typedef enum Option_FPS
+{
+    OPTION_30FPS = 0,
+    OPTION_60FPS = 1,
+    OPTION_90FPS = 2, 
+    OPTION_144FPS = 3,
+    OPTION_240FPS = 4
+}Option_FPS;
+
+extern int _TARGET_FPS;
 
 extern ALLEGRO_BITMAP* backbuffer;
 extern ALLEGRO_BITMAP* SCREEN;

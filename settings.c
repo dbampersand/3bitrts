@@ -7,6 +7,7 @@
 
 #include "ui.h"
 #include "sprite.h"
+#include "video.h"
 
 #include "allegro5/allegro.h"
 #ifdef __APPLE__
@@ -118,6 +119,10 @@ void SetDefaultSettings(Settings* setting)
     setting->musicVolume = 1.0f;
     setting->sfxVolume = 1.0f;
 
+    setting->slowdownPercent = 0.0f;
+    setting->targetFPS = OPTION_60FPS;
+
+
 
     setting->displayTimer = false;
     
@@ -175,10 +180,13 @@ void WriteSettingsFile(char* path)
         "renderscale %i;\n"
         "particles_enabled %i;\n"
         "light_effect_enabled %i;\n"
+        "targetFPS %i;\n"
         "display_health_bar %i;\n"
+
         "volume %f;\n"
         "sfxVolume: %f;\n"
         "musicVolume: %f;\n"
+        "slowdownPercent: %f;\n"
         "display_timer %i;\n"
         "key_Q %i;\n"
         "key_Q_Alt %i;\n"
@@ -238,12 +246,16 @@ void WriteSettingsFile(char* path)
         *   currSettings.renderScale,
         currSettings.particlesEnabled == true ? 1 : 0,
         currSettings.lightEffectEnabled == true ? 1 : 0,
+        currSettings.targetFPS,
+
 
         currSettings.displayHealthBar,
 
         currSettings.masterVolume,
         currSettings.sfxVolume,
         currSettings.musicVolume,
+
+        currSettings.slowdownPercent,
 
         currSettings.displayTimer ? 1 : 0,
         
@@ -622,6 +634,12 @@ bool LoadSettingsFile(char* path)
             {
                 currSettings.musicVolume =  musicVolume;
             }
+            float slowdownPercent  = FindToken(str,"slowdownPercent");
+            if (slowdownPercent >= 0)
+            {
+                currSettings.slowdownPercent = slowdownPercent;
+            }
+
 
             float particlesEnabled  = FindToken(str,"particles_enabled");
             if (particlesEnabled >= 0)
@@ -640,6 +658,12 @@ bool LoadSettingsFile(char* path)
             {
                 currSettings.displayHealthBar =  (Option_HealthBar)displayHealthBar;
             }
+            float targetFPS  = FindToken(str,"targetFPS");
+            if (targetFPS >= 0)
+            {
+                currSettings.targetFPS =  (Option_FPS)targetFPS;
+            }
+
 
             float displayTimer  = FindToken(str,"display_timer");
             if (displayTimer >= 0)
