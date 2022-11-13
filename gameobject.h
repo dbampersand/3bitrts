@@ -76,6 +76,8 @@ typedef struct GameObject
     char* lua_buffer;
 
     char* name; 
+    char* description;
+    
     char* path; 
     GameObject* targObj;
 
@@ -197,6 +199,8 @@ typedef struct GameObject
     float completionPercent;
 
     int ressurectionCost;
+
+    int spriteIndex_PurchaseScreenSprite;
 } GameObject;
 
 #define MAX_LIGHT_SIZE 90 

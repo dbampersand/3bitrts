@@ -54,8 +54,10 @@ function update(dt)
         dps = damageDone / totalTimeInCombat;
     end
     dpsStr = string.format("DPS: %.0f",dps);
-
-    ShowString(dpsStr,6,6);
+    
+    local strX = GetX(GetObjRef()) + GetWidth(GetObjRef())/2 + 5;
+    local strY = GetY(GetObjRef());
+    ShowString(dpsStr,strX,strY);
 
     ClearCommandQueue(GetObjRef());
 end

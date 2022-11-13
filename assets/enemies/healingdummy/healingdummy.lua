@@ -48,7 +48,10 @@ function update(dt)
     end
     dpsStr = string.format("HPS: %.0f",dps);
 
-    ShowString(dpsStr,120,6);
+    local strX = GetX(GetObjRef()) + GetWidth(GetObjRef())/2 + 5;
+    local strY = GetY(GetObjRef());
+    Print(strY);
+    ShowString(dpsStr,strX,strY);
 
     ClearCommandQueue(GetObjRef());
 end

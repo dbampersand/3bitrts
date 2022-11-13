@@ -1148,6 +1148,15 @@ void KillObj(GameObject* g, bool trigger)
     if (!ObjIsDecoration(g) && GetPlayerOwnedBy(g) > 0)
         AddCompletionPercent(g->completionPercent);
 
+    if (g->description)
+        free(g->description);
+    g->description = NULL;
+                //if we've set the name in script
+    if (g->name && g->name != g->prefab->name)
+    {
+           free(g->name);
+           g->name = NULL;
+    }
     int foundIndex = 0;
     for (int i = 0; i < numActiveObjects; i++)
     {
@@ -1161,7 +1170,7 @@ void KillObj(GameObject* g, bool trigger)
         activeObjects[i] = activeObjects[i+1];
     }
     numActiveObjects--;
-    
+
 
 
     

@@ -17,8 +17,9 @@ typedef enum GameState {
     GAMESTATE_WATCHING_REPLAY = 10,
     GAMESTATE_IN_SHOP = 11,
     GAMESTATE_EXIT = 12,
+    GAMESTATE_PURCHASING_UNITS = 13,
 
-    NUMGAMESTATES = 13
+    NUMGAMESTATES = 14
 } GameState;
 
 typedef enum Option_HealthBar
@@ -69,6 +70,7 @@ void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Enco
 void SetGameStateToChangingMap();
 void SetGameStateToWatchingReplay();
 void SetGameStateToInShop();
+void SetGameStateToPurchasingUnits();
 
 
 void Quit();

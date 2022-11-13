@@ -107,6 +107,12 @@ void SetGameStateToEnterShop()
 }
 void FinishTransition()
 {
+    if (transitioningTo == GAMESTATE_PURCHASING_UNITS)
+    {
+        gameState = GAMESTATE_PURCHASING_UNITS;
+        transitioningTo = GAMESTATE_PURCHASING_UNITS;
+        
+    }
     if (transitioningTo == GAMESTATE_MAIN_MENU)
     {
         gameState = GAMESTATE_MAIN_MENU;
@@ -303,6 +309,10 @@ void FinishTransition()
 
     }
     
+}
+void SetGameStateToPurchasingUnits()
+{
+    TransitionTo(GAMESTATE_PURCHASING_UNITS);
 }
 void SetGameStateToWatchingReplay()
 {

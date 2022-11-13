@@ -72,6 +72,29 @@ int L_SetHP(lua_State* l)
     } 
     return 0;
 }
+int L_SetObjName(lua_State* l)
+{
+    const char* name = lua_tostring(l,1);
+    currGameObjRunning->name = calloc(strlen(name)+1,sizeof(char));
+    strcpy(currGameObjRunning->name,name);
+    return 0;
+}
+
+int L_SetObjDescription(lua_State* l)
+{
+    const char* description = lua_tostring(l,1);
+    currGameObjRunning->description = calloc(strlen(description)+1,sizeof(char));
+    strcpy(currGameObjRunning->description,description);
+    return 0;
+}
+int L_SetObjPurchaseScreenSprite(lua_State* l)
+{
+    if (!currGameObjRunning)
+        return 0;
+    const char* path = lua_tostring(l,1);
+    currGameObjRunning->spriteIndex_PurchaseScreenSprite = LoadSprite(path,false);
+    return 0;
+}
 int L_PlayMusic(lua_State* l)
 {
     const char* path = lua_tostring(l,1);
@@ -3638,5 +3661,14 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_EnableNextLevelButton);
     lua_setglobal(luaState, "EnableNextLevelButton");
 
+    lua_pushcfunction(luaState, L_SetObjPurchaseScreenSprite);
+    lua_setglobal(luaState, "SetObjPurchaseScreenSprite");
+
+
+    lua_pushcfunction(luaState, L_SetObjDescription);
+    lua_setglobal(luaState, "SetObjDescription");
+
+    lua_pushcfunction(luaState, L_SetObjName);
+    lua_setglobal(luaState, "SetObjName");
 
 }

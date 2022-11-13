@@ -178,7 +178,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     {
         DrawUnitChoiceUI(mouseState, mouseStateLastFrame);
     }
-
+   
 
     int objSelected = -1;
     bool abilityCastOnTarget = players[0].abilityHeld && (mouseStateLastFrame->mouse.buttons & 1 || mouseState->mouse.buttons & 1);
@@ -456,6 +456,10 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     if (gameState == GAMESTATE_END)
     {
         DrawEndScreen(mouseState,mouseStateLastFrame);
+    }
+     if (gameState == GAMESTATE_PURCHASING_UNITS)
+    {
+        DrawPurchasingUnitsUI(*mouseState, *mouseStateLastFrame);
     }
 
 

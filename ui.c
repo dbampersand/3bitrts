@@ -26,8 +26,8 @@
 #include "dirent.h"
 #include "replay.h"
 
-Widget* Widgets_States[NUMGAMESTATES-1] = {0};
-int numSprites_States[NUMGAMESTATES-1] = {0};
+Widget* Widgets_States[NUMGAMESTATES] = {0};
+int numSprites_States[NUMGAMESTATES] = {0};
 
 Chatbox* chatboxes = NULL;
 int numChatboxes = 0;
@@ -36,7 +36,77 @@ Chatbox* chatboxShowing = NULL;
 
 UI ui = {0};
 char* stackDrawBuffer = NULL;
+void DrawPurchasingUnitsUI(MouseState mouseState, MouseState mouseStateLastFrame)
+{
+    PurchasingUnitUI* purchaseUI = &ui.purchasingUnitUI;
+    if (!purchaseUI->prefabs)
+    {
+        int numPlayerChoosable = 0;
+        for (int i = 0; i < numPrefabs; i++)
+        {
+            if (prefabs[i]->playerChoosable)
+            {
+                numPlayerChoosable++;
+            }
+        }
+        purchaseUI->prefabs = calloc(numPlayerChoosable,sizeof(GameObject*));
+        int index = 0;
+        for (int i = 0; i < numPrefabs; i++)
+        {
+            if (prefabs[i]->playerChoosable)
+            {
+                purchaseUI->prefabs[index] = prefabs[i];
+                index++;
+            }
+        }
+        purchaseUI->numPrefabs = numPlayerChoosable;
+    }
+    al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+    GameObject* prefabDrawing = purchaseUI->prefabs[purchaseUI->currentIndex];
+    Sprite* s = &sprites[prefabDrawing->spriteIndex_PurchaseScreenSprite];
 
+    al_draw_text(ui.font,FRIENDLY,11,15, ALLEGRO_ALIGN_LEFT,prefabDrawing->name ? prefabDrawing->name : "");
+
+    int paragraphX = 11;
+    int paragraphY = 25;
+    int paragraphWMax = _SCREEN_SIZE - GetWidthSprite(s) - paragraphX - 5;
+    //TODO: more than one page for this? If it overflows, add a next/previous page button
+    int clippingHeight = purchaseUI->back.y - paragraphY -  8;  
+    al_set_clipping_rectangle(paragraphX,paragraphY,paragraphWMax,clippingHeight);
+    al_draw_multiline_text(ui.tinyFont,FRIENDLY,11,25,paragraphWMax,8,ALLEGRO_ALIGN_LEFT,prefabDrawing->description ? prefabDrawing->description : "");
+    al_reset_clipping_rectangle();
+    int x = _SCREEN_SIZE-GetWidthSprite(s); int y = 0;
+    DrawSprite(s,x,y,0,0,0,FRIENDLY,false);
+
+    UpdateButton(purchaseUI->back.x,purchaseUI->back.y,&purchaseUI->back,mouseState,mouseStateLastFrame);
+    DrawUIElement(&purchaseUI->back,purchaseUI->back.x,purchaseUI->back.y,&mouseState,ui.menuButton.bgColor);
+
+    UpdateButton(purchaseUI->next.x,purchaseUI->next.y,&purchaseUI->next,mouseState,mouseStateLastFrame);
+    DrawUIElement(&purchaseUI->next,purchaseUI->next.x,purchaseUI->next.y,&mouseState,ui.menuButton.bgColor);
+
+    UpdateButton(purchaseUI->returnButton.x,purchaseUI->returnButton.y,&purchaseUI->returnButton,mouseState,mouseStateLastFrame);
+    DrawUIElement(&purchaseUI->returnButton,purchaseUI->returnButton.x,purchaseUI->returnButton.y,&mouseState,ui.menuButton.bgColor);
+
+    UpdateButton(purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,&purchaseUI->purchaseButton,mouseState,mouseStateLastFrame);
+    DrawUIElement(&purchaseUI->purchaseButton,purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,&mouseState,ui.menuButton.bgColor);
+
+    if (GetButtonIsClicked(&purchaseUI->back))
+    {
+        purchaseUI->currentIndex--;
+        purchaseUI->currentIndex = clamp(purchaseUI->currentIndex,0,purchaseUI->numPrefabs-1);
+    }
+    if (GetButtonIsClicked(&purchaseUI->next))
+    {
+        purchaseUI->currentIndex++;
+        purchaseUI->currentIndex = clamp(purchaseUI->currentIndex,0,purchaseUI->numPrefabs-1);
+    }
+    if (GetButtonIsClicked(&purchaseUI->returnButton))
+    {
+        SetGameStateToChoosingParty();
+    }
+
+
+}
 void DrawTimer(bool enabled)
 {   
     if (enabled)
@@ -208,7 +278,12 @@ void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame)
 
         UpdateButton(45,194,&ui.choosingUnits_Back,*mouseState,*mouseStateLastFrame);
         UpdateButton(109,194,&ui.choosingUnits_GO,*mouseState,*mouseStateLastFrame);
+        UpdateButton(ui.choosingUnits_Hire.x,ui.choosingUnits_Hire.y,&ui.choosingUnits_Hire,*mouseState,*mouseStateLastFrame);
 
+        if (GetButtonIsClicked(&ui.choosingUnits_Hire))
+        {
+            SetGameStateToPurchasingUnits();
+        }
 
         if (numUnitsSelected==e->numUnitsToSelect)
         {
@@ -220,6 +295,7 @@ void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame)
         }
         DrawUIElement(&ui.choosingUnits_Back,45,194,mouseState,ui.choosingUnits_Back.bgColor);
         DrawUIElement(&ui.choosingUnits_GO,109,194,mouseState,ui.choosingUnits_Back.bgColor);
+        DrawUIElement(&ui.choosingUnits_Hire,ui.choosingUnits_Hire.x,ui.choosingUnits_Hire.y,mouseState,ui.choosingUnits_Back.bgColor);
 
 
         char* number = calloc(log10(INT_MAX)*2+2,sizeof(char));
@@ -1518,6 +1594,15 @@ void ChangeButtonImage(UIElement* u, int spriteIndex)
     }
 }
 int padding = 8;
+void InitPurchaseScreenUI()
+{
+    InitButton(&ui.purchasingUnitUI.returnButton, "Return", "", 11,0, 14,14, LoadSprite("assets/ui/back_tab_icon.png", true));
+    
+    InitButton(&ui.purchasingUnitUI.back, "Back", "", 5,240, 26,11, 0);
+    InitButton(&ui.purchasingUnitUI.next, "Next", "", 88,240, 26,11, 0);
+    InitButton(&ui.purchasingUnitUI.purchaseButton, "Purchase", "", 36,240, 47,11,0);
+
+}
 void InitLoadReplayPanel()
 {
     ui.loadReplayPanel = CreatePanel(29,80,160,144,15,true);
@@ -1622,6 +1707,9 @@ void InitChoosingUnitButtons()
 {
     InitButton(&ui.choosingUnits_Back,"Back","Back",45,194,48,16,0);
     InitButton(&ui.choosingUnits_GO,"Adventure","Adventure",109,194,96,16,0);
+    InitButton(&ui.choosingUnits_Hire,"Hire","Hire",10,4,40,11,0);
+
+    
 }
 void InitEndScreen()
 {
@@ -1785,6 +1873,7 @@ void InitUI()
     InitAccessibilityOptionsPanel();
     InitControlsPanel();
     
+    InitPurchaseScreenUI();
     InitChoosingUnitButtons();
 
 
@@ -1826,7 +1915,7 @@ void InitUI()
     ui.animatePanel = UI_ANIMATE_STATIC;
 
 
-    for (int i = 0; i < NUMGAMESTATES-1; i++)
+    for (int i = 0; i < NUMGAMESTATES; i++)
     {
         Widgets_States[i] = calloc(NUMSPRITESTATESTOALLOC,sizeof(Widget));
         numSprites_States[i] = 0;
@@ -1882,7 +1971,7 @@ void UpdateWidget(Widget* w, float dt)
 
 void UpdateWidgets(float dt)
 {
-    for (int i = 0; i < NUMGAMESTATES-1; i++)
+    for (int i = 0; i < NUMGAMESTATES; i++)
     {
         for (int j = 0; j < numSprites_States[i]; j++)
         {

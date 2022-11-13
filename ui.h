@@ -154,6 +154,20 @@ typedef enum Widget_DrawOrder
     DRAWORDER_BEFOREUI,
     DRAWORDER_AFTERUI,
 } Widget_DrawOrder;
+typedef struct PurchasingUnitUI {
+    int currentIndex;
+    int indexTransitioningTo;
+    float transitionTimer;
+
+    GameObject** prefabs;
+    int numPrefabs;
+
+    UIElement back;
+    UIElement next;
+    UIElement returnButton;
+    UIElement purchaseButton;
+
+}PurchasingUnitUI;
 typedef struct UI
 {
     int panel_sprite_index;
@@ -203,6 +217,7 @@ typedef struct UI
 
     UIElement choosingUnits_Back;
     UIElement choosingUnits_GO;
+    UIElement choosingUnits_Hire;
 
     int uiClickedSound_Index;
     int uiClickedUpSound_Index;
@@ -217,6 +232,7 @@ typedef struct UI
     UIElement menuButton;
     UIElement nextLevelButton;
 
+    PurchasingUnitUI purchasingUnitUI;
     
 
 } UI;   
@@ -236,8 +252,8 @@ typedef struct Widget
     float timer; 
     void (*updateFunc)(struct Widget* self, float dt);
 } Widget;
-extern Widget* Widgets_States[NUMGAMESTATES-1];
-extern  int numSprites_States[NUMGAMESTATES-1];
+extern Widget* Widgets_States[NUMGAMESTATES];
+extern  int numSprites_States[NUMGAMESTATES];
 
 extern Chatbox* chatboxes;
 extern int numChatboxes;
@@ -317,3 +333,4 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
 void ChangeButtonImage(UIElement* u, int spriteIndex);
 void DrawTimer(bool enabled);
 char* GetButtonText(UIElement* u);
+void DrawPurchasingUnitsUI(MouseState mouseState, MouseState mouseStateLastFrame);
