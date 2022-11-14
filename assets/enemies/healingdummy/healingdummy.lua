@@ -50,7 +50,6 @@ function update(dt)
 
     local strX = GetX(GetObjRef()) + GetWidth(GetObjRef())/2 + 5;
     local strY = GetY(GetObjRef());
-    Print(strY);
     ShowString(dpsStr,strX,strY);
 
     ClearCommandQueue(GetObjRef());

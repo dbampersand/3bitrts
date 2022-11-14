@@ -471,3 +471,11 @@ float easeInCirc(float x) {
 float easeOutCirc(float x){
     return sqrt(1 - pow(x - 1, 2));
 }
+float easeInOutQuint(float x)
+{
+    if (x < 0.5f)
+    {
+        return 16 * x * x * x * x * x;
+    }
+    return 1 - pow(-2 * x + 2, 5) / 2.0f;
+}

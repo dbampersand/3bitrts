@@ -36,7 +36,7 @@ Chatbox* chatboxShowing = NULL;
 
 UI ui = {0};
 char* stackDrawBuffer = NULL;
-void DrawPurchasingUnitsUI(MouseState mouseState, MouseState mouseStateLastFrame)
+void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 {
     PurchasingUnitUI* purchaseUI = &ui.purchasingUnitUI;
     if (!purchaseUI->prefabs)
@@ -65,17 +65,26 @@ void DrawPurchasingUnitsUI(MouseState mouseState, MouseState mouseStateLastFrame
     GameObject* prefabDrawing = purchaseUI->prefabs[purchaseUI->currentIndex];
     Sprite* s = &sprites[prefabDrawing->spriteIndex_PurchaseScreenSprite];
 
-    al_draw_text(ui.font,FRIENDLY,11,15, ALLEGRO_ALIGN_LEFT,prefabDrawing->name ? prefabDrawing->name : "");
 
-    int paragraphX = 11;
+    int paragraphStartX = 11;
+    int paragraphX = paragraphStartX - (_SCREEN_SIZE*(purchaseUI->transitionTimer));
+    
     int paragraphY = 25;
-    int paragraphWMax = _SCREEN_SIZE - GetWidthSprite(s) - paragraphX - 5;
+    int paragraphWMax = _SCREEN_SIZE - GetWidthSprite(s) - paragraphStartX - 5;
     //TODO: more than one page for this? If it overflows, add a next/previous page button
     int clippingHeight = purchaseUI->back.y - paragraphY -  8;  
+
+    al_draw_text(ui.font,FRIENDLY,paragraphX,15, ALLEGRO_ALIGN_LEFT,prefabDrawing->name ? prefabDrawing->name : "");
+
     al_set_clipping_rectangle(paragraphX,paragraphY,paragraphWMax,clippingHeight);
-    al_draw_multiline_text(ui.tinyFont,FRIENDLY,11,25,paragraphWMax,8,ALLEGRO_ALIGN_LEFT,prefabDrawing->description ? prefabDrawing->description : "");
+    al_draw_multiline_text(ui.tinyFont,FRIENDLY,paragraphX,25,paragraphWMax,8,ALLEGRO_ALIGN_LEFT,prefabDrawing->description ? prefabDrawing->description : "");
     al_reset_clipping_rectangle();
-    int x = _SCREEN_SIZE-GetWidthSprite(s); int y = 0;
+    int x = (_SCREEN_SIZE-GetWidthSprite(s)); 
+    //if (!purchaseUI->isTransitionOut)
+    float timer = easeInOutQuint(purchaseUI->transitionTimer);
+    x = (_SCREEN_SIZE-GetWidthSprite(s))-(GetWidthSprite(s)*(-timer));
+
+    int y = 0;
     DrawSprite(s,x,y,0,0,0,FRIENDLY,false);
 
     UpdateButton(purchaseUI->back.x,purchaseUI->back.y,&purchaseUI->back,mouseState,mouseStateLastFrame);
@@ -90,20 +99,50 @@ void DrawPurchasingUnitsUI(MouseState mouseState, MouseState mouseStateLastFrame
     UpdateButton(purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,&purchaseUI->purchaseButton,mouseState,mouseStateLastFrame);
     DrawUIElement(&purchaseUI->purchaseButton,purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,&mouseState,ui.menuButton.bgColor);
 
-    if (GetButtonIsClicked(&purchaseUI->back))
+    if (GetButtonIsClicked(&purchaseUI->back) && purchaseUI->currentIndex != 0)
     {
-        purchaseUI->currentIndex--;
-        purchaseUI->currentIndex = clamp(purchaseUI->currentIndex,0,purchaseUI->numPrefabs-1);
+        purchaseUI->indexTransitioningTo--;
+        purchaseUI->indexTransitioningTo = clamp(purchaseUI->indexTransitioningTo,0,purchaseUI->numPrefabs-1);
+
+       // purchaseUI->transitionTimer = 0;
+        purchaseUI->isTransitionOut = true;
+        purchaseUI->isTransitioning = true;
+
     }
-    if (GetButtonIsClicked(&purchaseUI->next))
+    if (GetButtonIsClicked(&purchaseUI->next) && purchaseUI->currentIndex != purchaseUI->numPrefabs-1)
     {
-        purchaseUI->currentIndex++;
-        purchaseUI->currentIndex = clamp(purchaseUI->currentIndex,0,purchaseUI->numPrefabs-1);
+        purchaseUI->indexTransitioningTo++;
+        purchaseUI->indexTransitioningTo = clamp(purchaseUI->indexTransitioningTo,0,purchaseUI->numPrefabs-1);
+       // purchaseUI->transitionTimer = 0;
+        purchaseUI->isTransitionOut = true;
+        purchaseUI->isTransitioning = true;
     }
-    if (GetButtonIsClicked(&purchaseUI->returnButton))
+    if (GetButtonIsClicked(&purchaseUI->returnButton) )
     {
         SetGameStateToChoosingParty();
     }
+    if (purchaseUI->isTransitionOut)
+        purchaseUI->transitionTimer += dt*3.5f;
+    else
+        purchaseUI->transitionTimer -= dt*3.5f;
+
+    purchaseUI->transitionTimer = clamp(purchaseUI->transitionTimer,-1,1);
+
+    if (purchaseUI->transitionTimer >= 1)
+    {
+        purchaseUI->currentIndex = purchaseUI->indexTransitioningTo;
+        purchaseUI->isTransitionOut = false;
+    }
+    if (purchaseUI->transitionTimer < 0)
+    {
+        purchaseUI->isTransitioning = false;
+
+    }
+    if (!purchaseUI->isTransitioning)
+    {
+        purchaseUI->transitionTimer = 0;
+    }
+
 
 
 }

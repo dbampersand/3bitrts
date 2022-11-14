@@ -158,6 +158,8 @@ typedef struct PurchasingUnitUI {
     int currentIndex;
     int indexTransitioningTo;
     float transitionTimer;
+    bool isTransitionOut;
+    bool isTransitioning;
 
     GameObject** prefabs;
     int numPrefabs;
@@ -333,4 +335,4 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
 void ChangeButtonImage(UIElement* u, int spriteIndex);
 void DrawTimer(bool enabled);
 char* GetButtonText(UIElement* u);
-void DrawPurchasingUnitsUI(MouseState mouseState, MouseState mouseStateLastFrame);
+void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStateLastFrame);
