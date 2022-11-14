@@ -8,6 +8,7 @@
 #include "ui.h"
 #include "sprite.h"
 #include "video.h"
+#include "gameobject.h"
 
 #include "allegro5/allegro.h"
 #ifdef __APPLE__
@@ -600,6 +601,74 @@ void SetBinds(char* str)
     SetControllingAbilities(str);
     SetMovementKeys(str);
     SetBindControlGroups(str);
+}
+bool LoadSaveFile(char* path)
+{
+    if (path)
+    {
+        ALLEGRO_FILE* file = al_fopen(path,"rb");
+        if (file)
+        {
+            int size = al_fsize(file);
+            char* str  = calloc(al_fsize(file)+2,sizeof(char));
+            al_fread(file,str,al_fsize(file));
+            
+            char* unlockStr = strstr(str,"unlocked");
+            for (int i = unlockStr-str+strlen("unlocked"); i < size; i++)
+            {
+                //if the next character is a { ignoring whitespace
+                if (!isspace(unlockStr[i]))
+                {
+                    if (unlockStr[i] == '{')
+                    {
+                        int bounds = 0;
+                        for (int j = i+1; j < size; j++)
+                        {
+                            bounds++;
+                            if (unlockStr[j] == '}')
+                            {
+                                break;
+                            }
+                        }
+
+                        char* unlockedPathsStr = calloc(bounds+1,sizeof(char));
+                        strncpy(unlockedPathsStr,unlockStr+i+1,bounds-1);
+                        char* token = strtok(unlockedPathsStr,";");
+                        while (token)
+                        {
+                            for (int j = 0; j < strlen(token); j++)
+                            {
+                                if (token[j] == '"' || isspace(token[j]))
+                                {
+                                    for (int z = j; z < strlen(token)-1; z++)
+                                    {
+                                        token[z] = token[z+1];
+                                    }
+                                    token[strlen(token)-1] = '\0';
+                                    j--;    
+                                }
+                            }
+
+                            for (int j = 0; j < numPrefabs; j++)
+                            {
+                                GameObject* prefab = prefabs[j];
+                                if (prefab->path && strcmp(token,prefab->path)==0)
+                                {
+                                    prefab->purchased = true;
+                                }
+                            }
+                            token = strtok(NULL,";");
+                        }
+                        free(unlockedPathsStr);
+                    }
+                    else
+                        break;
+                }
+            }
+
+            free(str);
+        }
+    }
 }
 bool LoadSettingsFile(char* path)
 {

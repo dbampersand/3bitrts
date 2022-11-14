@@ -77,7 +77,7 @@ typedef struct GameObject
 
     char* name; 
     char* description;
-    
+
     char* path; 
     GameObject* targObj;
 
@@ -201,6 +201,7 @@ typedef struct GameObject
     int ressurectionCost;
 
     int spriteIndex_PurchaseScreenSprite;
+    bool purchased;
 } GameObject;
 
 #define MAX_LIGHT_SIZE 90 
@@ -265,6 +266,7 @@ bool CheckFuncExists(const char* funcName, char* lua_buffer);
 bool loadLuaGameObj(lua_State* l,const char* filename, GameObject* g);
 GameObject* LoadPrefab(const char* path);
 bool IsSelected(GameObject* g);
+bool IsSelectable(GameObject* g);
 void SetSelected(GameObject* g, bool select);
 bool ObjIsDecoration(GameObject* g);
 

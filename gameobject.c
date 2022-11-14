@@ -737,6 +737,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
    // memset(found->abilities,0,sizeof(Ability)*4);
     memset(currGameObjRunning,0,sizeof(GameObject));
 
+    currGameObjRunning->purchased = prefab->purchased;
 
     currGameObjRunning->objectIsStunnable = true;
 
@@ -1297,7 +1298,7 @@ bool IsSelected(GameObject* g)
 }
 void SetSelected(GameObject* g, bool select)
 {
-    if (select)
+    if (select && IsSelectable(g))
     {
         g->properties |= OBJ_SELECTED;
         players[0].selection[players[0].numUnitsSelected] = g;
@@ -2187,6 +2188,12 @@ void DrawSummonEffect(GameObject* g)
        // al_draw_filled_rectangle(x - (w/2), y - (h/2), x+(w/2), y+(h/2), c);
     }
 }
+bool IsSelectable(GameObject* g)
+{
+    if (gameState == GAMESTATE_CHOOSING_UNITS && !g->purchased)
+        return false;
+    return (GetPlayerOwnedBy(g) == 0);
+}
 void DrawGameObj(GameObject* g, bool forceInverse)
 {   
     if (!(g->properties & OBJ_ACTIVE))
@@ -2197,6 +2204,8 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     //if (ObjIsDecoration(g))
     //    c = BG;
     ALLEGRO_COLOR c = GetColor(GameObjToColor(g),GetPlayerOwnedBy(g));
+    if (IsOwnedByPlayer(g) && !IsSelectable(g))
+        c = BG;
     DrawSummonEffect(g);
 
 

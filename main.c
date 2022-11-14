@@ -227,6 +227,9 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
         if (ObjIsDecoration(g))
             c = BG;
+        if (IsOwnedByPlayer(g) && !IsSelectable(g))
+            c = BG;
+
 
         if (!ObjIsInvincible(g) && g->summonTime > g->summonMax)
         {
@@ -520,7 +523,7 @@ int main(int argc, char* args[])
 
     MouseState mouseState;
     ALLEGRO_KEYBOARD_STATE keyState;
-
+    LoadSaveFile("_save.save");
 
     //PlayMusic("assets/audio/first_boss.wav");
 
@@ -702,7 +705,7 @@ int main(int argc, char* args[])
             clock_t end = clock();
             double time = (double)(end - begin) / CLOCKS_PER_SEC;
 
-            printf("Total time: %f\n",time);
+            //printf("Total time: %f\n",time);
 
             fflush(stdout);
         }

@@ -66,7 +66,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     Sprite* s = &sprites[prefabDrawing->spriteIndex_PurchaseScreenSprite];
 
 
-    int paragraphStartX = 11;
+    int paragraphStartX = 8;
     int paragraphX = paragraphStartX - (_SCREEN_SIZE*(purchaseUI->transitionTimer));
     
     int paragraphY = 25;
@@ -116,6 +116,11 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
        // purchaseUI->transitionTimer = 0;
         purchaseUI->isTransitionOut = true;
         purchaseUI->isTransitioning = true;
+    }
+    if (GetButtonIsClicked(&purchaseUI->purchaseButton))
+    {
+        prefabDrawing->purchased = true;
+        SetGameStateToChoosingParty();
     }
     if (GetButtonIsClicked(&purchaseUI->returnButton) )
     {
@@ -1635,11 +1640,11 @@ void ChangeButtonImage(UIElement* u, int spriteIndex)
 int padding = 8;
 void InitPurchaseScreenUI()
 {
-    InitButton(&ui.purchasingUnitUI.returnButton, "Return", "", 11,0, 14,14, LoadSprite("assets/ui/back_tab_icon.png", true));
+    InitButton(&ui.purchasingUnitUI.returnButton, "Return", "", 8,0, 14,14, LoadSprite("assets/ui/back_tab_icon.png", true));
     
-    InitButton(&ui.purchasingUnitUI.back, "Back", "", 5,240, 26,11, 0);
-    InitButton(&ui.purchasingUnitUI.next, "Next", "", 88,240, 26,11, 0);
-    InitButton(&ui.purchasingUnitUI.purchaseButton, "Purchase", "", 36,240, 47,11,0);
+    InitButton(&ui.purchasingUnitUI.back, "Back", "Back", 8,240, 30,11, 0);
+    InitButton(&ui.purchasingUnitUI.next, "Next", "Next", 104,240, 30,11, 0);
+    InitButton(&ui.purchasingUnitUI.purchaseButton, "Purchase", "Purchase", 43,240, 56,11,0);
 
 }
 void InitLoadReplayPanel()
