@@ -10,6 +10,7 @@ replays/*
 *.exe
 *.out
 *.cfg
+*.save
 game.dSYM/Contents
 game
 game.dSYM

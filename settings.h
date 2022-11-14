@@ -90,3 +90,4 @@ bool IsBindDownThisFrame(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYB
 bool IsBindDown(ALLEGRO_KEYBOARD_STATE* keyState,Key k);
 void InitPath();
 bool LoadSaveFile(char* path);
+void Save(char* path);

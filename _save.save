@@ -1,7 +1,0 @@
-
-unlocked
-{
-	"assets/friendly/warrior/warrior.lua";
-	"assets/friendly/rogue/rogue.lua";
-};
-gold: 10;

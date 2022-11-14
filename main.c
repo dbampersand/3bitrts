@@ -524,7 +524,7 @@ int main(int argc, char* args[])
     MouseState mouseState;
     ALLEGRO_KEYBOARD_STATE keyState;
     LoadSaveFile("_save.save");
-
+    Save("_save.save");
     //PlayMusic("assets/audio/first_boss.wav");
 
 

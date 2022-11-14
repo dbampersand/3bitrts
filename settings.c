@@ -602,6 +602,36 @@ void SetBinds(char* str)
     SetMovementKeys(str);
     SetBindControlGroups(str);
 }
+void Save(char* path)
+{
+    ALLEGRO_FILE* file = al_fopen(path,"w+");
+    if (file)
+    {
+        al_fwrite(file,"unlocked\n{\n",strlen("unlocked\n{\n"));
+        for (int i = 0; i < numPrefabs; i++)
+        {
+            GameObject* prefab = prefabs[i];
+            if (prefab->playerChoosable && prefab->purchased && prefab->path)
+            {
+                al_fwrite(file,"\t",1);
+                al_fwrite(file,"\"",1);
+
+                al_fwrite(file,prefab->path,strlen(prefab->path));
+
+                al_fwrite(file,"\"",1);
+                al_fwrite(file,";",1);
+                al_fwrite(file,"\n",1);
+
+
+            }
+        }
+        al_fwrite(file,"};\n",strlen("};\n"));
+        al_fclose(file);
+    }
+    else
+        printf("Could not open save file to write! Path %s\n",path ? path : "NULL");
+
+}
 bool LoadSaveFile(char* path)
 {
     if (path)
@@ -667,7 +697,9 @@ bool LoadSaveFile(char* path)
             }
 
             free(str);
+            al_fclose(file);
         }
+
     }
 }
 bool LoadSettingsFile(char* path)

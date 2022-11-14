@@ -120,6 +120,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     if (GetButtonIsClicked(&purchaseUI->purchaseButton))
     {
         prefabDrawing->purchased = true;
+        Save("_save.save");
         SetGameStateToChoosingParty();
     }
     if (GetButtonIsClicked(&purchaseUI->returnButton) )
