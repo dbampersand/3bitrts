@@ -1269,6 +1269,15 @@ void UpdateScreenPositions(GameObject* g)
     g->position.screenY = ToScreenSpace_Y(g->position.worldY);
 
 }
+int SortPrefabs(const void* a, const void* b)
+{
+    GameObject* g1 = *(GameObject**)a;
+    GameObject* g2 = *(GameObject**)b;
+    if (g1->cost == g2->cost)
+        return strcmp(g1->name,g2->name);
+    return (g1->cost - g2->cost);
+}
+
 void LoadPrefabs(const char* dirPath)
 {
     DIR *d;
@@ -1291,6 +1300,7 @@ void LoadPrefabs(const char* dirPath)
         closedir(d);
 
     }
+    qsort(prefabs,numPrefabs,sizeof(GameObject*),SortPrefabs);
 }
 bool IsSelected(GameObject* g)
 {

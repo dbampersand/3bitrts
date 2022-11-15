@@ -1899,6 +1899,12 @@ int L_GetObjectName(lua_State* l)
     lua_pushstring(l,"");
     return 1;
 }
+int L_SetObjCost(lua_State* l)
+{
+    int cost = lua_tonumber(l,1);
+    currGameObjRunning->cost = cost;
+    return 0;
+}
 int L_GetObjFriendliness(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -3670,5 +3676,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetObjName);
     lua_setglobal(luaState, "SetObjName");
+
+    lua_pushcfunction(luaState, L_SetObjCost);
+    lua_setglobal(luaState, "SetObjCost");
 
 }

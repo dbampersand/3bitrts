@@ -117,6 +117,15 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
         purchaseUI->isTransitionOut = true;
         purchaseUI->isTransitioning = true;
     }
+    if (players[0].bankedGold < prefabDrawing->cost || prefabDrawing->purchased)
+    {
+        purchaseUI->purchaseButton.enabled = false;
+    }
+    else
+    {
+        purchaseUI->purchaseButton.enabled = true;
+    }
+
     if (GetButtonIsClicked(&purchaseUI->purchaseButton))
     {
         prefabDrawing->purchased = true;

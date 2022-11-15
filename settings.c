@@ -9,6 +9,7 @@
 #include "sprite.h"
 #include "video.h"
 #include "gameobject.h"
+#include "player.h"
 
 #include "allegro5/allegro.h"
 #ifdef __APPLE__
@@ -607,6 +608,12 @@ void Save(char* path)
     ALLEGRO_FILE* file = al_fopen(path,"w+");
     if (file)
     {
+        //al_fwrite(file, "bankedGold: ", strlen("bankedGold: "));
+        //al_fwrite(file, &players[0].bankedGold,sizeof(players[0].bankedGold));
+        //al_fwrite(file, ";\n", strlen(";\n"));
+
+        al_fprintf(file,"bankedGold: %i;\n",players[0].bankedGold);
+        
         al_fwrite(file,"unlocked\n{\n",strlen("unlocked\n{\n"));
         for (int i = 0; i < numPrefabs; i++)
         {
@@ -647,9 +654,9 @@ bool LoadSaveFile(char* path)
             for (int i = unlockStr-str+strlen("unlocked"); i < size; i++)
             {
                 //if the next character is a { ignoring whitespace
-                if (!isspace(unlockStr[i]))
+                if (!isspace(str[i]))
                 {
-                    if (unlockStr[i] == '{')
+                    if (str[i] == '{')
                     {
                         int bounds = 0;
                         for (int j = i+1; j < size; j++)
@@ -682,7 +689,7 @@ bool LoadSaveFile(char* path)
                             for (int j = 0; j < numPrefabs; j++)
                             {
                                 GameObject* prefab = prefabs[j];
-                                if (prefab->path && strcmp(token,prefab->path)==0)
+                                if (prefab->cost == 0 || (prefab->path && strcmp(token,prefab->path)==0))
                                 {
                                     prefab->purchased = true;
                                 }
@@ -696,6 +703,11 @@ bool LoadSaveFile(char* path)
                 }
             }
 
+            float gold = FindToken(str,"bankedGold");
+            if (gold >= 0)
+            {
+                players[0].bankedGold = gold;
+            }
             free(str);
             al_fclose(file);
         }
