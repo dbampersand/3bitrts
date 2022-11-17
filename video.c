@@ -42,6 +42,10 @@ int* cloudSprites;
 int numCloudSprites;
 int numFreeDecorations;
 
+int* dirtSprites;
+int numDirtSprites;
+
+
 
 void InitCloudSprites()
 {
@@ -61,9 +65,27 @@ void InitCloudSprites()
         cloudSprites[i] = LoadSprite(cloudSprPaths[i],false);
     }
 }
+void InitDirtSprites()
+{
+    const char* dirtSprPaths[] = 
+    {
+        "assets/decor/dirt/dirt_01.png",
+        "assets/decor/dirt/dirt_02.png",
+        "assets/decor/dirt/dirt_03.png",
+
+    };
+    numDirtSprites = sizeof(dirtSprPaths) / sizeof(dirtSprPaths[0]);
+    dirtSprites = calloc(numDirtSprites,sizeof(dirtSprites[0]));
+    for (int i = 0; i < numDirtSprites; i++)
+    {
+        dirtSprites[i] = LoadSprite(dirtSprPaths[i],false);
+    }
+
+}
 void InitSpriteDecorations()
 {
     InitCloudSprites();
+    InitDirtSprites();
     for (int i = 0; i < MAX_SPRITE_DECORATIONS; i++)
     {
         freeSpriteDecorations[i] = &spriteDecorations[i];
@@ -511,7 +533,7 @@ void ProcessSpriteDecorations(float dt)
         s->position.screenX = ToScreenSpace_X(s->position.worldX);
         s->position.screenY = ToScreenSpace_Y(s->position.worldY);
 
-        if (s->decorationType == SPRITE_CLOUD)
+        if (s->decorationType == SPRITE_BG_DECOR)
         {
             if (s->velocity.x > 0)
             {
@@ -578,7 +600,26 @@ void AddSpriteDecoration(SpriteDecoration s)
         }
     }
 }
+void RandomSpriteDecor(int numToAdd, int* array, int numArrayElements)
+{
+    for (int i = 0; i < numToAdd; i++)
+    {
+        SpriteDecoration s = {0};
+        s.decorationType = SPRITE_BG_DECOR;
+        s.spriteIndex = array[RandRangeI(0,numArrayElements)];
+        int w = GetWidthSprite(&sprites[s.spriteIndex]);
+        int h = GetHeightSprite(&sprites[s.spriteIndex]);
+        s.renderOrder = BEFORE_WORLD;
+        s.tint = COLOR_BG_DECOR;
 
+        s.position.worldX = RandRange(-w,GetMapWidth()+w);
+        s.position.worldY = RandRange(-h,GetMapWidth()+h);
+
+        AddSpriteDecoration(s);
+
+    }
+    
+}
 void AddClouds(int numClouds)
 {
     for (int i = 0; i < numClouds; i++)
@@ -593,7 +634,7 @@ void AddClouds(int numClouds)
 SpriteDecoration AddCloud()
 {
     SpriteDecoration s = {0};
-    s.decorationType = SPRITE_CLOUD;
+    s.decorationType = SPRITE_BG_DECOR;
     s.spriteIndex = cloudSprites[RandRangeI(0,numCloudSprites)];
     int w = GetWidthSprite(&sprites[s.spriteIndex]);
     int h = GetHeightSprite(&sprites[s.spriteIndex]);
@@ -635,17 +676,14 @@ SpriteDecoration AddCloud()
         s.position.worldX = RandRange(-w*2,GetMapWidth()+w*2);
         s.position.worldY = RandRange(GetMapHeight()+h,GetMapHeight()+h*2);
 
-        s.velocity.x = RandRange(-20,20);
-        s.velocity.y = RandRange(-20,-1);
+        s.velocity.x = RandRange(-CLOUD_SPEED,CLOUD_SPEED);
+        s.velocity.y = RandRange(-CLOUD_SPEED,-1);
 
     }
 
-    if (randSpawn == 4)
-        printf("aDSAFSDFSDFDS\n");
 
-
-    s.renderOrder = BEFORE_WORLD;
-    s.tint = COLOR_CLOUD;
+    s.renderOrder = AFTER_GAMEOBJECTS;
+    s.tint = COLOR_BG_DECOR;
     return s;
 }
 float easeOutQuint(float x) {

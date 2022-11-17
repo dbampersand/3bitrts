@@ -18,7 +18,7 @@ ALLEGRO_COLOR HEAL = {0};
 ALLEGRO_COLOR DAMAGE = {0};
 ALLEGRO_COLOR SPEED = {0};
 ALLEGRO_COLOR SHIELD = {0};
-ALLEGRO_COLOR CLOUD = {0};
+ALLEGRO_COLOR BG_DECOR = {0};
 
 ALLEGRO_COLOR _TRANSPARENT = {0};
 
@@ -101,8 +101,8 @@ Color ALColorToCol(ALLEGRO_COLOR c)
         return COLOR_GROUND_DARK;
     if (AlColIsEq(c,EDGE_HIGHLIGHT))
         return COLOR_EDGE_HIGHLIGHT;
-    if (AlColIsEq(c,CLOUD))
-        return COLOR_CLOUD;
+    if (AlColIsEq(c,BG_DECOR))
+        return COLOR_BG_DECOR;
 
 
 
@@ -134,7 +134,7 @@ void InitColors()
     GROUND_DARK = al_map_rgba(53,40,84,255);
     EDGE_HIGHLIGHT = al_map_rgba(106,106,212,255);
     _TRANSPARENT = al_map_rgba(0,0,0,0);
-    CLOUD = al_map_rgba(50,10,50,255);
+    BG_DECOR = al_map_rgba(BG.r+30,BG.g+20,BG.b+20,255);
 
 
     
@@ -167,7 +167,7 @@ void InitColors()
 
     ALColorLookup[COLOR_EDGE_HIGHLIGHT] = &EDGE_HIGHLIGHT;
     ALColorLookup[COLOR__TRANSPARENT] = &_TRANSPARENT;
-    ALColorLookup[COLOR_CLOUD] = &CLOUD;
+    ALColorLookup[COLOR_BG_DECOR] = &BG_DECOR;
 
 
 

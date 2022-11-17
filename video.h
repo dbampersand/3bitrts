@@ -54,7 +54,7 @@ typedef struct TextDisplay
 typedef enum DecorationType
 {
     SPRITE_NONE = 0,
-    SPRITE_CLOUD,
+    SPRITE_BG_DECOR,
 } DecorationType;
 
 typedef enum RenderOrder
@@ -82,6 +82,10 @@ extern SpriteDecoration* freeSpriteDecorations[MAX_SPRITE_DECORATIONS];
 extern int numFreeDecorations;
 extern int* cloudSprites;
 extern int numCloudSprites;
+
+extern int* dirtSprites;
+extern int numDirtSprites;
+
 #define CLOUD_SPEED 6
 
 extern TextDisplay textDisplays[NUM_TEXT_DISPLAYS];
@@ -118,3 +122,4 @@ void DrawSpriteDecorations(RenderOrder renderOrder);
 SpriteDecoration AddCloud();
 void AddClouds(int numClouds);
 void ClearSpriteDecorations();
+void RandomSpriteDecor(int numToAdd, int* array, int numArrayElements);
