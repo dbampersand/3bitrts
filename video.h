@@ -3,6 +3,7 @@
 #include "rect.h"
 #include "point.h"
 #include "allegro5/allegro.h"
+#include "colors.h"
 
 #ifndef M_PI
     #define M_PI 3.14159265358979323846
@@ -50,6 +51,39 @@ typedef struct TextDisplay
     int x; int y;
 } TextDisplay;
 
+typedef enum DecorationType
+{
+    SPRITE_NONE = 0,
+    SPRITE_CLOUD,
+} DecorationType;
+
+typedef enum RenderOrder
+{
+    BEFORE_WORLD,
+    AFTER_WORLD,
+    AFTER_GAMEOBJECTS,
+    AFTER_PARTICLES
+}RenderOrder;
+
+typedef struct SpriteDecoration
+{
+    DecorationType decorationType;
+    PointSpace position;
+    Point velocity;
+    int spriteIndex;
+    RenderOrder renderOrder;
+    Color tint;
+} SpriteDecoration;
+
+#define MAX_SPRITE_DECORATIONS 255
+
+extern SpriteDecoration spriteDecorations[MAX_SPRITE_DECORATIONS];
+extern SpriteDecoration* freeSpriteDecorations[MAX_SPRITE_DECORATIONS];
+extern int numFreeDecorations;
+extern int* cloudSprites;
+extern int numCloudSprites;
+#define CLOUD_SPEED 6
+
 extern TextDisplay textDisplays[NUM_TEXT_DISPLAYS];
 extern int numStringsToDraw;
 
@@ -78,3 +112,9 @@ float easeOutQuint(float x);
 float easeInCirc(float x);
 float easeOutCirc(float x);
 float easeInOutQuint(float x);
+
+void ProcessSpriteDecorations(float dt);
+void DrawSpriteDecorations(RenderOrder renderOrder);
+SpriteDecoration AddCloud();
+void AddClouds(int numClouds);
+void ClearSpriteDecorations();

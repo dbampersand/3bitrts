@@ -126,6 +126,8 @@ void FinishTransition()
 
         RemoveAllGameObjects();
 
+        ClearSpriteDecorations();
+        AddClouds(12);
         SetMap(LoadMap(encounterGoingTo->mapPath));
 
         int xPos = currMap->spawnPoint.x;

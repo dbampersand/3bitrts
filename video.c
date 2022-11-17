@@ -12,6 +12,10 @@
 #include "sprite.h"
 #include "ui.h"
 #include "gameobject.h"
+#include "map.h"
+#include "helperfuncs.h"
+#include "player.h"
+
 #include "allegro5/allegro_font.h"
 
 Point DEBUG_P1 = {0};
@@ -31,7 +35,42 @@ unsigned long long _FRAMES = 1;
  TextDisplay textDisplays[NUM_TEXT_DISPLAYS] = {0};
  int numStringsToDraw = 0;
 
+SpriteDecoration spriteDecorations[MAX_SPRITE_DECORATIONS];
+SpriteDecoration* freeSpriteDecorations[MAX_SPRITE_DECORATIONS];
 
+int* cloudSprites;
+int numCloudSprites;
+int numFreeDecorations;
+
+
+void InitCloudSprites()
+{
+    const char* cloudSprPaths[] = 
+    {
+        "assets/decor/clouds/cloud_01.png",
+        "assets/decor/clouds/cloud_02.png",
+        "assets/decor/clouds/cloud_03.png",
+        "assets/decor/clouds/cloud_04.png",
+        "assets/decor/clouds/cloud_05.png",
+
+    };
+    numCloudSprites = sizeof(cloudSprPaths) / sizeof(cloudSprPaths[0]);
+    cloudSprites = calloc(numCloudSprites,sizeof(cloudSprites[0]));
+    for (int i = 0; i < numCloudSprites; i++)
+    {
+        cloudSprites[i] = LoadSprite(cloudSprPaths[i],false);
+    }
+}
+void InitSpriteDecorations()
+{
+    InitCloudSprites();
+    for (int i = 0; i < MAX_SPRITE_DECORATIONS; i++)
+    {
+        freeSpriteDecorations[i] = &spriteDecorations[i];
+    }
+    numFreeDecorations = MAX_SPRITE_DECORATIONS;
+    
+}
 void InitVideo()
 {
     ALLEGRO_MONITOR_INFO monitor;
@@ -66,6 +105,7 @@ void InitVideo()
     sinTable = &__sinTable[360];
     cosTable = &__cosTable[360];
 
+    InitSpriteDecorations();
 
 
 }
@@ -460,6 +500,153 @@ void DrawBufferedStrings()
     //stringsToDraw = realloc(stringsToDraw,1*sizeof(Point));
 
     numStringsToDraw = 0;
+}
+void ProcessSpriteDecorations(float dt)
+{
+    for (int i = 0; i < MAX_SPRITE_DECORATIONS; i++)
+    {
+        SpriteDecoration* s = &spriteDecorations[i];
+        s->position.worldX += s->velocity.x * dt;
+        s->position.worldY += s->velocity.y * dt;
+        s->position.screenX = ToScreenSpace_X(s->position.worldX);
+        s->position.screenY = ToScreenSpace_Y(s->position.worldY);
+
+        if (s->decorationType == SPRITE_CLOUD)
+        {
+            if (s->velocity.x > 0)
+            {
+                if (s->position.worldX > GetMapWidth())
+                {
+                    *s = AddCloud();
+                }
+            }
+            if (s->velocity.y > 0)
+            {
+                if (s->position.worldY > GetMapHeight())
+                {
+                    *s = AddCloud();
+                }
+            }
+            if (s->velocity.x <= 0)
+            {
+                if (s->position.worldX + GetWidthSprite(&sprites[s->spriteIndex]) < 0)
+                {
+                    *s = AddCloud();
+                }
+            }
+            if (s->velocity.y <= 0)
+            {
+                if (s->position.worldY + GetHeightSprite(&sprites[s->spriteIndex]) < 0)
+                {
+                    *s = AddCloud();
+                }
+            }
+
+
+        }
+    }
+}
+void DrawSpriteDecorations(RenderOrder renderOrder)
+{
+    for (int i = 0; i < MAX_SPRITE_DECORATIONS; i++)
+    {
+        SpriteDecoration* s = &spriteDecorations[i];
+        if (renderOrder == s->renderOrder && s->decorationType > SPRITE_NONE)
+        {
+            DrawSprite(&sprites[s->spriteIndex],s->position.screenX,s->position.screenY,0,0,0,GetColor(s->tint,0),false);
+        }
+    }
+}
+void ClearSpriteDecorations()
+{
+    memset(spriteDecorations,0,MAX_SPRITE_DECORATIONS*sizeof(SpriteDecoration));
+
+    for (int i = 0; i < MAX_SPRITE_DECORATIONS; i++)
+    {
+        freeSpriteDecorations[i] = &spriteDecorations[i];
+    }
+    numFreeDecorations = MAX_SPRITE_DECORATIONS;
+}
+void AddSpriteDecoration(SpriteDecoration s)
+{
+    if (numFreeDecorations > 0)
+    {
+        if (s.decorationType > SPRITE_NONE)
+        {
+            *freeSpriteDecorations[numFreeDecorations-1] = s;
+            numFreeDecorations--;
+        }
+    }
+}
+
+void AddClouds(int numClouds)
+{
+    for (int i = 0; i < numClouds; i++)
+    {
+        if (numFreeDecorations > 0)
+        {
+            SpriteDecoration s = AddCloud();
+            AddSpriteDecoration(s);
+        }
+    }
+}
+SpriteDecoration AddCloud()
+{
+    SpriteDecoration s = {0};
+    s.decorationType = SPRITE_CLOUD;
+    s.spriteIndex = cloudSprites[RandRangeI(0,numCloudSprites)];
+    int w = GetWidthSprite(&sprites[s.spriteIndex]);
+    int h = GetHeightSprite(&sprites[s.spriteIndex]);
+
+
+    int randSpawn = RandRange(0,4);
+    //left
+    if (randSpawn == 0)
+    {
+        s.position.worldX = RandRange(-w*2,-w);
+        s.position.worldY = RandRange(-h*2,GetMapHeight()+h);
+
+        s.velocity.x = RandRange(1,CLOUD_SPEED);
+        s.velocity.y = RandRange(-CLOUD_SPEED,CLOUD_SPEED);
+
+    }
+    //top
+    if (randSpawn == 1)
+    {
+        s.position.worldX = RandRange(-w*2,GetMapWidth()+w*2);
+        s.position.worldY = RandRange(-h*2,-h);
+
+        s.velocity.x = RandRange(-CLOUD_SPEED,CLOUD_SPEED);
+        s.velocity.y = RandRange(1,CLOUD_SPEED);
+
+    }
+    //right
+    if (randSpawn == 2)
+    {
+        s.position.worldX = RandRange(GetMapWidth()+w,GetMapWidth()+w*2);
+        s.position.worldY = RandRange(-h*2,GetMapHeight()+h);
+
+        s.velocity.x = RandRange(-CLOUD_SPEED,-1);
+        s.velocity.y = RandRange(-CLOUD_SPEED,CLOUD_SPEED);
+    }
+    //bottom
+    if (randSpawn == 3)
+    {
+        s.position.worldX = RandRange(-w*2,GetMapWidth()+w*2);
+        s.position.worldY = RandRange(GetMapHeight()+h,GetMapHeight()+h*2);
+
+        s.velocity.x = RandRange(-20,20);
+        s.velocity.y = RandRange(-20,-1);
+
+    }
+
+    if (randSpawn == 4)
+        printf("aDSAFSDFSDFDS\n");
+
+
+    s.renderOrder = BEFORE_WORLD;
+    s.tint = COLOR_CLOUD;
+    return s;
 }
 float easeOutQuint(float x) {
     if (x > 1) return 1;

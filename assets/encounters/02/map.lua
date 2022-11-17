@@ -41,7 +41,7 @@ function update(dt)
     local numEnemies = GetAllObjsByFriendliness(TYPE_ENEMY);
 
     if (spawnedBoss == false) then-- and fourthWave == true and #numEnemies == 0) then
-        local boss = CreateObject("assets/encounters/02/boss.lua",120,22,TYPE_ENEMY,5,100);
+        local boss = CreateObject("assets/enemies/minotaur/minotaur.lua",120,22,TYPE_ENEMY,5,100);
         spawnedBoss = true
     end
     do return end

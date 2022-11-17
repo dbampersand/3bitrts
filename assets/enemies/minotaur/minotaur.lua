@@ -4,18 +4,26 @@ local smash = 0
 local quake = 0
 local chuck = 0
 local bellow = 0
+local hibernate = 0
+
+local state = 1;
+
+local STATE_NORMAL = 1;
+local STATE_HIBERNATING = 2
 
 function setup()
     SetSprite("assets/encounters/02/minotaur/minotaur.png");
     SetChannelingSprite("assets/enemies/minotaur/minotaur_channeling.png");
 
     smash = AddAbility(GetObjRef(),"assets/enemies/minotaur/ability_smash.lua",0)   
-    rampage = AddAbility(GetObjRef(),"assets/enemies/minotaur/ability_rampage.lua",1)    
+    rampage = AddAbility(GetObjRef(),"assets/enemies/minotaur/ability_rampage.lua",1)
     quake = AddAbility(GetObjRef(),"assets/enemies/minotaur/ability_quake.lua",2)    
     chuck = AddAbility(GetObjRef(),"assets/enemies/minotaur/ability_chuck.lua",3)    
     charge = AddAbility(GetObjRef(),"assets/enemies/minotaur/ability_charge.lua",4)    
     summon = AddAbility(GetObjRef(),"assets/enemies/minotaur/ability_summon.lua",5)    
-    bellow = AddAbility(GetObjRef(),"assets/enemies/minotaur/ability_bellow.lua",5)    
+    bellow = AddAbility(GetObjRef(),"assets/enemies/minotaur/ability_bellow.lua",6)
+    hibernate = AddAbility(GetObjRef(),"assets/enemies/minotaur/ability_hibernate.lua",7)
+
 
     SetDamage(10);
     SetMaxHP(10000,true)
@@ -52,6 +60,21 @@ function update(dt)
         if (math.fmod(math.floor(timer),30)) then
             CastAbility(rampage, 0.1, {})
         end
+
+        if (math.fmod(math.floor(timer),60) and !AbilityIsOnCooldown(GetObjRef(),hibernate)) then
+            state = STATE_HIBERNATING
+        end
+        if (state == STATE_HIBERNATING) then
+            SetMovePoint(GetObjRef(),128,128,false,false);
+            if (NumIsInRange(GetX(GetObjRef()),128,5) and NumIsInRange(GetY(GetObjRef()),128,5)) then
+                CastAbility(hibernate, 0, {})
+                
+            end
+            if (state == STATE_HIBERNATING and AbilityIsOnCooldown(GetObjRef(),hibernate) and ObjIsChanneling(GetObjRef()) == false) then
+                state = STATE_NORMAL;
+            end
+        end
+
 
         CastAbility(bellow,1,{})
 

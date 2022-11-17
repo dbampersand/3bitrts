@@ -680,7 +680,7 @@ int L_GetThreatRank(lua_State* l)
     {
         lua_pushnumber(l,i+1);
         lua_pushnumber(l,threats[i].obj-objects);
-        printf("%s\n",threats[i].obj->name);
+        //printf("%s\n",threats[i].obj->name ? );
 
 
         lua_settable(l,-3);
@@ -1706,6 +1706,14 @@ int L_CreateObject(lua_State* l)
     lua_pushnumber(l,g-objects);
     return 1;
 }
+int L_NumIsInRange(lua_State* l)
+{
+    float x = lua_tonumber(l,1);
+    float y = lua_tonumber(l,2);
+    float dist = lua_tonumber(l,3);
+    lua_pushboolean(l,x > y - dist && x < y + dist);
+    return 1;
+}
 int L_GetClosestObjectInRange(lua_State* l)
 {
     float x = lua_tonumber(l,1);
@@ -2580,6 +2588,16 @@ int L_SetObjChannelling(lua_State* l)
     SetObjChannelling(currGameObjRunning,NULL,time,x,y,currGameObjRunning,0,0);
     return 0;
 }
+int L_ObjIsChannelling(lua_State* l)
+{
+
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    GameObject* obj = &objects[index];
+    lua_pushboolean(l,ObjIsChannelling(obj));
+    return 1;
+}
 int L_CastAbility(lua_State* l)
 {
     if (ObjIsChannelling(currGameObjRunning))
@@ -3150,10 +3168,6 @@ void SetLuaKeyEnums(lua_State* l)
     lua_setglobal(l,"KEY_0");
 
 
-
-
-
-
 }
 void SetLuaFuncs()
 {
@@ -3679,5 +3693,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetObjCost);
     lua_setglobal(luaState, "SetObjCost");
+
+    lua_pushcfunction(luaState, L_NumIsInRange);
+    lua_setglobal(luaState, "NumIsInRange");
+
+    lua_pushcfunction(luaState, L_ObjIsChannelling);
+    lua_setglobal(luaState, "ObjIsChannelling");
 
 }

@@ -143,6 +143,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
                 replay.framePlayPosition++;
         }
     }
+    ProcessSpriteDecorations(dt);
     UpdateParticles(dt);
     ProcessAnimationEffects(dt);
     UpdateWidgets(dt);
@@ -167,8 +168,11 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             UpdateScreenPositionsAttack(&attacks[i]);
     }
 
+    DrawSpriteDecorations(BEFORE_WORLD);
     DrawMap(currMap,false);
     DrawMapHighlights();
+    DrawSpriteDecorations(AFTER_WORLD);
+
 
     DrawCommandQueue(players[0].selection[players[0].indexSelectedUnit]);
     
@@ -265,10 +269,15 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         }
 
     }
+    DrawSpriteDecorations(AFTER_GAMEOBJECTS);
+
     if (players[0].selecting)
         DrawMouseSelectBox(GetMouseClamped());
     if (currSettings.particlesEnabled)    
         DrawParticles();
+    DrawSpriteDecorations(AFTER_PARTICLES);
+    
+        
 
     if (players[0].abilityHeld)
     {
