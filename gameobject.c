@@ -2124,17 +2124,12 @@ void DrawMapHighlights()
 
     if (!scratchMap)
     {
-        //set as memory bitmap as there are a lot of calls to al_get_pixel and al_draw_pixel
-        int prevFlags = al_get_new_bitmap_flags();
-        al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP);
         scratchMap = al_create_bitmap(_SCREEN_SIZE,_SCREEN_SIZE);
-        al_set_new_bitmap_flags(prevFlags);
-
     }
 
     al_set_target_bitmap(scratchMap);
-    al_clear_to_color(_TRANSPARENT);
     al_draw_bitmap(sprites[currMap->spriteIndex].inverseSprite,-players[0].cameraPos.x,-players[0].cameraPos.y,0);
+    al_clear_to_color(_TRANSPARENT);
 
     for (int i = 0; i < numActiveObjects; i++)
     {
@@ -2160,7 +2155,10 @@ void DrawMapHighlights()
             }
         }
     }
+    al_lock_bitmap(scratchMap,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+
     al_convert_mask_to_alpha(scratchMap,WHITE);
+    al_unlock_bitmap(scratchMap);
     
     al_set_blender(beforeOp, beforeSrc, beforeDst);
 
