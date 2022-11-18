@@ -685,8 +685,6 @@ int L_GetThreatRank(lua_State* l)
 
         lua_settable(l,-3);
     }
-        printf("\n");
-
     free(threats);
     return 1; 
 }

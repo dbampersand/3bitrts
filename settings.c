@@ -711,6 +711,20 @@ bool LoadSaveFile(char* path)
             free(str);
             al_fclose(file);
         }
+        else
+        {
+            players[0].bankedGold = 0;
+            for (int j = 0; j < numPrefabs; j++)
+            {
+                GameObject* prefab = prefabs[j];
+                if (prefab->cost == 0)
+                {
+                    prefab->purchased = true;
+                }
+            }
+            Save("_save.save");
+
+        }
 
     }
 }

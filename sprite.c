@@ -191,6 +191,10 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
 }
 void DrawSprite(Sprite* sprite, int x, int y, float originX, float originY, float angle, ALLEGRO_COLOR tint, bool invert)
 {
+
+    //if the index is 0, never draw 
+    if (sprite == sprites)
+        return;
     if (sprite->sprite && !invert)
     {
         int w = al_get_bitmap_width(sprite->sprite);

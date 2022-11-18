@@ -2145,7 +2145,7 @@ void DrawMapHighlights()
             ALLEGRO_COLOR col = al_map_rgba_f(re,gr,bl,g->lightIntensity);
             if (g->lightSize > 0 && g->lightSize < MAX_LIGHT_SIZE)
             {
-                al_draw_tinted_bitmap(lights[g->lightSize],col,g->position.screenX-g->lightSize+GetWidth(g)/2,g->position.screenY-g->lightSize+GetHeight(g)/2,0);
+                al_draw_tinted_bitmap(lights[g->lightSize],col,g->position.worldX-g->lightSize+GetWidth(g)/2,g->position.worldY-g->lightSize+GetHeight(g)/2,0);
             }
         }
     }
@@ -2157,7 +2157,7 @@ void DrawMapHighlights()
     //DrawMap(currMap, true);
 
     al_set_target_bitmap(screen);
-    al_draw_bitmap(b,0,0,0);//-players[0].cameraPos.x,-players[0].cameraPos.y,0);
+    al_draw_bitmap(b,-players[0].cameraPos.x,-players[0].cameraPos.y,0);
     //TODO: can cache this rather than copying and deleting every frame
     al_destroy_bitmap(b);
 }
