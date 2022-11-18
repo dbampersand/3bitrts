@@ -353,8 +353,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         }
         DrawTimer(currSettings.displayTimer);
 
-        DrawGoldCount();
-        UpdateGoldAnimationTimer(dt);
 
 
     }
@@ -362,6 +360,8 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     DrawBufferedStrings();
     if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS)
     {
+        UpdateGoldAnimationTimer(dt);
+
         DrawDamageNumbers();
         UpdateButton(ui.menuButton.x,ui.menuButton.y,&ui.menuButton,*mouseState,*mouseStateLastFrame);
         DrawUIElement(&ui.menuButton,ui.menuButton.x,ui.menuButton.y,mouseState,ui.menuButton.bgColor);
@@ -430,6 +430,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                     WinGame();
                 }
             }
+
         }
 
         if (GetButtonIsClicked(&ui.menuButton))
@@ -444,6 +445,8 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                 ChangeUIPanel(&ui.pauseMenuPanel);
             }
         }
+            DrawGoldCount();
+
 
     }
 
@@ -472,6 +475,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
      if (gameState == GAMESTATE_PURCHASING_UNITS)
     {
         DrawPurchasingUnitsUI(dt, *mouseState, *mouseStateLastFrame);
+        DrawGoldCount();
     }
 
 

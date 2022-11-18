@@ -228,6 +228,9 @@ void FinishTransition()
         players[0].cameraPos.y = 0;
         combatStarted = false;
 
+        ClearGold();
+        AddGold(players[0].bankedGold);
+
 
     }
     if (transitioningTo == GAMESTATE_END)
@@ -238,6 +241,12 @@ void FinishTransition()
         combatStarted = false;
 
         SetMap(&maps[0]);
+
+        if (gameStats.gameWon)
+        {
+            players[0].bankedGold += players[0].gold;
+            Save("_save.save");
+        }
 
     }
     if (transitioningTo == GAMESTATE_IN_SHOP)

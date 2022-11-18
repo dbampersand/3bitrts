@@ -129,6 +129,9 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     if (GetButtonIsClicked(&purchaseUI->purchaseButton))
     {
         prefabDrawing->purchased = true;
+        AddGold(-prefabDrawing->cost);
+        players[0].bankedGold = players[0].gold;
+
         Save("_save.save");
         SetGameStateToChoosingParty();
     }
@@ -1761,7 +1764,7 @@ void InitChoosingUnitButtons()
 {
     InitButton(&ui.choosingUnits_Back,"Back","Back",45,194,48,16,0);
     InitButton(&ui.choosingUnits_GO,"Adventure","Adventure",109,194,96,16,0);
-    InitButton(&ui.choosingUnits_Hire,"Hire","Hire",10,4,40,11,0);
+    InitButton(&ui.choosingUnits_Hire,"Hire","Hire",168,4,40,11,0);
 
     
 }
@@ -2904,7 +2907,7 @@ void SetOptions()
 }
 void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
 {
-        char* buffer = calloc(1,sizeof(char));
+    char* buffer = calloc(1,sizeof(char));
 
     al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
 
@@ -2939,6 +2942,11 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
     sprintf(buffer,"Healing done: %i",gameStats.healingDone);
     al_draw_text(ui.font,FRIENDLY,17,196,0,buffer);
 
+    buffer = realloc(buffer,(strlen("Gold gained: ")+log10(pow(2,sizeof(players[0].gold)*8))+3) * sizeof(char));
+    sprintf(buffer,"Gold gained: %i",players[0].gold);
+    al_draw_text(ui.font,FRIENDLY,17,208,0,buffer);
+
+
 
     UpdateButton(ui.endScreen_Back.x,ui.endScreen_Back.y,&ui.endScreen_Back,*mouseState,*mouseStateLastFrame);
     UpdateButton(ui.endScreen_Retry.x,ui.endScreen_Retry.y,&ui.endScreen_Retry,*mouseState,*mouseStateLastFrame);
@@ -2968,12 +2976,22 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
         SetGameStateToChoosingEncounter();
         //transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
         RemoveReplay(&replay);
+        if (gameStats.gameWon && !GameStateIsTransition(&gameState))
+        {
+            players[0].bankedGold += players[0].gold;
+        }
         
     }
     if (GetButtonIsClicked(&ui.endScreen_Retry))
     {
         transitioningTo = GAMESTATE_INGAME;
         RemoveReplay(&replay);
+        
+        if (gameStats.gameWon && !GameStateIsTransition(&gameState))
+        {
+            players[0].bankedGold += players[0].gold;
+        }
+
     }
     if (GetButtonIsClicked(&ui.endScreen_SaveReplay))
     {

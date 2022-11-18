@@ -662,14 +662,14 @@ bool LoadSaveFile(char* path)
                         for (int j = i+1; j < size; j++)
                         {
                             bounds++;
-                            if (unlockStr[j] == '}')
+                            if (str[j] == '}')
                             {
                                 break;
                             }
                         }
 
                         char* unlockedPathsStr = calloc(bounds+1,sizeof(char));
-                        strncpy(unlockedPathsStr,unlockStr+i+1,bounds-1);
+                        strncpy(unlockedPathsStr,str+i+1,bounds-1);
                         char* token = strtok(unlockedPathsStr,";");
                         while (token)
                         {
