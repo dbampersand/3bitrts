@@ -2179,8 +2179,8 @@ void DrawAggroIndicators()
         {
             float cx; float cy; 
             float cx2; float cy2;
-            GetCentre(g,&cx,&cy);
-            GetCentre(g->targObj,&cx2,&cy2);
+            GetCentre_Screen(g,&cx,&cy);
+            GetCentre_Screen(g->targObj,&cx2,&cy2);
 
             al_draw_line(cx,cy,cx2,cy2,ENEMY,1);
         }
