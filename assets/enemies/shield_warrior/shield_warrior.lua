@@ -3,7 +3,7 @@ function setup()
     AddAbility(GetObjRef(),"assets/enemies/shield_warrior/ability_shieldstance.lua",0);
 
     SetDamage(20);
-    SetMaxHP(250,true)
+    SetMaxHP(400,true)
     SetSpeed(80)
     SetRange(5);
 

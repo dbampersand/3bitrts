@@ -1,11 +1,15 @@
+
+local summon = 0
+local cureaoe = 0
+
 function setup()
     SetSprite("assets/enemies/caduceus/caduceus.png");
     SetDamage(0);
-    SetMaxHP(600,true)
+    SetMaxHP(750,true)
     SetSpeed(0)
 
-    AddAbility(GetObjRef(),"assets/enemies/caduceus/ability_summon.lua",0);
-    AddAbility(GetObjRef(),"assets/enemies/caduceus/ability_cureaoe.lua",1);
+    summon = AddAbility(GetObjRef(),"assets/enemies/caduceus/ability_summon.lua",0);
+    cureaoe = AddAbility(GetObjRef(),"assets/enemies/caduceus/ability_cureaoe.lua",1);
 
 end
 
@@ -23,5 +27,6 @@ function update(dt)
 end
 
 function kill()
-
+    SetAbilityCooldownTimer(cureaoe,0)
+    CastAbility(cureaoe,0,{{x=cx,y=cy}});
 end

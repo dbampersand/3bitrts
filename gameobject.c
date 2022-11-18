@@ -2130,9 +2130,9 @@ void DrawMapHighlights()
         GameObject* g = activeObjects[i];
         if (IsActive(g) && IsOwnedByPlayer(g))
         {
-            g->lightR = 1;
-            g->lightG = 0.9;
-            g->lightB = 0.6;
+            g->lightR = 2;
+            g->lightG = 1;
+            g->lightB = 0.5f;
             g->lightIntensity = 0.5f;
 
             float re = g->lightR; float gr = g->lightG; float bl = g->lightB;
@@ -2157,7 +2157,7 @@ void DrawMapHighlights()
     //DrawMap(currMap, true);
 
     al_set_target_bitmap(screen);
-    al_draw_bitmap(b,-players[0].cameraPos.x,-players[0].cameraPos.y,0);
+    al_draw_bitmap(b,0,0,0);//-players[0].cameraPos.x,-players[0].cameraPos.y,0);
     //TODO: can cache this rather than copying and deleting every frame
     al_destroy_bitmap(b);
 }
@@ -2459,7 +2459,7 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
 
 
                 //ALLEGRO_COLOR col = al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
-                int index = GetIndex(GetWidthSprite(&sprites[currMap->spriteIndex]),mX,mY);
+                int index = GetIndex(GetHeightSprite(&sprites[currMap->spriteIndex]),mX,mY);
                 if (index < 0 || index >= GetMapWidth()*GetMapHeight())
                     break;
                 //if (col.a <= 0.001f)

@@ -221,7 +221,6 @@ void UpdateGoldTextString(int gold)
     sprintf(players[0].goldText,"%i",gold);
     players[0].goldText[numDigits] = '\0';
 
-
 }
 void AddGold(int count)
 {

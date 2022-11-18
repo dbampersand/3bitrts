@@ -132,7 +132,7 @@ void InitColors()
     SHIELD = al_map_rgba(106,171,235,255); 
 
     GROUND_DARK = al_map_rgba(53,40,84,255);
-    EDGE_HIGHLIGHT = al_map_rgba(106,106,212,255);
+    EDGE_HIGHLIGHT = al_map_rgba(167,112,213,255);
     _TRANSPARENT = al_map_rgba(0,0,0,0);
     BG_DECOR = al_map_rgba(BG.r+30,BG.g+20,BG.b+20,255);
 

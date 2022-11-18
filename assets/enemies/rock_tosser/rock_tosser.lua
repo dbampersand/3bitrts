@@ -6,7 +6,7 @@ function setup()
     SetSprite("assets/enemies/rock_tosser/rock_tosser.png");
 
     SetDamage(10);
-    SetMaxHP(750,true)
+    SetMaxHP(850,true)
     SetSpeed(80)
     SetRange(60);
 

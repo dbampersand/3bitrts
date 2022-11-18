@@ -4,7 +4,7 @@ function setup()
     SetSprite("assets/enemies/scorpion/scorpion.png");
 
     SetDamage(20);
-    SetMaxHP(600,true)
+    SetMaxHP(750,true)
     SetSpeed(80)
     SetRange(50);
 
