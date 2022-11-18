@@ -2124,16 +2124,17 @@ void DrawMapHighlights()
 
     if (!scratchMap)
     {
-       scratchMap = al_clone_bitmap(sprites[currMap->spriteIndex].inverseSprite);
+        //set as memory bitmap as there are a lot of calls to al_get_pixel and al_draw_pixel
+        int prevFlags = al_get_new_bitmap_flags();
+        al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP);
+        scratchMap = al_create_bitmap(_SCREEN_SIZE,_SCREEN_SIZE);
+        al_set_new_bitmap_flags(prevFlags);
+
     }
-    if (al_get_bitmap_width(scratchMap) != GetMapWidth() || al_get_bitmap_height(scratchMap) != GetMapHeight())
-    {
-        al_destroy_bitmap(scratchMap);
-        scratchMap = al_clone_bitmap(sprites[currMap->spriteIndex].inverseSprite);
-    }
+
     al_set_target_bitmap(scratchMap);
     al_clear_to_color(_TRANSPARENT);
-    al_draw_bitmap(sprites[currMap->spriteIndex].inverseSprite,0,0,0);
+    al_draw_bitmap(sprites[currMap->spriteIndex].inverseSprite,-players[0].cameraPos.x,-players[0].cameraPos.y,0);
 
     for (int i = 0; i < numActiveObjects; i++)
     {
@@ -2155,7 +2156,7 @@ void DrawMapHighlights()
             ALLEGRO_COLOR col = al_map_rgba_f(re,gr,bl,g->lightIntensity);
             if (g->lightSize > 0 && g->lightSize < MAX_LIGHT_SIZE)
             {
-                al_draw_tinted_bitmap(lights[g->lightSize],col,g->position.worldX-g->lightSize+GetWidth(g)/2,g->position.worldY-g->lightSize+GetHeight(g)/2,0);
+                al_draw_tinted_bitmap(lights[g->lightSize],col,g->position.screenX-g->lightSize+GetWidth(g)/2,g->position.screenY-g->lightSize+GetHeight(g)/2,0);
             }
         }
     }
@@ -2167,7 +2168,7 @@ void DrawMapHighlights()
     //DrawMap(currMap, true);
 
     al_set_target_bitmap(screen);
-    al_draw_bitmap(scratchMap,-players[0].cameraPos.x,-players[0].cameraPos.y,0);
+    al_draw_bitmap(scratchMap,0,0,0);
     //TODO: can cache this rather than copying and deleting every frame
 }
 void DrawAggroIndicators()
