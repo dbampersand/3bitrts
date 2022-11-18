@@ -2088,6 +2088,7 @@ void DrawObjShadows()
             DrawObjShadow(activeObjects[i]);
     }
 }   
+ALLEGRO_BITMAP* scratchMap = {0};
 void DrawMapHighlights()
 {
     if (!currSettings.lightEffectEnabled)
@@ -2121,9 +2122,18 @@ void DrawMapHighlights()
 
     al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_ONE);
 
-
-    ALLEGRO_BITMAP* b = al_clone_bitmap(sprites[currMap->spriteIndex].inverseSprite);
-    al_set_target_bitmap(b);
+    if (!scratchMap)
+    {
+       scratchMap = al_clone_bitmap(sprites[currMap->spriteIndex].inverseSprite);
+    }
+    if (al_get_bitmap_width(scratchMap) != GetMapWidth() || al_get_bitmap_height(scratchMap) != GetMapHeight())
+    {
+        al_destroy_bitmap(scratchMap);
+        scratchMap = al_clone_bitmap(sprites[currMap->spriteIndex].inverseSprite);
+    }
+    al_set_target_bitmap(scratchMap);
+    al_clear_to_color(_TRANSPARENT);
+    al_draw_bitmap(sprites[currMap->spriteIndex].inverseSprite,0,0,0);
 
     for (int i = 0; i < numActiveObjects; i++)
     {
@@ -2149,7 +2159,7 @@ void DrawMapHighlights()
             }
         }
     }
-    al_convert_mask_to_alpha(b,WHITE);
+    al_convert_mask_to_alpha(scratchMap,WHITE);
     
     al_set_blender(beforeOp, beforeSrc, beforeDst);
 
@@ -2157,9 +2167,8 @@ void DrawMapHighlights()
     //DrawMap(currMap, true);
 
     al_set_target_bitmap(screen);
-    al_draw_bitmap(b,-players[0].cameraPos.x,-players[0].cameraPos.y,0);
+    al_draw_bitmap(scratchMap,-players[0].cameraPos.x,-players[0].cameraPos.y,0);
     //TODO: can cache this rather than copying and deleting every frame
-    al_destroy_bitmap(b);
 }
 void DrawAggroIndicators()
 {
