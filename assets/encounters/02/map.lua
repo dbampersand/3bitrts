@@ -40,14 +40,13 @@ function update(dt)
 
     local numEnemies = GetAllObjsByFriendliness(TYPE_ENEMY);
 
-    if (spawnedBoss == false) then-- and fourthWave == true and #numEnemies == 0) then
+    if (spawnedBoss == false and fourthWave == true and #numEnemies == 0) then
         local boss = CreateObject("assets/enemies/minotaur/minotaur.lua",120,22,TYPE_ENEMY,5,100);
         spawnedBoss = true
     end
-    do return end
 
     if (spawnedBoss == false) then
-        if (firstWave == false and timer > 12) then
+        if (firstWave == false and timer > 2) then
             local enemyObjs = GetAllObjsByFriendliness(TYPE_ENEMY);
             local numObjs = #enemyObjs;
             local ob = CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",120,54,TYPE_ENEMY,2,0);

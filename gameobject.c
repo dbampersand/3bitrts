@@ -1925,6 +1925,7 @@ void Move(GameObject* g, float delta)
             for (int i = 0; i < numMoves; i++)
             {
                 g->position.worldY += dY;
+                
                 CheckCollisions(g,false, dY,ObjectCanPush(g));
                 CheckCollisionsWorld(g,false, dY);
             }
@@ -1936,8 +1937,9 @@ void Move(GameObject* g, float delta)
 
                 CheckCollisions(g,true, dX,ObjectCanPush(g));
                 CheckCollisionsWorld(g,true, dX);
-                SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,true);
             }
+            SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,true);
+
         }
     UpdateObjPosition(g,g->position.worldX,g->position.worldY);
 

@@ -75,7 +75,10 @@ void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
     //x+=_GRAIN*1.5f; y+=_GRAIN*1.5f;
    // w-=_GRAIN*2; h-=_GRAIN*2;
 
-    x-=1;
+    //x-=1;
+    x = (x / (int)_GRAIN) * _GRAIN;
+    y = (y / (int)_GRAIN) * _GRAIN;
+
     //y-=_GRAIN;
     w+=_GRAIN;
     h+=_GRAIN;
@@ -92,7 +95,7 @@ void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
             if (xn < 0 || xn >= GetMapWidth()/_GRAIN)
                 continue;
             
-            int index = GetIndex(GetMapHeight()/_GRAIN, ceil((xn)), ceil((yn)));
+            int index = GetIndex(GetMapHeight()/_GRAIN, ((xn)), ((yn)));
 
             if (objectIsHere)
             {
