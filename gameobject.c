@@ -1642,7 +1642,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
 {
     if (ObjIsDecoration(g))
         return;
-        int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
+    int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
     int h = al_get_bitmap_height(sprites[g->spriteIndex].sprite);
     
     if (ObjectIsInUI(g))
@@ -1673,7 +1673,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
         return;
 
     }
-    if (posY < 0 || posY+h > GetMapHeight())
+    if (posY < 0 || posY+h > UI_START_Y)
     {
         if (posY < 0)
         {
@@ -1682,10 +1682,10 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             CheckCollisions(g,false,1,true);
 
         } 
-        if (posY+h >  GetMapHeight())
+        if (posY+h >  UI_START_Y)
         {
             //g->position.worldY =  GetMapHeight()-h;
-            UpdateObjPosition_Y(g,GetMapHeight()-h);
+            UpdateObjPosition_Y(g, UI_START_Y-h);
             CheckCollisions(g,false,-1,true);
         } 
 
@@ -2175,7 +2175,7 @@ void DrawAggroIndicators()
     {
         GameObject* g = activeObjects[i];
         if (IsActive(g) && GetPlayerOwnedBy(g) != 0)
-        if (g->targObj)
+        if (g->targObj && g->queue[0].commandType == COMMAND_ATTACK)
         {
             float cx; float cy; 
             float cx2; float cy2;

@@ -13,7 +13,7 @@ function setup()
     SetMaxHP(maxHP,true)
     SetSpeed(80)
     SetRange(40);
-    SetMaxHP(400,true))
+    SetMaxHP(400,true)
     SetAttackSpeed(GetObjRef(),2)
 
 

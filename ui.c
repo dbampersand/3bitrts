@@ -87,6 +87,17 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     int y = 0;
     DrawSprite(s,x,y,0,0,0,FRIENDLY,false);
 
+    if (purchaseUI->currentIndex == 0)
+        purchaseUI->back.enabled = false;
+    else
+        purchaseUI->back.enabled = true;
+
+    if (purchaseUI->currentIndex == purchaseUI->numPrefabs-1)
+        purchaseUI->next.enabled = false;
+    else
+        purchaseUI->next.enabled = true;
+
+
     UpdateButton(purchaseUI->back.x,purchaseUI->back.y,&purchaseUI->back,mouseState,mouseStateLastFrame);
     DrawUIElement(&purchaseUI->back,purchaseUI->back.x,purchaseUI->back.y,&mouseState,ui.menuButton.bgColor);
 
@@ -99,6 +110,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     UpdateButton(purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,&purchaseUI->purchaseButton,mouseState,mouseStateLastFrame);
     DrawUIElement(&purchaseUI->purchaseButton,purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,&mouseState,ui.menuButton.bgColor);
 
+
     if (GetButtonIsClicked(&purchaseUI->back) && purchaseUI->currentIndex != 0)
     {
         purchaseUI->indexTransitioningTo--;
@@ -109,6 +121,8 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
         purchaseUI->isTransitioning = true;
 
     }
+
+
     if (GetButtonIsClicked(&purchaseUI->next) && purchaseUI->currentIndex != purchaseUI->numPrefabs-1)
     {
         purchaseUI->indexTransitioningTo++;

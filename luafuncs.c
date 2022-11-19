@@ -641,14 +641,22 @@ int L_GetAbilityRef(lua_State* l)
 
 int L_AbilityIsOnCooldown(lua_State* l)
 {
-    GameObject* g = &objects[(int)lua_tonumber(l,1)];
-    Ability* a = &g->abilities[(int)lua_tonumber(l,1)];
-    if (AbilityIsOnCooldown(a))
+    int objIndex = lua_tonumber(l,1);
+    int abilityIndex = lua_tonumber(l,2);
+
+    if (objIndex < 0 || objIndex >= MAX_OBJS || abilityIndex < 0 || abilityIndex >= MAX_ABILITIES)
     {
-        lua_pushboolean(l,false);
+        lua_pushboolean(l,true);
         return 1;
     }
-    lua_pushboolean(l,true);
+    GameObject* g = &objects[objIndex];
+    Ability* a = &g->abilities[abilityIndex];
+    if (AbilityIsOnCooldown(a))
+    {
+        lua_pushboolean(l,true);
+        return 1;
+    }
+    lua_pushboolean(l,false);
     return 1;
 }
 int SortThreat(const void* a, const void* b)

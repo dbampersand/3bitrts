@@ -206,10 +206,12 @@ bool RemoveEffect(Effect* e, GameObject* from, bool removeAllStacks)
 
     if (from)
     {
-        for (int i = e - from->effects; i < MAX_EFFECTS-1; i++)
-        {
-            from->effects[i] = from->effects[i+1];
-        }
+        int numToMove = MAX_EFFECTS - (e - from->effects) - 1;
+        memcpy(e,e+1,numToMove);
+        //for (int i = e - from->effects; i < MAX_EFFECTS-1; i++)
+        //{
+          //  from->effects[i] = from->effects[i+1];
+        //}
 
     }
     return true;

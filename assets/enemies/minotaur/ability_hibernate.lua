@@ -1,5 +1,5 @@
 local time = 15
-local totalHeal = 500
+local totalHeal = 1200
 local tickRate = 0.5
 
 function setup()
@@ -14,7 +14,9 @@ end
 local cone = -1
 local objTargetting = -1
 function casted(x,y,obj,headingx,headingy)
+
     SetObjChannelling(GetObjRef(),time);
+    SetChannelingSprite("assets/enemies/minotaur/minotaur_channel_hibernate.png")
     f1 = {};
     f1["trigger"] = TRIGGER_TIMER;
     f1["type"] = EFFECT_HEAL;

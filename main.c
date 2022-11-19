@@ -717,7 +717,7 @@ int main(int argc, char* args[])
             clock_t end = clock();
             double time = (double)(end - begin) / CLOCKS_PER_SEC;
 
-            printf("Total time: %f\n",time);
+            //printf("Total time: %f\n",time);
 
             fflush(stdout);
         }

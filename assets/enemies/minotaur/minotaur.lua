@@ -36,45 +36,56 @@ end
 
 function update(dt)
     if (IsInCombat()) then
-        local chargeTarget = {}
-        chargeTarget["target"] = GetRandomUnit(TYPE_ENEMY,Bor(TYPE_MELEEDPS,Bor(TYPE_RANGEDDPS,TYPE_HEALER)),999)
-        CastAbility(charge,5,{chargeTarget})
+        if (state == STATE_NORMAL) then
+            local chargeTarget = {}
+            chargeTarget["target"] = GetRandomUnit(TYPE_ENEMY,Bor(TYPE_MELEEDPS,Bor(TYPE_RANGEDDPS,TYPE_HEALER)),999)
+            CastAbility(charge,5,{chargeTarget})
 
-        j = GetThreatRank()
-        local target = {};
-        target["target"] = j[1];
-        CastAbility(smash,4,{target})
+            j = GetThreatRank()
+            local target = {};
+            target["target"] = j[1];
+            CastAbility(smash,4,{target})
 
-        local summonPosition = {}
-        summonPosition["x"] = GetX();
-        summonPosition["y"] = GetY();
+            local summonPosition = {}
+            summonPosition["x"] = GetX();
+            summonPosition["y"] = GetY();
 
-        CastAbility(summon,0,{summonPosition})
-        CastAbility(quake,0,{})
+            CastAbility(summon,0,{summonPosition})
+            CastAbility(quake,0,{})
 
-        local chuckTarget = {}
-        chuckTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_HEALER,999)
-        CastAbility(chuck,2,{chuckTarget})
+            local chuckTarget = {}
+            chuckTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_HEALER,999)
+            CastAbility(chuck,2,{chuckTarget})
 
-        timer = timer + dt;
-        if (math.fmod(math.floor(timer),30)) then
-            CastAbility(rampage, 0.1, {})
+            timer = timer + dt;
+            if (math.fmod(math.floor(timer),30)) then
+                CastAbility(rampage, 0.1, {})
+            end 
+            local isoncd = "false";
+            if (AbilityIsOnCooldown(GetObjRef(),hibernate) == true) then
+                isoncd = "true";
+            end
         end
 
-        if (math.fmod(math.floor(timer),60) and !AbilityIsOnCooldown(GetObjRef(),hibernate)) then
+        if ((math.floor(timer) % 60) == 0 and AbilityIsOnCooldown(GetObjRef(),hibernate) == false) then
             state = STATE_HIBERNATING
         end
         if (state == STATE_HIBERNATING) then
             SetMovePoint(GetObjRef(),128,128,false,false);
             if (NumIsInRange(GetX(GetObjRef()),128,5) and NumIsInRange(GetY(GetObjRef()),128,5)) then
                 CastAbility(hibernate, 0, {})
-                
-            end
-            if (state == STATE_HIBERNATING and AbilityIsOnCooldown(GetObjRef(),hibernate) and ObjIsChanneling(GetObjRef()) == false) then
-                state = STATE_NORMAL;
+                Print("HIBERNATING");
             end
         end
-
+        if (state == STATE_HIBERNATING and AbilityIsOnCooldown(GetObjRef(),hibernate) and ObjIsChannelling(GetObjRef()) == false) then
+            ClearCommandQueue();
+            SetChannelingSprite("assets/enemies/minotaur/minotaur_channeling.png");
+            state = STATE_NORMAL;
+        end
+        
+        if (state == STATE_HIBERNATING) then
+            Print("HIBERNATING")
+        end
 
         CastAbility(bellow,1,{})
 
