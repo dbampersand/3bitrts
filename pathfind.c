@@ -164,7 +164,7 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w
                 {
                     *found = true;
 
-                    float d = dist(nx,ny,current.x,current.y);
+                    float d = distSq(nx,ny,current.x,current.y);
                     if (d < closest)
                     {
                         closest = d;

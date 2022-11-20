@@ -227,6 +227,13 @@ float dot(float x1, float y1, float x2, float y2)
 {
     return (x1*x2)+(y1*y2);
 }
+float distSq(float x1, float y1, float x2, float y2)
+{
+    float moveX = x2 - x1;
+    float moveY = y2 - y1;
+
+    return (moveX*moveX+moveY*moveY);
+}
 float dist(float x1, float y1, float x2, float y2)
 {
     float moveX = x2 - x1;

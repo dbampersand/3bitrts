@@ -59,12 +59,13 @@ bool RectIsFree(int x, int y, int w, int h, bool caresAboutUnits)
 }
 bool PointIsFree(int x, int y, bool caresAboutUnits)
 {
-    int index = GetIndex(GetMapHeight()/_GRAIN, x, y);
-
     if (x < 0 || x >= GetMapWidth())
         return false;
     if (y < 0 || y >= GetMapHeight())
         return false;
+
+    int index = GetIndex(GetMapHeight()/_GRAIN, x, y);
+
     if (caresAboutUnits)
         return (currMap->collision[index] == COLLISION_OPEN);
     else
