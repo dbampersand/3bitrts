@@ -2,8 +2,10 @@
 
 #include "stdbool.h"
 #include "sound.h"
+#include "luafuncs.h"
 
 typedef struct GameObject GameObject;
+
 
 typedef enum ABILITY_CAST_TYPE
 {
@@ -30,7 +32,7 @@ typedef enum HINT
 typedef struct Ability
 {
 
-    char* luabuffer;
+    LuaBuffer luabuffer;
     int luafunc_casted;
     int luafunc_setup;
     int luafunc_onhit;
@@ -64,6 +66,8 @@ typedef struct Ability
 
 
 } Ability;
+
+#define NUM_ABILITY_FUNCTIONS 7
 
 
 extern Ability* abilities;

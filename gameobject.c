@@ -821,16 +821,24 @@ void AddDamage(GameObject* g, float value)
     if (!g) return;
     g->baseDamage += value;
 }
-bool CheckFuncExists(const char* funcName, char* lua_buffer)
+bool CheckFuncExists(const char* funcName, LuaBuffer* lua_buffer)
 {
-    char* c = strstr(lua_buffer,funcName);
+    for (int i = 0; i < lua_buffer->numFunctions; i++)
+    {
+        if (lua_buffer->functions[i] && strcmp(lua_buffer->functions[i],funcName) == 0)
+        {
+            return true;
+        }
+    }
+
+    char* c = strstr(lua_buffer->buffer,funcName);
     char* full = c + strlen(funcName);
 
     if (c == NULL) 
         return false;
-    while (c >= lua_buffer)
+    while (c >= lua_buffer->buffer)
     {
-        while (c >= lua_buffer)
+        while (c >= lua_buffer->buffer)
         {
             //if we've hit a newline
             if (iscntrl(*c) || *c == '\n')
@@ -861,6 +869,9 @@ bool CheckFuncExists(const char* funcName, char* lua_buffer)
             c--;
         }
     }
+    lua_buffer->functions[lua_buffer->numFunctions] = calloc(strlen(funcName)+1,sizeof(char));
+    strcpy(lua_buffer->functions[lua_buffer->numFunctions],funcName);
+    lua_buffer->numFunctions++;
     return true;
 }
 bool ObjHasType(GameObject* g, GAMEOBJ_TYPE_HINT typeHint)
@@ -882,7 +893,7 @@ bool loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
     
     if (g)
     {
-        if (g->lua_buffer)
+        if (g->lua_buffer.buffer)
         {
 
         }
@@ -890,7 +901,7 @@ bool loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
         {
             memset(g,0,sizeof(GameObject));    
             LoadLuaFile(filename,g);
-            if (!g->lua_buffer)
+            if (!g->lua_buffer.buffer)
             {
                 printf("GameObject: Could not load path %s\n",filename ? filename : "NULL");
                 free(cpy);
@@ -904,15 +915,21 @@ bool loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
 
     }
 
-    if (luaL_loadbuffer(l, g->lua_buffer,strlen(g->lua_buffer),NULL) || lua_pcall(l, 0, 0, 0))
+    if (luaL_loadbuffer(l, g->lua_buffer.buffer,strlen(g->lua_buffer.buffer),NULL) || lua_pcall(l, 0, 0, 0))
      {
          printf("%s\n\n---\nCan't load lua file:\n %s Filename: %s\n---\n\n\n",COL_ERR,lua_tostring(l,-1),filename);
          fflush(stdout);
      }
      else
      {
+
+        if (!g->lua_buffer.functions)
+        {
+            g->lua_buffer.functions = calloc(NUM_GAMEOBJECT_FUNCTIONS,sizeof(char*));
+        }
+
         int funcIndex;
-        if (CheckFuncExists("update",g->lua_buffer))
+        if (CheckFuncExists("update",&g->lua_buffer))
         {
             lua_getglobal(l, "update");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -921,7 +938,7 @@ bool loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
         else
             g->luafunc_update = -1;
 
-        if (CheckFuncExists("setup",g->lua_buffer))
+        if (CheckFuncExists("setup",&g->lua_buffer))
         {
             lua_getglobal(l, "setup");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -933,7 +950,7 @@ bool loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
             g->luafunc_setup = -1;
 
 
-        if (CheckFuncExists("kill",g->lua_buffer))
+        if (CheckFuncExists("kill",&g->lua_buffer))
         {
             lua_getglobal(l, "kill");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -942,7 +959,7 @@ bool loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
         else
             g->luafunc_kill = -1;
 
-        if (CheckFuncExists("OnAttack",g->lua_buffer))
+        if (CheckFuncExists("OnAttack",&g->lua_buffer))
         {
             lua_getglobal(l, "OnAttack");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -951,7 +968,7 @@ bool loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
         else
             g->luafunc_onattack = -1;
         
-        if (CheckFuncExists("OnMapChange",g->lua_buffer))
+        if (CheckFuncExists("OnMapChange",&g->lua_buffer))
         {
             lua_getglobal(l, "OnMapChange");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);

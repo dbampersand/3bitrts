@@ -187,7 +187,7 @@ void CloneAbilityPrefab(Ability* prefab, lua_State* l, Ability* cloneTo)
     Ability* a = cloneTo;
     a->path = prefab->path;
     a->luabuffer = prefab->luabuffer;
-    if (a->path && a->luabuffer)
+    if (a->path && a->luabuffer.buffer)
     {
         LoadAbility(a->path, l, a);
     }
@@ -233,7 +233,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
     if (a == NULL) 
         return;
 
-    if (!a->luabuffer)
+    if (!a->luabuffer.buffer)
     {
         memset(a,0,sizeof(Ability));
         char* file = readFile(path);
@@ -243,12 +243,12 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
             return;
         }
 
-        a->luabuffer = file;
+        a->luabuffer.buffer = file;
 
         a->path = calloc(strlen(path)+1,sizeof(char));
         memcpy(a->path,path,strlen(path)*sizeof(char));
     }
-    if (luaL_loadbuffer(l, a->luabuffer,strlen(a->luabuffer),NULL) || lua_pcall(l, 0, 0, 0))
+    if (luaL_loadbuffer(l, a->luabuffer.buffer,strlen(a->luabuffer.buffer),NULL) || lua_pcall(l, 0, 0, 0))
     {
         printf("Can't load lua file %s",lua_tostring(l,-1));
     }
@@ -262,7 +262,13 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         a->maxStacks = 1;
         a->manaCost = 0;
         int funcIndex;
-        if (CheckFuncExists("setup",a->luabuffer))
+
+        if (!a->luabuffer.functions)
+        {
+            a->luabuffer.functions = calloc(NUM_ABILITY_FUNCTIONS,sizeof(char*));
+        }
+
+        if (CheckFuncExists("setup",&a->luabuffer))
         {
             lua_getglobal(l, "setup");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -274,7 +280,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         else
             a->luafunc_setup = -1;
 
-        if (CheckFuncExists("casted",a->luabuffer))
+        if (CheckFuncExists("casted",&a->luabuffer))
         {
             lua_getglobal(l, "casted");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -282,7 +288,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         }
         else
             a->luafunc_casted = -1;
-        if (CheckFuncExists("onhit",a->luabuffer))
+        if (CheckFuncExists("onhit",&a->luabuffer))
         {
             lua_getglobal(l, "onhit");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -292,7 +298,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         else
             a->luafunc_onhit = -1;
 
-        if (CheckFuncExists("ontimeout",a->luabuffer))
+        if (CheckFuncExists("ontimeout",&a->luabuffer))
         {
             lua_getglobal(l, "ontimeout");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -302,7 +308,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         else
             a->luafunc_ontimeout = -1;
 
-        if (CheckFuncExists("abilitytick",a->luabuffer))
+        if (CheckFuncExists("abilitytick",&a->luabuffer))
         {
             lua_getglobal(l, "abilitytick");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -312,7 +318,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         else
             a->luafunc_abilitytick = -1;
 
-        if (CheckFuncExists("untoggle",a->luabuffer))
+        if (CheckFuncExists("untoggle",&a->luabuffer))
         {
             lua_getglobal(l, "untoggle");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -321,7 +327,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         else
             a->luafunc_untoggle = -1;
 
-        if (CheckFuncExists("onchanneled",a->luabuffer))
+        if (CheckFuncExists("onchanneled",&a->luabuffer))
         {
             lua_getglobal(l, "onchanneled");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);

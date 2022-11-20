@@ -5,6 +5,8 @@
 #include "augment.h"
 #include "ui.h"
 #include "point.h"
+#include "luafuncs.h"
+
 
 typedef struct Sprite Sprite;
 typedef struct lua_State lua_State;
@@ -27,7 +29,7 @@ typedef struct Encounter
 
     int spriteIndex;
     char* description;
-    char* lua_buffer;
+    LuaBuffer lua_buffer;
 
     int luafunc_setup;
     int luafunc_update;
@@ -56,6 +58,8 @@ typedef struct Encounter
 
 
 } Encounter;
+
+#define NUM_ENCOUNTER_FUNCTIONS 3
 
 void LoadEncounter(char* dirPath,lua_State* l);
 void LoadEncounters(char* dirPath,lua_State* l);

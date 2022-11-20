@@ -31,14 +31,19 @@ void InitItems()
 Item* LoadItemFuncs(Item* i, lua_State* l)
 {
     int funcIndex;
-    if (luaL_loadbuffer(l, i->luaBuffer,strlen(i->luaBuffer),NULL) || lua_pcall(l, 0, 0, 0))
+    if (luaL_loadbuffer(l, i->luaBuffer.buffer,strlen(i->luaBuffer.buffer),NULL) || lua_pcall(l, 0, 0, 0))
     {
         printf("%s\n\n---\nCan't load lua file:\n %s\n---\n\n\n",COL_ERR,lua_tostring(l,-1));
         fflush(stdout);
         return NULL;
     }
 
-    if (CheckFuncExists("update",i->luaBuffer))
+        if (!i->luaBuffer.functions)
+        {
+            i->luaBuffer.functions = calloc(NUM_ITEM_FUNCTIONS,sizeof(char*));
+        }
+
+    if (CheckFuncExists("update",&i->luaBuffer))
     {
         lua_getglobal(l, "update");
         funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -47,7 +52,7 @@ Item* LoadItemFuncs(Item* i, lua_State* l)
     else
         i->luafunc_update = -1;
 
-    if (CheckFuncExists("attached",i->luaBuffer))
+    if (CheckFuncExists("attached",&i->luaBuffer))
     {
         lua_getglobal(l, "attached");
         funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -56,7 +61,7 @@ Item* LoadItemFuncs(Item* i, lua_State* l)
     else
         i->luafunc_attached = -1;
 
-    if (CheckFuncExists("setup",i->luaBuffer))
+    if (CheckFuncExists("setup",&i->luaBuffer))
     {
         lua_getglobal(l, "setup");
         funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -69,7 +74,7 @@ Item* LoadItemFuncs(Item* i, lua_State* l)
         i->luafunc_setup = -1;
 
 
-    if (CheckFuncExists("OnEffect",i->luaBuffer))
+    if (CheckFuncExists("OnEffect",&i->luaBuffer))
     {
         lua_getglobal(l, "OnEffect");
         funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -78,7 +83,7 @@ Item* LoadItemFuncs(Item* i, lua_State* l)
     else
         i->luafunc_oneffect = -1;
 
-    if (CheckFuncExists("OnAttack",i->luaBuffer))
+    if (CheckFuncExists("OnAttack",&i->luaBuffer))
     {
         lua_getglobal(l, "OnAttack");
         funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -87,7 +92,7 @@ Item* LoadItemFuncs(Item* i, lua_State* l)
     else
         i->luafunc_onattack = -1;
 
-    if (CheckFuncExists("OnDamaged",i->luaBuffer))
+    if (CheckFuncExists("OnDamaged",&i->luaBuffer))
     {
         lua_getglobal(l, "OnDamaged");
         funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -121,14 +126,14 @@ Item* LoadItem(const char* path, lua_State* l)
 
     currItemRunning = i;
     
-    i->luaBuffer = readFile(path);
+    i->luaBuffer.buffer = readFile(path);
 
     char* cpy;
     cpy = calloc(strlen(path)+1,sizeof(char));
     strcpy(cpy,path);
 
 
-    if (luaL_loadbuffer(l, i->luaBuffer,strlen(i->luaBuffer),NULL) || lua_pcall(l, 0, 0, 0))
+    if (luaL_loadbuffer(l, i->luaBuffer.buffer,strlen(i->luaBuffer.buffer),NULL) || lua_pcall(l, 0, 0, 0))
      {
          printf("%s\n\n---\nCan't load lua file:\n %s path: %s\n---\n\n\n",COL_ERR,lua_tostring(l,-1),path);
          fflush(stdout);

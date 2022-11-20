@@ -181,7 +181,7 @@ void loadLuaGameMap(lua_State* l, const char* filename, Map* m)
 {
     char* cpy = calloc(strlen(filename)+1,sizeof(char));
     strcpy(cpy,filename);
-    m->lua_buffer = readFile(filename);
+    m->lua_buffer.buffer = readFile(filename);
 
 
 
@@ -194,19 +194,24 @@ void loadLuaGameMap(lua_State* l, const char* filename, Map* m)
      {
         currGameObjRunning = NULL;
         int funcIndex;
-        if (CheckFuncExists("update",m->lua_buffer))
+        if (!m->lua_buffer.functions)
+        {
+            m->lua_buffer.functions = calloc(NUM_MAP_FUNCTIONS,sizeof(char*));
+        }
+
+        if (CheckFuncExists("update",&m->lua_buffer))
         {
             lua_getglobal(l, "update");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
             m->luafunc_update = funcIndex;
         }
-        if (CheckFuncExists("setup",m->lua_buffer))
+        if (CheckFuncExists("setup",&m->lua_buffer))
         {
             lua_getglobal(l, "setup");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
             m->luafunc_setup = funcIndex;
         }
-        if (CheckFuncExists("mapend",m->lua_buffer))
+        if (CheckFuncExists("mapend",&m->lua_buffer))
         {
             lua_getglobal(l, "mapend");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);

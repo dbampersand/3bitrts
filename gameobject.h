@@ -14,6 +14,7 @@
 #include "stdbool.h"
 #include "video.h"
 #include <stdint.h>
+#include "luafuncs.h"
 
 
 #define MAX_PATHFINDING_NODES_HELD 20
@@ -73,7 +74,7 @@ typedef struct Player Player;
 typedef struct GameObject
 {    
     struct GameObject* prefab;
-    char* lua_buffer;
+    LuaBuffer lua_buffer;
 
     char* name; 
     char* description;
@@ -208,7 +209,7 @@ typedef struct GameObject
 #define MAX_LIGHT_SIZE 90 
 #define LIGHT_FACTOR 0.01f;
 
-
+#define NUM_GAMEOBJECT_FUNCTIONS 5
 
 #define MAX_OBJS 64
 extern GameObject* objects;
@@ -263,7 +264,7 @@ int GetCtrlGroup(int index);
 void SetCtrlGroup(int index, GameObject** list, int numUnitsSelected);
 void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
 GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE source);
-bool CheckFuncExists(const char* funcName, char* lua_buffer);
+bool CheckFuncExists(const char* funcName, LuaBuffer* lua_buffer);
 bool loadLuaGameObj(lua_State* l,const char* filename, GameObject* g);
 GameObject* LoadPrefab(const char* path);
 bool IsSelected(GameObject* g);

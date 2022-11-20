@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 #include "point.h"
+#include "luafuncs.h"
 
 #define _GRAIN 4
 typedef struct Sprite Sprite; 
@@ -29,7 +30,7 @@ typedef struct Map
     int luafunc_setup;
     int luafunc_mapend;
 
-    char* lua_buffer;
+    LuaBuffer lua_buffer;
     char* name;
 
     float percentComplete;
@@ -39,6 +40,8 @@ typedef struct Map
     bool forceNextLevelButtonEnabled;
 
 } Map;
+
+#define NUM_MAP_FUNCTIONS 3
 
 extern Map* currMap;
 extern Map* maps;

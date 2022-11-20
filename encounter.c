@@ -37,17 +37,23 @@ void LoadEncounter(char* dirPath, lua_State* l)
             {
                 if (strcasecmp(dir->d_name,"encounter.lua")==0)
                 {
-                    if (!e->lua_buffer)
+                    if (!e->lua_buffer.buffer)
                     {
                         char* concatted = calloc(strlen(dirPath)+strlen(dir->d_name)+1,sizeof(char)); 
                         strcpy(concatted,dirPath);
                         strcat(concatted,dir->d_name);
-                        e->lua_buffer = readFile(concatted);
+                        e->lua_buffer.buffer = readFile(concatted);
                         free(concatted);
                     }
-                    if (CheckFuncExists("setup",e->lua_buffer))
+
+                    if (!e->lua_buffer.functions)
                     {
-                        if (luaL_loadbuffer(l, e->lua_buffer,strlen(e->lua_buffer),NULL) || lua_pcall(l, 0, 0, 0))
+                        e->lua_buffer.functions = calloc(NUM_ENCOUNTER_FUNCTIONS,sizeof(char*));
+                    }
+
+                    if (CheckFuncExists("setup",&e->lua_buffer))
+                    {
+                        if (luaL_loadbuffer(l, e->lua_buffer.buffer,strlen(e->lua_buffer.buffer),NULL) || lua_pcall(l, 0, 0, 0))
                         {
                             printf("Can't load lua file %s",lua_tostring(l,-1));
                             fflush(stdout);
@@ -62,13 +68,13 @@ void LoadEncounter(char* dirPath, lua_State* l)
                             lua_rawgeti(l,LUA_REGISTRYINDEX,funcIndex);
                             lua_pcall(l,0,0,0);
 
-                            if (CheckFuncExists("update",e->lua_buffer))
+                            if (CheckFuncExists("update",&e->lua_buffer))
                             {
                                 lua_getglobal(l, "update");
                                 funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
                                 e->luafunc_update = funcIndex;
                             }
-                            if (CheckFuncExists("updateloadscreen",e->lua_buffer))
+                            if (CheckFuncExists("updateloadscreen",&e->lua_buffer))
                             {
                                 lua_getglobal(l, "updateloadscreen");
                                 funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);

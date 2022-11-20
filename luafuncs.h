@@ -11,7 +11,13 @@
 #ifndef M_PI
     #define M_PI 3.14159265358979323846
 #endif
-
+typedef struct LuaBuffer
+{
+    char* buffer;
+    char** functions;
+    int numFunctions;
+    int numFunctionsTotal;
+} LuaBuffer;
 
 typedef struct GameObject GameObject;
 typedef struct Ability Ability;

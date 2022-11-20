@@ -5,6 +5,7 @@
 #include "lua-5.4.3/src/lauxlib.h"
 #include "lua-5.4.3/src/lualib.h"
 #include "lua-5.4.3/src/luaconf.h"
+#include "luafuncs.h"
 
 typedef struct GameObject GameObject;
 typedef struct Effect Effect;
@@ -37,7 +38,7 @@ typedef struct Item
     char* path;
     bool enabled;
 
-    char* luaBuffer;
+    LuaBuffer luaBuffer;
 
     GameObject* attachedTo;
 
@@ -51,6 +52,8 @@ typedef struct ItemPool
     int* itemIndices;
     int numItems;
 } ItemPool;
+
+#define NUM_ITEM_FUNCTIONS 5
 
 extern Item* items;
 extern int numItems;

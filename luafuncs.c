@@ -337,9 +337,9 @@ int L_GetRandomUnit(lua_State* l)
 void LoadLuaFile(const char* filename, GameObject* g)
 {
     
-    if (!g->lua_buffer)
+    if (!g->lua_buffer.buffer)
     {
-        g->lua_buffer = readFile(filename);
+        g->lua_buffer.buffer = readFile(filename);
      }
 }
 int L_SetObjectCompletionPercent(lua_State* l)
