@@ -365,8 +365,11 @@ int GetMapWidth()
 {
     if (gameState == GAMESTATE_WATCHING_REPLAY)
     {
-        ReplayFrame* current = &replay.frames[replay.framePlayPosition];
-        return GetWidthSprite(&replay.sprites[current->mapSpriteIndex]);
+        if (replay.frames)
+        {
+            ReplayFrame* current = &replay.frames[replay.framePlayPosition];
+            return GetWidthSprite(&replay.sprites[current->mapSpriteIndex]);
+        }
     }
     return GetWidthSprite(&sprites[currMap->spriteIndex]);
 }

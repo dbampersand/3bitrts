@@ -147,6 +147,7 @@ void RecordReplay(ALLEGRO_BITMAP* screen)
    if (replay.numFrames >= FRAMES_PREALLOC || bufferPosition + _SCREEN_SIZE*_SCREEN_SIZE*sizeof(char) +  sizeof(uint32_t) + (sizeof(ReplayFrame)-sizeof(char*)) >= REPLAY_PREALLOC)
    {
         SerializeSection(&replay,false);
+        replay.numFrames = 0;
    }
 
 
@@ -244,6 +245,8 @@ void SerializeSection(Replay* r, bool finished)
 
         free(rf->objects);
         free(rf->attacks);
+        rf->objects = NULL;
+        rf->attacks = NULL;
 
    }
 
