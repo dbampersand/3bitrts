@@ -1629,14 +1629,20 @@ int GetUIStartHeight()
     return (_MAX(GetMapHeight(),_SCREEN_SIZE) - (_SCREEN_SIZE - UI_START_Y)) + 1;
 
 }
+bool RectIsInUI(float x, float y, float w, float h)
+{
+    return (y + h > GetUIStartHeight());
+
+}
 bool ObjectIsInUI(GameObject* g)
 {
-    if (g->position.worldY + GetHeight(g) > GetUIStartHeight())
+    return (RectIsInUI(g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g)));
+    /*if (g->position.worldY + GetHeight(g) > GetUIStartHeight())
     {
         return true;
     }
     return false;
-
+*/
 }
 void CheckCollisionsWorld(GameObject* g, bool x, float dV)
 {
@@ -1673,7 +1679,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
         return;
 
     }
-    if (posY < 0 || posY+h > UI_START_Y)
+    if (posY < 0 || RectIsInUI(posX,posY,w,h))
     {
         if (posY < 0)
         {
@@ -1682,7 +1688,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             CheckCollisions(g,false,1,true);
 
         } 
-        if (posY+h >  UI_START_Y)
+        if (RectIsInUI(posX,posY,w,h))
         {
             //g->position.worldY =  GetMapHeight()-h;
             UpdateObjPosition_Y(g, UI_START_Y-h);
