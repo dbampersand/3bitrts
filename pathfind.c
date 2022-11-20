@@ -147,8 +147,10 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w
     *found = false;
 
     if (RectIsFree(target.x,target.y,w,h,caresAboutUnits))
+    {
+        *found = true;
         return (PointI){target.x,target.y};
-
+    }
     
     int distanceFrom = 0;
     while (distanceFrom < _MAX(GetMapHeight(),GetMapWidth()))

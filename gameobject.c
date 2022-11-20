@@ -1780,7 +1780,7 @@ void DoCurrentPathingNode(GameObject* g)
         ClearPathfindingQueue(g);
         return;
     }
-    if (IsNear(g->position.worldX,g->pathNodes[g->currentPathingNode].p.x, 0.5) && IsNear(g->position.worldY,g->pathNodes[g->currentPathingNode].p.y, 0.5f) || g->pathfindNeedsRefresh)
+    if ((IsNear(g->position.worldX,g->pathNodes[g->currentPathingNode].p.x, 0.5) && IsNear(g->position.worldY,g->pathNodes[g->currentPathingNode].p.y, 0.5f)) || g->pathfindNeedsRefresh)
     {
         bool success;
         PointI targetIndex = (PointI){((g->targetPosition.x) / (float)_GRAIN), ((g->targetPosition.y) / (float)_GRAIN)};

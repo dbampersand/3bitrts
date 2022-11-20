@@ -472,7 +472,7 @@ int inf(FILE *source, FILE *dest)
     (void)inflateEnd(&strm);
     return ret == Z_STREAM_END ? Z_OK : Z_DATA_ERROR;
 }
-//taken from http://zlib.net/zlib_how.html
+//taken from http://zlib.net/zlib_how.html  
 void zerr(int ret)
 {
     fputs("zpipe: ", stderr);

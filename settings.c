@@ -104,7 +104,7 @@ bool IsBindReleasedThisFrame(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_
 }
 bool IsBindDownThisFrame(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame,Key k)
 {
-    return (al_key_down(keyStateThisFrame, k.keyMappedTo) && !al_key_down(keyStateLastFrame, k.keyMappedTo) || al_key_down(keyStateThisFrame, k.secondKeyMappedTo) && !al_key_down(keyStateLastFrame, k.secondKeyMappedTo));
+    return ((al_key_down(keyStateThisFrame, k.keyMappedTo) && !al_key_down(keyStateLastFrame, k.keyMappedTo)) || (al_key_down(keyStateThisFrame, k.secondKeyMappedTo) && !al_key_down(keyStateLastFrame, k.secondKeyMappedTo)));
 }
 bool IsBindDown(ALLEGRO_KEYBOARD_STATE* keyState, Key k)
 {
@@ -723,10 +723,14 @@ bool LoadSaveFile(char* path)
                 }
             }
             Save("_save.save");
+            return false;
 
         }
 
     }
+    else
+        return false;
+    return true;
 }
 bool LoadSettingsFile(char* path)
 {

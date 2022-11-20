@@ -364,7 +364,7 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
             return false;
         }
     }
-    if (target && (a->castType & ABILITY_TARGET_ALL || a->castType & ABILITY_TARGET_ENEMY || a->castType & ABILITY_TARGET_FRIENDLY) || a->castType & ABILITY_NONE)
+    if (target && ((a->castType & ABILITY_TARGET_ALL || a->castType & ABILITY_TARGET_ENEMY || a->castType & ABILITY_TARGET_FRIENDLY) || a->castType & ABILITY_NONE))
     {
         bool ownedByG = IsOwnedByPlayer(g);
         bool ownedByTarget = IsOwnedByPlayer(target);
