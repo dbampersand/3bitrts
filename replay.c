@@ -242,6 +242,9 @@ void SerializeSection(Replay* r, bool finished)
             }
         }
 
+        free(rf->objects);
+        free(rf->attacks);
+
    }
 
    if (finished)
