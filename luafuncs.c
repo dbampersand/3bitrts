@@ -1667,6 +1667,31 @@ int L_CreateObject(lua_State* l)
     float summonTime = lua_tonumber(l,5);
     float completionPercent = DEFAULT_COMPLETION_PERCENT; 
     bool applyCompletion = false;
+
+    GameObject* before = currGameObjRunning;
+
+    int ownedBy = PLAYER;
+    //when called from a gameobject or an ability used by a gameobject,
+    //set the player appropriately (if TYPE_FRIENDLY, make it a friend of that object)
+    if (currGameObjRunning)
+    {
+        if (PLAYER == TYPE_FRIENDLY)
+        {
+            ownedBy = GetPlayerOwnedBy(currGameObjRunning);
+        }
+        if (PLAYER == TYPE_ENEMY)
+        {
+            //if owned by player
+            if (GetPlayerOwnedBy(currGameObjRunning) == 0)
+            {
+                ownedBy = 1;
+            }
+            else
+            {
+                ownedBy = 0;
+            }
+        }
+    }
     if (lua_isnumber(l,6))
     {
         completionPercent = lua_tonumber(l,6);
@@ -1692,14 +1717,15 @@ int L_CreateObject(lua_State* l)
     {
         GameObject* prefab = LoadPrefab(l_path);
         g = AddGameobject(prefab,x,y,source);
-        SetOwnedBy(g, PLAYER);
+        SetOwnedBy(g, ownedBy);
 
     }
     else
     {
         g = AddGameobject(g,x,y,source);
-        SetOwnedBy(g, PLAYER);
+        SetOwnedBy(g, ownedBy);
     }
+    currGameObjRunning = before;
     if (!g)
         return 0;
     g->summonTime = 0;
@@ -3705,5 +3731,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_ObjIsChannelling);
     lua_setglobal(luaState, "ObjIsChannelling");
+
+    lua_pushcfunction(luaState, L_AddThreat);
+    lua_setglobal(luaState, "AddThreat");
 
 }

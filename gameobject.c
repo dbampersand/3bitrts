@@ -1446,8 +1446,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                                // g2->position.worldX=0;
                                 UpdateObjPosition_X(g2,0);
 
-                               // CheckCollisions(g2,true,1,true);
-                               //  CheckCollisionsWorld(g2,true,1);
                                 continue;
 
                             }
@@ -1461,8 +1459,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         collisionEvents[numEvents].x = true;
                         collisionEvents[numEvents].direction = -1;
                         numEvents++;
-                        //CheckCollisions(g2,true,-1,true);
-                        //CheckCollisionsWorld(g2,true,-1);
                     }
                     else
                     {
@@ -1475,8 +1471,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
 
                             //g->position.worldX = g2->position.worldX+al_get_bitmap_width(s2->sprite); 
                             UpdateObjPosition_X(g,g2->position.worldX+al_get_bitmap_width(s2->sprite));
-                            //CheckCollisions(g2,true,-1,true);
-                            //CheckCollisionsWorld(g2,true,-1);
                         }
                     }
                     
@@ -1503,7 +1497,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                                 {
                                     //g2->position.worldY=0;
                                     UpdateObjPosition_Y(g2,0);
-
                                 }
                                 if (ObjectIsInUI(g2))
                                 {
@@ -1514,8 +1507,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
 
                                     g2->position.worldY = GetUIStartHeight() - GetHeight(g2);
                                     UpdateObjPosition_Y(g2,GetUIStartHeight() - GetHeight(g2));
-                                    //CheckCollisions(g2,false,-1,true);
-                                    //CheckCollisionsWorld(g2,false,-1);
                                     continue;
                                 }
                         }
@@ -1523,9 +1514,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         collisionEvents[numEvents].x = false;
                         collisionEvents[numEvents].direction = 1;
                         numEvents++;
-                        //CheckCollisions(g2,false,1,true);
-                        //CheckCollisionsWorld(g2,false,1);
-
                     }
                     else
                     {
@@ -1538,8 +1526,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             
                             //g->position.worldY = g2->position.worldY - al_get_bitmap_height(s->sprite);
                             UpdateObjPosition_Y(g,g2->position.worldY - al_get_bitmap_height(s->sprite));
-                            //CheckCollisions(g2,false,1,true);
-                            //CheckCollisionsWorld(g2,false,1);
                         }
 
                     }
@@ -1561,8 +1547,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                                 collisionEvents[numEvents].x = false;
                                 collisionEvents[numEvents].direction = 1;
                                 numEvents++;
-                                //CheckCollisions(g2,false,1,true);
-                              //  CheckCollisionsWorld(g2,false,1);
                                 continue;
                             }
                             if (ObjectIsInUI(g2))
@@ -1574,8 +1558,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                         collisionEvents[numEvents].x = false;
                         collisionEvents[numEvents].direction = -1;
                         numEvents++;
-                        //CheckCollisions(g2,false,-1,true);
-                        //CheckCollisionsWorld(g2,false,-1);
                     }
                     else
                     {
@@ -1587,8 +1569,6 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
                             numEvents++;
                             //g->position.worldY = g2->position.worldY + al_get_bitmap_height(s2->sprite);
                             UpdateObjPosition_Y(g,g2->position.worldY + al_get_bitmap_height(s2->sprite));
-                           // CheckCollisions(g2,false,-1,true);
-                            //CheckCollisionsWorld(g2,false,-1);
                         }
                     }
                 }
@@ -2226,7 +2206,7 @@ void DrawSummonEffect(GameObject* g)
 }
 bool IsSelectable(GameObject* g)
 {
-    if (gameState == GAMESTATE_CHOOSING_UNITS && !g->purchased)
+    if (gameState == GAMESTATE_CHOOSING_UNITS && (g->playerChoosable && !g->purchased))
         return false;
     return (GetPlayerOwnedBy(g) == 0);
 }
@@ -2737,9 +2717,6 @@ void Teleport(GameObject* g, float x, float y, bool updateOld)
     UpdateObjPosition(g, move.x*_GRAIN, move.y*_GRAIN);
 
 
-
-    //CheckCollisions(g,true, 1, true);
-    //CheckCollisions(g,false, 1, true);  
  
     SetTargetPosition(g,g->position.worldX,g->position.worldY);
     SetMapCollisionRect(g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g),true);
