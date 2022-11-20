@@ -140,32 +140,47 @@ void ClearQueue(Queue* queue)
 {
     queue->numElements = 0;
 }
-//TODO: this can be made *far* more efficient
 PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w, int h, bool caresAboutUnits)
 {
     float closest = FLT_MAX;
     PointI closestP = current;
     *found = false;
 
-    for (int x = -32; x < 32; x++)
-    {
-        for (int y = -32; y < 32; y++)
-        {
-            int nx = target.x + x;
-            int ny = target.y + y;
+    if (RectIsFree(target.x,target.y,w,h,caresAboutUnits))
+        return (PointI){target.x,target.y};
 
-            if (RectIsFree(nx,ny,w,h,caresAboutUnits)) 
+    
+    int distanceFrom = 0;
+    while (distanceFrom < _MAX(GetMapHeight(),GetMapWidth()))
+    {
+        for (int x = -distanceFrom; x < distanceFrom; x++)
+        {
+            for (int y = -distanceFrom; y < distanceFrom; y++)
             {
-                float distance = dist(nx,ny,target.x,target.y);// + dist(nx,ny,current.x,current.y);
-                if (distance < closest)
+                int nx = target.x + x;
+                int ny = target.y + y;
+
+                if (RectIsFree(nx,ny,w,h,caresAboutUnits))
                 {
-                    closest = distance;
-                    closestP = (PointI){nx,ny};
                     *found = true;
+
+                    float d = dist(nx,ny,current.x,current.y);
+                    if (d < closest)
+                    {
+                        closest = d;
+                        closestP = (PointI){nx,ny};
+                    }
+                    //return (PointI){nx,ny};
                 }
             }
         }
+        if (*found)
+        {
+            return closestP;
+        }
+        distanceFrom++;
     }
+
     return closestP;
 }
 void GetPath(PathfindNode* currentNode, GameObject* g)
