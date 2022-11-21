@@ -5,18 +5,18 @@ function setup()
     SetChannelingSprite("assets/enemies/giant_ooze/giant_ooze_channelling.png");
 
     SetDamage(40);
-    SetMaxHP(3000,true)
+    SetMaxHP(4500,true)
     SetSpeed(60)
     SetRange(10);
 
-    squeeze = AddAbility(GetObjRef(),"assets/enemies/giant_ooze/squeeze.lua",0);
+    squeeze = AddAbility(GetObjRef(),"assets/enemies/giant_ooze/ability_squeeze.lua",0);
 
 end
 
 function update(dt)
     timer = timer + dt;
     if (timer > 5) then
-        CastAbility(0,5,{});
+        CastAbility(squeeze,5,{});
     end
 end
 
@@ -26,5 +26,5 @@ end
 
 function mapend()
     ChangeMap("assets/encounters/03/map_final.lua")
-    return false;
+    return true;
 end

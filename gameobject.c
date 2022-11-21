@@ -1595,7 +1595,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
     for (int i = 0; i < numEvents; i++)
     {
         CollisionEvent* c = &collisionEvents[i];
-        CheckCollisions(c->obj,c->x,c->direction,true);
+        CheckCollisions(c->obj,c->x,c->direction,objectCanPush);
         CheckCollisionsWorld(c->obj,c->x,c->direction);
 
     }
@@ -2133,8 +2133,9 @@ void DrawMapHighlights()
     }
 
     al_set_target_bitmap(scratchMap);
-    al_draw_bitmap(sprites[currMap->spriteIndex].inverseSprite,-players[0].cameraPos.x,-players[0].cameraPos.y,0);
+
     al_clear_to_color(_TRANSPARENT);
+    al_draw_bitmap(sprites[currMap->spriteIndex].inverseSprite,-players[0].cameraPos.x,-players[0].cameraPos.y,0);
 
     for (int i = 0; i < numActiveObjects; i++)
     {
@@ -2160,10 +2161,11 @@ void DrawMapHighlights()
             }
         }
     }
-    al_lock_bitmap(scratchMap,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
 
+    //TODO: investigate if we can have this locked, doesn't seem to work w/ locking
+    //al_lock_bitmap(scratchMap,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
     al_convert_mask_to_alpha(scratchMap,WHITE);
-    al_unlock_bitmap(scratchMap);
+   // al_unlock_bitmap(scratchMap);
     
     al_set_blender(beforeOp, beforeSrc, beforeDst);
 
@@ -2172,7 +2174,6 @@ void DrawMapHighlights()
 
     al_set_target_bitmap(screen);
     al_draw_bitmap(scratchMap,0,0,0);
-    //TODO: can cache this rather than copying and deleting every frame
 }
 void DrawAggroIndicators()
 {

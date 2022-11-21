@@ -17,7 +17,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["triggersPerSecond"] = 1
     f1["type"] = EFFECT_HURT_PERCENT;
     f1["value"] = 0.34;  
-    f1["name"] = "Howl"
+    f1["name"] = "Squeeze"
     f1["overwrites"] = true
 
     CreateCircularProjectiles(GetX(GetObjRef()),GetY(GetObjRef()),"",ATTACK_PROJECTILE_ANGLE,80,999,false,ATTACK_HITS_ENEMIES,128,COLOR_DAMAGE,0,{f1})
