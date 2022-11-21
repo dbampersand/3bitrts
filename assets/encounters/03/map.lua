@@ -1,7 +1,7 @@
 
 
 function setup()
-    SetMapSprite("assets/encounters/03/map.png")
+    SetMapSprite("assets/encounters/03/map_final.png")
         --CreateObject("assets/encounters/02/boss.lua",32,32,TYPE_ENEMY);
     CreateObject("assets/enemies/cusith/cusith.lua",120,22,TYPE_ENEMY,5);
 

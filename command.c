@@ -9,6 +9,7 @@
 #include "player.h"
 #include "map.h"
 #include <math.h>
+#include <float.h>
 
 Color queueCommandColors[COMMAND_ALL] = {0}; 
 
@@ -181,19 +182,30 @@ void NextCommand(GameObject* g)
 }
 void FindEnemiesToAttack(GameObject* g)
 {
+    GameObject* closestObj = NULL;
+    float closestDistance = FLT_MAX;
+
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g2 = activeObjects[i];  
         if (IsActive(g2) && GetPlayerOwnedBy(g) != GetPlayerOwnedBy(g2) && !ObjIsDecoration(g2))
         {
-            if (GetDist(g,g2) <= g->aggroRadius)
+            float gDist = GetDist(g,g2);
+            if (gDist <= g->aggroRadius)
             {
-                AttackCommand(g,g2,false);
-                return;
+                if (gDist <= closestDistance)
+                {
+                    closestObj = g2;
+                    closestDistance = gDist;
+                }
             }
 
         }
 
+    }
+    if (closestObj)
+    {
+        AttackCommand(g,closestObj,false);
     }
 }
 bool IsIdle(GameObject* g)
@@ -343,28 +355,7 @@ void DoCommands(GameObject* g)
             NextCommand(g);
             return;
         }
-        for (int i = 0; i < numActiveObjects; i++)
-        {
-            GameObject* g2 = activeObjects[i];  
-            if (ObjIsDecoration(g2))
-            {
-                if (!IsOwnedByPlayer(g))
-                    continue;
-            }
-            if (IsActive(g2))
-            {
-                if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(g2))
-                {
-                    if (GetDist(g,g2) <= g->aggroRadius)
-                    {
-                        g->targObj = g2;
-                        g->queue[0].commandType = COMMAND_ATTACK;
-                        g->queue[0].target = g2;
-                        return;  
-                    }
-                }
-            }
-        }
+        FindEnemiesToAttack(g);
 
     }
     if (c->commandType == COMMAND_STOP)

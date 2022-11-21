@@ -122,6 +122,7 @@ void FinishTransition()
     }
     if (transitioningTo == GAMESTATE_INGAME)
     {
+        gameStats.timeTaken = 0;
         NewReplay();
 
         RemoveAllGameObjects();
