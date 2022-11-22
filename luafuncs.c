@@ -1886,7 +1886,7 @@ int L_SetLightIntensity(lua_State* l)
 int L_SetMapSprite(lua_State* l)
 {
     currMap->spriteIndex = LoadSprite(lua_tostring(l,-1),true);
-    PreprocessMap(currMap);
+    PreprocessMap(currMap,RandRangeI(3,15));
     return 0;
 }
 int L_SetAbilityCastTypeHint(lua_State* l)

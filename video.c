@@ -103,6 +103,9 @@ void InitVideo()
     al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
     display = al_create_display(monitor.x2,monitor.y2);
 
+    InitSpriteDecorations();
+
+
     int resX = _SCREEN_SIZE*_RENDERSIZE;
     int resY = _SCREEN_SIZE*_RENDERSIZE;
 
@@ -127,7 +130,6 @@ void InitVideo()
     sinTable = &__sinTable[360];
     cosTable = &__cosTable[360];
 
-    InitSpriteDecorations();
 
 
 }
@@ -568,6 +570,7 @@ void ProcessSpriteDecorations(float dt)
         }
     }
 }
+                
 void DrawSpriteDecorations(RenderOrder renderOrder)
 {
     for (int i = 0; i < MAX_SPRITE_DECORATIONS; i++)
@@ -599,6 +602,41 @@ void AddSpriteDecoration(SpriteDecoration s)
             numFreeDecorations--;
         }
     }
+}
+void CreateSpriteDecorAtPosition(int selectedSprite,int x,int y,RenderOrder renderOrder,Color col)
+{
+        SpriteDecoration s = {0};
+        s.decorationType = SPRITE_BG_DECOR;
+        s.spriteIndex = selectedSprite;
+        s.renderOrder = renderOrder;
+        s.tint = col;
+
+        s.position.worldX = x;
+        s.position.worldY = y;
+
+        AddSpriteDecoration(s);
+
+}
+
+void RandomSpriteDecorAtPosition(int numToAdd, int* array, int numArrayElements, int x, int y, RenderOrder renderOrder, Color col)
+{
+    for (int i = 0; i < numToAdd; i++)
+    {
+        SpriteDecoration s = {0};
+        s.decorationType = SPRITE_BG_DECOR;
+        s.spriteIndex = array[RandRangeI(0,numArrayElements)];
+        int w = GetWidthSprite(&sprites[s.spriteIndex]);
+        int h = GetHeightSprite(&sprites[s.spriteIndex]);
+        s.renderOrder = renderOrder;
+        s.tint = col;
+
+        s.position.worldX = x;
+        s.position.worldY = y;
+
+        AddSpriteDecoration(s);
+
+    }
+    
 }
 void RandomSpriteDecor(int numToAdd, int* array, int numArrayElements)
 {

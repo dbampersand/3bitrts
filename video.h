@@ -122,4 +122,7 @@ void DrawSpriteDecorations(RenderOrder renderOrder);
 SpriteDecoration AddCloud();
 void AddClouds(int numClouds);
 void ClearSpriteDecorations();
+void RandomSpriteDecorAtPosition(int numToAdd, int* array, int numArrayElements, int x, int y, RenderOrder renderOrder, Color col);
 void RandomSpriteDecor(int numToAdd, int* array, int numArrayElements);
+void CreateSpriteDecorAtPosition(int selectedSprite,int x,int y,RenderOrder renderOrder,Color col);
+

@@ -115,7 +115,7 @@ void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
         }
     }
 }
-void PreprocessMap(Map* map)
+void PreprocessMap(Map* map, int randSpritesToAdd)
 {
     if (map->collision)
         free(map->collision);
@@ -155,6 +155,38 @@ void PreprocessMap(Map* map)
         }
       }
    }
+    for (int i = 0; i < randSpritesToAdd; i++)
+    {
+        int numAttempts = 15;
+        while (numAttempts-- > 0)
+        {
+            int x = RandRange(0,w);
+            int y = RandRange(0,h);
+
+            int selectedDirt = dirtSprites[RandRangeI(0,numDirtSprites)];
+            bool put = true;
+            for (int x2 = 0; x2 < GetWidthSprite(&sprites[selectedDirt]); x2++)
+            {
+                for (int y2 = 0; y2 < GetHeightSprite(&sprites[selectedDirt]); y2++)
+                {
+                    ALLEGRO_COLOR pixel = al_get_pixel(sprite, x+x2, y+y2);
+
+                    if (pixel.a && pixel.r > bgThreshhold && pixel.g > bgThreshhold && pixel.b > bgThreshhold) {
+
+                    }
+                    else
+                    {
+                        put = false;
+                    }
+                }
+            }
+
+            if (put) {
+                CreateSpriteDecorAtPosition(selectedDirt,x,y,AFTER_WORLD,COLOR_TEXTURED_GROUND);
+                break;
+            }
+        }
+    }
 
     Sprite* secondLayer = NewSprite(w,h);
     secondLayer-> path = calloc(1,sizeof(char));    

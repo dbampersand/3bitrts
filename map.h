@@ -47,7 +47,7 @@ extern Map* currMap;
 extern Map* maps;
 extern int numMaps;
 
-void PreprocessMap(Map* map);
+void PreprocessMap(Map* map, int randSpritesToAdd);
 Map* LoadMap(char* path);
 void SetMap(Map* m);
 void InitMaps();
