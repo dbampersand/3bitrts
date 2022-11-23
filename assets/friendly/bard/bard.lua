@@ -24,7 +24,7 @@ function setup()
     
     SetObjPurchaseScreenSprite("assets/friendly/bard/bard_full.png")
     SetObjName("Bard");
-    SetObjDescription("")
+    SetObjDescription("A travelling musician.")
     
 end
 

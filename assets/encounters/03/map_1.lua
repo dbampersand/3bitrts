@@ -14,3 +14,8 @@ end
 function kill()
 
 end
+
+function mapend()
+    ChangeMap("assets/encounters/03/map_final.lua")
+    return false;
+end

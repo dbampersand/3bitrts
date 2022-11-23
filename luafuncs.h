@@ -25,6 +25,7 @@ typedef struct Attack Attack;
 typedef struct Effect Effect;
 typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE; 
 
+extern bool _LOADING_PREFAB;
 extern lua_State* luaState;
 extern GameObject* currGameObjRunning;
 extern Ability* currAbilityRunning;

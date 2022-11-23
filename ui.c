@@ -65,20 +65,6 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     GameObject* prefabDrawing = purchaseUI->prefabs[purchaseUI->currentIndex];
     Sprite* s = &sprites[prefabDrawing->spriteIndex_PurchaseScreenSprite];
 
-
-    int paragraphStartX = 8;
-    int paragraphX = paragraphStartX - (_SCREEN_SIZE*(purchaseUI->transitionTimer));
-    
-    int paragraphY = 25;
-    int paragraphWMax = _SCREEN_SIZE - GetWidthSprite(s) - paragraphStartX - 5;
-    //TODO: more than one page for this? If it overflows, add a next/previous page button
-    int clippingHeight = purchaseUI->back.y - paragraphY -  8;  
-
-    al_draw_text(ui.font,FRIENDLY,paragraphX,15, ALLEGRO_ALIGN_LEFT,prefabDrawing->name ? prefabDrawing->name : "");
-
-    al_set_clipping_rectangle(paragraphX,paragraphY,paragraphWMax,clippingHeight);
-    al_draw_multiline_text(ui.tinyFont,FRIENDLY,paragraphX,25,paragraphWMax,8,ALLEGRO_ALIGN_LEFT,prefabDrawing->description ? prefabDrawing->description : "");
-    al_reset_clipping_rectangle();
     int x = (_SCREEN_SIZE-GetWidthSprite(s)); 
     //if (!purchaseUI->isTransitionOut)
     float timer = easeInOutQuint(purchaseUI->transitionTimer);
@@ -87,6 +73,97 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     int y = 0;
     DrawSprite(s,x,y,0,0,0,FRIENDLY,false);
 
+
+    int abilityY = 204;
+    
+    int abilitySize = 30;
+    int paragraphStartX = 8;
+
+    Ability* mousedOver = NULL; 
+
+    if (prefabDrawing->numAbilities <= 4)
+    {
+        
+        for (int i = 0; i < prefabDrawing->numAbilities; i++)
+        {
+            int xPos = (paragraphStartX + (i*abilitySize) + i*2) + _SCREEN_SIZE;
+            xPos -= (_SCREEN_SIZE)*(purchaseUI->transitionTimer+1);
+            int yPos = abilityY;
+            al_draw_filled_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,BG);
+            //al_draw_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
+            //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false);
+            ALLEGRO_COLOR* c = &FRIENDLY;
+            Rect r = (Rect){xPos,yPos,30,30};
+            
+            if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, c,false,true) && !mousedOver)
+            {
+                mousedOver = &prefabDrawing->abilities[i];
+            } 
+
+        }
+    }
+    
+    int totalW = 126; 
+    if (prefabDrawing->numAbilities >= 5)
+    {
+        abilityY = 170;
+        
+        for (int i = 0; i < 2; i++)
+        {
+            
+            //int xPos = paragraphStartX + (totalW/2*(i+1)) - abilitySize*1.5f;
+            int xPos = (paragraphStartX + (totalW/3*(i)) + abilitySize/2*(i+1) + (i*2)) + _SCREEN_SIZE;
+            xPos -= (_SCREEN_SIZE)*(purchaseUI->transitionTimer+1);
+            
+            int yPos = abilityY;
+            al_draw_filled_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,BG);
+           // al_draw_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
+            //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false);
+            ALLEGRO_COLOR* c = &FRIENDLY;
+            Rect r = (Rect){xPos,yPos,30,30};
+
+            if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, c,false,true) && !mousedOver)
+            {
+                mousedOver = &prefabDrawing->abilities[i];
+            } 
+
+        }
+        for (int i = 2; i < 5; i++)
+        {
+            int xPos = (paragraphStartX + (totalW/3*(i-2)) + ((i-2)*2)) + _SCREEN_SIZE;
+            xPos -= (_SCREEN_SIZE)*(purchaseUI->transitionTimer+1);
+
+            int yPos = abilityY+34;
+            al_draw_filled_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,BG);
+            //al_draw_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
+            //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false);
+            ALLEGRO_COLOR* c = &FRIENDLY;
+            Rect r = (Rect){xPos,yPos,30,30};
+            if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, c,false,true) && !mousedOver)
+            {
+                mousedOver = &prefabDrawing->abilities[i];
+            } 
+
+        }
+
+    }
+
+    int paragraphX = paragraphStartX - (_SCREEN_SIZE*(purchaseUI->transitionTimer));
+    
+    int paragraphY = 25;
+    int paragraphWMax = _SCREEN_SIZE - GetWidthSprite(s) - paragraphStartX - 5;
+    //TODO: more than one page for this? If it overflows, add a next/previous page button
+    int clippingHeight = abilityY - paragraphY -  8;  
+
+    char* description = prefabDrawing->description;
+    if (mousedOver)
+        description = mousedOver->description;
+    al_draw_text(ui.font,FRIENDLY,paragraphX,15, ALLEGRO_ALIGN_LEFT,prefabDrawing->name ? prefabDrawing->name : "");
+
+    al_set_clipping_rectangle(paragraphX,paragraphY,paragraphWMax,clippingHeight);
+    al_draw_multiline_text(ui.tinyFont,FRIENDLY,paragraphX,25,paragraphWMax,8,ALLEGRO_ALIGN_LEFT,description ? description : "");
+    al_reset_clipping_rectangle();
+  
     if (purchaseUI->currentIndex == 0)
         purchaseUI->back.enabled = false;
     else
@@ -672,7 +749,7 @@ bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c, MouseState* mo
     }
     return false;
 }
-bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, MouseState mouseState)
+bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, MouseState mouseState, ALLEGRO_COLOR* c, bool drawKey, bool ignoreStacks)
 {
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     if (selected->abilities[index].spriteIndex_Portrait <= 0) 
@@ -689,19 +766,23 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
     {
         percent = 1 - (a->cdTimer / a->cooldown);
     }
-    if (a->stacks > 0 && selected->stunTimer == 0)
+    if ((a->stacks > 0 && selected->stunTimer == 0) || ignoreStacks)
         percent = 1;
     int h = al_get_bitmap_height(s->sprite) * percent;
     int w = al_get_bitmap_width(s->sprite);
-    if (AbilityIsOnCooldown(a))//a->cdTimer > 0)
+    if (!ignoreStacks && AbilityIsOnCooldown(a))//a->cdTimer > 0)
     {
         keydown = false;
     }
-    ALLEGRO_COLOR* col = (ObjectHasManaToCast(selected,a) && !AbilityIsOnCooldown(a) && percent >= 1.0f) ? &FRIENDLY : &GROUND;
+    ALLEGRO_COLOR* col;
+    if (c)
+        col = c;
+    else
+        col = (ObjectHasManaToCast(selected,a) && !AbilityIsOnCooldown(a) && percent >= 1.0f) ? &FRIENDLY : &GROUND;
     DrawSpriteRegion(s,0,0,w,h,r.x,r.y,*col,keydown);
 
     //Draw stacks counter
-    if (a->maxStacks > 1)
+    if (a->maxStacks > 1 && !ignoreStacks)
     {
         int sizeStackCounter = 8;
         int xStackCounter = r.x+r.w-sizeStackCounter;
@@ -732,7 +813,7 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
         key = al_keycode_to_name(currSettings.keymap.key_F.keyMappedTo);
 
 
-    if (key)
+    if (key && drawKey)
     {
         int keyW = al_get_text_width(ui.tinyFont,key)+4;
         int keyH = al_get_font_line_height(ui.tinyFont)+4;
@@ -778,7 +859,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         Ability* heldAbility = players[0].abilityHeld;
         
 
-        if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0),IsBindDown(keyState,currSettings.keymap.key_Q),*mouseState))
+        if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0),IsBindDown(keyState,currSettings.keymap.key_Q),*mouseState,false,true,false))
         {
             if (selected->abilities[0].description)
             {
@@ -789,7 +870,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        if (DrawAbilityPortraits(selected,heldAbility,1,GetAbilityPortraitRect(1),IsBindDown(keyState,currSettings.keymap.key_W),*mouseState))
+        if (DrawAbilityPortraits(selected,heldAbility,1,GetAbilityPortraitRect(1),IsBindDown(keyState,currSettings.keymap.key_W),*mouseState,false,true,false))
         {
             if (selected->abilities[1].description)
             {
@@ -800,7 +881,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        if (DrawAbilityPortraits(selected,heldAbility,2,GetAbilityPortraitRect(2),IsBindDown(keyState,currSettings.keymap.key_E),*mouseState))
+        if (DrawAbilityPortraits(selected,heldAbility,2,GetAbilityPortraitRect(2),IsBindDown(keyState,currSettings.keymap.key_E),*mouseState,false,true,false))
         {
             if (selected->abilities[2].description)
             {
@@ -812,7 +893,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        if (DrawAbilityPortraits(selected,heldAbility,3,GetAbilityPortraitRect(3),IsBindDown(keyState,currSettings.keymap.key_R),*mouseState))
+        if (DrawAbilityPortraits(selected,heldAbility,3,GetAbilityPortraitRect(3),IsBindDown(keyState,currSettings.keymap.key_R),*mouseState,false,true,false))
         {
             if (selected->abilities[3].description)
             {
@@ -824,7 +905,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         }
         if (selected->numAbilities >= 5)
         {
-            if (DrawAbilityPortraits(selected,heldAbility,4,GetAbilityPortraitRect(4),IsBindDown(keyState,currSettings.keymap.key_F),*mouseState))
+            if (DrawAbilityPortraits(selected,heldAbility,4,GetAbilityPortraitRect(4),IsBindDown(keyState,currSettings.keymap.key_F),*mouseState,false,true,false))
             {
                 if (selected->abilities[4].description)
                 {

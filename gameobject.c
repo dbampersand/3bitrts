@@ -1233,6 +1233,7 @@ void LoadFolderPrefabs(const char* dirPath, char* name)
 }
 GameObject* LoadPrefab(const char* path)
 {
+    _LOADING_PREFAB = true;
     for (int i = 0; i < numPrefabs; i++)
     {
         if (prefabs[i]->path && strcasecmp(prefabs[i]->path,path)==0)
@@ -1254,6 +1255,7 @@ GameObject* LoadPrefab(const char* path)
     }
     prefabs[numPrefabs] = g;
     numPrefabs++;
+    _LOADING_PREFAB = false;
 
     return prefabs[numPrefabs-1];
 }

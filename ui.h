@@ -284,7 +284,7 @@ void GetAbilityClickedInsideUI(MouseState mouseState, MouseState mouseStateLastF
 void UpdateChatbox(float dt);
 void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseStateLastFrame);
 void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseState);
-bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, MouseState mouseState);
+bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index, Rect r, bool keydown, MouseState mouseState, ALLEGRO_COLOR* c, bool drawKey, bool ignoreStacks);
 void DrawCursor(MouseState* mouseState, int index, bool clicked);
 void LoadCursorSprite(UI* ui, int* index, char* path);
 void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, ALLEGRO_FONT* bold, int x, int y, int wTextbox, int minH, ALLEGRO_COLOR color, bool dither);

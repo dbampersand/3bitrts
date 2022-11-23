@@ -24,11 +24,13 @@
 #include "item.h"
 #include "shop.h"
 
+
  lua_State* luaState = NULL;
  GameObject* currGameObjRunning = NULL; 
  Ability* currAbilityRunning = NULL;
  Attack* currAttackRunning = NULL;
  ALLEGRO_KEYBOARD_STATE* keyStateLua = NULL;
+ bool _LOADING_PREFAB = false;
 
 static void dumpstack (lua_State* l) {
   int top=lua_gettop(l);
@@ -2726,10 +2728,16 @@ int L_ChangeMap(lua_State* l)
 }
 int L_AddAbility(lua_State* l)
 {
-    int objIndex = lua_tonumber(l,1);
-    if (objIndex < 0 || objIndex >= MAX_OBJS)
-        return 0;
-    GameObject* g = &objects[objIndex];
+    GameObject* g;
+    if (_LOADING_PREFAB)
+        g = currGameObjRunning;
+    else
+    {
+        int objIndex = lua_tonumber(l,1);
+        if (objIndex < 0 || objIndex >= MAX_OBJS)
+            return 0;
+        g = &objects[objIndex];
+    }
     const char* path = lua_tostring(l,2);
     int index = lua_tonumber(l,3);
     if (index < 0) index = 0; 

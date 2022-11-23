@@ -20,14 +20,9 @@ function update(dt)
     end
     local acidTarget = {};
     acidTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999);
-    CastAbility(acid,0,{})
+    CastAbility(acid,3,{acidTarget})
 end
 
 function kill()
-
 end
 
-function mapend()
-    ChangeMap("assets/encounters/03/map_final.lua")
-    return true;
-end
