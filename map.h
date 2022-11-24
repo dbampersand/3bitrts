@@ -18,7 +18,8 @@ typedef enum CollisionMapValue {
 typedef struct Map 
 {   
     CollisionMapValue* collision;//[_MAPSIZE*_MAPSIZE/_GRAIN];
-    
+    int collisionMapHeight;
+
     char* path;
     unsigned int spriteIndex;
     unsigned int secondLayerSpriteIndex;
@@ -64,3 +65,4 @@ bool RectIsFree(int x, int y, int w, int h, bool caresAboutUnits);
 void AddCompletionPercent(float percent);
 void ChangeMap(const char* path);
 void AddDirtSprites(int numToAdd, ALLEGRO_BITMAP* sprite);
+bool LineIsFree(int x, int y, bool caresAboutUnits, int h);

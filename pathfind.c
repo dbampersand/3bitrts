@@ -72,7 +72,7 @@ void InsertAt(Queue* q, PathfindNode p, int index)
 }
 void AddToMap(PathfindNode p, NODE_IN_SET set)
 {
-    int index = GetIndex(GetMapHeight()/(float)_GRAIN, p.p.x, p.p.y);
+    int index = GetIndex(currMap->collisionMapHeight, p.p.x, p.p.y);
     pathfindmap.set[index] = set;
 }
 NODE_IN_SET GetSet(int index)
@@ -240,7 +240,7 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
 {
     //SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,false);
     int mapW = GetMapWidth()/_GRAIN;
-    int mapH = GetMapHeight()/_GRAIN;
+    int mapH = currMap->collisionMapHeight;
 
     bool found;
     

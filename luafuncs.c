@@ -3248,7 +3248,7 @@ void SetLuaFuncs()
     lua_setglobal(luaState, "GetMouseScreenX");
     lua_pushcfunction(luaState, L_GetMouseScreenY);
     lua_setglobal(luaState, "GetMouseScreenY");
-        lua_pushcfunction(luaState, L_GetMouseWorldX);
+    lua_pushcfunction(luaState, L_GetMouseWorldX);
     lua_setglobal(luaState, "GetMouseWorldX");
     lua_pushcfunction(luaState, L_GetMouseWorldY);
     lua_setglobal(luaState, "GetMouseWorldY");

@@ -70,7 +70,7 @@ void DisplayCollision()
     {
         for (int y = 0; y < GetMapHeight(); y += _GRAIN)
         {
-            int idx = GetIndex(GetMapHeight()/(float)_GRAIN, floor(x / (float)_GRAIN), floor(y / (float)_GRAIN));
+            int idx = GetIndex(currMap->collisionMapHeight, floor(x / (float)_GRAIN), floor(y / (float)_GRAIN));
             if (currMap->collision[idx])
             {
                 ALLEGRO_COLOR c;
@@ -87,28 +87,50 @@ void DisplayCollision()
 }
 bool RectIsFree(int x, int y, int w, int h, bool caresAboutUnits)
 {
-    //x-=1; y-=1; w += 2; h += 2;
     for (int x2 = x; x2 < x + w; x2++)
     {
-        for (int y2 = y; y2 < y + h; y2++)
-        {
-            if (x >= GetMapWidth()/_GRAIN || y >= GetMapHeight()/_GRAIN)
+        //for (int y2 = y; y2 < y + h; y2++)
+       // {
+        if (!LineIsFree(x2,y,caresAboutUnits,h))
+            //if (!PointIsFree(x2,y2,caresAboutUnits))
                 return false;
-            if (!PointIsFree(x2,y2,caresAboutUnits))
-                return false;
-        }
+        //}
         
     }
     return true;
 }
-bool PointIsFree(int x, int y, bool caresAboutUnits)
+bool LineIsFree(int x, int y, bool caresAboutUnits, int h)
 {
-    if (x < 0 || x >= GetMapWidth())
-        return false;
-    if (y < 0 || y >= GetMapHeight())
+    if (y + h > GetMapHeight() || y < 0 || x < 0 || x >= GetMapWidth())
         return false;
 
-    int index = GetIndex(GetMapHeight()/_GRAIN, x, y);
+    int startIndex = GetIndex(currMap->collisionMapHeight,x,y);
+    
+
+    for (int index = startIndex; index < startIndex + h; index++)
+    {
+        CollisionMapValue m = currMap->collision[index];
+        if (caresAboutUnits)
+        {
+            if (m != COLLISION_OPEN)
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (m & (COLLISION_OPEN | COLLISION_WORLD_AND_OBJECT))
+                return false;
+        } 
+    }
+    return true;        
+}
+bool PointIsFree(int x, int y, bool caresAboutUnits)
+{
+    if (x < 0 | x >= GetMapWidth() | y < 0 | y >= GetMapHeight())
+        return false;
+
+    int index = GetIndex(currMap->collisionMapHeight, x, y);
 
     if (caresAboutUnits)
         return (currMap->collision[index] == COLLISION_OPEN);
@@ -129,18 +151,20 @@ void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
    // h+=_GRAIN;
 
 
-    int indexLeft = GetIndex(GetMapHeight()/_GRAIN, floor((x) / (float)_GRAIN), floor((y) / (float)_GRAIN));
-    int indexRight = GetIndex(GetMapHeight()/_GRAIN, ceil((x+w) / (float)_GRAIN), ceil((y+h) / (float)_GRAIN));
+    int indexLeft = GetIndex(currMap->collisionMapHeight, floor((x) / (float)_GRAIN), floor((y) / (float)_GRAIN));
+    int indexRight = GetIndex(currMap->collisionMapHeight, ceil((x+w) / (float)_GRAIN), ceil((y+h) / (float)_GRAIN));
+    
+
     for (int xn = x/_GRAIN; xn < ceil((x + w)/_GRAIN); xn++)
     {
-        for (int yn= y/_GRAIN; yn < ceil((y + h)/_GRAIN); yn++)
+        for (int yn = y/_GRAIN; yn < ceil((y + h)/_GRAIN); yn++)
         {
-            if (yn < 0 || yn >= GetMapHeight()/_GRAIN)
+            if (yn < 0 || yn >= currMap->collisionMapHeight)
                 continue;
             if (xn < 0 || xn >= GetMapWidth()/_GRAIN)
                 continue;
             
-            int index = GetIndex(GetMapHeight()/_GRAIN, ((xn)), ((yn)));
+            int index = GetIndex(currMap->collisionMapHeight, ((xn)), ((yn)));
 
             if (objectIsHere)
             {
@@ -173,6 +197,7 @@ void PreprocessMap(Map* map, int randSpritesToAdd)
 
     map->collision = calloc(w*h/_GRAIN,sizeof(CollisionMapValue));
     map->highlightMap = calloc(w*h,sizeof(bool));
+    map->collisionMapHeight = h/(float)_GRAIN;
 
     
     //memset(&map->collision,0,w*h/_GRAIN);

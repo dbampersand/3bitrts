@@ -149,7 +149,7 @@ void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)
 }
 void DrawFilledRect_Dithered(Rect r, ALLEGRO_COLOR color)
 {
-    al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+    al_lock_bitmap_region(al_get_target_bitmap(),r.x,r.y,r.w,r.h,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
     int dither = 2;
     for (int x = r.x; x < r.x+r.w; x++)
     {
@@ -167,7 +167,9 @@ void DrawFilledRect_Dithered(Rect r, ALLEGRO_COLOR color)
 }
 void DrawOutlinedRect_Dithered(Rect r, ALLEGRO_COLOR color)
 {
-    al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+    r.x--;
+
+    al_lock_bitmap_region(al_get_target_bitmap(),r.x,r.y,r.w+1,r.h+1,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
     r.x = (int)r.x;
     r.y = (int)r.y;    
     r.w = (int)r.w;    
@@ -176,7 +178,6 @@ void DrawOutlinedRect_Dithered(Rect r, ALLEGRO_COLOR color)
 
     //if ((int)r.x % 2 == 0)
       //  r.x--;
-    r.x--;
        
 
     for (int y = r.y; y < r.y+r.h; y++)
@@ -349,7 +350,7 @@ bool isInsideSector(int x, int y, int cx, int cy, float startX, float startY, fl
 }
 void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO_COLOR col, float length)
 {
-    al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+    al_lock_bitmap_region(al_get_target_bitmap(),xc-radius,yc-radius,radius*2,radius*2,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
     
     start = Normalise(start,0, M_PI*2);
     end = Normalise(end, 0, M_PI*2);

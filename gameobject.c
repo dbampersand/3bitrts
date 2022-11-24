@@ -1699,10 +1699,10 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
 
     if (dV == 0) return;
     
-    int indexTop = GetIndex( GetMapHeight()/_GRAIN, floor(posX/ (float)_GRAIN), floor(posY / (float)_GRAIN));
-    int indexRight = GetIndex(GetMapHeight()/_GRAIN, floor((posX+w) / (float)_GRAIN), floor((posY) / (float)_GRAIN));
-    int indexBottom = GetIndex(GetMapHeight()/_GRAIN, floor((posX) / (float)_GRAIN), floor((posY+h) / (float)_GRAIN));
-    int indexLeft = GetIndex(GetMapHeight()/_GRAIN, floor((posX) / (float)_GRAIN), floor((posY) / (float)_GRAIN));
+    int indexTop = GetIndex( currMap->collisionMapHeight, floor(posX/ (float)_GRAIN), floor(posY / (float)_GRAIN));
+    int indexRight = GetIndex(currMap->collisionMapHeight, floor((posX+w) / (float)_GRAIN), floor((posY) / (float)_GRAIN));
+    int indexBottom = GetIndex(currMap->collisionMapHeight, floor((posX) / (float)_GRAIN), floor((posY+h) / (float)_GRAIN));
+    int indexLeft = GetIndex(currMap->collisionMapHeight, floor((posX) / (float)_GRAIN), floor((posY) / (float)_GRAIN));
 
     if (x)
     {
@@ -1712,7 +1712,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             {
                // printf("gg");
                 //g->position.worldX = IndexToPoint(GetMapHeight()/_GRAIN,indexLeft).x*_GRAIN + _GRAIN;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
-                UpdateObjPosition_X(g,IndexToPoint(GetMapHeight()/_GRAIN,indexLeft).x*_GRAIN + _GRAIN);
+                UpdateObjPosition_X(g,IndexToPoint(currMap->collisionMapHeight,indexLeft).x*_GRAIN + _GRAIN);
 
                 CheckCollisions(g,true,1,true);
 
@@ -1724,7 +1724,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             {
                 //g->position.worldX = (indexRight/(GetMapHeight()/_GRAIN))*_GRAIN - w;
                 //g->position.worldX = IndexToPoint(GetMapHeight()/_GRAIN,indexRight).x*_GRAIN - w;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
-                UpdateObjPosition_X(g,IndexToPoint(GetMapHeight()/_GRAIN,indexRight).x*_GRAIN - w);
+                UpdateObjPosition_X(g,IndexToPoint(currMap->collisionMapHeight,indexRight).x*_GRAIN - w);
                 
                 CheckCollisions(g,true,-dV,true);
             }
@@ -1739,7 +1739,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             {
                 //int yCoord = (indexTop%(GetMapHeight()/_GRAIN)+1)*_GRAIN;
                 //g->position.worldY = IndexToPoint(GetMapHeight()/_GRAIN,indexTop).y*_GRAIN + _GRAIN;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
-                UpdateObjPosition_Y(g,IndexToPoint(GetMapHeight()/_GRAIN,indexTop).y*_GRAIN + _GRAIN);
+                UpdateObjPosition_Y(g,IndexToPoint(currMap->collisionMapHeight,indexTop).y*_GRAIN + _GRAIN);
                // g->position.worldY = yCoord;
                 CheckCollisions(g,false,-dV,true);
             }
@@ -1752,7 +1752,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
                 //int yCoord = (indexBottom%(GetMapHeight()/_GRAIN))*_GRAIN - h;
                 //g->position.worldY = yCoord;
                 //g->position.worldY = IndexToPoint(GetMapHeight()/_GRAIN,indexBottom).y*_GRAIN - h;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
-                UpdateObjPosition_Y(g,IndexToPoint(GetMapHeight()/_GRAIN,indexBottom).y*_GRAIN - h);
+                UpdateObjPosition_Y(g,IndexToPoint(currMap->collisionMapHeight,indexBottom).y*_GRAIN - h);
                 CheckCollisions(g,false,-dV,true);
             }
         }
@@ -1763,8 +1763,8 @@ void GetTilesAroundPoint(Point p, float w, float h, int indexes[2])
     float x = p.x;
     float y = p.y;
 
-    int indexLeft = GetIndex(GetMapHeight()/_GRAIN, floor((x) / (float)_GRAIN), floor((y) / (float)_GRAIN));
-    int indexRight = GetIndex(GetMapHeight()/_GRAIN, floor((x+w) / (float)_GRAIN), floor((y+h) / (float)_GRAIN));
+    int indexLeft = GetIndex(currMap->collisionMapHeight, floor((x) / (float)_GRAIN), floor((y) / (float)_GRAIN));
+    int indexRight = GetIndex(currMap->collisionMapHeight, floor((x+w) / (float)_GRAIN), floor((y+h) / (float)_GRAIN));
 
     indexes[0] = indexLeft;
     indexes[1] = indexRight;
@@ -2101,7 +2101,7 @@ void DrawMapHighlights()
     if (!currSettings.lightEffectEnabled)
         return;
     ALLEGRO_BITMAP* screen = al_get_target_bitmap();
-    al_lock_bitmap(sprites[currMap->spriteIndex].sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READONLY);
+    al_lock_bitmap_region(sprites[currMap->spriteIndex].sprite,-players[0].cameraPos.x,-players[0].cameraPos.y,_SCREEN_SIZE,_SCREEN_SIZE,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READONLY);
     al_lock_bitmap(screen,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
 
     clock_t begin = clock();
