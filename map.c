@@ -19,7 +19,51 @@
  Map* currMap = NULL;
  Map* maps = NULL;
  int numMaps = 0;
+void AddDirtSprites(int numToAdd, ALLEGRO_BITMAP* sprite)
+{
+    ALLEGRO_BITMAP* before = al_get_target_bitmap();
 
+    al_set_target_bitmap(sprite);
+    int w = al_get_bitmap_width(sprite);
+    int h = al_get_bitmap_height(sprite);
+    al_lock_bitmap(sprite,ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
+
+    ClearSpriteDecorations();
+    for (int i = 0; i < numToAdd; i++)
+    {
+        int numAttempts = 15;
+        while (numAttempts-- > 0)
+        {
+            int x = RandRange(0,w);
+            int y = RandRange(0,h);
+
+            int selectedDirt = dirtSprites[RandRangeI(0,numDirtSprites)];
+            bool put = true;
+            for (int x2 = 0; x2 < GetWidthSprite(&sprites[selectedDirt]); x2++)
+            {
+                for (int y2 = 0; y2 < GetHeightSprite(&sprites[selectedDirt]); y2++)
+                {
+                    ALLEGRO_COLOR pixel = al_get_pixel(sprite, x+x2, y+y2);
+
+                    if (pixel.a && pixel.r > bgThreshhold && pixel.g > bgThreshhold && pixel.b > bgThreshhold) {
+
+                    }
+                    else
+                    {
+                        put = false;
+                    }
+                }
+            }
+
+            if (put) {
+                CreateSpriteDecorAtPosition(selectedDirt,x,y,AFTER_WORLD,COLOR_TEXTURED_GROUND);
+                break;
+            }
+        }
+    }
+    al_unlock_bitmap(sprite);
+    al_set_target_bitmap(before);
+}
 void DisplayCollision()
 {
     for (int x = 0; x < GetMapWidth(); x += _GRAIN)
@@ -136,7 +180,6 @@ void PreprocessMap(Map* map, int randSpritesToAdd)
     al_lock_bitmap(sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
 
     al_set_target_bitmap(sprite);
-    float bgThreshhold = 0.6f;
     
 
    for (int y = 0; y < h; y++) {
@@ -155,39 +198,8 @@ void PreprocessMap(Map* map, int randSpritesToAdd)
         }
       }
    }
-    for (int i = 0; i < randSpritesToAdd; i++)
-    {
-        int numAttempts = 15;
-        while (numAttempts-- > 0)
-        {
-            int x = RandRange(0,w);
-            int y = RandRange(0,h);
 
-            int selectedDirt = dirtSprites[RandRangeI(0,numDirtSprites)];
-            bool put = true;
-            for (int x2 = 0; x2 < GetWidthSprite(&sprites[selectedDirt]); x2++)
-            {
-                for (int y2 = 0; y2 < GetHeightSprite(&sprites[selectedDirt]); y2++)
-                {
-                    ALLEGRO_COLOR pixel = al_get_pixel(sprite, x+x2, y+y2);
-
-                    if (pixel.a && pixel.r > bgThreshhold && pixel.g > bgThreshhold && pixel.b > bgThreshhold) {
-
-                    }
-                    else
-                    {
-                        put = false;
-                    }
-                }
-            }
-
-            if (put) {
-                CreateSpriteDecorAtPosition(selectedDirt,x,y,AFTER_WORLD,COLOR_TEXTURED_GROUND);
-                break;
-            }
-        }
-    }
-
+   
     Sprite* secondLayer = NewSprite(w,h);
     secondLayer-> path = calloc(1,sizeof(char));    
 
@@ -335,6 +347,11 @@ void SetMap(Map* m)
             CallLuaFunc(g->luafunc_onmapchange);
         }
     }
+
+       
+    ClearSpriteDecorations();
+    RandomSpriteDecor(16,dirtSprites,numDirtSprites);
+    AddDirtSprites(16, sprites[currMap->spriteIndex].sprite);
 
     //PreprocessMap(m);
 

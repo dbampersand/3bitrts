@@ -42,6 +42,7 @@ typedef struct Map
 } Map;
 
 #define NUM_MAP_FUNCTIONS 3
+#define bgThreshhold 0.6f
 
 extern Map* currMap;
 extern Map* maps;
@@ -62,3 +63,4 @@ bool PointIsFree(int x, int y, bool caresAboutUnits);
 bool RectIsFree(int x, int y, int w, int h, bool caresAboutUnits);
 void AddCompletionPercent(float percent);
 void ChangeMap(const char* path);
+void AddDirtSprites(int numToAdd, ALLEGRO_BITMAP* sprite);

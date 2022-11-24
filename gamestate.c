@@ -259,6 +259,7 @@ void FinishTransition()
     }
     if (transitioningTo == GAMESTATE_CHANGE_MAP)
     {
+
         combatStarted = false;
 
         gameState = GAMESTATE_INGAME;

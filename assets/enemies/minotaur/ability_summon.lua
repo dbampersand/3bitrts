@@ -16,7 +16,7 @@ end
 
 function casted(x,y,obj,headingx,headingy)
     local toSpawn = math.random(#adds);
-    CreateObject(adds[toSpawn],x,y,TYPE_ENEMY,1);
+    CreateObject(adds[toSpawn],x,y,TYPE_FRIENDLY,1);
     SetObjChannelling(GetObjRef(),1);
 
     return true; 

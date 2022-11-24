@@ -1183,7 +1183,7 @@ void KillObj(GameObject* g, bool trigger)
             foundIndex = i;
         }
     }
-    for (int i = foundIndex; i < numActiveObjects; i++)
+    for (int i = foundIndex; i < numActiveObjects-1; i++)
     {
         activeObjects[i] = activeObjects[i+1];
     }

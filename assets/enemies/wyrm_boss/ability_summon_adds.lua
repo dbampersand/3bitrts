@@ -15,7 +15,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 20;  
     --f1["duration"] = 4;
 
-    CreateObject("assets/enemies/wyrm_boss/wyrm_add/wyrm_add.lua",128,128,1,2);
+    CreateObject("assets/enemies/wyrm_boss/wyrm_add/wyrm_add.lua",128,128,TYPE_FRIENDLY,2);
     return true; 
 end
 
