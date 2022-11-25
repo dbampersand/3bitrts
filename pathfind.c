@@ -142,8 +142,6 @@ void ClearQueue(Queue* queue)
 }
 PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w, int h, bool caresAboutUnits, int maxSearch)
 {
-    w+=_GRAIN;
-    h+=_GRAIN;
     float closest = FLT_MAX;
     PointI closestP = (PointI){INT_MAX,INT_MAX};
     *found = false;

@@ -791,7 +791,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
 
     //currGameObjRunning->position.worldX = _SCREEN_SIZE/2.0f;
     //currGameObjRunning->position.worldY = _SCREEN_SIZE/2.0f;
-    UpdateObjPosition(currGameObjRunning,_SCREEN_SIZE/2.0f,_SCREEN_SIZE/2.0f);
+    UpdateObjPosition(currGameObjRunning,x+GetWidth(currGameObjRunning)/2,y+GetHeight(currGameObjRunning)/2);
 
     currGameObjRunning->shouldProcessAI = true;
 
@@ -2730,7 +2730,8 @@ void Teleport(GameObject* g, float x, float y, bool updateOld)
     if (!g) return;
 
     PointI target = (PointI){x/_GRAIN,y/_GRAIN};
-    PointI here = (PointI){g->position.worldX/_GRAIN,g->position.worldY/_GRAIN};
+
+    PointI here = (PointI){x/_GRAIN,y/_GRAIN};
     bool found = false;
 
     PointI move = GetClosestPathablePoint(target,here,&found,((GetWidth(g))/(float)_GRAIN),((GetHeight(g))/(float)_GRAIN),true,32);

@@ -410,7 +410,7 @@ void SetGameStateToChoosingParty()
             if (g->playerChoosable == true)
             {
 
-                int x=0; int y=0    ;
+                int x=0; int y=0;
                 int w = GetWidth(g);
                 int h = GetHeight(g);
 

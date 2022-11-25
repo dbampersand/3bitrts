@@ -148,8 +148,8 @@ void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
 
     //need to go up to the next _GRAIN level because
     //otherwise the collision rect might not cover the entire object
-   // w+=_GRAIN;
-    //h+=_GRAIN;
+    w+=_GRAIN;
+    h+=_GRAIN;
 
 
     int indexLeft = GetIndex(currMap->collisionMapHeight, floor((x) / (float)_GRAIN), floor((y) / (float)_GRAIN));
