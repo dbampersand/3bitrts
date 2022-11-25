@@ -140,7 +140,7 @@ void ClearQueue(Queue* queue)
 {
     queue->numElements = 0;
 }
-PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w, int h, bool caresAboutUnits)
+PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w, int h, bool caresAboutUnits, int maxSearch)
 {
     float closest = FLT_MAX;
     PointI closestP = current;
@@ -150,32 +150,75 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w
     {
         *found = true;
         return (PointI){target.x,target.y};
-    }
-    
+    }   
     int distanceFrom = 0;
-    while (distanceFrom < _MAX(GetMapHeight(),GetMapWidth()))
+    while (distanceFrom < maxSearch)
     {
-        for (int x = -distanceFrom; x < distanceFrom; x++)
+        int xLeft = target.x + -distanceFrom;
+        int xRight = target.x + distanceFrom;
+
+        int yTop = target.y + -distanceFrom;
+        int yBottom = target.y + distanceFrom;
+
+        for (int x2 = xLeft; x2 < xRight; x2++)
         {
-            for (int y = -distanceFrom; y < distanceFrom; y++)
+            if (RectIsFree(x2,yTop,w,h,caresAboutUnits))
             {
-                int nx = target.x + x;
-                int ny = target.y + y;
+                *found = true;
 
-                if (RectIsFree(nx,ny,w,h,caresAboutUnits))
+                float d = distSq(x2,yTop,current.x,current.y);
+                if (d < closest)
                 {
-                    *found = true;
-
-                    float d = distSq(nx,ny,current.x,current.y);
-                    if (d < closest)
-                    {
-                        closest = d;
-                        closestP = (PointI){nx,ny};
-                    }
-                    //return (PointI){nx,ny};
+                    closest = d;
+                    closestP = (PointI){x2,yTop};
                 }
+                //return (PointI){nx,ny};
             }
+            if (RectIsFree(x2,yBottom,w,h,caresAboutUnits))
+            {
+                *found = true;
+
+                    float d = distSq(x2,yBottom,current.x,current.y);
+                if (d < closest)
+                {
+                    closest = d;
+                    closestP = (PointI){x2,yBottom};
+                }
+                //return (PointI){nx,ny};
+            }
+
         }
+
+        for (int y2 = yTop; y2 < yBottom; y2++)
+        {
+            if (RectIsFree(xLeft,y2,w,h,caresAboutUnits))
+            {
+                *found = true;
+
+                float d = distSq(xLeft,y2,current.x,current.y);
+                if (d < closest)
+                {
+                    closest = d;
+                    closestP = (PointI){xLeft,y2};
+                }
+                //return (PointI){nx,ny};
+            }
+            if (RectIsFree(xRight,y2,w,h,caresAboutUnits))
+            {
+                *found = true;
+
+                float d = distSq(xRight,y2,current.x,current.y);
+                if (d < closest)
+                {
+                    closest = d;
+                    closestP = (PointI){xRight,y2};
+                }
+                //return (PointI){nx,ny};
+            }
+
+        }
+
+
         if (*found)
         {
             return closestP;
@@ -239,8 +282,10 @@ PathfindNode* GetBestGuess(PointI target)
 void AStar(PointI here, PointI target, bool* success, float w, float h, GameObject* g)
 {
     //SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,false);
+    
     int mapW = GetMapWidth()/_GRAIN;
     int mapH = currMap->collisionMapHeight;
+
 
     bool found;
     
@@ -252,16 +297,20 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
 
     if (here.y < 0 || here.y >= mapH)
         return;
-    target = GetClosestPathablePoint(target,here,&found,w,h,false);
+    target = GetClosestPathablePoint(target,here,&found,w,h,false,w);
     if (!found) 
         return;
-    here = GetClosestPathablePoint(here,target,&found,w,h,false);
+    here = GetClosestPathablePoint(here,target,&found,w,h,false,w);
+    if (!found) 
+        return;
     
     //if (!found) return target;
 
     if (PointIntIsEq(here,target))
     {
         ClearPathfindingQueue(g);
+        //SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,true);
+        
         return;
     }
 
@@ -295,6 +344,8 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
         if (PointIntIsEq(currentNode.p,target))
         {
             GetPath(&currentNode,g);
+            //SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,true);
+
             return;
         }
         if (closedSet.numElements >= PATHFIND_DEPTH)
@@ -302,6 +353,7 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
             //get the best guess
             PathfindNode* lowest = GetBestGuess(target);
             GetPath(lowest,g);
+            //SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,true);
             return;
         }
         for (int x = _MAX(0,currentNode.p.x-1); x < _MIN(currentNode.p.x+2,mapW); x++)
@@ -321,7 +373,8 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
                 if (set == NODE_INSIDE_CLOSED_LIST)
                     continue;
 
-                bool walkable = (RectIsFree(child.p.x,child.p.y,w,h,ObjectCanPush(g)),false);
+                //bool walkable = (RectIsFree(child.p.x,child.p.y,w,h,ObjectCanPush(g)),false);
+                bool walkable = PointIsFree(child.p.x,child.p.y,false);
                 
                 float distcurrchild = (x != currentNode.p.x && y != currentNode.p.y) ? 1.41421356237f : 1;
 
@@ -355,4 +408,6 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
     *success = false;
     PathfindNode* lowest = GetBestGuess(target);
     GetPath(lowest,g);
+    //SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,true);
+
 }

@@ -119,7 +119,7 @@ bool LineIsFree(int x, int y, bool caresAboutUnits, int h)
         }
         else
         {
-            if (m & (COLLISION_OPEN | COLLISION_WORLD_AND_OBJECT))
+            if (m != COLLISION_OPEN && m != COLLISION_WORLD_AND_OBJECT)
                 return false;
         } 
     }

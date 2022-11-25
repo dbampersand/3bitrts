@@ -1789,7 +1789,7 @@ void DoCurrentPathingNode(GameObject* g)
         PointI currentIndex = (PointI){((g->position.worldX) / (float)_GRAIN), ((g->position.worldY) / (float)_GRAIN)};
 
 
-        if (g->pathfindNeedsRefresh)
+        if (g->pathfindNeedsRefresh && ((_FRAMES+(g-objects))%MAX_OBJS) == 0)
             AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
         else   
         {
@@ -1797,6 +1797,8 @@ void DoCurrentPathingNode(GameObject* g)
             if (g->currentPathingNode >= MAX_PATHFINDING_NODES_HELD || ((_FRAMES+(g-objects))%MAX_OBJS) == 0)
             {
                 AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
+                g->currentPathingNode=0;
+ 
             }
         }
     }
@@ -1840,6 +1842,7 @@ void Move(GameObject* g, float delta)
           //  AStar(currentIndex,targetIndex,&success,GetWidth(g),GetHeight(g),g);
         if (!IsOwnedByPlayer(g) && !ObjectCanPush(g)) {
             DoCurrentPathingNode(g);
+
             if (g->currentPathingNode < MAX_PATHFINDING_NODES_HELD)
             {
                 path.x = (g->pathNodes[g->currentPathingNode].p.x + g->pathNodes[g->currentPathingNode+1].p.x) / 2;
@@ -2197,6 +2200,8 @@ void DrawAggroIndicators()
 }
 void DrawSummonEffect(GameObject* g)
 {
+    if (g->summonTime >= g->summonMax)
+        return;
     if (gameState == GAMESTATE_WATCHING_REPLAY)
         return;
     ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
@@ -2726,7 +2731,7 @@ void Teleport(GameObject* g, float x, float y, bool updateOld)
     PointI here = (PointI){g->position.worldX/_GRAIN,g->position.worldY/_GRAIN};
     bool found = false;
 
-    PointI move = GetClosestPathablePoint(target,here,&found,GetWidth(g)/_GRAIN,GetHeight(g)/_GRAIN,true);
+    PointI move = GetClosestPathablePoint(target,here,&found,GetWidth(g)/_GRAIN,GetHeight(g)/_GRAIN,true,32);
     
     //g->position.worldX = move.x*_GRAIN;
     //g->position.worldY = move.y*_GRAIN;
