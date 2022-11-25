@@ -1597,7 +1597,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
     for (int i = 0; i < numEvents; i++)
     {
         CollisionEvent* c = &collisionEvents[i];
-        CheckCollisions(c->obj,c->x,c->direction,objectCanPush);
+        CheckCollisions(c->obj,c->x,c->direction,true);
         CheckCollisionsWorld(c->obj,c->x,c->direction);
 
     }
@@ -1950,6 +1950,8 @@ void Move(GameObject* g, float delta)
 
         }
     UpdateObjPosition(g,g->position.worldX,g->position.worldY);
+    SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,true);
+
 
 }
 bool ObjectCanPush(GameObject* g)
@@ -2731,8 +2733,7 @@ void Teleport(GameObject* g, float x, float y, bool updateOld)
     PointI here = (PointI){g->position.worldX/_GRAIN,g->position.worldY/_GRAIN};
     bool found = false;
 
-    PointI move = GetClosestPathablePoint(target,here,&found,GetWidth(g)/_GRAIN,GetHeight(g)/_GRAIN,true,32);
-    
+    PointI move = GetClosestPathablePoint(target,here,&found,((GetWidth(g))/(float)_GRAIN),((GetHeight(g))/(float)_GRAIN),true,32);
     //g->position.worldX = move.x*_GRAIN;
     //g->position.worldY = move.y*_GRAIN;
     if (updateOld)

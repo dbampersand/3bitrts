@@ -503,8 +503,13 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         //AddCompletionPercent(10);
     }
     //GameObjDebugDraw();
-    //DebugDrawPathfinding();   
-    
+    //DebugDrawPathfinding(); 
+    if (al_key_down(keyState,ALLEGRO_KEY_V))
+    {
+    bool foundsd;
+    PointI gasdas = GetClosestPathablePoint((PointI){mouseState->worldX/_GRAIN,mouseState->worldY/_GRAIN},(PointI){mouseState->worldX/_GRAIN,mouseState->worldY/_GRAIN},&foundsd,4,4,true,32);   
+    al_draw_pixel(gasdas.x*_GRAIN,gasdas.y*_GRAIN,al_map_rgb(0,255,0));
+    }
 }
 
 void DrawMainMenu()

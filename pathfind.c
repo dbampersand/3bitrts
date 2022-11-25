@@ -142,8 +142,10 @@ void ClearQueue(Queue* queue)
 }
 PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w, int h, bool caresAboutUnits, int maxSearch)
 {
+    w+=_GRAIN;
+    h+=_GRAIN;
     float closest = FLT_MAX;
-    PointI closestP = current;
+    PointI closestP = (PointI){INT_MAX,INT_MAX};
     *found = false;
 
     if (RectIsFree(target.x,target.y,w,h,caresAboutUnits))
@@ -172,7 +174,6 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w
                     closest = d;
                     closestP = (PointI){x2,yTop};
                 }
-                //return (PointI){nx,ny};
             }
             if (RectIsFree(x2,yBottom,w,h,caresAboutUnits))
             {
@@ -184,7 +185,6 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w
                     closest = d;
                     closestP = (PointI){x2,yBottom};
                 }
-                //return (PointI){nx,ny};
             }
 
         }
@@ -201,7 +201,6 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w
                     closest = d;
                     closestP = (PointI){xLeft,y2};
                 }
-                //return (PointI){nx,ny};
             }
             if (RectIsFree(xRight,y2,w,h,caresAboutUnits))
             {
@@ -213,7 +212,6 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w
                     closest = d;
                     closestP = (PointI){xRight,y2};
                 }
-                //return (PointI){nx,ny};
             }
 
         }

@@ -92,7 +92,7 @@ bool RectIsFree(int x, int y, int w, int h, bool caresAboutUnits)
         //for (int y2 = y; y2 < y + h; y2++)
        // {
         if (!LineIsFree(x2,y,caresAboutUnits,h))
-            //if (!PointIsFree(x2,y2,caresAboutUnits))
+          //  if (!PointIsFree(x2,y2,caresAboutUnits))
                 return false;
         //}
         
@@ -101,7 +101,7 @@ bool RectIsFree(int x, int y, int w, int h, bool caresAboutUnits)
 }
 bool LineIsFree(int x, int y, bool caresAboutUnits, int h)
 {
-    if (y + h > GetMapHeight() || y < 0 || x < 0 || x >= GetMapWidth())
+    if (y + h > GetMapHeight()/_GRAIN || y < 0 || x < 0 || x >= GetMapWidth()/_GRAIN)
         return false;
 
     int startIndex = GetIndex(currMap->collisionMapHeight,x,y);
@@ -109,7 +109,7 @@ bool LineIsFree(int x, int y, bool caresAboutUnits, int h)
 
     for (int index = startIndex; index < startIndex + h; index++)
     {
-        CollisionMapValue m = currMap->collision[index];
+        CollisionMapValue m = currMap->collision[index];    
         if (caresAboutUnits)
         {
             if (m != COLLISION_OPEN)
@@ -146,9 +146,10 @@ void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
     x = (x / (int)_GRAIN) * _GRAIN;
     y = (y / (int)_GRAIN) * _GRAIN;
 
-    //y-=_GRAIN;
-    //w+=_GRAIN;
-   // h+=_GRAIN;
+    //need to go up to the next _GRAIN level because
+    //otherwise the collision rect might not cover the entire object
+   // w+=_GRAIN;
+    //h+=_GRAIN;
 
 
     int indexLeft = GetIndex(currMap->collisionMapHeight, floor((x) / (float)_GRAIN), floor((y) / (float)_GRAIN));
