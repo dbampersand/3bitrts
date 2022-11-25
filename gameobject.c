@@ -554,7 +554,26 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                             SetSelected(activeObjects[j],false);
                             ClearSelection();
                             players[0].numUnitsSelected = 0;
+
                         }
+                        if (gameState == GAMESTATE_CHOOSING_UNITS && !obj->purchased)
+                        {
+                            SetGameStateToPurchasingUnits();
+                            for (int j = 0; j < ui.purchasingUnitUI.numPrefabs; j++)
+                            {
+                                for (int z = 0; z < numActiveObjects; z++)
+                                {
+                                    if (strcmp(ui.purchasingUnitUI.prefabs[j]->name,activeObjects[z]->name) == 0)
+                                    {
+                                        ui.purchasingUnitUI.currentIndex = j;
+                                        ui.purchasingUnitUI.indexTransitioningTo = j;
+                                        break;
+                                    }
+                                    
+                                }
+                            }
+                        }
+
                         hasSelected = true;
                     }
                     if (IsBindDown(keyState,currSettings.keymap.key_Shift))
@@ -572,7 +591,6 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                         SetSelected(obj,true);
                         //players[0].selection[players[0].numUnitsSelected] = obj;
                         //players[0].numUnitsSelected++;
-
                     }
                     if (hasSelected) 
                         players[0].indexSelectedUnit = 0; 

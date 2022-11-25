@@ -36,6 +36,32 @@ Chatbox* chatboxShowing = NULL;
 
 UI ui = {0};
 char* stackDrawBuffer = NULL;
+void InitPurchasingUnitsUI()
+{
+    PurchasingUnitUI* purchaseUI = &ui.purchasingUnitUI;
+    if (!purchaseUI->prefabs)
+    {
+        int numPlayerChoosable = 0;
+        for (int i = 0; i < numPrefabs; i++)
+        {
+            if (prefabs[i]->playerChoosable)
+            {
+                numPlayerChoosable++;
+            }
+        }
+        purchaseUI->prefabs = calloc(numPlayerChoosable,sizeof(GameObject*));
+        int index = 0;
+        for (int i = 0; i < numPrefabs; i++)
+        {
+            if (prefabs[i]->playerChoosable)
+            {
+                purchaseUI->prefabs[index] = prefabs[i];
+                index++;
+            }
+        }
+        purchaseUI->numPrefabs = numPlayerChoosable;
+    }
+}
 void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 {
     PurchasingUnitUI* purchaseUI = &ui.purchasingUnitUI;
@@ -2033,6 +2059,7 @@ void InitUI()
 
     InitEndScreen();
     InitGameUI();
+
 
     ui.animatePanel = UI_ANIMATE_STATIC;
     ui.panelShownPercent = 0;

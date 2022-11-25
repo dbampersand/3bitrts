@@ -78,7 +78,9 @@ void init()
 
     Map* m = LoadMap("assets/ui/map_unitselect.lua");  
     SetMap(&maps[0]);
+
     LoadPrefabs("assets/friendly");
+    InitPurchasingUnitsUI();
 
     toSpawn = NULL;
 

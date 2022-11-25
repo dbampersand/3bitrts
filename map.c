@@ -89,12 +89,8 @@ bool RectIsFree(int x, int y, int w, int h, bool caresAboutUnits)
 {
     for (int x2 = x; x2 < x + w; x2++)
     {
-        //for (int y2 = y; y2 < y + h; y2++)
-       // {
         if (!LineIsFree(x2,y,caresAboutUnits,h))
-          //  if (!PointIsFree(x2,y2,caresAboutUnits))
                 return false;
-        //}
         
     }
     return true;

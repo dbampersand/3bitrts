@@ -336,3 +336,4 @@ void ChangeButtonImage(UIElement* u, int spriteIndex);
 void DrawTimer(bool enabled);
 char* GetButtonText(UIElement* u);
 void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStateLastFrame);
+void InitPurchasingUnitsUI();
