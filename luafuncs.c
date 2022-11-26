@@ -2743,6 +2743,16 @@ int L_CastAbility(lua_State* l)
     }
     return 1;
 }
+int L_SetEnraged(lua_State* l)
+{
+    int obj = lua_tonumber(l,1);
+    if (obj < 0 || obj >= MAX_OBJS)
+        return 0;
+    bool b = lua_toboolean(l,2);
+
+    objects[obj].enraged = b;
+    return 0;
+}
 int L_RandRange(lua_State* l)
 {
     double min = lua_tonumber(l,1);
@@ -3792,5 +3802,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetHeadingVector);
     lua_setglobal(luaState, "GetHeadingVector");
+
+    lua_pushcfunction(luaState, L_SetEnraged);
+    lua_setglobal(luaState, "SetEnraged");
 
 }

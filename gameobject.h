@@ -204,6 +204,8 @@ typedef struct GameObject
     int spriteIndex_PurchaseScreenSprite;
     bool purchased;
     int cost;
+
+    bool enraged;
 } GameObject;
 
 #define MAX_LIGHT_SIZE 90 

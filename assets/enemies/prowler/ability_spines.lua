@@ -58,7 +58,7 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
             local f1 = {};
             f1["trigger"] = TRIGGER_INSTANT;
             f1["type"] = EFFECT_HURT;
-            f1["value"] = 100;
+            f1["value"] = 75;
         
             local aoe = CreateAOE(startX + xMove,startY + yMove,"",radius,timeBeforeDamage,timeBeforeDamage,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,{f1});
         

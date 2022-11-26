@@ -2255,6 +2255,30 @@ bool IsSelectable(GameObject* g)
         return false;
     return (GetPlayerOwnedBy(g) == 0);
 }
+void DrawChannellingEffect(GameObject* g)
+{
+    ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
+    if (ObjIsDecoration(g))
+        c = BG;
+    if (IsOwnedByPlayer(g) && !IsSelectable(g))
+        c = BG;
+
+    float x = g->position.screenX + g->offset.x; 
+    float y = g->position.screenY + g->offset.y;
+
+    Sprite* s = ObjIsChannelling(g) ? &sprites[g->channelingSpriteIndex] :  &sprites[g->spriteIndex];
+
+    int effectAmount = (_FRAMES % 20) / 4;
+
+    Rect selectRect;
+    selectRect.w = al_get_bitmap_width(s->sprite) + effectAmount*2;
+    selectRect.h = al_get_bitmap_height(s->sprite) + effectAmount*2;
+    selectRect.x = x - effectAmount;
+    selectRect.y = y - effectAmount;
+
+    DrawRoundedRect(selectRect,c,false);
+
+}
 void DrawGameObj(GameObject* g, bool forceInverse)
 {   
     if (!(g->properties & OBJ_ACTIVE))
@@ -2350,6 +2374,10 @@ void DrawGameObj(GameObject* g, bool forceInverse)
         float circleCenterY = c1.y - (headingY * (GetHeight(g)+3));
         
         al_draw_filled_circle(ToScreenSpace_X(circleCenterX),ToScreenSpace_Y(circleCenterY),2,c);
+    }
+    if (ObjIsChannelling(g))
+    {
+        DrawChannellingEffect(g);
     }
     
 }

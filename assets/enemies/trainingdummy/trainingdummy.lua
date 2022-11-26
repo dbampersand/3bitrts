@@ -24,6 +24,7 @@ local hpLastFrame = maxHP;
 local damageDone = 0
 function update(dt)
 
+    SetEnraged(GetObjRef(),true);
    -- testTarget = {};
     --testTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999);
     --CastAbility(testAbility,4,{testTarget});
