@@ -23,7 +23,7 @@ function setup()
     SetAbilityHint(HINT_CIRCLE,30);
     SetCooldown(3); 
     AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
-    SetDescription("[b]Acid\n\nQuickly deals damage.")
+    SetDescription("[b]Spines\n\nCreates a line of spikes, hitting anything along its axis.")
 end
 function onchanneled()
     SetChannelingSprite("assets/enemies/giant_ooze/giant_ooze_channelling.png");
@@ -51,7 +51,6 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     if (attackRef == ticker) then
         timer = timer + dt;
         if (timer > (time / numSegments) * segmentsMade) then
-            Print("time: " .. time .. ", numSegments: " .. numSegments .. "segmentsMade: " .. segmentsMade)
             
             local xMove = (segmentsMade / numSegments) * (range * heading.headingx);
             local yMove = (segmentsMade / numSegments) * (range * heading.headingy);

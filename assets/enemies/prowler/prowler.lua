@@ -19,7 +19,7 @@ function update(dt)
         local objToAttack = GetRandomUnit(TYPE_ENEMY,TYPE_ANY,GetAbilityRange(GetObjRef(),spines))
 
         local target = GetHeadingVector(GetX(GetObjRef()),GetY(GetObjRef()),GetX(objToAttack),GetY(objToAttack));
-
+        target["target"]  = objToAttack;
 
 
         CastAbility(spines,0.5,{target});
