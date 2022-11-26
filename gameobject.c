@@ -2255,13 +2255,19 @@ bool IsSelectable(GameObject* g)
         return false;
     return (GetPlayerOwnedBy(g) == 0);
 }
+void DrawEnrageEffect(GameObject* g)
+{
+    AddParticleWithRandomProperties(RandRange(g->position.worldX,g->position.worldX+GetWidth(g)),RandRange(g->position.worldY,g->position.worldY+GetHeight(g)),GameObjToColor(g),1,4,0.25f,1.5f);
+}
 void DrawChannellingEffect(GameObject* g)
 {
-    ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
+    /*ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
     if (ObjIsDecoration(g))
         c = BG;
     if (IsOwnedByPlayer(g) && !IsSelectable(g))
-        c = BG;
+        c = BG;*/
+    
+    ALLEGRO_COLOR c = GetColor(GameObjToColor(g),GetPlayerOwnedBy(g));
 
     float x = g->position.screenX + g->offset.x; 
     float y = g->position.screenY + g->offset.y;
@@ -2378,6 +2384,10 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     if (ObjIsChannelling(g))
     {
         DrawChannellingEffect(g);
+    }
+    if (g->enraged)
+    {
+        DrawEnrageEffect(g);
     }
     
 }
