@@ -3037,8 +3037,8 @@ void DrawChannelHint(GameObject* g, float dt)
                 //draw line leading up to the circle
                 #define HINT_CIRCLE_LINE_SPEED 2.0f
 
-                float cx = x2;
-                float cy = y2;
+                float cx = ToScreenSpace_X(x2);
+                float cy = ToScreenSpace_Y(y2);
 
                 float x3 = x2 - x;
                 float y3 = y2 - y;

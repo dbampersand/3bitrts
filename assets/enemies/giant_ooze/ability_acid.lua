@@ -18,7 +18,7 @@ function casted(x,y,obj,headingx,headingy)
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT_PERCENT;
-    f1["value"] = 0.02;
+    f1["value"] = 0.01;
     f1["name"] = "Acid"
     f1["overwrites"] = true
 

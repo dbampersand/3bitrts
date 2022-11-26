@@ -10,7 +10,7 @@ function setup()
 
 
 
-    SetEncounterMapPath("assets/encounters/03/map_1.lua");
+    SetEncounterMapPath("assets/encounters/03/map_2.lua");
     SetEncounterDifficulty(DIFFICULTY_MEDIUM);
     EncounterSetNumUnitsToSelect(4);
     SetEncounterLoadScreen("assets/encounters/03/loadscreen.png")

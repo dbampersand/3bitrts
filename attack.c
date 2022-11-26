@@ -374,6 +374,7 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
     }
     if (dither == DITHER_POISON_HALF || dither == DITHER_POISON_QUARTER || dither == DITHER_POISON_EIGTH)
     {
+        al_unlock_bitmap(al_get_target_bitmap());
         int pattern;
         if (dither == DITHER_POISON_HALF)
             pattern=2;
