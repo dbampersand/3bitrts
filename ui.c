@@ -67,25 +67,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     PurchasingUnitUI* purchaseUI = &ui.purchasingUnitUI;
     if (!purchaseUI->prefabs)
     {
-        int numPlayerChoosable = 0;
-        for (int i = 0; i < numPrefabs; i++)
-        {
-            if (prefabs[i]->playerChoosable)
-            {
-                numPlayerChoosable++;
-            }
-        }
-        purchaseUI->prefabs = calloc(numPlayerChoosable,sizeof(GameObject*));
-        int index = 0;
-        for (int i = 0; i < numPrefabs; i++)
-        {
-            if (prefabs[i]->playerChoosable)
-            {
-                purchaseUI->prefabs[index] = prefabs[i];
-                index++;
-            }
-        }
-        purchaseUI->numPrefabs = numPlayerChoosable;
+        InitPurchasingUnitsUI();
     }
     al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
     GameObject* prefabDrawing = purchaseUI->prefabs[purchaseUI->currentIndex];

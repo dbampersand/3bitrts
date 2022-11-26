@@ -55,6 +55,33 @@ static void dumpstack (lua_State* l) {
     }
   }
 }
+int L_GetHeadingVector(lua_State* l)
+{
+    float x = lua_tonumber(l,1);
+    float y = lua_tonumber(l,2);
+    float x2 = lua_tonumber(l,3);
+    float y2 = lua_tonumber(l,4);
+
+    float dx = x2 - x;
+    float dy = y2 - y;
+
+    float angle = atan2(dy,dx);
+
+    float xHeading = cosf(angle);
+    float yHeading = sinf(angle);
+
+    lua_pushnumber(l,1);
+    lua_newtable(l);
+
+    lua_pushnumber(l,xHeading);
+    lua_setfield(l,-2,"headingx");
+
+    lua_pushnumber(l,yHeading);
+    lua_setfield(l,-2,"headingy");
+
+    return 1;
+
+}
 int L_SetHPIgnoreAugment(lua_State* l)
 {
     currGameObjRunning->health = lua_tonumber(l,1);
@@ -807,6 +834,21 @@ int L_SetAbilityRange(lua_State* l)
     if (currAbilityRunning)
         currAbilityRunning->range = lua_tonumber(l,1);
     return 0;
+}
+int L_GetAbilityRange(lua_State* l)
+{
+    int obj = lua_tonumber(l,1);
+    int ability = lua_tonumber(l,2);
+
+    if (obj < 0 || obj >= MAX_OBJS || ability < 0 || ability >= MAX_ABILITIES)
+        return 0;
+
+    GameObject* o = &objects[obj];
+    Ability* a = &o->abilities[ability];
+
+    lua_pushnumber(l,a->range);
+
+    return 1;
 }
 int L_SetDamage(lua_State* l)
 {
@@ -2890,6 +2932,7 @@ int L_SetLifetime(lua_State* l)
     }
     return 0;
 }
+
 int L_CopyObject(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -3300,6 +3343,10 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetAbilityRange);
     lua_setglobal(luaState, "SetAbilityRange");
+
+    lua_pushcfunction(luaState, L_GetAbilityRange);
+    lua_setglobal(luaState, "GetAbilityRange");
+
 
     lua_pushcfunction(luaState, L_SetCooldown);
     lua_setglobal(luaState, "SetCooldown");
@@ -3742,5 +3789,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_AddThreat);
     lua_setglobal(luaState, "AddThreat");
+
+    lua_pushcfunction(luaState, L_GetHeadingVector);
+    lua_setglobal(luaState, "GetHeadingVector");
 
 }

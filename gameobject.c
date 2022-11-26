@@ -3195,3 +3195,4 @@ int GetNumActiveObjects()
     }
     return numObjs;
 }
+

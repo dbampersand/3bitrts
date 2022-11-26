@@ -497,7 +497,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         DisplayCollision();
     if (al_key_down(keyState,ALLEGRO_KEY_O) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_O))
     {
-        GameObject* g = AddGameobject(prefabs[4],mouseState->worldX,mouseState->worldY,SOURCE_SPAWNED_FROM_MAP);
+        GameObject* g = AddGameobject(LoadPrefab("assets/enemies/prowler/prowler.lua"),mouseState->worldX,mouseState->worldY,SOURCE_SPAWNED_FROM_MAP);
         SetOwnedBy(g, 1);
        
         //KillObj(g,true);
@@ -726,7 +726,7 @@ int main(int argc, char* args[])
             clock_t end = clock();
             double time = (double)(end - begin) / CLOCKS_PER_SEC;
 
-            printf("Total time: %f\n",time);
+            //printf("Total time: %f\n",time);
 
             fflush(stdout);
         }
