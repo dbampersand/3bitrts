@@ -158,18 +158,24 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
 
     int paragraphX = paragraphStartX - (_SCREEN_SIZE*(purchaseUI->transitionTimer));
     
-    int paragraphY = 25;
+    int paragraphY = 34;
     int paragraphWMax = _SCREEN_SIZE - GetWidthSprite(s) - paragraphStartX - 5;
+    int titleY = 15;
     //TODO: more than one page for this? If it overflows, add a next/previous page button
     int clippingHeight = abilityY - paragraphY -  8;  
 
     char* description = prefabDrawing->description;
     if (mousedOver)
         description = mousedOver->description;
-    al_draw_text(ui.font,FRIENDLY,paragraphX,15, ALLEGRO_ALIGN_LEFT,prefabDrawing->name ? prefabDrawing->name : "");
 
-    al_set_clipping_rectangle(paragraphX,paragraphY,paragraphWMax,clippingHeight);
-    al_draw_multiline_text(ui.tinyFont,FRIENDLY,paragraphX,25,paragraphWMax,8,ALLEGRO_ALIGN_LEFT,description ? description : "");
+    //Draw unit square small portrait
+    int spriteX = paragraphX;
+    DrawSprite(&sprites[prefabDrawing->spriteIndex],spriteX,titleY,0,0,0,FRIENDLY,false);
+
+    al_draw_text(ui.font,FRIENDLY,paragraphX + GetWidth(prefabDrawing)+2,titleY+GetHeight(prefabDrawing)/2, ALLEGRO_ALIGN_LEFT,prefabDrawing->name ? prefabDrawing->name : "");
+
+    al_set_clipping_rectangle(0,paragraphY,paragraphWMax,clippingHeight);
+    al_draw_multiline_text(ui.tinyFont,FRIENDLY,paragraphX,paragraphY,paragraphWMax,8,ALLEGRO_ALIGN_LEFT,description ? description : "");
     al_reset_clipping_rectangle();
   
     if (purchaseUI->currentIndex == 0)
@@ -259,6 +265,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     {
         purchaseUI->transitionTimer = 0;
     }
+
 
 
 

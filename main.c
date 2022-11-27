@@ -513,6 +513,10 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     al_draw_pixel(gasdas.x*_GRAIN,gasdas.y*_GRAIN,al_map_rgb(0,255,0));
     }
 }
+int SortPointers(const void* a, const void* b)
+{
+    return (a - b);
+}
 
 void DrawMainMenu()
 {
@@ -729,6 +733,10 @@ int main(int argc, char* args[])
             //printf("Total time: %f\n",time);
 
             fflush(stdout);
+            
+            //sort activeobjects so we have less cache misses 
+            if (_FRAMES % 60 == 0)
+                qsort(activeObjects,numActiveObjects,sizeof(GameObject*),SortPointers);
         }
     }
     WriteSettingsFile("config.cfg");

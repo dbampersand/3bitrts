@@ -24,7 +24,7 @@ function setup()
     
     SetObjPurchaseScreenSprite("assets/friendly/bard/bard_full.png")
     SetObjName("Bard");
-    SetObjDescription("A travelling musician.")
+    SetObjDescription("A travelling musician. Finding the power of their songs at a young age, they found an income hard to come by: most brushed off the sell of a magic song as hogwash, or worse, witchcraft. The only people who would accept them and their unique talent, the life of an adventurer called. Lute in hand, they sing powerful magic songs providing their allies vital utility.")
     
 end
 
