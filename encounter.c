@@ -273,7 +273,7 @@ void ResetEncounterPosition()
     {
         NextEncounter();
     }
-
+    encounterOffset = encounterMoveTo;
     encounterMoveTimer = 1;
 
 
