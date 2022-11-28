@@ -26,6 +26,7 @@ typedef struct Encounter
 {
     Ability abilities[8];
     char* name;
+    char* path;
 
     int spriteIndex;
     char* description;
@@ -56,6 +57,8 @@ typedef struct Encounter
     UIElement encounter_ButtonRight;
     UIElement encounter_RerollAugments;
 
+    bool unlocked;
+
 
 } Encounter;
 
@@ -67,6 +70,9 @@ void NextEncounter();
 void PreviousEncounter();
 Encounter* GetEncounterByName(char* name);
 void UpdateEncounter(float dt);
+void UnlockEncounter(const char* path);
+void ResetEncounterPosition();
+bool PathCmp(char* path1, char* path2);
 
 extern Encounter** encounters;
 extern int numEncounters;

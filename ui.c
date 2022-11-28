@@ -1119,7 +1119,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     UpdateButton(80+offsetX,224,&e->encounter_ButtonConfirm,*mouseState,*mouseStateLastFrame);
     UpdateButton(192+offsetX,224,&e->encounter_ButtonRight,*mouseState,*mouseStateLastFrame);
 
-    if (index > 0 && (index > 0 && !encounters[index-1]->encounterShouldBeSkipped))
+    if (index > 0 && (index > 0 && (!encounters[index-1]->encounterShouldBeSkipped && encounters[index-1]->unlocked)))
     {
         e->encounter_ButtonLeft.enabled = true;
     }
@@ -1129,8 +1129,8 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     if (index+1 < numEncounters)
     {
         e->encounter_ButtonRight.enabled = true;
-        if (encounters[index+1]->encounterShouldBeSkipped)
-                e->encounter_ButtonRight.enabled = false;
+        if (encounters[index+1]->encounterShouldBeSkipped || !encounters[index+1]->unlocked)
+            e->encounter_ButtonRight.enabled = false;
     }
     else {
         e->encounter_ButtonRight.enabled = false;

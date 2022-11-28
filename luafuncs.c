@@ -3177,6 +3177,18 @@ int L_GetEffects(lua_State* l)
     }
     return 1;
 }
+int L_StartsUnlocked(lua_State* l)
+{
+    currEncounterRunning->unlocked = lua_toboolean(l,1);
+    return 0;
+}
+int L_UnlockEncounter(lua_State* l)
+{
+    const char* path = (const char*)lua_tostring(l,1);
+    UnlockEncounter(path);
+    
+    return 0;
+}
 void SetLuaKeyEnums(lua_State* l)
 {
     //TODO: Update these when a key is changed in settings
@@ -3805,5 +3817,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetEnraged);
     lua_setglobal(luaState, "SetEnraged");
+
+    lua_pushcfunction(luaState, L_StartsUnlocked);
+    lua_setglobal(luaState, "StartsUnlocked");
+
+    lua_pushcfunction(luaState, L_UnlockEncounter);
+    lua_setglobal(luaState, "UnlockEncounter");
 
 }

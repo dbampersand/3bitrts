@@ -557,7 +557,6 @@ int main(int argc, char* args[])
 
     //printf("%lu\n",sizeof(Attack));
 
-
     while (gameState != GAMESTATE_EXIT) {
 
         //sometimes event isn't registering when alt tabbed/debug mode?

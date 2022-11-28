@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
+#include <ctype.h>
 
 #include "encounter.h"
 
@@ -37,6 +38,8 @@ void LoadEncounter(char* dirPath, lua_State* l)
             {
                 if (strcasecmp(dir->d_name,"encounter.lua")==0)
                 {
+                    e->path = calloc(strlen(dirPath)+1,sizeof(char));
+                    strcpy(e->path,dirPath);
                     if (!e->lua_buffer.buffer)
                     {
                         char* concatted = calloc(strlen(dirPath)+strlen(dir->d_name)+1,sizeof(char)); 
@@ -132,6 +135,7 @@ int sortEncounters(const void* a, const void* b)
     Encounter* e =  *(Encounter**)a;
     Encounter* e2 = *(Encounter**)b;
     if (e->encounterShouldBeSkipped) return -1;
+    if (!e->unlocked) return -1;
     return ( e->difficulty - e2->difficulty);
 }
 
@@ -187,10 +191,7 @@ void LoadEncounters(char* dirPath, lua_State* l)
     }
     qsort(encounters,numEncounters,sizeof(Encounter*),sortEncounters);
 
-    if (encounters[0]->encounterShouldBeSkipped)
-    {
-        NextEncounter();
-    }
+    ResetEncounterPosition();
 }
 void NextEncounter()
 {
@@ -200,10 +201,10 @@ void NextEncounter()
 
     selectedEncounterIndex++;
 
-    if (selectedEncounterIndex < numEncounters)
+    /*if (selectedEncounterIndex < numEncounters)
     {
         Encounter* e = encounters[selectedEncounterIndex];
-        if (e->encounterShouldBeSkipped)
+        if (e->encounterShouldBeSkipped || !e->unlocked)
         {
             selectedEncounterIndex--;
 
@@ -214,15 +215,17 @@ void NextEncounter()
     {
         selectedEncounterIndex--;
         return;
-    }
-        encounterMoveTo += _SCREEN_SIZE;
+    }*/
+    encounterMoveTo += _SCREEN_SIZE;
     encounterMoveTimer = 0;
 
     selectedEncounterIndex = (selectedEncounterIndex) % (numEncounters);
-    while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped)
+    while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped || !encounters[selectedEncounterIndex]->unlocked)
     {
         selectedEncounterIndex++;
         selectedEncounterIndex = (selectedEncounterIndex) % (numEncounters);
+        encounterMoveTo += _SCREEN_SIZE;
+
     }
 
 }
@@ -233,10 +236,10 @@ void PreviousEncounter()
 
     selectedEncounterIndex--;
 
-    if (selectedEncounterIndex >= 0)
+    /*if (selectedEncounterIndex >= 0)
     {
         Encounter* e = encounters[selectedEncounterIndex];
-        if (e->encounterShouldBeSkipped)
+        if (e->encounterShouldBeSkipped || !e->unlocked)
         {
             selectedEncounterIndex++;
             return;    
@@ -246,17 +249,33 @@ void PreviousEncounter()
     {
         selectedEncounterIndex++;
         return;
-    }
+    }*/
     encounterMoveTo -= _SCREEN_SIZE;
     encounterMoveTimer = 0;
 
     selectedEncounterIndex = (selectedEncounterIndex) % (numEncounters-1);
-    while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped)
+    while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped || !encounters[selectedEncounterIndex]->unlocked)
     {
         selectedEncounterIndex--;
         if (selectedEncounterIndex < 0)
             selectedEncounterIndex = numEncounters-1;
+        encounterMoveTo -= _SCREEN_SIZE;
+        
     }
+
+}
+void ResetEncounterPosition()
+{
+    selectedEncounterIndex = 0;
+    encounterMoveTo = 0;
+    qsort(encounters,numEncounters,sizeof(Encounter*),sortEncounters);
+    while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped || !encounters[selectedEncounterIndex]->unlocked)
+    {
+        NextEncounter();
+    }
+
+    encounterMoveTimer = 1;
+
 
 }
 Encounter* GetEncounterByName(char* name)
@@ -289,4 +308,52 @@ void UpdateEncounter(float dt)
 
         UpdateMap(currMap,dt);
     }
+}
+bool IsSeperator(char c)
+{
+    return (c == '/' || c == '\\');
+}
+//currently unsupported: going backwards in directory,
+//eg, assets/../assets/encounters/01 
+bool PathCmp(char* path1, char* path2)
+{
+    if (strlen(path2) > strlen(path1))
+    {
+        char* tmp = path2;
+
+        path2 = path1;
+        path1 = tmp;
+    }
+
+    int path2len = strlen(path2);
+    for (int i = 0; i < strlen(path1); i++)
+    {
+        if (IsSeperator(path1[i]))
+            continue;
+
+        if (i > path2len)
+        {
+            return false;
+        }
+        else
+        {
+            if (tolower(path1[i]) != tolower(path2[i]))
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+void UnlockEncounter(const char* path)
+{
+    for (int i = 0; i < numEncounters; i++)
+    {
+        if (encounters[i]->path && PathCmp(encounters[i]->path, (char*)path))
+        {
+            encounters[i]->unlocked = true;
+        }
+    }
+    ResetEncounterPosition();
+
 }

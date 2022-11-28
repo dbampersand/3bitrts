@@ -33,5 +33,6 @@ function kill()
 end
 
 function mapend()
+    UnlockEncounter("assets/encounters/02");
     return true;
 end

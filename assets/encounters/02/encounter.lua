@@ -14,9 +14,4 @@ function setup()
     SetEncounterDifficulty(DIFFICULTY_MEDIUM);
     EncounterSetNumUnitsToSelect(4);
     SetEncounterLoadScreen("assets/encounters/02/loadscreen.png")
-    
-end
-
-function mapend()
-    return true;
-end
+end 

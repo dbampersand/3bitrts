@@ -10,6 +10,7 @@
 #include "video.h"
 #include "gameobject.h"
 #include "player.h"
+#include "encounter.h"
 
 #include "allegro5/allegro.h"
 #ifdef __APPLE__
@@ -633,6 +634,25 @@ void Save(char* path)
             }
         }
         al_fwrite(file,"};\n",strlen("};\n"));
+        
+        
+        al_fwrite(file,"unlockedEncounters\n{\n", strlen("unlockedEncounters\n{\n"));
+        for (int i = 0; i < numEncounters; i++)
+        {
+            Encounter* e = encounters[i];
+            if (e->path && e->unlocked)
+            {
+                al_fwrite(file,"\t",1);
+                al_fwrite(file,"\"",1);
+                al_fwrite(file,e->path,strlen(e->path));
+                al_fwrite(file,"\"",1);
+                al_fwrite(file,";",1);
+                al_fwrite(file,"\n",1);
+            }
+        }
+        al_fwrite(file,"};\n",strlen("};\n"));
+
+
         al_fclose(file);
     }
     else
@@ -702,6 +722,53 @@ bool LoadSaveFile(char* path)
                         break;
                 }
             }
+
+            char* unlockEnctrStr = strstr(str,"unlockedEncounters");
+            for (int i = unlockEnctrStr-str+strlen("unlockedEncounters"); i < size; i++)
+            {
+                //if the next character is a { ignoring whitespace
+                if (!isspace(str[i]))
+                {
+                    if (str[i] == '{')
+                    {
+                        int bounds = 0;
+                        for (int j = i+1; j < size; j++)
+                        {
+                            bounds++;
+                            if (str[j] == '}')
+                            {
+                                break;
+                            }
+                        }
+
+                        char* unlockedPathsStr = calloc(bounds+1,sizeof(char));
+                        strncpy(unlockedPathsStr,str+i+1,bounds-1);
+                        char* token = strtok(unlockedPathsStr,";");
+                        while (token)
+                        {
+                            for (int j = 0; j < strlen(token); j++)
+                            {
+                                if (token[j] == '"' || isspace(token[j]))
+                                {
+                                    for (int z = j; z < strlen(token)-1; z++)
+                                    {
+                                        token[z] = token[z+1];
+                                    }
+                                    token[strlen(token)-1] = '\0';
+                                    j--;    
+                                }
+                            }
+                            UnlockEncounter(token);
+
+                            token = strtok(NULL,";");
+                        }
+                        free(unlockedPathsStr);
+                    }
+                    else
+                        break;
+                }
+            }
+
 
             float gold = FindToken(str,"bankedGold");
             if (gold >= 0)
