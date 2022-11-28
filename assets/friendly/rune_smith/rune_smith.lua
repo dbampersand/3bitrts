@@ -21,7 +21,7 @@ function setup()
 
     SetObjPurchaseScreenSprite("assets/friendly/rune_smith/rune_smith_full.png")
     SetObjName("Rune Smith");
-    SetObjDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ut quam efficitur, mattis lacus vitae, fermentum nisl. Suspendisse vel sodales mi. Pellentesque eleifend auctor nulla, at ornare quam. Cras ac lorem sed tortor porttitor rhoncus. Fusce sed arcu ut ex mattis interdum non et massa. Nunc venenatis justo eu mauris dapibus pretium. Etiam nec nisl ut nibh euismod accumsan sed nec ante. Aliquam molestie est vitae arcu tristique gravida. Nunc non sapien eu nulla commodo varius. Curabitur lectus quam, condimentum eget posuere sed, eleifend eget eros. Donec tincidunt dolor in velit dictum, nec convallis erat efficitur. Mauris lacinia suscipit elit at interdum. Proin leo turpis, mollis at sodales a, consequat sit amet massa. Proin tristique libero ut velit mollis aliquam. Nullam sodales velit quis augue pharetra, ut porta nulla pharetra. Pellentesque at ante accumsan, semper ex sit amet, imperdiet purus.")
+    SetObjDescription("Not simply satisfied with her fledgling smithy, the Rune Smith took forging weapons and armor to a new level, introducing a concept few had tried: powerful magic runes. Crafting these items, however, requires extremely rare materials, and all but scraps turn up through travelling sellers. A large vein of ore had been rumored for a long time inside the mountain, and the Rune Smith intends to find it.")
     SetObjCost(10);
 end
 

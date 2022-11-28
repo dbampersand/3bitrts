@@ -174,7 +174,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
 
     al_draw_text(ui.font,FRIENDLY,paragraphX + GetWidth(prefabDrawing)+2,titleY+GetHeight(prefabDrawing)/2, ALLEGRO_ALIGN_LEFT,prefabDrawing->name ? prefabDrawing->name : "");
 
-    al_set_clipping_rectangle(0,paragraphY,paragraphWMax,clippingHeight);
+    al_set_clipping_rectangle(paragraphX,paragraphY,paragraphWMax,clippingHeight);
     al_draw_multiline_text(ui.tinyFont,FRIENDLY,paragraphX,paragraphY,paragraphWMax,8,ALLEGRO_ALIGN_LEFT,description ? description : "");
     al_reset_clipping_rectangle();
   
