@@ -20,7 +20,8 @@
 #include "player.h"
 #include "shield.h"
 #include "settings.h"
-#include "video.h"
+#include "video.h" 
+#include "pointspace.h"
 #include "item.h"
 #include "shop.h"
 
@@ -3186,7 +3187,7 @@ int L_UnlockEncounter(lua_State* l)
 {
     const char* path = (const char*)lua_tostring(l,1);
     UnlockEncounter(path);
-    
+
     return 0;
 }
 void SetLuaKeyEnums(lua_State* l)

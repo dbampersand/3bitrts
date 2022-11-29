@@ -4,6 +4,8 @@
 #include "point.h"
 #include "allegro5/allegro.h"
 #include "colors.h"
+#include "pointspace.h"
+
 
 #ifndef M_PI
     #define M_PI 3.14159265358979323846
@@ -18,11 +20,6 @@ typedef struct MouseState
 
 extern unsigned long long _FRAMES;
 
-typedef struct PointSpace
-{
-    float worldX; float worldY; 
-    float screenX; float screenY;
-} PointSpace;
 
 //refers to an index in Target FPS pulldown in videoOptionsPanel
 typedef enum Option_FPS
@@ -73,6 +70,7 @@ typedef struct SpriteDecoration
     int spriteIndex;
     RenderOrder renderOrder;
     Color tint;
+    float lifetime;
 } SpriteDecoration;
 
 #define MAX_SPRITE_DECORATIONS 255
@@ -98,6 +96,8 @@ extern Point DEBUG_P3;
 extern Point DEBUG_P4;
 extern float DEBUG_EXTRA;
 
+typedef struct GameObject GameObject;
+
 void DrawBufferedStrings();
 
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled);
@@ -116,6 +116,8 @@ float easeOutQuint(float x);
 float easeInCirc(float x);
 float easeOutCirc(float x);
 float easeInOutQuint(float x);
+float easeOutExpo(float x);
+
 
 void ProcessSpriteDecorations(float dt);
 void DrawSpriteDecorations(RenderOrder renderOrder);
@@ -125,4 +127,5 @@ void ClearSpriteDecorations();
 void RandomSpriteDecorAtPosition(int numToAdd, int* array, int numArrayElements, int x, int y, RenderOrder renderOrder, Color col);
 void RandomSpriteDecor(int numToAdd, int* array, int numArrayElements);
 void CreateSpriteDecorAtPosition(int selectedSprite,int x,int y,RenderOrder renderOrder,Color col);
-
+void CreatePoisonEffect(GameObject* g, float lifetime);
+void UpdateScreenPositions_Point(PointSpace* p);

@@ -1,6 +1,7 @@
 #include "console.h"
 #include "colors.h"
 #include "video.h"
+#include "pointspace.h"
 #include "sprite.h"
 #include "ui.h"
 

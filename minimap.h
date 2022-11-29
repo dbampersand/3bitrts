@@ -1,7 +1,8 @@
 #pragma once
 
 #include "allegro5/allegro.h"
-#include "video.h"
+#include "video.h" 
+#include "pointspace.h"
 
 typedef struct Minimap
 {

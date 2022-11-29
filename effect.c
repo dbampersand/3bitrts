@@ -5,10 +5,64 @@
 #include "augment.h"
 #include "encounter.h"
 #include "particle.h"
+#include "helperfuncs.h"
+#include "colors.h"
+
+#include "allegro5/allegro_primitives.h"
 
 #include <math.h>
+void UpdateEffectVisuals(GameObject* g, float dt)
+{
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        Effect* e = &g->effects[i];
 
+        if (e->enabled && e->visual.isActive)
+        {
+            e->visual.position.worldY -= dt*2;
+            //add slight sway  
+            e->visual.position.worldX += (_FRAMES % _TARGET_FPS*2) > _TARGET_FPS / 2 ? dt * 2.0f : dt * -2.0f;
+            e->visual.timer -= dt;
+            if (e->visual.timer <= 0)
+            {
+                e->visual.isActive = false;
+            }
+        }
+    }
+}
+void DrawEffectVisuals(GameObject* g)
+{
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        Effect* e = &g->effects[i];
+        if (e->enabled && e->visual.isActive)
+        {
+            EffectVisual* v = &e->visual;
+            float maxRadius = 5;
+            
+            float timer = (v->maxTimer - v->timer) * v->maxTimer*2;
+            if (v->timer < v->maxTimer/2)
+                timer = v->timer / v->maxTimer;
 
+            float radius = easeOutExpo(clamp(timer,0,1)) * maxRadius;
+            UpdateScreenPositions_Point(&v->position);
+            al_draw_circle(v->position.screenX,v->position.screenY,radius,GetColor(*v->color,0),1);
+        }
+    }
+
+}
+
+void InitializeEffectVisual(Effect* e, int x, int y)
+{
+    e->visual.maxTimer = e->duration;
+    e->visual.timer = e->visual.maxTimer;
+
+    e->visual.isActive = true;
+    e->visual.position.worldX = x;
+    e->visual.position.worldY = y;
+
+    e->visual.color = &EffectColors[e->effectType];
+}
 bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
 {
     if (!target)
@@ -281,6 +335,9 @@ Effect CopyEffect(Effect* e)
 void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
 {
     if (!e) return;
+
+    InitializeEffectVisual(e,RandRange(target->position.worldX,target->position.worldX+GetWidth(target)),RandRange(target->position.worldY,target->position.worldY+GetHeight(target)));
+
     //make a copy of the effect as otherwise we're using the same pointers for name/desc as the Attack
     //which causes a crash when freed
     //not an elegant solution but it works

@@ -4,7 +4,8 @@
 #include "stdbool.h"
 #include "allegro5/allegro.h"
 #include "colors.h"
-#include "video.h"
+#include "video.h" 
+#include "pointspace.h"
 
 #ifndef M_PI
     #define M_PI 3.14159265358979323846

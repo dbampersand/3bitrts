@@ -1,6 +1,7 @@
 #include "minimap.h"
 #include "colors.h"
-#include "video.h"
+#include "video.h" 
+#include "pointspace.h"
 #include "sprite.h"
 #include "map.h"
 #include "ui.h"

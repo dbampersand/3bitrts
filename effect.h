@@ -1,7 +1,8 @@
 #pragma once
 
 #include "stdbool.h"
-
+#include "pointspace.h"
+#include "colors.h"
 typedef struct GameObject GameObject;
 
 typedef enum EFFECT_TRIGGER
@@ -37,6 +38,15 @@ typedef enum EFFECT_TYPE
     EFFECT_ALL
 } EFFECT_TYPE;
 
+
+typedef struct EffectVisual {
+    PointSpace position;
+    float timer;
+    float maxTimer;
+    bool isActive;
+    Color* color;
+} EffectVisual;
+
 typedef struct Effect
 {
     EFFECT_TRIGGER trigger;
@@ -60,7 +70,10 @@ typedef struct Effect
     int spriteIndex_Portrait;
 
     bool overwrites;
+
+    EffectVisual visual;
     
+
 } Effect;
 
 void ApplyEffect(Effect* e, GameObject* from, GameObject* target);
@@ -71,3 +84,7 @@ void CureEffect(GameObject* g, int numEffects, bool removeAllStacks);
 void CureAll(GameObject* g);
 bool RemoveEffect(Effect* e, GameObject* from,bool removeAllStacks);
 bool EffectIsEnabled(Effect* e);
+
+void DrawEffectVisuals(GameObject* g);
+void UpdateEffectVisuals(GameObject* g, float dt);
+void InitializeEffectVisual(Effect* e, int x, int y);

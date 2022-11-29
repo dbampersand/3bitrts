@@ -7,7 +7,8 @@
 
 #include "ui.h"
 #include "sprite.h"
-#include "video.h"
+#include "video.h" 
+#include "pointspace.h"
 #include "gameobject.h"
 #include "player.h"
 #include "encounter.h"

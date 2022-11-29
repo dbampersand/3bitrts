@@ -12,7 +12,8 @@
 #include "item.h"
 #include "gameobject.h"
 #include "stdbool.h"
-#include "video.h"
+#include "video.h" 
+#include "pointspace.h"
 #include <stdint.h>
 #include "luafuncs.h"
 
@@ -70,6 +71,7 @@ typedef struct Player Player;
 #define MAX_ABILITIES 8
 #define FLASH_TIMER 0.1
 #define HEALTHBAR_HEIGHT 2
+
 
 typedef struct GameObject
 {    
@@ -206,6 +208,7 @@ typedef struct GameObject
     int cost;
 
     bool enraged;
+
 } GameObject;
 
 #define MAX_LIGHT_SIZE 90 
@@ -280,6 +283,7 @@ void Move(GameObject* g, float delta);
 
 void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col);
 void DrawGameObj(GameObject* g, bool forceInverse); 
+void DrawEffectVisuals(GameObject* g);
 
 
 void SetAttackingObj(GameObject* g, GameObject* target);

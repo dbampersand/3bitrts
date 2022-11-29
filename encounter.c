@@ -136,6 +136,8 @@ int sortEncounters(const void* a, const void* b)
     Encounter* e2 = *(Encounter**)b;
     if (e->encounterShouldBeSkipped) return -1;
     if (!e->unlocked) return -1;
+    if (e->difficulty == e2->difficulty)
+        return (strcmp(e->path,e2->path));
     return ( e->difficulty - e2->difficulty);
 }
 

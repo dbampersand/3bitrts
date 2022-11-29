@@ -3,7 +3,8 @@
 #include <stdbool.h>
 
 #include "colors.h"
-#include "video.h"
+#include "video.h" 
+#include "pointspace.h"
 
 
 typedef struct GameObject GameObject;

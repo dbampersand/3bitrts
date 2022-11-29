@@ -14,8 +14,8 @@
 #include "helperfuncs.h"
 #include "colors.h"
 #include "video.h"
+#include "pointspace.h"
 #include "animationeffect.h"
-#include "video.h"
 #include "shield.h"
 #include "player.h"
 #include "ui.h"
@@ -25,6 +25,7 @@
 #include "gamestate.h"
 #include "particle.h"
 #include "settings.h"
+#include "effect.h"
 
 #include "pathfind.h"
 #include "replay.h"
@@ -190,9 +191,13 @@ void UpdateObject(GameObject* g, float dt)
                  currGameObjRunning->abilities[i].stacks  = currGameObjRunning->abilities[i].maxStacks;
         }
     }
+    UpdateEffectVisuals(g,dt);
+
     UpdateMana(g, dt);
     UpdateHPRegen(g, dt);
     UpdateShield(g,dt);
+
+
 
     currGameObjRunning->invulnerableTime -= dt;
     if (currGameObjRunning->invulnerableTime < 0)
@@ -218,6 +223,7 @@ void UpdateObject(GameObject* g, float dt)
             return;
         }
     }
+
 
     ProcessEffects(currGameObjRunning,dt);
     ProcessShields(currGameObjRunning,dt);
@@ -2389,6 +2395,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     {
         DrawEnrageEffect(g);
     }
+    DrawEffectVisuals(g);
     
 }
 void SetLightSize(GameObject* g, int size)

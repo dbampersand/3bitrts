@@ -4,7 +4,8 @@
 
 #include "allegro5/allegro_primitives.h"
 
-#include "video.h"
+#include "video.h" 
+#include "pointspace.h"
 
 #include "colors.h"
 #include "helperfuncs.h"
@@ -614,6 +615,7 @@ void CreateSpriteDecorAtPosition(int selectedSprite,int x,int y,RenderOrder rend
 
         s.position.worldX = x;
         s.position.worldY = y;
+        s.lifetime = FLT_MAX-1;
 
         AddSpriteDecoration(s);
 
@@ -634,6 +636,9 @@ void RandomSpriteDecorAtPosition(int numToAdd, int* array, int numArrayElements,
         s.position.worldX = x;
         s.position.worldY = y;
 
+        s.lifetime = FLT_MAX-1;
+
+
         AddSpriteDecoration(s);
 
     }
@@ -653,6 +658,8 @@ void RandomSpriteDecor(int numToAdd, int* array, int numArrayElements)
 
         s.position.worldX = RandRange(-w,GetMapWidth()+w);
         s.position.worldY = RandRange(-h,GetMapWidth()+h);
+
+        s.lifetime = FLT_MAX-1;
 
         AddSpriteDecoration(s);
 
@@ -723,6 +730,8 @@ SpriteDecoration AddCloud()
 
     s.renderOrder = AFTER_GAMEOBJECTS;
     s.tint = COLOR_BG_DECOR;
+    s.lifetime = FLT_MAX-1;
+
     return s;
 }
 float easeOutQuint(float x) {
@@ -743,3 +752,15 @@ float easeInOutQuint(float x)
     }
     return 1 - pow(-2 * x + 2, 5) / 2.0f;
 }
+float easeOutExpo(float x)
+{
+    if (x >= 1)
+        return 1;
+    else return (1 - pow(2, -10 * x));
+}
+void UpdateScreenPositions_Point(PointSpace* p)
+{
+    p->screenX = ToScreenSpace_X(p->worldX);
+    p->screenY = ToScreenSpace_Y(p->worldY);
+}
+

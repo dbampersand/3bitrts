@@ -1,7 +1,6 @@
 #pragma once
 
 #include "allegro5/allegro.h"
-#include "effect.h"
 
 #define FRIENDLY_COLOR_ADD 80
 
@@ -113,7 +112,10 @@ extern ALLEGRO_COLOR FRIENDLY_SHIELD;
 
 
 extern ALLEGRO_COLOR* ALColorLookup[COLOR_ALL];
-extern Color EffectColors[EFFECT_ALL];
+extern Color* EffectColors;
+
+typedef struct Effect Effect;
+typedef struct GameObject GameObject;
 
 
 ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy);

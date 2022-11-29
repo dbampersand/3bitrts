@@ -3,6 +3,7 @@
 #include "gameobject.h"
 #include <stdio.h>
 #include "helperfuncs.h"
+#include "effect.h"
 
 ALLEGRO_COLOR BG = {0};
 ALLEGRO_COLOR FRIENDLY = {0};
@@ -33,7 +34,7 @@ ALLEGRO_COLOR FRIENDLY_SHIELD;
 
 
 ALLEGRO_COLOR* ALColorLookup[COLOR_ALL] = {0};
-Color EffectColors[EFFECT_ALL] = {0};
+Color* EffectColors = {0};
 
 ALLEGRO_COLOR GetColor(Color c, int objectOwnedBy)
 {
@@ -188,7 +189,7 @@ void InitColors()
     queueCommandColors[COMMAND_FOLLOW] = COLOR_FRIENDLY;
     queueCommandColors[COMMAND_HOLD] = COLOR_FRIENDLY;
 
-
+    EffectColors = calloc(EFFECT_ALL,sizeof(Color));
     EffectColors[EFFECT_NONE] = COLOR_BG;
     EffectColors[EFFECT_MAXHP] = COLOR_HEAL;
     EffectColors[EFFECT_HURT] = COLOR_DAMAGE;

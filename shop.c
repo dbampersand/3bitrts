@@ -4,7 +4,8 @@
 #include "sprite.h"
 #include "helperfuncs.h"
 #include "player.h"
-#include "video.h"
+#include "video.h" 
+#include "pointspace.h"
 #include "allegro5/allegro_primitives.h"
 #include <math.h>
 #include "gameobject.h"
