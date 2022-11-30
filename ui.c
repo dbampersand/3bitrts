@@ -72,6 +72,8 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     }
     al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
     GameObject* prefabDrawing = purchaseUI->prefabs[purchaseUI->currentIndex];
+    ALLEGRO_COLOR* c = prefabDrawing->purchased ? &FRIENDLY : &GROUND;
+
     Sprite* s = &sprites[prefabDrawing->spriteIndex_PurchaseScreenSprite];
 
     int x = (_SCREEN_SIZE-GetWidthSprite(s)); 
@@ -80,7 +82,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     x = (_SCREEN_SIZE-GetWidthSprite(s))-(GetWidthSprite(s)*(-timer));
 
     int y = 0;
-    DrawSprite(s,x,y,0,0,0,FRIENDLY,false);
+    DrawSprite(s,x,y,0,0,0,*c,false);
 
 
     int abilityY = 204;
@@ -89,6 +91,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     int paragraphStartX = 8;
 
     Ability* mousedOver = NULL; 
+
 
     if (prefabDrawing->numAbilities <= 4)
     {
@@ -101,7 +104,6 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
             al_draw_filled_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,BG);
             //al_draw_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
             //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false);
-            ALLEGRO_COLOR* c = &FRIENDLY;
             Rect r = (Rect){xPos,yPos,30,30};
             
             if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, c,false,true) && !mousedOver)
@@ -128,7 +130,6 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
             al_draw_filled_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,BG);
            // al_draw_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
             //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false);
-            ALLEGRO_COLOR* c = &FRIENDLY;
             Rect r = (Rect){xPos,yPos,30,30};
 
             if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, c,false,true) && !mousedOver)
@@ -146,7 +147,6 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
             al_draw_filled_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,BG);
             //al_draw_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
             //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false);
-            ALLEGRO_COLOR* c = &FRIENDLY;
             Rect r = (Rect){xPos,yPos,30,30};
             if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, c,false,true) && !mousedOver)
             {
@@ -171,12 +171,12 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
 
     //Draw unit square small portrait
     int spriteX = paragraphX;
-    DrawSprite(&sprites[prefabDrawing->spriteIndex],spriteX,titleY,0,0,0,FRIENDLY,false);
+    DrawSprite(&sprites[prefabDrawing->spriteIndex],spriteX,titleY,0,0,0,*c,false);
 
-    al_draw_text(ui.font,FRIENDLY,paragraphX + GetWidth(prefabDrawing)+2,titleY+GetHeight(prefabDrawing)/2, ALLEGRO_ALIGN_LEFT,prefabDrawing->name ? prefabDrawing->name : "");
+    al_draw_text(ui.font,*c,paragraphX + GetWidth(prefabDrawing)+2,titleY+GetHeight(prefabDrawing)/2, ALLEGRO_ALIGN_LEFT,prefabDrawing->name ? prefabDrawing->name : "");
 
     al_set_clipping_rectangle(paragraphX,paragraphY,paragraphWMax,clippingHeight);
-    al_draw_multiline_text(ui.tinyFont,FRIENDLY,paragraphX,paragraphY,paragraphWMax,8,ALLEGRO_ALIGN_LEFT,description ? description : "");
+    al_draw_multiline_text(ui.tinyFont,*c,paragraphX,paragraphY,paragraphWMax,8,ALLEGRO_ALIGN_LEFT,description ? description : "");
     al_reset_clipping_rectangle();
   
     if (purchaseUI->currentIndex == 0)

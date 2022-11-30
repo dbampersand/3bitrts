@@ -260,6 +260,9 @@ void UpdateGoldAnimationTimer(float dt)
 void DrawGoldCount()
 {
     int x = 8; int y = 8;
+    if (gameState == GAMESTATE_PURCHASING_UNITS)
+        x = 24;
+
     DrawSprite(&sprites[ui.gold_element_sprite_index],x,y,0,0,0,FRIENDLY,false);
     al_draw_text(ui.tinyFont,FRIENDLY,x+GetWidthSprite(&sprites[ui.gold_element_sprite_index])+2,y,ALLEGRO_ALIGN_LEFT,players[0].goldText);
 }

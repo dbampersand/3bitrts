@@ -567,16 +567,12 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                             SetGameStateToPurchasingUnits();
                             for (int j = 0; j < ui.purchasingUnitUI.numPrefabs; j++)
                             {
-                                for (int z = 0; z < numActiveObjects; z++)
-                                {
-                                    if (strcmp(ui.purchasingUnitUI.prefabs[j]->name,activeObjects[z]->name) == 0)
+                                    if (strcmp(ui.purchasingUnitUI.prefabs[j]->name,obj->name) == 0)
                                     {
                                         ui.purchasingUnitUI.currentIndex = j;
                                         ui.purchasingUnitUI.indexTransitioningTo = j;
                                         break;
                                     }
-                                    
-                                }
                             }
                         }
 
