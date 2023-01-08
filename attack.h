@@ -5,9 +5,10 @@
 #include "colors.h"
 #include "video.h" 
 #include "pointspace.h"
+#include "gameobject.h"
 
 
-typedef struct GameObject GameObject;
+
 typedef struct Effect Effect;
 typedef struct Ability Ability;
 
@@ -37,6 +38,8 @@ typedef struct Attack
     Ability* cameFrom;
     GameObject* target;
     GameObject* ownedBy;
+
+
     Effect* effects;    
 
     float x; float y; 
@@ -64,6 +67,7 @@ typedef struct Attack
     DITHER_PATTERN dither;
     ATTACK_TYPE attackType; 
     ATTACK_PROPERTIES properties;
+    OBJ_FRIENDLINESS playerOwnedBy;
 
 
 } Attack;

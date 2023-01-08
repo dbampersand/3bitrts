@@ -2228,6 +2228,53 @@ int L_AddArmor(lua_State* l)
     g->armor += armor;
     return 0;
 }
+
+//Debug function to be used in the console
+//Creates object with default properties on the mouse position
+int L_MObj(lua_State* l)
+{
+
+    GameObject* g;
+    const char* l_path = lua_tostring(l,1);
+    if (!l_path)
+    {
+        printf("CreateObject: Path null\n");
+        return 0;    
+    }
+    MouseState m = GetMouseClamped();
+    const int x = m.worldX;
+    const int y = m.worldY;
+    int PLAYER = lua_tonumber(l,2);
+    GameObject* before = currGameObjRunning;
+    bool prefabFound = false;
+
+    GAMEOBJ_SOURCE source = SOURCE_SPAWNED_FROM_OBJ;
+
+    for (int i = 0; i < numPrefabs; i++)
+    {
+        
+        if (prefabs[i]->path && strcasecmp(prefabs[i]->path,l_path) == 0)
+        {
+            g = prefabs[i];
+            prefabFound = true;
+            break;
+        }
+    } 
+    if (!prefabFound)
+    {
+        GameObject* prefab = LoadPrefab(l_path);
+        g = AddGameobject(prefab,x,y,PLAYER);
+        SetOwnedBy(g, PLAYER);
+
+    }
+    else
+    {
+        g = AddGameobject(g,x,y,source);
+        SetOwnedBy(g, PLAYER);
+    }
+    currGameObjRunning = before;
+    return 0;
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -2767,6 +2814,10 @@ int L_SetAbilityHint(lua_State* l)
     if (lua_isnumber(l,2))
     {
         currAbilityRunning->hintRadius = lua_tonumber(l,2);
+    }
+    if (lua_isboolean(l,3))
+    {
+        //currAbilityRunning->hintSoak = lua_toboolean(l,3);
     }
     return 0;
 }
@@ -3825,4 +3876,8 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_UnlockEncounter);
     lua_setglobal(luaState, "UnlockEncounter");
 
+    lua_pushcfunction(luaState, L_MObj);
+    lua_setglobal(luaState, "MObj");
+
+        
 }

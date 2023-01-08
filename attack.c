@@ -67,6 +67,7 @@ Attack* AddAttack(Attack* a)
 {
     if (attack_top >= MAX_ATTACKS)
         return NULL;
+    a->playerOwnedBy = GetPlayerOwnedBy(a->ownedBy);
     int index = freeAttacks[attack_top];
     attacks[freeAttacks[attack_top]] = *a;
     attacks[freeAttacks[attack_top]].properties |= ATTACK_ACTIVE;
@@ -124,11 +125,11 @@ int NumUnitsInsideAttack(Attack* a)
             Rect r = GetObjRect(activeObjects[i]);
             if (CircleInRect(a->x,a->y,a->targetRadius,r))
             {   
-                int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
+                int abilityOwnedBy = a->playerOwnedBy;//GetPlayerOwnedBy(a->ownedBy);
 
                 if (a->properties & ATTACK_HITS_ENEMIES)
                 {
-                    int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
+                    int abilityOwnedBy = a->playerOwnedBy;//GetPlayerOwnedBy(a->ownedBy);
                     int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
 
                     if (a->ownedBy)
@@ -220,6 +221,8 @@ void ApplyAttack(Attack* a, GameObject* target)
 //TODO: replace the long strings of put_pixel with a for loop iterating over bitmap
 void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color, DITHER_PATTERN dither)
 {
+    if (radius > MAX_AOE_CIRCUMFERENCE_SIZE/2)
+        radius = MAX_AOE_CIRCUMFERENCE_SIZE/2;
     int circum = radius*2;
     if (circum > MAX_AOE_CIRCUMFERENCE_SIZE)
         circum = MAX_AOE_CIRCUMFERENCE_SIZE;
@@ -566,9 +569,9 @@ void DrawAttack(Attack* a, float dt)
         }
         if (a->dither == DITHER_NONE || a->properties &  ATTACK_DRAW_CIRCLE)
         {
-            al_draw_circle((a->screenX),(a->screenY),a->radius,GetColor(c,GetPlayerOwnedBy(a->ownedBy)),1.5f);
+            al_draw_circle((a->screenX),(a->screenY),a->radius,GetColor(c,a->playerOwnedBy),1.5f);
         }
-        draw_circle_dithered(a->screenX,a->screenY,a->radius,GetColor(c,GetPlayerOwnedBy(a->ownedBy)),a->dither);
+        draw_circle_dithered(a->screenX,a->screenY,a->radius,GetColor(c,a->playerOwnedBy),a->dither);
 
         if (AttackIsSoak(a))
         {
@@ -606,7 +609,7 @@ void DrawAttack(Attack* a, float dt)
     }
     else
     {
-        al_draw_filled_circle((a->screenX),(a->screenY),a->radius,GetColor(a->color,GetPlayerOwnedBy(a->ownedBy)));
+        al_draw_filled_circle((a->screenX),(a->screenY),a->radius,GetColor(a->color,a->playerOwnedBy));
         al_draw_filled_circle((a->screenX+2),(a->screenY+2),a->radius,BG);
 
     }
@@ -714,7 +717,7 @@ void UpdateAttack(Attack* a, float dt)
         {
             if (!IsActive(activeObjects[i]))
                 continue;
-            int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
+           // int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
 
             //if (&objects[i] == &objects[abilityOwnedBy] && (AttackIsProjectile(a)))
               //  continue;
@@ -722,7 +725,7 @@ void UpdateAttack(Attack* a, float dt)
 
             if (a->properties & ATTACK_HITS_ENEMIES)
             {
-                int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
+                int abilityOwnedBy = a->playerOwnedBy;
                 int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
 
                 if (a->ownedBy && (!ObjIsDecoration(a->ownedBy)))
@@ -740,7 +743,7 @@ void UpdateAttack(Attack* a, float dt)
             }
             else if (a->properties & ATTACK_HITS_FRIENDLIES)
             {
-                int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
+                int abilityOwnedBy = a->playerOwnedBy;
                 int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
                 if (a->ownedBy && (!ObjIsDecoration(a->ownedBy)))
                 {
@@ -758,7 +761,9 @@ void UpdateAttack(Attack* a, float dt)
             }
            // if (a->ownedBy == &objects[i])
              //   continue;
+            
             Rect r = GetObjRect(activeObjects[i]);
+            
             if (a->attackType == ATTACK_AOE || a->attackType == ATTACK_PROJECTILE_TARGETED || a->attackType ==   ATTACK_PROJECTILE_POINT ||a->attackType == ATTACK_PROJECTILE_ANGLE)
             {
                 if (CircleInRect(a->x,a->y,a->targetRadius,r))

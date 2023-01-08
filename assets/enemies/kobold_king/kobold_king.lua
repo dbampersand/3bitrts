@@ -4,8 +4,8 @@ local maxHP = 8000;
 
 
 function setup()
-    SetSprite("assets/enemies/cusith/cusith.png");
-    SetChannelingSprite("assets/enemies/cusith/cusith_channelling.png")
+    SetSprite("assets/enemies/kobold_king/kobold_king.png");
+    SetChannelingSprite("assets/enemies/kobold_king/kobold_king_channeling.png")
     SetDamage(0);
     SetMaxHP(maxHP,true)
     SetSpeed(80)
@@ -13,14 +13,13 @@ function setup()
     SetAttackSpeed(GetObjRef(),1)
     SetObjIsBoss(GetObjRef(),true);
 
-
-
 end 
 function untoggle()
 
 end
 function update(dt)
-
+    local healthPercent = GetHP(GetObjRef()) / maxHP;
+    
 
 end
 

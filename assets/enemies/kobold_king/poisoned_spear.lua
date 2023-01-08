@@ -2,17 +2,18 @@ function setup()
     SetAbilityRange(999)
     SetCooldown(12)
     AbilitySetPortrait("assets/enemies/minotaur/ability_chuck.png");
-    SetDescription("[b]Chuck\n\n Throws a club at the target, stunning them.")
+    SetDescription("[b]Poisoned Spear\n\nStabs the target with a poison-tipped spear, dealing damage and poisoning them.")
     SetAbilityHint(HINT_LINE);
 end
 
 function casted(x,y,obj,headingx,headingy)
 
     f1 = {};
-    f1["trigger"] = TRIGGER_INSTANT;
-    f1["type"] = EFFECT_STUN;
-    f1["value"] = 2;  
-    f1["portrait"] = "assets/enemies/wyrm_boss/ability_fire_effect_portrait"
+    f1["trigger"] = TRIGGER_TIMER;
+    f1["type"] = EFFECT_HURT;
+    f1["value"] = 20;  
+    f1["triggersPerSecond"] = 1
+    f1["duration"] = 10
 
     f2 = {};
     f2["trigger"] = TRIGGER_INSTANT;

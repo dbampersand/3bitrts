@@ -281,7 +281,15 @@ void ProcessEffects(GameObject* g, float dt)
         {   
             if (e->trigger != TRIGGER_PERMANENT)
                 e->timer += dt;
-
+            if (e->trigger == TRIGGER_INSTANT)
+            {
+                ProcessEffect(&g->effects[i],g->effects[i].from,g, false);
+                if (RemoveEffect(&g->effects[i],g,false))
+                {
+                    i--;
+                    continue;
+                }
+            }
             if (e->trigger == TRIGGER_TIMER)
             {
                 if (e->numTriggers >= 0)
@@ -332,6 +340,7 @@ Effect CopyEffect(Effect* e)
     return e2;
 
 }
+
 void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
 {
     if (!e) return;
@@ -351,9 +360,9 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
 
     if (e->trigger == TRIGGER_INSTANT)
     {
-        ProcessEffect(e,from,target,false);
+       // ProcessEffect(e,from,target,false);
     }
-    else
+    //else
     {
         for (int i = 0; i < MAX_EFFECTS; i++)
         {
