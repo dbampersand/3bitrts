@@ -25,6 +25,9 @@
 #include "item.h"
 #include "shop.h"
 
+#include "allegro5/allegro_font.h"
+
+
 
  lua_State* luaState = NULL;
  GameObject* currGameObjRunning = NULL; 
@@ -2098,6 +2101,7 @@ int L_ShowString(lua_State* l)
     strncpy(textDisplays[numStringsToDraw].str,str,TEXT_DISPLAY_MAX_SIZE);
     textDisplays[numStringsToDraw].x = lua_tonumber(l,2);
     textDisplays[numStringsToDraw].y = lua_tonumber(l,3);
+    textDisplays[numStringsToDraw].align = lua_tonumber(l,4);
     numStringsToDraw++;
 
     return 0;
@@ -2611,6 +2615,14 @@ void SetGlobals(lua_State* l)
     lua_setglobal(l,"LEVEL_MID");
     lua_pushinteger(l,LEVEL_HIGH);
     lua_setglobal(l,"LEVEL_HIGH");
+
+    lua_pushinteger(l,ALLEGRO_ALIGN_LEFT);
+    lua_setglobal(l,"ALIGN_LEFT");
+    lua_pushinteger(l,ALLEGRO_ALIGN_CENTER);
+    lua_setglobal(l,"ALIGN_CENTER");
+    lua_pushinteger(l,ALLEGRO_ALIGN_RIGHT);
+    lua_setglobal(l,"ALIGN_RIGHT");
+
 
 }
 int L_SetItemIcon(lua_State* l)

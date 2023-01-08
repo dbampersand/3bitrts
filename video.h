@@ -46,6 +46,7 @@ typedef struct TextDisplay
 {
     char str[TEXT_DISPLAY_MAX_SIZE+1];
     int x; int y;
+    int align;
 } TextDisplay;
 
 typedef enum DecorationType

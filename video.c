@@ -519,7 +519,7 @@ void DrawBufferedStrings()
     for (int i = 0; i < numStringsToDraw; i++)
     {
         char* str = textDisplays[i].str;
-        al_draw_text(ui.font,FRIENDLY,textDisplays[i].x,textDisplays[i].y,ALLEGRO_ALIGN_LEFT,str);
+        al_draw_text(ui.font,FRIENDLY,textDisplays[i].x,textDisplays[i].y,textDisplays[i].align,str);
         //free(stringsToDraw[i]);
     }
     //locationsToDrawString = realloc(locationsToDrawString,1*sizeof(Point));
