@@ -1,6 +1,6 @@
 #include <time.h>
 #include <math.h>
-
+#include <float.h>
 
 #include "luafuncs.h"
 
@@ -613,7 +613,7 @@ float GetTableField(lua_State* l, int tableIndex, const char* name, bool* isAFie
         if (!isNum)
         {
             *isAField = false;
-            return 0;
+            return -FLT_MAX;
         }
         lua_remove(l,-1);
         *isAField = true;
@@ -621,7 +621,7 @@ float GetTableField(lua_State* l, int tableIndex, const char* name, bool* isAFie
     }
     *isAField = false; 
     lua_remove(l,-1);
-    return 0;
+    return -FLT_MAX;
 
 }
 bool GetTableField_Bool(lua_State* l, int tableIndex, const char* name, bool* isAField)
@@ -1781,7 +1781,26 @@ int L_CreateObject(lua_State* l)
 
     if (applyCompletion)
         g->completionPercent = completionPercent;
-    
+
+        if (!ObjIsDecoration(g))
+    {
+        if (source == SOURCE_SPAWNED_FROM_OBJ && currGameObjRunning)
+        {
+            if (IsInCombat(currGameObjRunning))
+            {
+                for (int i = 0; i < numActiveObjects; i++)
+                {
+                    if (GetPlayerOwnedBy(activeObjects[i]) != GetPlayerOwnedBy(g) && !ObjIsDecoration(activeObjects[i]))
+                    {
+                        GameObject* gac = activeObjects[i];
+                        float range = (255) / GetDist(g,activeObjects[i]);
+                        AddThreat(activeObjects[i],g,range);
+                    }
+                }
+                AttackHighestThreatCommand(g);
+            }
+        }    
+    }
 
     lua_pushnumber(l,g-objects);
     return 1;
@@ -2763,7 +2782,7 @@ int L_CastAbility(lua_State* l)
 
     size_t len =  lua_rawlen(l,3);
 
-    float x; float y; int obj = -1; float headingx=-1; float headingy=-1;
+    float x = -FLT_MAX; float y=-FLT_MAX; int obj = -1; float headingx=-1; float headingy=-1;
     GetCentre(currGameObjRunning,&x,&y);
     bool isAField;
     for (int i = 0; i < len; i++)
@@ -2777,9 +2796,30 @@ int L_CastAbility(lua_State* l)
         headingx = GetTableField(l,-1,"headingx",&isAField);
         headingy = GetTableField(l,-1,"headingy",&isAField);
     }
+    GameObject* target = obj > -1 ? &objects[obj] : NULL;
+    if (target)
+    {
+        if (GetDist(currGameObjRunning,target) > ability->range)
+        {
+            lua_pushboolean(l,false);
+            return 0;
+        }
+    }
+    //on the ground
+    else
+    {
+        float x1; float y1;
+        GetCentre(currGameObjRunning,&x1,&y1);
+        if (dist(x1,y1,x,y) > ability->range)
+        {
+            lua_pushboolean(l,false);
+            return 0;
+        }
+
+    }
     if (channelTime > 0)
     {
-        GameObject* target;
+        //GameObject* target;
         if (obj >= 0 && obj < MAX_OBJS)
         {
             target = &objects[obj];
@@ -2827,6 +2867,7 @@ int L_SetAbilityHint(lua_State* l)
     {
         currAbilityRunning->hintRadius = lua_tonumber(l,2);
     }
+
     if (lua_isboolean(l,3))
     {
         //currAbilityRunning->hintSoak = lua_toboolean(l,3);

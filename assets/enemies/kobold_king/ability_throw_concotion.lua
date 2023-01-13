@@ -1,6 +1,6 @@
 function setup()
-    SetAbilityRange(40)
-    SetCooldown(10)
+    SetAbilityRange(999)
+    SetCooldown(20)
     SetAbilityHint(HINT_CIRCLE,30,true);
     AbilitySetCastType(ABILITY_POINT);
     AbilitySetPortrait("assets/enemies/minotaur/ability_smash.png");
@@ -16,10 +16,10 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 150;  
+    f1["value"] = 40;  
 
 
-    CreateAOE(GetX(obj),GetY(obj),"", 30, 0, 0, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, true, obj, {f1})
+    CreateAOE(GetX(obj),GetY(obj),"", 30, 15, 1, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, true, obj, {f1})
     return true; 
 end
 

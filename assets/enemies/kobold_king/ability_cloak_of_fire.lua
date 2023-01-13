@@ -1,16 +1,8 @@
-local xMin = 60
-local xMax = 220
-
-local yMin = 38
-local yMax = 220
-
-
-
 function setup()
-    SetAbilityRange(20)
-    SetCooldown(40);
+    SetAbilityRange(120)
+    SetCooldown(4);
     AbilitySetPortrait("assets/enemies/cusith/ability_focus.png");
-    SetDescription("[b]Fan of Knives\n\nThrows knives, dealing large area damage.")
+    SetDescription("[b]Cloak of Fire\n\nDeals damage to all in melee range.")
     
 end
 
@@ -20,9 +12,9 @@ function casted(x,y,obj,headingx,headingy)
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 30;  
+    f1["value"] = 25;  
 
-    CreateCircularProjectiles(GetX(GetObjRef()),GetY(GetObjRef()),"",ATTACK_PROJECTILE_ANGLE,80,999,false,ATTACK_HITS_ENEMIES,16,COLOR_DAMAGE,0,{f1})
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 60, 0.25, 0.25,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_NONE,false, -1, {f1})
 
     return true;
 end

@@ -47,3 +47,4 @@ void NextCommand(GameObject* g);
 void ClearCommandQueue(GameObject* g);
 void DrawCommandQueue(GameObject* g);
 
+void AttackHighestThreatCommand(GameObject* g);

@@ -113,6 +113,12 @@ void AttackMoveCommand(GameObject* g, float x, float y, bool shiftHeld)
     Command c = (Command){.x = x, .y = y, .commandType = COMMAND_ATTACKMOVE, .target = NULL, .ability = NULL};
     AddCommand(g,c,shiftHeld);
 }
+void AttackHighestThreatCommand(GameObject* g)
+{
+    Threat* t = GetHighestThreat(&g->threatList);
+    if (t->obj)
+        AttackCommand(g,t->obj,false);
+}
 void FollowCommand(GameObject* g, GameObject* target, bool shiftHeld)
 {
     if (!g) return;

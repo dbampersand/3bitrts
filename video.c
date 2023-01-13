@@ -351,8 +351,7 @@ bool isInsideSector(int x, int y, int cx, int cy, float startX, float startY, fl
 }
 void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO_COLOR col, float length)
 {
-    al_lock_bitmap_region(al_get_target_bitmap(),xc-radius,yc-radius,radius*2,radius*2,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
-    
+   al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
     start = Normalise(start,0, M_PI*2);
     end = Normalise(end, 0, M_PI*2);
 
@@ -498,10 +497,10 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
     float distY = y - y2;
 
     float l = sqrt(distX*distX+distY*distY);
-    if (isInsideSector(m.worldX,m.worldY,x,y,x2,y2,x3,y3,l,radius,angle+DegToRad(45)))
+   // if (isInsideSector(m.worldX,m.worldY,x,y,x2,y2,x3,y3,l,radius,angle+DegToRad(45)))
         CircleSegment(x,y,l,angle2,angle3,color,length); 
-    else
-        CircleSegment(x,y,l,angle2,angle3,color,length);
+    //else
+   //     CircleSegment(x,y,l,angle2,angle3,color,length);
 
 }
 void SetDisplaySize()
