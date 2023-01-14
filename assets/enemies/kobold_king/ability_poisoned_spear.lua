@@ -18,7 +18,7 @@ function casted(x,y,obj,headingx,headingy)
     f2 = {};
     f2["trigger"] = TRIGGER_INSTANT;
     f2["type"] = EFFECT_HURT;
-    f2["value"] = 100;  
+    f2["value"] = 999;  
 
     ApplyEffect(obj,{f1,f2});
 

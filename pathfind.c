@@ -369,8 +369,8 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
                 if (set == NODE_INSIDE_CLOSED_LIST)
                     continue;
 
-                //bool walkable = (RectIsFree(child.p.x,child.p.y,w,h,ObjectCanPush(g)),false);
-                bool walkable = PointIsFree(child.p.x,child.p.y,false);
+                bool walkable = (RectIsFree(child.p.x-1,child.p.y-1,w+1,h+1,ObjectCanPush(g)),false);
+                //bool walkable = PointIsFree(child.p.x,child.p.y,false);
                 
                 float distcurrchild = (x != currentNode.p.x && y != currentNode.p.y) ? 1.41421356237f : 1;
 

@@ -1000,6 +1000,7 @@ int L_CreateCircularProjectiles(lua_State* l)
         Effect e;
         e = GetEffectFromTable(l, 12, i);
         e.from = currGameObjRunning;
+        e.abilityFrom = currAbilityRunning;
         lua_remove(l,-1);
         effects[i-1] = e;
     }       
@@ -1080,6 +1081,7 @@ int L_CreateProjectile(lua_State* l)
         Effect e;
         e = GetEffectFromTable(l, 12, i);
         e.from = currGameObjRunning;
+        e.abilityFrom = currAbilityRunning;
         lua_remove(l,-1);
         effects[i-1] = e;
     }       
@@ -1360,6 +1362,7 @@ int L_CreateCone(lua_State* l)
         Effect e;
         e = GetEffectFromTable(l, 14, i);
         e.from = currGameObjRunning;
+        e.abilityFrom = currAbilityRunning;
         lua_remove(l,-1);
         effects[i-1] = e;
     }  
@@ -1433,6 +1436,7 @@ int L_CreateAOE(lua_State* l)
         Effect e;
         e = GetEffectFromTable(l, 13, i);
         e.from = currGameObjRunning;
+        e.abilityFrom = currAbilityRunning;
         lua_remove(l,-1);
         effects[i-1] = e;
     }       
@@ -2103,9 +2107,10 @@ int L_HurtObj(lua_State* l)
     if (index < 0 || index >= MAX_OBJS)
         return 0;
     
-    if (Damage(currGameObjRunning,&objects[index],damage,false,0))
-        PrintDiedFrom(&objects[index],currGameObjRunning,NULL,damage);
-    
+    if (Damage(currGameObjRunning,&objects[index],damage,false,0, NULL))
+    {
+        //PrintDiedFrom(&objects[index],currGameObjRunning,NULL,damage);
+    }
     return 0;
 }
 int L_ShowString(lua_State* l)
@@ -2679,6 +2684,7 @@ int L_ApplyEffect(lua_State* l)
         Effect e;
         e = GetEffectFromTable(l, 2, i);
         e.from = currGameObjRunning;
+        e.abilityFrom = currAbilityRunning;
         //lua_remove(l,-1);
         ApplyEffect(&e,currGameObjRunning,&objects[objIndex]);
     }       
@@ -2693,8 +2699,10 @@ int L_DealDamage(lua_State* l)
 
     int dmg = lua_tonumber(l,2);
     
-    if (Damage(currGameObjRunning,&objects[objIndex],dmg,false,0))
-        PrintDiedFrom(&objects[objIndex],currGameObjRunning,NULL,dmg);
+    if (Damage(currGameObjRunning,&objects[objIndex],dmg,false,0, NULL))
+    {
+        //PrintDiedFrom(&objects[objIndex],currGameObjRunning,NULL,dmg);
+    }
     return 1;
 }
 int L_ClearCommandQueue(lua_State* l)

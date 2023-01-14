@@ -4,6 +4,7 @@
 #include "pointspace.h"
 #include "colors.h"
 typedef struct GameObject GameObject;
+typedef struct Ability Ability;
 
 typedef enum EFFECT_TRIGGER
 {
@@ -72,7 +73,8 @@ typedef struct Effect
     bool overwrites;
 
     EffectVisual visual;
-    
+
+    Ability* abilityFrom;
 
 } Effect;
 

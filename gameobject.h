@@ -293,7 +293,7 @@ void NewObj(GameObject* g);
 Rect GetObjRect(GameObject* g);
 int GetPlayerOwnedBy(GameObject* g);
 
-bool Damage(GameObject* source, GameObject* g, float value,bool triggerItems, float min);
+bool Damage(GameObject* source, GameObject* g, float value,bool triggerItems, float min, Effect* effect);
 void Heal(GameObject* g, float value);
 void Stun(GameObject* source, GameObject* g, float value);
 

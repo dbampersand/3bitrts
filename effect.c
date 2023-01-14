@@ -102,16 +102,16 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     }
     if (e->effectType == EFFECT_HURT)
     {
-        bool objectDied =   Damage(from,target,value*sign,propagateItemEffects,1);
+        bool objectDied = Damage(from,target,value*sign,propagateItemEffects,1,e);
         if (objectDied)
         {
-            PrintDiedFrom(target,from,e,value);
+            //PrintDiedFrom(target,from,e,value);
         }
         return objectDied;
     }
     if (e->effectType == EFFECT_HURT_PERCENT)
     {
-        return Damage(from,target,target->maxHP * (value*sign),propagateItemEffects,1);
+        return Damage(from,target,target->maxHP * (value*sign),propagateItemEffects,1,e);
     }
     if (e->effectType == EFFECT_STUN)
     {

@@ -56,11 +56,14 @@ float* cosTable = NULL;// = &__cosTable[360];
 void PrintDiedFrom(GameObject* obj, GameObject* damageSource, Effect* effectSource, int damage)
 {
     if (obj)
-        printf("GameObject %s died taking %i ",obj->name ? obj->name : "[No Name]",damage);
+        printf("GameObject '%s' died taking '%i' ",obj->name ? obj->name : "[No Name]",damage);
     if (damageSource)
-        printf("from object %s ",damageSource->name ? damageSource->name : "[No Name]");
+        printf("from object '%s' ",damageSource->name ? damageSource->name : "[No Name]");
     if (effectSource)
-        printf("from effect %s",effectSource->name ? effectSource->name : "[No Name]");
+        printf("from effect '%s'",effectSource->name ? effectSource->name : "[No Name]");
+    if (effectSource && effectSource->abilityFrom)
+        printf(" from ability '%s'",effectSource->abilityFrom->path ? effectSource->abilityFrom->path : "[No Path]");
+
 
     printf("\n");
 }
@@ -1110,6 +1113,7 @@ void KillObj(GameObject* g, bool trigger)
     if (!IsActive(g))
         return;
     ScatterEffect(g);
+    CureAll(g);
 
     RemoveObjFromAllThreatlists(g);
     RemoveObjFromAllCommands(g);
@@ -2631,10 +2635,9 @@ void AttackTarget(GameObject* g, float dt)
             AddAnimationEffect_Prefab(ae, g->properties & OBJ_OWNED_BY,midX,midY);
         }
 
-
-        if (Damage(g,g->targObj,damage,true,1))
+        if (Damage(g,g->targObj,damage,true,1, NULL))
         {
-            PrintDiedFrom(g,g->targObj,NULL,damage);
+            //PrintDiedFrom(oldObj,g,NULL,damage);
             g->targObj = NULL;
         }
 
@@ -2685,7 +2688,7 @@ void Stun(GameObject* source, GameObject* g, float value)
 }
 
 
-bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems, float min)
+bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems, float min, Effect* effect)
 {
     if (!g) return false;
 
@@ -2733,6 +2736,7 @@ bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems, f
         g->flashTimer = FLASH_TIMER;
     if (g->health <= 0)
     {
+        PrintDiedFrom(g,source,effect,value);
         KillObj(g,true);
         return true;
     }

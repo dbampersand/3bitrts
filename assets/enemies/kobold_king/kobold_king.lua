@@ -34,14 +34,16 @@ function untoggle()
 end
 function update(dt)
     --concoctionTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999);
-    
+    local target = {}
+    target["target"] = GetHighestThreat();
+
+    CastAbility(poisonedSpear,2,{target});
+
+    do return end;
     
 
 
     if (IsInCombat(GetObjRef())) then
-
-        CastAbility(callGuards,0,{});
-        do return end
 
         timer = timer + dt
 
