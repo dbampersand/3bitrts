@@ -13,6 +13,18 @@
 #include "colors.h"
 #include "player.h"
 
+void swapPoints(float* x, float* y, float* x2, float* y2)
+{
+    float x3 = *x; float y3 = *y;
+
+    *x = *x2; *y = *y2;
+    *x2 = x3; *y2 = y3;
+}
+float Cross(float x, float y, float x2, float y2)
+{
+    return (x*y2) - (y*x2);
+}
+
 bool IsNear(float f, float f2, float epsilon)
 {
     float max = fabsf(_MAX(f,f2));
@@ -258,7 +270,6 @@ void ClampToRadius(float* x, float* y, float cx, float cy, float radius)
 }
 bool PointInCircle(float x, float y, float cx, float cy, float radius)
 {
-    
     return (dist(x,y,cx,cy) < radius);
 }
 float cotan(float i)
@@ -310,7 +321,7 @@ float RadToDeg(float rad)
 {
     return rad * 180/M_PI;
 }
-float CircleRectDist(int cx, int cy, float radius, Rect r)
+bool CircleRectDist(int cx, int cy, float radius, Rect r)
 {
     Point cd;
     cd.x = fabsf(cx - r.x);

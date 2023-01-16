@@ -2672,9 +2672,15 @@ int L_ApplyEffect(lua_State* l)
 {
     int objIndex = lua_tonumber(l,1);
     if (objIndex < 0) 
-        return -1; 
+    {
+        printf("Could not apply effect from %s: 'obj' index out of range. Obj index is %i.",currAbilityRunning->path ? currAbilityRunning->path : "[No path]",objIndex);
+        return 0; 
+    }
     if (objIndex >= MAX_OBJS) 
-        return -1;
+    {
+        printf("Could not apply effect from %s: 'obj' index out of range. Obj index is %i.",currAbilityRunning->path ? currAbilityRunning->path : "[No path]",objIndex);
+        return 0;
+    }
     GameObject* g = &objects[objIndex];
 
     size_t len =  lua_rawlen(l,2);
@@ -2689,7 +2695,7 @@ int L_ApplyEffect(lua_State* l)
         ApplyEffect(&e,currGameObjRunning,&objects[objIndex]);
     }       
     
-    return 1;
+    return 0;
 }
 int L_DealDamage(lua_State* l)
 {

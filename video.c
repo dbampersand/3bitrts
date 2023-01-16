@@ -266,10 +266,6 @@ bool PointInTri(int x0, int y0, int x1, int y1, int x2, int y2, int pX, int pY)
     return (alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1 && gamma >= 0 && gamma <= 1);
 }
 
-bool isClockwise(int x1, int y1, int x2, int y2)
-{
-    return -x1*y2 + y1*x2 > 0;
-}
 Rect GetTriBoundingBox(int x0, int y0, int x1, int y1, int x2, int y2)
 {
     Rect r;
@@ -280,74 +276,36 @@ Rect GetTriBoundingBox(int x0, int y0, int x1, int y1, int x2, int y2)
     r.y = _MAX(_MAX(y0,y1),y2) - r.y;
     return r;
 }
+bool PointsAreClockwise(float x, float y, float x2, float y2) {
+  return -x*y2 + y*x2 > 0;
+}
 bool isInsideSector(int x, int y, int cx, int cy, float startX, float startY, float endX, float endY, float length, float radius, float amtRotated) 
 {
-    float dX = cx - x;
-    float dY = cy - y;
+    DEBUG_P1.x = startX;
+    DEBUG_P1.y = startY;
+    DEBUG_P2.x = endX;
+    DEBUG_P2.y = endY;
+    DEBUG_P3.x = x;
+    DEBUG_P3.y = y;
 
-    double angle = (atan2(y-cy,x-cx));
-    double angle2 = (atan2(startY-cy,startX-cx));
-    double angle3 = (atan2(endY-cy,endX-cx));
+    x -= cx;
+    y -= cy;
+    startX -= cx;
+    startY -= cy;
 
-    angle = Normalise(angle, 0, 2*M_PI);
-    angle2 = Normalise(angle2,   0, 2*M_PI);
-    angle3 = Normalise(angle3, 0, 2*M_PI);
-    double rad = DegToRad(radius);
-    rad = Normalise(rad, 0, 2*M_PI);
+    endX -= cx;
+    endY -= cy;
 
-    if (angle2 < angle3)
+
+    if (PointsAreClockwise(startX,startY,endX,endY)) 
     {
-        float temp = angle2;
-        angle2 = angle3;
-        angle3 = temp;
+        return !(!PointsAreClockwise(startX,startY,x,y) &&  PointsAreClockwise(endX,endY,x,y));
     }
-
-
-    if (dX*dX+dY*dY <= length*length)
+    else 
     {
-        float newX = startX-cx; float newY = startY-cy;
-        float newX2 = endX-cx; float newY2 = endY-cy;
-        Normalize(&newX,&newY);
-        Normalize(&newX2,&newY2);
-        newX*=10000;
-        newY*=10000;
+        return (!PointsAreClockwise(startX,startY,x,y) && PointsAreClockwise(endX,endY,x,y));
+     }
 
-        newX2*=10000;
-        newY2*=10000;
-        newX += startX;
-        newY += startY;
-        newX2 += endX;
-        newY2 += endY;
-
-
-        float midX = startX;
-        float midY = startY;
-
-        float midAngle = M_PI - ((atan2(endY-startY,endX-startX)) + DegToRad(90) - radius/2.0) + amtRotated;
-        
-        midAngle = Normalise(midAngle, 0, 2*M_PI);
-
-        RotatePointF(&midX,&midY,cx,cy,(midAngle));
-        float midXNrm = midX - cx;
-        float midYNrm = midY - cy;
-        Normalize(&midXNrm,&midYNrm);
-        midXNrm*=10000;
-        midYNrm*=10000;
-        midX += midXNrm;
-        midY += midYNrm;
-        
-        bool tri1 = PointInTri(cx,cy,newX,newY,midX,midY,x,y);
-        bool tri2 =  PointInTri(cx,cy,newX2,newY2,midX,midY,x,y);
-        #ifdef DEBUG
-            al_draw_line(cx,cy,midX,midY,POISON,1);
-        #endif
-        if (tri1 || tri2)
-        {
-            return true;
-        }
-
-    }
-    return false;
 }
 void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO_COLOR col, float length)
 {
@@ -403,26 +361,31 @@ bool RectInCone(Rect r, int cx, int cy, float angle, float radius, float length)
 {
     float dx = _MIN(cx-r.x,cx-r.x+r.w);
     float dy = _MIN(cy-r.y,cy-r.y+r.h);
-    if (CircleRectDist(cx,cy,length,r))
-    {      
+
         Point rc = (Point){r.x+r.w/2.0f,r.y+r.h/2.0f};
+
         Point tl = (Point){r.x,r.y};
         Point tr = (Point){r.x+r.w,r.y};
         Point bl = (Point){r.x,r.y+r.h};
-        Point br = (Point){r.x+r.h,r.y+r.h};
-        
-        int startX; int startY; int endX; int endY;
-        GetConeVertices(cx,cy,&startX,&startY,&endX,&endY,angle,radius,length);
+        Point br = (Point){r.x+r.w,r.y+r.h};
 
+    Point points[5] = {
+        rc, tl, tr, bl, br
+    };
+    for (int i = 0; i < 5; i++)
+    {
+        if (PointInCircle(points[i].x,points[i].y,cx,cy,length))
+        {      
+            
+            int startX; int startY; int endX; int endY;
+            GetConeVertices(cx,cy,&startX,&startY,&endX,&endY,angle,radius,length);
 
-        if (isInsideSector(rc.x, rc.y,cx,cy,startX,startY,endX,endY,length,radius,angle) ||
-            isInsideSector(tl.x, tl.y,cx,cy,startX,startY,endX,endY,length,radius,angle) ||
-            isInsideSector(tr.x, tr.y,cx,cy,startX,startY,endX,endY,length,radius,angle) ||
-            isInsideSector(bl.x, bl.y,cx,cy,startX,startY,endX,endY,length,radius,angle) ||
-            isInsideSector(br.x, br.y,cx,cy,startX,startY,endX,endY,length,radius,angle))
-        {
-            return true;
-        }
+            if (isInsideSector(points[i].x, points[i].y,cx,cy,startX,startY,endX,endY,length,radius,angle))
+            {
+                return true;
+            }
+    }
+
     }
     return false;
 }
@@ -456,8 +419,29 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
     RotatePoint(&x2,&y2,x,y, -radius/2.0f+angle);
     RotatePoint(&x3,&y3,x,y, radius/2.0f+angle);
 
-    al_draw_line(x,y,x2,y2,color,1);
-    al_draw_line(x,y,x3,y3,color,1);
+    float xLine2 = x2-x; float yLine2 = y2-y;
+    float xLine3 = x3-x; float yLine3 = y3-y;
+
+    Normalize(&xLine2,&yLine2);
+    Normalize(&xLine3,&yLine3);
+
+    xLine2 *= length;
+    yLine2 *= length;
+    xLine3 *= length;
+    yLine3 *= length;
+
+    al_draw_line(x,y,x+xLine2,y+yLine2,color,1);
+    al_draw_line(x,y,x+xLine3,y+yLine3,color,1);
+
+
+    MouseState m = GetMouseClamped();
+    if (isInsideSector(m.worldX,m.worldY, x,y,  x2, y2, x3, y3, length, radius, angle))
+    {
+        DEBUG_P4.x = 5;
+    }
+    else
+        DEBUG_P4.x = 0;
+
 
     float angle2 = atan2(y-y2,x-x2);
     float angle3 = atan2(y-y3,x-x3);
@@ -474,7 +458,6 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
     //angle2 -= angle;
     //angle3 -= angle;
 
-    MouseState m = GetMouseClamped();
 
     int startX = x2; int startY = y2;
     int endX = x3; int endY = y3;
@@ -496,7 +479,7 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
     float distX = x - x2;
     float distY = y - y2;
 
-    float l = sqrt(distX*distX+distY*distY);
+    float l = length;//sqrt(distX*distX+distY*distY);
    // if (isInsideSector(m.worldX,m.worldY,x,y,x2,y2,x3,y3,l,radius,angle+DegToRad(45)))
         CircleSegment(x,y,l,angle2,angle3,color,length); 
     //else

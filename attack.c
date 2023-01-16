@@ -788,6 +788,7 @@ void UpdateAttack(Attack* a, float dt)
             }
             if (a->attackType == ATTACK_CONE)
             {
+                GameObject* g = activeObjects[i];
                 float x = a->x; float y = a->y; 
                 float x2 = a->targx; float y2 = a->targy;
                 if (a->target)

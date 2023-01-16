@@ -10,6 +10,8 @@ local poisonedSpear = 0;
 local callGuards = 0
 local cloakOfFire = 0; 
 
+local enraged = false;
+
 
 function setup()
     SetSprite("assets/enemies/kobold_king/kobold_king.png");
@@ -34,16 +36,13 @@ function untoggle()
 end
 function update(dt)
     --concoctionTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999);
-    local target = {}
-    target["target"] = GetHighestThreat();
 
-    CastAbility(poisonedSpear,2,{target});
-
-    do return end;
     
-
-
     if (IsInCombat(GetObjRef())) then
+        local target = {}
+        target["target"] = GetHighestThreat();
+
+        CastAbility(slash,8,{target});
 
         timer = timer + dt
 
@@ -57,7 +56,7 @@ function update(dt)
         local target = {}
         target["target"] = GetHighestThreat();
 
-        CastAbility(poisonedSpear,4,{});
+        CastAbility(poisonedSpear,4,{target});
         if (timer > 15) then
             CastAbility(slash,2,{target});
         end

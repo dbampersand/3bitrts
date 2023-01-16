@@ -25,3 +25,6 @@ end
 function abilitytick(x, y, timeUntilAttackTick, parent, target, dt, attackRef, totalAttackDurationLeft)
 
 end
+function onchanneled() 
+    SetChannelingSprite("assets/enemies/kobold_king/kobold_king_channelling_call_guards.png");
+end

@@ -27,5 +27,5 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     
 end
 function onchanneled() 
-    SetChannelingSprite("assets/enemies/cusith/cusith_channelling_spin.png");
+    SetChannelingSprite("assets/enemies/kobold_king/kobold_king_channelling.png");
 end

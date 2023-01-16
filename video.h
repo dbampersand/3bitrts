@@ -73,7 +73,7 @@ typedef struct SpriteDecoration
     Color tint;
     float lifetime;
 } SpriteDecoration;
-
+    
 #define MAX_SPRITE_DECORATIONS 255
 
 extern SpriteDecoration spriteDecorations[MAX_SPRITE_DECORATIONS];
@@ -108,7 +108,7 @@ void GetConeVertices(int cx, int cy, int* x1, int* y1, int* x2, int* y2, float a
 bool isInsideSector(int x, int y, int cx, int cy, float startX, float startY, float endX, float endY, float length, float radius, float amtRotated);
 bool RectInCone(Rect r, int cx, int cy, float angle, float radius, float length);
 
-float CircleRectDist(int cx, int cy, float radius, Rect r);
+bool CircleRectDist(int cx, int cy, float radius, Rect r);
 void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO_COLOR col, float length);
 void SetDisplaySize();
 void InitVideo();

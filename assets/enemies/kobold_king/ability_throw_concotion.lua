@@ -19,7 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 40;  
 
 
-    CreateAOE(GetX(obj),GetY(obj),"", 30, 15, 1, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, true, obj, {f1})
+    CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 15, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj, {f1})
     return true; 
 end
 
@@ -29,4 +29,8 @@ end
 
 function abilitytick(x, y, durationLeft, obj, target)
     
+end
+
+function onchanneled() 
+    SetChannelingSprite("assets/enemies/kobold_king/kobold_king_chanelling_throw_concotion.png");
 end

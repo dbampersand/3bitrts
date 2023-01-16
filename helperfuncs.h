@@ -14,6 +14,8 @@ typedef struct GameObject GameObject;
 
 #define MOUSECURSORSIZE 5
 
+void swapPoints(float* x, float* y, float* x2, float* y2);
+float Cross(float x, float y, float x2, float y2);
 bool IsNear(float f, float f2, float epsilon);
 int GetIndex(int h, int x, int y);
 Point IndexToPoint(int h, int index);
