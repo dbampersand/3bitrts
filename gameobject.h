@@ -369,6 +369,8 @@ void SetLightSize(GameObject* g, int size);
 float GetTotalDotted(GameObject* g);
 
 int GetNumActiveObjects();
+bool RectIsInUI(float x, float y, float w, float h);
+
 
 int GetNumEnemyObjects();
 void PrintDiedFrom(GameObject* obj, GameObject* damageSource, Effect* effectSource, int damage);

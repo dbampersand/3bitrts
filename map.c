@@ -89,7 +89,7 @@ bool RectIsFree(int x, int y, int w, int h, bool caresAboutUnits)
 {
     for (int x2 = x; x2 < x + w; x2++)
     {
-        if (!LineIsFree(x2,y,caresAboutUnits,h))
+        if (!LineIsFree(x2,y,caresAboutUnits,h) || RectIsInUI(x2*_GRAIN,y*_GRAIN,w*_GRAIN,h*_GRAIN))
                 return false;
         
     }
