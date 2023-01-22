@@ -1,3 +1,5 @@
+local maxHP = 1000
+
 function setup()
     SetSprite("assets/friendly/rune_smith/rune_smith.png");
     AddAbility(GetObjRef(),"assets/friendly/rune_smith/rune_of_lifesteal.lua",0)    
@@ -17,7 +19,7 @@ function setup()
     IsPlayerChoosable(true);
     SetCategory(TYPE_TANK);
 
-    SetMaxHP(1000,true);
+    SetMaxHP(maxHP,true);
 
     SetObjPurchaseScreenSprite("assets/friendly/rune_smith/rune_smith_full.png")
     SetObjName("Rune Smith");

@@ -1,3 +1,5 @@
+local maxHP = 1000
+
 function setup()
     SetSprite("assets/friendly/paladin/paladin.png");
     AddAbility(GetObjRef(),"assets/friendly/paladin/shield_slam.lua",0)    
@@ -16,7 +18,7 @@ function setup()
     IsPlayerChoosable(true);
     SetCategory(TYPE_TANK);
 
-    SetMaxHP(1000,true);
+    SetMaxHP(maxHP,true);
     
     ObjectUsesMana(GetObjRef(),true);
 

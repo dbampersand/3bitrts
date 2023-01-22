@@ -1,4 +1,4 @@
-local maxHP = 250;
+local maxHP = 350;
 
 function setup()
     SetSprite("assets/friendly/shaman/shaman.png");

@@ -9,7 +9,7 @@ function setup()
     SetDescription("Smite\n\nHits the target for minor damage. Regenerates mana.")
     SetCooldown(10);
     SetManaCost(10)
-    SetAbilityMaxStacks(2);
+    SetAbilityMaxStacks(3);
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/priest/audio/smite.wav",1)
@@ -17,7 +17,7 @@ function casted(x,y,obj,headingx,headingy)
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT
-    f1["value"] = 120;  
+    f1["value"] = 90;  
 
     local f2 = {}
     f2["trigger"] = TRIGGER_TIMER

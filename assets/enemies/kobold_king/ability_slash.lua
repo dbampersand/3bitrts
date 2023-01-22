@@ -5,7 +5,7 @@ local cone = -1
 function setup()
     SetAbilityRange(100)
     SetCooldown(15);
-    AbilitySetPortrait("assets/enemies/cusith/ability_focus.png");
+    AbilitySetPortrait("assets/enemies/kobold_king/ability_slash.png");
     SetDescription("[b]Slash\n\nAfter channelling, hits in a cone.")
     SetAbilityHint(HINT_CONE,coneSize);
 

@@ -3,7 +3,7 @@ function setup()
     SetCooldown(20)
     SetAbilityHint(HINT_CIRCLE,30,true);
     AbilitySetCastType(ABILITY_POINT);
-    AbilitySetPortrait("assets/enemies/minotaur/ability_smash.png");
+    AbilitySetPortrait("assets/enemies/kobold_king/ability_throw_concoction.png");
     SetDescription("[b]Throw Concoction\n\nDeals a large amount of damage to all units in an area.")
 
 end

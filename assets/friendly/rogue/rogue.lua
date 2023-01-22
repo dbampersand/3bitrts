@@ -1,4 +1,4 @@
-local maxHP = 300;
+local maxHP = 400;
 
 function setup()
     SetSprite("assets/friendly/rogue/rogue.png");

@@ -1,10 +1,10 @@
 local length = 15
-
+local time = 10
 
 function setup()
     SetAbilityRange(256)
     SetCooldown(45);
-    AbilitySetPortrait("assets/enemies/cusith/ability_spin.png");
+    AbilitySetPortrait("assets/enemies/kobold_king/ability_throw_bot.png");
     SetDescription("[b]Throw Bot\n\nThrows an explosive bot, which explodes after " .. time .. " seconds unless killed.")
 
 end

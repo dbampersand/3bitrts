@@ -26,7 +26,7 @@ function casted(x,y,obj,headingx,headingy)
 
 
     aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_HEAL,DITHER_ATTACK_DAMAGE_QUARTER,false,-1, {f1})
-    SetAttackCircle(aoe,true);
+   -- SetAttackCircle(aoe,true);
     return true; 
 end
 

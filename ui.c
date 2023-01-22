@@ -457,8 +457,8 @@ void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame)
         {
             ui.choosingUnits_GO.enabled = false;
         }
-        DrawUIElement(&ui.choosingUnits_Back,45,194,mouseState,ui.choosingUnits_Back.bgColor);
-        DrawUIElement(&ui.choosingUnits_GO,109,194,mouseState,ui.choosingUnits_Back.bgColor);
+        DrawUIElement(&ui.choosingUnits_Back,ui.choosingUnits_Back.x,ui.choosingUnits_Back.y,mouseState,ui.choosingUnits_Back.bgColor);
+        DrawUIElement(&ui.choosingUnits_GO,ui.choosingUnits_GO.x,ui.choosingUnits_GO.y,mouseState,ui.choosingUnits_Back.bgColor);
         DrawUIElement(&ui.choosingUnits_Hire,ui.choosingUnits_Hire.x,ui.choosingUnits_Hire.y,mouseState,ui.choosingUnits_Back.bgColor);
 
 
@@ -1137,9 +1137,9 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
         e->encounter_ButtonRight.enabled = false;
     }
 
-    DrawUIElement(&e->encounter_ButtonLeft,16+offsetX,224,mouseState,e->encounter_ButtonLeft.bgColor);
+    DrawUIElement(&e->encounter_ButtonLeft,14+offsetX,224,mouseState,e->encounter_ButtonLeft.bgColor);
     DrawUIElement(&e->encounter_ButtonConfirm,80+offsetX,224,mouseState,e->encounter_ButtonConfirm.bgColor);
-    DrawUIElement(&e->encounter_ButtonRight,192+offsetX,224,mouseState,e->encounter_ButtonRight.bgColor);
+    DrawUIElement(&e->encounter_ButtonRight,194+offsetX,224,mouseState,e->encounter_ButtonRight.bgColor);
 
 
     if (GetButtonIsClicked(&e->encounter_ButtonLeft))

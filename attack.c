@@ -24,7 +24,70 @@ int attack_top = 0;
 int numActiveAttacks = 0;
 ALLEGRO_BITMAP* cachedAttackSprites[MAX_AOE_CIRCUMFERENCE_SIZE+1][DITHER_ALL] = {0};
 
+ALLEGRO_BITMAP* ditherCircleScratch = {0};
 
+void DrawOutlinedCircleDithered(float x, float y, float radius, ALLEGRO_COLOR color)
+{
+    ALLEGRO_BITMAP* before = al_get_target_bitmap();
+    if (!ditherCircleScratch)
+    {
+        ditherCircleScratch = al_create_bitmap(MAX_AOE_CIRCUMFERENCE_SIZE,MAX_AOE_CIRCUMFERENCE_SIZE);
+    }
+    al_set_target_bitmap(ditherCircleScratch);
+
+    al_clear_to_color(al_map_rgba(0,0,0,0));
+    al_draw_circle(MAX_AOE_CIRCUMFERENCE_SIZE/2.0f,MAX_AOE_CIRCUMFERENCE_SIZE/2.0f,radius,color,0);
+
+    //al_lock_bitmap_region(ditherCircleScratch, x - radius, y - radius, radius*2, radius*2, ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+    //al_lock_bitmap(ditherCircleScratch,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+    
+    int op; int src; int dst;
+    al_get_blender(&op,&src,&dst);
+
+    al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_ZERO);
+
+    int max = (MAX_AOE_CIRCUMFERENCE_SIZE/2) + radius;
+    int start = (MAX_AOE_CIRCUMFERENCE_SIZE/2)-radius+1;
+    if ((int)(radius) % 2 == 0)
+    {
+        max -= 1;
+    }
+    for (int y2 = start; y2 < max; y2++)
+    {
+        if (y2 % 2 == 0)
+            al_draw_line(MAX_AOE_CIRCUMFERENCE_SIZE/2 - radius,y2,
+                        MAX_AOE_CIRCUMFERENCE_SIZE/2 + radius,y2,
+                        _TRANSPARENT,1);
+    }
+    for (int x2 = (MAX_AOE_CIRCUMFERENCE_SIZE/2)-radius; x2 < (MAX_AOE_CIRCUMFERENCE_SIZE/2) + radius; x2++)
+    {
+        /*if (x2 % 2 == 0)
+            al_draw_line(x2,MAX_AOE_CIRCUMFERENCE_SIZE/2 - radius,
+                        x2,MAX_AOE_CIRCUMFERENCE_SIZE/2 + radius,
+                        _TRANSPARENT,1);*/
+    }
+
+    al_set_blender(op,src,dst); 
+
+    /*
+    for (int x2 = (MAX_AOE_CIRCUMFERENCE_SIZE/2) - radius; x2 < (MAX_AOE_CIRCUMFERENCE_SIZE/2) + radius; x2++)
+    {
+        for (int y2 = (MAX_AOE_CIRCUMFERENCE_SIZE/2)-radius; y2 < (MAX_AOE_CIRCUMFERENCE_SIZE/2) + radius; y2++)
+        {
+            if (x2 % 2 == 0)
+                al_put_pixel(x2,y2,_TRANSPARENT);
+        }
+    }*/
+
+    
+
+    al_unlock_bitmap(ditherCircleScratch);
+    al_set_target_bitmap(before);
+
+    al_draw_bitmap(ditherCircleScratch, x - MAX_AOE_CIRCUMFERENCE_SIZE / 2, y - MAX_AOE_CIRCUMFERENCE_SIZE / 2, 0);
+
+
+}
 void InitAttacks()
 {
     for (int i = 0; i < MAX_ATTACKS; i++)
@@ -227,11 +290,13 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
     if (circum > MAX_AOE_CIRCUMFERENCE_SIZE)
         circum = MAX_AOE_CIRCUMFERENCE_SIZE;
 
+
     if (cachedAttackSprites[(int)circum][dither])
     {
         al_draw_tinted_bitmap(cachedAttackSprites[(int)circum][dither],color,cX-radius,cY-radius,0);
         return;
     }
+
 
     ALLEGRO_BITMAP* before = al_get_target_bitmap();
     
@@ -512,7 +577,7 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
             pattern=5;
         if (dither == DITHER_ATTACK_DAMAGE_EIGTH)
             pattern=7;
-
+        
         int index = 0;
         for (int x = 0; x < circum+pattern; x+=pattern*2)
         {
@@ -571,7 +636,11 @@ void DrawAttack(Attack* a, float dt)
         {
             al_draw_circle((a->screenX),(a->screenY),a->radius,GetColor(c,a->playerOwnedBy),1.5f);
         }
-        draw_circle_dithered(a->screenX,a->screenY,a->radius,GetColor(c,a->playerOwnedBy),a->dither);
+        else
+        {
+            DrawOutlinedCircleDithered(a->screenX,a->screenY,a->radius,GetColor(c,a->playerOwnedBy));
+        }
+        draw_circle_dithered(a->screenX,a->screenY,a->radius*0.9f,GetColor(c,a->playerOwnedBy),a->dither);
 
         if (AttackIsSoak(a))
         {

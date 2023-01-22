@@ -30,6 +30,7 @@ function setup()
     poisonedSpear = AddAbility(GetObjRef(),"assets/enemies/kobold_king/ability_poisoned_spear.lua",4)
     callGuards = AddAbility(GetObjRef(),"assets/enemies/kobold_king/ability_call_guards.lua",5)
     cloakOfFire = AddAbility(GetObjRef(),"assets/enemies/kobold_king/ability_cloak_of_fire.lua",6)
+    
 end 
 function untoggle()
 
@@ -39,10 +40,6 @@ function update(dt)
 
     
     if (IsInCombat(GetObjRef())) then
-        local target = {}
-        target["target"] = GetHighestThreat();
-
-        CastAbility(slash,8,{target});
 
         timer = timer + dt
 

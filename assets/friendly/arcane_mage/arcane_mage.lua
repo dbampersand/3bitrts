@@ -1,4 +1,4 @@
-local maxHP = 250;
+local maxHP = 350;
 local heal = -1
 
 function setup()

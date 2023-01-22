@@ -146,6 +146,7 @@ PointI GetClosestPathablePoint(PointI target, PointI current, bool* found, int w
     PointI closestP = (PointI){INT_MAX,INT_MAX};
     *found = false;
 
+    
     if (RectIsFree(target.x,target.y,w,h,caresAboutUnits))
     {
         *found = true;

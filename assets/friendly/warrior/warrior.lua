@@ -1,3 +1,5 @@
+local maxHP = 1100
+
 function setup()
     SetSprite("assets/friendly/warrior/warrior.png");
     AddAbility(GetObjRef(),"assets/friendly/warrior/strike.lua",0)    
@@ -16,7 +18,7 @@ function setup()
     IsPlayerChoosable(true);
     SetCategory(TYPE_TANK);
 
-    SetMaxHP(1000,true);
+    SetMaxHP(1100,true);
 
     SetObjPurchaseScreenSprite("assets/friendly/warrior/warrior_full.png")
     SetObjName("Warrior");

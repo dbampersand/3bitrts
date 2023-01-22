@@ -1,7 +1,7 @@
 function setup()
     SetAbilityRange(999)
     SetCooldown(12)
-    AbilitySetPortrait("assets/enemies/minotaur/ability_chuck.png");
+    AbilitySetPortrait("assets/enemies/kobold_king/ability_poisoned_spear.png");
     SetDescription("[b]Poisoned Spear\n\nStabs the target with a poison-tipped spear, dealing damage and poisoning them.")
     SetAbilityHint(HINT_LINE);
 end

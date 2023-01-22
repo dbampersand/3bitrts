@@ -9,7 +9,7 @@ local yMax = 220
 function setup()
     SetAbilityRange(20)
     SetCooldown(40);
-    AbilitySetPortrait("assets/enemies/cusith/ability_focus.png");
+    AbilitySetPortrait("assets/enemies/kobold_king/ability_fan_of_knives.png");
     SetDescription("[b]Fan of Knives\n\nThrows knives, dealing large area damage.")
     
 end

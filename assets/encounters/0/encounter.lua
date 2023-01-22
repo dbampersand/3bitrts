@@ -3,10 +3,14 @@ function setup()
     SetEncounterDescription("A faction of goblins defend the entrance to the mountain.")
     SetEncounterName("Kobold King");
 
-    AddEncounterAbility("assets/enemies/wyrm_boss/ability_bite.lua",0,0);
-    AddEncounterAbility("assets/enemies/wyrm_boss/ability_firebreath.lua",1,0);
-    AddEncounterAbility("assets/enemies/wyrm_boss/ability_fire.lua",2,0);
-    AddEncounterAbility("assets/enemies/wyrm_boss/ability_nuke.lua",3,0);
+    AddEncounterAbility("assets/enemies/kobold_king/ability_throw_bot.lua",0,0);
+    AddEncounterAbility("assets/enemies/kobold_king/ability_fan_of_knives.lua",1,0);
+    AddEncounterAbility("assets/enemies/kobold_king/ability_slash.lua",2,0);
+    AddEncounterAbility("assets/enemies/kobold_king/ability_throw_concotion.lua",3,0);
+    AddEncounterAbility("assets/enemies/kobold_king/ability_poisoned_spear.lua",4,0);
+    AddEncounterAbility("assets/enemies/kobold_king/ability_call_guards.lua",5,0);
+    AddEncounterAbility("assets/enemies/kobold_king/ability_cloak_of_fire.lua",6,0);
+
 
 
     SetEncounterMapPath("assets/encounters/0/map_final.lua");

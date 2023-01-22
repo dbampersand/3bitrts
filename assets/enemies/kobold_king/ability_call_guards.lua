@@ -1,7 +1,7 @@
 function setup()
     SetAbilityRange(120)
     SetCooldown(60);
-    AbilitySetPortrait("assets/enemies/cusith/ability_focus.png");
+    AbilitySetPortrait("assets/enemies/kobold_king/ability_call_guards.png");
     SetDescription("[b]Call Guards\n\nCalls the royal guards.")
     
 end
