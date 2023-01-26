@@ -9,6 +9,7 @@
 #include "luafuncs.h"
 #include "gameobject.h"
 #include "map.h"
+#include "player.h"
 
 
 Encounter** encounters = NULL;
@@ -23,6 +24,20 @@ Encounter* currEncounterRunning = NULL;
 
 int selectedEncounterIndex = 0;
 
+float goldLossRate = 10;
+
+void SetEncounterProfited(Encounter* e, int amountProfited)
+{
+    if (amountProfited <= 0)
+        return;
+
+    if (amountProfited > e->bestProfited)
+    {
+        e->bestProfited += amountProfited;
+    }
+    e->totalProfit += amountProfited;
+
+}
 void LoadEncounter(char* dirPath, lua_State* l)
 {
     DIR *d;
@@ -30,7 +45,10 @@ void LoadEncounter(char* dirPath, lua_State* l)
     d = opendir(dirPath);
 
     Encounter* e = calloc(1,sizeof(Encounter));
+    
+    //defaults
     e->numUnitsToSelect = 4;
+    e->unlockBasePrice = 50;
 
     if (d) {
         while ((dir = readdir(d)) != NULL) {
@@ -100,6 +118,7 @@ void LoadEncounter(char* dirPath, lua_State* l)
     InitButton(&e->encounter_ButtonConfirm,"Select Party","Select Party",0,224,96,16,0);
     InitButton(&e->encounter_ButtonRight,">",">",0,224,48,16,0);
     InitButton(&e->encounter_RerollAugments,"","",220,50,20,20,LoadSprite("assets/ui/augments/reroll.png",true));
+    InitButton(&e->encounter_PurchaseAugment,"","",220,50,60,10,0);
 
     e->augment = 1;
     ClearAugments(e);
@@ -309,6 +328,8 @@ void UpdateEncounter(float dt)
         lua_pcall(luaState,1,0,0);
 
         UpdateMap(currMap,dt);
+        if (gameState == GAMESTATE_INGAME)
+            AddGold(-dt * (1/goldLossRate));
     }
 }
 bool IsSeperator(char c)
@@ -347,15 +368,25 @@ bool PathCmp(char* path1, char* path2)
     }
     return true;
 }
-void UnlockEncounter(const char* path)
+void UnlockEncounter(const char* path, int difficultyUnlocked, int bestProfit, int totalProfit, bool overwrite)
 {
     for (int i = 0; i < numEncounters; i++)
     {
         if (encounters[i]->path && PathCmp(encounters[i]->path, (char*)path))
         {
+            if (!encounters[i]->unlocked || overwrite)
+            {
+                encounters[i]->difficultyUnlocked = difficultyUnlocked;
+                encounters[i]->bestProfited = bestProfit;
+                encounters[i]->totalProfit = totalProfit;
+            }
             encounters[i]->unlocked = true;
         }
     }
     ResetEncounterPosition();
 
+}
+int GetAugmentCost(Encounter* e, int level)
+{
+    return (e->unlockBasePrice * level * level);
 }

@@ -45,7 +45,6 @@ typedef struct Encounter
     int loadScreen_spriteIndex; 
 
     int augment;
-    int maxaugment;
 
     Augment augments[MAX_AUGMENTS];
 
@@ -56,13 +55,21 @@ typedef struct Encounter
     UIElement encounter_ButtonConfirm;
     UIElement encounter_ButtonRight;
     UIElement encounter_RerollAugments;
+    UIElement encounter_PurchaseAugment;
+
 
     bool unlocked;
+    int difficultyUnlocked;
+    int unlockBasePrice;
+
+    int bestProfited;
+    int totalProfit;
 
 
 } Encounter;
 
 #define NUM_ENCOUNTER_FUNCTIONS 3
+
 
 void LoadEncounter(char* dirPath,lua_State* l);
 void LoadEncounters(char* dirPath,lua_State* l);
@@ -70,9 +77,14 @@ void NextEncounter();
 void PreviousEncounter();
 Encounter* GetEncounterByName(char* name);
 void UpdateEncounter(float dt);
-void UnlockEncounter(const char* path);
+void UnlockEncounter(const char* path, int difficultyUnlocked, int bestProfit, int totalProfit, bool overwrite);
 void ResetEncounterPosition();
 bool PathCmp(char* path1, char* path2);
+
+void SetEncounterProfited(Encounter* e, int amountProfited);
+int GetAugmentCost(Encounter* e, int level);
+
+
 
 extern Encounter** encounters;
 extern int numEncounters;
@@ -85,3 +97,6 @@ extern float encounterMoveTo;
 extern Encounter* currEncounterRunning;
 
 extern int selectedEncounterIndex;
+extern float goldLossRate;
+
+extern int maxAugments;

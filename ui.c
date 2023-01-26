@@ -1058,10 +1058,9 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 
 
     int augmentX = 96;
-    e->maxaugment = 4;
     if (e->augment <= 0)
         e->augment = 1; 
-    for (int i = 0; i < e->maxaugment+1; i++)
+    for (int i = 0; i < e->difficultyUnlocked; i++)
     {
         Rect drawRect = (Rect){augmentX+offsetX,20,GetWidthSprite(&sprites[ui.augmentIconIndex]),GetHeightSprite(&sprites[ui.augmentIconIndex])};
         DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0.5f,0.5f,0,i < e->augment ? FRIENDLY : GROUND,false);
@@ -1076,6 +1075,34 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
             }
         }
     }
+    e->encounter_PurchaseAugment.x = augmentX + 3 + offsetX;
+    e->encounter_PurchaseAugment.y = 20 - (e->encounter_PurchaseAugment.h/2);
+    int purchaseCost = GetAugmentCost(e, e->difficultyUnlocked+1);
+    char* buttonText = calloc(NumDigits(purchaseCost),sizeof(char));
+    sprintf(buttonText,"%i",purchaseCost);
+    ChangeButtonText((Button*)(e->encounter_PurchaseAugment.data), buttonText);
+    free(buttonText);
+
+    if (purchaseCost > players[0].bankedGold)
+    {
+        e->encounter_PurchaseAugment.enabled = false;
+    }
+    else
+    {
+        e->encounter_PurchaseAugment.enabled = true;
+    }
+    UpdateButton(e->encounter_PurchaseAugment.x,e->encounter_PurchaseAugment.y,&e->encounter_PurchaseAugment,*mouseState,*mouseStateLastFrame);
+    DrawUIElement(&e->encounter_PurchaseAugment,e->encounter_PurchaseAugment.x,e->encounter_PurchaseAugment.y,mouseState,COLOR_BG);
+
+    if (GetButtonIsClicked(&e->encounter_PurchaseAugment))
+    {
+        AddGold(-purchaseCost);
+        players[0].bankedGold -= purchaseCost;
+        e->difficultyUnlocked++;
+        e->encounter_PurchaseAugment.enabled = false;
+
+    }
+
 
     free(augmentStr);
 
@@ -3055,7 +3082,7 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
     al_draw_text(ui.font,FRIENDLY,17,196,0,buffer);
 
     buffer = realloc(buffer,(strlen("Gold gained: ")+log10(pow(2,sizeof(players[0].gold)*8))+3) * sizeof(char));
-    sprintf(buffer,"Gold gained: %i",players[0].gold);
+    sprintf(buffer,"Gold gained: %i",(int)players[0].gold);
     al_draw_text(ui.font,FRIENDLY,17,208,0,buffer);
 
 

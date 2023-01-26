@@ -647,6 +647,9 @@ void Save(char* path)
                 al_fwrite(file,"\"",1);
                 al_fwrite(file,e->path,strlen(e->path));
                 al_fwrite(file,"\"",1);
+                al_fwrite(file," ",1);
+                al_fwrite(file,&e->difficultyUnlocked,NumDigits(e->difficultyUnlocked));
+                al_fprintf(file," %i, %i, %i",e->difficultyUnlocked,e->bestProfited,e->totalProfit);
                 al_fwrite(file,";",1);
                 al_fwrite(file,"\n",1);
             }
@@ -747,8 +750,12 @@ bool LoadSaveFile(char* path)
                         char* token = strtok(unlockedPathsStr,";");
                         while (token)
                         {
+                            int positionEnd = strlen(token);
                             for (int j = 0; j < strlen(token); j++)
                             {
+                                if (token[j] == '"')
+                                    positionEnd = j;
+
                                 if (token[j] == '"' || isspace(token[j]))
                                 {
                                     for (int z = j; z < strlen(token)-1; z++)
@@ -759,7 +766,22 @@ bool LoadSaveFile(char* path)
                                     j--;    
                                 }
                             }
-                            UnlockEncounter(token);
+                            char* levelStats = &token[positionEnd];
+                            if (strlen(levelStats) > 1)
+                            {
+                                int unlockLevel = 0;
+                                int bestProfit = 0;
+                                int totalProfit = 0;
+                                char comma = ',';
+                                char* save;
+                                unlockLevel = atoi(strtok_r(levelStats,&comma,&save));
+                                bestProfit = atoi(strtok_r(NULL,&comma,&save));
+                                totalProfit = atoi(strtok_r(NULL,&comma,&save));
+
+
+                                token[positionEnd] = '\0';
+                                UnlockEncounter(token,unlockLevel,bestProfit,totalProfit,true);
+                            }
 
                             token = strtok(NULL,";");
                         }
@@ -776,6 +798,8 @@ bool LoadSaveFile(char* path)
             {
                 players[0].bankedGold = gold;
             }
+
+
             free(str);
             al_fclose(file);
         }

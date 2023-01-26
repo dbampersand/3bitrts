@@ -26,7 +26,7 @@ typedef struct Player
 
     Point cameraPos;
 
-    int gold;
+    float gold;
     char* goldText;
     float goldAnimationTimer;
 
@@ -66,7 +66,7 @@ void MoveCam(float x, float y);
 void ClearSelection();
 bool BuyItem(Item* i);
 int GetGold();
-void AddGold(int count);
+void AddGold(float count);
 void DrawGoldCount();
 void ClearGold();
 void UpdateGoldAnimationTimer(float dt);

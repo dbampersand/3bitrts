@@ -536,6 +536,10 @@ void Quit()
 void WinGame()
 {
     gameStats.gameWon = true;
+    if (players[0].gold > 0)
+    {
+        SetEncounterProfited(currEncounterRunning,players[0].gold);
+    }
     SetGameStateToEndscreen();
 }
 void LoseGame()

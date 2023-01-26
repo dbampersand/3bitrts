@@ -655,6 +655,7 @@ int main(int argc, char* args[])
         }
         if (event.type == ALLEGRO_EVENT_TIMER) {
             
+            //todo: refactor this
             int targetFPSIndex = ((Pulldown*)(GetUIElement(&ui.videoOptionsPanel,"Target FPS")->data))->selectedIndex;
             currSettings.targetFPS = targetFPSIndex;
             if (targetFPSIndex == OPTION_30FPS && _TARGET_FPS != 30)

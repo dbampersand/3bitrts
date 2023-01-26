@@ -1,5 +1,5 @@
 function setup()
-    SetMapSprite("assets/encounters/01/map_final.png")
+    SetMapSprite("assets/encounters/0/map_final.png")
     SetEncounterMusic("assets/audio/first_boss.wav");
 
     CreateObject("assets/enemies/kobold_king/kobold_king.lua",256,0,TYPE_ENEMY,0);

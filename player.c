@@ -211,26 +211,30 @@ void UpdateGoldTextString(int gold)
     int numDigits = NumDigits(gold);
     if (!players[0].goldText)
     {
-        players[0].goldText = calloc(numDigits+1,sizeof(char));
+        players[0].goldText = calloc(numDigits+2,sizeof(char));
         players[0].goldAnimationTimer = 1;   
     }
     else
     {
-        players[0].goldText = realloc(players[0].goldText,(numDigits+1)*sizeof(char));
+        players[0].goldText = realloc(players[0].goldText,(numDigits+2)*sizeof(char));
     }
     sprintf(players[0].goldText,"%i",gold);
     players[0].goldText[numDigits] = '\0';
 
 }
-void AddGold(int count)
+void AddGold(float count)
 {
+    int before = floor(players[0].gold);
     players[0].gold += count;
 
-
-    if (players[0].goldAnimationTimer >= 1)
+    //if there's been a change of at least 1 gold
+    if (before != (int)floor(players[0].gold))
     {
-        players[0].goldAnimationTimer = 0;
-        players[0].goldDisplaying = players[0].gold-count;
+        if (players[0].goldAnimationTimer >= 1)
+        {
+            players[0].goldAnimationTimer = 0;
+            players[0].goldDisplaying = players[0].gold-count;
+        }
     }
 }
 void UpdateGoldAnimationTimer(float dt)
@@ -264,9 +268,12 @@ void DrawGoldCount()
         x = 24;
 
     DrawSprite(&sprites[ui.gold_element_sprite_index],x,y,0,0,0,FRIENDLY,false);
-    al_draw_text(ui.tinyFont,FRIENDLY,x+GetWidthSprite(&sprites[ui.gold_element_sprite_index])+2,y,ALLEGRO_ALIGN_LEFT,players[0].goldText);
+
+    ALLEGRO_COLOR c = floor(players[0].gold) >= 0 ? FRIENDLY : ENEMY;
+    al_draw_text(ui.tinyFont,c,x+GetWidthSprite(&sprites[ui.gold_element_sprite_index])+2,y,ALLEGRO_ALIGN_LEFT,players[0].goldText);
 }
 void ClearGold()
 {
+    players[0].goldAnimationTimer = 1;
     AddGold(-GetGold());
 }

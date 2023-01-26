@@ -3304,8 +3304,13 @@ int L_StartsUnlocked(lua_State* l)
 int L_UnlockEncounter(lua_State* l)
 {
     const char* path = (const char*)lua_tostring(l,1);
-    UnlockEncounter(path);
+    UnlockEncounter(path,0,0,0,false);
 
+    return 0;
+}
+int L_SetUnlockLevelPrice(lua_State* l)
+{
+    currEncounterRunning->unlockBasePrice = lua_tonumber(l,1);
     return 0;
 }
 void SetLuaKeyEnums(lua_State* l)
@@ -3942,6 +3947,10 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_UnlockEncounter);
     lua_setglobal(luaState, "UnlockEncounter");
+
+
+    lua_pushcfunction(luaState, L_SetUnlockLevelPrice);
+    lua_setglobal(luaState, "SetUnlockLevelPrice");
 
     lua_pushcfunction(luaState, L_MObj);
     lua_setglobal(luaState, "MObj");
