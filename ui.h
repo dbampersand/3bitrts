@@ -59,12 +59,13 @@ typedef struct Chatbox
 } Chatbox;
 typedef enum UIElement_Type
 {
-    ELEMENT_BUTTON,
-    ELEMENT_SLIDER,
-    ELEMENT_CHECKBOX,
-    ELEMENT_TEXT,
-    ELEMENT_PULLDOWN,
-    ELEMENT_KEYINPUT
+    ELEMENT_BUTTON = 1,
+    ELEMENT_SLIDER=2,
+    ELEMENT_CHECKBOX=3,
+    ELEMENT_TEXT=4,
+    ELEMENT_KEYINPUT=5,
+    ELEMENT_PULLDOWN=6,
+
     //ELEMENT_CHATBOX
 
 } UIElement_Type;
@@ -298,7 +299,7 @@ void InitFonts();
 void DrawMenus(MouseState* mouseState);
 void UpdateKeyInput(int rX, int rY, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame);
 void UpdateButton(int rX, int rY, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame);
-void UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame);
+bool UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame);
 void GetUILocation(Panel* p, UIElement* uF, int* x, int* y);
 UIElement* GetUIElement(Panel* p, char* name);
 void UpdatePanel(Panel* p, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame);

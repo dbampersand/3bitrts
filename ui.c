@@ -1556,7 +1556,7 @@ void AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int s
     AddElement(panel,&u);
 
 }
-void UpdatePulldownMenu(Pulldown* p, int x, int y, int w, int h, MouseState mouseState, MouseState mouseStateLastFrame)
+bool UpdatePulldownMenu(Pulldown* p, int x, int y, int w, int h, MouseState mouseState, MouseState mouseStateLastFrame)
 {
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     //ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
@@ -1573,7 +1573,7 @@ void UpdatePulldownMenu(Pulldown* p, int x, int y, int w, int h, MouseState mous
                 {
                     p->clicked = false;
                     p->selectedIndex = i;
-                    return;
+                    return true;
                 }
                 y2 += h;
             }
@@ -1593,6 +1593,7 @@ void UpdatePulldownMenu(Pulldown* p, int x, int y, int w, int h, MouseState mous
             p->clicked = false; 
         }
     }
+    return false;
 }
 void DrawPullDownMenu(Pulldown* p, int x, int y, int w, int h, bool isActive, MouseState* mouseState, ALLEGRO_COLOR bgColor)
 {
@@ -2377,10 +2378,10 @@ void UpdateButton(int rX, int rY, UIElement* u, MouseState mouseState, MouseStat
         b->clicked = false;
     }
 }
-void UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
+bool UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
 {
     if (!u->enabled)
-        return;
+        return false;
     int x; int y;
     GetUILocation(p,u,&x,&y);
    
@@ -2405,18 +2406,21 @@ void UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* m
     }
     if (u->elementType == ELEMENT_PULLDOWN)
     {
-        UpdatePulldownMenu((Pulldown*)u->data, x,  y, u->w,u->h,*mouseState, *mouseStateLastFrame);
+        return UpdatePulldownMenu((Pulldown*)u->data, x,  y, u->w,u->h,*mouseState, *mouseStateLastFrame);
     }
 
-
+    return false;
 }
 void UpdatePanel(Panel* p, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
 {
     if (p)
     {
-        for (int i = 0; i < p->numElements; i++)
+        for (int i = p->numElements-1; i  >= 0; i--)
         {
-            UpdateElement(p,&p->elements[i],mouseState,mouseStateLastFrame, keyStateThisFrame);
+            if (UpdateElement(p,&p->elements[i],mouseState,mouseStateLastFrame, keyStateThisFrame))
+            {
+                break;
+            }
         }
     }
     UpdateScrollbar(p,mouseState,mouseStateLastFrame);
@@ -2747,9 +2751,21 @@ void DrawPanelTabs(Panel* p, MouseState* mouseState)
         } 
     }
 }
+//ensure ELEMENT_PULLDOWN is always rendered last
+int panelSort(const void* a, const void* b) {
+    UIElement* u1 = (UIElement*)a;
+    UIElement* u2 = (UIElement*)b;
+    int j = u1->elementType;
+    int z = u2->elementType;
+
+    return (u1->elementType - u2->elementType);
+}
 void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent)
 {   
     panelShownPercent = easeOutSine(panelShownPercent);
+
+    qsort(p->elements,p->numElements,sizeof(UIElement),panelSort);
+
     al_set_clipping_rectangle(p->x-1,p->y-1,p->w+1,p->h*panelShownPercent+2);
     if (p->showBorder)
     {
