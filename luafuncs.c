@@ -3313,6 +3313,20 @@ int L_SetUnlockLevelPrice(lua_State* l)
     currEncounterRunning->unlockBasePrice = lua_tonumber(l,1);
     return 0;
 }
+int L_AddGold(lua_State* l)
+{
+    int gold = lua_tonumber(l,1);
+    if (currEncounterRunning)
+    {
+        AddGold(gold);
+    }
+    else
+    {
+        players[0].bankedGold += gold;
+    }
+    return 0;
+}
+
 void SetLuaKeyEnums(lua_State* l)
 {
     //TODO: Update these when a key is changed in settings
@@ -3955,5 +3969,7 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_MObj);
     lua_setglobal(luaState, "MObj");
 
-        
+    lua_pushcfunction(luaState, L_AddGold);
+    lua_setglobal(luaState, "AddGold");
+
 }

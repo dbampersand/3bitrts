@@ -647,9 +647,9 @@ void Save(char* path)
                 al_fwrite(file,"\"",1);
                 al_fwrite(file,e->path,strlen(e->path));
                 al_fwrite(file,"\"",1);
-                al_fwrite(file," ",1);
-                al_fwrite(file,&e->difficultyUnlocked,NumDigits(e->difficultyUnlocked));
+               
                 al_fprintf(file," %i, %i, %i",e->difficultyUnlocked,e->bestProfited,e->totalProfit);
+ 
                 al_fwrite(file,";",1);
                 al_fwrite(file,"\n",1);
             }

@@ -1076,14 +1076,20 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
         }
     }
     e->encounter_PurchaseAugment.x = augmentX + 3 + offsetX;
-    e->encounter_PurchaseAugment.y = 20 - (e->encounter_PurchaseAugment.h/2);
+    e->encounter_PurchaseAugment.y = 22 - (e->encounter_PurchaseAugment.h/2);
     int purchaseCost = GetAugmentCost(e, e->difficultyUnlocked+1);
-    char* buttonText = calloc(NumDigits(purchaseCost),sizeof(char));
-    sprintf(buttonText,"%i",purchaseCost);
-    ChangeButtonText((Button*)(e->encounter_PurchaseAugment.data), buttonText);
-    free(buttonText);
-
-    if (purchaseCost > players[0].bankedGold)
+    if (e->bestProfited > 0)
+    {
+        char* buttonText = calloc(NumDigits(purchaseCost),sizeof(char));
+        sprintf(buttonText,"%i",purchaseCost);
+        ChangeButtonText((Button*)(e->encounter_PurchaseAugment.data), buttonText);
+        free(buttonText);
+    }
+    else
+    {
+        ChangeButtonText((Button*)(e->encounter_PurchaseAugment.data), "Locked");
+    }
+    if (purchaseCost > players[0].bankedGold || e->bestProfited <= 0)
     {
         e->encounter_PurchaseAugment.enabled = false;
     }
@@ -1100,6 +1106,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
         players[0].bankedGold -= purchaseCost;
         e->difficultyUnlocked++;
         e->encounter_PurchaseAugment.enabled = false;
+        Save("_save.save");
 
     }
 

@@ -59,11 +59,11 @@ typedef struct Encounter
 
 
     bool unlocked;
-    int difficultyUnlocked;
-    int unlockBasePrice;
+    int32_t difficultyUnlocked;
+    int32_t unlockBasePrice;
 
-    int bestProfited;
-    int totalProfit;
+    int32_t bestProfited;
+    int32_t totalProfit;
 
 
 } Encounter;
