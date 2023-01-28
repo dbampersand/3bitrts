@@ -172,6 +172,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
 
     DrawSpriteDecorations(BEFORE_WORLD);
+    if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS)
     DrawMap(currMap,false);
     DrawSpriteDecorations(AFTER_WORLD);
     DrawMapHighlights();
@@ -180,6 +181,9 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     DrawCommandQueue(players[0].selection[players[0].indexSelectedUnit]);
     
     DrawAttacks(dt);
+
+        UpdateGoldAnimationTimer(dt);
+
 
     if (gameState == GAMESTATE_CHOOSING_UNITS)
     {
@@ -363,7 +367,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     DrawBufferedStrings();
     if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS)
     {
-        UpdateGoldAnimationTimer(dt);
 
         DrawDamageNumbers();
         UpdateButton(ui.menuButton.x,ui.menuButton.y,&ui.menuButton,*mouseState,*mouseStateLastFrame);

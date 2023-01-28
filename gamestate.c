@@ -119,6 +119,10 @@ void FinishTransition()
         transitioningTo = GAMESTATE_MAIN_MENU;
         ChangeUIPanel(&ui.mainMenuPanel);
         RemoveReplay(&replay);
+
+        ClearGold();
+        AddGold(players[0].bankedGold);
+
     }
     if (transitioningTo == GAMESTATE_INGAME)
     {
@@ -198,6 +202,13 @@ void FinishTransition()
         RemoveAllGameObjects();
         //ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
         combatStarted = false;
+
+        ClearGold();
+        AddGold(players[0].bankedGold);
+        
+
+
+
 
     }
         if (transitioningTo == GAMESTATE_WATCHING_REPLAY)

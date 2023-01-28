@@ -1196,6 +1196,8 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
             selectedEncounterIndex = numEncounters-1;
 
     }
+    
+    DrawGoldCount();
 }
 void AddElement(Panel* p, UIElement* u)
 {

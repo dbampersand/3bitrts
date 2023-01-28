@@ -3316,13 +3316,15 @@ int L_SetUnlockLevelPrice(lua_State* l)
 int L_AddGold(lua_State* l)
 {
     int gold = lua_tonumber(l,1);
-    if (currEncounterRunning)
+    if (gameState == GAMESTATE_INGAME)
     {
         AddGold(gold);
     }
     else
     {
         players[0].bankedGold += gold;
+        AddGold(gold);
+
     }
     return 0;
 }

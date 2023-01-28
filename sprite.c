@@ -193,7 +193,7 @@ void DrawSprite(Sprite* sprite, int x, int y, float originX, float originY, floa
 {
 
     //if the index is 0, never draw 
-    if (sprite == sprites)
+    if (sprite == sprites || !sprite)
         return;
     if (sprite->sprite && !invert)
     {
