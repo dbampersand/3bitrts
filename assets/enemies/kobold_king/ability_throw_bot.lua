@@ -6,6 +6,7 @@ function setup()
     SetCooldown(45);
     AbilitySetPortrait("assets/enemies/kobold_king/ability_throw_bot.png");
     SetDescription("[b]Throw Bot\n\nThrows an explosive bot, which explodes after " .. time .. " seconds unless killed.")
+    SetAbilityName("Throw Bot"); 
 
 end
 

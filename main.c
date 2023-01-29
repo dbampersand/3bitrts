@@ -100,6 +100,7 @@ void init()
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseStateLastFrame)
 {   
 
+    numChannellingInfosDrawn =  0;
     if (gameState == GAMESTATE_IN_SHOP)
         UpdateShop(dt,*mouseState,*mouseStateLastFrame);
 
@@ -162,7 +163,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
     for (int i = 0; i < numActiveObjects; i++)
     {
-        if (IsActive(activeObjects[i]))
+        if (IsActive(activeObjects[i])) 
             UpdateScreenPositions(activeObjects[i]);
     }
     for (int i = 0; i < MAX_ATTACKS; i++)
@@ -173,7 +174,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
     DrawSpriteDecorations(BEFORE_WORLD);
     if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS)
-    DrawMap(currMap,false);
+        DrawMap(currMap,false);
     DrawSpriteDecorations(AFTER_WORLD);
     DrawMapHighlights();
 

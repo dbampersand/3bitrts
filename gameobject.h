@@ -251,6 +251,7 @@ extern float __cosTable[360*2];
 extern float* sinTable;// = &__sinTable[360];
 extern float* cosTable;// = &__cosTable[360];
 
+extern int numChannellingInfosDrawn;
 
 
 

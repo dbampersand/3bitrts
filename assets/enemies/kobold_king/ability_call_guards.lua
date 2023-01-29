@@ -3,7 +3,7 @@ function setup()
     SetCooldown(60);
     AbilitySetPortrait("assets/enemies/kobold_king/ability_call_guards.png");
     SetDescription("[b]Call Guards\n\nCalls the royal guards.")
-    
+    SetAbilityName("Call Guards"); 
 end
 
 function casted(x,y,obj,headingx,headingy)

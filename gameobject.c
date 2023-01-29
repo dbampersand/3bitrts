@@ -5,6 +5,7 @@
 #include <ctype.h>
 
 #include "allegro5/allegro_primitives.h"
+#include "allegro5/allegro_ttf.h"
 
 #include "gameobject.h"
 
@@ -52,7 +53,44 @@ float __cosTable[360*2] = {0};
 float* sinTable = NULL; // = &__sinTable[360];
 float* cosTable = NULL;// = &__cosTable[360];
 
+int numChannellingInfosDrawn = 0;
 
+
+
+void DrawChannellingInfo(GameObject* obj)
+{
+    numChannellingInfosDrawn++;
+
+    Ability* a = obj->channelledAbility;
+
+    int xStart = 10;
+    int yStart = 30 * numChannellingInfosDrawn;
+    int h = 6;
+    int w = _SCREEN_SIZE - xStart*2;
+
+    if (a)
+    {
+        float percent = clamp(1 - (obj->channellingTime / obj->channellingTotal),0,1);
+        al_draw_rectangle(xStart,yStart,xStart+w,yStart+h,ENEMY,1);
+        al_draw_filled_rectangle(xStart+1,yStart+2,xStart+((w-2)*percent),yStart+(h-1),ENEMY);
+
+        char* name = a->name;
+        if (!name)
+        {
+            if (a->path)
+                for (int i = strlen(a->path)-2; i >= 0; i--)
+                {
+                    if (a->path[i] == '/' || a->path[i] == '\\')
+                    {
+                        name = &a->path[i+1];
+                        break;
+                    }
+                }
+        }
+        al_draw_text(ui.tinyFont,ENEMY,xStart,yStart-6,0,name);
+
+    }
+}
 void PrintDiedFrom(GameObject* obj, GameObject* damageSource, Effect* effectSource, int damage)
 {
     if (obj)
@@ -2313,6 +2351,13 @@ void DrawGameObj(GameObject* g, bool forceInverse)
         s = &replay.sprites[g->spriteIndex];
     else   
         s = ObjIsChannelling(g) ? &sprites[g->channelingSpriteIndex] :  &sprites[g->spriteIndex];
+    
+    if (ObjIsBoss(g) && ObjIsChannelling(g))
+    {
+        DrawChannellingInfo(g);
+    }
+
+
     bool isReversed = IsSelected(g) || forceInverse;
     isReversed = g->flashTimer > 0 ? !isReversed : isReversed;
 

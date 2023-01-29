@@ -3,6 +3,7 @@ function setup()
     SetCooldown(4);
     AbilitySetPortrait("assets/enemies/kobold_king/ability_cloak_of_fire.png");
     SetDescription("[b]Cloak of Fire\n\nDeals damage to all in melee range. Spawns a pool of fire underneath a random target.")
+    SetAbilityName("Cloak of Fire"); 
     
 end
 

@@ -44,6 +44,7 @@ typedef struct Ability
     float range;
     //float length;
     char* path;
+    char* name;
     int spriteIndex_Portrait;
     float cooldown;
     float cdTimer;

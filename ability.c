@@ -351,6 +351,7 @@ bool AbilityCanBeCastOnGround(Ability* a)
 {
     return (a->castType & (ABILITY_POINT|ABILITY_ANGLE|ABILITY_INSTANT));
 }
+
 //returns if the ability has been cast or not
 bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, float headingy, GameObject* target)
 {

@@ -9,6 +9,8 @@ function setup()
     SetDescription("[b]Slash\n\nAfter channelling, hits in a cone.")
     SetAbilityHint(HINT_CONE,coneSize);
 
+    SetAbilityName("Slash"); 
+
     
 end
 

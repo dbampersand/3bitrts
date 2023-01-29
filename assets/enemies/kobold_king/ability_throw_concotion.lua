@@ -5,6 +5,7 @@ function setup()
     AbilitySetCastType(ABILITY_POINT);
     AbilitySetPortrait("assets/enemies/kobold_king/ability_throw_concoction.png");
     SetDescription("[b]Throw Concoction\n\nDeals a large amount of damage to all units in an area.")
+    SetAbilityName("Throw Concoction"); 
 
 end
 

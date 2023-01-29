@@ -206,6 +206,18 @@ int L_SetDescription(lua_State* l)
     currAbilityRunning->description = buff;
     return 0;
 }
+int L_SetAbilityName(lua_State* l)
+{
+    const char* str = lua_tostring(l,1);
+    if (currAbilityRunning->name && strcmp(currAbilityRunning->name,str)==0)
+    {
+        return 0;
+    }
+    currAbilityRunning->name = calloc(strlen(str)+1,sizeof(char));
+    strcpy(currAbilityRunning->name,str);
+    return 0;
+
+}
 int L_SetAttackPosition(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -3973,5 +3985,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_AddGold);
     lua_setglobal(luaState, "AddGold");
+
+
+    lua_pushcfunction(luaState, L_SetAbilityName);
+    lua_setglobal(luaState, "SetAbilityName");
 
 }

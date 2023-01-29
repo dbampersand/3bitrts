@@ -11,6 +11,7 @@ function setup()
     SetCooldown(40);
     AbilitySetPortrait("assets/enemies/kobold_king/ability_fan_of_knives.png");
     SetDescription("[b]Fan of Knives\n\nThrows knives, dealing large area damage.")
+    SetAbilityName("Fan of Knives"); 
     
 end
 
