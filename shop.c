@@ -204,12 +204,12 @@ void DrawShopItems(float dt, MouseState mouseState)
         if ((!shop.heldItem || shop.heldItem == si) && ItemIsPurchasable(si->item) && dist(mouseState.screenX,mouseState.screenY,cx,cy) <= r)
         {
             al_draw_filled_circle(cx,cy, r,FRIENDLY);
-            DrawSprite(&sprites[si->item->spriteIndex_Icon],si->position.x,si->position.y,0,0,0,BG,false);
+            DrawSprite(&sprites[si->item->spriteIndex_Icon],si->position.x,si->position.y,0,0,0,BG,false,false,false);
         }
         else
         {
             al_draw_circle(cx,cy, r,col,1);
-            DrawSprite(&sprites[si->item->spriteIndex_Icon],si->position.x,si->position.y,0,0,0,col,false);
+            DrawSprite(&sprites[si->item->spriteIndex_Icon],si->position.x,si->position.y,0,0,0,col,false,false,false);
         }
         char* price = calloc(NumDigits(si->item->goldCost)+1,sizeof(char));
         sprintf(price,"%i",si->item->goldCost);
@@ -246,7 +246,7 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
         if (!IsActive(g) || !IsOwnedByPlayer(g) || !g->playerChoosable)
             continue;
 
-        DrawSprite(&sprites[g->spriteIndex],x,y,0,0,0,FRIENDLY,false);
+        DrawSprite(&sprites[g->spriteIndex],x,y,0,0,0,FRIENDLY,false,false,false);
         y += GetHeight(g)+1;
         
         float slotX = x;
@@ -254,7 +254,7 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
         for (int i = 0; i < INVENTORY_SLOTS; i++)
         {
             al_draw_circle(slotX+12,slotY+12,12,FRIENDLY,1);
-            DrawSprite(&sprites[g->inventory[i].spriteIndex_Icon],slotX,slotY,0,0,0,FRIENDLY,false);
+            DrawSprite(&sprites[g->inventory[i].spriteIndex_Icon],slotX,slotY,0,0,0,FRIENDLY,false,false,false);
             slotX += 25;
         }
         if (shop.heldItem)
@@ -294,8 +294,8 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
             if (players[0].gold >= g->ressurectionCost)
                 al_draw_rectangle(r.x, r.y, r.x + r.w, r.y + r.h, FRIENDLY,1);
 
-            DrawSprite(&sprites[g->spriteIndex],x,y,0,0,0,FRIENDLY,true);
-            DrawSprite(ghost,x+GetWidthSprite(&sprites[g->spriteIndex])+10,y,0,0,0,FRIENDLY,false);
+            DrawSprite(&sprites[g->spriteIndex],x,y,0,0,0,FRIENDLY,true,false,false);
+            DrawSprite(ghost,x+GetWidthSprite(&sprites[g->spriteIndex])+10,y,0,0,0,FRIENDLY,false,false,false);
 
             char textBuffer[NumDigits(INT_MAX)+3];
             memset(textBuffer,0,sizeof(char)*NumDigits(INT_MAX)+3);
@@ -304,7 +304,7 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
         
             int textX = x+GetWidthSprite(&sprites[g->spriteIndex])+35;
             int textY = y+_MAX(GetHeightSprite(ghost),GetHeight(g))/2 - al_get_font_line_height(ui.font)/2;
-            DrawSprite(&sprites[ui.gold_element_sprite_index],textX,textY,0,0,0,FRIENDLY,false);
+            DrawSprite(&sprites[ui.gold_element_sprite_index],textX,textY,0,0,0,FRIENDLY,false,false,false);
 
             al_draw_text(ui.font,FRIENDLY,textX+GetWidthSprite(&sprites[ui.gold_element_sprite_index])+1,textY,ALLEGRO_ALIGN_LEFT,textBuffer);
             y += GetHeight(g)+1;
@@ -332,7 +332,7 @@ void DrawShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 
     al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
 
-    DrawSprite(&sprites[shop.spriteIndex_stall],startX,startY,0,0,0,FRIENDLY,false);
+    DrawSprite(&sprites[shop.spriteIndex_stall],startX,startY,0,0,0,FRIENDLY,false,false,false);
     DrawAnimation(shop.currAnimation,startX + shopkeeperOffsetX,startY + shopkeeperOffsetY,COLOR_FRIENDLY,false);
     DrawButton(&shop.continueButton,shop.continueButton.x,shop.continueButton.y,mouseState,true,BG,true);
 

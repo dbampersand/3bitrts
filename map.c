@@ -399,8 +399,8 @@ void DrawMap(Map* m, bool invert)
         s = &replay.sprites[m->spriteIndex];
         s2 = &replay.sprites[m->secondLayerSpriteIndex];
     }
-    DrawSprite(s,x,y,0.5f,0.5f,0,c,invert);
-    DrawSprite(s2,x,y,0.5f,0.5f,0,GROUND_DARK,false);
+    DrawSprite(s,x,y,0.5f,0.5f,0,c,invert,false,false);
+    DrawSprite(s2,x,y,0.5f,0.5f,0,GROUND_DARK,false,false,false);
 
 }
 void UpdateMap(Map* m, float dt)

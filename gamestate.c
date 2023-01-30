@@ -38,6 +38,8 @@
 
 GameState gameState = {0};
 
+TRANSITION transitionDrawing;
+
 
 bool TransitionTo(GameState state)
 {
@@ -66,6 +68,8 @@ void InitGameState()
 }
 void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Encounter* e)
 {
+    transitionDrawing = TRANSITION_CHAINS;
+
     //transitioningTo = GAMESTATE_LOAD_ENCOUNTER;
     //transitionTimer = 0;
     TransitionTo(GAMESTATE_LOAD_ENCOUNTER);
@@ -86,6 +90,8 @@ void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Enco
 }
 void SetGameStateToInGame()
 {
+    transitionDrawing = TRANSITION_DOOR;
+
     //transitioningTo = GAMESTATE_INGAME;
     //transitionTimer = 0;
     TransitionTo(GAMESTATE_INGAME);
@@ -95,6 +101,9 @@ void SetGameStateToInGame()
 }
 void SetGameStateToChoosingEncounter()
 {
+    transitionDrawing = TRANSITION_CHAINS;
+    transitionDrawing = TRANSITION_DOOR;
+
     //gameState = GAMESTATE_INGAME;
     //transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
     //transitionTimer = 0;
@@ -103,6 +112,7 @@ void SetGameStateToChoosingEncounter()
 }
 void SetGameStateToEnterShop()
 {
+    transitionDrawing = TRANSITION_CHAINS;
     
 }
 void FinishTransition()
@@ -337,24 +347,28 @@ void FinishTransition()
 }
 void SetGameStateToPurchasingUnits()
 {
+    transitionDrawing = TRANSITION_CHAINS;
     TransitionTo(GAMESTATE_PURCHASING_UNITS);
 }
 void SetGameStateToWatchingReplay()
 {
+    transitionDrawing = TRANSITION_CHAINS;
     TransitionTo(GAMESTATE_WATCHING_REPLAY);
     ChangeUIPanel(NULL);
 }
 void SetGameStateToInShop()
 {
+    transitionDrawing = TRANSITION_CHAINS;
     TransitionTo(GAMESTATE_IN_SHOP);
 }
 void SetGameStateToChangingMap()
 {
+    transitionDrawing = TRANSITION_CHAINS;
     TransitionTo(GAMESTATE_CHANGE_MAP);
 }
 void SetGameStateToChoosingParty()
 {
-    
+    transitionDrawing = TRANSITION_CHAINS;
     if (TransitionTo(GAMESTATE_CHOOSING_UNITS))
     {
         RemoveAllGameObjects();
@@ -636,10 +650,11 @@ float easeInOutBack(float x)
 }
 
 
-
 #define TRANSITION_CHAIN_SIZE 5
 #define LATTICE_DISTANCE 20
-void DrawTransition(float dt)
+
+
+void DrawTransition_Chains(float dt)
 {
     float h = (_SCREEN_SIZE+10) * (easeInOutBack(transitionTimer)) - 1;
     al_draw_filled_rectangle(0,0,_SCREEN_SIZE,h,BG);
@@ -673,6 +688,37 @@ void DrawTransition(float dt)
         y -= LATTICE_DISTANCE;
     }
     al_reset_clipping_rectangle();
+
+}
+void DrawTransition_Door(float dt)
+{
+    float w = (_SCREEN_SIZE/2.0f) * (easeOutQuint(transitionTimer));
+    al_draw_filled_rectangle(0,0,w,_SCREEN_SIZE,BG);
+    al_draw_filled_rectangle(_SCREEN_SIZE,0,_SCREEN_SIZE-w,_SCREEN_SIZE,BG);
+
+    float hingeX = w - _SCREEN_SIZE/2;
+    float hingeY = 30;
+
+    float hingeY2 = _SCREEN_SIZE - hingeY;
+
+    int doorIndL = LoadSprite("assets/ui/transitions/door/door_l.png",false);
+    int doorIndR = LoadSprite("assets/ui/transitions/door/door_r.png",false);
+
+
+    DrawSprite(&sprites[doorIndL],w-_SCREEN_SIZE/2.0f,0,0,0,0,FRIENDLY,false,false,false);
+    DrawSprite(&sprites[doorIndR],_SCREEN_SIZE-w,0,0.5f,0.5f,0,FRIENDLY,false,true,false);
+}
+void DrawTransition(float dt)
+{
+    if (transitionDrawing == TRANSITION_CHAINS)
+    {
+        DrawTransition_Chains(dt);
+    }
+    if (transitionDrawing == TRANSITION_DOOR)
+    {
+        DrawTransition_Door(dt);
+    }
+
 
 }
 bool GameStateIsTransition(GameState* g)

@@ -562,7 +562,7 @@ void DrawSpriteDecorations(RenderOrder renderOrder)
         SpriteDecoration* s = &spriteDecorations[i];
         if (renderOrder == s->renderOrder && s->decorationType > SPRITE_NONE)
         {
-            DrawSprite(&sprites[s->spriteIndex],s->position.screenX,s->position.screenY,0,0,0,GetColor(s->tint,0),false);
+            DrawSprite(&sprites[s->spriteIndex],s->position.screenX,s->position.screenY,0,0,0,GetColor(s->tint,0),false,false,false);
         }
     }
 }

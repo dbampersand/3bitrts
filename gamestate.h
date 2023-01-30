@@ -22,6 +22,12 @@ typedef enum GameState {
     NUMGAMESTATES = 14
 } GameState;
 
+typedef enum TRANSITION
+{
+    TRANSITION_CHAINS,
+    TRANSITION_DOOR
+} TRANSITION;
+
 typedef enum Option_HealthBar
 {
     OPTION_HPBAR_ALWAYS = 0,
@@ -56,6 +62,9 @@ extern Encounter* encounterGoingTo;
 extern char* pathToNextMap;
 
 extern GameState gameState;
+
+extern  TRANSITION transitionDrawing;
+
 
 
 bool TransitionTo(GameState state);

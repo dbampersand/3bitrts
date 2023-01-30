@@ -2384,7 +2384,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
         //DrawSpriteRegion(s,sx,sy,sw,sh,x,(y+sy),GetColor(COLOR_GROUND_DARK,GetPlayerOwnedBy(g)),false);
     }
     else
-        DrawSprite(s,x,y,0.5f,0.5f,g->angle,c, isReversed);
+        DrawSprite(s,x,y,0.5f,0.5f,g->angle,c, isReversed,false,false);
     
 
     if ((g->queue[0].commandType == COMMAND_ATTACK || g->queue[0].commandType == COMMAND_CAST) && g->queue[0].target)

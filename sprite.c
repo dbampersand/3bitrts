@@ -189,12 +189,16 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
 
     return 0;
 }
-void DrawSprite(Sprite* sprite, int x, int y, float originX, float originY, float angle, ALLEGRO_COLOR tint, bool invert)
+void DrawSprite(Sprite* sprite, int x, int y, float originX, float originY, float angle, ALLEGRO_COLOR tint, bool invert, bool flipX, bool flipY)
 {
 
     //if the index is 0, never draw 
     if (sprite == sprites || !sprite)
         return;
+
+    int xFlip = flipX ? -1 : 1;
+    int yFlip = flipY ? -1 : 1;
+
     if (sprite->sprite && !invert)
     {
         int w = al_get_bitmap_width(sprite->sprite);
@@ -204,11 +208,11 @@ void DrawSprite(Sprite* sprite, int x, int y, float originX, float originY, floa
         float cx = w * (originX);
         float cy = h * (originY);
 
-        float oX = x+ w * originX;
-        float oY = y+  h * originY;
+        float oX = x + w * originX;
+        float oY = y +  h * originY;
 
 
-        al_draw_tinted_scaled_rotated_bitmap(sprite->sprite,tint,cx,cy,oX,oY,1,1,angle,0);
+        al_draw_tinted_scaled_rotated_bitmap(sprite->sprite,tint,cx,cy,oX,oY,xFlip,yFlip,angle,0);
 
     }
     if (sprite->inverseSprite && invert)
@@ -224,7 +228,7 @@ void DrawSprite(Sprite* sprite, int x, int y, float originX, float originY, floa
         float oY = y+  h * originY;
 
         //al_draw_tinted_scaled_bitmap(sprite->inverseSprite,tint,0,0,w,h,x,y,w,h,0);
-        al_draw_tinted_scaled_rotated_bitmap(sprite->inverseSprite,tint,cx,cy,oX,oY,1,1,angle,0);
+        al_draw_tinted_scaled_rotated_bitmap(sprite->inverseSprite,tint,cx,cy,oX,oY,xFlip,yFlip,angle,0);
 
     }
 }

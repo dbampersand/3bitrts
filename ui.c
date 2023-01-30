@@ -82,7 +82,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     x = (_SCREEN_SIZE-GetWidthSprite(s))-(GetWidthSprite(s)*(-timer));
 
     int y = 0;
-    DrawSprite(s,x,y,0,0,0,*c,false);
+    DrawSprite(s,x,y,0,0,0,*c,false,false,false);
 
 
     int abilityY = 204;
@@ -103,7 +103,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
             int yPos = abilityY;
             al_draw_filled_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,BG);
             //al_draw_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
-            //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false);
+            //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false,false,false);
             Rect r = (Rect){xPos,yPos,30,30};
             
             if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, c,false,true) && !mousedOver)
@@ -129,7 +129,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
             int yPos = abilityY;
             al_draw_filled_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,BG);
            // al_draw_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
-            //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false);
+            //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false,false,false);
             Rect r = (Rect){xPos,yPos,30,30};
 
             if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, c,false,true) && !mousedOver)
@@ -146,7 +146,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
             int yPos = abilityY+34;
             al_draw_filled_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,BG);
             //al_draw_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
-            //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false);
+            //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false,false,false);
             Rect r = (Rect){xPos,yPos,30,30};
             if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, c,false,true) && !mousedOver)
             {
@@ -171,7 +171,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
 
     //Draw unit square small portrait
     int spriteX = paragraphX;
-    DrawSprite(&sprites[prefabDrawing->spriteIndex],spriteX,titleY,0,0,0,*c,false);
+    DrawSprite(&sprites[prefabDrawing->spriteIndex],spriteX,titleY,0,0,0,*c,false,false,false);
 
     al_draw_text(ui.font,*c,paragraphX + GetWidth(prefabDrawing)+2,titleY+GetHeight(prefabDrawing)/2, ALLEGRO_ALIGN_LEFT,prefabDrawing->name ? prefabDrawing->name : "");
 
@@ -729,7 +729,7 @@ bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, MouseState
         shouldInvert = true;
     }
 
-    DrawSprite(s,x,y,0.5f,0.5f,0,color,shouldInvert);
+    DrawSprite(s,x,y,0.5f,0.5f,0,color,shouldInvert,false,false);
 
     if (shouldInvert)
         return true;
@@ -743,7 +743,7 @@ bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c, MouseState* mo
     if (e->enabled)
     {
         if (e->spriteIndex_Portrait > 0)
-            DrawSprite(&sprites[e->spriteIndex_Portrait],x,y,0.5f,0.5f,0,FRIENDLY,false);
+            DrawSprite(&sprites[e->spriteIndex_Portrait],x,y,0.5f,0.5f,0,FRIENDLY,false,false,false);
         else
             al_draw_filled_rectangle(r.x,r.y,r.x+r.w,r.y+r.h,FRIENDLY);
         if (e->canStack)
@@ -865,8 +865,8 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             s = &sprites[ui.panel_5_abilities_sprite_index];
     }
     if (!s) return;
-    DrawSprite(s,1,UI_START_Y+1,0.5f,0.5f,0,FRIENDLY,false);
-    DrawSprite(health,1,UI_START_Y+1,0.5f,0.5f,0,FRIENDLY,false);
+    DrawSprite(s,1,UI_START_Y+1,0.5f,0.5f,0,FRIENDLY,false,false,false);
+    DrawSprite(health,1,UI_START_Y+1,0.5f,0.5f,0,FRIENDLY,false,false,false);
 
     if (selected)
     {
@@ -1063,7 +1063,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     for (int i = 0; i < e->difficultyUnlocked; i++)
     {
         Rect drawRect = (Rect){augmentX+offsetX,20,GetWidthSprite(&sprites[ui.augmentIconIndex]),GetHeightSprite(&sprites[ui.augmentIconIndex])};
-        DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0.5f,0.5f,0,i < e->augment ? FRIENDLY : GROUND,false);
+        DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0.5f,0.5f,0,i < e->augment ? FRIENDLY : GROUND,false,false,false);
         augmentX += drawRect.w+3;
 
         if (mouseStateLastFrame->mouse.buttons & 1 && !(mouseState->mouse.buttons & 1))
@@ -1116,7 +1116,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     al_draw_line(10+offsetX,73,246,73,FRIENDLY,1);
     
     al_draw_text(ui.font,FRIENDLY,16+offsetX,81,0,"Wyrm");
-    DrawSprite(&sprites[e->spriteIndex],17+offsetX,102,0.5f,0.5f,0,ENEMY,false);
+    DrawSprite(&sprites[e->spriteIndex],17+offsetX,102,0.5f,0.5f,0,ENEMY,false,false,false);
 
     Ability* mousedOver = NULL;
     mousedOver = DrawAbility(&e->abilities[0], 96+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[0] : mousedOver;
@@ -2219,7 +2219,7 @@ void DrawWidgets(GameState currentState, Widget_DrawOrder drawOrderToDraw)
         if (u->drawOrder == drawOrderToDraw)
         {
             Sprite* s = &sprites[u->spriteIndex];
-            DrawSprite(s,u->x,u->y,u->originX,u->originY,u->rotation,FRIENDLY,false);
+            DrawSprite(s,u->x,u->y,u->originX,u->originY,u->rotation,FRIENDLY,false,false,false);
         }
     }
 }
@@ -2596,7 +2596,7 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
     }
     if (b->spriteIndex)
     {
-        DrawSprite(&sprites[b->spriteIndex],x,y,0.5f,0.5f,0,FRIENDLY,false);
+        DrawSprite(&sprites[b->spriteIndex],x,y,0.5f,0.5f,0,FRIENDLY,false,false,false);
     }
 
 }
@@ -2919,14 +2919,14 @@ void DrawCursor(MouseState* mouseState, int index, bool clicked)
 {
     if (mouseState->mouse.buttons & 1 || mouseState->mouse.buttons & 2)
     {
-        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,FRIENDLY,true);
-        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,BG,false);
+        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,FRIENDLY,true,false,false);
+        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,BG,false,false,false);
 
     }
     else
     {
-        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,BG,true);
-        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,FRIENDLY,false);
+        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,BG,true,false,false);
+        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,FRIENDLY,false,false,false);
     }
 
 
@@ -3082,7 +3082,7 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
     //Write the boss name and sprite
     al_draw_text(ui.font,ENEMY,16,70,0,currEncounterRunning->name);
     Sprite* sEnemy = &sprites[currEncounterRunning->spriteIndex];
-    DrawSprite(sEnemy,17,91,0.5f,0.5f,0,ENEMY,false);
+    DrawSprite(sEnemy,17,91,0.5f,0.5f,0,ENEMY,false,false,false);
 
     //Write augment level and augment changes
     al_draw_text(ui.font,ENEMY,90,89,0,"Augment 3");
@@ -3130,7 +3130,7 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
             if (toSpawn[i]->spriteIndex >= 0 && toSpawn[i]->spriteIndex < numSprites)
             {
                 Sprite* s = &sprites[toSpawn[i]->spriteIndex];
-                DrawSprite(s,x,y,0.5f,0.5f,0,FRIENDLY,false);
+                DrawSprite(s,x,y,0.5f,0.5f,0,FRIENDLY,false,false,false);
                 x += GetWidth(toSpawn[i])+5;
             }
         }

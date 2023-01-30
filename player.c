@@ -254,7 +254,7 @@ void UpdateGoldAnimationTimer(float dt)
 
     float yEnd = (percent * y) - fabsf((1-percent) * startY);
 
-    DrawSprite(&sprites[ui.gold_element_sprite_index],x,yEnd,0,0,0,FRIENDLY,false);
+    DrawSprite(&sprites[ui.gold_element_sprite_index],x,yEnd,0,0,0,FRIENDLY,false,false,false);
 
     float goldShowingPercent = EaseInOutCubic(players[0].goldAnimationTimer*1.25f);
     float goldDisplaying = players[0].gold-((players[0].gold - players[0].goldDisplaying)*(1-goldShowingPercent));
@@ -267,7 +267,7 @@ void DrawGoldCount()
     if (gameState == GAMESTATE_PURCHASING_UNITS)
         x = 24;
 
-    DrawSprite(&sprites[ui.gold_element_sprite_index],x,y,0,0,0,FRIENDLY,false);
+    DrawSprite(&sprites[ui.gold_element_sprite_index],x,y,0,0,0,FRIENDLY,false,false,false);
 
     ALLEGRO_COLOR c = floor(players[0].gold) >= 0 ? FRIENDLY : ENEMY;
     al_draw_text(ui.tinyFont,c,x+GetWidthSprite(&sprites[ui.gold_element_sprite_index])+2,y,ALLEGRO_ALIGN_LEFT,players[0].goldText);

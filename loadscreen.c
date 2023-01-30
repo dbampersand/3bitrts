@@ -95,8 +95,8 @@ void DrawLoadscreen()
     al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
     DrawLoadScreenSprites(ORDER_BEFORESPRITE);
 
-    DrawSprite(&sprites[loadScreen.maskSpriteIndex],loadScreen.x,loadScreen.y,0.5f,0.5f,0,BG,false);
-    DrawSprite(&sprites[loadScreen.spriteIndex],loadScreen.x,loadScreen.y,0.5f,0.5f,0,FRIENDLY,false);
+    DrawSprite(&sprites[loadScreen.maskSpriteIndex],loadScreen.x,loadScreen.y,0.5f,0.5f,0,BG,false,false,false);
+    DrawSprite(&sprites[loadScreen.spriteIndex],loadScreen.x,loadScreen.y,0.5f,0.5f,0,FRIENDLY,false,false,false);
 
     if (loadScreen.state == LOADSCREEN_TRANSITON_IN)
     {
@@ -157,7 +157,7 @@ void DrawLoadScreenSprites(LoadScreenDrawOrder order)
         
         if (sp->draw == order)
         {
-            DrawSprite(&sprites[sp->spriteIndex],sp->position.x+loadScreen.x,sp->position.y+loadScreen.y,0,0,0,GROUND_DARK,false);
+            DrawSprite(&sprites[sp->spriteIndex],sp->position.x+loadScreen.x,sp->position.y+loadScreen.y,0,0,0,GROUND_DARK,false,false,false);
         }
     }
 }
