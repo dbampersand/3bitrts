@@ -101,7 +101,7 @@ void SetGameStateToInGame()
 }
 void SetGameStateToChoosingEncounter()
 {
-    transitionDrawing = TRANSITION_CHAINS;
+    //transitionDrawing = TRANSITION_CHAINS;
     transitionDrawing = TRANSITION_DOOR;
 
     //gameState = GAMESTATE_INGAME;
@@ -358,7 +358,7 @@ void SetGameStateToWatchingReplay()
 }
 void SetGameStateToInShop()
 {
-    transitionDrawing = TRANSITION_CHAINS;
+    transitionDrawing = TRANSITION_STAIRS;
     TransitionTo(GAMESTATE_IN_SHOP);
 }
 void SetGameStateToChangingMap()
@@ -368,7 +368,7 @@ void SetGameStateToChangingMap()
 }
 void SetGameStateToChoosingParty()
 {
-    transitionDrawing = TRANSITION_CHAINS;
+    transitionDrawing = TRANSITION_TRIANGLES;
     if (TransitionTo(GAMESTATE_CHOOSING_UNITS))
     {
         RemoveAllGameObjects();
@@ -690,6 +690,76 @@ void DrawTransition_Chains(float dt)
     al_reset_clipping_rectangle();
 
 }
+void DrawTransition_Triangle(float dt)
+{
+    double p = easeInOutQuint(transitionTimer);
+
+    float move1 = (1-p) * _SCREEN_SIZE;
+    float move2 = p * _SCREEN_SIZE;
+    float move3 = p * _SCREEN_SIZE;
+
+
+    float x1 = 0;
+    float y1 = _SCREEN_SIZE + move1;
+    
+    float x2 = _SCREEN_SIZE;
+    float y2 = _SCREEN_SIZE + move1;
+
+    float x3 = _SCREEN_SIZE/2.0f;
+    float y3 = 0 + move1;
+
+
+
+
+    al_draw_filled_triangle(x1,y1,x2,y2,x3,y3,FRIENDLY);
+    
+    x1 = 0;
+    y1 = -_SCREEN_SIZE   + move2;
+    
+    x2 = _SCREEN_SIZE/2.0f;
+    y2 = -_SCREEN_SIZE + move2;
+
+    x3 = 0;
+    y3 = 0 + move2;
+
+    al_draw_filled_triangle(x1,y1,x2,y2,x3,y3,FRIENDLY);
+
+    x1 = _SCREEN_SIZE;
+    y1 = -_SCREEN_SIZE   + move2;
+    
+    x2 = _SCREEN_SIZE/2.0f;
+    y2 = -_SCREEN_SIZE + move2;
+
+    x3 = _SCREEN_SIZE;
+    y3 = 0 + move2;
+
+    al_draw_filled_triangle(x1,y1,x2,y2,x3,y3,FRIENDLY);
+
+
+}
+void DrawTransition_Stairs(float dt)
+{
+    int numStairs = 12  ;
+    double widthSingle = _SCREEN_SIZE / (float)numStairs;
+
+    for (int i = 0; i < numStairs; i++)
+    {
+        double p = (easeOutQuint(transitionTimer)); 
+
+        p -= ((i) / (float)numStairs)/(double)numStairs;
+        p = clamp(p,0,1);
+
+
+        float x = i * widthSingle;
+        float y = floor(((_SCREEN_SIZE/(double)numStairs)*(i+1)) * p);
+        float y2 = floor(((_SCREEN_SIZE/(double)numStairs)*(numStairs-(i))) * p);
+
+        al_draw_filled_rectangle(x,0,x+widthSingle,y2,BG);
+        al_draw_filled_rectangle(x,_SCREEN_SIZE,x+widthSingle,_SCREEN_SIZE-y,FRIENDLY);
+        
+    }
+
+}
 void DrawTransition_Door(float dt)
 {
     float w = (_SCREEN_SIZE/2.0f) * (easeOutQuint(transitionTimer));
@@ -719,6 +789,14 @@ void DrawTransition(float dt)
         DrawTransition_Door(dt);
     }
 
+    if (transitionDrawing == TRANSITION_STAIRS)
+    {
+        DrawTransition_Stairs(dt);
+    }
+        if (transitionDrawing == TRANSITION_TRIANGLES)
+    {
+        DrawTransition_Triangle(dt);
+    }
 
 }
 bool GameStateIsTransition(GameState* g)
@@ -738,7 +816,9 @@ void SetGameStateToEndscreen()
 void SetGameStateToInMenu()
 {
     //transitioningTo = GAMESTATE_MAIN_MENU;
-    //transitionTimer = 0;    
+    //transitionTimer = 0; 
+    transitionDrawing = TRANSITION_CHAINS;
+
     TransitionTo(GAMESTATE_MAIN_MENU);
 }
 void DrawStartScreen()
