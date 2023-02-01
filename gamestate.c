@@ -68,7 +68,7 @@ void InitGameState()
 }
 void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Encounter* e)
 {
-    transitionDrawing = TRANSITION_CHEVRONS;
+    transitionDrawing = TRANSITION_CHAINS;
 
     //transitioningTo = GAMESTATE_LOAD_ENCOUNTER;
     //transitionTimer = 0;
@@ -90,7 +90,7 @@ void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Enco
 }
 void SetGameStateToInGame()
 {
-    transitionDrawing = TRANSITION_CHAINS;
+    transitionDrawing = TRANSITION_CIRCLE;
 
     //transitioningTo = GAMESTATE_INGAME;
     //transitionTimer = 0;
@@ -768,6 +768,13 @@ float easeInOutSine(float x)
 {
     return -(cos(M_PI * x) - 1) / 2.0f;
 }
+void DrawTransition_Circle(float dt)
+{
+    float p = easeInOutSine(transitionTimer);
+
+    al_draw_filled_circle(_SCREEN_SIZE/2.0f,_SCREEN_SIZE/2.0f,_SCREEN_SIZE*p,BG);
+
+}
 void DrawTransition_Chevrons(float dt)
 {
     int numChevrons = 16;
@@ -780,7 +787,6 @@ void DrawTransition_Chevrons(float dt)
         float p = easeInOutSine(transitionTimer);
 
 
-        //int offset = p * _SCREEN_SIZE - (i * singleHeight * (singleHeight*(1-p)));
         int offset = singleHeight * i * p;
         ALLEGRO_COLOR col = i % 2 == 0 ? BG : FRIENDLY;
         ALLEGRO_VERTEX chevron[] = {
@@ -845,6 +851,10 @@ void DrawTransition(float dt)
     {
         DrawTransition_Chevrons(dt);
     }
+    if (transitionDrawing == TRANSITION_CIRCLE)
+    {
+        DrawTransition_Circle(dt);
+    }
 }
 bool GameStateIsTransition(GameState* g)
 {
@@ -864,7 +874,7 @@ void SetGameStateToInMenu()
 {
     //transitioningTo = GAMESTATE_MAIN_MENU;
     //transitionTimer = 0; 
-    transitionDrawing = TRANSITION_CHEVRONS;
+    transitionDrawing = TRANSITION_CHAINS;
 
     TransitionTo(GAMESTATE_MAIN_MENU);
 }
