@@ -68,7 +68,7 @@ void InitGameState()
 }
 void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Encounter* e)
 {
-    transitionDrawing = TRANSITION_CHAINS;
+    transitionDrawing = TRANSITION_CHEVRONS;
 
     //transitioningTo = GAMESTATE_LOAD_ENCOUNTER;
     //transitionTimer = 0;
@@ -90,7 +90,7 @@ void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Enco
 }
 void SetGameStateToInGame()
 {
-    transitionDrawing = TRANSITION_DOOR;
+    transitionDrawing = TRANSITION_CHAINS;
 
     //transitioningTo = GAMESTATE_INGAME;
     //transitionTimer = 0;
@@ -112,7 +112,7 @@ void SetGameStateToChoosingEncounter()
 }
 void SetGameStateToEnterShop()
 {
-    transitionDrawing = TRANSITION_CHAINS;
+    transitionDrawing = TRANSITION_STAIRS;
     
 }
 void FinishTransition()
@@ -347,7 +347,7 @@ void FinishTransition()
 }
 void SetGameStateToPurchasingUnits()
 {
-    transitionDrawing = TRANSITION_CHAINS;
+    transitionDrawing = TRANSITION_CHEVRONS;
     TransitionTo(GAMESTATE_PURCHASING_UNITS);
 }
 void SetGameStateToWatchingReplay()
@@ -760,9 +760,53 @@ void DrawTransition_Stairs(float dt)
     }
 
 }
+float easeOutCubic(float x)
+{
+    return 1 - pow(1 - x, 3);
+}   
+float easeInOutSine(float x)
+{
+    return -(cos(M_PI * x) - 1) / 2.0f;
+}
+void DrawTransition_Chevrons(float dt)
+{
+    int numChevrons = 16;
+    float singleHeight = (_SCREEN_SIZE*2) / numChevrons;
+
+
+
+    for (int i = 0; i < numChevrons; i++)
+    {
+        float p = easeInOutSine(transitionTimer);
+
+
+        //int offset = p * _SCREEN_SIZE - (i * singleHeight * (singleHeight*(1-p)));
+        int offset = singleHeight * i * p;
+        ALLEGRO_COLOR col = i % 2 == 0 ? BG : FRIENDLY;
+        ALLEGRO_VERTEX chevron[] = {
+            {.x = 0, .y = _SCREEN_SIZE, .z = 0, .u = 128, .v = 0, .color = col},
+            {.x = _SCREEN_SIZE/2.0f, .y = _SCREEN_SIZE - singleHeight, .z = 0, .u = 256, .v = 256, .color = col},
+            {.x = _SCREEN_SIZE, .y = _SCREEN_SIZE, .z = 0, .u = 0, .v = 256, .color = col},
+            
+            {.x = _SCREEN_SIZE, .y = _SCREEN_SIZE + singleHeight, .z = 0, .u = 0, .v = 256, .color = col},
+            {.x = _SCREEN_SIZE/2.0f, .y = _SCREEN_SIZE+singleHeight/2, .z = 0, .u = 256, .v = 256, .color = col},
+            {.x = 0, .y = _SCREEN_SIZE + singleHeight, .z = 0, .u = 256, .v = 256, .color = col}
+        };
+
+        for (int z = 0; z < 6; z++)
+        {
+            chevron[z].y += singleHeight;
+            chevron[z].y -= offset;
+        }
+
+        al_draw_prim(chevron, NULL, 0, 0, 6, ALLEGRO_PRIM_TRIANGLE_FAN);
+        
+    }
+}
+
 void DrawTransition_Door(float dt)
 {
-    float w = (_SCREEN_SIZE/2.0f) * (easeOutQuint(transitionTimer));
+    float w = (_SCREEN_SIZE/2.0f) * (easeOutCubic(transitionTimer));
     al_draw_filled_rectangle(0,0,w,_SCREEN_SIZE,BG);
     al_draw_filled_rectangle(_SCREEN_SIZE,0,_SCREEN_SIZE-w,_SCREEN_SIZE,BG);
 
@@ -797,7 +841,10 @@ void DrawTransition(float dt)
     {
         DrawTransition_Triangle(dt);
     }
-
+    if (transitionDrawing == TRANSITION_CHEVRONS)
+    {
+        DrawTransition_Chevrons(dt);
+    }
 }
 bool GameStateIsTransition(GameState* g)
 {
@@ -817,7 +864,7 @@ void SetGameStateToInMenu()
 {
     //transitioningTo = GAMESTATE_MAIN_MENU;
     //transitionTimer = 0; 
-    transitionDrawing = TRANSITION_CHAINS;
+    transitionDrawing = TRANSITION_CHEVRONS;
 
     TransitionTo(GAMESTATE_MAIN_MENU);
 }
