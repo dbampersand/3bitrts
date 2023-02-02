@@ -675,59 +675,66 @@ bool LoadSaveFile(char* path)
             al_fread(file,str,al_fsize(file));
             
             char* unlockStr = strstr(str,"unlocked");
-            for (int i = unlockStr-str+strlen("unlocked"); i < size; i++)
+            if (unlockStr)
             {
-                //if the next character is a { ignoring whitespace
-                if (!isspace(str[i]))
+                    
+                for (int i = unlockStr-str+strlen("unlocked"); i < size; i++)
                 {
-                    if (str[i] == '{')
+                    //if the next character is a { ignoring whitespace
+                    if (!isspace(str[i]))
                     {
-                        int bounds = 0;
-                        for (int j = i+1; j < size; j++)
+                        if (str[i] == '{')
                         {
-                            bounds++;
-                            if (str[j] == '}')
+                            int bounds = 0;
+                            for (int j = i+1; j < size; j++)
                             {
-                                break;
-                            }
-                        }
-
-                        char* unlockedPathsStr = calloc(bounds+1,sizeof(char));
-                        strncpy(unlockedPathsStr,str+i+1,bounds-1);
-                        char* token = strtok(unlockedPathsStr,";");
-                        while (token)
-                        {
-                            for (int j = 0; j < strlen(token); j++)
-                            {
-                                if (token[j] == '"' || isspace(token[j]))
+                                bounds++;
+                                if (str[j] == '}')
                                 {
-                                    for (int z = j; z < strlen(token)-1; z++)
+                                    break;
+                                }
+                            }
+
+                            char* unlockedPathsStr = calloc(bounds+1,sizeof(char));
+                            strncpy(unlockedPathsStr,str+i+1,bounds-1);
+                            char* token = strtok(unlockedPathsStr,";");
+                            while (token)
+                            {
+                                for (int j = 0; j < strlen(token); j++)
+                                {
+                                    if (token[j] == '"' || isspace(token[j]))
                                     {
-                                        token[z] = token[z+1];
+                                        for (int z = j; z < strlen(token)-1; z++)
+                                        {
+                                            token[z] = token[z+1];
+                                        }
+                                        token[strlen(token)-1] = '\0';
+                                        j--;    
                                     }
-                                    token[strlen(token)-1] = '\0';
-                                    j--;    
                                 }
-                            }
 
-                            for (int j = 0; j < numPrefabs; j++)
-                            {
-                                GameObject* prefab = prefabs[j];
-                                if (prefab->cost == 0 || (prefab->path && strcmp(token,prefab->path)==0))
+                                for (int j = 0; j < numPrefabs; j++)
                                 {
-                                    prefab->purchased = true;
+                                    GameObject* prefab = prefabs[j];
+                                    if (prefab->cost == 0 || (prefab->path && strcmp(token,prefab->path)==0))
+                                    {
+                                        prefab->purchased = true;
+                                    }
                                 }
+                                token = strtok(NULL,";");
                             }
-                            token = strtok(NULL,";");
+                            free(unlockedPathsStr);
                         }
-                        free(unlockedPathsStr);
+                        else
+                            break;
                     }
-                    else
-                        break;
                 }
+            
             }
-
             char* unlockEnctrStr = strstr(str,"unlockedEncounters");
+
+            if (unlockEnctrStr)
+            {
             for (int i = unlockEnctrStr-str+strlen("unlockedEncounters"); i < size; i++)
             {
                 //if the next character is a { ignoring whitespace
@@ -790,6 +797,7 @@ bool LoadSaveFile(char* path)
                     else
                         break;
                 }
+            }
             }
 
 
