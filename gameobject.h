@@ -209,6 +209,8 @@ typedef struct GameObject
 
     bool enraged;
 
+    float nextFootstepTime;
+
 } GameObject;
 
 #define MAX_LIGHT_SIZE 90 
@@ -252,6 +254,10 @@ extern float* sinTable;// = &__sinTable[360];
 extern float* cosTable;// = &__cosTable[360];
 
 extern int numChannellingInfosDrawn;
+
+int* footstepSFXIndices;
+int numFootsteps;
+int lastFootstepPlayed;
 
 
 

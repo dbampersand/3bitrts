@@ -15,6 +15,8 @@ function casted(x,y,obj,headingx,headingy)
         CreateObject("assets/enemies/viper/viper.lua",point.x,point.y,TYPE_FRIENDLY,2);
         point = RotatePoint(point.x,point.y,cx,cy,xPos*i);
     end
+    PlaySound("assets/enemies/caduceus/audio/summon_adds.wav",0.7);
+
     return true; 
 end
 

@@ -21,6 +21,7 @@ function casted(x,y,obj,headingx,headingy)
 
 
     ApplyEffect(obj,{f1});
+    PlaySound("assets/enemies/viper/audio/bite.wav",1);
     return true; 
 end
 

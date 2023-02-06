@@ -20,11 +20,13 @@ function casted(x,y,obj,headingx,headingy)
 
     CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj),"",ATTACK_PROJECTILE_POINT,25,10,false,ATTACK_HITS_ENEMIES,COLOR_POISON,{f1})
 
+    PlaySound("assets/enemies/naja/audio/bind_cast.wav",1);
 
     return true; 
 end
 
 function onhit(x,y,objhit)
+    PlaySound("assets/enemies/naja/audio/bind.wav",1);
 end
 
 function abilitytick(x, y, durationLeft)

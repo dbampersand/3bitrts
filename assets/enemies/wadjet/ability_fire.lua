@@ -17,6 +17,8 @@ function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/enemies/wyrm_boss/audio/fire.wav",1)
     
     CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HALF,false,-1, {f1})
+    PlaySound("assets/enemies/wadjet/audio/fire.wav",1);
+
     return true; 
 end
 

@@ -18,6 +18,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 40;  
 
     atk = CreateAOE(GetX(obj),GetY(obj),"", 30, duration, duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj, {f1})
+    PlaySound("assets/enemies/rock_tosser/audio/chuck.wav",.75);
 
 
     return true; 
@@ -37,4 +38,5 @@ end
 
 function ontimeout(x,y,obj,dt,target)
     atk = -1
+    PlaySound("assets/enemies/rock_tosser/audio/toss_small.wav",1);
 end

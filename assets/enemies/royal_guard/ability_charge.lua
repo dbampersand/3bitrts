@@ -21,6 +21,7 @@ function casted(x,y,obj,headingx,headingy)
     SetObjChannelling(GetObjRef(),1.25);
 
     CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",1.25,1.25,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,{f1});
+    PlaySound("assets/enemies/royal_guard/audio/charge.wav",1);
     return true; 
 end
 

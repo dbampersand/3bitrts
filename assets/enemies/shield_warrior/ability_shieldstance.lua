@@ -16,7 +16,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 300;  
     f1["duration"] = 20
     ApplyEffect(GetObjRef(),{f1});
-
+    PlaySound("assets/enemies/shield_warrior/audio/shield_stance.wav",1);
     return true; 
 end
 

@@ -21,7 +21,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = dps / tickrate;
 
     CreateAOE(GetX(obj),GetY(obj),"", radius, 1/tickrate, duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj, {f1})
-
+    PlaySound("assets/enemies/scorpion/audio/spit.wav",1);
     return true; 
 end
 

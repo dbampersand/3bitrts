@@ -23,6 +23,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["overwrites"] = true
 
      CreateAOE(GetX(obj),GetY(obj),"",40,0.1,30,false,ATTACK_HITS_ENEMIES,COLOR_POISON,DITHER_POISON_QUARTER,false,-1,{f1});
+     PlaySound("assets/enemies/giant_ooze/audio/acid.wav",0.75);
 
     return true; 
 end

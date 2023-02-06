@@ -232,6 +232,11 @@ void UpdateObject(GameObject* g, float dt)
                  currGameObjRunning->abilities[i].stacks  = currGameObjRunning->abilities[i].maxStacks;
         }
     }
+    g->nextFootstepTime -= dt;
+    if (g->nextFootstepTime < 0)
+        g->nextFootstepTime = 0;
+
+
     UpdateEffectVisuals(g,dt);
 
     UpdateMana(g, dt);
@@ -1865,6 +1870,31 @@ void DoCurrentPathingNode(GameObject* g)
         }
     }
 }
+void PlayFootstepSound(GameObject* g)
+{
+    if (!footstepSFXIndices)
+    {
+        numFootsteps = 8;
+        footstepSFXIndices = calloc(numFootsteps,sizeof(Sound));
+        footstepSFXIndices[0] = LoadSound("assets/audio/footsteps/1.wav");
+        footstepSFXIndices[1] = LoadSound("assets/audio/footsteps/2.wav");
+        footstepSFXIndices[2] = LoadSound("assets/audio/footsteps/3.wav");
+        footstepSFXIndices[3] = LoadSound("assets/audio/footsteps/4.wav");
+        footstepSFXIndices[4] = LoadSound("assets/audio/footsteps/5.wav");
+        footstepSFXIndices[5] = LoadSound("assets/audio/footsteps/6.wav");
+        footstepSFXIndices[6] = LoadSound("assets/audio/footsteps/7.wav");
+        footstepSFXIndices[7] = LoadSound("assets/audio/footsteps/8.wav");
+    }
+    int randInd = RandRange(0,numFootsteps);
+    while (randInd == lastFootstepPlayed)
+    {
+        randInd = RandRange(0,numFootsteps);
+    }
+    PlaySound(&sounds[footstepSFXIndices[randInd]],0.25f);
+    lastFootstepPlayed = randInd;
+
+
+}
 void Move(GameObject* g, float delta)
 {
     if (!g) return;
@@ -1875,7 +1905,7 @@ void Move(GameObject* g, float delta)
     if (g->speed == 0)
         return;
     #define DIST_DELTA 1
-        
+
     PointSpace before = g->position;
     int w = GetWidth(g);//al_get_bitmap_width(sprites[g->spriteIndex].sprite);
     int h = GetHeight(g);//al_get_bitmap_height(sprites[g->spriteIndex].sprite);
@@ -1942,14 +1972,14 @@ void Move(GameObject* g, float delta)
         double moveY = ytarg - g->position.worldY;
         
 
-        double dist = sqrt(moveX*moveX+moveY*moveY);
+        double d = sqrt(moveX*moveX+moveY*moveY);
 
         float speed = _MAX(0,g->speed);
 
-        double dX = (moveX / dist * speed) * delta;
-        double dY = (moveY / dist * speed) * delta;
+        double dX = (moveX / d * speed) * delta;
+        double dY = (moveY / d * speed) * delta;
 
-        if (dist <= DIST_DELTA)
+        if (d <= DIST_DELTA)
         {
             //g->position.worldX = xtarg;
             UpdateObjPosition_X(g,xtarg);
@@ -1964,7 +1994,7 @@ void Move(GameObject* g, float delta)
             return;
         }
         double mDist = sqrt(dX * dX + dY * dY);
-        if (dist <= mDist)
+        if (d <= mDist)
         {
             dX = xtarg - g->position.worldX;
             dY = ytarg - g->position.worldY;
@@ -2011,6 +2041,16 @@ void Move(GameObject* g, float delta)
             SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,true);
 
         }
+
+    if (g->nextFootstepTime <= 0 && (before.worldX != g->position.worldX || before.worldY != g->position.worldY)) {
+        if (dist(before.worldX,before.worldY,g->position.worldX,g->position.worldY) > 0.1f)
+        {
+            PlayFootstepSound(g);   
+            g->nextFootstepTime = g->speed / 60.0f;
+        }
+    }
+        
+
     UpdateObjPosition(g,g->position.worldX,g->position.worldY);
     SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,true);
 

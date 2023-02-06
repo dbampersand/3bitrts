@@ -135,7 +135,11 @@ void PlaySound(Sound* s, float relativeVolume)
             soundPlayedThisFramePosition++;
         }
     }
-    al_play_sample(s->sample, currSettings.masterVolume * relativeVolume * currSettings.sfxVolume, 0, 1.0f, ALLEGRO_PLAYMODE_ONCE, NULL);
+    float volumeJitter = RandRange(-0.1,0.1);
+    float pitchJitter = RandRange(-0.05,0.05);
+    relativeVolume += volumeJitter;
+
+    al_play_sample(s->sample, currSettings.masterVolume * relativeVolume * currSettings.sfxVolume, 0, 1.0f + pitchJitter, ALLEGRO_PLAYMODE_ONCE, NULL);
 }
 void StopMusic()
 {
