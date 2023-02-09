@@ -210,6 +210,7 @@ typedef struct GameObject
     bool enraged;
 
     float nextFootstepTime;
+    
 
 } GameObject;
 

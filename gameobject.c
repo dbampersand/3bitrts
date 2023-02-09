@@ -803,6 +803,11 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
    // memset(found->abilities,0,sizeof(Ability)*4);
     memset(currGameObjRunning,0,sizeof(GameObject));
 
+    currGameObjRunning->numAttackSounds = prefab->numAttackSounds;
+    currGameObjRunning->attackSoundIndices = calloc(prefab->numAttackSounds,sizeof(int));
+    memcpy(currGameObjRunning->attackSoundIndices,prefab->attackSoundIndices,sizeof(int)*prefab->numAttackSounds);
+
+
     currGameObjRunning->purchased = prefab->purchased;
 
     currGameObjRunning->objectIsStunnable = true;
@@ -2671,6 +2676,15 @@ void SetAttackingObj(GameObject* g, GameObject* target)
 {
     g->targObj = target;
 }
+void PlayAttackSound(GameObject* g)
+{  
+    if (g->numAttackSounds > 0)
+    {
+        int randInd = RandRange(0,g->numAttackSounds);
+        Sound* sound = &sounds[randInd];
+        PlaySound(sound,1.0f);
+    } 
+}
 void AttackTarget(GameObject* g, float dt)
 {
     if (!g) return;
@@ -2693,11 +2707,12 @@ void AttackTarget(GameObject* g, float dt)
             lua_pcall(luaState,1,0,0);
 
         }
+        PlayAttackSound(g);
 
         float damage = g->baseDamage;
         ProcessItemsOnAttack(g,dt,&damage);
         
-       //    g->targObj->health -= damage   ;
+       //    g->targObj->health -= damage;
 
         if (g->numAttackEffectIndices > 0)
         {

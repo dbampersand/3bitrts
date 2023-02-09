@@ -128,6 +128,32 @@ int L_SetObjPurchaseScreenSprite(lua_State* l)
     currGameObjRunning->spriteIndex_PurchaseScreenSprite = LoadSprite(path,false);
     return 0;
 }
+int L_SetAttackSounds(lua_State* l)
+{
+    int len = lua_rawlen(l,1);
+
+    if (currGameObjRunning->attackSoundIndices)
+        free(currGameObjRunning->attackSoundIndices);
+
+    currGameObjRunning->attackSoundIndices = calloc(len,sizeof(int));
+    currGameObjRunning->numAttackSounds = len;
+
+    for (int i = 0; i < len; i++)
+    {
+        lua_pushnumber(l,i+1);
+        lua_gettable(l,1);
+
+
+        const char* path = lua_tostring(l,-1);
+        lua_pop(l,1);
+
+        currGameObjRunning->attackSoundIndices[i] = LoadSound(path);
+    }
+    lua_pop(l,1);
+
+    return 0;
+
+}
 int L_PlayMusic(lua_State* l)
 {
     const char* path = lua_tostring(l,1);
@@ -3989,5 +4015,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetAbilityName);
     lua_setglobal(luaState, "SetAbilityName");
+
+    lua_pushcfunction(luaState, L_SetAttackSounds);
+    lua_setglobal(luaState, "SetAttackSounds");
 
 }
