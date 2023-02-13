@@ -26,6 +26,14 @@ function setup()
     spin = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_spin.lua",3);
     focus = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_focus.lua",4);
 
+    SetAttackSounds({
+        "assets/audio/attacks/melee_bite/bite_1.wav",
+        "assets/audio/attacks/melee_bite/bite_2.wav",
+        "assets/audio/attacks/melee_bite/bite_3.wav",
+        "assets/audio/attacks/melee_bite/bite_4.wav",
+        "assets/audio/attacks/melee_bite/bite_5.wav"
+    });
+
 
 end 
 function untoggle()

@@ -14,6 +14,14 @@ function setup()
 
     local targ = GetRandomUnit(TYPE_ENEMY,Bor(TYPE_HEALER,TYPE_RANGEDDPS),999)
 
+    SetAttackSounds({
+        "assets/audio/attacks/melee_bite/bite_1.wav",
+        "assets/audio/attacks/melee_bite/bite_2.wav",
+        "assets/audio/attacks/melee_bite/bite_3.wav",
+        "assets/audio/attacks/melee_bite/bite_4.wav",
+        "assets/audio/attacks/melee_bite/bite_5.wav"
+    });
+
 end
 
 function update(dt)

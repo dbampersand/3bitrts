@@ -12,6 +12,15 @@ function setup()
 
     squeeze = AddAbility(GetObjRef(),"assets/enemies/giant_ooze/ability_squeeze.lua",0);
     acid = AddAbility(GetObjRef(),"assets/enemies/giant_ooze/ability_acid.lua",1);
+
+    SetAttackSounds({
+        "assets/audio/attacks/attack_spit/spit_1.wav",
+        "assets/audio/attacks/attack_spit/spit_2.wav",
+        "assets/audio/attacks/attack_spit/spit_3.wav",
+        "assets/audio/attacks/attack_spit/spit_4.wav",
+        "assets/audio/attacks/attack_spit/spit_5.wav",
+    });
+
 end
 function update(dt)
     timer = timer + dt;

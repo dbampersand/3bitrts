@@ -7,6 +7,10 @@ function setup()
     AddEncounterAbility("assets/enemies/wyrm_boss/ability_firebreath.lua",1,0);
     AddEncounterAbility("assets/enemies/wyrm_boss/ability_fire.lua",2,0);
     AddEncounterAbility("assets/enemies/wyrm_boss/ability_nuke.lua",3,0);
+    AddEncounterAbility("assets/enemies/wyrm_boss/ability_firebreath.lua",4,0);
+    AddEncounterAbility("assets/enemies/wyrm_boss/ability_summon_adds.lua",5,0);
+    AddEncounterAbility("assets/enemies/wyrm_boss/ability_bomb.lua",6,0);
+    AddEncounterAbility("assets/enemies/wyrm_boss/ability_rage.lua",7,0);
 
 
     SetEncounterMapPath("assets/encounters/01/map_1.lua");
@@ -15,4 +19,4 @@ function setup()
 
     SetEncounterLoadScreen("assets/encounters/01/loadscreen.png")
     StartsUnlocked(true);
-end
+end 

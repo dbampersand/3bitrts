@@ -92,7 +92,7 @@ bool IsModifierDown(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
         al_key_down(keyStateThisFrame,ALLEGRO_KEY_RSHIFT)   || 
         al_key_down(keyStateThisFrame,ALLEGRO_KEY_TAB)      ||
         al_key_down(keyStateThisFrame,ALLEGRO_KEY_LWIN)     ||
-        al_key_down(keyStateThisFrame,ALLEGRO_KEY_RWIN)     ||
+        al_key_down(keyStateThisFrame,ALLEGRO_KEY_RWIN)     ||  
         al_key_down(keyStateThisFrame,ALLEGRO_KEY_LCTRL)    ||
         al_key_down(keyStateThisFrame,ALLEGRO_KEY_RCTRL)    ||
         al_key_down(keyStateThisFrame,ALLEGRO_KEY_COMMAND) 

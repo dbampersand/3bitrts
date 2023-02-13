@@ -4,6 +4,7 @@ function setup()
     CreateObject("assets/enemies/healingdummy/healingdummy.lua",256-60,24,TYPE_FRIENDLY,0);
    
 
+    CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",256,128,TYPE_ENEMY,0);
 
 
 end

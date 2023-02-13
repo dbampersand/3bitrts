@@ -1,14 +1,14 @@
-local charge = 0
+local throwDarts = 0
 
 function setup()
-    SetSprite("assets/enemies/royal_guard/royal_guard.png");
+    SetSprite("assets/enemies/kobold_foreman/kobold_foreman.png");
 
     SetDamage(7);
     SetMaxHP(750,true)
     SetSpeed(120)
     SetRange(6);
 
-    charge = AddAbility(GetObjRef(),"assets/enemies/royal_guard/ability_charge.lua",0);
+    throwDarts = AddAbility(GetObjRef(),"assets/enemies/kobold_foreman/ability_throw_darts.lua",0);
 
     SetAttackSounds({
         "assets/audio/attacks/melee_sword/sword_1.wav",
@@ -23,8 +23,9 @@ function setup()
 end
 
 function update(dt)
-    local randUnit = {target = GetRandomUnit(TYPE_ENEMY,Band(TYPE_ALL,Bnot(TYPE_TANK),256))};
-    CastAbility(charge,2,{randUnit});
+    local randUnit = {target = GetRandomUnit(TYPE_ENEMY,Band(TYPE_ALL,Bnot(TYPE_TANK)),256)};
+    CastAbility(throwDarts,2,{randUnit});
+
 end
 
 function kill()

@@ -843,7 +843,7 @@ void DrawTransition(float dt)
     {
         DrawTransition_Stairs(dt);
     }
-        if (transitionDrawing == TRANSITION_TRIANGLES)
+    if (transitionDrawing == TRANSITION_TRIANGLES)
     {
         DrawTransition_Triangle(dt);
     }

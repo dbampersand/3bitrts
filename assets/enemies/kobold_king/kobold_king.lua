@@ -31,6 +31,16 @@ function setup()
     callGuards = AddAbility(GetObjRef(),"assets/enemies/kobold_king/ability_call_guards.lua",5)
     cloakOfFire = AddAbility(GetObjRef(),"assets/enemies/kobold_king/ability_cloak_of_fire.lua",6)
     
+    SetAttackSounds({
+        "assets/audio/attacks/melee_sword/sword_1.wav",
+        "assets/audio/attacks/melee_sword/sword_2.wav",
+        "assets/audio/attacks/melee_sword/sword_3.wav",
+        "assets/audio/attacks/melee_sword/sword_4.wav",
+        "assets/audio/attacks/melee_sword/sword_5.wav",
+        "assets/audio/attacks/melee_sword/sword_6.wav",
+        "assets/audio/attacks/melee_sword/sword_7.wav"
+    });
+
 end 
 function untoggle()
 

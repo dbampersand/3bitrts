@@ -14,6 +14,16 @@ function setup()
     small = AddAbility(GetObjRef(),"assets/enemies/rock_tosser/ability_throw_small_rock.lua",1);
 
     SetChannelingSprite("assets/enemies/rock_tosser/rock_tosser_channeling.png")
+
+    SetAttackSounds({
+        "assets/audio/attacks/melee_hammer/hammer_1.wav",
+        "assets/audio/attacks/melee_hammer/hammer_2.wav",
+        "assets/audio/attacks/melee_hammer/hammer_3.wav",
+        "assets/audio/attacks/melee_hammer/hammer_4.wav",
+        "assets/audio/attacks/melee_hammer/hammer_5.wav"
+        "assets/audio/attacks/melee_hammer/hammer_6.wav"
+    });
+
 end
 
 function update(dt)

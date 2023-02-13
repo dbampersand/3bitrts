@@ -128,6 +128,7 @@ int L_SetObjPurchaseScreenSprite(lua_State* l)
     currGameObjRunning->spriteIndex_PurchaseScreenSprite = LoadSprite(path,false);
     return 0;
 }
+
 int L_SetAttackSounds(lua_State* l)
 {
     if (!lua_istable(l,1))
@@ -400,7 +401,6 @@ int L_GetRandomUnit(lua_State* l)
         }
         GameObject* randObj = list[rand()%numObjs];
         lua_pushnumber(l,randObj-objects);
-
     }*/
     //if we still have no objects
     if (numObjs <= 0)
@@ -1001,6 +1001,54 @@ void CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const 
     AddAttack(&a);
 
 }   
+int L_CreateConeProjectiles(lua_State* l)
+{
+    const float x = lua_tonumber(l,1);
+    const float y = lua_tonumber(l,2);
+    const float toX = lua_tonumber(l,3); 
+    const float toY = lua_tonumber(l,4);
+    const char* portrait = lua_tostring(l,5);
+    const int attackType = lua_tonumber(l,6);
+    const int speed = lua_tonumber(l,7);
+    const int duration = lua_tonumber(l,8);
+    const bool shouldCallback = lua_toboolean(l, 9);
+    const int properties = lua_tonumber(l,10);
+    const int numProjectiles = lua_tonumber(l,11);
+    const int color = lua_tonumber(l,12);
+    const float radius = DegToRad(lua_tonumber(l,13));
+
+
+    size_t len =  lua_rawlen(l,14);
+
+    float anglePointedAt = Normalise(PointsToAngleRad(toX,toY,x,y),0,2*M_PI);
+
+
+
+
+    Effect effects[len];    
+    memset(effects,0,sizeof(Effect)*len);
+    for (int i = 1; i < len+1; i++)
+    {
+        Effect e;
+        e = GetEffectFromTable(l, 14, i);
+        e.from = currGameObjRunning;
+        e.abilityFrom = currAbilityRunning;
+        lua_remove(l,-1);
+        effects[i-1] = e;
+    }       
+
+
+    float startAngle = anglePointedAt - radius/2.0f;
+
+    for (int i = 0; i < numProjectiles; i++)
+    {
+        float angle = (i) *  radius / (float)numProjectiles;
+        CreateProjectile(l,x,y, x+cos(angle+startAngle), y+sin(angle+startAngle), portrait, attackType, speed, duration, shouldCallback, properties, NULL, color, effects, len);
+    }
+    return 0;
+}
+
+
 int L_CreateCircularProjectiles(lua_State* l)
 {
     const float x = lua_tonumber(l,1);
@@ -1050,7 +1098,7 @@ int L_CreateCircularProjectiles(lua_State* l)
     for (int i = 0; i < numProjectiles; i++)
     {
         float angle = M_PI / (float)numProjectiles*i*2; 
-        CreateProjectile(l,x,y, x+sin(angle+angleOffset), y+cos(angle+angleOffset), portrait, attackType, speed, duration, shouldCallback, properties, targ,color, effects, len);
+        CreateProjectile(l,x,y, x+cos(angle+angleOffset), y+sin(angle+angleOffset), portrait, attackType, speed, duration, shouldCallback, properties, targ,color, effects, len);
 
     }
     for (int i = 0; i < len; i++)
@@ -2919,6 +2967,11 @@ int L_RandRange(lua_State* l)
 }
 int L_SetAbilityHint(lua_State* l)
 {
+    if (!currAbilityRunning)
+    {
+        printf("SetAbilityHint needs to be called from an ability.\n");
+        return 0;
+    }
     currAbilityRunning->targetingHint = lua_tonumber(l,1);
     if (lua_isnumber(l,2))
     {
@@ -4023,5 +4076,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetAttackSounds);
     lua_setglobal(luaState, "SetAttackSounds");
+
+    lua_pushcfunction(luaState, L_CreateConeProjectiles);
+    lua_setglobal(luaState, "CreateConeProjectiles");
+
 
 }

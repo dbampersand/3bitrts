@@ -3058,15 +3058,15 @@ void UnsetAll()
 int GetWidth(GameObject* g)
 {
     if (gameState == GAMESTATE_WATCHING_REPLAY)
-        return al_get_bitmap_width(replay.sprites[g->spriteIndex].sprite);
+        return al_get_bitmap_width(replay.sprites[g->spriteIndex].sprite) > 1 ? al_get_bitmap_width(replay.sprites[g->spriteIndex].sprite) : 1;
 
-    return al_get_bitmap_width(sprites[g->spriteIndex].sprite);
+    return al_get_bitmap_width(sprites[g->spriteIndex].sprite) > 1 ?  al_get_bitmap_width(sprites[g->spriteIndex].sprite) : 1;
 }
 int GetHeight(GameObject* g)
 {
     if (gameState == GAMESTATE_WATCHING_REPLAY)
-        return al_get_bitmap_height(replay.sprites[g->spriteIndex].sprite);
-    return al_get_bitmap_height(sprites[g->spriteIndex].sprite);
+        return al_get_bitmap_height(replay.sprites[g->spriteIndex].sprite) > 1 ? al_get_bitmap_height(replay.sprites[g->spriteIndex].sprite) : 1;
+    return al_get_bitmap_height(sprites[g->spriteIndex].sprite) > 1 ? al_get_bitmap_height(sprites[g->spriteIndex].sprite) : 1;
 }
 
 float RectDist(GameObject* g1, GameObject* g2)

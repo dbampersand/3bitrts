@@ -10,6 +10,15 @@ function setup()
 
     sunDisc = AddAbility(GetObjRef(),"assets/enemies/wadjet/ability_sun_disc.lua",0);
 
+    SetAttackSounds({
+        "assets/audio/attacks/ranged_magic/magic_1.wav",
+        "assets/audio/attacks/ranged_magic/magic_2.wav",
+        "assets/audio/attacks/ranged_magic/magic_3.wav",
+        "assets/audio/attacks/ranged_magic/magic_4.wav",
+        "assets/audio/attacks/ranged_magic/magic_5.wav"
+        "assets/audio/attacks/ranged_magic/magic_6.wav"
+    });
+
 end
 
 function update(dt)

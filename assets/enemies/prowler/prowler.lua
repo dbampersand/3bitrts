@@ -10,6 +10,8 @@ function setup()
     SetRange(0);
 
     spines = AddAbility(GetObjRef(),"assets/enemies/prowler/ability_spines.lua",0);
+
+
 end
 function update(dt)
     if (IsInCombat()) then
