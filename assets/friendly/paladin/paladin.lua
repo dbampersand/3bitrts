@@ -26,6 +26,19 @@ function setup()
     SetObjName("Paladin");
     SetObjDescription("Blessed with holy power, the Paladin is a crusader for all things just. Confident that great evil lurks inside the mountain, she understands that clearing the mountain will be a test of her strength, will and faith. An ardent protector, the Paladin is committed to defending her allies above all else.")
     SetObjCost(20);
+
+    SetAttackSounds(
+        {
+        "assets/audio/attacks/melee_sword/sword_1.wav",
+        "assets/audio/attacks/melee_sword/sword_2.wav",
+        "assets/audio/attacks/melee_sword/sword_3.wav",
+        "assets/audio/attacks/melee_sword/sword_4.wav",
+        "assets/audio/attacks/melee_sword/sword_5.wav",
+        "assets/audio/attacks/melee_sword/sword_6.wav",
+        "assets/audio/attacks/melee_sword/sword_7.wav"
+    }
+    );
+
 end
 
 function update(dt)

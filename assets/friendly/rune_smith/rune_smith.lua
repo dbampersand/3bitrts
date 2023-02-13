@@ -25,6 +25,18 @@ function setup()
     SetObjName("Rune Smith");
     SetObjDescription("Not simply satisfied with her fledgling smithy, the Rune Smith took forging weapons and armor to a new level, introducing a concept few had tried: powerful magic runes. Crafting these items, however, requires extremely rare materials, and all but scraps turn up through travelling sellers. A large vein of ore had been rumored for a long time inside the mountain, and the Rune Smith intends to find it.")
     SetObjCost(10);
+
+    SetAttackSounds(
+        {
+        "assets/audio/attacks/melee_hammer/hammer_1.wav",
+        "assets/audio/attacks/melee_hammer/hammer_2.wav",
+        "assets/audio/attacks/melee_hammer/hammer_3.wav",
+        "assets/audio/attacks/melee_hammer/hammer_4.wav",
+        "assets/audio/attacks/melee_hammer/hammer_5.wav",
+        "assets/audio/attacks/melee_hammer/hammer_6.wav"
+    }
+    );
+
 end
 
 function update(dt)

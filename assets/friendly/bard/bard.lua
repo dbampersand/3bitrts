@@ -25,7 +25,19 @@ function setup()
     SetObjPurchaseScreenSprite("assets/friendly/bard/bard_full.png")
     SetObjName("Bard");
     SetObjDescription("A travelling musician. Finding the power of their songs at a young age, they found an income hard to come by: most brushed off the sell of a magic song as hogwash, or worse, witchcraft. The only people who would accept them and their unique talent, the life of an adventurer called. Lute in hand, they sing powerful magic songs providing their allies vital utility.")
-    
+    SetAttackSounds(
+        {
+        "assets/audio/attacks/ranged_bow/bow_1.wav",
+        "assets/audio/attacks/ranged_bow/bow_2.wav",
+        "assets/audio/attacks/ranged_bow/bow_3.wav",
+        "assets/audio/attacks/ranged_bow/bow_4.wav",
+        "assets/audio/attacks/ranged_bow/bow_5.wav",
+        "assets/audio/attacks/ranged_bow/bow_6.wav",
+        "assets/audio/attacks/ranged_bow/bow_7.wav",
+        "assets/audio/attacks/ranged_bow/bow_8.wav"
+    }
+    );
+
 end
 
 function update(dt)

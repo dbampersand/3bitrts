@@ -28,6 +28,17 @@ function setup()
     SetObjPurchaseScreenSprite("assets/friendly/priest/priest_full.png")
     SetObjName("Priest");
     SetObjDescription("To a member of the ancient and exclusive Triadi church, three represent the holiness above God. This priestess belongs to a small sect of the church believing that God can be found inside of a mountain. That prospect alone made her join a party of adventurers tackling the mountain as a healer.")
+   
+    SetAttackSounds(
+        {
+        "assets/audio/attacks/ranged_magic/magic_1.wav",
+        "assets/audio/attacks/ranged_magic/magic_2.wav",
+        "assets/audio/attacks/ranged_magic/magic_3.wav",
+        "assets/audio/attacks/ranged_magic/magic_4.wav",
+        "assets/audio/attacks/ranged_magic/magic_5.wav",
+        "assets/audio/attacks/ranged_magic/magic_6.wav"
+    }
+    );
 
 
 end

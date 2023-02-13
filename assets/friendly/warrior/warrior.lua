@@ -31,7 +31,7 @@ function setup()
         "assets/audio/attacks/melee_sword/sword_4.wav",
         "assets/audio/attacks/melee_sword/sword_5.wav",
         "assets/audio/attacks/melee_sword/sword_6.wav",
-        "assets/audio/attacks/melee_sword/sword_7.wav",
+        "assets/audio/attacks/melee_sword/sword_7.wav"
     });
 end 
 

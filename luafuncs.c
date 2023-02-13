@@ -130,6 +130,11 @@ int L_SetObjPurchaseScreenSprite(lua_State* l)
 }
 int L_SetAttackSounds(lua_State* l)
 {
+    if (!lua_istable(l,1))
+    {
+        printf("Could not load attack sound, argument needs to be inside a table, for instance: {\"assets/audio...\",\"assets/audio/...\"}\n");
+        return 0;
+    }
     int len = lua_rawlen(l,1);
 
     if (currGameObjRunning->attackSoundIndices)

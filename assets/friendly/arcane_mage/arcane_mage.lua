@@ -30,6 +30,16 @@ function setup()
     SetObjPurchaseScreenSprite("assets/friendly/arcane_mage/arcane_mage_full.png")
     SetObjName("Arcane Mage");
     SetObjDescription("Not from this plane of existence, the Arcane Mage is a mysterious figure. Completely mute, all that is understood is that there is something at the bottom of this mountain that they want. A master of arcane and elemental magic, they exude a powerful aura that terrifies anyone who stands in their way.")
+    SetAttackSounds(
+        {
+        "assets/audio/attacks/ranged_magic/magic_1.wav",
+        "assets/audio/attacks/ranged_magic/magic_2.wav",
+        "assets/audio/attacks/ranged_magic/magic_3.wav",
+        "assets/audio/attacks/ranged_magic/magic_4.wav",
+        "assets/audio/attacks/ranged_magic/magic_5.wav",
+        "assets/audio/attacks/ranged_magic/magic_6.wav"
+    }
+);
 end
 
 function update(dt)

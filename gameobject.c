@@ -2682,7 +2682,7 @@ void PlayAttackSound(GameObject* g)
     {
         int randInd = RandRange(0,g->numAttackSounds);
         Sound* sound = &sounds[g->attackSoundIndices[randInd]];
-        PlaySound(sound,1.0f);
+        PlaySound(sound,.4f);
     } 
 }
 void AttackTarget(GameObject* g, float dt)

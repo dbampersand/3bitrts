@@ -29,6 +29,18 @@ function setup()
     SetObjName("Herbalist");
     SetObjDescription("A master botanist, the Herbalist demonstrates a calm and measured approach, using well-crafted potions and medicine to heal her allies. Rare herbs and fungi grow deep in the mountain, the study of which may lead to the synthesisation of an immortality potion. She knows this may be her only chance to venture into the mountain.")
 
+    SetAttackSounds(
+        {
+        "assets/audio/attacks/ranged_bow/bow_1.wav",
+        "assets/audio/attacks/ranged_bow/bow_2.wav",
+        "assets/audio/attacks/ranged_bow/bow_3.wav",
+        "assets/audio/attacks/ranged_bow/bow_4.wav",
+        "assets/audio/attacks/ranged_bow/bow_5.wav",
+        "assets/audio/attacks/ranged_bow/bow_6.wav",
+        "assets/audio/attacks/ranged_bow/bow_7.wav",
+        "assets/audio/attacks/ranged_bow/bow_8.wav"
+    }
+    );
 
 
 end
