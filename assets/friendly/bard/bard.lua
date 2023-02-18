@@ -41,9 +41,6 @@ function setup()
 end
 
 function update(dt)
-    if (GetKey(KEY_U)) then
-    CreateObject("assets/enemies/viper/viper.lua",GetMouseWorldX(),GetMouseWorldY(),TYPE_ENEMY,3); 
-    end
 end
 
 function kill()

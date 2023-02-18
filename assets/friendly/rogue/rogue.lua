@@ -31,6 +31,16 @@ function setup()
     SetObjName("Rogue");
     SetObjDescription("Having studied herbology, the Rogue is a master of all that is poisonous and toxic. For all his knowledge, his husband, poisoned by an unknown source, lays dying in bed, unable to be diagnosed. Upon hearing rumours of a particularly potent strain of healing herb growing in the mountain, he resolved to put his skills to use.")
 
+    SetAttackSounds(
+        {
+        "assets/audio/attacks/melee_dagger/dagger_1.wav",
+        "assets/audio/attacks/melee_dagger/dagger_2.wav",
+        "assets/audio/attacks/melee_dagger/dagger_3.wav",
+        "assets/audio/attacks/melee_dagger/dagger_4.wav",
+        "assets/audio/attacks/melee_dagger/dagger_5.wav"
+        }
+    );
+
 end
 
 function update(dt)
