@@ -264,6 +264,8 @@ int lastFootstepPlayed;
 
 //add 8 more free objects when we need to realloc objects array
 #define BUFFER_PREALLOC_AMT 8
+
+bool PlayerHasEnemyUnitSelected();
 void SetTargetPosition(GameObject* g, float x, float y);
 void ClearPathfindingQueue(GameObject* g);
 GameObject* GetMousedOver(MouseState* mouseState);

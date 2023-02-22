@@ -351,7 +351,14 @@ bool AbilityCanBeCastOnGround(Ability* a)
 {
     return (a->castType & (ABILITY_POINT|ABILITY_ANGLE|ABILITY_INSTANT));
 }
+/*void SetAbilityName(Ability* a)
+{
+    const char* str = lua_tostring(l,1);
+    char* buff = calloc(strlen(str)+1,sizeof(char));
+    memcpy(buff,str,(strlen(str)+1)*sizeof(char));
+    currAbilityRunning->description = buff;
 
+}*/
 //returns if the ability has been cast or not
 bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, float headingy, GameObject* target)
 {

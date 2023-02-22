@@ -772,6 +772,9 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
         return false;
     if (heldAbility == &selected->abilities[index])
         keydown = true;
+
+    if (!IsOwnedByPlayer(selected))
+        keydown = false;
     Sprite* s = &sprites[selected->abilities[index].spriteIndex_Portrait];
     //DrawSprite(s,startX,startY,FRIENDLY,keydown);
     Ability* a = &selected->abilities[index];

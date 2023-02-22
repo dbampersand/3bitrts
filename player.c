@@ -46,6 +46,8 @@ void InitPlayers()
 }
 void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseState)
 {
+    if (PlayerHasEnemyUnitSelected())
+        return;
     int index = GetAbilityIndexClicked(keyState,keyStateLastFrame);
     if (index > -1)
     if (players[0].selection[players[0].indexSelectedUnit])

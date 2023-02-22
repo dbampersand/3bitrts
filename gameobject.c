@@ -55,7 +55,16 @@ float* cosTable = NULL;// = &__cosTable[360];
 
 int numChannellingInfosDrawn = 0;
 
-
+bool PlayerHasEnemyUnitSelected()
+{
+    for (int i = 0; i < MAXUNITSSELECTED; i++)
+    {
+        GameObject* obj = players[0].selection[i];
+        if (IsActive(obj) && !IsOwnedByPlayer(obj))
+            return true;
+    }
+    return false;
+}
 
 void DrawChannellingInfo(GameObject* obj)
 {
@@ -140,7 +149,7 @@ void UpdatePlayerObjectInteractions(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KE
 }
 void ProcessAttackMoveMouseCommand(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState)
 {
-    if (players[0].amoveSelected)
+    if (players[0].amoveSelected && !PlayerHasEnemyUnitSelected())
     {
         players[0].amoveSelected = false;   
         for (int i = 0; i < numActiveObjects; i++)
@@ -567,6 +576,9 @@ void SetCtrlGroup(int index, GameObject** list, int numUnitsSelected)
 void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
 
+    if (players[0].abilityHeld)
+        return;
+
     if (!(mouseLastFrame->mouse.buttons & 1)  && (mouseState->mouse.buttons & 1) && !players[0].abilityHeld)
     {
         AddMouseRandomParticles(*mouseState, 3);
@@ -588,10 +600,25 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
             r.h = _MAX(endSelection.y,players[0].selectionStart.y) - _MIN(endSelection.y,players[0].selectionStart.y);
             bool hasSelected = false;
             
+            int numUnitClickedOn = 0;
             for (int i = 0; i < numActiveObjects; i++)
             {
                 GameObject* obj = activeObjects[i];
-                if (!IsOwnedByPlayer(obj) || !IsActive(obj) || ObjIsDecoration(obj))
+
+                if (ObjIsBoss(obj) || !IsActive(obj) || ObjIsDecoration(obj))
+                    continue;
+                Rect rObj = GetObjRect(obj);
+                if (CheckIntersect(rObj,r))
+                {   
+                    numUnitClickedOn++;
+                }
+
+            }
+
+            for (int i = 0; i < numActiveObjects; i++)
+            {
+                GameObject* obj = activeObjects[i];
+                if (ObjIsBoss(obj) || !IsActive(obj) || ObjIsDecoration(obj))
                     continue;
                 Sprite* sp = &sprites[obj->spriteIndex];
                 int j = al_get_bitmap_width(sp->sprite);
@@ -608,7 +635,7 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                             players[0].numUnitsSelected = 0;
 
                         }
-                        if (gameState == GAMESTATE_CHOOSING_UNITS && !obj->purchased)
+                        if (gameState == GAMESTATE_CHOOSING_UNITS && (!obj->purchased && obj->playerChoosable))
                         {
                             SetGameStateToPurchasingUnits();
                             for (int j = 0; j < ui.purchasingUnitUI.numPrefabs; j++)
@@ -626,17 +653,21 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                     }
                     if (IsBindDown(keyState,currSettings.keymap.key_Shift))
                     {
-                        bool selected = IsSelected(obj);
-                        SetSelected(obj,!selected);
-                        //we're removing the unit from selection as it is already selected 
-                        if (selected)
+                        if (IsOwnedByPlayer(obj))
                         {
-                            RemoveGameObjectFromSelection(&players[0],obj);
+                            bool selected = IsSelected(obj);
+                            SetSelected(obj,!selected);
+                            //we're removing the unit from selection as it is already selected 
+                            if (selected)
+                            {
+                                RemoveGameObjectFromSelection(&players[0],obj);
+                        }
                         }
                     }
                     else
                     {
-                        SetSelected(obj,true);
+                        if (IsOwnedByPlayer(obj) || (!IsOwnedByPlayer(obj) && numUnitClickedOn == 1))
+                            SetSelected(obj,true);
                         //players[0].selection[players[0].numUnitsSelected] = obj;
                         //players[0].numUnitsSelected++;
                     }
@@ -651,11 +682,12 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
     {
         for (int i = 0; i < players[0].numUnitsSelected; i++)
         {
-            HoldCommand(players[0].selection[i],IsBindDown(keyState,currSettings.keymap.key_Shift));
+            if (IsOwnedByPlayer(players[0].selection[i]))
+                HoldCommand(players[0].selection[i],IsBindDown(keyState,currSettings.keymap.key_Shift));
         }
 
     }
-    if (!(mouseState->mouse.buttons & 2) && (mouseLastFrame->mouse.buttons & 2))
+    if (!PlayerHasEnemyUnitSelected() && (!(mouseState->mouse.buttons & 2) && (mouseLastFrame->mouse.buttons & 2)))
     {
         if (!MouseInsideUI(mouseState))
         {
@@ -2342,7 +2374,7 @@ bool IsSelectable(GameObject* g)
 {
     if (gameState == GAMESTATE_CHOOSING_UNITS && (g->playerChoosable && !g->purchased))
         return false;
-    return (GetPlayerOwnedBy(g) == 0);
+    return (!ObjIsBoss(g) || GetPlayerOwnedBy(g) == 0);//(GetPlayerOwnedBy(g) == 0);
 }
 void DrawEnrageEffect(GameObject* g)
 {
