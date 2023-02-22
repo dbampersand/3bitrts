@@ -20,7 +20,7 @@ typedef enum MusicState {
 void InitSound();
 int LoadSound(const char* path);
 void PlaySound(Sound* s, float relativeVolume);
-void PlayMusic(const char* path);
+void PlayMusic(const char* path, float loopPoint, float musicGain);
 void UpdateMusic(float dt);
 void PlayEncounterMusic();
 void StopMusic();
@@ -36,6 +36,9 @@ extern ALLEGRO_AUDIO_STREAM* musicFadingTo;
 
 extern float musicVolMixer1;
 extern float musicVolMixer2;
+
+float musicGain1; 
+float musicGain2;
 
 extern ALLEGRO_VOICE* musicVoice1;
 extern ALLEGRO_VOICE* musicVoice2;

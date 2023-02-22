@@ -78,7 +78,9 @@ void init()
     LoadEncounters("assets/encounters",luaState);
 
     Map* m = LoadMap("assets/ui/map_unitselect.lua");  
-    SetMap(&maps[0]);
+    Map* mNull = LoadMap("assets/ui/map_null.lua");  
+
+    SetMap(mNull);
 
     LoadPrefabs("assets/friendly");
     InitPurchasingUnitsUI();
@@ -95,6 +97,8 @@ void init()
     InitReplay();
     InitPathfinding();
     LoadShop();
+
+    PlayMusic("assets/audio/intro.wav",0.5f,0);
 }
 
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseStateLastFrame)

@@ -39,7 +39,7 @@ function setup()
         "assets/audio/attacks/ranged_magic/magic_5.wav",
         "assets/audio/attacks/ranged_magic/magic_6.wav"
     }
-);
+    );
 end
 
 function update(dt)

@@ -40,8 +40,6 @@ function setup()
         "assets/audio/attacks/ranged_bow/bow_6.wav",
         "assets/audio/attacks/ranged_bow/bow_7.wav",
         "assets/audio/attacks/ranged_bow/bow_8.wav"
-
-
     }
     );
 

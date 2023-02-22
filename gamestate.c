@@ -875,7 +875,7 @@ void SetGameStateToInMenu()
     //transitioningTo = GAMESTATE_MAIN_MENU;
     //transitionTimer = 0; 
     transitionDrawing = TRANSITION_CHAINS;
-
+    StopMusic();
     TransitionTo(GAMESTATE_MAIN_MENU);
 }
 void DrawStartScreen()

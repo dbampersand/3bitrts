@@ -16,6 +16,19 @@ function setup()
     SetMaxHP(400,true)
     SetAttackSpeed(GetObjRef(),2)
 
+    SetAttackSounds(
+        {
+        "assets/audio/attacks/ranged_bow/bow_1.wav",
+        "assets/audio/attacks/ranged_bow/bow_2.wav",
+        "assets/audio/attacks/ranged_bow/bow_3.wav",
+        "assets/audio/attacks/ranged_bow/bow_4.wav",
+        "assets/audio/attacks/ranged_bow/bow_5.wav",
+        "assets/audio/attacks/ranged_bow/bow_6.wav",
+        "assets/audio/attacks/ranged_bow/bow_7.wav",
+        "assets/audio/attacks/ranged_bow/bow_8.wav"
+    }
+    );
+
 
 end
 

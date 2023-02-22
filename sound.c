@@ -140,21 +140,24 @@ void PlaySound(Sound* s, float relativeVolume)
     relativeVolume += volumeJitter;
 
     al_play_sample(s->sample, currSettings.masterVolume * relativeVolume * currSettings.sfxVolume, 0, 1.0f + pitchJitter, ALLEGRO_PLAYMODE_ONCE, NULL);
+
 }
 void StopMusic()
 {
-    if (music)
+    /*if (music)
         al_destroy_audio_stream(music);
     if (musicFadingTo)
         al_destroy_audio_stream(musicFadingTo);
-
-    music = NULL;
+*/
+    //music = NULL;
     musicFadingTo = NULL;
-    musicVolMixer1 = 0;
-    musicVolMixer2 = 0;
+    //musicVolMixer1 = 0;
+    //musicVolMixer2 = 0;
+
+    musicState = MUSICSTATE_FADINGOUT;
 
 }
-void PlayMusic(const char* path)
+void PlayMusic(const char* path, float musicGain, float loopPoint)
 {
     if (musicFadingTo)
         return;
@@ -175,7 +178,11 @@ void PlayMusic(const char* path)
             printf("al_attach_audio_stream_to_mixer failed.\n");
         }
     musicVolMixer2 = 0;
+
     al_set_audio_stream_playmode(musicFadingTo,ALLEGRO_PLAYMODE_LOOP);
+    al_set_audio_stream_loop_secs(musicFadingTo,loopPoint,al_get_audio_stream_length_secs(musicFadingTo));
+    musicState = MUSICSTATE_PLAYING;
+    musicGain2 = musicGain;
     //al_set_voice_playing(musicVoice,true);
     //al_register_event_source(queue, al_get_audio_stream_event_source(musicFadingTo));
 }
@@ -183,49 +190,79 @@ void PlayEncounterMusic()
 {
     if (currEncounterRunning->musicPath)
     {
-        PlayMusic(currEncounterRunning->musicPath);
+        PlayMusic(currEncounterRunning->musicPath,1,0);
     }
 }
 void UpdateMusic(float dt)
 {
     float max = currSettings.musicVolume * currSettings.masterVolume;
-    if (musicFadingTo)
-    {
-        musicVolMixer1 -= dt*2;
-        musicVolMixer2 += dt*2;
 
+    if (musicState  == MUSICSTATE_FADINGOUT)
+    {
+        musicVolMixer1 -= dt * .75f;
+        musicVolMixer2 -= dt * .75f;
         musicVolMixer1 = clamp(musicVolMixer1,0,max);
         musicVolMixer2 = clamp(musicVolMixer2,0,max);
 
-        al_set_mixer_gain(musicMixer1,musicVolMixer1);
-        al_set_mixer_gain(musicMixer2,musicVolMixer2);
-        if (musicVolMixer2 >= max)
+        al_set_mixer_gain(musicMixer1,musicVolMixer1 * musicGain1);
+        al_set_mixer_gain(musicMixer2,musicVolMixer2 * musicGain2);
+
+        if (music && musicVolMixer1 <= 0)
         {
-            musicVolMixer2 = 0.0f;
-            musicVolMixer1 = max;
-
-            if (music)
-                al_destroy_audio_stream(music);
-
-            ALLEGRO_MIXER* temp = musicMixer1;
-            musicMixer1 = musicMixer2;
-            musicMixer2 = temp;
-
-            music = musicFadingTo;
-            musicFadingTo = NULL;
-
-            al_set_mixer_gain(musicMixer1,musicVolMixer1);
-            al_set_mixer_gain(musicMixer2,musicVolMixer2);
-            
-
+            al_destroy_audio_stream(music);
+            music = NULL;
         }
-        
+        if (musicFadingTo && musicVolMixer2 <= 0)
+        {
+            al_destroy_audio_stream(musicFadingTo);
+            musicFadingTo = NULL;
+        }
+
     }
     else
     {
-        musicVolMixer1 = max;
-        al_set_mixer_gain(musicMixer1,musicVolMixer1);
+        if (musicFadingTo)
+        {
+            musicVolMixer1 -= dt*2;
+            musicVolMixer2 += dt*2;
+
+            musicVolMixer1 = clamp(musicVolMixer1,0,max);
+            musicVolMixer2 = clamp(musicVolMixer2,0,max);
+
+            al_set_mixer_gain(musicMixer1,musicVolMixer1 * musicGain1);
+            al_set_mixer_gain(musicMixer2,musicVolMixer2 * musicGain2);
+            if (musicVolMixer2 >= max)
+            {
+                musicVolMixer2 = 0.0f;
+                musicVolMixer1 = max;
+
+                if (music)
+                    al_destroy_audio_stream(music);
+
+                ALLEGRO_MIXER* temp = musicMixer1;
+                musicMixer1 = musicMixer2;
+                musicMixer2 = temp;
+
+                float tempGain = musicGain1;
+                musicGain1 = musicGain2;
+                musicGain2 = tempGain;
+
+                music = musicFadingTo;
+                musicFadingTo = NULL;
+
+                al_set_mixer_gain(musicMixer1,musicVolMixer1 * musicGain1);
+                al_set_mixer_gain(musicMixer2,musicVolMixer2 * musicGain2);
+                
+
+            }
+            
+        }
+        else
+        {
+            musicVolMixer1 = max;
+            al_set_mixer_gain(musicMixer1,musicVolMixer1 * musicGain2);
 
 
+        }
     }
 }
