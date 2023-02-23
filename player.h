@@ -71,4 +71,9 @@ void DrawGoldCount();
 void ClearGold();
 void UpdateGoldAnimationTimer(float dt);
 
+int GetCameraMiddleX();
+int GetCameraMiddleY();
+
+
+
 

@@ -10,6 +10,8 @@
 #include "encounter.h"
 #include "settings.h"
 #include "replay.h"
+#include "map.h"
+#include "player.h"
 
 ALLEGRO_AUDIO_STREAM* music = NULL;
 ALLEGRO_AUDIO_STREAM* musicFadingTo = NULL;
@@ -114,8 +116,28 @@ int LoadSound(const char* path)
 
     return numSounds-1;
 }
+void PlaySoundAtPosition(Sound* s, float relativeVolume, int x, int y)
+{
+    float camX = GetCameraMiddleX();
+    float camY = GetCameraMiddleY();
 
-void PlaySound(Sound* s, float relativeVolume)
+    float xPercent = clamp((x - camX) / _SCREEN_SIZE,-0.8f,0.8f);
+    float yPercent = (y - camY) / _SCREEN_SIZE;
+
+    float distance = dist(x,y,camX,camY) / (_SCREEN_SIZE/4);
+    if (distance <= 0.0001)
+        distance = 0.0001;
+
+    float volumeGain = 1 / distance;//clamp(1 / distance,0,1); 
+    volumeGain = clamp(volumeGain,0,1);
+
+
+
+    PlaySound(s,relativeVolume*volumeGain,xPercent);
+
+}
+
+void PlaySound(Sound* s, float relativeVolume, float pan)
 {
     if (!s->sample)
     {
@@ -139,7 +161,7 @@ void PlaySound(Sound* s, float relativeVolume)
     float pitchJitter = RandRange(-0.05,0.05);
     relativeVolume += volumeJitter;
 
-    al_play_sample(s->sample, currSettings.masterVolume * relativeVolume * currSettings.sfxVolume, 0, 1.0f + pitchJitter, ALLEGRO_PLAYMODE_ONCE, NULL);
+    al_play_sample(s->sample, currSettings.masterVolume * relativeVolume * currSettings.sfxVolume, pan, 1.0f + pitchJitter, ALLEGRO_PLAYMODE_ONCE, NULL);
 
 }
 void StopMusic()

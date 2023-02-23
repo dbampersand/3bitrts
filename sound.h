@@ -19,7 +19,8 @@ typedef enum MusicState {
 
 void InitSound();
 int LoadSound(const char* path);
-void PlaySound(Sound* s, float relativeVolume);
+void PlaySoundAtPosition(Sound* s, float relativeVolume, int x, int y);
+void PlaySound(Sound* s, float relativeVolume, float pan);
 void PlayMusic(const char* path, float loopPoint, float musicGain);
 void UpdateMusic(float dt);
 void PlayEncounterMusic();

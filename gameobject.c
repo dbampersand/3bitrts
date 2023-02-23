@@ -1927,7 +1927,9 @@ void PlayFootstepSound(GameObject* g)
     {
         randInd = RandRange(0,numFootsteps);
     }
-    PlaySound(&sounds[footstepSFXIndices[randInd]],0.25f);
+    float x; float y;
+    GetCentre(g,&x,&y);
+    PlaySoundAtPosition(&sounds[footstepSFXIndices[randInd]],0.25f,x,y);
     lastFootstepPlayed = randInd;
 
 
@@ -2714,7 +2716,9 @@ void PlayAttackSound(GameObject* g)
     {
         int randInd = RandRange(0,g->numAttackSounds);
         Sound* sound = &sounds[g->attackSoundIndices[randInd]];
-        PlaySound(sound,.4f);
+        float x; float y;
+        GetCentre(g,&x,&y);
+        PlaySoundAtPosition(sound,.4f,x,y);
     } 
 }
 void AttackTarget(GameObject* g, float dt)

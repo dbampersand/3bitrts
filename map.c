@@ -442,6 +442,8 @@ int GetMapWidth()
             return GetWidthSprite(&replay.sprites[current->mapSpriteIndex]);
         }
     }
+    if (GetWidthSprite(&sprites[currMap->spriteIndex]) == 0)
+        return 1;
     return GetWidthSprite(&sprites[currMap->spriteIndex]);
 }
 int GetMapHeight()
@@ -451,6 +453,8 @@ int GetMapHeight()
         ReplayFrame* current = &replay.frames[replay.framePlayPosition];
         return GetHeightSprite(&replay.sprites[current->mapSpriteIndex]);
     }
+    if (GetHeightSprite(&sprites[currMap->spriteIndex]) == 0)
+        return 1;
 
     return GetHeightSprite(&sprites[currMap->spriteIndex]);
 }

@@ -2228,7 +2228,32 @@ int L_PlaySound(lua_State* l)
 {
     const char* path = lua_tostring(l,1);
     Sound* s = &sounds[LoadSound(path)];
-    PlaySound(s,lua_tonumber(l,2));
+
+
+    float x = lua_tonumber(l,3);
+    float y = lua_tonumber(l,4);
+
+
+    if (!lua_isnumber(l,3))
+    {
+        if (currGameObjRunning)
+        {
+            GetCentre(currGameObjRunning,&x,&y);
+        }        
+        else if (currAttackRunning)
+        {
+            x = currAttackRunning->x;
+            y = currAttackRunning->y;
+        }
+        else
+        {
+            x = GetCameraMiddleX();
+            y = GetCameraMiddleY();
+
+        }
+    }
+
+    PlaySoundAtPosition(s,lua_tonumber(l,2), x,y);
     return 0;
 }
 int L_AddStack(lua_State* l)

@@ -2248,7 +2248,7 @@ bool GetButton(Panel* p, char* name)
                 Button* b = (Button*)u->data;
                 if (b->activated)
                 {
-                    PlaySound(&sounds[u->sound_clickDown_Index],0.5f);
+                    PlaySound(&sounds[u->sound_clickDown_Index],0.5f,0);
                 }
                 return (b->activated);
             }
@@ -2314,7 +2314,7 @@ void UpdateKeyInput(int rX, int rY, UIElement* u, MouseState mouseState, MouseSt
         {
             if (!t->clicked)
             {
-                PlaySound(&sounds[u->sound_clickUp_Index],0.5f);
+                PlaySound(&sounds[u->sound_clickUp_Index],0.5f,0);
             }
             t->clicked = true;
         }
@@ -2362,7 +2362,7 @@ void UpdateButton(int rX, int rY, UIElement* u, MouseState mouseState, MouseStat
         {
             if (!b->clicked)
             {
-                PlaySound(&sounds[u->sound_clickUp_Index],0.5f);
+                PlaySound(&sounds[u->sound_clickUp_Index],0.5f,0);
             }
             b->clicked = true;
         }
@@ -2909,7 +2909,7 @@ bool GetButtonIsClicked(UIElement* u)
             {
                 if (u->sound_clickDown_Index)
                 {
-                    PlaySound(&sounds[u->sound_clickDown_Index],0.5f);
+                    PlaySound(&sounds[u->sound_clickDown_Index],0.5f,0);
                 }
             }
             return b->activated;

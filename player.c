@@ -54,7 +54,7 @@ void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STAT
     {
         if (!AbilityIsOnCooldown(&players[0].selection[players[0].indexSelectedUnit]->abilities[index]))
         {
-            PlaySound(&sounds[ability_UI_click_sound],0.5f);
+            PlaySound(&sounds[ability_UI_click_sound],0.5f,0);
             players[0].abilityHeld = NULL;
             currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
             if (currGameObjRunning->numAbilities < 5 && index == 4)
@@ -85,7 +85,7 @@ void CheckAbilityClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STAT
     {
         if (players[0].abilityHeld)
         {
-            PlaySound(&sounds[ability_UI_click_up_sound],0.5f);
+            PlaySound(&sounds[ability_UI_click_up_sound],0.5f,0);
         }
         players[0].abilityHeld = NULL;
         players[0].amoveSelected = false;
@@ -197,6 +197,15 @@ void ClearSelection()
     players[0].numUnitsSelected = 0;
 
 }
+int GetCameraMiddleX()
+{
+    return players[0].cameraPos.x + _SCREEN_SIZE/2.0f;
+}
+int GetCameraMiddleY()
+{
+    return players[0].cameraPos.y + _SCREEN_SIZE/2.0f;
+}
+
 bool BuyItem(Item* i)
 {
     if (players[0].gold < i->goldCost)

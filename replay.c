@@ -167,7 +167,7 @@ void PlayReplay(ALLEGRO_BITMAP* screen)
         Sound* s = &replay.frames[replay.framePlayPosition].soundsPlayedThisFrame[i];
         if (s->path)
         {
-            PlaySound(&replay.frames[replay.framePlayPosition].soundsPlayedThisFrame[i],1.0f);
+            PlaySound(&replay.frames[replay.framePlayPosition].soundsPlayedThisFrame[i],1.0f,0);
         }
     }
 }
