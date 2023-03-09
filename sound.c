@@ -277,7 +277,6 @@ void UpdateMusic(float dt)
 
                 al_set_mixer_gain(musicMixer1,musicVolMixer1 * musicGain1);
                 al_set_mixer_gain(musicMixer2,musicVolMixer2 * musicGain2);
-                
 
             }
             

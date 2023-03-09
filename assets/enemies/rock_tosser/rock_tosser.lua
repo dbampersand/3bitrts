@@ -20,7 +20,7 @@ function setup()
         "assets/audio/attacks/melee_hammer/hammer_2.wav",
         "assets/audio/attacks/melee_hammer/hammer_3.wav",
         "assets/audio/attacks/melee_hammer/hammer_4.wav",
-        "assets/audio/attacks/melee_hammer/hammer_5.wav"
+        "assets/audio/attacks/melee_hammer/hammer_5.wav",
         "assets/audio/attacks/melee_hammer/hammer_6.wav"
     });
 

@@ -1,4 +1,4 @@
-function setup()
+ function setup()
     SetEncounterSprite("assets/enemies/kobold_king/kobold_king.png");
     SetEncounterDescription("A faction of goblins defend the entrance to the mountain.")
     SetEncounterName("Kobold King");
@@ -13,7 +13,7 @@ function setup()
 
 
 
-    SetEncounterMapPath("assets/encounters/0/map_final.lua");
+    SetEncounterMapPath("assets/encounters/0/map_1.lua");
     SetEncounterDifficulty(DIFFICULTY_EASY);
     EncounterSetNumUnitsToSelect(3);
 

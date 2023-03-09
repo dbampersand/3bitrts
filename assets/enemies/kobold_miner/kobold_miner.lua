@@ -15,15 +15,17 @@ function setup()
         "assets/audio/attacks/melee_hammer/hammer_2.wav",
         "assets/audio/attacks/melee_hammer/hammer_3.wav",
         "assets/audio/attacks/melee_hammer/hammer_4.wav",
-        "assets/audio/attacks/melee_hammer/hammer_5.wav"
+        "assets/audio/attacks/melee_hammer/hammer_5.wav",
         "assets/audio/attacks/melee_hammer/hammer_6.wav"
     });
 
 end
 
 function update(dt)
-    local randUnit = {target = GetRandomUnit(TYPE_ENEMY,Band(TYPE_ALL,Bnot(TYPE_TANK)),256)};
-    CastAbility(bomb,2,{randUnit});
+    if (IsInCombat()) then
+        local randUnit = {target = GetRandomUnit(TYPE_ENEMY,Band(TYPE_ALL,Bnot(TYPE_TANK)),256)};
+        CastAbility(bomb,2,{randUnit});
+    end
 end
 
 function kill()
