@@ -7,10 +7,8 @@ function setup()
     CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",131,296,TYPE_ENEMY,0);
    
 
-    CreateObject("assets/enemies/caduceus/caduceus.lua",156,48,TYPE_ENEMY,0);
-
     SetSpawnPoint(120,460)
-    
+    PlayMusic("assets/audio/music/encounters/kobold_encounter.wav",0.5); 
 end
 
 function update(dt)

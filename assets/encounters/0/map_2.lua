@@ -22,6 +22,7 @@ function setup()
 
 
         SetSpawnPoint(35,115)
+    PlayMusic("assets/audio/music/encounters/kobold_encounter.wav",0.5); 
     
 end
 

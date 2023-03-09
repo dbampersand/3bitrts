@@ -135,7 +135,7 @@ void PlaySoundAtPosition(Sound* s, float relativeVolume, int x, int y)
 
     PlaySound(s,relativeVolume*volumeGain,xPercent);
 
-}
+} 
 
 void PlaySound(Sound* s, float relativeVolume, float pan)
 {
@@ -183,6 +183,8 @@ void PlayMusic(const char* path, float musicGain, float loopPoint)
 {
     if (musicFadingTo)
         return;
+    if (musicPath && path && PathCmp((char*)path,musicPath) == true)
+        return;
     if (musicPath)
     {
         free(musicPath);
@@ -205,6 +207,7 @@ void PlayMusic(const char* path, float musicGain, float loopPoint)
     al_set_audio_stream_loop_secs(musicFadingTo,loopPoint,al_get_audio_stream_length_secs(musicFadingTo));
     musicState = MUSICSTATE_PLAYING;
     musicGain2 = musicGain;
+    UpdateMusic(0);
     //al_set_voice_playing(musicVoice,true);
     //al_register_event_source(queue, al_get_audio_stream_event_source(musicFadingTo));
 }
@@ -282,7 +285,7 @@ void UpdateMusic(float dt)
         else
         {
             musicVolMixer1 = max;
-            al_set_mixer_gain(musicMixer1,musicVolMixer1 * musicGain2);
+            al_set_mixer_gain(musicMixer1,musicVolMixer1 * musicGain1);
 
 
         }
