@@ -1,3 +1,5 @@
+local atk = -1;
+
 function setup()
     SetAbilityRange(999)
     SetCooldown(15)

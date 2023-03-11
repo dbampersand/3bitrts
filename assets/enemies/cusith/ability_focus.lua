@@ -4,6 +4,7 @@ local xMax = 220
 local yMin = 38
 local yMax = 220
 
+local atk = -1;
 
 
 function setup()

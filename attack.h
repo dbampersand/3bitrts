@@ -78,7 +78,7 @@ typedef struct Attack
 
 
 extern Attack attacks[MAX_ATTACKS];
-extern unsigned char freeAttacks[MAX_ATTACKS]; //indices for attacks
+extern unsigned int freeAttacks[MAX_ATTACKS]; //indices for attacks
 extern int attack_top;
 
 //~500kb on 64bit systems

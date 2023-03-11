@@ -1,6 +1,8 @@
 local length = 15
 local time = 10
 
+local atk = -1
+
 function setup()
     SetAbilityRange(256)
     SetCooldown(45);

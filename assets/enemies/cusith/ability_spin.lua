@@ -5,6 +5,8 @@ local length = 0.1
 local totalDotDamage = 150
 local dotTime = 10
 
+local atk = -1;
+
 function setup()
     SetAbilityRange(256)
     SetCooldown(60);

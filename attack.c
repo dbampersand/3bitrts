@@ -19,7 +19,7 @@
 #include "map.h"
 
 Attack attacks[MAX_ATTACKS] = {0};
-unsigned char freeAttacks[MAX_ATTACKS] = {0}; 
+unsigned int freeAttacks[MAX_ATTACKS] = {0}; 
 int attack_top = 0;
 int numActiveAttacks = 0;
 ALLEGRO_BITMAP* cachedAttackSprites[MAX_AOE_CIRCUMFERENCE_SIZE+1][DITHER_ALL] = {0};
@@ -638,7 +638,9 @@ void DrawAttack(Attack* a, float dt)
         }
         else
         {
-            DrawOutlinedCircleDithered(a->screenX,a->screenY,a->radius,GetColor(c,a->playerOwnedBy));
+            al_draw_circle((a->screenX),(a->screenY),a->radius,GetColor(c,a->playerOwnedBy),0.5f);
+            
+            //DrawOutlinedCircleDithered(a->screenX,a->screenY,a->radius,GetColor(c,a->playerOwnedBy));
         }
         draw_circle_dithered(a->screenX,a->screenY,a->radius*0.9f,GetColor(c,a->playerOwnedBy),a->dither);
 

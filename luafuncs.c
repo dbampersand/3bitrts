@@ -2211,7 +2211,6 @@ int L_ShowString(lua_State* l)
 {
 
     const char* str = lua_tostring(l,1);
-    printf("%s\n",str);
     if (numStringsToDraw >= NUM_TEXT_DISPLAYS)
     {
         printf("Too many strings (%i) to draw '%s'\n",numStringsToDraw,str);

@@ -95,6 +95,7 @@ void SetGameStateToInGame()
     //transitioningTo = GAMESTATE_INGAME;
     //transitionTimer = 0;
     TransitionTo(GAMESTATE_INGAME);
+    StopMusic();
 
 
 
@@ -360,6 +361,7 @@ void SetGameStateToInShop()
 {
     transitionDrawing = TRANSITION_STAIRS;
     TransitionTo(GAMESTATE_IN_SHOP);
+    StopMusic();
 }
 void SetGameStateToChangingMap()
 {
