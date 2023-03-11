@@ -7,7 +7,7 @@ function setup()
     AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
     SetDescription("[b]Fireball\n\nThrows a fireball towards the target, exploding after " .. time .. " seconds");
     SetAbilityName("Fireball"); 
-    --SetAbilityHint(HINE_LINE);
+    SetAbilityHint(HINT_LINE);
 
 end
 
@@ -19,9 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 80;
 
-    --CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj),"",ATTACK_PROJECTILE_POINT,25,10,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,{f1})
---    makeAOE(x,y)
-    CreateAOE(x,y,"", 50, 1, 6, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
+    CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj),"",ATTACK_PROJECTILE_POINT,25,4,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,{f1})
 
 
     return true; 
@@ -36,9 +34,10 @@ function makeAOE(x,y)
      CreateAOE(x,y,"", 50, 1, 6, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
 end
 function onhit(x,y,objhit)
+    makeAOE(x,y)
 end
 function ontimeout(x,y,obj,dt,target)
-    --makeAOE(x,y)
+    makeAOE(x,y)
 end
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     

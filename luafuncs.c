@@ -1521,7 +1521,7 @@ int L_CreateAOE(lua_State* l)
     const bool isSoak = lua_toboolean(l,11);
     const int target = lua_tonumber(l,12);
 
-
+    printf("Create aoe");
     size_t len =  lua_rawlen(l,13);
     Effect effects[len];    
     memset(effects,0,sizeof(Effect)*len);

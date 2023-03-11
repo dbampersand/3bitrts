@@ -120,6 +120,7 @@ Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float ti
     a.color = color;
     a.dither = dither;
     a.target = target;
+    a.playerOwnedBy = GetPlayerOwnedBy(from);
 
     Attack* ref = AddAttack(&a);
     return ref;
@@ -145,6 +146,9 @@ void RemoveAttack(int attackindex)
     
 
     Attack* a = &attacks[attackindex];
+    GameObject* before = currGameObjRunning;
+    currGameObjRunning = a->ownedBy;
+
     if (a->cameFrom)
     {
         lua_rawgeti(luaState,LUA_REGISTRYINDEX,a->cameFrom->luafunc_onhit);
@@ -170,6 +174,7 @@ void RemoveAttack(int attackindex)
         free(a->effects);
         a->effects = NULL;
     }
+    currGameObjRunning =  before;
 
 
 }
@@ -638,7 +643,7 @@ void DrawAttack(Attack* a, float dt)
         }
         else
         {
-            al_draw_circle((a->screenX),(a->screenY),a->radius,GetColor(c,a->playerOwnedBy),0.5f);
+            al_draw_circle((a->screenX),(a->screenY),a->radius,GetColor(c,a->playerOwnedBy),1);
             
             //DrawOutlinedCircleDithered(a->screenX,a->screenY,a->radius,GetColor(c,a->playerOwnedBy));
         }
