@@ -1504,6 +1504,35 @@ int L_SetAttackCircle(lua_State* l)
     }
     return 0;
 }
+int L_SetAggroGroup(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    int group = lua_tonumber(l,2);
+
+    if (objIndex < 0 || objIndex >= MAX_OBJS)
+    {
+        printf("L_SetAggroGroup: ObjIndex not valid: %i\n", objIndex);
+        return 0;
+    }
+    GameObject* g = &objects[objIndex];
+    g->aggroGroup = group;
+    g->aggroGroupSet = true;
+
+    return 0;
+}
+int L_RemoveAggroGroup(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    if (objIndex < 0 || objIndex >= MAX_OBJS)
+    {
+        printf("L_RemoveAggroGroup: ObjIndex not valid: %i\n", objIndex);
+        return 0;
+    }
+    GameObject* g = &objects[objIndex];
+    g->aggroGroup = 0;
+    g->aggroGroupSet = false;
+    return 0;
+}
 int L_CreateAOE(lua_State* l)
 {
     //read from table of effects
@@ -1521,7 +1550,6 @@ int L_CreateAOE(lua_State* l)
     const bool isSoak = lua_toboolean(l,11);
     const int target = lua_tonumber(l,12);
 
-    printf("Create aoe");
     size_t len =  lua_rawlen(l,13);
     Effect effects[len];    
     memset(effects,0,sizeof(Effect)*len);
@@ -4107,6 +4135,12 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_CreateConeProjectiles);
     lua_setglobal(luaState, "CreateConeProjectiles");
+
+    lua_pushcfunction(luaState, L_SetAggroGroup);
+    lua_setglobal(luaState, "SetAggroGroup");
+
+    lua_pushcfunction(luaState, L_RemoveAggroGroup);
+    lua_setglobal(luaState, "RemoveAggroGroup");
 
 
 }

@@ -211,6 +211,9 @@ typedef struct GameObject
 
     float nextFootstepTime;
     
+    bool aggroGroupSet;
+    int aggroGroup;
+
 
 } GameObject;
 

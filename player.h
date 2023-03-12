@@ -33,6 +33,7 @@ typedef struct Player
     float goldDisplaying;
 
     int32_t bankedGold;
+
 } Player;
 
 //The point (8, SCREEN_SIZE-8, 8, SCREEN_SIZE-8) at which the camera starts to pan

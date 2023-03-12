@@ -3,11 +3,11 @@ local timer = 0
 function setup()
     SetMapSprite("assets/encounters/01/map_1.png")
 
-    CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",115,296,TYPE_ENEMY,0);
-    CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",131,296,TYPE_ENEMY,0);
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",115,296,TYPE_ENEMY,0),1);
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",131,296,TYPE_ENEMY,0),1);
 
-    CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",136,192,TYPE_ENEMY,0);
-    CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",136,192,TYPE_ENEMY,0);
+    SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",136,192,TYPE_ENEMY,0),1);
+    SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",136,192,TYPE_ENEMY,0),2);
 
    
 

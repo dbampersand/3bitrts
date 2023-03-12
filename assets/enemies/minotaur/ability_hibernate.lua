@@ -17,7 +17,7 @@ function casted(x,y,obj,headingx,headingy)
 
     SetObjChannelling(GetObjRef(),time);
     SetChannelingSprite("assets/enemies/minotaur/minotaur_channel_hibernate.png")
-    f1 = {};
+    f1 = {}; 
     f1["trigger"] = TRIGGER_TIMER;
     f1["type"] = EFFECT_HEAL;
     f1["value"] = totalHeal / time * tickRate;

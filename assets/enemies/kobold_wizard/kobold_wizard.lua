@@ -9,7 +9,7 @@ function setup()
     SetRange(6);
 
     fireball = AddAbility(GetObjRef(),"assets/enemies/kobold_wizard/ability_fireball.lua",0);
-    --burn = AddAbility(GetObjRef(),"assets/enemies/kobold_miner/ability_burn.lua",0);
+    burn = AddAbility(GetObjRef(),"assets/enemies/kobold_wizard/ability_burn.lua",1);
 
 
     SetAttackSounds({
@@ -27,7 +27,7 @@ function update(dt)
     if (IsInCombat()) then
         local randUnit = {target = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,256)};
         CastAbility(fireball,2,{randUnit});
-        --CastAbility(burn,0.1,{randUnit});
+        CastAbility(burn,1,{{target=GetRandomUnit(TYPE_ENEMY,TYPE_TANK,256)}});
 
     end
 end

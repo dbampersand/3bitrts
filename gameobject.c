@@ -2859,6 +2859,16 @@ bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems, f
     
     AddThreat(source,g,value);
 
+    if (g->aggroGroupSet)
+        for (int i = 0; i < numActiveObjects; i++)
+        {
+            GameObject* g2 = activeObjects[i];
+            if (g2->aggroGroupSet && g2->aggroGroup == g->aggroGroup)
+            {
+                AddThreat(source,g2,0);
+            }
+        }
+
     value = DamageShields(g,value);
     g->health -= value;
     if (source && source != g)
@@ -3033,6 +3043,17 @@ void DoAI(GameObject* g)
                             }
                         }*/
                         AddThreat(activeObjects[i],g, 0);
+                        if (g->aggroGroupSet)
+                            for (int j = 0; j < numActiveObjects; j++)
+                            {
+                                GameObject* g2 = activeObjects[j];
+                                if (g2->aggroGroupSet && g2->aggroGroup == g->aggroGroup)
+                                {
+                                    AddThreat(g2,g,0);
+                                }
+                            }
+
+
                     }
 
                 }
