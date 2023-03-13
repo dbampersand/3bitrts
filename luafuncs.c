@@ -3004,6 +3004,11 @@ int L_CastAbility(lua_State* l)
     }
     return 1;
 }
+int L_GoShop(lua_State* l)
+{
+    currEncounterRunning->goingToShop = lua_toboolean(l,1);
+    return 0;
+}
 int L_SetEnraged(lua_State* l)
 {
     int obj = lua_tonumber(l,1);
@@ -4142,5 +4147,7 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_RemoveAggroGroup);
     lua_setglobal(luaState, "RemoveAggroGroup");
 
+    lua_pushcfunction(luaState, L_GoShop);
+    lua_setglobal(luaState, "GoShop");
 
 }

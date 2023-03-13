@@ -368,6 +368,7 @@ void SetGameStateToChangingMap()
 {
     transitionDrawing = TRANSITION_CHAINS;
     TransitionTo(GAMESTATE_CHANGE_MAP);
+    currEncounterRunning->goingToShop = false;
 }
 void SetGameStateToChoosingParty()
 {

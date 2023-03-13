@@ -15,7 +15,7 @@ function setup()
         "assets/audio/attacks/ranged_magic/magic_2.wav",
         "assets/audio/attacks/ranged_magic/magic_3.wav",
         "assets/audio/attacks/ranged_magic/magic_4.wav",
-        "assets/audio/attacks/ranged_magic/magic_5.wav"
+        "assets/audio/attacks/ranged_magic/magic_5.wav",
         "assets/audio/attacks/ranged_magic/magic_6.wav"
     });
 

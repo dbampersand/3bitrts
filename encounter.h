@@ -65,7 +65,7 @@ typedef struct Encounter
     int32_t bestProfited;
     int32_t totalProfit;
 
-
+    bool goingToShop;
 } Encounter;
 
 #define NUM_ENCOUNTER_FUNCTIONS 3

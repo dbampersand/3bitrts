@@ -15,6 +15,7 @@
 #include "colors.h"
 #include "player.h"
 #include "replay.h"
+#include "encounter.h"
 
  Map* currMap = NULL;
  Map* maps = NULL;
@@ -473,8 +474,10 @@ void ChangeMap(const char* path)
     if (gameState == GAMESTATE_IN_SHOP)
         return;
 
-    //SetGameStateToChangingMap(path);
-    SetGameStateToInShop();
+    if (currEncounterRunning->goingToShop)
+        SetGameStateToInShop();
+    else
+        SetGameStateToChangingMap(path);
 
     if (pathToNextMap)
         free(pathToNextMap);
