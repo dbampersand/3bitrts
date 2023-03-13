@@ -191,16 +191,16 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
 
 
     UpdateButton(purchaseUI->back.x,purchaseUI->back.y,&purchaseUI->back,mouseState,mouseStateLastFrame);
-    DrawUIElement(&purchaseUI->back,purchaseUI->back.x,purchaseUI->back.y,&mouseState,ui.menuButton.bgColor);
+    DrawUIElement(&purchaseUI->back,purchaseUI->back.x,purchaseUI->back.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY);
 
     UpdateButton(purchaseUI->next.x,purchaseUI->next.y,&purchaseUI->next,mouseState,mouseStateLastFrame);
-    DrawUIElement(&purchaseUI->next,purchaseUI->next.x,purchaseUI->next.y,&mouseState,ui.menuButton.bgColor);
+    DrawUIElement(&purchaseUI->next,purchaseUI->next.x,purchaseUI->next.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY);
 
     UpdateButton(purchaseUI->returnButton.x,purchaseUI->returnButton.y,&purchaseUI->returnButton,mouseState,mouseStateLastFrame);
-    DrawUIElement(&purchaseUI->returnButton,purchaseUI->returnButton.x,purchaseUI->returnButton.y,&mouseState,ui.menuButton.bgColor);
+    DrawUIElement(&purchaseUI->returnButton,purchaseUI->returnButton.x,purchaseUI->returnButton.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY);
 
     UpdateButton(purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,&purchaseUI->purchaseButton,mouseState,mouseStateLastFrame);
-    DrawUIElement(&purchaseUI->purchaseButton,purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,&mouseState,ui.menuButton.bgColor);
+    DrawUIElement(&purchaseUI->purchaseButton,purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY);
 
 
     if (GetButtonIsClicked(&purchaseUI->back) && purchaseUI->currentIndex != 0)
@@ -470,9 +470,9 @@ void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame)
         {
             ui.choosingUnits_GO.enabled = false;
         }
-        DrawUIElement(&ui.choosingUnits_Back,ui.choosingUnits_Back.x,ui.choosingUnits_Back.y,mouseState,ui.choosingUnits_Back.bgColor);
-        DrawUIElement(&ui.choosingUnits_GO,ui.choosingUnits_GO.x,ui.choosingUnits_GO.y,mouseState,ui.choosingUnits_Back.bgColor);
-        DrawUIElement(&ui.choosingUnits_Hire,ui.choosingUnits_Hire.x,ui.choosingUnits_Hire.y,mouseState,ui.choosingUnits_Back.bgColor);
+        DrawUIElement(&ui.choosingUnits_Back,ui.choosingUnits_Back.x,ui.choosingUnits_Back.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY);
+        DrawUIElement(&ui.choosingUnits_GO,ui.choosingUnits_GO.x,ui.choosingUnits_GO.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY);
+        DrawUIElement(&ui.choosingUnits_Hire,ui.choosingUnits_Hire.x,ui.choosingUnits_Hire.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY);
 
 
         char* number = calloc(log10(INT_MAX)*2+2,sizeof(char));
@@ -532,7 +532,7 @@ void DrawReplayUI(Replay* r, MouseState* mouseState, MouseState* mouseStateLastF
     al_draw_rectangle(19,5,222,13,FRIENDLY,1);
     al_draw_filled_rectangle(position.x,position.y,position.x+position.w,position.h,FRIENDLY);
 
-    DrawButton(&replayPlayButton,replayPlayButton.x,replayPlayButton.y,*mouseState,true,BG,true);
+    DrawButton(&replayPlayButton,replayPlayButton.x,replayPlayButton.y,*mouseState,true,BG,true,FRIENDLY);
     UpdateButton(replayPlayButton.x,replayPlayButton.y,&replayPlayButton,*mouseState,*mouseStateLastFrame);
 
     if (GetButtonIsClicked(&replayPlayButton))
@@ -547,7 +547,7 @@ void DrawReplayUI(Replay* r, MouseState* mouseState, MouseState* mouseStateLastF
             ChangeButtonImage(&replayPlayButton,LoadSprite("assets/ui/button_play.png",true));
         }
     }
-    DrawButton(&replayBackButton,replayBackButton.x,replayBackButton.y,*mouseState,true,BG,true);
+    DrawButton(&replayBackButton,replayBackButton.x,replayBackButton.y,*mouseState,true,BG,true,FRIENDLY);
     UpdateButton(replayBackButton.x,replayBackButton.y,&replayBackButton,*mouseState,*mouseStateLastFrame);
     if (GetButtonIsClicked(&replayBackButton))
     {
@@ -737,7 +737,7 @@ bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, MouseState
         al_draw_rectangle(x,y,x+w,y+h,color,1);
     bool shouldInvert = false;
 
-    if (PointInRect(mouse->screenX,mouse->screenY,r))
+    if (mouse && PointInRect(mouse->screenX,mouse->screenY,r))
     {
         shouldInvert = true;
     }
@@ -1015,34 +1015,37 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 {
     Encounter* e = encounters[index];
 
+    ALLEGRO_COLOR disabled = GROUND_DARK;
+
+
     char* augmentStr = calloc(NumDigits(e->augment)+1,sizeof(char));
     sprintf(augmentStr,"%i",e->augment);
 
-    al_draw_text(ui.font,FRIENDLY,16+offsetX,18,0,"Augment");
-    al_draw_text(ui.font,FRIENDLY,84+offsetX,18,0,augmentStr);
+    al_draw_text(ui.font,e->unlocked ? FRIENDLY : disabled,16+offsetX,18,0,"Augment");
+    al_draw_text(ui.font,e->unlocked ? FRIENDLY : disabled,84+offsetX,18,0,augmentStr);
 
     int amtDamagePercent = GetAugmentDamageBonus(100,e->augment);
     char* dmgString = calloc(1 + NumDigits(amtDamagePercent) + 1 +strlen("Damage ") + 1,sizeof(char));
     sprintf(dmgString,"+%i%% Damage",amtDamagePercent);
-    al_draw_text(ui.tinyFont,FRIENDLY,16+offsetX,40,0,dmgString);
+    al_draw_text(ui.tinyFont,e->unlocked ? FRIENDLY : disabled,16+offsetX,40,0,dmgString);
 
 
     int amtHealthPercent = GetAugmentHealthBonus(100,e->augment);
     char* healthString = calloc(1 + NumDigits(amtHealthPercent) + 1 +strlen("HP ") + 1,sizeof(char));
     sprintf(healthString,"+%i%% HP",amtHealthPercent);
-    al_draw_text(ui.tinyFont,FRIENDLY,92+offsetX,40,0,healthString);
+    al_draw_text(ui.tinyFont,e->unlocked ? FRIENDLY : disabled,92+offsetX,40,0,healthString);
 
     int amtAbilityPercent = GetAugmentAbilityDamage(100,e->augment);
     char* abilityDmg = calloc(1 + NumDigits(amtAbilityPercent) + 1 +strlen("Ability Damage ") + 1,sizeof(char));
     sprintf(abilityDmg,"+%i%% Ability Damage",amtAbilityPercent);
-    al_draw_text(ui.tinyFont,FRIENDLY,138+offsetX,40,0,abilityDmg);
+    al_draw_text(ui.tinyFont,e->unlocked ? FRIENDLY : disabled,138+offsetX,40,0,abilityDmg);
     
 
     int row = 50;
     int column = 16;
 
     UpdateButton(column+offsetX,row,&e->encounter_RerollAugments,*mouseState,*mouseStateLastFrame);
-    DrawUIElement(&e->encounter_RerollAugments,column+offsetX,row,mouseState,e->encounter_RerollAugments.bgColor);
+    DrawUIElement(&e->encounter_RerollAugments,column+offsetX,row,mouseState,e->encounter_RerollAugments.bgColor,e->unlocked ? COLOR_FRIENDLY : ALColorToCol(disabled));
     column += 32;
     if (GetButtonIsClicked(&e->encounter_RerollAugments))
     {
@@ -1054,9 +1057,12 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     {
         Augment* a = &e->augments[i];
         char* description = GetAugmentDescription(a->augment);
-        ALLEGRO_COLOR* color = GetAugmentDescriptionColor(a);
+        ALLEGRO_COLOR col = *GetAugmentDescriptionColor(a);
 
-        if (DrawAugmentPortrait(a,column+offsetX,row, mouseState))
+        if (!e->unlocked)   
+            col = disabled;
+
+        if (DrawAugmentPortrait(a,column+offsetX,row, mouseState, col))
             augmentDescriptionToDraw = description;
         //al_draw_text(ui.tinyFont,*color,column+offsetX,row,0,description);
         column += 24;
@@ -1114,7 +1120,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
         e->encounter_PurchaseAugment.enabled = true;
     }
     UpdateButton(e->encounter_PurchaseAugment.x,e->encounter_PurchaseAugment.y,&e->encounter_PurchaseAugment,*mouseState,*mouseStateLastFrame);
-    DrawUIElement(&e->encounter_PurchaseAugment,e->encounter_PurchaseAugment.x,e->encounter_PurchaseAugment.y,mouseState,COLOR_BG);
+    DrawUIElement(&e->encounter_PurchaseAugment,e->encounter_PurchaseAugment.x,e->encounter_PurchaseAugment.y,mouseState,COLOR_BG,e->unlocked ? COLOR_FRIENDLY : ALColorToCol(disabled));
 
     if (GetButtonIsClicked(&e->encounter_PurchaseAugment))
     {
@@ -1129,21 +1135,34 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 
     free(augmentStr);
 
-    al_draw_line(10+offsetX,73,246,73,FRIENDLY,1);
+    al_draw_line(10+offsetX,73,246,73,e->unlocked ? FRIENDLY : disabled,1);
     
-    al_draw_text(ui.font,FRIENDLY,16+offsetX,81,0,"Wyrm");
-    DrawSprite(&sprites[e->spriteIndex],17+offsetX,102,0.5f,0.5f,0,ENEMY,false,false,false);
+    al_draw_text(ui.font,e->unlocked ? FRIENDLY : disabled,16+offsetX,81,0,"Wyrm");
+    DrawSprite(&sprites[e->spriteIndex],17+offsetX,102,0.5f,0.5f,0,e->unlocked ? ENEMY : disabled,false,false,false);
 
     Ability* mousedOver = NULL;
-    mousedOver = DrawAbility(&e->abilities[0], 96+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[0] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[1], 136+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[1] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[2], 175+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[2] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[3], 214+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[3] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[4], 96+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[4] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[5], 136+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[5] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[6], 175+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[6] : mousedOver;
-    mousedOver = DrawAbility(&e->abilities[7], 214+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[7] : mousedOver;
-
+    if (e->unlocked)
+    {
+        mousedOver = DrawAbility(&e->abilities[0], 96+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[0] : mousedOver;
+        mousedOver = DrawAbility(&e->abilities[1], 136+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[1] : mousedOver;
+        mousedOver = DrawAbility(&e->abilities[2], 175+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[2] : mousedOver;
+        mousedOver = DrawAbility(&e->abilities[3], 214+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[3] : mousedOver;
+        mousedOver = DrawAbility(&e->abilities[4], 96+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[4] : mousedOver;
+        mousedOver = DrawAbility(&e->abilities[5], 136+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[5] : mousedOver;
+        mousedOver = DrawAbility(&e->abilities[6], 175+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[6] : mousedOver;
+        mousedOver = DrawAbility(&e->abilities[7], 214+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[7] : mousedOver;
+    }
+    else if (!e->unlocked)
+    {
+        DrawAbility(&e->abilities[0], 96+offsetX, 80, disabled, NULL);
+        DrawAbility(&e->abilities[1], 136+offsetX, 80, disabled, NULL);
+        DrawAbility(&e->abilities[2], 175+offsetX, 80, disabled, NULL);
+        DrawAbility(&e->abilities[3], 214+offsetX, 80, disabled, NULL);
+        DrawAbility(&e->abilities[4], 96+offsetX, 120, disabled, NULL);
+        DrawAbility(&e->abilities[5], 136+offsetX, 120, disabled, NULL);
+        DrawAbility(&e->abilities[6], 175+offsetX, 120, disabled, NULL);
+        DrawAbility(&e->abilities[7], 214+offsetX, 120, disabled, NULL);
+    }
 
     char* descriptionToDraw;
     if (mousedOver)
@@ -1158,7 +1177,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
         descriptionToDraw = augmentDescriptionToDraw;
     if (descriptionToDraw)
     {
-        DrawDescriptionBox(descriptionToDraw,2,ui.font,ui.boldFont,16+offsetX,170,224,41,ENEMY,true);
+        DrawDescriptionBox(descriptionToDraw,2,ui.font,ui.boldFont,16+offsetX,170,224,41,e->unlocked ? ENEMY : disabled,true);
 
     }
     ui.panelShownPercent=1.0f;
@@ -1170,7 +1189,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     UpdateButton(80+offsetX,224,&e->encounter_ButtonConfirm,*mouseState,*mouseStateLastFrame);
     UpdateButton(192+offsetX,224,&e->encounter_ButtonRight,*mouseState,*mouseStateLastFrame);
 
-    if (index > 0 && (index > 0 && (!encounters[index-1]->encounterShouldBeSkipped && encounters[index-1]->unlocked)))
+    if (index > 0 && (index > 0 && (!encounters[index-1]->encounterShouldBeSkipped)))
     {
         e->encounter_ButtonLeft.enabled = true;
     }
@@ -1180,16 +1199,16 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     if (index+1 < numEncounters)
     {
         e->encounter_ButtonRight.enabled = true;
-        if (encounters[index+1]->encounterShouldBeSkipped || !encounters[index+1]->unlocked)
-            e->encounter_ButtonRight.enabled = false;
+        //if (encounters[index+1]->encounterShouldBeSkipped)
+          //  e->encounter_ButtonRight.enabled = false;
     }
     else {
         e->encounter_ButtonRight.enabled = false;
     }
 
-    DrawUIElement(&e->encounter_ButtonLeft,14+offsetX,224,mouseState,e->encounter_ButtonLeft.bgColor);
-    DrawUIElement(&e->encounter_ButtonConfirm,80+offsetX,224,mouseState,e->encounter_ButtonConfirm.bgColor);
-    DrawUIElement(&e->encounter_ButtonRight,194+offsetX,224,mouseState,e->encounter_ButtonRight.bgColor);
+    DrawUIElement(&e->encounter_ButtonLeft,14+offsetX,224,mouseState,e->encounter_ButtonLeft.bgColor,COLOR_FRIENDLY);
+    DrawUIElement(&e->encounter_ButtonConfirm,80+offsetX,224,mouseState,e->encounter_ButtonConfirm.bgColor,COLOR_FRIENDLY);
+    DrawUIElement(&e->encounter_ButtonRight,194+offsetX,224,mouseState,e->encounter_ButtonRight.bgColor,COLOR_FRIENDLY);
 
 
     if (GetButtonIsClicked(&e->encounter_ButtonLeft))
@@ -1212,8 +1231,23 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
             selectedEncounterIndex = numEncounters-1;
 
     }
-    
+    if (!encounters[index]->unlocked)
+    {
+        DrawSprite(&sprites[LoadSprite("assets/ui/levelselect/padlock.png",false)],offsetX,0,0,0,0,FRIENDLY,false,false,false);
+        e->encounter_ButtonConfirm.enabled = false;
+        e->encounter_RerollAugments.enabled = false;
+        e->encounter_PurchaseAugment.enabled = false;
+    }   
+    else
+    {
+        e->encounter_ButtonConfirm.enabled = true;
+
+    }
+
+
+
     DrawGoldCount();
+
 }
 void AddElement(Panel* p, UIElement* u)
 {
@@ -2563,7 +2597,7 @@ void DrawButtonText(UIElement* u,int x, int y, ALLEGRO_COLOR col)
     }
     al_draw_text(ui.font,col,textX,textY,align,b->description);
 }   
-void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected)
+void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected, ALLEGRO_COLOR foregroundColor)
 {
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     Button* b = (Button*)u->data;
@@ -2585,8 +2619,8 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
 
     if (b->clicked && isActive)
     {
-        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,FRIENDLY);
-        al_draw_rectangle(x,y,x+u->w,y+u->h,BG,1);
+        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,foregroundColor);
+        al_draw_rectangle(x,y,x+u->w,y+u->h,bgColor,1);
         al_draw_text(ui.font,BG,textX,textY,align,b->description);
     }
     else 
@@ -2596,23 +2630,23 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
             al_draw_filled_rectangle(x,y,x+u->w,y+u->h,bgColor);
             if (isActive)
             {
-                al_draw_rectangle(x, y, x + button.w, y + button.h, FRIENDLY,1);
+                al_draw_rectangle(x, y, x + button.w, y + button.h, foregroundColor,1);
             }
             else
             {
-                DrawOutlinedRect_Dithered(button,FRIENDLY);
+                DrawOutlinedRect_Dithered(button,foregroundColor);
             }
         }
         //al_draw_text(ui.font,FRIENDLY,textX,textY,align,b->description);
-        DrawButtonText(u,x,y,FRIENDLY);
+        DrawButtonText(u,x,y,foregroundColor);
     }
     if (PointInRect(mouseState.screenX,mouseState.screenY,button) && isActive && !b->clicked)
     {
-        al_draw_rectangle(x+2,y+2,x+u->w-2,y+u->h-2,FRIENDLY,1);
+        al_draw_rectangle(x+2,y+2,x+u->w-2,y+u->h-2,foregroundColor,1);
     }
     if (b->spriteIndex)
     {
-        DrawSprite(&sprites[b->spriteIndex],x,y,0.5f,0.5f,0,FRIENDLY,false,false,false);
+        DrawSprite(&sprites[b->spriteIndex],x,y,0.5f,0.5f,0,foregroundColor,false,false,false);
     }
 
 }
@@ -2664,12 +2698,14 @@ void DrawKeyInput(UIElement* u, int x, int y, MouseState mouseState, bool isActi
     }
 
 }
-void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, Color bgColor)
+void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, Color bgColor, Color foregroundColor)
 {
     ALLEGRO_COLOR col = GetColor(bgColor,0);
+    ALLEGRO_COLOR colForeground = GetColor(foregroundColor,0);
+
     if (u->elementType == ELEMENT_BUTTON)
     {
-        DrawButton(u,x,y,*mouseState,u->enabled,col,((Button*)(u->data))->drawLine);
+        DrawButton(u,x,y,*mouseState,u->enabled,col,((Button*)(u->data))->drawLine,colForeground);
     }
     if (u->elementType == ELEMENT_TEXT)
     {
@@ -2763,7 +2799,7 @@ void DrawPanelTabs(Panel* p, MouseState* mouseState)
             h = al_get_bitmap_height(sprites[b->spriteIndex].sprite);
             w = al_get_bitmap_width(sprites[b->spriteIndex].sprite);
             al_draw_rectangle(x,y,x+w,y+h,FRIENDLY,1);
-            DrawButton(&tab->tabButton,x,y,*mouseState,true,BG,true);
+            DrawButton(&tab->tabButton,x,y,*mouseState,true,BG,true,FRIENDLY);
             //DrawSprite(&sprites[b->spriteIndex],p->x,y,FRIENDLY,false);
             y += h;
         } 
@@ -2799,7 +2835,7 @@ void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent)
     int currX=p->x+p->padding; int currY=p->y+p->padding; 
     if (p->backButton.data)
     {
-        DrawButton(&p->backButton,p->x,p->y,*mouseState,true,BG,true);
+        DrawButton(&p->backButton,p->x,p->y,*mouseState,true,BG,true,FRIENDLY);
         currY+=p->backButton.h;
     }
 
@@ -2814,7 +2850,7 @@ void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent)
         UIElement* u = ((UIElement*)&p->elements[i]);
         int x; int y;
         GetUILocation(p, u, &x, &y);
-        DrawUIElement(u,x,y,mouseState,u->bgColor);
+        DrawUIElement(u,x,y,mouseState,u->bgColor, COLOR_FRIENDLY);
 
     }
     if (p->tabs)
@@ -3132,9 +3168,9 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
     UpdateButton(ui.endScreen_Retry.x,ui.endScreen_Retry.y,&ui.endScreen_Retry,*mouseState,*mouseStateLastFrame);
     UpdateButton(ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,&ui.endScreen_SaveReplay,*mouseState,*mouseStateLastFrame);
 
-    DrawUIElement(&ui.endScreen_Back,ui.endScreen_Back.x,ui.endScreen_Back.y,mouseState,ui.endScreen_Back.bgColor);
-    DrawUIElement(&ui.endScreen_Retry,ui.endScreen_Retry.x,ui.endScreen_Retry.y,mouseState,ui.endScreen_Retry.bgColor);
-    DrawUIElement(&ui.endScreen_SaveReplay,ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,mouseState,ui.endScreen_SaveReplay.bgColor);
+    DrawUIElement(&ui.endScreen_Back,ui.endScreen_Back.x,ui.endScreen_Back.y,mouseState,ui.endScreen_Back.bgColor,COLOR_FRIENDLY);
+    DrawUIElement(&ui.endScreen_Retry,ui.endScreen_Retry.x,ui.endScreen_Retry.y,mouseState,ui.endScreen_Retry.bgColor,COLOR_FRIENDLY);
+    DrawUIElement(&ui.endScreen_SaveReplay,ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,mouseState,ui.endScreen_SaveReplay.bgColor,COLOR_FRIENDLY);
     
     int x = 86;
     int y = 139;

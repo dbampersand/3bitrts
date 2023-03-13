@@ -429,10 +429,10 @@ ALLEGRO_COLOR GetAugmentColor(Augment* a)
         return GROUND;
     return BG;
 }
-bool DrawAugmentPortrait(Augment* a, int x, int y, MouseState* mouseState)
+bool DrawAugmentPortrait(Augment* a, int x, int y, MouseState* mouseState, ALLEGRO_COLOR col)
 {
     int w = 20; int h = 20;
-    ALLEGRO_COLOR col = GetAugmentColor(a);
+    //ALLEGRO_COLOR col = GetAugmentColor(a);
 
 
     Rect r = (Rect){x,y,w,h};

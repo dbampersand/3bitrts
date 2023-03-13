@@ -307,7 +307,7 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_
 bool GetButton(Panel* p, char* name);
 KeyInput* GetKeyInput(Panel* p, char* name);
 Button* GetButtonB(Panel* p, char* name);
-void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState,Color bgColor); 
+void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, Color bgColor, Color foregroundColor);
 void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent);
 void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, int index, int offsetX);
 void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame);
@@ -332,7 +332,7 @@ void ClearPanelElements(Panel* p);
 void GenerateFileListButtons(char* path, Panel* p);
 void DrawReplayUI(Replay* r, MouseState* mouseState, MouseState* mouseStateLastFrame);
 void DrawButtonText(UIElement* u,int x, int y, ALLEGRO_COLOR col);
-void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected);
+void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected, ALLEGRO_COLOR foregroundColor);
 void ChangeButtonImage(UIElement* u, int spriteIndex);
 void DrawTimer(bool enabled);
 char* GetButtonText(UIElement* u);

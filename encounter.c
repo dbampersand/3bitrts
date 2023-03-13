@@ -154,7 +154,6 @@ int sortEncounters(const void* a, const void* b)
     Encounter* e =  *(Encounter**)a;
     Encounter* e2 = *(Encounter**)b;
     if (e->encounterShouldBeSkipped) return -1;
-    if (!e->unlocked) return -1;
     if (e->difficulty == e2->difficulty)
         return (strcmp(e->path,e2->path));
     return ( e->difficulty - e2->difficulty);
@@ -241,7 +240,7 @@ void NextEncounter()
     encounterMoveTimer = 0;
 
     selectedEncounterIndex = (selectedEncounterIndex) % (numEncounters);
-    while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped || !encounters[selectedEncounterIndex]->unlocked)
+    while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped)
     {
         selectedEncounterIndex++;
         selectedEncounterIndex = (selectedEncounterIndex) % (numEncounters);
@@ -275,7 +274,7 @@ void PreviousEncounter()
     encounterMoveTimer = 0;
 
     selectedEncounterIndex = (selectedEncounterIndex) % (numEncounters-1);
-    while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped || !encounters[selectedEncounterIndex]->unlocked)
+    while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped)
     {
         selectedEncounterIndex--;
         if (selectedEncounterIndex < 0)
@@ -290,7 +289,7 @@ void ResetEncounterPosition()
     selectedEncounterIndex = 0;
     encounterMoveTo = 0;
     qsort(encounters,numEncounters,sizeof(Encounter*),sortEncounters);
-    while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped || !encounters[selectedEncounterIndex]->unlocked)
+    while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped)
     {
         NextEncounter();
     }

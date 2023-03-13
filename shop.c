@@ -334,7 +334,7 @@ void DrawShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 
     DrawSprite(&sprites[shop.spriteIndex_stall],startX,startY,0,0,0,FRIENDLY,false,false,false);
     DrawAnimation(shop.currAnimation,startX + shopkeeperOffsetX,startY + shopkeeperOffsetY,COLOR_FRIENDLY,false);
-    DrawButton(&shop.continueButton,shop.continueButton.x,shop.continueButton.y,mouseState,true,BG,true);
+    DrawButton(&shop.continueButton,shop.continueButton.x,shop.continueButton.y,mouseState,true,BG,true,FRIENDLY);
 
     DrawShopObjects(mouseState,mouseStateLastFrame);
     DrawShopItems(dt,mouseState);

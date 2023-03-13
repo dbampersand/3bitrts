@@ -87,4 +87,4 @@ float GetAugmentMultiplier(int augmentLevel);
 
 ALLEGRO_COLOR* GetAugmentDescriptionColor(Augment* a);
 void InitAugments();
-bool DrawAugmentPortrait(Augment* a, int x, int y, MouseState* mouseState);
+bool DrawAugmentPortrait(Augment* a, int x, int y, MouseState* mouseState, ALLEGRO_COLOR col);
