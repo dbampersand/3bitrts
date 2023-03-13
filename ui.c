@@ -318,17 +318,26 @@ void UpdateChatbox(float dt)
 }
 void EndChatbox()
 {
+    ClearChatbox();
+    gameState = GAMESTATE_INGAME;
+    transitioningTo = GAMESTATE_INGAME;
+}
+void ClearChatbox()
+{
     for (int i = 0; i < numChatboxes; i++)
     {
-        free(chatboxes[i].text);
-        free(chatboxes[i].displayingUpTo);
+        if (chatboxes[i].text)
+            free(chatboxes[i].text);
+        if (chatboxes[i].displayingUpTo)
+            free(chatboxes[i].displayingUpTo);
     }
-    free(chatboxes);
+    if (chatboxes)
+        free(chatboxes);
     chatboxes = NULL;
     chatboxShowing = NULL;
     numChatboxes = 0;
-    gameState = GAMESTATE_INGAME;
-    transitioningTo = GAMESTATE_INGAME;
+
+
 }
 void Chatbox_NextLine()
 {
