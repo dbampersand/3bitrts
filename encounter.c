@@ -109,7 +109,7 @@ void LoadEncounter(char* dirPath, lua_State* l)
                     }
                     if (!e->name)
                     {                        
-                        e->name = calloc(strlen(dirPath),sizeof(char));
+                        e->name = calloc(strlen(dirPath)+1,sizeof(char));
                         strcpy(e->name,dirPath);
                     }
                 }   
