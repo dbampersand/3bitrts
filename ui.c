@@ -341,6 +341,10 @@ void ClearChatbox()
 }
 void Chatbox_NextLine()
 {
+    players[0].selecting = false;
+    players[0].amoveSelected = false;
+    players[0].abilityHeld = NULL;
+    players[0].clickedThisFrame = NULL;
     if (strlen(chatboxShowing->displayingUpTo) == strlen(chatboxShowing->text))
     {
         chatboxShowing = &chatboxes[(chatboxShowing-chatboxes)+1];

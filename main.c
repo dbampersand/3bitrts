@@ -177,7 +177,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
 
     DrawSpriteDecorations(BEFORE_WORLD);
-    if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS)
+    if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS || gameState == GAMESTATE_IN_CHATBOX)
         DrawMap(currMap,false);
     DrawSpriteDecorations(AFTER_WORLD);
     DrawMapHighlights();
