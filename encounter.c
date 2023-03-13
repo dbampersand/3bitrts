@@ -49,6 +49,7 @@ void LoadEncounter(char* dirPath, lua_State* l)
     //defaults
     e->numUnitsToSelect = 4;
     e->unlockBasePrice = 50;
+    e->encounterShouldBeSkipped = false;
 
     if (d) {
         while ((dir = readdir(d)) != NULL) {
@@ -58,6 +59,8 @@ void LoadEncounter(char* dirPath, lua_State* l)
                 {
                     e->path = calloc(strlen(dirPath)+1,sizeof(char));
                     strcpy(e->path,dirPath);
+
+
                     if (!e->lua_buffer.buffer)
                     {
                         char* concatted = calloc(strlen(dirPath)+strlen(dir->d_name)+1,sizeof(char)); 
@@ -103,6 +106,11 @@ void LoadEncounter(char* dirPath, lua_State* l)
                             }
 
                         }
+                    }
+                    if (!e->name)
+                    {                        
+                        e->name = calloc(strlen(dirPath),sizeof(char));
+                        strcpy(e->name,dirPath);
                     }
                 }   
             }
@@ -210,7 +218,6 @@ void LoadEncounters(char* dirPath, lua_State* l)
         closedir(d);
     }
     qsort(encounters,numEncounters,sizeof(Encounter*),sortEncounters);
-
     ResetEncounterPosition();
 }
 void NextEncounter()
@@ -236,10 +243,16 @@ void NextEncounter()
         selectedEncounterIndex--;
         return;
     }*/
+        for (int i = 0; i < numEncounters; i++)
+    {
+        printf("%s, %s\n",encounters[i]->name, encounters[i]->encounterShouldBeSkipped ? "true" : "false");
+    }
+    printf("\n\n\n");
     encounterMoveTo += _SCREEN_SIZE;
     encounterMoveTimer = 0;
 
     selectedEncounterIndex = (selectedEncounterIndex) % (numEncounters);
+    Encounter* e = encounters[selectedEncounterIndex];
     while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped)
     {
         selectedEncounterIndex++;
@@ -247,6 +260,7 @@ void NextEncounter()
         encounterMoveTo += _SCREEN_SIZE;
 
     }
+
 
 }
 void PreviousEncounter()
@@ -288,7 +302,7 @@ void ResetEncounterPosition()
 {
     selectedEncounterIndex = 0;
     encounterMoveTo = 0;
-    qsort(encounters,numEncounters,sizeof(Encounter*),sortEncounters);
+    //qsort(encounters,numEncounters,sizeof(Encounter*),sortEncounters);
     while (encounters[selectedEncounterIndex]->encounterShouldBeSkipped)
     {
         NextEncounter();
