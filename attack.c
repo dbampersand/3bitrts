@@ -709,6 +709,19 @@ void UpdateAttack(Attack* a, float dt)
             RandParticleAroundEdgeOfCircle(a->x,a->y,a->radius,3,1,a->color);
         }
     }
+    else
+    {
+        
+        float minAngle;
+        float maxAngle;
+        float movingAngle = atan2(a->targy - a->y, a->targx - a->x);
+
+        minAngle = movingAngle - DegToRad(45);
+        maxAngle = movingAngle + DegToRad(45);
+        
+        AddParticleWithRandomProperties(a->x,a->y,a->color,0.2f,4,1,1.5f,minAngle,maxAngle);
+
+    }
 
     if (a->cameFrom)
     {

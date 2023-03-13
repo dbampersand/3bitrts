@@ -1152,7 +1152,7 @@ void ScatterEffect(GameObject* g)
             ALLEGRO_COLOR pixel = al_get_pixel(sprite, x, y);
             if (pixel.a)
             {
-                AddParticleWithRandomProperties(g->position.worldX+x,g->position.worldY+y,c, 0.15, 2, 0, 0.025);
+                AddParticleWithRandomProperties(g->position.worldX+x,g->position.worldY+y,c, 0.15, 2, 0, 0.025,-M_PI,M_PI);
             }
         }
     }
@@ -2380,7 +2380,7 @@ bool IsSelectable(GameObject* g)
 }
 void DrawEnrageEffect(GameObject* g)
 {
-    AddParticleWithRandomProperties(RandRange(g->position.worldX,g->position.worldX+GetWidth(g)),RandRange(g->position.worldY,g->position.worldY+GetHeight(g)),GameObjToColor(g),1,4,0.25f,1.5f);
+    AddParticleWithRandomProperties(RandRange(g->position.worldX,g->position.worldX+GetWidth(g)),RandRange(g->position.worldY,g->position.worldY+GetHeight(g)),GameObjToColor(g),1,4,0.25f,1.5f,-M_PI,M_PI);
 }
 void DrawChannellingEffect(GameObject* g)
 {
