@@ -1,10 +1,10 @@
 local bomb = 0
 
 function setup()
-    SetSprite("assets/enemies/kobold_wizard/kobold_wizard.png");
+    SetSprite("assets/enemies/nix/nix.png");
 
     SetDamage(12);
-    SetMaxHP(750,true)
+    SetMaxHP(3000,true)
     SetSpeed(120)
     SetRange(32);
 

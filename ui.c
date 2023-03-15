@@ -37,6 +37,7 @@ Chatbox* chatboxShowing = NULL;
 
 UI ui = {0};
 char* stackDrawBuffer = NULL;
+
 void InitPurchasingUnitsUI()
 {
     PurchasingUnitUI* purchaseUI = &ui.purchasingUnitUI;

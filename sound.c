@@ -172,7 +172,7 @@ void StopMusic()
         al_destroy_audio_stream(musicFadingTo);
 */
     //music = NULL;
-    musicFadingTo = NULL;
+    //musicFadingTo = NULL;
     //musicVolMixer1 = 0;
     //musicVolMixer2 = 0;
 
@@ -231,15 +231,19 @@ void UpdateMusic(float dt)
 
         al_set_mixer_gain(musicMixer1,musicVolMixer1 * musicGain1);
         al_set_mixer_gain(musicMixer2,musicVolMixer2 * musicGain2);
-
         if (music && musicVolMixer1 <= 0)
         {
+            al_destroy_audio_stream(musicFadingTo);
             al_destroy_audio_stream(music);
+            musicFadingTo = NULL;
             music = NULL;
         }
         if (musicFadingTo && musicVolMixer2 <= 0)
         {
+
             al_destroy_audio_stream(musicFadingTo);
+            al_destroy_audio_stream(music);
+            music = NULL;
             musicFadingTo = NULL;
         }
 

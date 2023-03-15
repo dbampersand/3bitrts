@@ -1826,6 +1826,17 @@ int L_SetDecoration(lua_State* l)
     }
     return 0;
 }
+int L_IsDecoration(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+    {
+        printf("L_IsDecoration: invalid index: %i.\n",index);
+        return 0;
+    }
+    lua_pushboolean(l,ObjIsDecoration(&objects[index]));
+    return 1;
+}
 int L_CreateObject(lua_State* l)
 {
     GameObject* g;
@@ -4149,5 +4160,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GoShop);
     lua_setglobal(luaState, "GoShop");
+
+    lua_pushcfunction(luaState, L_IsDecoration);
+    lua_setglobal(luaState, "IsDecoration");
+
 
 }

@@ -243,11 +243,6 @@ void NextEncounter()
         selectedEncounterIndex--;
         return;
     }*/
-        for (int i = 0; i < numEncounters; i++)
-    {
-        printf("%s, %s\n",encounters[i]->name, encounters[i]->encounterShouldBeSkipped ? "true" : "false");
-    }
-    printf("\n\n\n");
     encounterMoveTo += _SCREEN_SIZE;
     encounterMoveTimer = 0;
 

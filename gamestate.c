@@ -251,6 +251,7 @@ void FinishTransition()
         players[0].cameraPos.x = 0;
         players[0].cameraPos.y = 0;
         combatStarted = false;
+        SpawnPartySelects();
 
         ClearGold();
         AddGold(players[0].bankedGold);
@@ -370,192 +371,199 @@ void SetGameStateToChangingMap()
     TransitionTo(GAMESTATE_CHANGE_MAP);
     currEncounterRunning->goingToShop = false;
 }
+void SpawnPartySelects()
+{
+    RemoveAllGameObjects();
+    SetMap(&maps[0]);
+    int xPos = 17;  
+    
+    #define NUMUNITSPERROW 3
+
+    #define TANKSTARTX 24
+    #define TANKSTARTY 50
+
+    #define HEALERSTARTX 110
+    #define HEALERSTARTY 50
+
+    #define MELEEDPSSTARTX 199
+    #define MELEEDPSSTARTY 50
+
+    #define RANGEDDPSSTARTX 24
+    #define RANGEDDPSSTARTY 106
+
+    #define UTILITYSTARTX 110
+    #define UTILITYSTARTY 106
+
+    #define UNCATAGORISEDX 199
+    #define UNCATAGORISEDY 106
+
+
+    int tankX = TANKSTARTX;
+    int tankY = TANKSTARTY;
+    int healerX = HEALERSTARTX;
+    int healerY = HEALERSTARTY;
+    int meleeX = MELEEDPSSTARTX;
+    int meleeY = MELEEDPSSTARTY;
+    int rangedX = RANGEDDPSSTARTX;
+    int rangedY = RANGEDDPSSTARTY;
+    int utilityX = UTILITYSTARTX;
+    int utilityY = UTILITYSTARTY;
+    int uncategorisedX = UTILITYSTARTX;
+    int uncategorisedY = UTILITYSTARTY;
+
+
+    int numTanks=0;
+    int numHealers=0;
+    int numMelee=0;
+    int numRanged=0;
+    int numUtility=0;
+    int numUncategorised = -1;
+
+    int largestTank = -1;
+    int largestHealer = -1;
+    int largestMelee = -1;
+    int largestRanged = -1;
+    int largestUtility = -1;
+    int largestUncategorised = -1;
+
+
+
+
+
+    for (int i = 0; i < numPrefabs; i++)
+    {
+        GameObject* g = prefabs[i];
+        
+        if (g->playerChoosable == true)
+        {
+
+            int x=0; int y=0;
+            int w = GetWidth(g);
+            int h = GetHeight(g);
+
+            if (g->category & TYPE_TANK)
+            {
+                numTanks++;
+
+                if (h > largestTank)
+                    largestTank = h;
+
+                if ((numTanks-1) % 3 == 0)
+                {
+                    tankX = TANKSTARTX;
+                    tankY += largestTank+1;
+                    largestHealer = -1;
+                }
+                x = tankX;
+                y = tankY;
+                tankX += w;
+
+            }
+            else  if (g->category & TYPE_HEALER)
+            {
+                numHealers++;
+
+                if (h > largestHealer)
+                    largestHealer = h;
+
+                if ((numHealers - 1) % 3 == 0)
+                {
+                    healerX = HEALERSTARTX;
+                    healerY += largestHealer+1;
+                    largestHealer = -1;
+                }
+                x = healerX;
+                y = healerY;
+                healerX += w;
+            }
+            else if (g->category & TYPE_MELEEDPS)
+            {
+                numMelee++;
+
+                if (h > largestMelee)
+                    largestMelee = h;
+
+                if ((numMelee-1) % 3 == 0)
+                {
+                    meleeX = MELEEDPSSTARTX;
+                    meleeY += largestMelee+1;
+                    largestMelee = -1;
+                }
+                x = meleeX;
+                y = meleeY;
+                meleeX += w;
+            }
+            
+            else if (g->category & TYPE_RANGEDDPS)
+            {
+                numRanged++;
+
+                if (h > largestRanged)
+                    largestRanged = h;
+
+                if ((numRanged-1) % 3 == 0)
+                {
+                    rangedX = RANGEDDPSSTARTX;
+                    rangedY += largestRanged+1;
+                    largestRanged = -1;
+                }
+                x = rangedX;
+                y = rangedY;
+                rangedX += w;
+            }
+            
+            else if (g->category & TYPE_UTILITY)
+            {
+                numUtility++;
+
+                if (h > largestUtility)
+                    largestUtility = h;
+
+                if ((numUtility-1) % 3 == 0)
+                {
+                    utilityX = UTILITYSTARTX;
+                    utilityY += largestUtility+1;
+                    largestUtility = -1;
+                }
+                x = utilityX;
+                y = utilityY;
+                utilityX += w;
+            }
+            else
+            {
+                numUncategorised++;
+
+                if (h > largestUncategorised)
+                    largestUncategorised = h;
+
+                if ((numUncategorised-1) % 3 == 0)
+                {
+                    uncategorisedX = UTILITYSTARTX;
+                    uncategorisedY += largestUncategorised+1;
+                    largestUncategorised = -1;
+                }
+                x = uncategorisedX;
+                y = uncategorisedY;
+                uncategorisedX += w;
+            }
+
+
+            GameObject* gNew = AddGameobject(g,x,y,SOURCE_SPAWNED_FROM_MAP);
+            HoldCommand(gNew,false);
+            
+        }   
+    }
+
+}
 void SetGameStateToChoosingParty()
 {
     transitionDrawing = TRANSITION_TRIANGLES;
+    TransitionTo(GAMESTATE_CHOOSING_UNITS);
+    /*
     if (TransitionTo(GAMESTATE_CHOOSING_UNITS))
     {
-        RemoveAllGameObjects();
-        SetMap(&maps[0]);
-        int xPos = 17;  
-        
-        #define NUMUNITSPERROW 3
-
-        #define TANKSTARTX 24
-        #define TANKSTARTY 50
-
-        #define HEALERSTARTX 110
-        #define HEALERSTARTY 50
-
-        #define MELEEDPSSTARTX 199
-        #define MELEEDPSSTARTY 50
-
-        #define RANGEDDPSSTARTX 24
-        #define RANGEDDPSSTARTY 106
-
-        #define UTILITYSTARTX 110
-        #define UTILITYSTARTY 106
-
-        #define UNCATAGORISEDX 199
-        #define UNCATAGORISEDY 106
-
-
-        int tankX = TANKSTARTX;
-        int tankY = TANKSTARTY;
-        int healerX = HEALERSTARTX;
-        int healerY = HEALERSTARTY;
-        int meleeX = MELEEDPSSTARTX;
-        int meleeY = MELEEDPSSTARTY;
-        int rangedX = RANGEDDPSSTARTX;
-        int rangedY = RANGEDDPSSTARTY;
-        int utilityX = UTILITYSTARTX;
-        int utilityY = UTILITYSTARTY;
-        int uncategorisedX = UTILITYSTARTX;
-        int uncategorisedY = UTILITYSTARTY;
-
-
-        int numTanks=0;
-        int numHealers=0;
-        int numMelee=0;
-        int numRanged=0;
-        int numUtility=0;
-        int numUncategorised = -1;
-
-        int largestTank = -1;
-        int largestHealer = -1;
-        int largestMelee = -1;
-        int largestRanged = -1;
-        int largestUtility = -1;
-        int largestUncategorised = -1;
-
-
-
-
-
-        for (int i = 0; i < numPrefabs; i++)
-        {
-            GameObject* g = prefabs[i];
-            
-            if (g->playerChoosable == true)
-            {
-
-                int x=0; int y=0;
-                int w = GetWidth(g);
-                int h = GetHeight(g);
-
-                if (g->category & TYPE_TANK)
-                {
-                    numTanks++;
-
-                    if (h > largestTank)
-                        largestTank = h;
-
-                    if ((numTanks-1) % 3 == 0)
-                    {
-                        tankX = TANKSTARTX;
-                        tankY += largestTank+1;
-                        largestHealer = -1;
-                    }
-                    x = tankX;
-                    y = tankY;
-                    tankX += w;
-
-                }
-               else  if (g->category & TYPE_HEALER)
-                {
-                    numHealers++;
-
-                    if (h > largestHealer)
-                        largestHealer = h;
-
-                    if ((numHealers - 1) % 3 == 0)
-                    {
-                        healerX = HEALERSTARTX;
-                        healerY += largestHealer+1;
-                        largestHealer = -1;
-                    }
-                    x = healerX;
-                    y = healerY;
-                    healerX += w;
-                }
-                else if (g->category & TYPE_MELEEDPS)
-                {
-                    numMelee++;
-
-                    if (h > largestMelee)
-                        largestMelee = h;
-
-                    if ((numMelee-1) % 3 == 0)
-                    {
-                        meleeX = MELEEDPSSTARTX;
-                        meleeY += largestMelee+1;
-                        largestMelee = -1;
-                    }
-                    x = meleeX;
-                    y = meleeY;
-                    meleeX += w;
-                }
-                
-                else if (g->category & TYPE_RANGEDDPS)
-                {
-                    numRanged++;
-
-                    if (h > largestRanged)
-                        largestRanged = h;
-
-                    if ((numRanged-1) % 3 == 0)
-                    {
-                        rangedX = RANGEDDPSSTARTX;
-                        rangedY += largestRanged+1;
-                        largestRanged = -1;
-                    }
-                    x = rangedX;
-                    y = rangedY;
-                    rangedX += w;
-                }
-                
-                else if (g->category & TYPE_UTILITY)
-                {
-                    numUtility++;
-
-                    if (h > largestUtility)
-                        largestUtility = h;
-
-                    if ((numUtility-1) % 3 == 0)
-                    {
-                        utilityX = UTILITYSTARTX;
-                        utilityY += largestUtility+1;
-                        largestUtility = -1;
-                    }
-                    x = utilityX;
-                    y = utilityY;
-                    utilityX += w;
-                }
-                else
-                {
-                    numUncategorised++;
-
-                    if (h > largestUncategorised)
-                        largestUncategorised = h;
-
-                    if ((numUncategorised-1) % 3 == 0)
-                    {
-                        uncategorisedX = UTILITYSTARTX;
-                        uncategorisedY += largestUncategorised+1;
-                        largestUncategorised = -1;
-                    }
-                    x = uncategorisedX;
-                    y = uncategorisedY;
-                    uncategorisedX += w;
-                }
-
-
-                GameObject* gNew = AddGameobject(g,x,y,SOURCE_SPAWNED_FROM_MAP);
-                HoldCommand(gNew,false);
-                
-            }   
-        }
-    }
+        SpawnPartySelects();
+    }*/
 
 }
 void Quit()

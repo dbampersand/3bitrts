@@ -98,6 +98,9 @@ bool GameStateIsTransition(GameState* g);
 bool GameIsPaused();
 bool GameIsIngame();
 
+void SpawnPartySelects();
+
+
 
 void RessurectGameObject(GameObject* g);    
 void AddDeadGameObject(GameObject* g);
