@@ -588,6 +588,9 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
     if (players[0].selecting)
     {
     }
+    if (mouseState->mouse.buttons & 2)
+        players[0].amoveSelected = false;
+
     if (!(mouseState->mouse.buttons & 1))
     {
         if (players[0].selecting)
@@ -701,7 +704,6 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                     }
                     for (int i = 0; i < MAXUNITSSELECTED; i++)
                     {
-                    
                         GameObject* g = players[0].selection[i];
                         if (!IsActive(g))
                             continue;

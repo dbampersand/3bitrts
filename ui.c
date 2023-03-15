@@ -411,25 +411,25 @@ void DrawMouse(MouseState* mouseState, GameObject* mousedOver)
 
     if (players[0].abilityHeld)
     {
-        DrawCursor(&mouse, ui.cursorCastingIndex, false);
+        DrawCursor(&mouse, ui.cursorCastingIndex, false, FRIENDLY);
     }
     else if (mousedOver)
     {
         if (mousedOver->properties & OBJ_OWNED_BY && players[0].numUnitsSelected > 0)
-            DrawCursor(&mouse, ui.cursorAttackIndex,false);
+            DrawCursor(&mouse, ui.cursorAttackIndex,false,DAMAGE);
         else if (!(mousedOver->properties & OBJ_OWNED_BY))
-            DrawCursor(&mouse, ui.cursorFriendlyIndex, false);
+            DrawCursor(&mouse, ui.cursorFriendlyIndex, false,FRIENDLY);
         else
-            DrawCursor(&mouse, ui.cursorDefaultIndex, false);
+            DrawCursor(&mouse, ui.cursorDefaultIndex, false,FRIENDLY);
 
     }
     else if (players[0].amoveSelected)
     {
-        DrawCursor(&mouse, ui.cursorAttackIndex,false);
+        DrawCursor(&mouse, ui.cursorAttackIndex,false,DAMAGE);
     }
     else 
     {
-        DrawCursor(&mouse, ui.cursorDefaultIndex, false);
+        DrawCursor(&mouse, ui.cursorDefaultIndex, false,FRIENDLY);
     }
 
 }
@@ -2968,18 +2968,18 @@ bool GetButtonIsClicked(UIElement* u)
     return false;
 }
 
-void DrawCursor(MouseState* mouseState, int index, bool clicked)
+void DrawCursor(MouseState* mouseState, int index, bool clicked,ALLEGRO_COLOR color)
 {
     if (mouseState->mouse.buttons & 1 || mouseState->mouse.buttons & 2)
     {
-        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,FRIENDLY,true,false,false);
+        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,color,true,false,false);
         DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,BG,false,false,false);
 
     }
     else
     {
         DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,BG,true,false,false);
-        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,FRIENDLY,false,false,false);
+        DrawSprite(&sprites[index],mouseState->screenX,mouseState->screenY,0.5f,0.5f,0,color,false,false,false);
     }
 
 
