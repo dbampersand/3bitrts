@@ -25,7 +25,8 @@ void DrawCommand(Command* c, int x, int y)
     if (c->commandType == COMMAND_ATTACK || c->commandType == COMMAND_ATTACKMOVE)
         al_draw_triangle(x-2,y-2,x+2,y+2,x,y-2,GetColor(queueCommandColors[c->commandType],0),1);
     if (c->commandType == COMMAND_CAST)
-        al_draw_circle(x,y,2,GetColor(queueCommandColors[COMMAND_CAST],0),1);
+        al_draw_rectangle(x-2,y-2,x+2,y+2,GetColor(queueCommandColors[COMMAND_MOVE],0),1);
+        //al_draw_circle(x,y,2,GetColor(queueCommandColors[COMMAND_CAST],0),1);
     if (c->commandType == COMMAND_STOP)
         al_draw_filled_rectangle(x-2,y-2,x+2,y+2,GetColor(queueCommandColors[COMMAND_MOVE],0));
 }
@@ -281,7 +282,7 @@ void DoCommands(GameObject* g)
             NextCommand(g);
             if (IsIdle(g))
             {
-                AttackMoveCommand(g,targX,targY,false);
+                AttackMoveCommand(g,targX-MOUSECURSORSIZE,targY-MOUSECURSORSIZE,false);
             }
             return;
         }

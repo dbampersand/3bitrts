@@ -135,10 +135,10 @@ void CastAbilityOnMouse(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState
                 CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->worldX,mouseState->worldY,IsBindDown(keyState,currSettings.keymap.key_Shift));
             }
             else
-                MoveCommand(currGameObjRunning,mouseState->worldX,mouseState->worldY, IsBindDown(keyState,currSettings.keymap.key_Shift));
+                MoveCommand(currGameObjRunning,mouseState->worldX-MOUSECURSORSIZE,mouseState->worldY-MOUSECURSORSIZE, IsBindDown(keyState,currSettings.keymap.key_Shift));
         }
         else
-            CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->worldX,mouseState->worldY,IsBindDown(keyState,currSettings.keymap.key_Shift));
+            CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->worldX-MOUSECURSORSIZE,mouseState->worldY-MOUSECURSORSIZE,IsBindDown(keyState,currSettings.keymap.key_Shift));
         //CastAbility(currGameObjRunning,currAbilityRunning,mouseState->x,mouseState->y,mouseState->x-midX,mouseState->y-midY,target);
         players[0].clickedThisFrame = target;
 
@@ -151,7 +151,7 @@ void CastAbilityOnMouse(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState
                     if (target && GetPlayerOwnedBy(target) == TYPE_ENEMY)
                         AttackCommand(g,target,IsBindDown(keyState,currSettings.keymap.key_Shift));
                     else
-                        AttackMoveCommand(g,mouseState->worldX,mouseState->worldY,IsBindDown(keyState,currSettings.keymap.key_Shift));
+                        AttackMoveCommand(g,mouseState->worldX-MOUSECURSORSIZE,mouseState->worldY-MOUSECURSORSIZE,IsBindDown(keyState,currSettings.keymap.key_Shift));
                 }
             }
     }

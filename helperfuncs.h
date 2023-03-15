@@ -12,7 +12,7 @@
 
 typedef struct GameObject GameObject;
 
-#define MOUSECURSORSIZE 5
+#define MOUSECURSORSIZE 8
 
 void swapPoints(float* x, float* y, float* x2, float* y2);
 float Cross(float x, float y, float x2, float y2);
