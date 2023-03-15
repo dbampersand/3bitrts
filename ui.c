@@ -411,7 +411,44 @@ void DrawMouse(MouseState* mouseState, GameObject* mousedOver)
 
     if (players[0].abilityHeld)
     {
-        DrawCursor(&mouse, ui.cursorCastingIndex, false, FRIENDLY);
+        ALLEGRO_COLOR color = FRIENDLY;
+        int cursorIndex = ui.cursorCastingIndex;
+        if (mousedOver)
+        {
+            if (IsOwnedByPlayer(mousedOver))
+            {
+                if (players[0].abilityHeld->castType & ABILITY_TARGET_FRIENDLY || players[0].abilityHeld->castType & ABILITY_TARGET_ALL)
+                {
+                        color = HEAL;
+                }
+
+            }
+            if (!IsOwnedByPlayer(mousedOver))
+            {
+                if (players[0].abilityHeld->castType & ABILITY_TARGET_ENEMY || players[0].abilityHeld->castType & ABILITY_TARGET_ALL)
+                {
+                    color = DAMAGE;
+                }
+            }
+
+
+        }
+        else
+        {
+            if (players[0].abilityHeld->castType & ABILITY_POINT)
+            {
+                if (players[0].abilityHeld->castType & ABILITY_TARGET_FRIENDLY)
+                {
+                    color = HEAL;
+                }
+                else
+                    color = DAMAGE;
+                
+                if (players[0].abilityHeld->castType & ABILITY_TARGET_FRIENDLY && players[0].abilityHeld->castType & ABILITY_TARGET_ENEMY)
+                    color = DAMAGE; 
+            }
+        }
+        DrawCursor(&mouse, ui.cursorCastingIndex, false, color);
     }
     else if (mousedOver)
     {
