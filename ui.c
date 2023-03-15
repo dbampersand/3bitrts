@@ -698,7 +698,7 @@ void ChangeUIPanel(Panel* to)
         ui.animatePanel = UI_ANIMATE_IN;
     }
 }
-void DrawHealthUIElement(GameObject* selected)
+void DrawHealthUIElement(GameObject* selected, ALLEGRO_COLOR color)
 {
     float percentHP = selected->health / selected->maxHP;
     int startHPY = UI_START_Y+1+ 6;
@@ -711,10 +711,10 @@ void DrawHealthUIElement(GameObject* selected)
 
     int startY = startHPY + (hpH - (hpH*percentHP));
     int endY = (startHPY + hpH);
-    al_draw_filled_rectangle(startHPX, startY, startHPX+hpW,endY, FRIENDLY);
+    al_draw_filled_rectangle(startHPX, startY, startHPX+hpW,endY, color);
 }
 
-void DrawManaUIElement(GameObject* selected)
+void DrawManaUIElement(GameObject* selected, ALLEGRO_COLOR color)
 {
     if (!selected->usesMana) 
         return;
@@ -726,7 +726,7 @@ void DrawManaUIElement(GameObject* selected)
 
     int startY = startManaY + (manaH - (manaH*percentMana));
     int endY = (startManaY + manaH);
-    al_draw_filled_rectangle(startManaX, startY, startManaX+manaW,endY, FRIENDLY);
+    al_draw_filled_rectangle(startManaX, startY, startManaX+manaW,endY, color);
 
 
 }
@@ -859,14 +859,14 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
         int yStackCounter = r.y+r.h-sizeStackCounter;
 
         al_draw_filled_rectangle(xStackCounter,yStackCounter,xStackCounter+sizeStackCounter,yStackCounter+sizeStackCounter,BG);
-        al_draw_rectangle(xStackCounter,yStackCounter,xStackCounter+sizeStackCounter,yStackCounter+sizeStackCounter,FRIENDLY,1);
+        al_draw_rectangle(xStackCounter,yStackCounter,xStackCounter+sizeStackCounter,yStackCounter+sizeStackCounter,*c,1);
 
         const int maxchars = ceil(log10(pow(2,sizeof(a->stacks)*8)))+2;
         if (!stackDrawBuffer)
             stackDrawBuffer = calloc(maxchars,sizeof(char));
         memset(stackDrawBuffer,0,maxchars*sizeof(char));
         sprintf(stackDrawBuffer,"%i",a->stacks);
-        al_draw_text(ui.tinyFont, FRIENDLY, xStackCounter+sizeStackCounter/2, yStackCounter+sizeStackCounter/2-al_get_font_line_height(ui.tinyFont)/4, ALLEGRO_ALIGN_CENTRE, stackDrawBuffer);
+        al_draw_text(ui.tinyFont, *c, xStackCounter+sizeStackCounter/2, yStackCounter+sizeStackCounter/2-al_get_font_line_height(ui.tinyFont)/4, ALLEGRO_ALIGN_CENTRE, stackDrawBuffer);
 
     }
     //Draw key to press for the ability
@@ -889,9 +889,9 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
         int keyH = al_get_font_line_height(ui.tinyFont)+4;
 
         al_draw_filled_rectangle(r.x,r.y,r.x+keyW,r.y+keyH,BG);
-        al_draw_rectangle(r.x,r.y,r.x+keyW,r.y+keyH,FRIENDLY,1);
+        al_draw_rectangle(r.x,r.y,r.x+keyW,r.y+keyH,*c,1);
 
-        al_draw_text(ui.tinyFont, FRIENDLY, r.x+keyW/2,r.y+keyH/2-1, ALLEGRO_ALIGN_CENTRE, key);
+        al_draw_text(ui.tinyFont, *c, r.x+keyW/2,r.y+keyH/2-1, ALLEGRO_ALIGN_CENTRE, key);
 
     }
 
@@ -903,10 +903,14 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
 }
 void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseState)
 {
-    al_draw_filled_rectangle(0, UI_START_Y, _SCREEN_SIZE, _SCREEN_SIZE, BG);
-
     GameObject* selected = players[0].selection[players[0].indexSelectedUnit];
     Sprite* s =  &sprites[ui.panel_sprite_index];
+
+    ALLEGRO_COLOR baseColor = (IsOwnedByPlayer(selected) || !selected) ? FRIENDLY : ENEMY;
+
+
+    al_draw_filled_rectangle(0, UI_START_Y, _SCREEN_SIZE, _SCREEN_SIZE, BG);
+
 
     Sprite* health = &sprites[ui.health_element_sprite_index];
     if (selected)
@@ -919,17 +923,17 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             s = &sprites[ui.panel_5_abilities_sprite_index];
     }
     if (!s) return;
-    DrawSprite(s,1,UI_START_Y+1,0.5f,0.5f,0,FRIENDLY,false,false,false);
-    DrawSprite(health,1,UI_START_Y+1,0.5f,0.5f,0,FRIENDLY,false,false,false);
+    DrawSprite(s,1,UI_START_Y+1,0.5f,0.5f,0,baseColor,false,false,false);
+    DrawSprite(health,1,UI_START_Y+1,0.5f,0.5f,0,baseColor,false,false,false);
 
     if (selected)
     {
-        DrawHealthUIElement(selected);
-        DrawManaUIElement(selected);
+        DrawHealthUIElement(selected,baseColor);
+        DrawManaUIElement(selected,baseColor);
         Ability* heldAbility = players[0].abilityHeld;
         
 
-        if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0),IsBindDown(keyState,currSettings.keymap.key_Q),*mouseState,false,true,false))
+        if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0),IsBindDown(keyState,currSettings.keymap.key_Q),*mouseState,&baseColor,true,false))
         {
             if (selected->abilities[0].description)
             {
@@ -940,7 +944,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        if (DrawAbilityPortraits(selected,heldAbility,1,GetAbilityPortraitRect(1),IsBindDown(keyState,currSettings.keymap.key_W),*mouseState,false,true,false))
+        if (DrawAbilityPortraits(selected,heldAbility,1,GetAbilityPortraitRect(1),IsBindDown(keyState,currSettings.keymap.key_W),*mouseState,&baseColor,true,false))
         {
             if (selected->abilities[1].description)
             {
@@ -951,7 +955,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        if (DrawAbilityPortraits(selected,heldAbility,2,GetAbilityPortraitRect(2),IsBindDown(keyState,currSettings.keymap.key_E),*mouseState,false,true,false))
+        if (DrawAbilityPortraits(selected,heldAbility,2,GetAbilityPortraitRect(2),IsBindDown(keyState,currSettings.keymap.key_E),*mouseState,&baseColor,true,false))
         {
             if (selected->abilities[2].description)
             {
@@ -963,7 +967,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             }
 
         }
-        if (DrawAbilityPortraits(selected,heldAbility,3,GetAbilityPortraitRect(3),IsBindDown(keyState,currSettings.keymap.key_R),*mouseState,false,true,false))
+        if (DrawAbilityPortraits(selected,heldAbility,3,GetAbilityPortraitRect(3),IsBindDown(keyState,currSettings.keymap.key_R),*mouseState,&baseColor,true,false))
         {
             if (selected->abilities[3].description)
             {
@@ -975,7 +979,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         }
         if (selected->numAbilities >= 5)
         {
-            if (DrawAbilityPortraits(selected,heldAbility,4,GetAbilityPortraitRect(4),IsBindDown(keyState,currSettings.keymap.key_F),*mouseState,false,true,false))
+            if (DrawAbilityPortraits(selected,heldAbility,4,GetAbilityPortraitRect(4),IsBindDown(keyState,currSettings.keymap.key_F),*mouseState,&baseColor,true,false))
             {
                 if (selected->abilities[4].description)
                 {
