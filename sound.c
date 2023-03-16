@@ -12,6 +12,8 @@
 #include "replay.h"
 #include "map.h"
 #include "player.h"
+#include "dirent.h"
+#include <string.h>
 
 ALLEGRO_AUDIO_STREAM* music = NULL;
 ALLEGRO_AUDIO_STREAM* musicFadingTo = NULL;
@@ -31,8 +33,76 @@ Sound* sounds = NULL;
 int numSoundsAllocated = 0;
 int numSounds = 0;
 
- MusicState musicState = {0};  
+ MusicState musicState = {0};
 
+int* ambientSounds = NULL; 
+int numAmbientSounds = 0;
+int numAmbientSoundsAlloced = 0;
+  
+float timeToNextAmbience = 8;
+
+bool ExtensionIsValidAudio(char* ext)
+{
+    return  (strcasecmp(ext,"wav") == 0 || strcasecmp(ext,"flac") == 0 || strcasecmp(ext,"ogg")  == 0|| strcasecmp(ext,"it")  == 0 || strcasecmp(ext,"s3m") == 0|| strcasecmp(ext,"xm") == 0);
+}
+Sound* GetRandomAmbient()
+{
+    return &sounds[RandRangeI(0,numAmbientSounds)];
+}
+void UpdateAmbience(float dt)
+{
+    timeToNextAmbience -= dt;
+
+    if (timeToNextAmbience <= 0)
+    {
+        PlaySound(GetRandomAmbient(),RandRange(0.05,0.2),RandRange(-0.45,0.45));
+        timeToNextAmbience = RandRange(3.5,12);
+    }
+}
+void AddAmbientSound(int index)
+{
+    if (!ambientSounds)
+        ambientSounds = calloc(NUMSOUNDSTOPREALLOC,sizeof(ambientSounds[0]));
+    if (numAmbientSounds >= numAmbientSoundsAlloced)
+    {
+        numAmbientSoundsAlloced += NUMSOUNDSTOPREALLOC;
+        ambientSounds = realloc(ambientSounds,numAmbientSoundsAlloced * sizeof(ambientSounds[0]));
+    }
+
+    ambientSounds[numAmbientSounds] = index;
+    numAmbientSounds++;
+}
+void LoadAmbientSounds()
+{
+    const char* path = "assets/audio/ambient/";
+    DIR* d;
+    struct dirent* dir;
+    d = opendir(path);
+    if (d) {
+        while ((dir = readdir(d)) != NULL) {
+            char* ext = dir->d_name;
+            for (int i = 0; i < strlen(ext); i++)
+            {
+                if (ext[i] == '.')
+                    ext = &ext[i+1];
+            }
+
+            if (ExtensionIsValidAudio(ext))
+            {
+                char* fullPath = calloc(strlen(path) + strlen(dir->d_name)+1,sizeof(char));
+                strcpy(fullPath,path);
+                strcat(fullPath,dir->d_name);
+                int index = LoadSound(fullPath);
+
+                AddAmbientSound(index);
+                free(fullPath);
+            }
+
+
+        }
+    }
+
+}
 
 void InitSound()
 {
@@ -63,6 +133,8 @@ void InitSound()
 
         al_attach_mixer_to_voice(musicMixer1, musicVoice1);
         al_attach_mixer_to_voice(musicMixer2, musicVoice2);
+
+        LoadAmbientSounds();
     }
 
 }

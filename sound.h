@@ -15,6 +15,9 @@ typedef enum MusicState {
 
 }MusicState;
 
+extern int* ambientSounds; 
+extern int numAmbientSounds;
+extern int numAmbientSoundsAlloced;
 
 
 void InitSound();
@@ -26,6 +29,8 @@ void UpdateMusic(float dt);
 void PlayEncounterMusic();
 void StopMusic();
 void ResetSoundsThisFrame();
+void UpdateAmbience(float dt);
+
 
 
 
