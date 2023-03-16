@@ -56,21 +56,21 @@ int popcnt(int n)
 }
 void PlaySelectionSound(GameObject* g)
 {
-    if (g->objType == TYPE_ALL)
+    if (g->category == TYPE_ALL)
     {
 
     }
-    else if (g->objType == 0)
+    else if (g->category == 0)
     {
         return;
     }
     else
     {
-        if (selectionSounds[g->objType])
+        if (selectionSounds[g->category])
         {
-            int ind = selectionSounds[g->objType][RandRangeI(0,numSelectionSounds[g->objType])];
+            int ind = selectionSounds[g->category][RandRangeI(0,numSelectionSounds[g->category])];
             Sound* s = &sounds[ind];
-            PlaySoundAtPosition(s,0.1f,g->position.worldX,g->position.worldY);
+            PlaySoundAtPosition(s,0.1,g->position.worldX,g->position.worldY);
         }
     }
 }
@@ -190,7 +190,7 @@ void LoadSelectionSounds(char* path, GAMEOBJ_TYPE_HINT typeHint)
 
 void InitSound()
 {
-    if (    al_install_audio())
+    if (al_install_audio())
     {
         al_init_acodec_addon();
         al_reserve_samples(RESERVED_SAMPLES);
@@ -220,6 +220,12 @@ void InitSound()
 
         LoadAmbientSounds();
         LoadSelectionSounds("assets/audio/selection_sounds/ranged_dps/",TYPE_RANGEDDPS);
+        LoadSelectionSounds("assets/audio/selection_sounds/melee_dps/",TYPE_MELEEDPS);
+        LoadSelectionSounds("assets/audio/selection_sounds/utility/",TYPE_UTILITY);
+        LoadSelectionSounds("assets/audio/selection_sounds/tank/",TYPE_TANK);
+        LoadSelectionSounds("assets/audio/selection_sounds/healer/",TYPE_HEALER);
+
+
     }
 
 }
@@ -333,6 +339,9 @@ void StopMusic()
     //musicFadingTo = NULL;
     //musicVolMixer1 = 0;
     //musicVolMixer2 = 0;
+    if (musicPath)
+        free(musicPath);
+    musicPath = NULL;
 
     musicState = MUSICSTATE_FADINGOUT;
 
