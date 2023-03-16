@@ -377,7 +377,6 @@ void GetAbilityClickedInsideUI(MouseState mouseState, MouseState mouseStateLastF
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     //ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
 
-    if (mouseStateLastFrame.mouse.buttons & 1)
     if (currGameObjRunning)
     {
         players[0].amoveSelected = false;

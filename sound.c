@@ -55,7 +55,7 @@ void UpdateAmbience(float dt)
 
     if (timeToNextAmbience <= 0)
     {
-        PlaySound(GetRandomAmbient(),RandRange(0.05,0.2),RandRange(-0.45,0.45));
+        PlaySound(GetRandomAmbient(),RandRange(0.05,0.2),RandRange(-0.25,0.25));
         timeToNextAmbience = RandRange(3.5,12);
     }
 }
