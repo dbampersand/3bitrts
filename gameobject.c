@@ -1194,6 +1194,16 @@ void KillObj(GameObject* g, bool trigger)
     if (!g) return;
     if (!IsActive(g))
         return;
+
+    if (currMap->luafunc_objectdied)
+    {
+        lua_rawgeti(luaState,LUA_REGISTRYINDEX,currMap->luafunc_objectdied);
+
+        lua_pushinteger(luaState,g-objects);
+        lua_pcall(luaState,1,0,0);
+
+        
+    }
     ScatterEffect(g);
     CureAll(g);
 
@@ -1458,6 +1468,14 @@ int GetPlayerOwnedBy(GameObject* g)
     if (ObjIsDecoration(g))
         return TYPE_DECORATION;
     return (g->properties & OBJ_OWNED_BY) > 0 ? TYPE_ENEMY : TYPE_FRIENDLY;
+}
+
+int GetPlayerOwnedBy_IncludeDecor(GameObject* g)
+{
+        if (!g) 
+        return -1;
+    return (g->properties & OBJ_OWNED_BY) > 0 ? TYPE_ENEMY : TYPE_FRIENDLY;
+
 }
 void SetOwnedBy(GameObject* g, int i)
 {

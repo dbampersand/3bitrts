@@ -305,6 +305,8 @@ void NewObj(GameObject* g);
 
 Rect GetObjRect(GameObject* g);
 int GetPlayerOwnedBy(GameObject* g);
+int GetPlayerOwnedBy_IncludeDecor(GameObject* g);
+
 
 bool Damage(GameObject* source, GameObject* g, float value,bool triggerItems, float min, Effect* effect);
 void Heal(GameObject* g, float value);

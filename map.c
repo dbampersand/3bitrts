@@ -285,6 +285,13 @@ void loadLuaGameMap(lua_State* l, const char* filename, Map* m)
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
             m->luafunc_mapend = funcIndex;
         }
+        if (CheckFuncExists("objectdied",&m->lua_buffer))
+        {
+            lua_getglobal(l, "objectdied");
+            funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+            m->luafunc_objectdied = funcIndex;
+        }
+
 
 
         char* strSplit;

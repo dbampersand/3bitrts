@@ -94,7 +94,6 @@ void LoadAmbientSounds()
                 strcpy(fullPath,path);
                 strcat(fullPath,dir->d_name);
                 int index = LoadSound(fullPath);
-                printf("%s\n",fullPath);
                 AddAmbientSound(index);
                 free(fullPath);
             }

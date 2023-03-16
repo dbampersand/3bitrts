@@ -1128,7 +1128,7 @@ int L_NumObjectsOwnedByPlayer(lua_State* l)
         GameObject* g = activeObjects[i];
         if (IsActive(g))
         {
-            if (GetPlayerOwnedBy(activeObjects[i]) == player)
+            if (GetPlayerOwnedBy_IncludeDecor(activeObjects[i]) == player)
             {
                 numObjs++;
             }

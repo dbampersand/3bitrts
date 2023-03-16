@@ -30,6 +30,7 @@ typedef struct Map
     int luafunc_update;
     int luafunc_setup;
     int luafunc_mapend;
+    int luafunc_objectdied;
 
     LuaBuffer lua_buffer;
     char* name;
