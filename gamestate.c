@@ -119,6 +119,7 @@ void SetGameStateToEnterShop()
 void FinishTransition()
 {
     ClearChatbox();
+    RemoveAllAttacks();
     if (transitioningTo == GAMESTATE_PURCHASING_UNITS)
     {
         gameState = GAMESTATE_PURCHASING_UNITS;

@@ -257,9 +257,9 @@ void UpdateObject(GameObject* g, float dt)
     currGameObjRunning->invulnerableTime -= dt;
     if (currGameObjRunning->invulnerableTime < 0)
         currGameObjRunning->invulnerableTime = 0;
+
     ProcessEffects(currGameObjRunning,dt);
     ProcessShields(currGameObjRunning,dt);
-
 
 
     g->stunTimer -= dt;
