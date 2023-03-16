@@ -2266,7 +2266,8 @@ int L_ShowString(lua_State* l)
 int L_PlaySound(lua_State* l)
 {
     const char* path = lua_tostring(l,1);
-    Sound* s = &sounds[LoadSound(path)];
+    int ind = LoadSound(path);
+    Sound* s = &sounds[ind];
 
 
     float x = lua_tonumber(l,3);
