@@ -14,6 +14,7 @@
 #include "player.h"
 #include "dirent.h"
 #include <string.h>
+#include <math.h>
 
 ALLEGRO_AUDIO_STREAM* music = NULL;
 ALLEGRO_AUDIO_STREAM* musicFadingTo = NULL;
@@ -40,6 +41,39 @@ int numAmbientSounds = 0;
 int numAmbientSoundsAlloced = 0;
   
 float timeToNextAmbience = 8;
+
+int** selectionSounds = NULL;
+int* numSelectionSounds = NULL;
+int popcnt(int n)
+{
+    int bits = 0;
+    while (n > 0)
+    {
+        n &= n - 1;
+        bits++;
+    }
+    return bits;
+}
+void PlaySelectionSound(GameObject* g)
+{
+    if (g->objType == TYPE_ALL)
+    {
+
+    }
+    else if (g->objType == 0)
+    {
+        return;
+    }
+    else
+    {
+        if (selectionSounds[g->objType])
+        {
+            int ind = selectionSounds[g->objType][RandRangeI(0,numSelectionSounds[g->objType])];
+            Sound* s = &sounds[ind];
+            PlaySoundAtPosition(s,0.1f,g->position.worldX,g->position.worldY);
+        }
+    }
+}
 
 bool ExtensionIsValidAudio(char* ext)
 {
@@ -103,6 +137,56 @@ void LoadAmbientSounds()
     }
 
 }
+void AddToSelectionSound(GAMEOBJ_TYPE_HINT typeHint, char* path)
+{
+    int index = LoadSound(path);
+    if (!selectionSounds[typeHint])
+    {
+        selectionSounds[typeHint] = calloc(NUMSOUNDSTOPREALLOC,sizeof(int));
+    }    
+    if (numSelectionSounds[typeHint] +1 % NUMSOUNDSTOPREALLOC == 0)
+    {
+        selectionSounds[typeHint] = realloc(selectionSounds[typeHint],(numSelectionSounds[typeHint]+NUMSOUNDSTOPREALLOC)*sizeof(int));
+    }
+    
+    selectionSounds[typeHint][numSelectionSounds[typeHint]] = index;
+
+    numSelectionSounds[typeHint]++;
+}
+void LoadSelectionSounds(char* path, GAMEOBJ_TYPE_HINT typeHint)
+{
+    DIR* d;
+    struct dirent* dir;
+    d = opendir(path);
+
+    if (!selectionSounds)
+    {
+        selectionSounds = calloc(TYPE_ALL+1,sizeof(int*));
+        numSelectionSounds = calloc(TYPE_ALL+1,sizeof(int));
+    }
+
+    if (d) {
+        while ((dir = readdir(d)) != NULL) {
+            char* ext = dir->d_name;
+            for (int i = 0; i < strlen(ext); i++)
+            {
+                if (ext[i] == '.')
+                    ext = &ext[i+1];
+            }
+            if (ExtensionIsValidAudio(ext))
+            {
+                char* fullPath = calloc(strlen(path) + strlen(dir->d_name)+1,sizeof(char));
+                strcpy(fullPath,path);
+                strcat(fullPath,dir->d_name);
+
+                AddToSelectionSound(typeHint,fullPath);
+                free(fullPath);
+            }
+
+        }
+    }
+
+}
 
 void InitSound()
 {
@@ -135,6 +219,7 @@ void InitSound()
         al_attach_mixer_to_voice(musicMixer2, musicVoice2);
 
         LoadAmbientSounds();
+        LoadSelectionSounds("assets/audio/selection_sounds/ranged_dps/",TYPE_RANGEDDPS);
     }
 
 }
@@ -193,7 +278,7 @@ void PlaySoundAtPosition(Sound* s, float relativeVolume, int x, int y)
     float camX = GetCameraMiddleX();
     float camY = GetCameraMiddleY();
 
-    float xPercent = clamp((x - camX) / _SCREEN_SIZE,-0.8f,0.8f);
+    float xPercent = clamp((x - camX) / _SCREEN_SIZE,-0.4f,0.4f);
     float yPercent = (y - camY) / _SCREEN_SIZE;
 
     float distance = dist(x,y,camX,camY) / (_SCREEN_SIZE/4);
@@ -230,8 +315,8 @@ void PlaySound(Sound* s, float relativeVolume, float pan)
             soundPlayedThisFramePosition++;
         }
     }
-    float volumeJitter = RandRange(-0.1,0.1);
-    float pitchJitter = RandRange(-0.05,0.05);
+    float volumeJitter = RandRange(-0.05,0.05);
+    float pitchJitter = RandRange(-0.025,0.025);
     relativeVolume += volumeJitter;
 
     al_play_sample(s->sample, currSettings.masterVolume * relativeVolume * currSettings.sfxVolume, pan, 1.0f + pitchJitter, ALLEGRO_PLAYMODE_ONCE, NULL);

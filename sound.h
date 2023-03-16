@@ -15,6 +15,11 @@ typedef enum MusicState {
 
 }MusicState;
 
+typedef struct GameObject GameObject;
+
+extern int** selectionSounds;
+extern int* numSelectionSounds;
+
 extern int* ambientSounds; 
 extern int numAmbientSounds;
 extern int numAmbientSoundsAlloced;
@@ -31,6 +36,7 @@ void StopMusic();
 void ResetSoundsThisFrame();
 void UpdateAmbience(float dt);
 
+void PlaySelectionSound(GameObject* g);
 
 
 

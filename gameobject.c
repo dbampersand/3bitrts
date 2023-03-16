@@ -1448,6 +1448,11 @@ void SetSelected(GameObject* g, bool select)
         g->properties |= OBJ_SELECTED;
         players[0].selection[players[0].numUnitsSelected] = g;
         players[0].numUnitsSelected++;
+
+        if (players[0].selection[0] == g)
+        {
+            PlaySelectionSound(g);
+        }
     }
     else
     {
