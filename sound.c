@@ -47,7 +47,8 @@ bool ExtensionIsValidAudio(char* ext)
 }
 Sound* GetRandomAmbient()
 {
-    return &sounds[RandRangeI(0,numAmbientSounds)];
+    int randSound = ambientSounds[RandRangeI(0,numAmbientSounds)];
+    return &sounds[randSound];
 }
 void UpdateAmbience(float dt)
 {
@@ -93,7 +94,7 @@ void LoadAmbientSounds()
                 strcpy(fullPath,path);
                 strcat(fullPath,dir->d_name);
                 int index = LoadSound(fullPath);
-
+                printf("%s\n",fullPath);
                 AddAmbientSound(index);
                 free(fullPath);
             }
@@ -219,6 +220,7 @@ void PlaySound(Sound* s, float relativeVolume, float pan)
             s->sample = sounds[i].sample;
             s->path = sounds[i].path;
             printf("LOAD\n");
+            printf("path: %s",s->path);
         }   
     }
     if (gameState == GAMESTATE_INGAME && soundPlayedThisFramePosition <= NUM_SOUNDS_TO_SAVE && replay.numFrames > 0)
