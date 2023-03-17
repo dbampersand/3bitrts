@@ -2158,6 +2158,35 @@ int L_GetObjFriendliness(lua_State* l)
     lua_pushnumber(l,GetPlayerOwnedBy(&objects[index]));
     return 1;
 }
+int L_GetOppositeFriendliness(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+    {
+        printf("GetOppositeFriendliness: invalid index: %i\n",index);
+        return 0;
+    }
+    GameObject* g = &objects[index];
+    int friendliness = GetPlayerOwnedBy(g);
+    if (friendliness == TYPE_ENEMY)
+    {
+        lua_pushnumber(l,TYPE_FRIENDLY);
+    }
+    else if (friendliness == TYPE_FRIENDLY)
+    {
+        lua_pushnumber(l,TYPE_ENEMY);
+    }
+    else if (friendliness == TYPE_DECORATION)
+    {
+        lua_pushnumber(l,TYPE_DECORATION);
+    }
+    else
+    {
+        printf("GetOppositeFriendliness: PANIC UNKNOWN FRIENDLINESS\n");
+    }
+    return 1;
+
+}
 int L_GetAllObjsByFriendliness(lua_State* l)
 {
     int friendliness = lua_tonumber(l,1);
@@ -2172,7 +2201,7 @@ int L_GetAllObjsByFriendliness(lua_State* l)
         {
             index++;
             lua_pushnumber(l,index);
-            lua_pushnumber(l,i+1);
+            lua_pushnumber(l,g-objects);
             lua_settable(l,-3);
         }
     }
@@ -3465,6 +3494,14 @@ int L_GetEffects(lua_State* l)
     }
     return 1;
 }
+int L_GetMapWidth(lua_State* l)
+{
+    lua_pushnumber(l,GetMapWidth());
+}
+int L_GetMapHeight(lua_State* l)
+{
+    lua_pushnumber(l,GetMapHeight());
+}
 int L_StartsUnlocked(lua_State* l)
 {
     currEncounterRunning->unlocked = lua_toboolean(l,1);
@@ -4165,5 +4202,13 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_IsDecoration);
     lua_setglobal(luaState, "IsDecoration");
 
+    lua_pushcfunction(luaState, L_GetOppositeFriendliness);
+    lua_setglobal(luaState, "GetOppositeFriendliness");
+
+    lua_pushcfunction(luaState, L_GetMapWidth);
+    lua_setglobal(luaState, "GetMapWidth");
+
+    lua_pushcfunction(luaState, L_GetMapHeight);
+    lua_setglobal(luaState, "GetMapHeight");
 
 }

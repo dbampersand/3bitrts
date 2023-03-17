@@ -1,4 +1,5 @@
-local bomb = 0
+local lavaField = 0
+local melt = 0;
 
 function setup()
     SetSprite("assets/enemies/nix/nix.png");
@@ -8,8 +9,8 @@ function setup()
     SetSpeed(120)
     SetRange(32);
 
-    fireball = AddAbility(GetObjRef(),"assets/enemies/kobold_wizard/ability_fireball.lua",0);
-    burn = AddAbility(GetObjRef(),"assets/enemies/kobold_wizard/ability_burn.lua",1);
+    melt = AddAbility(GetObjRef(),"assets/enemies/nix/ability_melt.lua",0);
+    lavaField = AddAbility(GetObjRef(),"assets/enemies/nix/ability_lava_field.lua",1);
 
 
     SetAttackSounds({
@@ -26,8 +27,8 @@ end
 function update(dt)
     if (IsInCombat()) then
         local randUnit = {target = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,256)};
-        CastAbility(fireball,2,{randUnit});
-        CastAbility(burn,1,{{target=GetRandomUnit(TYPE_ENEMY,TYPE_TANK,256)}});
+        CastAbility(lavaField,2,{});
+        CastAbility(melt,1,{{target=GetRandomUnit(TYPE_ENEMY,TYPE_TANK,256)}});
 
     end
 end

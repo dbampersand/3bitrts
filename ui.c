@@ -845,7 +845,7 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
     }
     ALLEGRO_COLOR* col;
     if (c)
-        col = c;
+        col = (ObjectHasManaToCast(selected,a) && !AbilityIsOnCooldown(a) && percent >= 1.0f) ? c : &GROUND;
     else
         col = (ObjectHasManaToCast(selected,a) && !AbilityIsOnCooldown(a) && percent >= 1.0f) ? &FRIENDLY : &GROUND;
     DrawSpriteRegion(s,0,0,w,h,r.x,r.y,*col,keydown);

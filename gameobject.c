@@ -2963,6 +2963,10 @@ void Teleport(GameObject* g, float x, float y, bool updateOld)
         return;
     if (!g) return;
 
+    x -= GetWidth(g)/2.0f;
+    y -= GetHeight(g)/2.0f;
+
+
     PointI target = (PointI){x/_GRAIN,y/_GRAIN};
 
     PointI here = (PointI){x/_GRAIN,y/_GRAIN};

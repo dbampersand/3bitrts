@@ -7,7 +7,7 @@ function setup()
     CreateObject("assets/enemies/kobold_wizard/kobold_wizard.lua",205,64,TYPE_ENEMY,0);
     CreateObject("assets/enemies/kobold_wizard/kobold_wizard.lua",205,184,TYPE_ENEMY,0);
 
-    miniboss = CreateObject("assets/enemies/nix/nix.lua",140,108,TYPE_ENEMY,0); 
+    miniboss = CreateObject("assets/enemies/nix/nix.lua",142,117,TYPE_ENEMY,0); 
     SetDecoration(miniboss,true);
     SetInvincible(miniboss,true);
 

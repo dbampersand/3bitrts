@@ -1,13 +1,11 @@
-local damage = 125
-local time = 12
-local ticksPerSecond = 1;
+local time = 8
 
 function setup()
     SetAbilityRange(32)
     SetCooldown(24);
     AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
-    SetDescription("[b]Burn\n\nDeals damage over time to the target.");
-    SetAbilityName("Burn"); 
+    SetDescription("[b]Melt\n\nDestroys target's armour, causing them to take more damage.");
+    SetAbilityName("Melt"); 
 
 end
 
@@ -15,11 +13,10 @@ function casted(x,y,obj,headingx,headingy)
     
 
     local f1 = {};
-    f1["trigger"] = TRIGGER_TIMER; 
-    f1["type"] = EFFECT_HURT;
-    f1["value"] = damage / time * ticksPerSecond;
+    f1["trigger"] = TRIGGER_INSTANT; 
+    f1["type"] = EFFECT_ARMOR;
+    f1["value"] = -10;
     f1["duration"] = time;
-    f1["triggersPerSecond"] = 1;
 
     ApplyEffect(obj,{f1});
 
