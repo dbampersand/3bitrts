@@ -148,7 +148,14 @@ void RecordReplay(ALLEGRO_BITMAP* screen)
    {
         SerializeSection(&replay,false);
         replay.numFrames = 0;
+        return;
    }
+   else
+   {
+        memset(&replay.frames[replay.numFrames],0,sizeof(ReplayFrame));
+   }
+
+
 
 
 }
