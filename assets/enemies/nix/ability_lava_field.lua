@@ -13,7 +13,7 @@ function setup()
 end
 
 
-function makeAOE(x,y)
+local function makeAOE(x,y)
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
@@ -27,10 +27,9 @@ function casted(x,y,obj,headingx,headingy)
     local numToSpawnOnEnemies = math.min(#enemies,numAoEsSpawned)
     local numToSpread = numAoEsSpawned - numToSpawnOnEnemies;
     for i=1, numToSpawnOnEnemies do
-        Print("gg")
         makeAOE(GetX(enemies[i]),GetY(enemies[i]));
     end
-    for i=0, #numToSpread do
+    for i=1, numToSpread do
         makeAOE(RandRange(0,GetMapWidth()),RandRange(0,GetMapHeight()))
     end
     

@@ -25,7 +25,7 @@ function casted(x,y,obj,headingx,headingy)
     return true; 
 end
 
-function makeAOE(x,y)
+local function makeAOE(x,y)
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;

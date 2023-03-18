@@ -3166,9 +3166,11 @@ float RectDist(GameObject* g1, GameObject* g2)
 
 bool IsInCombat(GameObject* g)
 {
+    if (ObjIsDecoration(g) && ObjIsInvincible(g))
+        return false;
     if (g->threatList.obj || g->threatList.next)
     {
-
+        
         return true;
     }
     return false;

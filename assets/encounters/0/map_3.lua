@@ -1,6 +1,6 @@
 
 function setup()
-    SetMapSprite("assets/encounters/01/map_3.png")
+    SetMapSprite("assets/encounters/0/map_3.png")
 
     CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",168,123,TYPE_ENEMY,0);
     

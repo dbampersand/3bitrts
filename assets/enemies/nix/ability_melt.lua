@@ -13,7 +13,7 @@ function casted(x,y,obj,headingx,headingy)
     
 
     local f1 = {};
-    f1["trigger"] = TRIGGER_INSTANT; 
+    f1["trigger"] = TRIGGER_CONST; 
     f1["type"] = EFFECT_ARMOR;
     f1["value"] = -10;
     f1["duration"] = time;

@@ -256,8 +256,10 @@ int L_SetAbilityName(lua_State* l)
 int L_SetAttackPosition(lua_State* l)
 {
     int index = lua_tonumber(l,1);
-    currAttackRunning->x = lua_tonumber(l,2);
-    currAttackRunning->y = lua_tonumber(l,3);
+    
+    Attack* a = &attacks[index];
+    a->x = lua_tonumber(l,2) - a->radius/2.0f;
+    a->y = lua_tonumber(l,3) - a->radius/2.0f;
 
     return 0;
 }
@@ -775,7 +777,18 @@ int L_GetThreatRank(lua_State* l)
     free(threats);
     return 1; 
 }
+int L_GetAttackTarget(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+    {
+        printf("L_GetAttackTarget: invalid index: %i",index);
+    }
+    Threat* t = GetHighestThreat(&objects[index].threatList);
 
+    lua_pushnumber(l, t->obj - objects);
+    return 1;
+}
 Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
 {
     lua_pushnumber(l,index);
@@ -3497,10 +3510,12 @@ int L_GetEffects(lua_State* l)
 int L_GetMapWidth(lua_State* l)
 {
     lua_pushnumber(l,GetMapWidth());
+    return 1;
 }
 int L_GetMapHeight(lua_State* l)
 {
     lua_pushnumber(l,GetMapHeight());
+    return 1;
 }
 int L_StartsUnlocked(lua_State* l)
 {
@@ -3705,6 +3720,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetThreatRank);
     lua_setglobal(luaState, "GetThreatRank");
+
+    lua_pushcfunction(luaState, L_GetAttackTarget);
+    lua_setglobal(luaState, "GetAttackTarget");
 
     lua_pushcfunction(luaState, L_GetThisObj);
     lua_setglobal(luaState, "GetThisObj");
@@ -4210,5 +4228,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetMapHeight);
     lua_setglobal(luaState, "GetMapHeight");
+
+    lua_pushcfunction(luaState, L_GetAttackTarget);
+    lua_setglobal(luaState, "GetAttackTarget");
 
 }

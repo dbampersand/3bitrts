@@ -308,7 +308,6 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         }
         else
             a->luafunc_ontimeout = -1;
-
         if (CheckFuncExists("abilitytick",&a->luabuffer))
         {
             lua_getglobal(l, "abilitytick");
