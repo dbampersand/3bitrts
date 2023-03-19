@@ -194,6 +194,7 @@ int NumUnitsInsideAttack(Attack* a)
             if (CircleInRect(a->x,a->y,a->targetRadius,r))
             {   
                 int abilityOwnedBy = a->playerOwnedBy;//GetPlayerOwnedBy(a->ownedBy);
+
                 if (a->playerOwnedBy != GetPlayerOwnedBy(activeObjects[i]))
                 {
                     if (a->properties & ATTACK_HITS_ENEMIES)
@@ -241,58 +242,13 @@ int NumUnitsInsideAttack(Attack* a)
                                 continue;
                             }
                         }
-                        if (a->ownedBy)
-                        {
-                            if (objOwnedBy != abilityOwnedBy)
-                            {
-                                numObjects++;
-                                continue;
-                            }
-                        }
-                        else
-                        {
-                            if (objOwnedBy == TYPE_FRIENDLY)
-                            {
-                                numObjects++;
-                                continue;
-                            }
-                        }
-                    }
-                }
-                else if (a->playerOwnedBy == GetPlayerOwnedBy(activeObjects[i]))
-                {
-                    if (a->properties & ATTACK_HITS_FRIENDLIES)
-                    {
-                        int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
-                        int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
-                        if (a->ownedBy)
-                        {
-                            if (objOwnedBy == abilityOwnedBy)
-                            {
-                                numObjects++;
-                                continue;
-                            }
-                        }
-                        else
-                        {
-                            if (objOwnedBy == TYPE_ENEMY)
-                            {
-                                numObjects++;
-                                continue;
-                            }
-                        }
 
-                    }
-                }
-            }
-        }
                     }
                 }
             }
         }
 
     }
-    printf("%i\n",numObjects);
     return numObjects;
 
 }
