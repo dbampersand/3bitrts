@@ -258,6 +258,7 @@ void RemoveAllAttacks()
     {
         RemoveAttack(i);
     }
+    numActiveAttacks = 0;
     players[0].abilityHeld = NULL;
 }
 void ApplyAttack(Attack* a, GameObject* target)
