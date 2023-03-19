@@ -3575,6 +3575,32 @@ int L_SetCompletionPercent(lua_State* l)
     AddCompletionPercent(amtToAdd);
     return 0;
 }
+int L_AnyObjInCombat(lua_State* l)
+{
+    for (int i = 0; i < numActiveObjects; i++)
+    {
+        if (IsInCombat(activeObjects[i]))
+        {
+            lua_pushboolean(l,true);
+            return 1;
+        }
+    }
+    lua_pushboolean(l,false);
+    return 1;
+}
+int L_RemoveFromCount(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    bool b = lua_toboolean(l,2);
+
+    if (index < 0 || index >= MAX_OBJS)
+    {
+        printf("L_RemoveFromCount: invalid index: %i\n",index);
+        return 0;
+    }
+    objects[index].isRemovedFromCount = b;
+    return 0;
+}
 void SetLuaKeyEnums(lua_State* l)
 {
     //TODO: Update these when a key is changed in settings
@@ -4265,5 +4291,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetCompletionPercent);
     lua_setglobal(luaState, "GetCompletionPercent");
+
+    lua_pushcfunction(luaState, L_AnyObjInCombat);
+    lua_setglobal(luaState, "AnyObjInCombat");
+
+    lua_pushcfunction(luaState, L_RemoveFromCount);
+    lua_setglobal(luaState, "RemoveFromCount");
 
 }

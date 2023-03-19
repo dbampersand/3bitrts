@@ -314,6 +314,7 @@ void FinishTransition()
             {
                // objects[i].position.worldX = xPos;
                 //objects[i].position.worldY = yPos;
+                DeleteThreatList(activeObjects[i]);
                 UpdateObjPosition(activeObjects[i],xPos,yPos);
                 SetTargetPosition(activeObjects[i],xPos,yPos);
 

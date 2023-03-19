@@ -2959,7 +2959,7 @@ void SetObjectCanPush(GameObject* g, bool value)
 }
 
 void Teleport(GameObject* g, float x, float y, bool updateOld)
-{
+{   
     if (!currMap->collision)
         return;
     if (!g) return;
@@ -3335,7 +3335,7 @@ int GetNumPlayerControlledObjs(Player* p)
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g = activeObjects[i];
-        if (IsActive(g))
+        if (IsActive(g) && !g->isRemovedFromCount)
         {
             if (GetPlayerOwnedBy(g) == (p-players))
             {

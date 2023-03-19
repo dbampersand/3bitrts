@@ -200,6 +200,7 @@ typedef struct GameObject
     bool isBoss;
 
     float completionPercent;
+    bool isRemovedFromCount;
 
     int ressurectionCost;
 
