@@ -195,49 +195,55 @@ int NumUnitsInsideAttack(Attack* a)
             {   
                 int abilityOwnedBy = a->playerOwnedBy;//GetPlayerOwnedBy(a->ownedBy);
 
-                if (a->properties & ATTACK_HITS_ENEMIES)
+                if (a->playerOwnedBy != GetPlayerOwnedBy(activeObjects[i]))
                 {
-                    int abilityOwnedBy = a->playerOwnedBy;//GetPlayerOwnedBy(a->ownedBy);
-                    int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
+                    if (a->properties & ATTACK_HITS_ENEMIES)
+                    {
+                        int abilityOwnedBy = a->playerOwnedBy;//GetPlayerOwnedBy(a->ownedBy);
+                        int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
 
-                    if (a->ownedBy)
-                    {
-                        if (objOwnedBy != abilityOwnedBy)
+                        if (a->ownedBy)
                         {
-                            numObjects++;
-                            continue;
+                            if (objOwnedBy != abilityOwnedBy)
+                            {
+                                numObjects++;
+                                continue;
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (objOwnedBy == TYPE_FRIENDLY)
+                        else
                         {
-                            numObjects++;
-                            continue;
+                            if (objOwnedBy == TYPE_FRIENDLY)
+                            {
+                                numObjects++;
+                                continue;
+                            }
                         }
                     }
                 }
-                else if (a->properties & ATTACK_HITS_FRIENDLIES)
+                else if (a->playerOwnedBy == GetPlayerOwnedBy(activeObjects[i]))
                 {
-                    int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
-                    int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
-                    if (a->ownedBy)
+                    if (a->properties & ATTACK_HITS_FRIENDLIES)
                     {
-                        if (objOwnedBy == abilityOwnedBy)
+                        int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
+                        int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
+                        if (a->ownedBy)
                         {
-                            numObjects++;
-                            continue;
+                            if (objOwnedBy == abilityOwnedBy)
+                            {
+                                numObjects++;
+                                continue;
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (objOwnedBy == TYPE_ENEMY)
+                        else
                         {
-                            numObjects++;
-                            continue;
+                            if (objOwnedBy == TYPE_ENEMY)
+                            {
+                                numObjects++;
+                                continue;
+                            }
                         }
-                    }
 
+                    }
                 }
             }
         }
@@ -811,42 +817,47 @@ void UpdateAttack(Attack* a, float dt)
             //if (&objects[i] == &objects[abilityOwnedBy] && (AttackIsProjectile(a)))
               //  continue;
 
-
-            if (a->properties & ATTACK_HITS_ENEMIES)
+            if (a->playerOwnedBy != GetPlayerOwnedBy(activeObjects[i]))
             {
-                int abilityOwnedBy = a->playerOwnedBy;
-                int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
+                if (a->properties & ATTACK_HITS_ENEMIES)
+                {
+                    int abilityOwnedBy = a->playerOwnedBy;
+                    int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
 
-                if (a->ownedBy && (!ObjIsDecoration(a->ownedBy)))
-                {
-                    if (objOwnedBy == abilityOwnedBy)
+                    if (a->ownedBy && (!ObjIsDecoration(a->ownedBy)))
                     {
-                        continue;
+                        if (objOwnedBy == abilityOwnedBy)
+                        {
+                            continue;
+                        }
                     }
-                }
-                else
-                {
-                    if (objOwnedBy == TYPE_FRIENDLY)
-                        continue;
+                    else
+                    {
+                        if (objOwnedBy == TYPE_FRIENDLY)
+                            continue;
+                    }
                 }
             }
-            else if (a->properties & ATTACK_HITS_FRIENDLIES)
+            else if (a->playerOwnedBy == GetPlayerOwnedBy(activeObjects[i]))
             {
-                int abilityOwnedBy = a->playerOwnedBy;
-                int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
-                if (a->ownedBy && (!ObjIsDecoration(a->ownedBy)))
+                if (a->properties & ATTACK_HITS_FRIENDLIES)
                 {
-                    if (objOwnedBy != abilityOwnedBy)
+                    int abilityOwnedBy = a->playerOwnedBy;
+                    int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
+                    if (a->ownedBy && (!ObjIsDecoration(a->ownedBy)))
                     {
-                        continue;
+                        if (objOwnedBy != abilityOwnedBy)
+                        {
+                            continue;
+                        }
                     }
-                }
-                else
-                {
-                    if (objOwnedBy == TYPE_ENEMY)
-                        continue;
-                }
+                    else
+                    {
+                        if (objOwnedBy == TYPE_ENEMY)
+                            continue;
+                    }
 
+                }
             }
            // if (a->ownedBy == &objects[i])
              //   continue;

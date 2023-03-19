@@ -3575,6 +3575,19 @@ int L_SetCompletionPercent(lua_State* l)
     AddCompletionPercent(amtToAdd);
     return 0;
 }
+int L_AnyObjInCombat(lua_State* l)
+{
+    for (int i = 0; i < numActiveObjects; i++)
+    {
+        if (IsInCombat(activeObjects[i]))
+        {
+            lua_pushboolean(l,true);
+            return 1;
+        }
+    }
+    lua_pushboolean(l,false);
+    return 1;
+}
 void SetLuaKeyEnums(lua_State* l)
 {
     //TODO: Update these when a key is changed in settings
@@ -4265,5 +4278,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetCompletionPercent);
     lua_setglobal(luaState, "GetCompletionPercent");
+
+    lua_pushcfunction(luaState, L_AnyObjInCombat);
+    lua_setglobal(luaState, "AnyObjInCombat");
 
 }

@@ -2959,7 +2959,7 @@ void SetObjectCanPush(GameObject* g, bool value)
 }
 
 void Teleport(GameObject* g, float x, float y, bool updateOld)
-{
+{   
     if (!currMap->collision)
         return;
     if (!g) return;
