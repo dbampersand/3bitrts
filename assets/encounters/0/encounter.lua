@@ -13,7 +13,7 @@
 
 
 
-    SetEncounterMapPath("assets/encounters/0/map_2.lua");
+    SetEncounterMapPath("assets/encounters/0/map_3.lua");
     SetEncounterDifficulty(DIFFICULTY_EASY);
     EncounterSetNumUnitsToSelect(3);
 

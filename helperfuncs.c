@@ -97,8 +97,8 @@ MouseState GetMouseClamped()
             //mouse.x =  ((_SCREEN_SIZE*_RENDERSIZE) - (MOUSECURSORSIZE*_RENDERSIZE)) / _RENDERSIZE;
         #endif
     }
-    mouse.x = clamp(mouse.x,0,_SCREEN_SIZE-MOUSECURSORSIZE);
-    mouse.y = clamp(mouse.y,0,_SCREEN_SIZE-MOUSECURSORSIZE);
+    mouse.x = clamp(mouse.x,0,_SCREEN_SIZE-MOUSECURSORSIZE/2);
+    mouse.y = clamp(mouse.y,0,_SCREEN_SIZE-MOUSECURSORSIZE/2);
 
     //ToWorldSpaceI(&mouse.x,&mouse.y);
 

@@ -164,7 +164,6 @@ void MoveCam(float x, float y)
 }
 void MoveCamera(MouseState mouseState,ALLEGRO_KEYBOARD_STATE* keyState, float dt)
 {    
-
     if (mouseState.screenX < SCREEN_EDGE || IsBindDown(keyState,currSettings.keymap.key_PanLeft))
     {
         MoveCam(players[0].cameraPos.x - (cameraSpeed*dt),players[0].cameraPos.y);

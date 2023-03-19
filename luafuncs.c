@@ -3571,7 +3571,7 @@ int L_GetCompletionPercent(lua_State* l)
 }
 int L_SetCompletionPercent(lua_State* l)
 {
-    int amtToAdd = lua_tonumber(l,1) - currMap->percentComplete;
+    int amtToAdd = lua_tonumber(l,1) - currMap->percentComplete; 
     AddCompletionPercent(amtToAdd);
     return 0;
 }

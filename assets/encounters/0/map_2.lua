@@ -25,7 +25,6 @@ function update(dt)
     if (NumObjectsOwnedByPlayer(TYPE_ENEMY) == 0) then
         SetAutoWin(true);
     end
-    SetCompletionPercent(100);
 
 end
 

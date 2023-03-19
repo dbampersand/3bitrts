@@ -2,16 +2,18 @@
 function setup()
     SetMapSprite("assets/encounters/0/map_3.png")
 
-    CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",168,123,TYPE_ENEMY,0);
-    
-    CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",120,182,TYPE_ENEMY,0);
-    CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",120,182,TYPE_ENEMY,0);
-  
-    CreateObject("assets/enemies/naja/naja.lua",250,340,TYPE_ENEMY,0);
-    CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",250,340,TYPE_ENEMY,0);
-    CreateObject("assets/enemies/rock_tosser/rock_tosser.lua",250,340,TYPE_ENEMY,0);
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",40,217,TYPE_ENEMY,0),1)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",40,233,TYPE_ENEMY,0),1);
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",40,249,TYPE_ENEMY,0),1);
+    SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",58,233,TYPE_ENEMY,0),1);
 
-    SetSpawnPoint(13,86)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",297,217,TYPE_ENEMY,0),2)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",297,233,TYPE_ENEMY,0),2);
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",297,249,TYPE_ENEMY,0),2);
+    SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",280,233,TYPE_ENEMY,0),2);
+
+  
+    SetSpawnPoint(161,28)
     
 end
 
@@ -29,6 +31,6 @@ function kill()
 end
 
 function mapend()
-    ChangeMap("assets/encounters/01/map_final.lua")
+    ChangeMap("assets/encounters/0/map_final.lua")
     return false;
 end
