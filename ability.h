@@ -63,6 +63,8 @@ typedef struct Ability
     int stacks;
     int maxStacks;
 
+    float timeSinceLastCast;
+
 
 
 

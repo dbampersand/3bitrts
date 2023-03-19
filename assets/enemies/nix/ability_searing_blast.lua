@@ -3,11 +3,11 @@ local direction = {};
 local speed = 60;
 local defaultSpeed = 30;
 function setup()
-    SetAbilityRange(32)
-    SetCooldown(8);
+    SetAbilityRange(32) 
+    SetCooldown(4.5);
     AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
-    SetDescription("[b]Chaos Ball\n\nShoots a ball that moves, dealing damage to all in its path.");
-    SetAbilityName("Melt"); 
+    SetDescription("[b]Searing Blast\n\nShoots a ball that moves, dealing damage to all in its path.");
+    SetAbilityName("Searing Blast"); 
 
 end
 
@@ -16,7 +16,7 @@ function casted(x,y,obj,headingx,headingy)
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 60;
+    f1["value"] = 50;
 
     aoe = CreateAOE(x,y,"", 25, 1, 5, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
     direction.x = GetX(obj) - GetX(GetObjRef()) 

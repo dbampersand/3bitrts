@@ -429,6 +429,8 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
 
     if ((a->castType != ABILITY_TOGGLE) || (a->castType == ABILITY_TOGGLE && !a->toggled) || AbilityCanBeCastOnGround(a))
     {
+        a->timeSinceLastCast = 0;
+
         lua_rawgeti(luaState, LUA_REGISTRYINDEX, a->luafunc_casted);
         
         float cx; float cy;
@@ -458,6 +460,8 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
     }
     else if (a->castType == ABILITY_TOGGLE && a->toggled)
     {
+        a->timeSinceLastCast = 0;
+
         lua_rawgeti(luaState, LUA_REGISTRYINDEX, a->luafunc_untoggle);
 
         lua_pushinteger(luaState,x);

@@ -232,6 +232,7 @@ void UpdateObject(GameObject* g, float dt)
     //things that should always run:
     for (int i = 0; i < MAX_ABILITIES; i++)
     {
+        currGameObjRunning->abilities[i].timeSinceLastCast += dt;
         currGameObjRunning->abilities[i].cdTimer -= dt;
         if (currGameObjRunning->abilities[i].cdTimer < 0)
         {

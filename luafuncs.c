@@ -273,6 +273,18 @@ int L_GetThisObj(lua_State* l)
     lua_pushnumber(l,currGameObjRunning-objects);
     return 1;
 }
+int L_TimeSinceLastCast(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_ABILITIES)
+    {
+        printf("L_TimeSinceLastCast: index invalid: %i\n",index);
+        return 0;
+    }
+    Ability* a = &currGameObjRunning->abilities[index];
+    lua_pushnumber(l,a->timeSinceLastCast);
+    return 1;
+}
 void CallLuaFunc(int funcID)
 {
     lua_rawgeti(luaState,LUA_REGISTRYINDEX,funcID);
@@ -309,6 +321,9 @@ int L_GetRandomUnit(lua_State* l)
     OBJ_FRIENDLINESS friend = lua_tonumber(l,1);
     GAMEOBJ_TYPE_HINT typeHint = lua_tonumber(l,2);
     float range = lua_tonumber(l,3);
+    if (!lua_isnumber(l,3))
+        range = FLT_MAX;
+
 
     GameObject** list = calloc(MAX_OBJS,sizeof(GameObject*));
     int numObjs=0;
@@ -3549,7 +3564,17 @@ int L_AddGold(lua_State* l)
     }
     return 0;
 }
-
+int L_GetCompletionPercent(lua_State* l)
+{
+    lua_pushnumber(l,currMap->percentComplete);
+    return 1;
+}
+int L_SetCompletionPercent(lua_State* l)
+{
+    int amtToAdd = lua_tonumber(l,1) - currMap->percentComplete;
+    AddCompletionPercent(amtToAdd);
+    return 0;
+}
 void SetLuaKeyEnums(lua_State* l)
 {
     //TODO: Update these when a key is changed in settings
@@ -4231,5 +4256,14 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetAttackTarget);
     lua_setglobal(luaState, "GetAttackTarget");
+
+    lua_pushcfunction(luaState, L_TimeSinceLastCast);
+    lua_setglobal(luaState, "TimeSinceLastCast");
+
+    lua_pushcfunction(luaState, L_SetCompletionPercent);
+    lua_setglobal(luaState, "SetCompletionPercent");
+
+    lua_pushcfunction(luaState, L_GetCompletionPercent);
+    lua_setglobal(luaState, "GetCompletionPercent");
 
 }

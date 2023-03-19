@@ -317,6 +317,8 @@ void FinishTransition()
                 UpdateObjPosition(activeObjects[i],xPos,yPos);
                 SetTargetPosition(activeObjects[i],xPos,yPos);
 
+                Teleport(activeObjects[i],xPos,yPos,true);
+
                 xPos += GetWidth(activeObjects[i]);
                 if (i == encounterGoingTo->numUnitsToSelect/2)
                 {
