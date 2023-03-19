@@ -815,8 +815,8 @@ void UpdateAttack(Attack* a, float dt)
 
             int abilityOwnedBy = a->playerOwnedBy;
             int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
-            bool cond1 = (a->properties & ATTACK_HITS_ENEMIES && abilityOwnedBy != a->playerOwnedBy);
-            bool cond2 = (a->properties & ATTACK_HITS_FRIENDLIES && abilityOwnedBy == a->playerOwnedBy);
+            bool cond1 = (a->properties & ATTACK_HITS_ENEMIES && objOwnedBy != a->playerOwnedBy);
+            bool cond2 = (a->properties & ATTACK_HITS_FRIENDLIES && objOwnedBy == a->playerOwnedBy);
             if (!cond1 && !cond2)
                 continue;
             /*
