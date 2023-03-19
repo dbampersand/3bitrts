@@ -241,7 +241,51 @@ int NumUnitsInsideAttack(Attack* a)
                                 continue;
                             }
                         }
+                        if (a->ownedBy)
+                        {
+                            if (objOwnedBy != abilityOwnedBy)
+                            {
+                                numObjects++;
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            if (objOwnedBy == TYPE_FRIENDLY)
+                            {
+                                numObjects++;
+                                continue;
+                            }
+                        }
+                    }
+                }
+                else if (a->playerOwnedBy == GetPlayerOwnedBy(activeObjects[i]))
+                {
+                    if (a->properties & ATTACK_HITS_FRIENDLIES)
+                    {
+                        int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
+                        int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
+                        if (a->ownedBy)
+                        {
+                            if (objOwnedBy == abilityOwnedBy)
+                            {
+                                numObjects++;
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            if (objOwnedBy == TYPE_ENEMY)
+                            {
+                                numObjects++;
+                                continue;
+                            }
+                        }
 
+                    }
+                }
+            }
+        }
                     }
                 }
             }
