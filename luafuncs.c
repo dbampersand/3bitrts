@@ -1915,6 +1915,7 @@ int L_CreateObject(lua_State* l)
     if (!currGameObjRunning)
         source = SOURCE_SPAWNED_FROM_MAP;
 
+
     bool prefabFound = false;
     for (int i = 0; i < numPrefabs; i++)
     {
@@ -1938,6 +1939,11 @@ int L_CreateObject(lua_State* l)
         g = AddGameobject(g,x,y,source);
         SetOwnedBy(g, ownedBy);
     }
+    if (PLAYER == TYPE_DECORATION)
+    {
+        //SetDecoration(currGameObjRunning,true);
+    }
+
     currGameObjRunning = before;
     if (!g)
         return 0;
@@ -1947,7 +1953,8 @@ int L_CreateObject(lua_State* l)
     if (applyCompletion)
         g->completionPercent = completionPercent;
 
-        if (!ObjIsDecoration(g))
+
+    if (!ObjIsDecoration(g))
     {
         if (source == SOURCE_SPAWNED_FROM_OBJ && currGameObjRunning)
         {

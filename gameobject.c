@@ -315,9 +315,10 @@ void UpdateObject(GameObject* g, float dt)
         }
     }
     
+    UpdateChannellingdObj(currGameObjRunning,dt);
     if (!IsActive(currGameObjRunning) || ObjIsDecoration(g))
         return;
-    UpdateChannellingdObj(currGameObjRunning,dt);
+
     if (currGameObjRunning->properties & OBJ_ACTIVE && !IsOwnedByPlayer(currGameObjRunning))
     {
         DoAI(currGameObjRunning);
@@ -1490,9 +1491,14 @@ void SetOwnedBy(GameObject* g, int i)
     {
         g->properties &= ~OBJ_OWNED_BY;
     }
-    else
+    else if (i == TYPE_ENEMY)
     {
         g->properties |= OBJ_OWNED_BY;
+    }
+    else if (i == TYPE_DECORATION)
+    {
+        g->properties |= OBJ_OWNED_BY;
+        SetDecoration(g,true);
     }
 }
 void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
@@ -2263,7 +2269,7 @@ void DrawObjShadows()
 {
     for (int i = 0; i < numActiveObjects; i++)
     {
-        if (IsActive(activeObjects[i]) && !ObjIsDecoration(activeObjects[i]) && objects[i].summonTime > objects[i].summonMax)
+        if (IsActive(activeObjects[i]) && !ObjIsDecoration(activeObjects[i]) && !ObjIsInvincible(activeObjects[i]) && objects[i].summonTime > objects[i].summonMax)
             DrawObjShadow(activeObjects[i]);
     }
 }   
@@ -2322,8 +2328,28 @@ void DrawMapHighlights()
             g->lightIntensity = 0.5f;
 
             DrawLight(g->lightSize,g->lightR,g->lightG,g->lightB,g->lightIntensity,g->position.worldX+GetWidth(g)/2,g->position.worldY+GetHeight(g)/2);
+        }
+        if (IsActive(g) && !IsOwnedByPlayer(g) && !ObjIsDecoration(g)) 
+        {
+            g->lightR = ENEMY.r;
+            g->lightG = ENEMY.g;
+            g->lightB = ENEMY.b;
+            g->lightIntensity = 0.5f;
+
+            DrawLight(g->lightSize,g->lightR,g->lightG,g->lightB,g->lightIntensity,g->position.worldX+GetWidth(g)/2,g->position.worldY+GetHeight(g)/2);
+
+        }       
+        else if (IsActive(g) && ObjIsDecoration(g))
+        {
+            g->lightR = FRIENDLY.r;
+            g->lightG = FRIENDLY.g;
+            g->lightB = FRIENDLY.b;
+            g->lightIntensity = 0.125f;
+
+            DrawLight(g->lightSize,g->lightR,g->lightG,g->lightB,g->lightIntensity,g->position.worldX+GetWidth(g)/2,g->position.worldY+GetHeight(g)/2);
 
         }
+
     }
     for (int i = 0; i < MAX_PARTICLES; i++)
     {
@@ -2448,7 +2474,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     DrawSummonEffect(g);
 
 
-    if (g->summonTime >= g->summonMax && gameState != GAMESTATE_WATCHING_REPLAY)
+    if (g->summonTime >= g->summonMax && gameState != GAMESTATE_WATCHING_REPLAY && !ObjIsDecoration(g) && !ObjIsInvincible(g))
         RedrawMapSegmentUnderObj(g);
     Sprite* s;
     if (gameState == GAMESTATE_WATCHING_REPLAY) 
