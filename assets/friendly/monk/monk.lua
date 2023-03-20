@@ -23,7 +23,7 @@ function setup()
 
     SetObjType(TYPE_MELEEDPS);
 
-    --IsPlayerChoosable(true);
+    IsPlayerChoosable(true);
     SetCategory(TYPE_MELEEDPS);
     
     SetObjectPush(false);

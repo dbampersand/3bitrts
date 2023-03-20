@@ -35,7 +35,7 @@ function casted(x,y,obj,headingx,headingy)
     xPos = GetX();
     yPos = GetY();
     local sp = 50 
-    local duration = 5
+    local duration = 2.25
     speed = {};
     speed["trigger"] = TRIGGER_CONST;
     speed["type"] = EFFECT_SPEED; 

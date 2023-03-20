@@ -105,3 +105,5 @@ int GetNumActiveAttacks();
 int NumUnitsInsideAttack(Attack* a);
 bool AttackIsActive(Attack* a);
 void UpdateScreenPositionsAttack(Attack* a);
+
+bool AttackIsAOE(Attack* a);

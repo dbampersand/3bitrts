@@ -16,7 +16,7 @@ function casted(x,y,obj,headingx,headingy)
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 30;  
+    f1["value"] = 15;  
 
 
     CreateConeProjectiles(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj),"",ATTACK_PROJECTILE_ANGLE,80,15,false,ATTACK_HITS_ENEMIES,10,COLOR_DAMAGE,60,{f1});

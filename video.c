@@ -46,6 +46,31 @@ int numFreeDecorations;
 int* dirtSprites;
 int numDirtSprites;
 
+void DrawLight(int lightSize, float r, float g, float b, float intensity, float worldX, float worldY)
+{
+    float re = r; float gr = g; float bl = b;
+    re *= intensity;
+    gr *= intensity;
+    bl *= intensity;
+
+    ALLEGRO_COLOR col = al_map_rgba_f(re,gr,bl,intensity);
+
+    if (!lights[lightSize])
+    {
+        GenerateCircleHighlight(lightSize);
+    }
+    if (lightSize > 0 && lightSize < MAX_LIGHT_SIZE)
+    {
+        worldX -= lightSize;
+        worldY -= lightSize;
+
+        float x = worldX;
+        float y = worldY;
+        ToScreenSpace(&x,&y);
+        al_draw_tinted_bitmap(lights[lightSize],col,x,y,0);
+    }
+
+}
 
 
 void InitCloudSprites()

@@ -22,7 +22,7 @@ void UpdateParticles(float dt)
 {
     for (int i = 0; i < MAX_PARTICLES; i++)
     {
-        if (particle_properties[i] | PARTICLE_ENABLED)
+        if (ParticleIsActive(i))
         {
             particle_x[i] += cosTable[particle_dir[i]%360] * particle_speed[i];
             particle_y[i] += sinTable[particle_dir[i]%360] * particle_speed[i];
@@ -70,6 +70,10 @@ void InitParticles()
 
     PARTICLES_TOP = 0;
 }
+float GetParticleAlpha(int index)
+{
+    return particle_lifetime[index] / (float)particle_lifetime_total[index];
+}
 void DrawParticles()
 {
     int beforeOp; int beforeSrc; int beforeDst;
@@ -81,14 +85,14 @@ void DrawParticles()
     al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
     for (int i = 0; i < MAX_PARTICLES; i++)
     {
-        if (particle_properties[i] & PARTICLE_ENABLED)
+        if (ParticleIsActive(i))
         {
             ALLEGRO_COLOR col = GetColor(particle_colors[i],0);
             //col.a = particle_lifetime[i] / (float)particle_lifetime_total[i];
-            float a = particle_lifetime[i] / (float)particle_lifetime_total[i];
+            float a = GetParticleAlpha(i);
             col = al_map_rgba_f(col.r*a,col.g*a,col.b*a,a);
             al_put_blended_pixel(ToScreenSpace_X(particle_x[i]),ToScreenSpace_Y(particle_y[i]),col);
-            al_put_blended_pixel(ToScreenSpace_X(particle_x[i])+2,ToScreenSpace_Y(particle_y[i])+2,GROUND_DARK);
+            //al_put_blended_pixel(ToScreenSpace_X(particle_x[i])+2,ToScreenSpace_Y(particle_y[i])+2,GROUND_DARK);
 
         }
     }
@@ -103,4 +107,8 @@ void RandParticleAroundEdgeOfCircle(float cx, float cy, float r, short lifetime,
     float x = cx + cos(angle)*r;
     float y = cy + sin(angle)*r;
     AddParticle(x,y,RandRange(1,lifetime),RandRange(maxspeed/2.0f,maxspeed),RadToDeg(angle),col);
+}
+bool ParticleIsActive(int index)
+{
+    return (particle_properties[index] & PARTICLE_ENABLED);
 }

@@ -130,3 +130,5 @@ void RandomSpriteDecor(int numToAdd, int* array, int numArrayElements);
 void CreateSpriteDecorAtPosition(int selectedSprite,int x,int y,RenderOrder renderOrder,Color col);
 void CreatePoisonEffect(GameObject* g, float lifetime);
 void UpdateScreenPositions_Point(PointSpace* p);
+
+void DrawLight(int lightSize, float r, float g, float b, float intensity, float worldX, float worldY);

@@ -158,6 +158,18 @@ void RemoveAttack(int attackindex)
         lua_pushinteger(luaState,(-1));    
         lua_pcall(luaState,3,0,0);
     }
+
+    if (AttackIsAOE(a))
+    {
+        for (int i = 0; i < RandRangeI(a->radius,a->radius*a->radius); i++)
+            RandParticleAroundEdgeOfCircle(a->x,a->y,a->radius,1.45,RandRange(0.8f,1.5f),a->color);
+    }
+    if (!AttackIsAOE(a))
+    {
+        for (int i = 0; i < RandRangeI(4,20); i++)
+            AddParticleWithRandomProperties(a->x,a->y,a->color,0.25,4,0.85,2,-M_PI,M_PI);
+    }
+
     a->properties = '\0';
 
     if (attack_top <= 0)
@@ -175,6 +187,7 @@ void RemoveAttack(int attackindex)
         a->effects = NULL;
     }
     currGameObjRunning =  before;
+
 
 
 }

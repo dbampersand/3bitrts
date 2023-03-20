@@ -2321,20 +2321,19 @@ void DrawMapHighlights()
             g->lightB = 0.5f;
             g->lightIntensity = 0.5f;
 
-            float re = g->lightR; float gr = g->lightG; float bl = g->lightB;
+            DrawLight(g->lightSize,g->lightR,g->lightG,g->lightB,g->lightIntensity,g->position.worldX+GetWidth(g)/2,g->position.worldY+GetHeight(g)/2);
 
-            re *= g->lightIntensity;
-            gr *= g->lightIntensity;
-            bl *= g->lightIntensity;
-
-
-            ALLEGRO_COLOR col = al_map_rgba_f(re,gr,bl,g->lightIntensity);
-            if (g->lightSize > 0 && g->lightSize < MAX_LIGHT_SIZE)
-            {
-                al_draw_tinted_bitmap(lights[g->lightSize],col,g->position.screenX-g->lightSize+GetWidth(g)/2,g->position.screenY-g->lightSize+GetHeight(g)/2,0);
-            }
         }
     }
+    for (int i = 0; i < MAX_PARTICLES; i++)
+    {
+        if (ParticleIsActive(i))
+        {
+            ALLEGRO_COLOR c = GetColor(particle_colors[i],0);
+            DrawLight(3,c.r,c.g,c.b,GetParticleAlpha(i),particle_x[i],particle_y[i]);
+        }
+    }
+
 
     //TODO: investigate if we can have this locked, doesn't seem to work w/ locking
     //al_lock_bitmap(scratchMap,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);

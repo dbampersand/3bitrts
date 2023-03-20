@@ -132,7 +132,7 @@ void CastAbilityOnMouse(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState
         {
             if (!ObjIsInvincible(target))
             {
-                CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->worldX,mouseState->worldY,IsBindDown(keyState,currSettings.keymap.key_Shift));
+                CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->worldX-MOUSECURSORSIZE,mouseState->worldY-MOUSECURSORSIZE,IsBindDown(keyState,currSettings.keymap.key_Shift));
             }
             else
                 MoveCommand(currGameObjRunning,mouseState->worldX-MOUSECURSORSIZE,mouseState->worldY-MOUSECURSORSIZE, IsBindDown(keyState,currSettings.keymap.key_Shift));

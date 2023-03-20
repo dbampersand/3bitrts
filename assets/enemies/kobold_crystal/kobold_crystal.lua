@@ -7,8 +7,8 @@ function setup()
     SetMaxHP(750,true)
     SetSpeed(0)
     SetRange(32);
-    SetInvincible(true)
-    --RemoveFromCount(GetObjRef(),true);
+    SetInvincible(GetObjRef(),true)
+    RemoveFromCount(GetObjRef(),true);
 
     crash = AddAbility(GetObjRef(),"assets/enemies/kobold_crystal/ability_crash.lua",0);
 

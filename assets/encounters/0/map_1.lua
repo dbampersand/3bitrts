@@ -38,6 +38,6 @@ end
 
 function mapend()
     GoShop(true);
-    ChangeMap("assets/encounters/0/map_final.lua")
+    ChangeMap("assets/encounters/0/map_2.lua")
     return false;
 end
