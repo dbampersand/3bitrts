@@ -306,7 +306,7 @@ ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
 
     rf.numAttacks = GetNumActiveAttacks();
     rf.attacks = calloc(rf.numAttacks,sizeof(Attack));
-
+    
     for (int i = 0; i < MAX_ATTACKS; i++)
     {
         if (AttackIsActive(&attacks[i]))

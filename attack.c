@@ -146,6 +146,8 @@ void RemoveAttack(int attackindex)
     
 
     Attack* a = &attacks[attackindex];
+    if (!AttackIsActive(a))
+        return;
     GameObject* before = currGameObjRunning;
     currGameObjRunning = a->ownedBy;
 

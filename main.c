@@ -734,7 +734,7 @@ int main(int argc, char* args[])
             Render(dt, &mouseState, &mouseStateLastFrame, &keyState, &keyStateLastFrame);
             if (gameState == GAMESTATE_INGAME)
                 RecordReplay(SCREEN);
-                DrawConsole();
+            DrawConsole();
 
             al_set_target_bitmap(backbuffer);
             al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE, drawposx, drawposy,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
