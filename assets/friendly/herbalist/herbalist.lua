@@ -1,4 +1,4 @@
-local maxHP = 350;
+local maxHP = 900;
 
 function setup()
     SetSprite("assets/friendly/herbalist/herbalist.png");
@@ -16,7 +16,7 @@ function setup()
     SetDamage(5);
     SetRange(100)
     SetMaxHP(maxHP,true)
-    SetManaRegen(15);
+    SetManaRegen(1);
 
     SetObjType(TYPE_HEALER);
     IsPlayerChoosable(true);

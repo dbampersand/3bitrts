@@ -23,6 +23,7 @@
         "string.h": "c",
         "allegro.h": "c",
         "cmath": "c",
-        "animationeffect.h": "c"
+        "animationeffect.h": "c",
+        "allegro_font.h": "c"
     }
 }

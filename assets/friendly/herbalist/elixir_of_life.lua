@@ -5,7 +5,7 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
     SetAbilityRange(60)
     SetDescription("Elixir of Life\n\nA large heal over time effect.")
-    SetManaCost(35)
+    SetManaCost(15)
     SetAbilityMaxStacks(3);
     SetAbilityCooldown(GetObjRef(),GetAbilityRef(),20);
 end

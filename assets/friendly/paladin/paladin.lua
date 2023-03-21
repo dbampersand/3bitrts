@@ -1,4 +1,4 @@
-local maxHP = 1000
+local maxHP = 1350
 
 function setup()
     SetSprite("assets/friendly/paladin/paladin.png");

@@ -8,7 +8,7 @@ function setup()
     SetAbilityRange(60)
     SetDescription("Regenerative Herbs\n\nHeal over time effect. Stacks up to " .. maxStacks .. " times.");
     SetCooldown(4);
-    SetManaCost(10)
+    SetManaCost(20)
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/priest/audio/smite.wav",1)

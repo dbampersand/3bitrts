@@ -1,4 +1,4 @@
-local maxHP = 1100
+local maxHP = 2200
 
 function setup()
     SetSprite("assets/friendly/warrior/warrior.png");

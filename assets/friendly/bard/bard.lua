@@ -1,4 +1,4 @@
-local maxHP = 350;
+local maxHP = 750;
 
 
 function setup()

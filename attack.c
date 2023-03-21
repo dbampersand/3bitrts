@@ -18,6 +18,11 @@
 #include "player.h"
 #include "map.h"
 
+#include "lua-5.4.3/src/lua.h"
+#include "lua-5.4.3/src/lauxlib.h"
+#include "lua-5.4.3/src/lualib.h"
+#include "lua-5.4.3/src/luaconf.h"
+
 Attack attacks[MAX_ATTACKS] = {0};
 unsigned int freeAttacks[MAX_ATTACKS] = {0}; 
 int attack_top = 0;
@@ -158,7 +163,8 @@ void RemoveAttack(int attackindex)
         lua_pushinteger(luaState,a->x);
         lua_pushinteger(luaState,a->y);    
         lua_pushinteger(luaState,(-1));    
-        lua_pcall(luaState,3,0,0);
+        lua_pushinteger(luaState,a-attacks);
+        lua_pcall(luaState,4,0,0);
     }
 
     if (AttackIsAOE(a))
@@ -303,8 +309,9 @@ void ApplyAttack(Attack* a, GameObject* target)
             lua_pushinteger(luaState,a->x);
             lua_pushinteger(luaState,a->y);    
             lua_pushinteger(luaState,(int)(target-objects));    
+            lua_pushinteger(luaState,a-attacks);
 
-            lua_pcall(luaState,3,0,0);
+            lua_pcall(luaState,4,0,0);
         }
     }
 }
@@ -722,7 +729,7 @@ bool AttackIsProjectile(Attack* a)
 }
 void UpdateAttack(Attack* a, float dt)
 {
-    if (!(a->properties & ATTACK_ACTIVE))
+    if (!AttackIsActive(a) )
         return;
     if (AttackIsAOE(a))
     {
@@ -984,7 +991,7 @@ void UpdateAttack(Attack* a, float dt)
             lua_pushnumber(luaState,dt);    
             lua_pushinteger(luaState,a->target - objects);
             lua_pushinteger(luaState,a-attacks);
-            lua_pcall(luaState,6,0,0);
+            lua_pcall(luaState,7,0,0);
 
         }
         RemoveAttack(a-attacks);

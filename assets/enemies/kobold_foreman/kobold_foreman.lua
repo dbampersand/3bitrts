@@ -3,7 +3,7 @@ local throwDarts = 0
 function setup()
     SetSprite("assets/enemies/kobold_foreman/kobold_foreman.png");
 
-    SetDamage(7);
+    SetDamage(35);
     SetMaxHP(750,true)
     SetSpeed(120)
     SetRange(6);

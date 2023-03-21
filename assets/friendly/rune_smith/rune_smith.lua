@@ -1,4 +1,4 @@
-local maxHP = 1000
+local maxHP = 1300
 
 function setup()
     SetSprite("assets/friendly/rune_smith/rune_smith.png");

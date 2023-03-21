@@ -1,4 +1,4 @@
-local maxHP = 450;
+local maxHP = 900;
 local maxMana = 150
 
 function setup()
@@ -16,7 +16,7 @@ function setup()
     SetDamage(5);
     SetRange(40)
 
-    SetManaRegen(15);
+    SetManaRegen(1);
     SetMaxMana(maxMana,true)
     SetMaxHP(maxHP,true);
     

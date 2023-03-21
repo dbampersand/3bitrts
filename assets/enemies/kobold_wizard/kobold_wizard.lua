@@ -3,7 +3,7 @@ local bomb = 0
 function setup()
     SetSprite("assets/enemies/kobold_wizard/kobold_wizard.png");
 
-    SetDamage(12);
+    SetDamage(35);
     SetMaxHP(750,true)
     SetSpeed(120)
     SetRange(32);

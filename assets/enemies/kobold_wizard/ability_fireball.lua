@@ -1,6 +1,6 @@
 local length = 15
 local time = 12
-
+local projectile = -1;
 function setup()
     SetAbilityRange(256)
     SetCooldown(20);
@@ -19,8 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 80;
 
-    CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj),"",ATTACK_PROJECTILE_POINT,25,4,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,{f1})
-
+    projectile = CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj),"",ATTACK_PROJECTILE_POINT,25,4,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,{f1})
 
     return true; 
 end
@@ -31,12 +30,12 @@ local function makeAOE(x,y)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 30;
 
-     CreateAOE(x,y,"", 50, 1, 6, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
+    CreateAOE(x,y,"", 50, 1, 6, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
 end
 function onhit(x,y,objhit)
     makeAOE(x,y)
 end
-function ontimeout(x,y,obj,dt,target)
+function ontimeout(x,y,obj,dt,target,atk)
     makeAOE(x,y)
 end
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)

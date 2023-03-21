@@ -976,7 +976,7 @@ int L_AddAttackSprite(lua_State* l)
     currGameObjRunning->onAttackEffectsIndices[currGameObjRunning->numAttackEffectIndices-1] = index;
     return 0;
 }
-void CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const char* portrait, int attackType, int speed, int duration, bool shouldCallback, int properties, GameObject* targ, uint32_t color, Effect* effects, size_t len)
+int CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const char* portrait, int attackType, int speed, int duration, bool shouldCallback, int properties, GameObject* targ, uint32_t color, Effect* effects, size_t len)
 {
 
         
@@ -1029,8 +1029,8 @@ void CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const 
     a.shouldCallback = shouldCallback;
     a.duration = duration;
     a.color = color;
-    AddAttack(&a);
-
+    Attack* ref = AddAttack(&a);
+    return ref - attacks;
 }   
 int L_CreateConeProjectiles(lua_State* l)
 {
@@ -1207,7 +1207,7 @@ int L_CreateProjectile(lua_State* l)
         lua_remove(l,-1);
         effects[i-1] = e;
     }       
-    CreateProjectile(l, fromX, fromY, targX, targY, portrait, attackType, speed, duration, shouldCallback, properties, targ, color, effects, len);
+    int ref = CreateProjectile(l, fromX, fromY, targX, targY, portrait, attackType, speed, duration, shouldCallback, properties, targ, color, effects, len);
     
     for (int i = 0; i < len; i++)
     {
@@ -1217,7 +1217,7 @@ int L_CreateProjectile(lua_State* l)
         if (e->description)
             free(e->description);
     }
-
+    lua_pushnumber(l,ref);
     return 1;
 }
 //used when called from *by the ability itself*

@@ -1,4 +1,4 @@
-local maxHP = 350;
+local maxHP = 800;
 
 function setup()
     SetSprite("assets/friendly/priest/priest.png");
@@ -16,7 +16,7 @@ function setup()
     SetDamage(5);
     SetRange(100)
     SetMaxHP(maxHP,true)
-    SetManaRegen(10);
+    SetManaRegen(0.85);
 
     SetObjType(TYPE_HEALER);
     IsPlayerChoosable(true);
