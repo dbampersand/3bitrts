@@ -631,7 +631,7 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                 if (CheckIntersect(rObj,r))
                 {
                     if (!IsBindDown(keyState,currSettings.keymap.key_Shift))
-                    if (!hasSelected)
+                    if (!hasSelected && !DebounceActive())
                     {
                         for (int j = 0; j < numActiveObjects; j++)
                         {
@@ -671,8 +671,14 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                     }
                     else
                     {
-                        if (IsOwnedByPlayer(obj) || (!IsOwnedByPlayer(obj) && numUnitClickedOn == 1))
-                            SetSelected(obj,true);
+                        if (numUnitClickedOn > 1 || !DebounceActive())
+                        {
+                            if (IsOwnedByPlayer(obj) || (!IsOwnedByPlayer(obj) && numUnitClickedOn == 1))
+                                SetSelected(obj,true);
+                        }
+                        if (numUnitClickedOn == 1)
+                            ActivateDebounce();
+
                         //players[0].selection[players[0].numUnitsSelected] = obj;
                         //players[0].numUnitsSelected++;
                     }

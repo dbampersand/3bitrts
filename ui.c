@@ -38,6 +38,23 @@ Chatbox* chatboxShowing = NULL;
 UI ui = {0};
 char* stackDrawBuffer = NULL;
 
+float debounceTimer = 0;
+float debounceTime = 0.15;
+bool DebounceActive()
+{
+    return (debounceTimer > 0);
+}
+void UpdateDebounce(float dt)
+{
+    debounceTimer -= dt;
+    if (debounceTimer < 0)
+        debounceTimer = 0;
+}
+void ActivateDebounce()
+{
+    if (!DebounceActive())
+        debounceTimer = debounceTime;
+}
 void InitPurchasingUnitsUI()
 {
     PurchasingUnitUI* purchaseUI = &ui.purchasingUnitUI;

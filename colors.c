@@ -138,7 +138,7 @@ void InitColors()
     GROUND_DARK = al_map_rgba(53,40,84,255);
     EDGE_HIGHLIGHT = al_map_rgba(167,112,213,255);
     _TRANSPARENT = al_map_rgba(0,0,0,0);
-    BG_DECOR = al_map_rgba((BG.r*255)+5,(BG.g*255)+10,(BG.b*255)+5,255);
+    BG_DECOR = al_map_rgba((BG.r*255)+10,(BG.g*255)+15,(BG.b*255)+10,255);
     TEXTURED_GROUND = al_map_rgba((GROUND.r*255)-5,(GROUND.g*255) - 5,(GROUND.b*255)-5,255);
 
 
