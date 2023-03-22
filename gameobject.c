@@ -54,17 +54,17 @@ float* sinTable = NULL; // = &__sinTable[360];
 float* cosTable = NULL;// = &__cosTable[360];
 
 int numChannellingInfosDrawn = 0;
-void MoveObjTo(GameObject* g, float x, float y)
+void MoveObjTo(GameObject* g, float x, float y, bool objCanPush)
 {
     double dX = x - g->position.worldX;
     double dY = y - g->position.worldY;
 
     UpdateObjPosition_X(g,x);
-    CheckCollisions(g,true, dX,ObjectCanPush(g));
+    CheckCollisions(g,true, dX,objCanPush);
     CheckCollisionsWorld(g,true, dX);
 
     UpdateObjPosition_Y(g,y);
-    CheckCollisions(g,false, dY,ObjectCanPush(g));
+    CheckCollisions(g,false, dY,objCanPush);
     CheckCollisionsWorld(g,false, dY);
     SetMapCollisionRect(g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g),true);
 
@@ -75,14 +75,14 @@ void UpdatePush(GameObject* g, float dt)
 
     if (g->pushTimer > 0)
     {
-        float time = easeOutExpo(g->pushTimer / g->pushFullTime);
+        float time = easeOutExpo(1 - (g->pushTimer / g->pushFullTime));
         float amtToMove = time * g->pushSpeed * dt;
 
         Point moveTo; 
         moveTo.x = g->position.worldX + amtToMove * g->pushDir.x;
         moveTo.y = g->position.worldY + amtToMove * g->pushDir.y;
 
-        MoveObjTo(g,moveTo.x,moveTo.y);
+        MoveObjTo(g,moveTo.x,moveTo.y,true);
     }   
     else
     {
@@ -93,12 +93,14 @@ void UpdatePush(GameObject* g, float dt)
 
 bool ObjIsPushable(GameObject* g)
 {
-    return (ObjIsBoss(g) || g->objIsPushable);
+    if (ObjIsBoss(g))
+        return false;
+    return g->objIsPushable;
 }
 
 void PushObj(GameObject* g, float velocity, float timeToPush, Point from)
 {
-    if (ObjIsPushable(g))
+    if (!ObjIsPushable(g))
         return;
     g->pushFullTime = timeToPush;
     g->pushTimer = timeToPush;
@@ -481,6 +483,8 @@ void UpdateObject(GameObject* g, float dt)
     }
     if (shouldMove)
         Move(currGameObjRunning, dt);
+    else if (g->pushTimer > 0)
+        UpdatePush(g,dt);
 }
 
 void InitObjects()
@@ -904,6 +908,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
     currGameObjRunning->attackSoundIndices = calloc(prefab->numAttackSounds,sizeof(int));
     memcpy(currGameObjRunning->attackSoundIndices,prefab->attackSoundIndices,sizeof(int)*prefab->numAttackSounds);
 
+    currGameObjRunning->objIsPushable = true;
 
     currGameObjRunning->purchased = prefab->purchased;
 

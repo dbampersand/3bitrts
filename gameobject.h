@@ -275,7 +275,7 @@ int lastFootstepPlayed;
 //add 8 more free objects when we need to realloc objects array
 #define BUFFER_PREALLOC_AMT 8
 
-void MoveObjTo(GameObject* g, float x, float y);
+void MoveObjTo(GameObject* g, float x, float y, bool objCanPush);
 
 void PushObj(GameObject* g, float velocity, float timeToPush, Point from);
 void UpdatePush(GameObject* g, float dt);
