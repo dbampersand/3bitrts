@@ -992,7 +992,7 @@ int CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const c
     float x2 = x; float y2 = y;
     if (attackType == ATTACK_PROJECTILE_ANGLE)
     {
-        x2 = cx - x;  y2 = cy - y;
+        x2 = x - cx ;  y2 = y - cy;
         if (x2 != 0 && y2 != 0)
             Normalize(&x2,&y2);
     }

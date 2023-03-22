@@ -153,13 +153,13 @@ void RemoveAttack(int attackindex)
 
     if (a->cameFrom)
     {
-        lua_rawgeti(luaState,LUA_REGISTRYINDEX,a->cameFrom->luafunc_onhit);
+        /*lua_rawgeti(luaState,LUA_REGISTRYINDEX,a->cameFrom->luafunc_onhit);
 
         lua_pushinteger(luaState,a->x);
         lua_pushinteger(luaState,a->y);    
         lua_pushinteger(luaState,(-1));    
         lua_pushinteger(luaState,a-attacks);
-        lua_pcall(luaState,4,0,0);
+        lua_pcall(luaState,4,0,0);*/
     }
 
     if (AttackIsAOE(a))
@@ -824,6 +824,28 @@ void UpdateAttack(Attack* a, float dt)
             copied = &copy;
 
         }
+        if (a->x < 0 || a->y < 0 || a->x > GetMapWidth() || a->y > GetMapHeight() || a->duration < 0)
+        {
+            if (a->shouldCallback)
+            {
+                currAbilityRunning = a->cameFrom;
+                currGameObjRunning = a->ownedBy;
+                currAttackRunning = a;
+
+                lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_ontimeout);
+
+                lua_pushnumber(luaState,a->x);
+                lua_pushnumber(luaState,a->y);
+                lua_pushinteger(luaState,a->ownedBy-objects);
+                lua_pushnumber(luaState,dt);    
+                lua_pushinteger(luaState,a->target - objects);
+                lua_pushinteger(luaState,a-attacks);
+                lua_pcall(luaState,6,0,0);
+
+            }
+            RemoveAttack(a-attacks);
+            return;
+        }
 
 
         for (int i = 0; i < numActiveObjects; i++)
@@ -968,29 +990,6 @@ void UpdateAttack(Attack* a, float dt)
     if (isSoak)
     {
         free(copied->effects);
-    }
-    if (a->x < 0 || a->y < 0 || a->x > GetMapWidth() || a->y > GetMapHeight() || a->duration < 0)
-    {
-        if (a->shouldCallback)
-        {
-            
-            currAbilityRunning = a->cameFrom;
-            currGameObjRunning = a->ownedBy;
-            currAttackRunning = a;
-
-            lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_ontimeout);
-
-            lua_pushnumber(luaState,a->x);
-            lua_pushnumber(luaState,a->y);
-            lua_pushinteger(luaState,a->ownedBy-objects);
-            lua_pushnumber(luaState,dt);    
-            lua_pushinteger(luaState,a->target - objects);
-            lua_pushinteger(luaState,a-attacks);
-            lua_pcall(luaState,7,0,0);
-
-        }
-        RemoveAttack(a-attacks);
-        return;
     }
 }
 void UpdateAttacks(float dt)
