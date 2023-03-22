@@ -18,11 +18,6 @@
 #include "player.h"
 #include "map.h"
 
-#include "lua-5.4.3/src/lua.h"
-#include "lua-5.4.3/src/lauxlib.h"
-#include "lua-5.4.3/src/lualib.h"
-#include "lua-5.4.3/src/luaconf.h"
-
 Attack attacks[MAX_ATTACKS] = {0};
 unsigned int freeAttacks[MAX_ATTACKS] = {0}; 
 int attack_top = 0;

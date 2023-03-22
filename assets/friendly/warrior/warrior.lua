@@ -1,4 +1,4 @@
-local maxHP = 2200
+local maxHP = 3100
 
 function setup()
     SetSprite("assets/friendly/warrior/warrior.png");
@@ -14,11 +14,11 @@ function setup()
     SetDamage(5);
 
     SetObjType(TYPE_TANK)
-    SetThreatMultiplier(10);
+    SetThreatMultiplier(12);
     IsPlayerChoosable(true);
     SetCategory(TYPE_TANK);
 
-    SetMaxHP(1100,true);
+    SetMaxHP(maxHP,true);
 
     SetObjPurchaseScreenSprite("assets/friendly/warrior/warrior_full.png")
     SetObjName("Warrior");

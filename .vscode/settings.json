@@ -24,6 +24,7 @@
         "allegro.h": "c",
         "cmath": "c",
         "animationeffect.h": "c",
-        "allegro_font.h": "c"
+        "allegro_font.h": "c",
+        "augment.h": "c"
     }
 }

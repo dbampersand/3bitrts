@@ -1,5 +1,5 @@
 
-local damage = 40
+local damage = 70
 function setup()
     AbilitySetCastType(Bor(ABILITY_POINT,ABILITY_TARGET_ENEMY)); 
     AbilitySetPortrait("assets/friendly/warrior/icon_charge.png");
@@ -27,7 +27,7 @@ function casted(x,y,obj,headingx,headingy)
     f2 = {};
     f2["trigger"] = TRIGGER_INSTANT;
     f2["type"] = EFFECT_THREAT;
-    f2["value"] = 100;  
+    f2["value"] = 600; 
 
 
 
@@ -44,7 +44,7 @@ function casted(x,y,obj,headingx,headingy)
     ApplyEffect(GetObjRef(),{speed});
 
     SetMovePoint(GetObjRef(),x, y, true, false)
-    CreateCircularProjectiles(xPos,yPos,"",ATTACK_PROJECTILE_ANGLE,sp,duration,true,ATTACK_HITS_ENEMIES,10,COLOR_FRIENDLY_DAMAGE,0,{f1,f2})
+    CreateCircularProjectiles(xPos,yPos,"",ATTACK_PROJECTILE_ANGLE,sp,duration,true,ATTACK_HITS_ENEMIES,12,COLOR_FRIENDLY_DAMAGE,0,{f1,f2})
 
     --aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,false,-1, {f1})
 

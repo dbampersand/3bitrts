@@ -2132,6 +2132,9 @@ void Move(GameObject* g, float delta)
     SetMapCollisionRect(g->position.worldX,g->position.worldY,w,h,true);
 
 
+    AddParticleWithRandomProperties(g->position.worldX+GetWidth(g)/2.0f,g->position.worldY+GetHeight(g)/2.0f,GameObjToColor(g),1.25,1.5,0.05f,0.2f,-M_PI,M_PI);
+
+
 }
 bool ObjectCanPush(GameObject* g)
 {
