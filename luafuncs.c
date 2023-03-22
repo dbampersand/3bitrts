@@ -1561,6 +1561,39 @@ int L_RemoveAggroGroup(lua_State* l)
     g->aggroGroupSet = false;
     return 0;
 }
+int L_SetObjectPushable(lua_State* l)
+{
+    int obj = lua_tonumber(l,1);
+    bool b = lua_toboolean(l,2);
+        if (obj < 0 || obj >= MAX_OBJS)
+    {
+        printf("L_SetObjectPushable: Index invalid: %i\n",obj);
+        return 0;
+    }
+    objects[obj].objIsPushable = b;
+    return 0;
+
+}
+int L_PushObj(lua_State* l)
+{
+    float fromX = lua_tonumber(l,1);
+    float fromY = lua_tonumber(l,2);
+
+    int objPushing = lua_tonumber(l,3);
+    
+    float velocity = lua_tonumber(l,4);
+    float timeToPush = lua_tonumber(l,5);
+
+    if (objPushing < 0 || objPushing >= MAX_OBJS)
+    {
+        printf("L_PushObj: Index invalid: %i\n",objPushing);
+        return 0;
+    }
+    GameObject* obj = &objects[objPushing];
+    PushObj(obj,velocity,timeToPush,(Point){fromX,fromY});
+
+    return 0;
+}
 int L_CreateAOE(lua_State* l)
 {
     //read from table of effects
@@ -4304,5 +4337,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_RemoveFromCount);
     lua_setglobal(luaState, "RemoveFromCount");
+
+    lua_pushcfunction(luaState, L_PushObj);
+    lua_setglobal(luaState, "PushObj");
+
+    lua_pushcfunction(luaState, L_SetObjectPushable);
+    lua_setglobal(luaState, "SetObjectPushable");
 
 }

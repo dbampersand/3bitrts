@@ -215,6 +215,12 @@ typedef struct GameObject
     bool aggroGroupSet;
     int aggroGroup;
 
+    float pushTimer;
+    float pushFullTime;
+    Point pushDir;
+    float pushSpeed;
+
+    bool objIsPushable;
 
 } GameObject;
 
@@ -268,6 +274,11 @@ int lastFootstepPlayed;
 
 //add 8 more free objects when we need to realloc objects array
 #define BUFFER_PREALLOC_AMT 8
+
+void MoveObjTo(GameObject* g, float x, float y);
+
+void PushObj(GameObject* g, float velocity, float timeToPush, Point from);
+void UpdatePush(GameObject* g, float dt);
 
 bool PlayerHasEnemyUnitSelected();
 void SetTargetPosition(GameObject* g, float x, float y);

@@ -11,6 +11,7 @@ function setup()
     SetObjectPush(true);
     ObjIsStunnable(GetObjRef(),false);
     SetObjIsBoss(GetObjRef(),true)
+    SetObjectPushable(GetObjRef(),false);
 
     testAbility = AddAbility(GetObjRef(),"assets/enemies/scorpion/ability_spit.lua",0)   
 

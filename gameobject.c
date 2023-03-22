@@ -54,6 +54,61 @@ float* sinTable = NULL; // = &__sinTable[360];
 float* cosTable = NULL;// = &__cosTable[360];
 
 int numChannellingInfosDrawn = 0;
+void MoveObjTo(GameObject* g, float x, float y)
+{
+    double dX = x - g->position.worldX;
+    double dY = y - g->position.worldY;
+
+    UpdateObjPosition_X(g,x);
+    CheckCollisions(g,true, dX,ObjectCanPush(g));
+    CheckCollisionsWorld(g,true, dX);
+
+    UpdateObjPosition_Y(g,y);
+    CheckCollisions(g,false, dY,ObjectCanPush(g));
+    CheckCollisionsWorld(g,false, dY);
+    SetMapCollisionRect(g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g),true);
+
+}
+void UpdatePush(GameObject* g, float dt)
+{
+    g->pushTimer -= dt;
+
+    if (g->pushTimer > 0)
+    {
+        float time = easeOutExpo(g->pushTimer / g->pushFullTime);
+        float amtToMove = time * g->pushSpeed * dt;
+
+        Point moveTo; 
+        moveTo.x = g->position.worldX + amtToMove * g->pushDir.x;
+        moveTo.y = g->position.worldY + amtToMove * g->pushDir.y;
+
+        MoveObjTo(g,moveTo.x,moveTo.y);
+    }   
+    else
+    {
+        g->pushTimer = 0;
+    }
+
+}
+
+bool ObjIsPushable(GameObject* g)
+{
+    return (ObjIsBoss(g) || g->objIsPushable);
+}
+
+void PushObj(GameObject* g, float velocity, float timeToPush, Point from)
+{
+    if (ObjIsPushable(g))
+        return;
+    g->pushFullTime = timeToPush;
+    g->pushTimer = timeToPush;
+    g->pushSpeed = velocity;
+
+    g->pushDir.x = ( g->position.worldX - from.x);
+    g->pushDir.y = (g->position.worldY - from.y);
+    Normalize(&g->pushDir.x,&g->pushDir.y);
+}
+
 
 bool PlayerHasEnemyUnitSelected()
 {
@@ -1979,9 +2034,17 @@ void Move(GameObject* g, float delta)
         return;
     if (ObjIsDecoration(g))
         return;
+
+    if (g->pushTimer > 0)
+    {
+        UpdatePush(g,delta);
+        return;
+    }
+
     if (g->speed == 0)
         return;
     #define DIST_DELTA 1
+
 
     PointSpace before = g->position;
     int w = GetWidth(g);//al_get_bitmap_width(sprites[g->spriteIndex].sprite);

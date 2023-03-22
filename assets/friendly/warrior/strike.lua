@@ -37,6 +37,9 @@ function casted(x,y,obj,headingx,headingy)
     ApplyEffect(obj,{f1,f2})
     ApplyEffect(GetObjRef(),{f3});
     PlaySound("assets/friendly/warrior/audio/strike.wav",0.5);
+
+    PushObj(GetX(GetObjRef()),GetY(GetObjRef()),obj,10,0.15);
+
     
     return true;
 end
