@@ -1074,7 +1074,7 @@ int L_CreateConeProjectiles(lua_State* l)
     for (int i = 0; i < numProjectiles; i++)
     {
         float angle = (i) *  radius / (float)numProjectiles;
-        CreateProjectile(l,x,y, x+cos(angle+startAngle), y+sin(angle+startAngle), portrait, attackType, speed, duration, shouldCallback, properties, NULL, color, effects, len);
+        CreateProjectile(l,x,y, x-cos(angle+startAngle), y-sin(angle+startAngle), portrait, attackType, speed, duration, shouldCallback, properties, NULL, color, effects, len);
     }
     return 0;
 }
