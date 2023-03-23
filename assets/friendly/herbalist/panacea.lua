@@ -12,6 +12,9 @@ end
 
 
 function casted(x,y,obj,headingx,headingy)
+
+    PlaySound("assets/friendly/herbalist/audio/panacea.wav",1.25)
+
     local before = GetNumEffects(obj);
 
     local f1 = {};

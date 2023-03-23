@@ -10,7 +10,7 @@ function setup()
     SetAbilityCooldown(GetObjRef(),GetAbilityRef(),20);
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/priest/audio/shield.wav",1)
+    PlaySound("assets/friendly/herbalist/audio/elixir_of_life.wav",1.25)
 
     local newObj = obj
     local newX = 0; local newY = 0

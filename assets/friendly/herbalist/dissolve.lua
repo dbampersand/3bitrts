@@ -9,6 +9,8 @@ function setup()
 
     SetCooldown(20);
     SetManaCost(10)
+
+    
 end
 
 
@@ -26,6 +28,9 @@ function casted(x,y,obj,headingx,headingy)
     f2["value"] = damage / duration;
 
     ApplyEffect(obj,{f1,f2});   
+
+    PlaySound("assets/friendly/herbalist/audio/dissolve.wav",1.25)
+
 
     return true; 
 end

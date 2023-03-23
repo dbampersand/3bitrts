@@ -11,7 +11,7 @@ function setup()
     SetManaCost(20)
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/priest/audio/smite.wav",1)
+    PlaySound("assets/friendly/herbalist/audio/regenerative_herbs.wav",1.25)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_TIMER

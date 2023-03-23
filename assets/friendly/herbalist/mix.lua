@@ -1,4 +1,4 @@
-local efficiency = 0.6
+local efficiency = 1.2
 
 function setup()
     AbilitySetPortrait("assets/friendly/herbalist/icon_mix.png");
@@ -13,6 +13,9 @@ end
 
 
 function casted(x,y,obj,headingx,headingy)
+
+    PlaySound("assets/friendly/herbalist/audio/mix.wav",1.25)
+
     local effects = GetEffects(obj);
 
     local totalHeal = 0
@@ -34,6 +37,10 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HEAL
     f1["value"] = totalHeal * efficiency;
     ApplyEffect(obj,{f1});
+
+    if (totalHeal > 0) then
+        ShakeScreen(1,0.2)
+    end
     return true; 
 end
 

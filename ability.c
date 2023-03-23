@@ -71,7 +71,7 @@ void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD
     if (transitioningTo != gameState)
         return;
     CheckAbilityClicked(keyState,keyStateLastFrame, &mouseState);
-    if (mouseState.mouse.buttons & 1) 
+    if (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1))
     {
         currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
         currAbilityRunning = players[0].abilityHeld;

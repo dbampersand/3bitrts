@@ -640,7 +640,7 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
     if (players[0].abilityHeld)
         return;
 
-    if (!(mouseLastFrame->mouse.buttons & 1)  && (mouseState->mouse.buttons & 1) && !players[0].abilityHeld)
+    if (!(mouseLastFrame->mouse.buttons & 1)  && (mouseState->mouse.buttons & 1) && !players[0].abilityHeld && !MouseInsideUI(mouseState))
     {
         AddMouseRandomParticles(*mouseState, 3);
         players[0].selecting = true;
