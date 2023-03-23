@@ -54,7 +54,7 @@ function untoggle()
 end
 
 function onhit(x,y,objhit)
-    PushObj(x,y,objHit,70,0.05);
+    PushObj(x,y,objHit,90,0.1);
 
 end
 

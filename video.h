@@ -99,6 +99,18 @@ extern float DEBUG_EXTRA;
 
 typedef struct GameObject GameObject;
 
+typedef struct ScreenShake
+{
+    float screenShakeAmount; 
+    float screenShakePosition;
+    float screenShakeTime;
+    float screenShakeTimeTotal;
+
+} ScreenShake;
+#define NUMSCREENSHAKES 30
+int screenShakeTop;
+ScreenShake screenShakes[NUMSCREENSHAKES];
+
 void DrawBufferedStrings();
 
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled);
@@ -132,3 +144,8 @@ void CreatePoisonEffect(GameObject* g, float lifetime);
 void UpdateScreenPositions_Point(PointSpace* p);
 
 void DrawLight(int lightSize, float r, float g, float b, float intensity, float worldX, float worldY);
+
+
+void AddScreenshake(float amt, float time);
+float GetScreenshake();
+void UpdateScreenshake(float dt);

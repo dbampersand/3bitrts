@@ -771,3 +771,44 @@ void UpdateScreenPositions_Point(PointSpace* p)
     p->screenY = ToScreenSpace_Y(p->worldY);
 }
 
+void AddScreenshake(float amt, float time)
+{
+    ScreenShake* s = &screenShakes[screenShakeTop];
+    s->screenShakeAmount = amt;
+    s->screenShakeTime = time;
+    s->screenShakeTimeTotal = time;
+
+    screenShakeTop++;
+    if (screenShakeTop >= NUMSCREENSHAKES)
+        screenShakeTop = 0;
+}
+void UpdateScreenshake(float dt)
+{
+    for (int i = 0; i < NUMSCREENSHAKES; i++)
+    {
+        ScreenShake* s = &screenShakes[i];
+        s->screenShakeTime -= dt;
+        if (s->screenShakeTime < 0)
+            s->screenShakeTime = 0;
+    }
+}
+float GetScreenshake()
+{
+    float total = 0;
+    for (int i = 0; i < NUMSCREENSHAKES; i++)
+    {
+        ScreenShake* s = &screenShakes[i];
+        if (s->screenShakeTimeTotal == 0)
+        {
+            continue;
+        }
+        float time = (s->screenShakeTime / s->screenShakeTimeTotal);
+
+        float v = easeOutExpo(time);
+        float shake = sin(_FRAMES) * s->screenShakeAmount * v;
+
+        total += shake;
+
+    }
+    return total;
+}

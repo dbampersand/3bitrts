@@ -39,7 +39,7 @@ function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/warrior/audio/strike.wav",0.5);
 
     PushObj(GetX(GetObjRef()),GetY(GetObjRef()),obj,50,0.15);
-
+    ShakeScreen(5,0.25)
     
     return true;
 end

@@ -976,6 +976,13 @@ int L_AddAttackSprite(lua_State* l)
     currGameObjRunning->onAttackEffectsIndices[currGameObjRunning->numAttackEffectIndices-1] = index;
     return 0;
 }
+int L_ShakeScreen(lua_State* l)
+{
+    float intensity = lua_tonumber(l,1);
+    float time = lua_tonumber(l,2);
+    AddScreenshake(intensity,time);
+    return 0;
+}
 int CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const char* portrait, int attackType, int speed, int duration, bool shouldCallback, int properties, GameObject* targ, uint32_t color, Effect* effects, size_t len)
 {
 
@@ -4343,5 +4350,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetObjectPushable);
     lua_setglobal(luaState, "SetObjectPushable");
+
+    lua_pushcfunction(luaState, L_ShakeScreen);
+    lua_setglobal(luaState, "ShakeScreen");
 
 }

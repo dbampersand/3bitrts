@@ -736,9 +736,10 @@ int main(int argc, char* args[])
             if (gameState == GAMESTATE_INGAME)
                 RecordReplay(SCREEN);
             DrawConsole();
+            UpdateScreenshake(dt);
 
             al_set_target_bitmap(backbuffer);
-            al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE, drawposx, drawposy,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
+            al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE, drawposx+GetScreenshake(), drawposy,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
             al_flip_display();
 
             mouseStateLastFrame = mouseState;
