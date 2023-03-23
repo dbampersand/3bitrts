@@ -2,7 +2,7 @@ local totem = -1
 
 function setup()
     AbilitySetPortrait("assets/friendly/herbalist/icon_panacea.png");
-    SetDescription("Panacea\n\nCures a bad effect from target. Generates mana when it cures an effect")
+    SetDescription("Panacea\n\nCures a bad effect from target and provides a shield. Generates mana when it cures an effect.")
 
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
 
@@ -20,6 +20,13 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 1
     ApplyEffect(obj,{f1});
     local after = GetNumEffects(obj);
+
+    local f3 = {};
+    f3["trigger"] = TRIGGER_INSTANT
+    f3["type"] = EFFECT_SHIELD
+    f3["value"] = 100
+    ApplyEffect(obj,{f3});
+
 
     --Add mana if we've cured an effect
     if (before - after ~= 0) then

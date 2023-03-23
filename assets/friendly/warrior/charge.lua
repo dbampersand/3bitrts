@@ -55,6 +55,10 @@ end
 
 function onhit(x,y,objhit)
     PushObj(x,y,objHit,90,0.1);
+    ShakeScreen(0.5,0.1)
+
+    PlaySound("assets/friendly/warrior/audio/charge_hitsound.wav",0.5);
+
 
 end
 

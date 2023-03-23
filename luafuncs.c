@@ -815,7 +815,10 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
     e.trigger = GetTableField(l,-1,"trigger", &isField);
     e.effectType = GetTableField(l,-1,"type",&isField);
     float triggersPerSecond = GetTableField(l,-1,"triggersPerSecond",&isField);
-    e.triggersPerSecond = triggersPerSecond;
+    if (isField)
+        e.triggersPerSecond = triggersPerSecond;
+    else
+        e.triggersPerSecond = 1;
     e.duration = GetTableField(l,-1,"duration",&isField);
     const char* portrait = GetTableField_Str(l,-1,"portrait",&isField);
     if (isField && portrait)
@@ -847,7 +850,7 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
     e.overwrites = (bool)GetTableField_Bool(l,-1,"overwrites",&isField);
     e.stacks = 1;
     e.timer = 0;
-    e.numTriggers = e.duration * triggersPerSecond;
+    e.numTriggers = e.duration * e.triggersPerSecond;
     if (e.numTriggers == 0) 
         e.numTriggers = 1;
     int maxStacks = GetTableField(l,-1,"maxStacks",&isField);

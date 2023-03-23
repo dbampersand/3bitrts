@@ -736,6 +736,7 @@ int main(int argc, char* args[])
             if (gameState == GAMESTATE_INGAME)
                 RecordReplay(SCREEN);
             DrawConsole();
+            
             UpdateScreenshake(dt);
 
             al_set_target_bitmap(backbuffer);

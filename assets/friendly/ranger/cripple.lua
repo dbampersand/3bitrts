@@ -7,7 +7,7 @@ function setup()
     SetCooldown(15);
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/rogue/audio/backstab.wav",1.25)
+    PlaySound("assets/friendly/ranger/audio/cripple.wav",1.25)
     f1 = {};
     f1["trigger"] = TRIGGER_CONST
     f1["type"] = EFFECT_SPEED

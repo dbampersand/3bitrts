@@ -7,7 +7,7 @@ function setup()
     SetAbilityRange(50);
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/rogue/audio/cloak.wav",1.25)
+    PlaySound("assets/friendly/ranger/audio/aimed_shot.wav",1.25)
 
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
@@ -15,6 +15,10 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 140;
     ApplyEffect(obj,{f1})
     AddStack(GetObjRef(),2,1);
+
+    ShakeScreen(3,0.3);
+    PushObj(GetX(GetObjRef()),GetY(GetObjRef()),obj,80,0.1);
+
 
 
     return true;

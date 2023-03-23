@@ -1,9 +1,9 @@
 local duration = 15
-local value = 10
-
+local value = -6
+local damage = 100
 function setup()
     AbilitySetPortrait("assets/friendly/herbalist/icon_dissolve.png");
-    SetDescription("Dissolve\n\nReduces target's armor.")
+    SetDescription("Dissolve\n\nReduces the target's armour and deals damage over time.")
 
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
 
@@ -19,8 +19,13 @@ function casted(x,y,obj,headingx,headingy)
     f1["duration"] = duration;
     f1["value"] = value;
 
+    local f2 = {};
+    f2["trigger"] = TRIGGER_TIMER
+    f2["type"] = EFFECT_HURT
+    f2["duration"] = duration;
+    f2["value"] = damage / duration;
 
-    ApplyEffect(obj,{f1});
+    ApplyEffect(obj,{f1,f2});   
 
     return true; 
 end

@@ -10,7 +10,7 @@ function setup()
     SetAbilityStacks(0)
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/rogue/audio/toxic.wav",1.25)
+    PlaySound("assets/friendly/ranger/audio/flurry.wav",1.25)
     f1 = {}
     f1["trigger"] = TRIGGER_CONST
     f1["type"] = EFFECT_ATTACKSPEED

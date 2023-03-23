@@ -7,7 +7,7 @@ function setup()
     SetCooldown(70)
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/rogue/audio/shiv.wav",1.25)
+    PlaySound("assets/friendly/ranger/audio/instinct.wav",1.25)
 
     f1 = {};
     f1["trigger"] = TRIGGER_CONST;
