@@ -7,7 +7,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
 
     SetAbilityRange(20)
-    SetCooldown(0);
+    SetCooldown(4);
     SetManaCost(65);
 end
 

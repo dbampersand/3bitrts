@@ -6,12 +6,12 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",115,296,TYPE_ENEMY,0),1);
     SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",131,296,TYPE_ENEMY,0),1);
 
-    SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",136,192,TYPE_ENEMY,0),2);
-    SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",136,192,TYPE_ENEMY,0),2);
+    --SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",136,192,TYPE_ENEMY,0),2);
+    --SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",136,192,TYPE_ENEMY,0),2);
 
-    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",93,59,TYPE_ENEMY,0),3);
-    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",193,68,TYPE_ENEMY,0),3);
-    SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",142,86,TYPE_ENEMY,0),3);
+    --SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",93,59,TYPE_ENEMY,0),3);
+    --SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",193,68,TYPE_ENEMY,0),3);
+    --SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",142,86,TYPE_ENEMY,0),3);
 
  
     SetSpawnPoint(120,460)

@@ -5,7 +5,7 @@ function setup()
     SetAbilityRange(120)
     SetDescription("Regen\n\nA heal over time effect.")
     SetManaCost(15)
-    SetAbilityCooldown(1);
+    SetCooldown(1);
     
 end
 function casted(x,y,obj,headingx,headingy)

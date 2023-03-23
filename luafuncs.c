@@ -1235,6 +1235,7 @@ int L_SetCooldown(lua_State* l)
 {
     const float cd = lua_tonumber(l,1);
     currAbilityRunning->cooldown = cd;
+    
     return 0;
 }
 int L_SetCooldownTimer(lua_State* l)
@@ -1246,6 +1247,11 @@ int L_SetCooldownTimer(lua_State* l)
 //used when called outside the ability
 int L_SetAbilityCooldown(lua_State* l)
 {
+    if (!lua_isnumber(l,1) || !lua_isnumber(l,2) || !lua_isnumber(l,3))
+    {
+        printf("L_SetAbilityCooldown: Invalid number or types of arguments. Possibly you are meaning to use SetCooldown when inside an ability.\n");
+        return 0;
+    }
     int gameObjIndex = lua_tonumber(l,1);
     if (gameObjIndex < 0 || gameObjIndex >= MAX_OBJS)
         return 0;
