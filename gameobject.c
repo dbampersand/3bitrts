@@ -359,7 +359,9 @@ void UpdateObject(GameObject* g, float dt)
         ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
         if ((_FRAMES+(g-objects))%2==0)
         RandParticleAroundEdgeOfCircle(cx, cy, r, g->summonMax+1, 0.4, ALColorToCol(c));
-
+        
+        UpdatePush(g,dt);
+        
         return;
     }
     if (ObjIsDecoration(g))
