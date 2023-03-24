@@ -2914,7 +2914,7 @@ Rect GetObjRect(GameObject* g)
 {
     if (!g) return (Rect){0,0,0,0};
     if (g->spriteIndex <= 0) return (Rect){g->position.worldX,g->position.worldY,0,0};
-    Rect r = (Rect){g->position.worldX,g->position.worldY,al_get_bitmap_width(sprites[g->spriteIndex].sprite),al_get_bitmap_height(sprites[g->spriteIndex].sprite)};
+    Rect r = (Rect){g->position.worldX-1,g->position.worldY-1,al_get_bitmap_width(sprites[g->spriteIndex].sprite)+2,al_get_bitmap_height(sprites[g->spriteIndex].sprite)+2};
     return r;
 }
 void SetMoveSpeed(GameObject* g, float value)

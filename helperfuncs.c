@@ -86,7 +86,6 @@ MouseState GetMouseClamped()
     mouse.y = mouse.y/(float)_RENDERSIZE;
 
 
-
     if (mouse.x + MOUSECURSORSIZE > (_SCREEN_SIZE))
     {
         //mouse.x = _SCREEN_SIZE - MOUSECURSORSIZE;
@@ -114,9 +113,9 @@ MouseState GetMouseClamped()
     MouseState m;
     m.mouse = mouse;
     m.screenX = mouse.x;
-    m.screenY = mouse.y;
-    m.worldX = ToWorldSpace_X(mouse.x);
-    m.worldY = ToWorldSpace_Y(mouse.y);
+    m.screenY = mouse.y; 
+    m.worldX = ToWorldSpace_X(m.screenX);
+    m.worldY = ToWorldSpace_Y(m.screenY);
 
 
     return m;

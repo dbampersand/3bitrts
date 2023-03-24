@@ -59,7 +59,6 @@ void DrawHeldAbility(MouseState* mouseState)
         y = cy + y*_MIN(radius,dist);
         ToScreenSpace(&x,&y);
         //al_draw_line(ToScreenSpace_X(cx),ToScreenSpace_Y(cy),x,y,FRIENDLY,1);
-        printf("%f,%f\n",x,y);
     }*/
     GameObject* heldSelected = players[0].selection[players[0].indexSelectedUnit];
     float cxHeld; float cyHeld; 
