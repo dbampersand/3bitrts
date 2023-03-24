@@ -110,6 +110,7 @@ void CastAbilityOnMouse(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState
     if (players[0].abilityHeld)
     {
         GameObject* target = NULL;  
+        currGameObjRunning = players[0].selection[0];
         if (AbilityShouldBeCastOnTarget(players[0].abilityHeld))
             for (int i = 0; i < numActiveObjects; i++)
             {
@@ -147,7 +148,7 @@ void CastAbilityOnMouse(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState
             for (int i = 0; i < MAXUNITSSELECTED; i++)
             {
                 GameObject* g = players[0].selection[i];
-                if (g != currGameObjRunning)
+                if (g && g != currGameObjRunning)
                 {
                     if (target && GetPlayerOwnedBy(target) == TYPE_ENEMY)
                         AttackCommand(g,target,IsBindDown(keyState,currSettings.keymap.key_Shift));
@@ -161,23 +162,23 @@ void CastAbilityOnMouse(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState
 int GetAbilityIndexClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
 
-    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Q))
+    if (IsBindDownThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Q))
     {
         return 0;
     }
-    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_W))
+    if (IsBindDownThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_W))
     {
         return 1;
     }
-    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_E))
+    if (IsBindDownThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_E))
     {
         return 2;
     }
-    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_R))
+    if (IsBindDownThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_R))
     {
         return 3;
     }
-    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_F))
+    if (IsBindDownThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_F))
     {
         return 4;
     }
