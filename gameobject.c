@@ -888,6 +888,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
     GameObject* before = currGameObjRunning;
     GameObject* found = NULL;
 
+    //searching for an open slot to put the object in
     for (int i = 0; i < MAX_OBJS; i++)
     {
         if (!IsActive(&objects[i]))
@@ -2397,6 +2398,8 @@ void DrawMapHighlights()
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g = activeObjects[i];
+        int offset = i * 16;
+        float lightSize = g->lightSize + (sin(offset + (_FRAMES/16.0f)) * 1.15f);
         if (IsActive(g) && IsOwnedByPlayer(g))
         {
             g->lightR = 2;
@@ -2404,7 +2407,7 @@ void DrawMapHighlights()
             g->lightB = 0.5f;
             g->lightIntensity = 0.5f;
 
-            DrawLight(g->lightSize,g->lightR,g->lightG,g->lightB,g->lightIntensity,g->position.worldX+GetWidth(g)/2,g->position.worldY+GetHeight(g)/2);
+            DrawLight(lightSize,g->lightR,g->lightG,g->lightB,g->lightIntensity,g->position.worldX+GetWidth(g)/2,g->position.worldY+GetHeight(g)/2);
         }
         if (IsActive(g) && !IsOwnedByPlayer(g) && !ObjIsDecoration(g)) 
         {
@@ -2413,7 +2416,7 @@ void DrawMapHighlights()
             g->lightB = ENEMY.b;
             g->lightIntensity = 0.5f;
 
-            DrawLight(g->lightSize,g->lightR,g->lightG,g->lightB,g->lightIntensity,g->position.worldX+GetWidth(g)/2,g->position.worldY+GetHeight(g)/2);
+            DrawLight(lightSize,g->lightR,g->lightG,g->lightB,g->lightIntensity,g->position.worldX+GetWidth(g)/2,g->position.worldY+GetHeight(g)/2);
 
         }       
         else if (IsActive(g) && ObjIsDecoration(g))
@@ -2423,7 +2426,7 @@ void DrawMapHighlights()
             g->lightB = FRIENDLY.b;
             g->lightIntensity = 0.125f;
 
-            DrawLight(g->lightSize,g->lightR,g->lightG,g->lightB,g->lightIntensity,g->position.worldX+GetWidth(g)/2,g->position.worldY+GetHeight(g)/2);
+            DrawLight(lightSize,g->lightR,g->lightG,g->lightB,g->lightIntensity,g->position.worldX+GetWidth(g)/2,g->position.worldY+GetHeight(g)/2);
 
         }
 
@@ -2712,7 +2715,7 @@ void GenerateCircleHighlight(int lightSize)
                 
                 //if (!touched[touchedCoordX][touchedCoordY])
                 {
-                    ALLEGRO_COLOR col = al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
+                    //ALLEGRO_COLOR col = al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
 
                     //if (AlColIsEq(colGround,GROUND))
                     {

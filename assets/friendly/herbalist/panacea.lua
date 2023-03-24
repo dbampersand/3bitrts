@@ -1,4 +1,3 @@
-local totem = -1
 
 function setup()
     AbilitySetPortrait("assets/friendly/herbalist/icon_panacea.png");
@@ -28,6 +27,7 @@ function casted(x,y,obj,headingx,headingy)
     f3["trigger"] = TRIGGER_INSTANT
     f3["type"] = EFFECT_SHIELD
     f3["value"] = 100
+    f3["duration"] = 15;
     ApplyEffect(obj,{f3});
 
 

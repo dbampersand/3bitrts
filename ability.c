@@ -45,7 +45,7 @@ void DrawHeldAbility(MouseState* mouseState)
 
     al_draw_circle((cx),(cy),radius,FRIENDLY,0);
     
-    if (players[0].abilityHeld->targetingHint == HINT_LINE)
+    /*if (players[0].abilityHeld->targetingHint == HINT_LINE)
     {
         //normalise then project to min(radius,mousepos)
         float distX = mouseState->screenX - cx; 
@@ -58,8 +58,9 @@ void DrawHeldAbility(MouseState* mouseState)
         x = cx + x*_MIN(radius,dist);
         y = cy + y*_MIN(radius,dist);
         ToScreenSpace(&x,&y);
-        al_draw_line(ToScreenSpace_X(cx),ToScreenSpace_Y(cy),x,y,FRIENDLY,1);
-    }
+        //al_draw_line(ToScreenSpace_X(cx),ToScreenSpace_Y(cy),x,y,FRIENDLY,1);
+        printf("%f,%f\n",x,y);
+    }*/
     GameObject* heldSelected = players[0].selection[players[0].indexSelectedUnit];
     float cxHeld; float cyHeld; 
     GetCentre(heldSelected,&cxHeld,&cyHeld);

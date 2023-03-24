@@ -17,6 +17,15 @@ void UpdateEffectVisuals(GameObject* g, float dt)
     {
         Effect* e = &g->effects[i];
 
+        if (!IsActive(g))
+        {
+            if (e->visual.timer > 1)
+            {
+                e->visual.timer = 1;
+            }
+        }
+
+
         if (e->enabled && e->visual.isActive)
         {
             e->visual.position.worldY -= dt*2;
