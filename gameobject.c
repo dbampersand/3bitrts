@@ -3225,7 +3225,7 @@ float GetDist(GameObject* g1, GameObject* g2)
     unioned.w -= r1.w + r2.w;
     unioned.h -= r1.h + r2.h;
 
-    return unioned.w+unioned.h;
+    return abs(unioned.w)+abs(unioned.h);
 }
 GameObject* GetClicked(float x, float y)
 {
