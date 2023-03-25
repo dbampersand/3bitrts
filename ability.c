@@ -110,7 +110,7 @@ void CastAbilityOnMouse(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState
     if (players[0].abilityHeld)
     {
         GameObject* target = NULL;  
-        currGameObjRunning = players[0].selection[0];
+        currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
         if (AbilityShouldBeCastOnTarget(players[0].abilityHeld))
             for (int i = 0; i < numActiveObjects; i++)
             {
@@ -264,6 +264,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         a->stacks = 1;
         a->maxStacks = 1;
         a->manaCost = 0;
+        a->range = 30;
         int funcIndex;
 
         if (!a->luabuffer.functions)

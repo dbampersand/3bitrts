@@ -201,6 +201,7 @@ void UpdatePlayerObjectInteractions(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KE
         {
             players[0].indexSelectedUnit = 0;
         }
+        players[0].abilityHeld = NULL;
     }
 
 }
@@ -3218,6 +3219,8 @@ float GetDistCentre(GameObject* g1, GameObject* g2)
 }
 float GetDist(GameObject* g1, GameObject* g2)
 {
+    if (g1 == g2)
+        return 0;
     Rect r1 = GetObjRect(g1);
     Rect r2 = GetObjRect(g2);
 

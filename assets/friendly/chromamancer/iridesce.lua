@@ -4,6 +4,7 @@ function setup()
     SetDescription("Iridesce\n\nShields target and heals over time. When used on enemies, causes a damage over time effect.")
     SetCooldown(0.5);
     SetManaCost(20)
+
 end
 
 function casted(x,y,obj,headingx,headingy)
