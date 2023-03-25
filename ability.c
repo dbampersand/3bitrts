@@ -398,7 +398,7 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
             }
         }
 
-        if (GetDistCentre(g,target) > a->range)
+        if (GetDist(g,target) > a->range)
             return false;
     }
     if (g && (!(a->castType & ABILITY_INSTANT) &&  !(a->castType & ABILITY_TOGGLE)))
@@ -566,8 +566,7 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
         else
             return false;
     }
-    float f = GetDist(g,target);
-    if (GetDistCentre(g,target) > a->range)
+    if (GetDist(g,target) >= a->range)
         return false;
     if (target == NULL && AbilityShouldBeCastOnTarget(a))
         return false;

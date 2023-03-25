@@ -3267,8 +3267,8 @@ float RectDist(GameObject* g1, GameObject* g2)
     unioned.w -= r1.w + r2.w;
     unioned.h -= r1.h + r2.h;
 
-    unioned.w = max(0,unioned.w);
-    unioned.h = max(0,unioned.h);
+    unioned.w = _MAX(0,unioned.w);
+    unioned.h = _MAX(0,unioned.h);
 
 
     //float dist = (unioned.w+unioned.h) - (r1.w+r2.w+r1.h+r2.h);
