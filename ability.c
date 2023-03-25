@@ -42,9 +42,11 @@ void DrawHeldAbility(MouseState* mouseState)
     GetCentre_Screen(g, &cx, &cy);
     int w; int h;
 
-    float radius = players[0].abilityHeld->range + (GetWidth(g));
+    float radiusX = players[0].abilityHeld->range + (GetWidth(g));
+    float radiusY = players[0].abilityHeld->range + (GetHeight(g));
 
-    al_draw_circle((cx),(cy),radius,FRIENDLY,0);
+    al_draw_ellipse(cx,cy,radiusX,radiusY,FRIENDLY,0);
+//    al_draw_circle((cx),(cy),radius,FRIENDLY,0);
     
     /*if (players[0].abilityHeld->targetingHint == HINT_LINE)
     {
