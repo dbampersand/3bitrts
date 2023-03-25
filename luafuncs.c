@@ -3363,9 +3363,10 @@ int L_CopyObject(lua_State* l)
         {
             g2->abilities[i].cdTimer = g->abilities[i].cdTimer;
         }
+        lua_pushnumber(l,g2-objects);
+        return 1;
     }
-    lua_pushnumber(l,g-objects);
-    return 1;
+    return 0;
 }
 int L_SetSpawnPoint(lua_State* l)
 {
