@@ -3261,12 +3261,14 @@ float RectDist(GameObject* g1, GameObject* g2)
 {
     Rect r1 = GetObjRect(g1);//(Rect){g1->position.worldX,g1->position.worldY,GetWidth(g1),GetHeight(g1)};
     Rect r2 = GetObjRect(g2);//(Rect){g2->position.worldX,g2->position.worldY,GetWidth(g2),GetHeight(g2)};
+    if (CheckIntersect(r1,r2))
+        return 0;
     Rect unioned = UnionRectR(r1,r2);
     unioned.w -= r1.w + r2.w;
     unioned.h -= r1.h + r2.h;
 
-    unioned.w = max(0,unioned.w);
-    unioned.h = max(0,unioned.h);
+    unioned.w = _MAX(0,unioned.w);
+    unioned.h = _MAX(0,unioned.h);
 
 
     //float dist = (unioned.w+unioned.h) - (r1.w+r2.w+r1.h+r2.h);
