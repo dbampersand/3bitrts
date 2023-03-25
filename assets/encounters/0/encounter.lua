@@ -18,5 +18,5 @@
     EncounterSetNumUnitsToSelect(3);
 
     SetEncounterLoadScreen("assets/encounters/0/loadscreen.png")
-    StartsUnlocked(true);
+    StartsUnlocked(true);   
 end

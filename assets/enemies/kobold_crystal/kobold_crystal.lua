@@ -25,9 +25,9 @@ function setup()
 end
 
 function update(dt)
-    if (AnyObjInCombat()) then
+    --if (AnyObjInCombat()) then
         CastAbility(crash,6,{{target=GetRandomUnit(TYPE_ENEMY,Band(Bnot(TYPE_TANK),TYPE_ALL),256)}});
-    end
+    --end
 end
 
 function kill()
