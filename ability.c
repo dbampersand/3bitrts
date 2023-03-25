@@ -41,7 +41,8 @@ void DrawHeldAbility(MouseState* mouseState)
     GameObject* g = players[0].selection[players[0].indexSelectedUnit];
     GetCentre_Screen(g, &cx, &cy);
     int w; int h;
-    float radius = players[0].abilityHeld->range;
+
+    float radius = players[0].abilityHeld->range + (GetWidth(g));
 
     al_draw_circle((cx),(cy),radius,FRIENDLY,0);
     
