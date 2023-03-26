@@ -1,24 +1,43 @@
 #include "vectorshape.h"
+#include "player.h"
+#include "colors.h"
+#include "gameobject.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include <float.h>
+#include <stdio.h>
 
 #include "allegro5/allegro.h"
 
-ALLEGRO_BITMAP* btest;
 
-void DrawVectorShape(VectorShape* v)
+void DrawVectorShape(VectorShape* v, Color color)
 {
-    
-}
+        int w = v->extentMaxX - v->extentMinX;
+    int h = v->extentMaxY - v->extentMinY;
 
+    float xScreen = v->x - w/2.0f; float yScreen = v->y - h/2.0f;
+    ToScreenSpace(&xScreen,&yScreen);
+    al_draw_tinted_bitmap(v->generatedSprite,GetColor(color,0),xScreen,yScreen,0);
+//    al_draw_tinted_bitmap(v->generatedSprite,al_map_rgb(255,255,255),0,0,0);
+
+}   
+bool ObjectInVectorShape(GameObject* g, VectorShape* v)
+{
+    if (!g || !v)  
+        return false;
+    
+    float posX = g->position.worldX;
+    float posY = g->position.worldY;
+    return (PointInShape(v,posX,posY));
+}
 void MoveVectorShape(int x, int y, VectorShape v)
 {
 
 }
 bool CastRay(float x, float y, Line l)
 {
-    const float _EPSILON = 0.00001f;
+    const float _EPSILON = 0.001f;
 
     float minX = _MIN(l.x1,l.x2);
     float minY = _MIN(l.y1,l.y2);
@@ -98,6 +117,8 @@ ALLEGRO_BITMAP* GenerateVectorShapeBitmap(VectorShape* v)
     int w = v->extentMaxX - v->extentMinX;
     int h = v->extentMaxY - v->extentMinY;
 
+    printf("size: %i,%i\n",w,h);
+
     ALLEGRO_BITMAP* b = al_create_bitmap(w,h);
     al_lock_bitmap(b,ALLEGRO_PIXEL_FORMAT_ANY,0);
     al_set_target_bitmap(b);
@@ -107,18 +128,28 @@ ALLEGRO_BITMAP* GenerateVectorShapeBitmap(VectorShape* v)
         {
             if (PointInShape(v,x,y))
             {
-                al_put_blended_pixel(x,y,(ALLEGRO_COLOR){255,255,255,255});
+                //printf("p: %i,%i\n",x,y);
+               // printf("transformed: %i,%i\n",x-v->x,y-v->y);
+
+                al_put_blended_pixel(x-v->x,y-v->y,al_map_rgb(255,255,255));
             }
         }
     }
-    btest = b;
     al_unlock_bitmap(b);
     al_set_target_bitmap(before);
+
+    v->generatedSprite = b;
 
 }
 VectorShape CreateVectorShape(Point* points, int numPoints, int x, int y)
 {
     VectorShape v = {0};
+    v.extentMinX = FLT_MAX;
+    v.extentMinY = FLT_MAX;
+    v.extentMaxX = -FLT_MAX;
+    v.extentMaxY = -FLT_MAX;
+
+
     for (int i = 0; i < numPoints; i++)
     {
         v.extentMinX = _MIN(v.extentMinX,points[i].x);
@@ -133,4 +164,5 @@ VectorShape CreateVectorShape(Point* points, int numPoints, int x, int y)
     v.numPoints = numPoints;
 
     GenerateVectorShapeBitmap(&v);
+    return v;
 }

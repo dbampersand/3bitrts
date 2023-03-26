@@ -15,9 +15,10 @@ function casted(x,y,obj,headingx,headingy)
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT; 
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 100;
+    f1["value"] = 20;
 
-    CreateAttackArea({{14,15},{50,50},{80,30}},0,0,"",0.5,5,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false);
+   -- CreateAttackArea({{0,0},{20,0},{20,20},{0,20}},10,10,"",0.5,12,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
+    CreateAttackArea({{100,100},{200,100},{200,200},{100,200}},1,10,"",0.5,12,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
 
     return true; 
 end

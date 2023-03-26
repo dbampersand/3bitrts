@@ -17,6 +17,7 @@
 #include "particle.h"
 #include "player.h"
 #include "map.h"
+#include "vectorshape.h"
 
 Attack attacks[MAX_ATTACKS] = {0};
 unsigned int freeAttacks[MAX_ATTACKS] = {0}; 
@@ -707,6 +708,10 @@ void DrawAttack(Attack* a, float dt)
         float angle = RadToDeg(atan2(y2-a->y,x2-a->x));
         DrawCone((a->x),(a->y),angle,a->radius,a->range,FRIENDLY);
     }
+    else if (a->attackType == ATTACK_SHAPE)
+    {
+        DrawVectorShape(&a->shape,a->color);
+    }
     else
     {
         al_draw_filled_circle((a->screenX),(a->screenY),a->radius,GetColor(a->color,a->playerOwnedBy));
@@ -797,7 +802,7 @@ void UpdateAttack(Attack* a, float dt)
         {
             MoveAngle(&a->x,&a->y,a->targx,a->targy,a->speed,dt);
         }
-        else if (a->attackType == ATTACK_AOE || a->attackType == ATTACK_CONE)
+        else if (a->attackType == ATTACK_AOE || a->attackType == ATTACK_SHAPE || a->attackType == ATTACK_CONE)
         {
 
         }
@@ -911,6 +916,14 @@ void UpdateAttack(Attack* a, float dt)
                     }
                 }
             }
+            if (a->attackType == ATTACK_SHAPE)
+            {
+                if (ObjectInVectorShape(activeObjects[i],&a->shape))
+                {
+                    ApplyAttack(a,activeObjects[i]);
+                }
+            }
+
             if (a->attackType == ATTACK_CONE)
             {
                 GameObject* g = activeObjects[i];
@@ -1034,5 +1047,33 @@ int GetNumActiveAttacks()
 }
 Attack* CreateAttackShape(VectorShape v, float cx, float cy, char* effectPortrait, float tickrate, float duration, bool shouldCallback, int properties, int color, int dither, int numEffects, Effect* effects, GameObject* target, GameObject* from)
 {
-    
+    Attack a = {0};
+    a.ownedBy = from;
+    a.x = cx;
+    a.y = cy;    
+    a.targx = cx;
+    a.targy = cy;
+    a.radius = 0;
+    a.easing = 0.85f;
+    a.targetRadius = 0;
+    a.effects = calloc(numEffects,sizeof(Effect));
+    memcpy(a.effects,effects,sizeof(Effect)*numEffects);
+    a.numEffects = numEffects;
+    //a.ownedBy = currGameObjRunning;
+    a.properties = properties;
+    a.cameFrom = currAbilityRunning;
+    a.shouldCallback = shouldCallback;
+    a.duration = duration;
+    a.attackType = ATTACK_SHAPE;
+    a.tickrate = tickrate;
+    a.color = color;
+    a.dither = dither;
+    a.target = target;
+    a.playerOwnedBy = GetPlayerOwnedBy(from);
+
+    a.shape = v;
+
+    Attack* ref = AddAttack(&a);
+    return ref;
+
 }
