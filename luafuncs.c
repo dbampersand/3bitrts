@@ -1626,6 +1626,9 @@ int L_CreateAttackArea(lua_State* l)
     int lenArea = lua_rawlen(l,1);
     Point* points = calloc(lenArea,sizeof(float));
 
+    float x = lua_tonumber(l,2);
+    float y = lua_tonumber(l,3);
+
     for (int i = 0; i < lenArea; i++)
     {
         lua_pushnumber(l,i+1);
@@ -1647,13 +1650,10 @@ int L_CreateAttackArea(lua_State* l)
 
 
     }   
-    float x = lua_tonumber(l,2);
-    float y = lua_tonumber(l,3);
 
 
     VectorShape v = CreateVectorShape(points,lenArea,x,y);
     free(points);
-    //btest = v.generatedSprite;
 
     const char* effectPortrait = lua_tostring(l,4);
     const float tickrate = lua_tonumber(l,5);
@@ -1663,28 +1663,28 @@ int L_CreateAttackArea(lua_State* l)
     const int color = lua_tonumber(l,9);
     const int dither = lua_tonumber(l,10);
     const bool isSoak = lua_toboolean(l,11);
-    const int target = lua_tonumber(l,12);
 
-    size_t len =  lua_rawlen(l,13);
+
+    size_t len =  lua_rawlen(l,12);
     Effect effects[len];    
     memset(effects,0,sizeof(Effect)*len);
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 13, i);
+        e = GetEffectFromTable(l, 12, i);
         e.from = currGameObjRunning;
         e.abilityFrom = currAbilityRunning;
         lua_remove(l,-1);
         effects[i-1] = e;
     }       
-    GameObject* targ = NULL;
-    if (target >= 0 && target < MAX_OBJS)
-    {   
-        targ = &objects[target];
-    }
 
-    Attack* ref = CreateAttackShape(v,x,y, (char*)effectPortrait, tickrate, duration, shouldCallback,  properties,  color,  dither,  len, effects, targ, currGameObjRunning);
+    Attack* ref = CreateAttackShape(v,x,y, (char*)effectPortrait, tickrate, duration, shouldCallback,  properties,  color,  dither,  len, effects, NULL, currGameObjRunning);
 
+    if (ref)
+        lua_pushnumber(l,ref - attacks);
+    else
+        lua_pushnumber(l,-1);
+    return 1;
 
 
 }

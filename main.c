@@ -531,8 +531,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         al_draw_pixel(DEBUG_P3.x,DEBUG_P3.y,al_map_rgb(255,0,255));
         al_draw_pixel(DEBUG_P4.x,DEBUG_P4.y,al_map_rgb(0,255,0));
     #endif
-    if (btest)
-        al_draw_tinted_bitmap(btest,(ALLEGRO_COLOR){1,1,1,1},0,0,0);
 }
 int SortPointers(const void* a, const void* b)
 {
