@@ -25,6 +25,10 @@
         "cmath": "c",
         "animationeffect.h": "c",
         "allegro_font.h": "c",
-        "augment.h": "c"
+        "augment.h": "c",
+        "pointspace.h": "c",
+        "video.h": "c",
+        "player.h": "c",
+        "sprite.h": "c"
     }
 }

@@ -1032,3 +1032,7 @@ int GetNumActiveAttacks()
 {
     return numActiveAttacks;
 }
+Attack* CreateAttackShape(VectorShape v, float cx, float cy, char* effectPortrait, float tickrate, float duration, bool shouldCallback, int properties, int color, int dither, int numEffects, Effect* effects, GameObject* target, GameObject* from)
+{
+    
+}

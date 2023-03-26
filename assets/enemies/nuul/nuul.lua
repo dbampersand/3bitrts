@@ -1,17 +1,14 @@
-local crash = 0
+local quartz = -1
 
 function setup()
-    SetSprite("assets/enemies/kobold_crystal/kobold_crystal.png");
+    SetSprite("assets/enemies/nuul/nuul.png");
 
-    SetDamage(0);
-    SetMaxHP(750,true)
-    SetSpeed(0)
+    SetDamage(12);
+    SetMaxHP(3000,true)
+    SetSpeed(120)
     SetRange(32);
-    SetInvincible(GetObjRef(),true)
-    RemoveFromCount(GetObjRef(),true);
 
-    crash = AddAbility(GetObjRef(),"assets/enemies/kobold_crystal/ability_crash.lua",0);
-
+    quartz = AddAbility(GetObjRef(),"assets/enemies/nuul/ability_quartz.lua",0);
 
     SetAttackSounds({
         "assets/audio/attacks/melee_hammer/hammer_1.wav",
@@ -25,9 +22,7 @@ function setup()
 end
 
 function update(dt)
-    if (AnyObjInCombat()) then
-        CastAbility(crash,6,{{target=GetRandomUnit(TYPE_ENEMY,Band(Bnot(TYPE_TANK),TYPE_ALL),256)}});
-    end
+    CastAbility(quartz,{});
 end
 
 function kill()
