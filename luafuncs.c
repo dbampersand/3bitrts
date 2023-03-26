@@ -1624,10 +1624,8 @@ int L_PushObj(lua_State* l)
 int L_CreateAttackArea(lua_State* l)
 {
     int lenArea = lua_rawlen(l,1);
-    Point* points = calloc(lenArea,sizeof(float));
+    Point* points = calloc(lenArea,sizeof(Point));
 
-    float x = lua_tonumber(l,2);
-    float y = lua_tonumber(l,3);
 
     for (int i = 0; i < lenArea; i++)
     {
@@ -1639,18 +1637,22 @@ int L_CreateAttackArea(lua_State* l)
         lua_pushnumber(l,2);
         lua_gettable(l,-3);
 
+        points[i].x = lua_tonumber(l,-2);
+        points[i].y = lua_tonumber(l,-1);
 
-        points[i].x = lua_tonumber(l,-1);
-        points[i].y = lua_tonumber(l,-2);
 
         lua_pop(l,1);
         lua_pop(l,1);
+        lua_pop(l,1);
+
 
         printf("%f,%f\n",points[i].x,points[i].y);
 
 
     }   
 
+    float x = lua_tonumber(l,2);
+    float y = lua_tonumber(l,3);
 
     VectorShape v = CreateVectorShape(points,lenArea,x,y);
     free(points);

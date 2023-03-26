@@ -525,6 +525,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         PointI gasdas = GetClosestPathablePoint((PointI){mouseState->worldX/_GRAIN,mouseState->worldY/_GRAIN},(PointI){mouseState->worldX/_GRAIN,mouseState->worldY/_GRAIN},&foundsd,4,4,true,32);   
         al_draw_pixel(gasdas.x*_GRAIN,gasdas.y*_GRAIN,al_map_rgb(0,255,0));
     }
+    #define DEBUG
     #ifdef DEBUG
         al_draw_pixel(DEBUG_P1.x,DEBUG_P1.y,al_map_rgb(0,255,0));
         al_draw_pixel(DEBUG_P2.x,DEBUG_P2.y,al_map_rgb(255,0,0));

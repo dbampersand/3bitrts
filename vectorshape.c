@@ -1,14 +1,15 @@
 #include "vectorshape.h"
 #include "player.h"
 #include "colors.h"
+#include "rect.h"
 #include "gameobject.h"
 
 #include <stdlib.h>
 #include <string.h>
 #include <float.h>
 #include <stdio.h>
-
 #include "allegro5/allegro.h"
+#include "allegro5/allegro_primitives.h"
 
 
 void DrawVectorShape(VectorShape* v, Color color)
@@ -16,20 +17,33 @@ void DrawVectorShape(VectorShape* v, Color color)
         int w = v->extentMaxX - v->extentMinX;
     int h = v->extentMaxY - v->extentMinY;
 
-    float xScreen = v->x - w/2.0f; float yScreen = v->y - h/2.0f;
+    float xScreen = v->x + v->extentMinX; float yScreen = v->y + v->extentMinY;
     ToScreenSpace(&xScreen,&yScreen);
     al_draw_tinted_bitmap(v->generatedSprite,GetColor(color,0),xScreen,yScreen,0);
-//    al_draw_tinted_bitmap(v->generatedSprite,al_map_rgb(255,255,255),0,0,0);
 
 }   
 bool ObjectInVectorShape(GameObject* g, VectorShape* v)
 {
     if (!g || !v)  
         return false;
-    
-    float posX = g->position.worldX;
-    float posY = g->position.worldY;
-    return (PointInShape(v,posX,posY));
+    #define COLLISION_SHAPE_NUM_POINTS 5
+
+    Rect r = GetObjRect(g);
+
+    float moveX = r.w / COLLISION_SHAPE_NUM_POINTS;
+    float moveY = r.h / COLLISION_SHAPE_NUM_POINTS;
+
+    for (float x = 0; x < COLLISION_SHAPE_NUM_POINTS; x++)
+    {
+        for (float y = 0; y < COLLISION_SHAPE_NUM_POINTS; y++)
+        {
+            float xCheck = r.x + (x * moveX);
+            float yCheck = r.y + (y * moveY);
+            if (PointInShape(v,xCheck,yCheck))
+                return true;
+        }
+    } 
+    return false;
 }
 void MoveVectorShape(int x, int y, VectorShape v)
 {
@@ -86,6 +100,7 @@ bool CastRay(float x, float y, Line l)
 bool PointInShape(VectorShape* v, int x, int y)
 {
     int numIntersections = 0;
+
     for (int i = 0; i < v->numPoints; i++)
     {
         Line l;
@@ -117,21 +132,19 @@ ALLEGRO_BITMAP* GenerateVectorShapeBitmap(VectorShape* v)
     int w = v->extentMaxX - v->extentMinX;
     int h = v->extentMaxY - v->extentMinY;
 
-    printf("size: %i,%i\n",w,h);
 
     ALLEGRO_BITMAP* b = al_create_bitmap(w,h);
     al_lock_bitmap(b,ALLEGRO_PIXEL_FORMAT_ANY,0);
     al_set_target_bitmap(b);
-    for (int x = v->extentMinX + v->x; x < v->extentMaxX + v->x; x++)
+
+
+    for (int x = v->x + v->extentMinX; x < v->x + v->extentMaxX; x++)
     {
-        for (int y = v->extentMinY + v->y; y < v->extentMaxY + v->y; y++)
+        for (int y = v->y + v->extentMinY; y < v->y + v->extentMaxY; y++)
         {
             if (PointInShape(v,x,y))
             {
-                //printf("p: %i,%i\n",x,y);
-               // printf("transformed: %i,%i\n",x-v->x,y-v->y);
-
-                al_put_blended_pixel(x-v->x,y-v->y,al_map_rgb(255,255,255));
+                al_put_blended_pixel(x-(v->x + v->extentMinX),y-(v->y + v->extentMinY),al_map_rgb(255,255,255));
             }
         }
     }
