@@ -6,7 +6,7 @@
 #include "video.h" 
 #include "pointspace.h"
 #include "gameobject.h"
-
+#include "vectorshape.h"
 
 
 typedef struct Effect Effect;
@@ -22,6 +22,7 @@ typedef enum ATTACK_TYPE
     ATTACK_PROJECTILE_ANGLE,
     ATTACK_MELEE,
     ATTACK_CONE,
+    ATTACK_SHAPE
 } ATTACK_TYPE;
 
 typedef enum ATTACK_PROPERTIES
@@ -69,6 +70,8 @@ typedef struct Attack
     ATTACK_PROPERTIES properties;
     OBJ_FRIENDLINESS playerOwnedBy;
 
+    VectorShape shape;
+
 
 } Attack;
 
@@ -107,3 +110,4 @@ bool AttackIsActive(Attack* a);
 void UpdateScreenPositionsAttack(Attack* a);
 
 bool AttackIsAOE(Attack* a);
+Attack* CreateAttackShape(VectorShape v, float cx, float cy, char* effectPortrait, float tickrate, float duration, bool shouldCallback, int properties, int color, int dither, int numEffects, Effect* effects, GameObject* target, GameObject* from);

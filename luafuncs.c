@@ -24,6 +24,7 @@
 #include "pointspace.h"
 #include "item.h"
 #include "shop.h"
+#include "vectorshape.h"
 
 #include "allegro5/allegro_font.h"
 
@@ -1620,6 +1621,73 @@ int L_PushObj(lua_State* l)
 
     return 0;
 }
+int L_CreateAttackArea(lua_State* l)
+{
+    int lenArea = lua_rawlen(l,1);
+    Point* points = calloc(lenArea,sizeof(float));
+
+    for (int i = 0; i < lenArea; i++)
+    {
+        lua_pushnumber(l,i+1);
+        lua_gettable(l,1);
+
+        lua_pushnumber(l,1);
+        lua_gettable(l,-2);
+        lua_pushnumber(l,2);
+        lua_gettable(l,-3);
+
+
+        points[i].x = lua_tonumber(l,-1);
+        points[i].y = lua_tonumber(l,-2);
+
+        lua_pop(l,1);
+        lua_pop(l,1);
+
+        printf("%f,%f\n",points[i].x,points[i].y);
+
+
+    }   
+    float x = lua_tonumber(l,2);
+    float y = lua_tonumber(l,3);
+
+
+    VectorShape v = CreateVectorShape(points,lenArea,x,y);
+    free(points);
+    //btest = v.generatedSprite;
+
+    const char* effectPortrait = lua_tostring(l,4);
+    const float tickrate = lua_tonumber(l,5);
+    const float duration = lua_tonumber(l, 6);
+    const bool shouldCallback = lua_toboolean(l, 7);
+    const int properties = lua_tonumber(l,8);
+    const int color = lua_tonumber(l,9);
+    const int dither = lua_tonumber(l,10);
+    const bool isSoak = lua_toboolean(l,11);
+    const int target = lua_tonumber(l,12);
+
+    size_t len =  lua_rawlen(l,13);
+    Effect effects[len];    
+    memset(effects,0,sizeof(Effect)*len);
+    for (int i = 1; i < len+1; i++)
+    {
+        Effect e;
+        e = GetEffectFromTable(l, 13, i);
+        e.from = currGameObjRunning;
+        e.abilityFrom = currAbilityRunning;
+        lua_remove(l,-1);
+        effects[i-1] = e;
+    }       
+    GameObject* targ = NULL;
+    if (target >= 0 && target < MAX_OBJS)
+    {   
+        targ = &objects[target];
+    }
+
+    Attack* ref = CreateAttackShape(v,x,y, (char*)effectPortrait, tickrate, duration, shouldCallback,  properties,  color,  dither,  len, effects, targ, currGameObjRunning);
+
+
+
+}
 int L_CreateAOE(lua_State* l)
 {
     //read from table of effects
@@ -1650,28 +1718,6 @@ int L_CreateAOE(lua_State* l)
         effects[i-1] = e;
     }       
 
-/*
-    Attack a = {0};
-    a.x = x;
-    a.y = y;
-    a.targx = x;
-    a.targy = y;
-    a.radius = 0;
-    a.easing=0.1f;
-    a.targetRadius = radius;
-    a.effects = calloc(len,sizeof(Effect));
-    memcpy(a.effects,effects,sizeof(Effect)*len);
-    a.numEffects = len;
-    a.ownedBy = currGameObjRunning;
-    a.properties = properties;
-    a.cameFrom = currAbilityRunning;
-    a.ownedBy = currGameObjRunning;
-    a.shouldCallback = shouldCallback;
-    a.duration = duration;
-    a.attackType = ATTACK_AOE;
-    a.tickrate = tickrate;
-    a.color = color;
-    a.dither = dither;*/
     GameObject* targ = NULL;
     if (target >= 0 && target < MAX_OBJS)
     {   
@@ -4376,5 +4422,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_ShakeScreen);
     lua_setglobal(luaState, "ShakeScreen");
+
+    lua_pushcfunction(luaState, L_CreateAttackArea);
+    lua_setglobal(luaState, "CreateAttackArea");
 
 }
