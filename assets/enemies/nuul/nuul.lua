@@ -5,8 +5,8 @@ function setup()
 
     SetDamage(12);
     SetMaxHP(3000,true)
-    SetSpeed(120)
-    SetRange(32);
+    SetSpeed(0)
+    SetRange(32);   
 
     quartz = AddAbility(GetObjRef(),"assets/enemies/nuul/ability_quartz.lua",0);
 

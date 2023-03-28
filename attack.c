@@ -190,6 +190,13 @@ void RemoveAttack(int attackindex)
         free(a->effects);
         a->effects = NULL;
     }
+    if (a->shape.points)
+    {
+        free(a->shape.points);
+        a->shape.points = NULL;
+        al_destroy_bitmap(a->shape.generatedSprite);
+         a->shape.generatedSprite = NULL;
+    }
     currGameObjRunning =  before;
 
 

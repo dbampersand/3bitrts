@@ -14,19 +14,35 @@
 
 void DrawVectorShape(VectorShape* v, Color color)
 {
-        int w = v->extentMaxX - v->extentMinX;
-    int h = v->extentMaxY - v->extentMinY;
+    int w = abs(v->extentMaxX) + abs(v->extentMinX);
+    int h = (v->extentMaxY) - (v->extentMinY);
 
-    float xScreen = v->x + v->extentMinX; float yScreen = v->y + v->extentMinY;
+
+    float xScreen = v->x ; 
+    float yScreen = v->y;
+
     ToScreenSpace(&xScreen,&yScreen);
-    al_draw_tinted_bitmap(v->generatedSprite,GetColor(color,0),xScreen,yScreen,0);
+
+    float cx = w/2;
+    float cy = h/2;
+    
+
+    float dx = xScreen + v->offsetX;
+    float dy = yScreen + v->offsetY;
+    RotatePointF(&dx,&dy,v->x,v->y,v->angle);
+
+    DEBUG_P4.x = cx + v->x;
+    DEBUG_P4.y = cy + v->y;
+
+
+    al_draw_tinted_rotated_bitmap(v->generatedSprite,GetColor(color,0),cx,cy,dx,dy,v->angle,0);
 
 }   
 bool ObjectInVectorShape(GameObject* g, VectorShape* v)
 {
     if (!g || !v)  
         return false;
-    #define COLLISION_SHAPE_NUM_POINTS 5
+    #define COLLISION_SHAPE_NUM_POINTS 5.0f
 
     Rect r = GetObjRect(g);
 
@@ -101,11 +117,39 @@ bool PointInShape(VectorShape* v, int x, int y)
 {
     int numIntersections = 0;
 
+    float xScreen = v->x + v->points[0].x; 
+    float yScreen = v->y +  v->points[0].y;
+
+    float cx = v->x;
+    float cy = v->y;
+
+    //RotatePointF(&cx,&cy,v->x,v->y,v->angle);
+
     for (int i = 0; i < v->numPoints; i++)
     {
         Line l;
         l.x1 = v->points[i].x + v->x;
         l.y1 = v->points[i].y + v->y;
+
+        RotatePointF(&l.x1,&l.y1,cx,cy,v->angle);
+        /*
+        if (i == 0)
+        {
+            DEBUG_P1.x = l.x1;
+            DEBUG_P1.y = l.y1;
+
+        }
+        if (i == 1)
+        {
+            DEBUG_P2.x = l.x1;
+            DEBUG_P2.y = l.y1;
+        }
+        if (i == 2)
+        {
+            DEBUG_P3.x = l.x1;
+            DEBUG_P3.y = l.y1;
+        }*/
+
 
         Point point2;
         if (i == v->numPoints-1)
@@ -118,6 +162,7 @@ bool PointInShape(VectorShape* v, int x, int y)
         }
         l.x2 = point2.x + v->x;
         l.y2 = point2.y + v->y;
+        RotatePointF(&l.x2,&l.y2,cx,cy,v->angle);
 
         if (CastRay(x,y,l))
             numIntersections++;
@@ -129,25 +174,32 @@ bool PointInShape(VectorShape* v, int x, int y)
 ALLEGRO_BITMAP* GenerateVectorShapeBitmap(VectorShape* v)
 {
     ALLEGRO_BITMAP* before = al_get_target_bitmap();
-    int w = v->extentMaxX - v->extentMinX;
-    int h = v->extentMaxY - v->extentMinY;
+    int w = abs(v->extentMaxX) + abs(v->extentMinX);
+    int h = abs(v->extentMaxY) + abs(v->extentMinY);
 
 
     ALLEGRO_BITMAP* b = al_create_bitmap(w,h);
-    al_lock_bitmap(b,ALLEGRO_PIXEL_FORMAT_ANY,0);
+
     al_set_target_bitmap(b);
+    al_lock_bitmap(b,ALLEGRO_PIXEL_FORMAT_ANY,0);
 
-
-    for (int x = v->x + v->extentMinX; x < v->x + v->extentMaxX; x++)
+    int yOffset = v->extentMinY;
+    
+    for (int x = v->extentMinX; x < w; x++)
     {
-        for (int y = v->y + v->extentMinY; y < v->y + v->extentMaxY; y++)
+        for (int y = v->extentMinY; y < h; y++)
         {
-            if (PointInShape(v,x,y))
+            float x2 = x + v->x;
+            float y2 = y + v->y;
+
+            if (PointInShape(v,x2,y2))
             {
-                al_put_blended_pixel(x-(v->x + v->extentMinX),y-(v->y + v->extentMinY),al_map_rgb(255,255,255));
+                al_put_blended_pixel(x - v->extentMinX,y+abs(yOffset),al_map_rgb(255,255,255));
             }
         }
     }
+    v->angle = 0;
+
     al_unlock_bitmap(b);
     al_set_target_bitmap(before);
 
@@ -162,6 +214,9 @@ VectorShape CreateVectorShape(Point* points, int numPoints, int x, int y)
     v.extentMaxX = -FLT_MAX;
     v.extentMaxY = -FLT_MAX;
 
+    v.offsetX = 0;
+    v.offsetY = 0;
+
 
     for (int i = 0; i < numPoints; i++)
     {
@@ -169,12 +224,16 @@ VectorShape CreateVectorShape(Point* points, int numPoints, int x, int y)
         v.extentMinY = _MIN(v.extentMinY,points[i].y);
         v.extentMaxX = _MAX(v.extentMaxX,points[i].x);
         v.extentMaxY = _MAX(v.extentMaxY,points[i].y);
+
+
     }
+
     v.points = calloc(numPoints,sizeof(v.points[0]));
     memcpy(v.points,points,numPoints * sizeof(v.points[0]));
     v.x = x;
     v.y = y;
     v.numPoints = numPoints;
+    v.angle = 0;
 
     GenerateVectorShapeBitmap(&v);
     return v;

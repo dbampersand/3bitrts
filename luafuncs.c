@@ -1621,6 +1621,20 @@ int L_PushObj(lua_State* l)
 
     return 0;
 }
+int L_RotateAttackArea(lua_State* l)
+{
+    int atk = lua_tonumber(l,1);
+    float angle = DegToRad(lua_tonumber(l,2));
+    if (atk < 0 || atk >= MAX_ATTACKS)
+    {
+        printf("L_RotateAttackArea: invalid index: %i\n",atk);
+        return 0;
+    }
+
+    Attack* a = &attacks[atk];
+    a->shape.angle += angle;
+    return 0;
+}
 int L_CreateAttackArea(lua_State* l)
 {
     int lenArea = lua_rawlen(l,1);
@@ -1644,11 +1658,6 @@ int L_CreateAttackArea(lua_State* l)
         lua_pop(l,1);
         lua_pop(l,1);
         lua_pop(l,1);
-
-
-        printf("%f,%f\n",points[i].x,points[i].y);
-
-
     }   
 
     float x = lua_tonumber(l,2);
@@ -3283,13 +3292,20 @@ int L_MoveAttack(lua_State* l)
     if (index >= 0 && index < MAX_ATTACKS)
     {
         Attack* a = &attacks[index];
+        float x = lua_tonumber(l,2);
+        float y = lua_tonumber(l,3);
+
         if (a)
         {
 
-            float x = lua_tonumber(l,2);
-            float y = lua_tonumber(l,3);
             a->x = x;
             a->y = y;
+        }
+        if (a->attackType == ATTACK_SHAPE)
+        {
+            a->shape.x = x;
+            a->shape.y = y;
+
         }
     }
     return 0;
@@ -4427,5 +4443,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_CreateAttackArea);
     lua_setglobal(luaState, "CreateAttackArea");
+
+    lua_pushcfunction(luaState, L_RotateAttackArea);
+    lua_setglobal(luaState, "RotateAttackArea");
 
 }

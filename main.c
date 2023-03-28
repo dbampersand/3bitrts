@@ -39,6 +39,7 @@
 
 ALLEGRO_BITMAP* testBitmap;
 
+
 void init()
 {
     srand(time(NULL));
@@ -527,10 +528,10 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     #define DEBUG
     #ifdef DEBUG
-        al_draw_pixel(DEBUG_P1.x,DEBUG_P1.y,al_map_rgb(0,255,0));
-        al_draw_pixel(DEBUG_P2.x,DEBUG_P2.y,al_map_rgb(255,0,0));
-        al_draw_pixel(DEBUG_P3.x,DEBUG_P3.y,al_map_rgb(255,0,255));
-        al_draw_pixel(DEBUG_P4.x,DEBUG_P4.y,al_map_rgb(0,255,0));
+        al_put_blended_pixel(DEBUG_P1.x,DEBUG_P1.y,al_map_rgb(0,255,0));
+        al_put_blended_pixel(DEBUG_P2.x,DEBUG_P2.y,al_map_rgb(255,0,0));
+        al_put_blended_pixel(DEBUG_P3.x,DEBUG_P3.y,al_map_rgb(255,0,255));
+        al_put_blended_pixel(DEBUG_P4.x,DEBUG_P4.y,al_map_rgb(255,255,255));
     #endif
 }
 int SortPointers(const void* a, const void* b)

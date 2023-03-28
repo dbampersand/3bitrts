@@ -29,6 +29,8 @@
         "pointspace.h": "c",
         "video.h": "c",
         "player.h": "c",
-        "sprite.h": "c"
+        "sprite.h": "c",
+        "cstdlib": "c",
+        "allegro_primitives.h": "c"
     }
 }

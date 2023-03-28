@@ -23,12 +23,15 @@ typedef struct VectorShape
 
 
     ALLEGRO_BITMAP* generatedSprite;
+
+    float angle;
+    float offsetX; float offsetY;
 } VectorShape;
 
 typedef struct Line
 {
-    int x1; int y1;
-    int x2; int y2;
+    float x1; float y1;
+    float x2; float y2;
 }Line;
 
 

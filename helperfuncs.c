@@ -291,8 +291,8 @@ void RotatePointF(float* x, float* y, float cx, float cy, float angle)
     *x -= cx;
     *y -= cy;
 
-    int xN = *x * cos(angle) - *y * sin(angle);
-    int yN = *y * cos(angle) + *x * sin(angle);
+    float xN = *x * cos(angle) - *y * sin(angle);
+    float yN = *y * cos(angle) + *x * sin(angle);
 
     *x = xN + cx;
     *y = yN + cy;
