@@ -22,7 +22,7 @@ function casted(x,y,obj,headingx,headingy)
     --local area = CreateAttackArea({{0,0},{50,-50},{-50,-50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
     
     --local area = CreateAttackArea({{0,0},{50,50},{-50,50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
-    local area = CreateAttackArea({{0,16},{50,50},{-50,50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
+    local area = CreateAttackArea({{0,-32},{50,-50},{-50,-50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
     --CreateAttackArea({{-50,-50},{50,-50},{50,50},{-50,50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,12,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
     
     return true; 

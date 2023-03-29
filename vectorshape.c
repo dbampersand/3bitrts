@@ -15,7 +15,7 @@
 void DrawVectorShape(VectorShape* v, Color color)
 {
     int w = abs(v->extentMaxX) + abs(v->extentMinX);
-    int h = (v->extentMaxY) - (v->extentMinY);
+    int h = abs(v->extentMaxY) + abs(v->extentMinY);
 
 
     float xScreen = v->x ; 
