@@ -13,8 +13,8 @@
 #include <math.h>
 void DrawVectorShape(VectorShape* v, Color color)
 {
-    int w = abs(v->extentMaxX) + abs(v->extentMinX);
-    int h = abs(v->extentMaxY) + abs(v->extentMinY);
+    int w = fabsf(v->extentMaxX) + fabsf(v->extentMinX);
+    int h = fabsf(v->extentMaxY) + fabsf(v->extentMinY);
     
 
     float xScreen = v->x ; 
@@ -36,19 +36,19 @@ void DrawVectorShape(VectorShape* v, Color color)
     float cx = w/2;
     float cy = h/2;
     
-    if (abs(v->extentMinY) > abs(v->extentMaxY))
+    if (fabsf(v->extentMinY) > fabsf(v->extentMaxY))
     {
         cy = h;
     }
-    if (abs(v->extentMinY) < abs(v->extentMaxY))
+    if (fabsf(v->extentMinY) < fabsf(v->extentMaxY))
     {
         cy = 0;
     }
-    if (abs(v->extentMinX) > abs(v->extentMaxX))
+    if (fabsf(v->extentMinX) > fabsf(v->extentMaxX))
     {
         cx = w;
     }
-    if (abs(v->extentMinX) < abs(v->extentMaxX))
+    if (fabsf(v->extentMinX) < fabsf(v->extentMaxX))
     {
         cx = 0;
     }
@@ -149,14 +149,10 @@ bool PointInShape(VectorShape* v, int x, int y, float angle)
     {
         if (PointInShape(&v->cutoutAreas[i],x,y,angle))
         {
-            printf("gggg\n");
             return false;
         }
     }
     int numIntersections = 0;
-
-    float xScreen = v->x + v->points[0].x; 
-    float yScreen = v->y +  v->points[0].y;
 
     float cx = v->x;
     float cy = v->y;
@@ -227,8 +223,8 @@ void NOTArea(VectorShape* v, Point* points, int numPoints)
 ALLEGRO_BITMAP* GenerateVectorShapeBitmap(VectorShape* v, VectorShape* parent, bool not)
 {
     ALLEGRO_BITMAP* before = al_get_target_bitmap();
-    int w = abs(parent->extentMaxX) + abs(parent->extentMinX);
-    int h = abs(parent->extentMaxY) + abs(parent->extentMinY);
+    int w = fabsf(parent->extentMaxX) + fabsf(parent->extentMinX);
+    int h = fabsf(parent->extentMaxY) + fabsf(parent->extentMinY);
 
     int yOffset = parent->extentMinY;
 
@@ -254,12 +250,12 @@ ALLEGRO_BITMAP* GenerateVectorShapeBitmap(VectorShape* v, VectorShape* parent, b
     {
         for (int y = parent->extentMinY; y < h; y++)
         {
-            float x2 = x + parent->x;
+            float x2 = x + parent->x;   
             float y2 = y + parent->y;
 
             if (PointInShape(v,x2,y2,0))
             {
-                al_put_pixel(x - parent->extentMinX,y+abs(yOffset),col);
+                al_put_pixel(x - parent->extentMinX,y + abs(yOffset),col);
             }
         }
     }

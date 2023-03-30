@@ -22,8 +22,46 @@ function casted(x,y,obj,headingx,headingy)
     --local area = CreateAttackArea({{0,0},{50,-50},{-50,-50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
     
     --local area = CreateAttackArea({{0,0},{-50,-50},{-50,50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
-    local area = CreateAttackArea({{0,-16},{50,-50},{-50,-50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
-    CutoutArea(area,{{0,-16},{25,-50},{-25,-50}});
+    local area = CreateAttackArea({
+        {-GetMapWidth(),-GetMapHeight()},
+        {GetMapWidth(),-GetMapHeight()},
+        {GetMapWidth(),GetMapHeight()},
+        {-GetMapWidth(),GetMapHeight()}
+    },
+        GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
+    local angle = 30
+    local move = 360 / 5
+
+    CutoutArea(area,{{0,0},{-100,-100},{-100,-200}});
+
+    for i=0,5 do
+        local p1 = {100,100};
+        local p2 = {100,100};
+
+
+
+        p1 = RotatePoint(p1.x,p1.y,GetX(GetObjRef()),GetY(GetObjRef()),angle+(move*(i)))
+        p2 = RotatePoint(p2.x,p2.y,GetX(GetObjRef()),GetY(GetObjRef()),-angle+(move*(i)))
+        p1.x = p1.x - GetX(GetObjRef());
+        p1.y = p1.y - GetY(GetObjRef());
+
+        p2.x = p2.x - GetX(GetObjRef());
+        p2.y = p2.y - GetY(GetObjRef());
+
+
+        --p1 = Normalize(p1.x,p1.y);
+       -- p2 = Normalize(p2.x,p2.y);
+        --p1.x = p1.x * 100;
+        --p1.y = p1.y * 100;
+        --p2.x = p2.x * 100;
+        --p2.y = p2.y * 100;
+
+
+        CutoutArea(area,{{0,0},p1,p2});
+
+    end
+    --RotateAttackArea(area,RandRange(0,360));
+   
     --CreateAttackArea({{-50,-50},{50,-50},{50,50},{-50,50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,12,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
     
     return true; 
@@ -34,7 +72,7 @@ end
 function ontimeout(x,y,obj,dt,target)
 end
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
-    RotateAttackArea(attackRef,20 * dt);
+    RotateAttackArea(attackRef,10 * dt);
     --MoveAttack(attackRef,GetX(GetObjRef()),GetY(GetObjRef()));
 end
 function onchanneled() 
