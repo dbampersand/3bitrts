@@ -21,15 +21,16 @@ function casted(x,y,obj,headingx,headingy)
     --CreateAttackArea({{100,100},{200,100},{200,200},{100,200}},1,10,"",0.5,12,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
     --local area = CreateAttackArea({{0,0},{50,-50},{-50,-50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
     
-    --local area = CreateAttackArea({{0,0},{50,50},{-50,50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
-    local area = CreateAttackArea({{0,-32},{50,-50},{-50,-50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
+    --local area = CreateAttackArea({{0,0},{-50,-50},{-50,50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
+    local area = CreateAttackArea({{0,-16},{50,-50},{-50,-50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
+    CutoutArea(area,{{0,-16},{25,-50},{-25,-50}});
     --CreateAttackArea({{-50,-50},{50,-50},{50,50},{-50,50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,12,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
     
     return true; 
 end
 
 function onhit(x,y,objhit)
-end
+end 
 function ontimeout(x,y,obj,dt,target)
 end
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)

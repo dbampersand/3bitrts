@@ -196,6 +196,12 @@ void RemoveAttack(int attackindex)
         a->shape.points = NULL;
         al_destroy_bitmap(a->shape.generatedSprite);
          a->shape.generatedSprite = NULL;
+        if (a->shape.cutoutAreas)
+        {
+            free(a->shape.cutoutAreas);
+            a->shape.cutoutAreas = NULL;
+            a->shape.numCutOutAreas = 0;
+        }
     }
     currGameObjRunning =  before;
 

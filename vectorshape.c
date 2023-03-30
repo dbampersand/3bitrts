@@ -10,29 +10,58 @@
 #include <stdio.h>
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_primitives.h"
-
-
+#include <math.h>
 void DrawVectorShape(VectorShape* v, Color color)
 {
     int w = abs(v->extentMaxX) + abs(v->extentMinX);
     int h = abs(v->extentMaxY) + abs(v->extentMinY);
-
+    
 
     float xScreen = v->x ; 
     float yScreen = v->y;
+
+    if (fabsf(v->extentMinY) > fabsf(v->extentMaxY))
+        yScreen -= v->extentMaxY;
+    if (fabsf(v->extentMinY) < fabsf(v->extentMaxY))
+        yScreen -= v->extentMinY;
+    if (fabsf(v->extentMinX) > fabsf(v->extentMaxX))
+        xScreen -= v->extentMaxX;
+    if (fabsf(v->extentMinX) < fabsf(v->extentMaxX))
+        xScreen -= v->extentMinX;
+
+
 
     ToScreenSpace(&xScreen,&yScreen);
 
     float cx = w/2;
     float cy = h/2;
     
+    if (abs(v->extentMinY) > abs(v->extentMaxY))
+    {
+        cy = h;
+    }
+    if (abs(v->extentMinY) < abs(v->extentMaxY))
+    {
+        cy = 0;
+    }
+    if (abs(v->extentMinX) > abs(v->extentMaxX))
+    {
+        cx = w;
+    }
+    if (abs(v->extentMinX) < abs(v->extentMaxX))
+    {
+        cx = 0;
+    }
+
+
+
 
     float dx = xScreen + v->offsetX;
     float dy = yScreen + v->offsetY;
     RotatePointF(&dx,&dy,v->x,v->y,v->angle);
 
-    DEBUG_P4.x = cx + v->x;
-    DEBUG_P4.y = cy + v->y;
+    //DEBUG_P4.x = cx + v->x;
+    //DEBUG_P4.y = cy + v->y;
 
 
     al_draw_tinted_rotated_bitmap(v->generatedSprite,GetColor(color,0),cx,cy,dx,dy,v->angle,0);
@@ -46,6 +75,7 @@ bool ObjectInVectorShape(GameObject* g, VectorShape* v)
 
     Rect r = GetObjRect(g);
 
+
     float moveX = r.w / COLLISION_SHAPE_NUM_POINTS;
     float moveY = r.h / COLLISION_SHAPE_NUM_POINTS;
 
@@ -55,7 +85,7 @@ bool ObjectInVectorShape(GameObject* g, VectorShape* v)
         {
             float xCheck = r.x + (x * moveX);
             float yCheck = r.y + (y * moveY);
-            if (PointInShape(v,xCheck,yCheck))
+            if (PointInShape(v,xCheck,yCheck,v->angle))
                 return true;
         }
     } 
@@ -113,8 +143,16 @@ bool CastRay(float x, float y, Line l)
     else
         return false;
 }
-bool PointInShape(VectorShape* v, int x, int y)
+bool PointInShape(VectorShape* v, int x, int y, float angle)
 {
+    for (int i = 0; i < v->numCutOutAreas; i++)
+    {
+        if (PointInShape(&v->cutoutAreas[i],x,y,angle))
+        {
+            printf("gggg\n");
+            return false;
+        }
+    }
     int numIntersections = 0;
 
     float xScreen = v->x + v->points[0].x; 
@@ -131,8 +169,8 @@ bool PointInShape(VectorShape* v, int x, int y)
         l.x1 = v->points[i].x + v->x;
         l.y1 = v->points[i].y + v->y;
 
-        RotatePointF(&l.x1,&l.y1,cx,cy,v->angle);
-        /*
+        RotatePointF(&l.x1,&l.y1,cx,cy,angle);
+        
         if (i == 0)
         {
             DEBUG_P1.x = l.x1;
@@ -148,7 +186,7 @@ bool PointInShape(VectorShape* v, int x, int y)
         {
             DEBUG_P3.x = l.x1;
             DEBUG_P3.y = l.y1;
-        }*/
+        }
 
 
         Point point2;
@@ -162,7 +200,7 @@ bool PointInShape(VectorShape* v, int x, int y)
         }
         l.x2 = point2.x + v->x;
         l.y2 = point2.y + v->y;
-        RotatePointF(&l.x2,&l.y2,cx,cy,v->angle);
+        RotatePointF(&l.x2,&l.y2,cx,cy,angle);
 
         if (CastRay(x,y,l))
             numIntersections++;
@@ -170,35 +208,62 @@ bool PointInShape(VectorShape* v, int x, int y)
     }
     return (numIntersections % 2 != 0);
 }
+void NOTArea(VectorShape* v, Point* points, int numPoints)
+{
+    if (!v->cutoutAreas)
+    {
+        v->cutoutAreas = calloc(1,sizeof(VectorShape));
+        v->numCutOutAreas = 1;
+    }
+    else
+    {
+        v->numCutOutAreas++;
+        v->cutoutAreas = realloc(v->cutoutAreas,v->numCutOutAreas * sizeof(VectorShape));
+    }
+    v->cutoutAreas[v->numCutOutAreas - 1] = CreateVectorShape(points,numPoints,v->x,v->y);
+    GenerateVectorShapeBitmap(&v->cutoutAreas[v->numCutOutAreas-1],v,true);
+}
 
-ALLEGRO_BITMAP* GenerateVectorShapeBitmap(VectorShape* v)
+ALLEGRO_BITMAP* GenerateVectorShapeBitmap(VectorShape* v, VectorShape* parent, bool not)
 {
     ALLEGRO_BITMAP* before = al_get_target_bitmap();
-    int w = abs(v->extentMaxX) + abs(v->extentMinX);
-    int h = abs(v->extentMaxY) + abs(v->extentMinY);
+    int w = abs(parent->extentMaxX) + abs(parent->extentMinX);
+    int h = abs(parent->extentMaxY) + abs(parent->extentMinY);
+
+    int yOffset = parent->extentMinY;
 
 
-    ALLEGRO_BITMAP* b = al_create_bitmap(w,h);
+    ALLEGRO_BITMAP* b;
+    if (parent && parent->generatedSprite)
+    {
+        b = parent->generatedSprite;
+    }
+    else
+        b = al_create_bitmap(w,h);
+    
 
     al_set_target_bitmap(b);
     al_lock_bitmap(b,ALLEGRO_PIXEL_FORMAT_ANY,0);
 
-    int yOffset = v->extentMinY;
-    
-    for (int x = v->extentMinX; x < w; x++)
+    ALLEGRO_COLOR col;
+    if (not)
+        col = al_map_rgba(0,0,0,0);
+    else
+        col = al_map_rgb(255,255,255);
+    for (int x = parent->extentMinX; x < w; x++)
     {
-        for (int y = v->extentMinY; y < h; y++)
+        for (int y = parent->extentMinY; y < h; y++)
         {
-            float x2 = x + v->x;
-            float y2 = y + v->y;
+            float x2 = x + parent->x;
+            float y2 = y + parent->y;
 
-            if (PointInShape(v,x2,y2))
+            if (PointInShape(v,x2,y2,0))
             {
-                al_put_blended_pixel(x - v->extentMinX,y+abs(yOffset),al_map_rgb(255,255,255));
+                al_put_pixel(x - parent->extentMinX,y+abs(yOffset),col);
             }
         }
     }
-    v->angle = 0;
+    //v->angle = 0;
 
     al_unlock_bitmap(b);
     al_set_target_bitmap(before);
@@ -235,6 +300,6 @@ VectorShape CreateVectorShape(Point* points, int numPoints, int x, int y)
     v.numPoints = numPoints;
     v.angle = 0;
 
-    GenerateVectorShapeBitmap(&v);
+    GenerateVectorShapeBitmap(&v,&v,false);
     return v;
 }

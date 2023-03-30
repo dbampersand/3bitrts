@@ -1699,6 +1699,36 @@ int L_CreateAttackArea(lua_State* l)
 
 
 }
+int L_CutoutArea(lua_State* l)
+{
+    int attackIndex = lua_tonumber(l,1);
+
+    int lenArea = lua_rawlen(l,2);
+    Point* points = calloc(lenArea,sizeof(Point));
+
+
+    for (int i = 0; i < lenArea; i++)
+    {
+        lua_pushnumber(l,i+1);
+        lua_gettable(l,2);
+
+        lua_pushnumber(l,1);
+        lua_gettable(l,-2);
+        lua_pushnumber(l,2);
+        lua_gettable(l,-3);
+
+        points[i].x = lua_tonumber(l,-2);
+        points[i].y = lua_tonumber(l,-1);
+
+
+        lua_pop(l,1);
+        lua_pop(l,1);
+        lua_pop(l,1);
+
+    }   
+    NOTArea(&attacks[attackIndex].shape,points,lenArea);
+    free(points);
+}
 int L_CreateAOE(lua_State* l)
 {
     //read from table of effects
@@ -4446,5 +4476,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_RotateAttackArea);
     lua_setglobal(luaState, "RotateAttackArea");
+
+    lua_pushcfunction(luaState, L_CutoutArea);
+    lua_setglobal(luaState, "CutoutArea");
+
 
 }
