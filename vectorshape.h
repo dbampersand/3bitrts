@@ -49,7 +49,7 @@ void MoveVectorShape(int x, int y, VectorShape v);
 VectorShape CreateVectorShape(Point* points, int numPoints, int x, int y);
 void DrawVectorShape(VectorShape* v, Color color);
 bool ObjectInVectorShape(GameObject* g, VectorShape* v);
-bool PointInShape(VectorShape* v, int x, int y, float angle);
+bool PointInShape(VectorShape* v, int x, int y, float angle, float w, float h);
 void NOTArea(VectorShape* v, Point* points, int numPoints);
 ALLEGRO_BITMAP* GenerateVectorShapeBitmap(VectorShape* v, VectorShape* parent, bool not);
 

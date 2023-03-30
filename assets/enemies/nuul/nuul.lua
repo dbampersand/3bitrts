@@ -1,4 +1,5 @@
 local quartz = -1
+local time = 0
 
 function setup()
     SetSprite("assets/enemies/nuul/nuul.png");
@@ -22,7 +23,10 @@ function setup()
 end
 
 function update(dt)
-    CastAbility(quartz,{});
+    time = time + dt
+    if (time > 0) then
+        CastAbility(quartz,{});
+    end
 end
 
 function kill()

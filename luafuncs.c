@@ -1741,7 +1741,6 @@ int L_CutoutArea(lua_State* l)
         lua_pop(l,1);
 
     }   
-    printf("\n\n");
 
     NOTArea(&attacks[attackIndex].shape,points,lenArea);
     free(points);
@@ -3508,8 +3507,6 @@ int L_RotatePoint(lua_State* l)
     float cy = lua_tonumber(l,4);
 
     float angle = lua_tonumber(l,5);
-
-    printf("angle: %f\n",angle);
 
     RotatePointF(&x,&y,cx,cy,DegToRad(angle));
     lua_newtable(l);
