@@ -82,7 +82,6 @@ function onchanneled()
 end
 
 function untoggle()
-    Print("Coming from untoggle");
     RemoveAttack(area);
     area = -1
 end

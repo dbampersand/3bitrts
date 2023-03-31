@@ -1335,7 +1335,6 @@ int L_UntoggleAll(lua_State* l)
     }
     return 0;
 }
-
 int L_GetAttackLifetime(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -3361,6 +3360,11 @@ int L_MoveAttack(lua_State* l)
         {
             a->shape.x = x;
             a->shape.y = y;
+            for (int i = 0; i < a->shape.numCutOutAreas; i++)
+            {
+                a->shape.x = x;
+                a->shape.y = y;
+            }
 
         }
     }

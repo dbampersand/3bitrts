@@ -194,10 +194,13 @@ bool CastRay(float x, float y, Line l)
 }
 bool PointInShape(VectorShape* v, int x, int y, float angle, float w, float h)
 {
-    if (!PointInRect(x,y,(Rect){v->x + v->extentMinX, v->y + v->extentMinY,w,h}))
-        return false;
+    //if (!PointInRect(x,y,(Rect){v->x + v->extentMinX, v->y + v->extentMinY,w,h}))
+      //  return false;
     for (int i = 0; i < v->numCutOutAreas; i++)
     {
+        int w2 = fabsf(v->cutoutAreas[i].extentMinX) + fabsf(v->cutoutAreas[i].extentMaxX);
+        int h2 = fabsf(v->cutoutAreas[i].extentMinY) + fabsf(v->cutoutAreas[i].extentMaxY);
+
         if (PointInShape(&v->cutoutAreas[i],x,y,angle,w,h))
         {
             return false;
@@ -229,7 +232,26 @@ bool PointInShape(VectorShape* v, int x, int y, float angle, float w, float h)
         }
         l.x2 = point2.x + v->x;
         l.y2 = point2.y + v->y;
+
         RotatePointF(&l.x2,&l.y2,cx,cy,angle);
+
+        if (i == 0)
+        {
+            DEBUG_P1.x = l.x1;
+            DEBUG_P1.y = l.y1;
+
+        }
+        if (i == 1)
+        {
+            DEBUG_P2.x = l.x2;
+            DEBUG_P2.y = l.y2;
+        }
+        if (i == 2)
+        {
+            DEBUG_P3.x = cx;
+            DEBUG_P3.y = cy;
+        }
+
 
         if (CastRay(x,y,l))
             numIntersections++;

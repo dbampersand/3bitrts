@@ -1,21 +1,5 @@
-local range = 400
-local radius = 20
-local time = 1.25;
-
-local heading = {};
-local timer = 0;
-
-local numSegments = range / radius;
-local segmentsMade = 0
-
-local ticker = -1
-local radius = 15
-
-local startX = 0;
-local startY = 0;
-
-local timeBeforeDamage = 0.35;
-
+local attacks = {};
+local numAttacks = 3
 function setup()
 
     SetAbilityRange(range)
@@ -30,8 +14,12 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
-    Print("headingx: " .. headingx .. ", headingy: " .. headingy);
+    local attack = {};
 
+    --local randTargets = GetRandomUnit
+
+    Print("headingx: " .. headingx .. ", headingy: " .. headingy);
+    local xHeading = GetX(GetObjRef() - )
     heading = {headingx = headingx, headingy = headingy};
     ticker = CreateTicker(time);    
     
