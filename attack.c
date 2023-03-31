@@ -123,6 +123,7 @@ Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float ti
     a.target = target;
     a.playerOwnedBy = GetPlayerOwnedBy(from);
 
+
     Attack* ref = AddAttack(&a);
     return ref;
 
@@ -190,7 +191,7 @@ void RemoveAttack(int attackindex)
         free(a->effects);
         a->effects = NULL;
     }
-    if (a->shape.points)
+    if (a->attackType == ATTACK_SHAPE && a->shape.points)
     {
         free(a->shape.points);
         a->shape.points = NULL;

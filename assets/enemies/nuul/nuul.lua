@@ -1,6 +1,8 @@
 local quartz = -1
 local time = 0
 
+local isInIntermission = false
+
 function setup()
     SetSprite("assets/enemies/nuul/nuul.png");
 
@@ -23,10 +25,12 @@ function setup()
 end
 
 function update(dt)
-    time = time + dt
-    if (time > 0) then
+    local hpPercent = GetHPPercent(GetObjRef());
+    if (hpPercent < 60 and hpPercent > 30 and isInIntermission == false) then
+        isInIntermission = true
         CastAbility(quartz,{});
     end
+
 end
 
 function kill()

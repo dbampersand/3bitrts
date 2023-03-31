@@ -1,11 +1,13 @@
-local time = 8
+local area = -1
 
 function setup()
     SetAbilityRange(32)
-    SetCooldown(24);
+    SetCooldown(0);
     AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
     SetDescription("[b]Quartz\n\nCreates an area of damaging fire.");
-    SetAbilityName("Melt"); 
+    SetAbilityName("Quartz"); 
+
+    AbilitySetCastType(ABILITY_TOGGLE);
 
 end
 
@@ -22,7 +24,7 @@ function casted(x,y,obj,headingx,headingy)
     --local area = CreateAttackArea({{0,0},{50,-50},{-50,-50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
     
     --local area = CreateAttackArea({{0,0},{-50,-50},{-50,50}},GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
-    local area = CreateAttackArea({
+    area = CreateAttackArea({
         {-GetMapWidth(),-GetMapHeight()},
         {GetMapWidth(),-GetMapHeight()},
         {GetMapWidth(),GetMapHeight()},
@@ -73,7 +75,14 @@ function ontimeout(x,y,obj,dt,target)
 end
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     RotateAttackArea(attackRef,10 * dt);
-    --MoveAttack(attackRef,GetX(GetObjRef()),GetY(GetObjRef()));
+    MoveAttack(attackRef,GetX(GetObjRef()),GetY(GetObjRef()));
+    SetAttackLifetime(attackRef,100);
 end
 function onchanneled() 
+end
+
+function untoggle()
+    Print("Coming from untoggle");
+    RemoveAttack(area);
+    area = -1
 end

@@ -1409,6 +1409,16 @@ int L_GetMaxHP(lua_State* l)
     return 1;
 }
 
+int L_GetHPPercent(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+
+    lua_pushnumber(l,objects[index].health / objects[index].maxHP * 100);
+    return 1;
+
+}
 int L_SetObjAggroRadius(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -4087,6 +4097,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetHP);
     lua_setglobal(luaState, "GetHP");
+
+    lua_pushcfunction(luaState, L_GetHPPercent);
+    lua_setglobal(luaState, "GetHPPercent");
 
     lua_pushcfunction(luaState, L_GetMaxHP);
     lua_setglobal(luaState, "GetMaxHP");
