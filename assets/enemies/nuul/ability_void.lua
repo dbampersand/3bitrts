@@ -16,18 +16,12 @@ function casted(x,y,obj,headingx,headingy)
 
     local attack = {};
 
-    --local randTargets = GetRandomUnit
-
-    Print("headingx: " .. headingx .. ", headingy: " .. headingy);
-    local xHeading = GetX(GetObjRef() - )
-    heading = {headingx = headingx, headingy = headingy};
-    ticker = CreateTicker(time);    
-    
-    timer = 0
-    segmentsMade = 0
-
-    startX = GetX(GetObjRef());
-    startY = GetY(GetObjRef());
+    local randTargets = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,9999,3)
+    for i=0,#randTargets do
+        local xHeading = GetX(GetObjRef()) - GetX(randTargets[i+1]);
+        local yHeading = GetY(GetObjRef()) - GetY(randTargets[i+1]);
+       -- Print(randTargets[i+1]);
+    end
     return true; 
 end
 

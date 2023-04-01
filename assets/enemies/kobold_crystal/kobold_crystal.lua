@@ -26,7 +26,7 @@ end
 
 function update(dt)
     if (AnyObjInCombat()) then
-        CastAbility(crash,6,{{target=GetRandomUnit(TYPE_ENEMY,Band(Bnot(TYPE_TANK),TYPE_ALL),256)}});
+        CastAbility(crash,6,{{target=GetRandomUnit(TYPE_ENEMY,Band(Bnot(TYPE_TANK),TYPE_ALL),256)[1]}});
     end
 end
 

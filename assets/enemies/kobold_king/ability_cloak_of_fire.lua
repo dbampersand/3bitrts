@@ -24,7 +24,7 @@ function casted(x,y,obj,headingx,headingy)
     f2["value"] = 5;  
 
     local randTarget = {}
-    randTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ANY,999);
+    randTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ANY,999)[1];
     CreateAOE(GetX(randTarget.target),GetY(randTarget.target),"", 20, 0.25, 12,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_QUARTER,false, -1, {f2})
 
     return true;

@@ -28,7 +28,7 @@ function update(dt)
         CastAbility(squeeze,5,{});
     end
     local acidTarget = {};
-    acidTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999);
+    acidTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999)[1];
     CastAbility(acid,3,{acidTarget})
 end
 

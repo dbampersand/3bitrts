@@ -25,9 +25,9 @@ end
 
 function update(dt)
     if (IsInCombat()) then
-        local randUnit = {target = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,256)};
+        local randUnit = {target = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,256)[1]};
         CastAbility(fireball,2,{randUnit});
-        CastAbility(burn,1,{{target=GetRandomUnit(TYPE_ENEMY,TYPE_TANK,256)}});
+        CastAbility(burn,1,{{target=GetRandomUnit(TYPE_ENEMY,TYPE_TANK,256)[1]}});
 
     end
 end

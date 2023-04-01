@@ -324,6 +324,9 @@ int L_GetRandomUnit(lua_State* l)
     float range = lua_tonumber(l,3);
     if (!lua_isnumber(l,3))
         range = FLT_MAX;
+    int toGet = 1;
+    if (lua_isnumber(l,4))
+        toGet = lua_tonumber(l,4);
 
 
     GameObject** list = calloc(MAX_OBJS,sizeof(GameObject*));
@@ -361,10 +364,29 @@ int L_GetRandomUnit(lua_State* l)
     }
     if (numObjs > 0)
     {
-        GameObject* randObj = list[rand()%numObjs];
-        lua_pushnumber(l,randObj-objects);
+        int numPushed = 0;
+        lua_newtable(l);
+        for (int i = 0; i < toGet; i++)
+        {
+
+            int pickedObj = rand()%numObjs;
+            GameObject* randObj = list[pickedObj];
+            lua_pushnumber(l,i+1);
+            lua_pushnumber(l,randObj-objects);
+            for (int j = pickedObj; j < numObjs-1; j++)
+            {
+                list[j] = list[j+1];
+            }
+            numObjs--;
+            numPushed++;
+            lua_settable(l,-3);
+            if (numObjs <= 0)
+                break;
+        }
         free(list);
         return 1;
+
+
     }
     //There are no objects tagged - pick a random object that follows the friendliness
     else 
@@ -401,9 +423,25 @@ int L_GetRandomUnit(lua_State* l)
         }
         if (numObjs > 0)
         {
-            
-            GameObject* randObj = list[rand()%numObjs];
-            lua_pushnumber(l,randObj-objects);
+            int numPushed = 0;
+            lua_newtable(l);
+            for (int i = 0; i < toGet; i++)
+            {
+
+                int pickedObj = rand()%numObjs;
+                GameObject* randObj = list[pickedObj];
+                lua_pushnumber(l,i+1);
+                lua_pushnumber(l,randObj-objects);
+                for (int j = pickedObj; j < numObjs-1; j++)
+                {
+                    list[j] = list[j+1];
+                }
+                numObjs--;
+                numPushed++;
+                lua_settable(l,-3);
+                if (numObjs <= 0)
+                    break;
+            }
             free(list);
             return 1;
         }

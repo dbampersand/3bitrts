@@ -32,7 +32,7 @@ function update(dt)
 
         local target = {};
 
-        local targ = GetRandomUnit(TYPE_ENEMY,TYPE_ANY,999);
+        local targ = GetRandomUnit(TYPE_ENEMY,TYPE_ANY,999)[1];
 
         target["target"] = targ;
         if (target["target"] ~= nil) then

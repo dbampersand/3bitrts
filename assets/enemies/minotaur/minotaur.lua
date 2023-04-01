@@ -48,7 +48,7 @@ function update(dt)
     if (IsInCombat()) then
         if (state == STATE_NORMAL) then
             local chargeTarget = {}
-            chargeTarget["target"] = GetRandomUnit(TYPE_ENEMY,Bor(TYPE_MELEEDPS,Bor(TYPE_RANGEDDPS,TYPE_HEALER)),999)
+            chargeTarget["target"] = GetRandomUnit(TYPE_ENEMY,Bor(TYPE_MELEEDPS,Bor(TYPE_RANGEDDPS,TYPE_HEALER)),999)[1]
             CastAbility(charge,5,{chargeTarget})
 
             j = GetThreatRank()
@@ -64,7 +64,7 @@ function update(dt)
             CastAbility(quake,0,{})
 
             local chuckTarget = {}
-            chuckTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_HEALER,999)
+            chuckTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_HEALER,999)[1]
             CastAbility(chuck,2,{chuckTarget})
 
             timer = timer + dt;

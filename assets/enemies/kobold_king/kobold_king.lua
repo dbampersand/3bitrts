@@ -78,7 +78,7 @@ function update(dt)
         end
 
         local concoctionTarget = {};
-        concoctionTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999);
+        concoctionTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999)[1];
         CastAbility(throwConcoction,3,{concoctionTarget});
         
         if (healthPercent < 0.5) then

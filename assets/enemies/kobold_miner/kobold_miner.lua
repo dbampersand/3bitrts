@@ -23,7 +23,7 @@ end
 
 function update(dt)
     if (IsInCombat()) then
-        local randUnit = {target = GetRandomUnit(TYPE_ENEMY,Band(TYPE_ALL,Bnot(TYPE_TANK)),256)};
+        local randUnit = {target = GetRandomUnit(TYPE_ENEMY,Band(TYPE_ALL,Bnot(TYPE_TANK)),256)[1]};
         CastAbility(bomb,2,{randUnit});
     end
 end
