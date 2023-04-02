@@ -812,7 +812,7 @@ void UpdateAttack(Attack* a, float dt)
     }
     //else
     {
-        if (a->attackType == ATTACK_PROJECTILE_ANGLE)
+        if (a->attackType == ATTACK_PROJECTILE_ANGLE || a->attackType == ATTACK_AOE)
         {
             MoveAngle(&a->x,&a->y,a->targx,a->targy,a->speed,dt);
         }
@@ -962,6 +962,7 @@ void UpdateAttack(Attack* a, float dt)
         }
         if (a->attackType == ATTACK_AOE || a->attackType == ATTACK_CONE)
         {
+
             if (a->timer > a->tickrate)
             {
                 a->timer = 0;

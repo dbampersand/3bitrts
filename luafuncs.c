@@ -994,6 +994,37 @@ int L_SetAttackSpeed(lua_State* l)
     g->attackSpeed = as;
     return 0;
 }
+int L_SetAttackMoveAngle(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_ATTACKS)
+        return 0;
+    Attack* a = &attacks[index];
+    float angleX = lua_tonumber(l,2);
+    float angleY = lua_tonumber(l,3);
+
+    //if angle isn't normalised
+    if (angleX > 1 || angleX < -1 || angleY > 1 || angleY < -1)
+        Normalize(&angleX,&angleY);
+    a->targx = angleX;
+    a->targy = angleY;
+
+    return 0;
+}
+int L_SetAttackVelocity(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_ATTACKS)
+        return 0;
+    Attack* a = &attacks[index];
+    float v = lua_tonumber(l,2);
+
+    a->speed = v;
+
+    return 0;
+}
+
+
 int L_AddAttackSprite(lua_State* l)
 {
     const char* _path = lua_tostring(l,1);
@@ -4550,5 +4581,10 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_CutoutArea);
     lua_setglobal(luaState, "CutoutArea");
 
+    lua_pushcfunction(luaState, L_SetAttackMoveAngle);
+    lua_setglobal(luaState, "SetAttackMoveAngle");
+
+    lua_pushcfunction(luaState, L_SetAttackVelocity);
+    lua_setglobal(luaState, "SetAttackVelocity");
 
 }

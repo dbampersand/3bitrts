@@ -1,10 +1,11 @@
 local quartz = -1
 local void = -1
-local time = 0
 
 local isInIntermission = false
 local intermissionStart = 60
 local intermissionEnd = 30
+
+local timer = 0
 function setup()
     SetSprite("assets/enemies/nuul/nuul.png");
 
@@ -27,19 +28,24 @@ function setup()
 end
 
 function update(dt)
-    CastAbility(void,{});
+    if (IsInCombat(GetObjRef())) then
+        timer = timer + dt;
 
-    local hpPercent = GetHPPercent(GetObjRef());
-    if (hpPercent < intermissionStart and hpPercent > intermissionEnd) then
-        if (isInIntermission == false) then
-            isInIntermission = true
-            --CastAbility(quartz,{});
+        local hpPercent = GetHPPercent(GetObjRef());
+        if (hpPercent < intermissionStart and hpPercent > intermissionEnd) then
+            if (isInIntermission == false) then
+                isInIntermission = true
+                CastAbility(quartz,{});
+            end
+            do return end;
         end
-        do return end;
-    end
-    if (hpPercent <= intermissionEnd and isInIntermission == true) then
-        isInIntermission = false
-        --CastAbility(quartz,{});
+        if (hpPercent <= intermissionEnd and isInIntermission == true) then
+            isInIntermission = false
+            CastAbility(quartz,{});
+        end
+        if (timer > 4) then
+            CastAbility(void,{});
+        end
     end
 
 end

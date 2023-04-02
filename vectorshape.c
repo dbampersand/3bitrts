@@ -79,7 +79,6 @@ void DrawVectorShape(VectorShape* v, Color color)
 
 
 
-    ToScreenSpace(&xScreen,&yScreen);
 
     float cx = w/2;
     float cy = h/2;
@@ -106,10 +105,14 @@ void DrawVectorShape(VectorShape* v, Color color)
 
     float dx = xScreen + v->offsetX;
     float dy = yScreen + v->offsetY;
-    RotatePointF(&dx,&dy,v->x,v->y,v->angle);
+    
+    float rotX = v->x; float rotY = v->y;
+
+    RotatePointF(&dx,&dy,rotX,rotY,v->angle);
 
     //DEBUG_P4.x = cx + v->x;
     //DEBUG_P4.y = cy + v->y;
+    ToScreenSpace(&dx,&dy);
 
 
     al_draw_tinted_rotated_bitmap(v->generatedSprite,GetColor(color,0),cx,cy,dx,dy,v->angle,0);
