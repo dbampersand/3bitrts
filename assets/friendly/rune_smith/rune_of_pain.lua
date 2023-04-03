@@ -11,12 +11,12 @@ function casted(x,y,obj,headingx,headingy)
     --SetObjPosition(GetObjRef(),xPos,yPos);
     --SetObjTargetPosition(GetObjRef(),xPos,yPos);
     --CreateProjectile(GetMouseX(),GetMouseY(),"",ATTACK_PROJECTILE_POINT,25,10,true,{})
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
     f1["value"] = 200;  
 
-    f2 = {}
+    local f2 = {}
     f2["trigger"] = TRIGGER_INSTANT;
     f2["type"] = EFFECT_THREAT;
     f2["value"] = 200;  

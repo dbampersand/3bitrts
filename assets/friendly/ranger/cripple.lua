@@ -8,13 +8,13 @@ function setup()
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/ranger/audio/cripple.wav",1.25)
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_CONST
     f1["type"] = EFFECT_SPEED
     f1["value"] = -70;  
     f1["duration"] = 10
 
-    f2 = {};
+    local f2 = {};
     f2["trigger"] = TRIGGER_CONST
     f2["type"] = EFFECT_THREAT
     f2["value"] = 999999;

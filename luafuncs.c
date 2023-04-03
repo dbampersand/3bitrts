@@ -344,7 +344,7 @@ int L_GetRandomUnit(lua_State* l)
                 {
                     if (friend == TYPE_ENEMY)
                     {
-                        if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(currGameObjRunning))
+                        if (GetPlayerOwnedBy_IncludeDecor(g) != GetPlayerOwnedBy_IncludeDecor(currGameObjRunning))
                         {
                             list[numObjs] = g;
                             numObjs++;
@@ -352,7 +352,7 @@ int L_GetRandomUnit(lua_State* l)
                     }
                     if (friend == TYPE_FRIENDLY)
                     {
-                        if (GetPlayerOwnedBy(g) == GetPlayerOwnedBy(currGameObjRunning))
+                        if (GetPlayerOwnedBy_IncludeDecor(g) == GetPlayerOwnedBy_IncludeDecor(currGameObjRunning))
                         {
                             list[numObjs] = g;
                             numObjs++;
@@ -403,7 +403,7 @@ int L_GetRandomUnit(lua_State* l)
                 {
                     if (friend == TYPE_ENEMY)
                     {
-                        if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(currGameObjRunning))
+                        if (GetPlayerOwnedBy_IncludeDecor(g) != GetPlayerOwnedBy_IncludeDecor(currGameObjRunning))
                         {
                             list[numObjs] = g;
                             numObjs++;
@@ -411,7 +411,7 @@ int L_GetRandomUnit(lua_State* l)
                     }
                     if (friend == TYPE_FRIENDLY)
                     {
-                        if (GetPlayerOwnedBy(g) == GetPlayerOwnedBy(currGameObjRunning))
+                        if (GetPlayerOwnedBy_IncludeDecor(g) == GetPlayerOwnedBy_IncludeDecor(currGameObjRunning))
                         {
                             list[numObjs] = g;
                             numObjs++;
@@ -464,7 +464,7 @@ int L_GetRandomUnit(lua_State* l)
     //if we still have no objects
     if (numObjs <= 0)
     {
-         lua_pushnumber(l,-1);
+        lua_newtable(l);
     }
     free(list);
     return 1;
@@ -549,6 +549,7 @@ int L_GetX(lua_State* l)
         }
         else
         {
+            printf("GetX: Index out of range: %i\n",index);
             GetCentre(currGameObjRunning,&x,&y);
             lua_pushnumber(l,x);
         }
@@ -580,6 +581,7 @@ int L_GetY(lua_State* l)
         }
         else
         {
+            printf("GetY: Index out of range: %i\n",index);
             GetCentre(currGameObjRunning,&x,&y);
             lua_pushnumber(l,y);
         }
@@ -3262,13 +3264,14 @@ int L_CastAbility(lua_State* l)
     float x = -FLT_MAX; float y=-FLT_MAX; int obj = -1; float headingx=-1; float headingy=-1;
     GetCentre(currGameObjRunning,&x,&y);
     bool isAField;
+    bool xIsPresent; bool yIsPresent;
     for (int i = 0; i < len; i++)
     {
         lua_pushnumber(l,i+1);
         lua_gettable(l,3);
 
-        x = GetTableField(l,-1,"x",&isAField);
-        y = GetTableField(l,-1,"y",&isAField);
+        x = GetTableField(l,-1,"x",&xIsPresent);
+        y = GetTableField(l,-1,"y",&yIsPresent);
         obj = GetTableField(l,-1,"target",&isAField);
         headingx = GetTableField(l,-1,"headingx",&isAField);
         headingy = GetTableField(l,-1,"headingy",&isAField);
@@ -3283,7 +3286,7 @@ int L_CastAbility(lua_State* l)
         }
     }
     //on the ground
-    else
+    else if (xIsPresent && yIsPresent)
     {
         float x1; float y1;
         GetCentre(currGameObjRunning,&x1,&y1);
@@ -3292,8 +3295,13 @@ int L_CastAbility(lua_State* l)
             lua_pushboolean(l,false);
             return 0;
         }
-
     }
+    //otherwise: may be xheading/yheading which does not need to be checked
+    if (!xIsPresent)
+        x = currGameObjRunning->position.worldX;
+    if (!yIsPresent)
+        y = currGameObjRunning->position.worldY;
+
     if (channelTime > 0)
     {
         //GameObject* target;

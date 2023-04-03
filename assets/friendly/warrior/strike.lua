@@ -16,19 +16,19 @@ function casted(x,y,obj,headingx,headingy)
         damage = 150
     end
 
-    f2 = {};
+    local f2 = {};
     f2["trigger"] = TRIGGER_INSTANT
     f2["type"] = EFFECT_HURT
     f2["value"] = damage;  
 
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_THREAT;
     f1["triggersPerSecond"] = 1 
     f1["value"] = 100;  
     f1["duration"] = 1;  
 
-    f3 = {};
+    local f3 = {};
     f3["trigger"] = TRIGGER_CONST;
     f3["type"] = EFFECT_SPEED;
     f3["value"] = 100;  

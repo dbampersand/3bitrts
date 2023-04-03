@@ -19,7 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     end
 
 
-    f2 = {};
+    local f2 = {};
     f2["trigger"] = TRIGGER_INSTANT;
     f2["type"] = EFFECT_HEAL;
     f2["value"] = healFor;  
@@ -27,7 +27,7 @@ function casted(x,y,obj,headingx,headingy)
     ApplyEffect(obj,{f2});
 
 
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_SHIELD;
     f1["value"] = healFor;  

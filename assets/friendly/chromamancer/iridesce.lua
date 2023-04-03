@@ -14,8 +14,8 @@ function casted(x,y,obj,headingx,headingy)
     local thisObjSide = GetObjFriendliness(GetObjRef());
     local targetSide = GetObjFriendliness(obj);
 
-    f1 = {};
-    f2 = {};
+    local f1 = {};
+    local f2 = {};
     --if this is a friendly unit
     if (thisObjSide == targetSide) then
         f1["trigger"] = TRIGGER_INSTANT;

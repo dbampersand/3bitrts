@@ -9,12 +9,12 @@ end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/rogue/audio/shiv.wav",1.25)
 
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT
     f1["value"] = 10;  
 
-    f2 = {};
+    local f2 = {};
     f2["name"] = "Poison"
     f2["canStack"] = true;  
     f2["trigger"] = TRIGGER_TIMER

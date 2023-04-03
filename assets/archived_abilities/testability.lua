@@ -9,14 +9,14 @@ function setup()
     
 end
 function casted()
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_TIMER;
     f1["type"] = EFFECT_HEAL;
     f1["triggersPerSecond"] = 2
     f1["value"] = 2;  
     f1["duration"] = 10;
 
-    f2 = {};
+    local f2 = {};
     f2["trigger"] = TRIGGER_INSTANT
     f2["type"] = EFFECT_HURT
     f2["triggersPerSecond"] = 1 

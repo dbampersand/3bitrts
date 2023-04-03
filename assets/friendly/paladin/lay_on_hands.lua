@@ -14,12 +14,12 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HEAL;
     f1["value"] = 100000;  
 
-    f2 = {};
+    local f2 = {};
     f2["trigger"] = TRIGGER_INSTANT;
     f2["type"] = EFFECT_INVULN
     f2["value"] = invincibleDuration;  

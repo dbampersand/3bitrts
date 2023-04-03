@@ -13,14 +13,14 @@ end
 function casted(x,y,obj,headingx,headingy)
 
 
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_SHIELD;
     f1["value"] = 50;  
     f1["duration"] = 8;  
 
 
-    f2 = {};
+    local f2 = {};
     f2["trigger"] = TRIGGER_INSTANT;
     f2["type"] = EFFECT_ARMOR;
     f2["value"] = 6;  

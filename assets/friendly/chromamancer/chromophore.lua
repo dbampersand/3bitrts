@@ -18,20 +18,20 @@ function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/chromamancer/audio/chromophore.wav",1)
 
     
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_SHIELD;
     f1["value"] = 20;  
     f1["triggersPerSecond"] = 1
     f1["duration"] = 10
 
-    f2 = {};
+    local f2 = {};
     f2["trigger"] = TRIGGER_INSTANT;
     f2["type"] = EFFECT_HEAL;
     f2["value"] = 10;  
 
 
-    f3 = {};
+    local f3 = {};
     f3["trigger"] = TRIGGER_CONST;
     f3["type"] = EFFECT_ATTACKDAMAGE;
     f3["duration"] = 1

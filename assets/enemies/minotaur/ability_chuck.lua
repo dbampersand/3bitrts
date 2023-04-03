@@ -8,13 +8,13 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_STUN;
     f1["value"] = 2;  
     f1["portrait"] = "assets/enemies/wyrm_boss/ability_fire_effect_portrait"
 
-    f2 = {};
+    local f2 = {};
     f2["trigger"] = TRIGGER_INSTANT;
     f2["type"] = EFFECT_HURT;
     f2["value"] = 100;  

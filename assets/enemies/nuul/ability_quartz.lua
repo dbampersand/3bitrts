@@ -34,7 +34,6 @@ function casted(x,y,obj,headingx,headingy)
     local angle = 30
     local move = 360 / 5
 
-    CutoutArea(area,{{0,0},{-100,-100},{-100,-200}});
 
     for i=0,5 do
         local p1 = {100,100};

@@ -17,14 +17,14 @@ function casted(x,y,obj,headingx,headingy)
 
     PlaySound("assets/friendly/warrior/audio/charge.wav",0.5);
     
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
     --f1["numTriggers"] = 5
     f1["value"] = damage;  
     --f1["duration"] = 10;
     
-    f2 = {};
+    local f2 = {};
     f2["trigger"] = TRIGGER_INSTANT;
     f2["type"] = EFFECT_THREAT;
     f2["value"] = 600; 

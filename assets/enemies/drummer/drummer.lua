@@ -33,7 +33,7 @@ function untoggle()
 end
 function update(dt)
     if (aoe == -1) then
-        f1 = {};
+        local f1 = {};
         f1["trigger"] = TRIGGER_CONST;
         f1["type"] = EFFECT_SPEED;
         --f1["numTriggers"] = 5
@@ -43,7 +43,7 @@ function update(dt)
         f1["name"] = "Speed"
         f1["overwrites"] = true
     
-        f2 = {};
+        local f2 = {};
         f2["trigger"] = TRIGGER_CONST;
         f2["type"] = EFFECT_ATTACKDAMAGE;
         f2["value"] = 2;
@@ -52,7 +52,7 @@ function update(dt)
         f2["name"] = "AttackDamage"
         f2["overwrites"] = true
         
-        f3 = {};
+        local f3 = {};
         f3["trigger"] = TRIGGER_CONST;
         f3["type"] = EFFECT_ATTACKSPEED;
         f3["value"] = -0.2;

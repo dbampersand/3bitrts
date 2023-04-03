@@ -10,12 +10,12 @@ end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/rogue/audio/cloak.wav",1.25)
 
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT
     f1["value"] = 25;
 
-    f2 = {};
+    local f2 = {};
     f2["trigger"] = TRIGGER_INSTANT
     f2["type"] = EFFECT_ADD_MANA
     f2["value"] = 20;

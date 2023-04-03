@@ -9,10 +9,10 @@ local timer = 0
 function setup()
     SetSprite("assets/enemies/nuul/nuul.png");
 
-    SetDamage(12);
-    SetMaxHP(3000,true)
+    SetDamage(50);
+    SetMaxHP(6000,true)
     SetSpeed(0)
-    SetRange(32);   
+    SetRange(128);   
 
     quartz = AddAbility(GetObjRef(),"assets/enemies/nuul/ability_quartz.lua",0);
     void = AddAbility(GetObjRef(),"assets/enemies/nuul/ability_void.lua",1);

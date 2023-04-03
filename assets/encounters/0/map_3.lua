@@ -12,6 +12,7 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",297,249,TYPE_ENEMY,0),2);
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",280,233,TYPE_ENEMY,0),2);
 
+
     CreateObject("assets/enemies/kobold_crystal/kobold_crystal.lua",164,304,TYPE_ENEMY,0);
   
     SetSpawnPoint(161,28)
@@ -32,6 +33,7 @@ function kill()
 end
 
 function mapend()
+    GoShop(true);
     ChangeMap("assets/encounters/0/map_final.lua")
     return false;
 end

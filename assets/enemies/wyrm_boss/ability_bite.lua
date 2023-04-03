@@ -13,7 +13,7 @@ function casted(x,y,obj,headingx,headingy)
     end
     PlaySound("assets/enemies/wyrm_boss/audio/bite.wav",1)
 
-    f1 = {};
+    local f1 = {};
     f1["name"] = "Bite"
     f1["canStack"] = true;
     f1["trigger"] = TRIGGER_TIMER;
@@ -23,7 +23,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["duration"] = 999;
     f1["portrait"] = "assets/enemies/wyrm_boss/ability_bite_effect_portrait.png"
     
-    f2 = {};
+    local f2 = {};
     f2["trigger"] = TRIGGER_INSTANT;
     f2["type"] = EFFECT_HURT;
     f2["value"] = 100;

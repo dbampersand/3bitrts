@@ -11,7 +11,7 @@ function setup()
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/ranger/audio/flurry.wav",1.25)
-    f1 = {}
+    local f1 = {}
     f1["trigger"] = TRIGGER_CONST
     f1["type"] = EFFECT_ATTACKSPEED
     f1["value"] = -0.09;
@@ -20,7 +20,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["duration"] = 10
     f1["name"] = "Flurry"
 
-    f2 = {}
+    local f2 = {}
     f2["trigger"] = TRIGGER_CONST
     f2["type"] = EFFECT_ATTACKDAMAGE
     f2["value"] = 4;

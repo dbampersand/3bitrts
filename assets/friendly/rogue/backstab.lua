@@ -8,12 +8,12 @@ function setup()
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/rogue/audio/backstab.wav",1.25)
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT
     f1["value"] = 120;  
 
-    f2 = {};
+    local f2 = {};
     f2["trigger"] = TRIGGER_CONST
     f2["type"] = EFFECT_SPEED
     f2["value"] = -25;
