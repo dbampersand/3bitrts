@@ -2615,7 +2615,8 @@ void DrawGameObj(GameObject* g, bool forceInverse)
         c2.x = c1.x + (headingX * 5);
         c2.y = c1.y + (headingY * 5);
 
-        DrawArrow(ToScreenSpace_X(c1.x),ToScreenSpace_Y(c1.y),ToScreenSpace_X(c2.x),ToScreenSpace_Y(c2.y),c);
+        if (!ObjIsDecoration(g))
+            DrawArrow(ToScreenSpace_X(c1.x),ToScreenSpace_Y(c1.y),ToScreenSpace_X(c2.x),ToScreenSpace_Y(c2.y),c);
 
         if (ObjIsBoss(g))
         {
