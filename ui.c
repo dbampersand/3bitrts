@@ -2208,7 +2208,7 @@ void InitUI()
 
 
     ui.animatePanel = UI_ANIMATE_STATIC;
-    ui.panelShownPercent = 0;
+    ui.panelShownPercent = 1;
     ui.changingTo = NULL;
     
     ui.currentPanel = NULL;

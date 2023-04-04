@@ -614,14 +614,41 @@ void CheckIfGameIsLost()
 void UpdateTransition(float dt)
 {
     if (GameStateIsTransition(&gameState))
-    {
-        if (transitionTimer < 0.4f)
+    {   
+        if (transitionDrawing == TRANSITION_CHAINS)
         {
-            transitionTimer += dt * 3;
+            if (transitionTimer < 0.4f)
+            {
+                transitionTimer += dt * 3;
+            }
+            else
+            {
+                transitionTimer += dt * 0.8f;
+            }
+        }
+        else if (transitionDrawing == TRANSITION_TRIANGLES)
+        {
+            if (transitionTimer < 0.3f)
+            {
+                transitionTimer += dt * 3;
+            }
+            else
+                transitionTimer += dt * 0.8f;
+        }
+        else if (transitionDrawing == TRANSITION_CIRCLE)
+        {
+            transitionTimer += dt * 1.6f;
         }
         else
         {
-            transitionTimer += dt * 0.8f;
+            if (transitionTimer < 0.4f)
+            {
+                transitionTimer += dt * 2;
+            }
+            else
+            {
+                transitionTimer += dt * 1.8f;
+            }
         }
 
         if (transitionTimer >= 1.0f)

@@ -27,11 +27,11 @@ function setup()
     CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",139,20,TYPE_ENEMY,0)
     CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",138,37,TYPE_ENEMY,0)
 
-    CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",309,31,TYPE_ENEMY,0)
-    CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",326,93,TYPE_ENEMY,0)
-    CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",323,130,TYPE_ENEMY,0)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",309,31,TYPE_ENEMY,0),4)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",326,93,TYPE_ENEMY,0),4)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",323,130,TYPE_ENEMY,0),4)
 
-    CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",286,82,TYPE_ENEMY,0)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",286,82,TYPE_ENEMY,0),4)
 
     SetSpawnPoint(86,497)
     
