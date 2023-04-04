@@ -14,6 +14,8 @@
 #include "encounter.h"
 
 Shop shop = {0};
+int rerollCost = 5;
+
 
 void LoadShop()
 {
@@ -152,7 +154,7 @@ void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 
         if (si == shop.heldItem)
             continue;
-        si->position = Towards_Angled(si->position,si->desiredPosition,dt*60);
+        si->position = Towards_Angled(si->position,si->desiredPosition,dt*225);
 
     }
 
@@ -323,6 +325,28 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
         shop.heldItem = NULL;
 
 }
+void DrawReroll(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
+{
+    int x = 122; int y = 124;
+
+    Sprite* s = &sprites[LoadSprite("assets/ui/augments/reroll.png",true)];
+    Rect r = (Rect){x,y,GetWidthSprite(s),GetHeightSprite(s)};
+
+    bool moused = PointInRect(mouseState.screenX,mouseState.screenY,r);
+    DrawSprite(s,x,y,0,0,0,players[0].gold >= rerollCost ? FRIENDLY : GROUND,moused,false,false);
+    
+
+
+    if (moused && players[0].gold >= rerollCost)
+    {
+        if ((mouseStateLastFrame.mouse.buttons & 1)  && !(mouseState.mouse.buttons & 1))
+        {
+            AddGold(-rerollCost);
+            RefreshShop();
+        }
+    }
+    
+}
 void DrawShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 {
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
@@ -338,4 +362,9 @@ void DrawShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 
     DrawShopObjects(mouseState,mouseStateLastFrame);
     DrawShopItems(dt,mouseState);
+
+    DrawReroll(dt,mouseState,mouseStateLastFrame);
+
+    DrawGoldCount(BG,ENEMY);
+
 }

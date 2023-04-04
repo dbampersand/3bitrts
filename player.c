@@ -271,15 +271,15 @@ void UpdateGoldAnimationTimer(float dt)
     UpdateGoldTextString(goldDisplaying);
 
 }
-void DrawGoldCount()
+void DrawGoldCount(ALLEGRO_COLOR colorPositive, ALLEGRO_COLOR colorNegative)
 {
-    int x = 8; int y = 8;
+    int x = 9; int y = 9;
     if (gameState == GAMESTATE_PURCHASING_UNITS)
         x = 24;
 
-    DrawSprite(&sprites[ui.gold_element_sprite_index],x,y,0,0,0,FRIENDLY,false,false,false);
+    DrawSprite(&sprites[ui.gold_element_sprite_index],x,y,0,0,0,colorPositive,false,false,false);
 
-    ALLEGRO_COLOR c = floor(players[0].gold) >= 0 ? FRIENDLY : ENEMY;
+    ALLEGRO_COLOR c = floor(players[0].gold) >= 0 ? colorPositive : colorNegative;
     al_draw_text(ui.tinyFont,c,x+GetWidthSprite(&sprites[ui.gold_element_sprite_index])+2,y,ALLEGRO_ALIGN_LEFT,players[0].goldText);
 }
 void ClearGold()

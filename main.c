@@ -461,7 +461,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                 ChangeUIPanel(&ui.pauseMenuPanel);
             }
         }
-            DrawGoldCount();
+            DrawGoldCount(FRIENDLY,ENEMY);
 
 
     }
@@ -491,7 +491,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
      if (gameState == GAMESTATE_PURCHASING_UNITS)
     {
         DrawPurchasingUnitsUI(dt, *mouseState, *mouseStateLastFrame);
-        DrawGoldCount();
+        DrawGoldCount(FRIENDLY,ENEMY);
     }
 
 
