@@ -431,7 +431,8 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
 
     //This is so that, if we copy an object, it can't copy again by casting the same ability
     float cooldownBefore = a->cdTimer;
-    a->cdTimer = a->cooldown;
+    if (a->stacks == a->maxStacks)
+        a->cdTimer = a->cooldown;
 
     if ((a->castType != ABILITY_TOGGLE) || (a->castType == ABILITY_TOGGLE && !a->toggled) || AbilityCanBeCastOnGround(a))
     {
@@ -454,7 +455,8 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         bool b = lua_toboolean(luaState,-1);
         if (b)
         {   
-            a->cdTimer = a->cooldown;
+            if (a->stacks == a->maxStacks)
+                a->cdTimer = a->cooldown;
             a->stacks--;
             if (a->stacks < 0)
                 a->stacks = 0;

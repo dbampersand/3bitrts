@@ -884,7 +884,16 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
         sprintf(stackDrawBuffer,"%i",a->stacks);
         al_draw_text(ui.tinyFont, *c, xStackCounter+sizeStackCounter/2, yStackCounter+sizeStackCounter/2-al_get_font_line_height(ui.tinyFont)/4, ALLEGRO_ALIGN_CENTRE, stackDrawBuffer);
 
+        //draw countdown animation
     }
+    if (a->stacks != a->maxStacks)
+    {
+        float percent = 1-(a->cdTimer / a->cooldown);
+        al_draw_line(r.x,r.y + (r.h*percent),r.x+r.w,r.y+(r.h*percent),BG,1);
+        al_draw_line(r.x,r.y + 1 + (r.h*percent),r.x+r.w,r.y + 1 +(r.h*percent),*c,1);
+
+    }
+
     //Draw key to press for the ability
     const char* key = 0; 
     if (index == 0)
