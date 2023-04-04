@@ -120,6 +120,7 @@ void FinishTransition()
 {
     ClearChatbox();
     RemoveAllAttacks();
+    ChangeUIPanel(NULL);
     if (transitioningTo == GAMESTATE_PURCHASING_UNITS)
     {
         gameState = GAMESTATE_PURCHASING_UNITS;

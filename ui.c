@@ -707,7 +707,7 @@ void ChangeUIPanel(Panel* to)
         return;
     ui.animatePanel = true;
     ui.changingTo = to;
-    ui.animatePanel = UI_ANIMATE_OUT;
+    ui.animatePanel = UI_ANIMATE_STATIC;
 
     if (ui.currentPanel == &ui.mainMenuPanel)
     {
@@ -2570,7 +2570,7 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_
         UpdateTabButtons(ui.currentPanel, mouseState,mouseStateLastFrame);
     }
 
-    if (IsBindReleasedThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Pause))
+    if (IsBindDownThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Pause))
     {
         if (GameIsIngame())
         {
@@ -2613,6 +2613,12 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_
 
         }
     }
+    if (ui.animatePanel == UI_ANIMATE_STATIC)
+    {
+        ui.panelShownPercent = 1;
+        ui.currentPanel = ui.changingTo;
+    }
+
     if (ui.currentPanel)
     {
         UpdatePanel(ui.currentPanel,mouseState,mouseStateLastFrame, keyState);
