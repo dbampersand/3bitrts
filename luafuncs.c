@@ -3133,6 +3133,84 @@ int L_SetItemGoldCost(lua_State* l)
     return 0;
 
 }
+int L_CleaveEffect(lua_State* l)
+{
+    int primary = lua_tonumber(l,1);
+    int numCleaves = lua_tonumber(l,3);
+    int range = lua_tonumber(l,4);
+    float cleavePercent = lua_tonumber(l,5);
+
+    //lua_pop(l,-1);
+    //lua_pop(l,-1);
+
+
+
+    GameObject** targets = calloc(numCleaves+1,sizeof(GameObject*));
+    int numTargets = 1;
+
+    GameObject* mainObj = &objects[primary];
+
+
+    targets[0] = mainObj;
+    
+    for (int i = 0; i < numCleaves; i++)
+    {
+        for (int j = 0; j < numActiveObjects; j++)
+        {
+            bool ignore = false;
+            //ignore targets already on the list or of a different friendliness
+            for (int z = 0; z < numTargets; z++)
+            {
+                if (targets[z] == activeObjects[j] )
+                {
+                    ignore = true;
+                    break;
+                }
+                if (GetPlayerOwnedBy(activeObjects[j]) != GetPlayerOwnedBy(mainObj))
+                {
+                    ignore = true;
+                    break;
+                }
+
+            }
+            if (!ignore)
+            {
+                if (GetDist(activeObjects[j],mainObj) <= range)
+                {
+                    targets[numTargets] = activeObjects[j];
+                    numTargets++;
+                    break;
+                }
+            }
+        }
+    }
+
+    size_t len =  lua_rawlen(l,2);
+
+    for (int i = 1; i < len+1; i++)
+    {
+        Effect e;
+        e = GetEffectFromTable(l, 2, i);
+        e.from = currGameObjRunning;
+        e.abilityFrom = currAbilityRunning;
+        for (int j = 0; j  < numTargets; j++)
+        {
+            Effect eCopy = e;
+            //targets other than the main
+            if (j != 0)
+            {
+                eCopy.value *= cleavePercent;
+            }
+            ApplyEffect(&eCopy,currGameObjRunning,targets[j]);
+        }
+        lua_pop(l,1);
+    }       
+
+
+    free(targets);
+    return 0;
+
+}
 int L_ApplyEffect(lua_State* l)
 {
     int objIndex = lua_tonumber(l,1);
@@ -3158,6 +3236,7 @@ int L_ApplyEffect(lua_State* l)
         e.abilityFrom = currAbilityRunning;
         //lua_remove(l,-1);
         ApplyEffect(&e,currGameObjRunning,&objects[objIndex]);
+        lua_pop(l,1);
     }       
     
     return 0;
@@ -4594,5 +4673,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetAttackVelocity);
     lua_setglobal(luaState, "SetAttackVelocity");
+
+    lua_pushcfunction(luaState, L_CleaveEffect);
+    lua_setglobal(luaState, "CleaveEffect");
 
 }
