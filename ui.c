@@ -393,6 +393,8 @@ void GetAbilityClickedInsideUI(MouseState mouseState, MouseState mouseStateLastF
 {
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     //ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
+    if (PlayerHasEnemyUnitSelected())
+        return;
 
     if (currGameObjRunning)
     {
