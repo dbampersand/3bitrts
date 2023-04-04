@@ -7,7 +7,7 @@
 
 void AddThreat(GameObject* source, GameObject* target, int damage)
 {
-    if (GetPlayerOwnedBy(source) == GetPlayerOwnedBy(target) || !IsActive(source) || !IsActive(target))
+    if (GetPlayerOwnedBy(source) == GetPlayerOwnedBy(target) || !IsActive(source) || !IsActive(target) || ObjIsDecoration(target) || ObjIsDecoration(source))
         return;
 
     if (damage > 0)

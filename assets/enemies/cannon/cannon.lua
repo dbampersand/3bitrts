@@ -31,10 +31,12 @@ function update(dt)
     if (timer < 0) then
         timer = RandRange(0.25,2)
         local target = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,GetAbilityRange(GetObjRef(),shoot))[1];
-        local x = GetX(target) + RandRange(-10,10);
-        local y = GetY(target) + RandRange(-10,10);
+        if (target ~= nil) then
+            local x = GetX(target) + RandRange(-10,10);
+            local y = GetY(target) + RandRange(-10,10);
 
-        CastAbility(shoot,4,{{x = x, y = y}});
+            CastAbility(shoot,4,{{x = x, y = y}});
+        end
     end
 end
 
