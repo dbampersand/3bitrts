@@ -172,7 +172,7 @@ void RemoveAttack(int attackindex)
     if (!AttackIsAOE(a))
     {
         for (int i = 0; i < RandRangeI(4,20); i++)
-            AddParticleWithRandomProperties(a->x,a->y,a->color,0.25,4,0.85,2,-M_PI,M_PI);
+            AddParticleWithRandomProperties(a->x+a->radius/2.0f,a->y+a->radius/2.0f,a->color,0.25,4,0.85,2,-M_PI*2,M_PI*2);
     }
 
     a->properties = '\0';
@@ -757,10 +757,14 @@ void UpdateAttack(Attack* a, float dt)
         
         float minAngle;
         float maxAngle;
-        float movingAngle = atan2(a->targy - a->y, a->targx - a->x);
+        float movingAngle;
+        if (a->attackType == ATTACK_PROJECTILE_POINT)
+           movingAngle = atan2(a->y - a->targy, a->x - a->targx);
+        else
+            movingAngle = atan2(-a->targy,-a->targx);
 
-        minAngle = movingAngle - DegToRad(45);
-        maxAngle = movingAngle + DegToRad(45);
+        minAngle = movingAngle - DegToRad(90);
+        maxAngle = movingAngle + DegToRad(90);
         
         AddParticleWithRandomProperties(a->x,a->y,a->color,0.2f,4,1,1.5f,minAngle,maxAngle);
 

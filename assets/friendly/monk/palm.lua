@@ -20,7 +20,7 @@ function casted(x,y,obj,headingx,headingy)
     AddStack(GetObjRef(),4,1);
 
 
-
+    ShakeScreen(2,0.1)
     return true;
 end
 function onhit(x,y,objhit)
