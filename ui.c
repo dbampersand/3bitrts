@@ -81,7 +81,7 @@ void InitPurchasingUnitsUI()
         purchaseUI->numPrefabs = numPlayerChoosable;
     }
 }
-void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
+void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
     PurchasingUnitUI* purchaseUI = &ui.purchasingUnitUI;
     if (!purchaseUI->prefabs)
@@ -221,7 +221,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     DrawUIElement(&purchaseUI->purchaseButton,purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY);
 
 
-    if (GetButtonIsClicked(&purchaseUI->back) && purchaseUI->currentIndex != 0)
+    if ((GetButtonIsClicked(&purchaseUI->back) || IsBindDownThisFrame(keyStateThisFrame,keyStateLastFrame,currSettings.keymap.key_PanLeft)) && purchaseUI->currentIndex != 0)
     {
         purchaseUI->indexTransitioningTo--;
         purchaseUI->indexTransitioningTo = clamp(purchaseUI->indexTransitioningTo,0,purchaseUI->numPrefabs-1);
@@ -233,7 +233,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     }
 
 
-    if (GetButtonIsClicked(&purchaseUI->next) && purchaseUI->currentIndex != purchaseUI->numPrefabs-1)
+    if ((GetButtonIsClicked(&purchaseUI->next) || IsBindDownThisFrame(keyStateThisFrame,keyStateLastFrame,currSettings.keymap.key_PanRight)) && purchaseUI->currentIndex != purchaseUI->numPrefabs-1)
     {
         purchaseUI->indexTransitioningTo++;
         purchaseUI->indexTransitioningTo = clamp(purchaseUI->indexTransitioningTo,0,purchaseUI->numPrefabs-1);
@@ -259,7 +259,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
         Save("_save.save");
         SetGameStateToChoosingParty();
     }
-    if (GetButtonIsClicked(&purchaseUI->returnButton) )
+    if (GetButtonIsClicked(&purchaseUI->returnButton) || IsBindDownThisFrame(keyStateThisFrame,keyStateLastFrame,currSettings.keymap.key_Cancel))
     {
         SetGameStateToChoosingParty();
     }

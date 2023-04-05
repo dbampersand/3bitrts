@@ -2012,7 +2012,7 @@ int L_SetMaxMana(lua_State* l)
 }
 int L_SetMaxHP(lua_State* l)
 {
-    int hp = lua_tonumber(l,1);
+    float hp = lua_tonumber(l,1);
     bool heal = lua_toboolean(l,2);
 
 

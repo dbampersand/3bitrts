@@ -340,6 +340,6 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
 void ChangeButtonImage(UIElement* u, int spriteIndex);
 void DrawTimer(bool enabled);
 char* GetButtonText(UIElement* u);
-void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStateLastFrame);
+void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
 void InitPurchasingUnitsUI();
 void ClearChatbox();
