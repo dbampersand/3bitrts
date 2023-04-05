@@ -219,7 +219,7 @@ void CureEffect(GameObject* g, Effect* e, int numEffects, bool removeAllStacks)
         if (e == e2)
             continue;
 
-        if (GetPlayerOwnedBy_IncludeDecor(e2->from) != GetPlayerOwnedBy_IncludeDecor(g) || GetPlayerOwnedBy(e2->from) == TYPE_DECORATION)
+        if (!e2->from || GetPlayerOwnedBy_IncludeDecor(e2->from) != GetPlayerOwnedBy_IncludeDecor(g) || GetPlayerOwnedBy(e2->from) == TYPE_DECORATION)
         {
             if (RemoveEffect(e2,g,removeAllStacks))
                 i--;

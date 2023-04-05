@@ -13,7 +13,7 @@ function setup()
     AddEncounterAbility("assets/enemies/wyrm_boss/ability_rage.lua",7,0);
 
 
-    SetEncounterMapPath("assets/encounters/01/map_1.lua");
+    SetEncounterMapPath("assets/encounters/01/map_final.lua");
     SetEncounterDifficulty(DIFFICULTY_EASY);
     EncounterSetNumUnitsToSelect(3);
 
