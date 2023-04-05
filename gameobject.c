@@ -1549,7 +1549,7 @@ int GetPlayerOwnedBy(GameObject* g)
 
 int GetPlayerOwnedBy_IncludeDecor(GameObject* g)
 {
-        if (!g) 
+    if (!g) 
         return -1;
     return (g->properties & OBJ_OWNED_BY) > 0 ? TYPE_ENEMY : TYPE_FRIENDLY;
 

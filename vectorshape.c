@@ -340,6 +340,7 @@ ALLEGRO_BITMAP* GenerateVectorShapeBitmap(VectorShape* v, VectorShape* parent, b
 
 
     v->generatedSprite = b;
+    return b;
 
 }
 VectorShape CreateVectorShape(Point* points, int numPoints, int x, int y)

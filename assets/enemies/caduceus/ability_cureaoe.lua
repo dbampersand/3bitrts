@@ -2,14 +2,13 @@ function setup()
     SetAbilityRange(30)
     SetCooldown(20); 
     AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
-    SetDescription("[b]Summon\n\nSummons three vipers.")
+    SetDescription("[b]Cure\n\nCures all targets in an area.")
     AbilitySetCastType(ABILITY_INSTANT);
-    SetMaxHP(200);
 end
 function casted(x,y,obj,headingx,headingy)
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_CURE;
-    f1["value"] = 1;
+    f1["value"] = 3;
 
     local aoe = CreateAOE(x,y,"",120,0.25,1,false,ATTACK_HITS_ENEMIES,COLOR_HEAL,DITHER_VERTICAL_HALF,false,-1,{f1});
     SetAttackCircle(aoe,true);

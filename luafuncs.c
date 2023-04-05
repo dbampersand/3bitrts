@@ -1824,6 +1824,7 @@ int L_CutoutArea(lua_State* l)
 
     NOTArea(&attacks[attackIndex].shape,points,lenArea);
     free(points);
+    return 0;
 }
 int L_CreateAOE(lua_State* l)
 {
@@ -2011,8 +2012,9 @@ int L_SetMaxMana(lua_State* l)
 }
 int L_SetMaxHP(lua_State* l)
 {
-    float hp = lua_tonumber(l,1);
+    int hp = lua_tonumber(l,1);
     bool heal = lua_toboolean(l,2);
+
 
     currGameObjRunning->maxHP = hp;
 
@@ -2648,6 +2650,11 @@ int L_Normalize(lua_State* l)
     return 1;
 
 }
+int L_GetUIHeight(lua_State* l)
+{
+    lua_pushnumber(l,GetUIStartHeight());
+    return 1;
+}
 int L_SetBounty(lua_State* l)
 {
     int objIndex = lua_tonumber(l,1);
@@ -2674,6 +2681,15 @@ int L_ObjIsStunnable(lua_State* l)
     bool stunnable = lua_toboolean(l,2);
     objects[index].objectIsStunnable = stunnable;
     return 0;
+}
+int L_SetStunTimer(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    objects[index].stunTimer = lua_tonumber(l,2);
+    return 0; 
+    
 }
 int L_GetNumEffects(lua_State* l)
 {
@@ -4676,5 +4692,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_CleaveEffect);
     lua_setglobal(luaState, "CleaveEffect");
+
+    lua_pushcfunction(luaState, L_GetUIHeight);
+    lua_setglobal(luaState, "GetUIHeight");
+
+    lua_pushcfunction(luaState, L_SetStunTimer);
+    lua_setglobal(luaState, "SetStunTimer");
 
 }

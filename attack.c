@@ -167,7 +167,7 @@ void RemoveAttack(int attackindex)
     if (AttackIsAOE(a))
     {
         for (int i = 0; i < RandRangeI(a->radius,a->radius*a->radius); i++)
-            RandParticleAroundEdgeOfCircle(a->x,a->y,a->radius,1.45,RandRange(0.8f,1.5f),a->color);
+            RandParticleAroundEdgeOfCircle(a->x,a->y,a->radius,1.45f,RandRange(0.8f,1.5f),a->color);
     }
     if (!AttackIsAOE(a))
     {

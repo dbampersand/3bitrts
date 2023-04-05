@@ -49,15 +49,6 @@ function casted(x,y,obj,headingx,headingy)
         p2.x = p2.x - GetX(GetObjRef());
         p2.y = p2.y - GetY(GetObjRef());
 
-
-        --p1 = Normalize(p1.x,p1.y);
-       -- p2 = Normalize(p2.x,p2.y);
-        --p1.x = p1.x * 100;
-        --p1.y = p1.y * 100;
-        --p2.x = p2.x * 100;
-        --p2.y = p2.y * 100;
-
-
         CutoutArea(area,{{0,0},p1,p2});
 
     end

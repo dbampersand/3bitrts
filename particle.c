@@ -101,7 +101,7 @@ void DrawParticles()
     al_set_blender(beforeOp, beforeSrc, beforeDst);
 
 }
-void RandParticleAroundEdgeOfCircle(float cx, float cy, float r, short lifetime, float maxspeed, Color col)
+void RandParticleAroundEdgeOfCircle(float cx, float cy, float r, float lifetime, float maxspeed, Color col)
 {
     float angle = RandRange(-2*M_PI,2*M_PI);
     float x = cx + cos(angle)*r;

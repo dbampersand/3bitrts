@@ -82,7 +82,7 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target);
 void ProcessEffects(GameObject* g, float dt);
 bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove);
 int CureNamedEffect(GameObject* g, const char* name, int numStacksToRemove);
-void CureEffect(GameObject* g, int numEffects, bool removeAllStacks);
+void CureEffect(GameObject* g, Effect* e, int numEffects, bool removeAllStacks);
 void CureAll(GameObject* g);
 bool RemoveEffect(Effect* e, GameObject* from,bool removeAllStacks);
 bool EffectIsEnabled(Effect* e);

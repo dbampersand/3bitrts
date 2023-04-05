@@ -184,7 +184,7 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         for (int i = 0; i < e->value; i++)
         {
-            CureEffect(target,e->value,false);
+            CureEffect(target,e,e->value,false);
         }
     }
 
@@ -208,14 +208,20 @@ int CureNamedEffect(GameObject* g, const char* name, int numStacksToRemove)
     }
     return numStacksRemoved;
 }
-void CureEffect(GameObject* g, int numEffects, bool removeAllStacks)
+void CureEffect(GameObject* g, Effect* e, int numEffects, bool removeAllStacks)
 {
+    if (!g || !e) 
+        return;
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
-        Effect* e = &g->effects[i];
-        if (GetPlayerOwnedBy(e->from) != GetPlayerOwnedBy(g))
+        Effect* e2 = &g->effects[i];
+
+        if (e == e2)
+            continue;
+
+        if (GetPlayerOwnedBy_IncludeDecor(e2->from) != GetPlayerOwnedBy_IncludeDecor(g) || GetPlayerOwnedBy(e2->from) == TYPE_DECORATION)
         {
-            if (RemoveEffect(e,g,removeAllStacks))
+            if (RemoveEffect(e2,g,removeAllStacks))
                 i--;
             numEffects--;
             if (numEffects <= 0)
@@ -269,8 +275,12 @@ bool RemoveEffect(Effect* e, GameObject* from, bool removeAllStacks)
 
     if (from)
     {
+
         int numToMove = MAX_EFFECTS - (e - from->effects) - 1;
         memcpy(e,e+1,numToMove);
+
+        e->from = NULL;
+
         //for (int i = e - from->effects; i < MAX_EFFECTS-1; i++)
         //{
           //  from->effects[i] = from->effects[i+1];

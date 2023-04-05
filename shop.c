@@ -155,7 +155,7 @@ void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
         if (si == shop.heldItem)
             continue;
         si->position = Towards_Angled(si->position,si->desiredPosition,dt*225);
-
+    
     }
 
 
