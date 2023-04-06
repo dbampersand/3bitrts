@@ -14,6 +14,10 @@ typedef struct GameObject GameObject;
 
 #define MOUSECURSORSIZE 8
 
+void RGBToHSV(float r, float g, float b, float* h, float* s, float* v);
+void HSVToRGB(float h, float s, float v, float* r, float* g, float* b);
+
+
 void swapPoints(float* x, float* y, float* x2, float* y2);
 float Cross(float x, float y, float x2, float y2);
 bool IsNear(float f, float f2, float epsilon);

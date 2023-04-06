@@ -139,6 +139,7 @@ Attack* AddAttack(Attack* a)
     attacks[freeAttacks[attack_top]].properties |= ATTACK_ACTIVE;
     attack_top++;   
     numActiveAttacks++;
+    a->inactiveFor = 0;
     return &attacks[index];
 }
 void RemoveAttack(int attackindex)
@@ -663,30 +664,46 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
 }
 void DrawAttack(Attack* a, float dt)
 {
+    Color c = a->color;
+    ALLEGRO_COLOR col = GetColor(c,a->playerOwnedBy);
+
     if (a->attackType == ATTACK_AOE)
     {
-        Color c = a->color;
         float timeleft = a->duration;
         if (timeleft < 4.0f && timeleft >= 0.1f)
         {
             int coef = (_TARGET_FPS*2) - (1/timeleft * (_TARGET_FPS/1.5f));
             coef = coef > (_TARGET_FPS/14) ? coef : _TARGET_FPS/14;
-            if (_FRAMES % (coef) >= 0 && _FRAMES % (coef) < _TARGET_FPS/10)
+            if (a->inactiveFor > 0 && _FRAMES % (coef) >= 0 && _FRAMES % (coef) < _TARGET_FPS/10)
             {
                 c = COLOR_GROUND_DARK;
             }
         }
+        if (a->inactiveFor > 0)
+        {
+            float amtToMove = DegToRad(45);
+            for (float i = 0; i < M_PI*2; i += amtToMove)
+            {
+                float start = i + _FRAMES/(float)_TARGET_FPS;
+                float delta = amtToMove/2.0f;
+                al_draw_arc(a->screenX,a->screenY,a->radius,start,delta,col,1);
+                
+            }
+
+            return;
+
+        }
         if (a->dither == DITHER_NONE || a->properties &  ATTACK_DRAW_CIRCLE)
         {
-            al_draw_circle((a->screenX),(a->screenY),a->radius,GetColor(c,a->playerOwnedBy),1.5f);
+            al_draw_circle((a->screenX),(a->screenY),a->radius,col,1.5f);
         }
         else
         {
-            al_draw_circle((a->screenX),(a->screenY),a->radius,GetColor(c,a->playerOwnedBy),1);
+            al_draw_circle((a->screenX),(a->screenY),a->radius,col,1);
             
             //DrawOutlinedCircleDithered(a->screenX,a->screenY,a->radius,GetColor(c,a->playerOwnedBy));
         }
-        draw_circle_dithered(a->screenX,a->screenY,a->radius*0.9f,GetColor(c,a->playerOwnedBy),a->dither);
+        draw_circle_dithered(a->screenX,a->screenY,a->radius*0.9f,col,a->dither);
 
         if (AttackIsSoak(a))
         {
@@ -704,7 +721,7 @@ void DrawAttack(Attack* a, float dt)
                 RotatePointF(&x,&y,a->screenX,a->screenY,DegToRad(90));
                 RotatePointF(&endX,&endY,a->screenX,a->screenY,DegToRad(90));
                 
-                DrawArrow((endX),(endY),(x),(y),GetColor(c,GetPlayerOwnedBy(a->ownedBy)));
+                DrawArrow((endX),(endY),(x),(y),col);
             }
         }
     }
@@ -720,11 +737,11 @@ void DrawAttack(Attack* a, float dt)
             //al_put_pixel(x2,y2,POISON);
         }
         float angle = RadToDeg(atan2(y2-a->y,x2-a->x));
-        DrawCone((a->x),(a->y),angle,a->radius,a->range,FRIENDLY);
+        DrawCone((a->x),(a->y),angle,a->radius,a->range,col);
     }
     else if (a->attackType == ATTACK_SHAPE)
     {
-        DrawVectorShape(&a->shape,a->color);
+        DrawVectorShape(&a->shape,c);
     }
     else
     {
@@ -745,6 +762,9 @@ void UpdateAttack(Attack* a, float dt)
 {
     if (!AttackIsActive(a) )
         return;
+    a->inactiveFor -= dt; 
+    if (a->inactiveFor < 0)
+        a->inactiveFor = 0;
     if (AttackIsAOE(a))
     {
         if (_FRAMES%(int)(_TARGET_FPS/AOE_PARTICLES_PER_SECOND) == 0)
@@ -770,17 +790,6 @@ void UpdateAttack(Attack* a, float dt)
 
     }
 
-    if (a->cameFrom)
-    {
-        if (a->cameFrom->castType != ABILITY_TOGGLE)
-        {
-            a->duration -= dt;
-        }
-    }
-    else
-    {
-        a->duration -= dt;
-    }
     float amtToIncreaseBy = (a->timer*a->timer*a->timer*a->timer);
 
     if (a->radius != a->targetRadius)
@@ -832,6 +841,22 @@ void UpdateAttack(Attack* a, float dt)
                 return;
             }
         }
+
+        if (a->inactiveFor > 0)
+            return;
+
+        if (a->cameFrom)
+        {
+            if (a->cameFrom->castType != ABILITY_TOGGLE)
+            {
+                a->duration -= dt;
+            }
+        }
+        else
+        {
+            a->duration -= dt;
+        }
+
 
         if (AttackIsSoak(a))
         {

@@ -72,6 +72,7 @@ typedef struct Attack
 
     VectorShape shape;
 
+    float inactiveFor;
 
 } Attack;
 

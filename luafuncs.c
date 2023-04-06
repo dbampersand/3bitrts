@@ -3327,6 +3327,36 @@ int L_ObjIsChannelling(lua_State* l)
     lua_pushboolean(l,ObjIsChannelling(obj));
     return 1;
 }
+int L_SetAttackInactive(lua_State* l)
+{
+    int atk = lua_tonumber(l,1);
+    float length = lua_tonumber(l,2);
+
+    if (atk < 0 || atk >= MAX_ATTACKS)
+    {
+        printf("L_SetAttackInactive: invalid index: %i\n",atk);
+        return 0;
+    }
+    attacks[atk].inactiveFor = length;
+
+    return 0;
+
+}
+int L_GetAttackInactive(lua_State* l)
+{
+    int atk = lua_tonumber(l,1);
+
+    if (atk < 0 || atk >= MAX_ATTACKS)
+    {
+        printf("L_GetAttackInactive: invalid index: %i\n",atk);
+        return 0;
+    }
+    lua_pushnumber(l,attacks[atk].inactiveFor);
+
+    return 1;
+
+}
+
 int L_CastAbility(lua_State* l)
 {
     if (ObjIsChannelling(currGameObjRunning))
@@ -4698,5 +4728,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetStunTimer);
     lua_setglobal(luaState, "SetStunTimer");
+
+    lua_pushcfunction(luaState, L_SetAttackInactive);
+    lua_setglobal(luaState, "SetAttackInactive");
+
+    lua_pushcfunction(luaState, L_GetAttackInactive);
+    lua_setglobal(luaState, "GetAttackInactive");
 
 }

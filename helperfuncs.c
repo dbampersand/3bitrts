@@ -13,6 +13,7 @@
 #include "colors.h"
 #include "player.h"
 
+
 void swapPoints(float* x, float* y, float* x2, float* y2)
 {
     float x3 = *x; float y3 = *y;

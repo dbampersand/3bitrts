@@ -17,6 +17,7 @@ function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/enemies/wyrm_boss/audio/fire.wav",1)
     
     CreateCircularProjectiles(GetX(GetObjRef()),GetY(GetObjRef()),"",ATTACK_PROJECTILE_ANGLE,60,10,true,ATTACK_HITS_ENEMIES,12,COLOR_FRIENDLY_DAMAGE,0,{f1})
+
     PlaySound("assets/enemies/wadjet/audio/fire.wav",1);
 
     return true; 
