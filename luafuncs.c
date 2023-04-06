@@ -3393,9 +3393,9 @@ int L_CastAbility(lua_State* l)
     }
     //otherwise: may be xheading/yheading which does not need to be checked
     if (!xIsPresent)
-        x = currGameObjRunning->position.worldX;
+        GetCentre(currGameObjRunning,&x,NULL);
     if (!yIsPresent)
-        y = currGameObjRunning->position.worldY;
+        GetCentre(currGameObjRunning,NULL,&y);
 
     if (channelTime > 0)
     {

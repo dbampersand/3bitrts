@@ -1,4 +1,7 @@
-local sunDisc = 0
+local sunDisc = -1
+local fire =  -1
+
+local timer = 0; 
 
 function setup()
     SetSprite("assets/enemies/wadjet/wadjet.png");
@@ -9,7 +12,7 @@ function setup()
     SetRange(5);
 
     sunDisc = AddAbility(GetObjRef(),"assets/enemies/wadjet/ability_sun_disc.lua",0);
-
+    fire = AddAbility(GetObjRef(),"assets/enemies/wadjet/ability_fire.lua",1);
     SetAttackSounds({
         "assets/audio/attacks/ranged_magic/magic_1.wav",
         "assets/audio/attacks/ranged_magic/magic_2.wav",
@@ -25,13 +28,22 @@ function update(dt)
     local threatlist = GetThreatRank();
     local target = {};
     target["target"] = threatlist[1];
-    if (target["target"] ~= nil) then
-        if (GetStacks(GetObjRef(),sunDisc)==3) then
-            CastAbility(0,0,{{target = threatlist[1]}});
-            CastAbility(0,0,{{target = threatlist[2]}});
-            CastAbility(0,0,{{target = threatlist[3]}});
+
+    if (IsInCombat()) then
+        timer = timer + dt;
+        if (timer > 5) then
+            CastAbility(fire,1,{{}})
+            if (target["target"] ~= nil) then
+                if (GetStacks(GetObjRef(),sunDisc)==3) then
+                    CastAbility(sunDisc,0,{{target = threatlist[1]}});
+                    CastAbility(sunDisc,0,{{target = threatlist[2]}});
+                    CastAbility(sunDisc,0,{{target = threatlist[3]}});
+                end
+            end
         end
+    
     end
+
 end
 
 function kill()

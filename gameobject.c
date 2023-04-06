@@ -3122,12 +3122,16 @@ void GetCentre(GameObject* g, float* x, float* y)
 {
     if (!g)
     {
-        *x = 0;
-        *y = 0;
+        if (x)
+            *x = 0;
+        if (y)
+            *y = 0;
          return;
     }
-    *x = g->position.worldX + al_get_bitmap_width(sprites[g->spriteIndex].sprite)/2.0f;
-    *y = g->position.worldY + al_get_bitmap_height(sprites[g->spriteIndex].sprite)/2.0f;
+    if (x)
+        *x = g->position.worldX + al_get_bitmap_width(sprites[g->spriteIndex].sprite)/2.0f;
+    if (y)
+        *y = g->position.worldY + al_get_bitmap_height(sprites[g->spriteIndex].sprite)/2.0f;
 
 }
 void GetCentre_Screen(GameObject* g, float* x, float* y)

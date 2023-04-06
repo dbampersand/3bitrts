@@ -36,7 +36,7 @@ function update(dt)
 
         target["target"] = targ;
         if (target["target"] ~= nil) then
-            CastAbility(spit,2,{target});
+            CastAbility(spit,1,{target});
         end
     end
 end

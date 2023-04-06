@@ -25,11 +25,13 @@ function setup()
 end
 
 function update(dt)
-    local threatlist = GetThreatRank();
-    local target = {};
-    target["target"] = threatlist[1];
-    if (target["target"] ~= nil) then
-        CastAbility(0,0,{target});
+    if (IsInCombat()) then
+        local threatlist = GetThreatRank();
+        local target = {};
+        target["target"] = threatlist[1];
+        if (target["target"] ~= nil) then
+            CastAbility(0,0.2,{target});
+        end
     end
 end
 
