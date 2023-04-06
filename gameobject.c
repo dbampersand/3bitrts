@@ -325,8 +325,11 @@ void UpdateObject(GameObject* g, float dt)
     if (g->stunTimer < 0)  
         g->stunTimer = 0;
     if (g->stunTimer > 0)
+    {
+        UpdatePush(g,dt);
         return;
-
+    }
+    
     g->flashTimer -= dt;
     if (g->flashTimer < 0)
         g->flashTimer = 0;

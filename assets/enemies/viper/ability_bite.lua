@@ -1,3 +1,7 @@
+local damage = 100
+local ticksPerSec = 5
+local duration = 40
+
 function setup()
 
     SetAbilityRange(10)
@@ -14,9 +18,9 @@ function casted(x,y,obj,headingx,headingy)
     f1["canStack"] = true;  
     f1["trigger"] = TRIGGER_TIMER;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 1.5;
-    f1["triggersPerSecond"] = 5;  
-    f1["duration"] = 40;
+    f1["value"] = damage / ticksPerSec / duration;
+    f1["triggersPerSecond"] = ticksPerSec;  
+    f1["duration"] = duration;
     f1["portrait"] = "assets/enemies/wyrm_boss/ability_bite_effect_portrait.png"
 
 

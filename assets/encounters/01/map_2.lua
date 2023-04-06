@@ -14,14 +14,16 @@ function setup()
     CreateObject("assets/enemies/scorpion/scorpion.lua",389,262,TYPE_ENEMY,0);
     CreateObject("assets/enemies/scorpion/scorpion.lua",422,260,TYPE_ENEMY,0);
 
+    SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",180,320,TYPE_ENEMY,0),4);
+    SetAggroGroup(CreateObject("assets/enemies/wadjet/wadjet.lua",180,344,TYPE_ENEMY,0),4);
+    SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",180,320,TYPE_ENEMY,0),4);
 
-    CreateObject("assets/enemies/wadjet/wadjet.lua",180,344,TYPE_ENEMY,0);
 
     CreateObject("assets/decor/curebox.lua",374,307,TYPE_ENEMY,0);
     CreateObject("assets/decor/curebox.lua",284,251,TYPE_ENEMY,0);
 
 
-        SetSpawnPoint(35,115)
+    SetSpawnPoint(35,115)
     
 end
 

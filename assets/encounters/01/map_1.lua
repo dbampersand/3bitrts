@@ -3,20 +3,22 @@ local timer = 0
 function setup()
     SetMapSprite("assets/encounters/01/map_1.png")
 
-    CreateObject("assets/enemies/viper/viper.lua",115,296,TYPE_ENEMY,0);
-    CreateObject("assets/enemies/viper/viper.lua",131,296,TYPE_ENEMY,0);
+    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",115,296,TYPE_ENEMY,0),1);
+    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",131,296,TYPE_ENEMY,0),1);
    
     CreateObject("assets/decor/curebox.lua",104,260,TYPE_ENEMY,0);
     CreateObject("assets/decor/curebox.lua",120,260,TYPE_ENEMY,0);
     CreateObject("assets/decor/curebox.lua",136,260,TYPE_ENEMY,0);
 
-    CreateObject("assets/enemies/cobra/cobra.lua",80,184, TYPE_ENEMY,0);
-    CreateObject("assets/enemies/viper/viper.lua",100,180,TYPE_ENEMY,0);
-    CreateObject("assets/enemies/cobra/cobra.lua",164,184,TYPE_ENEMY,0);
+    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",80,184, TYPE_ENEMY,0),2);
+    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",100,180,TYPE_ENEMY,0),2);
+    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",164,184,TYPE_ENEMY,0),2);
 
 
+    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",130,48,TYPE_ENEMY,0),3);
+    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",180,48,TYPE_ENEMY,0),3);
 
-    CreateObject("assets/enemies/caduceus/caduceus.lua",156,48,TYPE_ENEMY,0);
+    SetAggroGroup(CreateObject("assets/enemies/caduceus/caduceus.lua",156,48,TYPE_ENEMY,0),3);
 
     SetSpawnPoint(120,460)
     

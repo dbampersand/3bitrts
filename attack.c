@@ -315,6 +315,7 @@ void ApplyAttack(Attack* a, GameObject* target)
         if (a->shouldCallback)
         {
             currAbilityRunning = a->cameFrom; 
+            currGameObjRunning = a->ownedBy;
             lua_rawgeti(luaState,LUA_REGISTRYINDEX,a->cameFrom->luafunc_onhit);
 
             lua_pushinteger(luaState,a->x);

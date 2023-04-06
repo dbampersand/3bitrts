@@ -1,5 +1,5 @@
 local radius = 25
-local dps = 20
+local dps = 10
 local duration = 10
 local tickrate = 10
 
@@ -20,7 +20,8 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = dps / tickrate;
 
-    CreateAOE(GetX(obj),GetY(obj),"", radius, 1/tickrate, duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj, {f1})
+    local atk = CreateAOE(GetX(obj),GetY(obj),"", radius, 1/tickrate, duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj, {f1})
+    SetAttackInactive(atk,0.5)
     PlaySound("assets/enemies/scorpion/audio/spit.wav",1);
     return true; 
 end

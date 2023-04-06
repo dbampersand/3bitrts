@@ -11,8 +11,9 @@ function casted(x,y,obj,headingx,headingy)
     local cy = y--GetY(GetObjRef());
 
     local point = {x=cx, y=cy-32};
+    local parentAggroGroup = GetAggroGroup(GetObjRef());
     for i=1,2 do
-        CreateObject("assets/enemies/viper/viper.lua",point.x,point.y,TYPE_FRIENDLY,2);
+        SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",point.x,point.y,TYPE_FRIENDLY,2),parentAggroGroup);
         point = RotatePoint(point.x,point.y,cx,cy,xPos*i);
     end
     PlaySound("assets/enemies/caduceus/audio/summon_adds.wav",0.7);

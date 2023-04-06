@@ -1655,6 +1655,25 @@ int L_SetAggroGroup(lua_State* l)
 
     return 0;
 }
+int L_GetAggroGroup(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    if (objIndex < 0 || objIndex >= MAX_OBJS)
+    {
+        printf("L_RemoveAggroGroup: ObjIndex not valid: %i\n", objIndex);
+        return 0;
+    }
+    GameObject* g = &objects[objIndex];
+    if (!g->aggroGroupSet)
+    {
+        lua_pushboolean(l,false);
+        return 1;
+    }
+    
+    lua_pushnumber(l,g->aggroGroup);
+    return 1;
+
+}
 int L_RemoveAggroGroup(lua_State* l)
 {
     int objIndex = lua_tonumber(l,1);
@@ -4734,5 +4753,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetAttackInactive);
     lua_setglobal(luaState, "GetAttackInactive");
+
+    lua_pushcfunction(luaState, L_GetAggroGroup);
+    lua_setglobal(luaState, "GetAggroGroup");
 
 }
