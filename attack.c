@@ -327,6 +327,18 @@ void ApplyAttack(Attack* a, GameObject* target)
         }
     }
 }
+void DrawOutlineBrokenCircle(float cx, float cy, float radius, ALLEGRO_COLOR color, float rotspeed, float numSegments)
+{
+    float angle = DegToRad(360 / numSegments);
+    float offset = DegToRad(_FRAMES * rotspeed);
+
+    for (int i = 0; i < numSegments; i++)
+    {
+        float start = angle * i + offset;
+        float delta = angle/2.0f;
+        al_draw_arc(cx,cy,radius,start,delta,color,1);
+    }
+}
 //TODO: replace the long strings of put_pixel with a for loop iterating over bitmap
 void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color, DITHER_PATTERN dither)
 {
@@ -716,14 +728,17 @@ void DrawAttack(Attack* a, float dt)
         }
         if (a->dither == DITHER_NONE || a->properties &  ATTACK_DRAW_CIRCLE)
         {
-            al_draw_circle((a->screenX),(a->screenY),a->radius,col,1.5f);
+            //al_draw_circle((a->screenX),(a->screenY),a->radius,col,1.5f);
+            DrawOutlineBrokenCircle(a->screenX,a->screenY,a->radius,col,0.85,6);
+            
         }
         else
         {
-            al_draw_circle((a->screenX),(a->screenY),a->radius,col,1);
+            DrawOutlineBrokenCircle(a->screenX,a->screenY,a->radius,col,0.85,2);
             
             //DrawOutlinedCircleDithered(a->screenX,a->screenY,a->radius,GetColor(c,a->playerOwnedBy));
         }
+
         draw_circle_dithered(a->screenX,a->screenY,a->radius*0.9f,col,a->dither);
 
         if (AttackIsSoak(a))

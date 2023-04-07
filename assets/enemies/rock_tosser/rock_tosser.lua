@@ -1,7 +1,9 @@
 local large = 0
 local small = 0
 
-
+local timer = 0;
+local maxDecisionTime = 2;
+local minDecisionTime = 0.2
 function setup()
     SetSprite("assets/enemies/rock_tosser/rock_tosser.png");
 
@@ -23,22 +25,26 @@ function setup()
         "assets/audio/attacks/melee_hammer/hammer_5.wav",
         "assets/audio/attacks/melee_hammer/hammer_6.wav"
     });
-
+    timer = RandRange(minDecisionTime,maxDecisionTime)
 end
 
 function update(dt)
     if (IsInCombat()) then
+        timer = timer - dt;
+        if (timer < 0) then
+            timer = RandRange(minDecisionTime,maxDecisionTime)
 
-        local target = {};
+            local target = {};
 
-        local targ = GetRandomUnit(TYPE_ENEMY,TYPE_ANY,999)[1];
+            local targ = GetRandomUnit(TYPE_ENEMY,TYPE_ANY,999)[1];
+            
 
+            target["target"] = targ;
+            if (target["target"] ~= nil) then
+                CastAbility(large,3,{target});
+                CastAbility(small,4,{target});
 
-        target["target"] = targ;
-        if (target["target"] ~= nil) then
-            CastAbility(large,2,{target});
-            CastAbility(small,3.5,{target});
-
+            end
         end
     end
 end
