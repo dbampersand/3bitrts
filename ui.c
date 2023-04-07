@@ -1236,7 +1236,6 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     if (purchaseCost > players[0].bankedGold || e->bestProfited <= 0)
     {
         e->encounter_PurchaseAugment.isHighlighted = false;
-
         e->encounter_PurchaseAugment.enabled = false;
     }
     else

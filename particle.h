@@ -26,7 +26,7 @@ extern float particle_speed[MAX_PARTICLES];
 extern Color particle_colors[MAX_PARTICLES];
 extern int PARTICLES_TOP;
 
-
+void ClearParticles();
 void UpdateParticles(float dt);
 void DrawParticles();
 void InitParticles();

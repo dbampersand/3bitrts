@@ -17,6 +17,7 @@
 #include "replay.h"
 #include "shop.h"
 #include "console.h"
+#include "particle.h"
 
 #ifndef M_PI
     #define M_PI 3.14159265358979323846
@@ -47,7 +48,6 @@ bool TransitionTo(GameState state)
     if (transitioningTo == state)
         return false;
     transitionAudioPlayed = false;
-    printf("AAA\n");
     transitioningTo = state;
     transitionTimer = 0;
     return true;
@@ -300,7 +300,7 @@ void FinishTransition()
         {
             if (!IsOwnedByPlayer(&objects[i]))
             {
-                KillObj(&objects[i],false);
+                KillObj(&objects[i],false,false);
             }
         }
         AddGold(goldBefore - players[0].gold);
@@ -354,6 +354,8 @@ void FinishTransition()
         ClearSelection();
 
     }
+    //ClearParticles();
+
     
 }
 void SetGameStateToPurchasingUnits()
@@ -629,7 +631,7 @@ void UpdateTransition(float dt)
             {
                 transitionTimer += dt * 0.8f;
             }
-            if (transitionAudioPlayed == false && transitionTimer >= 0.75f)
+            if (transitionAudioPlayed == false && transitionTimer >= 0.725f)
             {
                 transitionAudioPlayed = true;
                 AddScreenshake(6,0.1f);
@@ -659,7 +661,23 @@ void UpdateTransition(float dt)
                 transitionTimer += dt * 1.8f;
             }
         }
+        if (transitionDrawing == TRANSITION_DOOR)
+        {
+            if (transitionAudioPlayed == false && transitionTimer >= 0.925f)
+            {
+                transitionAudioPlayed = true;
+                AddScreenshake(2,0.1f);
 
+                float numParticlesToSpawn = 40;
+                for (int i = 0; i < numParticlesToSpawn; i++)
+                {
+                    int randX = (_SCREEN_SIZE/2) + RandRange(-3,3);
+                    int randY = RandRange(0,_SCREEN_SIZE);
+
+                    AddParticleWithRandomProperties(randX,randY,COLOR_FRIENDLY,0.6f,1.4f,0.2f,0.6f,-2*M_PI,2*M_PI);
+                }
+            }
+        }
         if (transitionTimer >= 1.0f)
         {
             FinishTransition();

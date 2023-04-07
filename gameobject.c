@@ -339,7 +339,7 @@ void UpdateObject(GameObject* g, float dt)
         g->deathTimer -= dt;
         if (g->deathTimer <= 0)
         {
-            KillObj(g,true);
+            KillObj(g,true,true);
             return;
         }
     }
@@ -1264,7 +1264,7 @@ void RemoveObjFromAllCommands(GameObject* g)
         }
     }
 }
-void KillObj(GameObject* g, bool trigger)
+void KillObj(GameObject* g, bool trigger, bool spawnParticles)
 {
     if (!g) return;
     if (!IsActive(g))
@@ -1279,7 +1279,8 @@ void KillObj(GameObject* g, bool trigger)
 
         
     }
-    ScatterEffect(g);
+    if (spawnParticles)
+        ScatterEffect(g);
     CureAll(g);
 
     RemoveObjFromAllThreatlists(g);
@@ -3021,7 +3022,7 @@ bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems, f
     if (g->health <= 0)
     {
         PrintDiedFrom(g,source,effect,value);
-        KillObj(g,true);
+        KillObj(g,true,true);
         return true;
     }
     return false;
@@ -3441,7 +3442,7 @@ void RemoveAllGameObjects()
 {
     for (int i = 0; i < MAX_OBJS; i++)
     {
-        KillObj(&objects[i],false);
+        KillObj(&objects[i],false,false);
 
     }
 }

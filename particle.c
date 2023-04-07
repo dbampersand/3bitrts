@@ -16,7 +16,13 @@
  float particle_speed[MAX_PARTICLES] = {0}; 
  Color particle_colors[MAX_PARTICLES] = {0};
  int PARTICLES_TOP = 0;
-
+void ClearParticles()
+{
+    for (int i = 0; i < MAX_PARTICLES; i++)
+    {
+        particle_properties[i] &= ~PARTICLE_ENABLED;
+    }
+}
 
 void UpdateParticles(float dt)
 {

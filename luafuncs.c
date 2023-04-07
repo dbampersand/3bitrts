@@ -2431,7 +2431,7 @@ int L_KillObj(lua_State* l)
     bool triggerEffects = lua_toboolean(l,2);
     if (index >= 0 && index < MAX_OBJS)
     {
-        KillObj(&objects[index],triggerEffects);
+        KillObj(&objects[index],triggerEffects,true);
     }
     return 0;
 }
