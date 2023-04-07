@@ -1,5 +1,6 @@
 local bind = 0
-
+local sinkholes = 0
+local fangs = 0
 function setup()
     SetSprite("assets/enemies/naja/naja.png");
 
@@ -9,6 +10,9 @@ function setup()
     SetRange(50);
 
     bind = AddAbility(GetObjRef(),"assets/enemies/naja/ability_bind.lua",0);
+    sinkholes = AddAbility(GetObjRef(),"assets/enemies/naja/ability_sinkholes.lua",1);
+    fangs = AddAbility(GetObjRef(),"assets/enemies/naja/ability_fangs.lua",2);
+
     SetChannelingSprite("assets/enemies/naja/naja_channeling.png")
 
     SetAttackSounds({
@@ -30,6 +34,9 @@ end
 function update(dt)
     if (IsInCombat()) then
 
+        CastAbility(fangs,0,{{target=GetRandomUnit(TYPE_ENEMY,TYPE_TANK,999)[1]}});
+
+        CastAbility(sinkholes,0,{});
         local target = {};
 
         local targ = GetRandomUnit(TYPE_ENEMY,TYPE_ANY,999)[1];

@@ -6,7 +6,7 @@ function setup()
     SetSprite("assets/enemies/rock_tosser/rock_tosser.png");
 
     SetDamage(10);
-    SetMaxHP(850,true)
+    SetMaxHP(600,true)
     SetSpeed(80)
     SetRange(60);
 
@@ -37,7 +37,7 @@ function update(dt)
         target["target"] = targ;
         if (target["target"] ~= nil) then
             CastAbility(large,2,{target});
-            CastAbility(small,6,{target});
+            CastAbility(small,3.5,{target});
 
         end
     end

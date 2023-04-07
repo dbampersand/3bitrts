@@ -1,11 +1,11 @@
-local duration = 6
+local duration = 0.1
 local atk = -1
 
 function setup()
 
     SetAbilityRange(999)
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
-    SetAbilityHint(HINT_LINE);
+    SetAbilityHint(HINT_CIRCLE,30,true);
     SetCooldown(16); 
     AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
     SetDescription("[b]Throw Large Rock\n\nDeals soak damage in an area.")

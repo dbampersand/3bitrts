@@ -1,11 +1,11 @@
-local duration = 2
+local duration = 0.1
 local atk = -1
 
 function setup()
 
-    SetAbilityRange(999)
+    SetAbilityRange(999,30)
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
-    SetAbilityHint(HINT_LINE);
+    SetAbilityHint(HINT_CIRCLE);
     SetCooldown(7); 
     AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
     SetDescription("[b]Throw Small Rock\n\nDeals damage in an area.")

@@ -1025,7 +1025,16 @@ int L_SetAttackVelocity(lua_State* l)
 
     return 0;
 }
+int L_GetAttackVelocity(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_ATTACKS)
+        return 0;
+    Attack* a = &attacks[index];
+    lua_pushnumber(l,a->speed);
 
+    return 1;
+}
 
 int L_AddAttackSprite(lua_State* l)
 {
@@ -3506,11 +3515,20 @@ int L_SetAbilityHint(lua_State* l)
     {
         currAbilityRunning->hintRadius = lua_tonumber(l,2);
     }
+    else
+    {
+        currAbilityRunning->hintRadius = 30;
+    }
 
     if (lua_isboolean(l,3))
     {
-        //currAbilityRunning->hintSoak = lua_toboolean(l,3);
+        currAbilityRunning->hintSoak = lua_toboolean(l,3);
     }
+    else
+    {
+        currAbilityRunning->hintSoak = false;
+    }
+
     return 0;
 }
 int L_ChangeMap(lua_State* l)
@@ -4738,6 +4756,10 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetAttackVelocity);
     lua_setglobal(luaState, "SetAttackVelocity");
+
+    lua_pushcfunction(luaState, L_GetAttackVelocity);
+    lua_setglobal(luaState, "GetAttackVelocity");
+
 
     lua_pushcfunction(luaState, L_CleaveEffect);
     lua_setglobal(luaState, "CleaveEffect");

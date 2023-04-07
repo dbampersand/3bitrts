@@ -91,6 +91,7 @@ extern ALLEGRO_BITMAP* cachedAttackSprites[MAX_AOE_CIRCUMFERENCE_SIZE+1][DITHER_
 
 #define AOE_PARTICLES_PER_SECOND 1.0f
 
+void DrawHintSoak(float cx, float cy, float radius, ALLEGRO_COLOR col);
 Attack* AddAttack(Attack* a);
 void InitAttacks();
 void RemoveAttack(int attackindex);

@@ -3390,6 +3390,7 @@ void DrawChannelHint(GameObject* g, float dt)
                 //draw line leading up to the circle
                 #define HINT_CIRCLE_LINE_SPEED 2.0f
 
+
                 float cx = ToScreenSpace_X(x2);
                 float cy = ToScreenSpace_Y(y2);
 
@@ -3397,7 +3398,6 @@ void DrawChannelHint(GameObject* g, float dt)
                 float y3 = y2 - y;
 
                 float lineTimer = easedTimer * HINT_CIRCLE_LINE_SPEED > 1 ? 1 : easedTimer * HINT_CIRCLE_LINE_SPEED;
-
                 if (lineTimer >= 1)
                 {
                     float arcTimer = easeOutQuint((easedTimer-(1/HINT_CIRCLE_LINE_SPEED))*HINT_CIRCLE_LINE_SPEED);
@@ -3409,6 +3409,8 @@ void DrawChannelHint(GameObject* g, float dt)
                     al_draw_arc(cx,cy,a->hintRadius,startAngle,arcAngleDraw,col,1);
                     al_draw_arc(cx,cy,a->hintRadius,startAngle,-arcAngleDraw,col,1);
 
+                    if (a->hintSoak)
+                        DrawHintSoak(cx,cy,a->hintRadius,col);
 
                 }
 

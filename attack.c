@@ -663,6 +663,26 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
 
     al_set_target_bitmap(before);
 }
+void DrawHintSoak(float cx, float cy, float radius, ALLEGRO_COLOR col)
+{
+    float move = ((_FRAMES)%10)/8.0f;
+    float x = cx;
+    float y = cy - radius - 10 - move;
+
+    float endX = cx;
+    float endY = cy - radius - 5 - move;
+    RotatePointF(&x,&y,cx,cy,DegToRad(45+_FRAMES));
+    RotatePointF(&endX,&endY,cx,cy,DegToRad(45+_FRAMES));
+
+    for (int i = 0; i < 4; i++)
+    {
+        RotatePointF(&x,&y,cx,cy,DegToRad(90));
+        RotatePointF(&endX,&endY,cx,cy,DegToRad(90));
+        
+        DrawArrow((endX),(endY),(x),(y),col);
+    }
+
+}
 void DrawAttack(Attack* a, float dt)
 {
     Color c = a->color;
@@ -708,7 +728,8 @@ void DrawAttack(Attack* a, float dt)
 
         if (AttackIsSoak(a))
         {
-            float move = ((_FRAMES)%10)/4.0f;
+            DrawHintSoak(a->screenX,a->screenY,a->targetRadius,col);
+            /*float move = ((_FRAMES)%10)/4.0f;
             float x = a->screenX;
             float y = a->screenY - a->targetRadius - 10 - move;
 
@@ -723,7 +744,7 @@ void DrawAttack(Attack* a, float dt)
                 RotatePointF(&endX,&endY,a->screenX,a->screenY,DegToRad(90));
                 
                 DrawArrow((endX),(endY),(x),(y),col);
-            }
+            }*/
         }
     }
     else if (a->attackType == ATTACK_CONE)
