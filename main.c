@@ -308,6 +308,8 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         {
             DrawPanel(&ui.mainMenuPanel,mouseState,1);
         }
+        DrawParticles();
+
     }
     DrawWidgets(gameState, DRAWORDER_BEFOREUI);
 
@@ -475,6 +477,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         encounterOffset = Towards(encounterOffset,encounterMoveTo,easeOutQuint(encounterMoveTimer)*_SCREEN_SIZE/8.0f);
         DrawMouse(mouseState, NULL);
         DrawTransition(dt);
+        DrawParticles();
 
         return;
     }

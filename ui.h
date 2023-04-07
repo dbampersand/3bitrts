@@ -118,6 +118,8 @@ typedef struct UIElement
     SoundIndex sound_clickUp_Index;
     Color bgColor;
 
+    bool isHighlighted;
+
 } UIElement;
 
 typedef struct Panel

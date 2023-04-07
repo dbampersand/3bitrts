@@ -58,6 +58,7 @@ extern ALLEGRO_EVENT_QUEUE* queue;
 
 extern GameState transitioningTo;
 extern float transitionTimer;
+extern bool transitionAudioPlayed;
 
 extern GameObject** toSpawn;
  extern GameObject* deadFriendlyObjects;

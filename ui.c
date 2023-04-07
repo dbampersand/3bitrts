@@ -26,6 +26,7 @@
 #include "augment.h"
 #include "dirent.h"
 #include "replay.h"
+#include "particle.h"
 
 Widget* Widgets_States[NUMGAMESTATES] = {0};
 int numSprites_States[NUMGAMESTATES] = {0};
@@ -40,6 +41,57 @@ char* stackDrawBuffer = NULL;
 
 float debounceTimer = 0;
 float debounceTime = 0.15;
+void DrawUIHighlight(UIElement* u, float x, float y)
+{
+    int total = u->w*2 + u->h*2;
+    int amtThrough = _FRAMES % total;
+
+    int numParticlesToAdd = 2;
+
+    float lifetimeMin = 0.1f;
+    float lifetimeMax = 2.0f;
+
+    float speedMin = 0.1f;
+    float speedMax = 0.9f;
+
+
+    //we are on the top of the rectangle
+    if (amtThrough >= 0 && amtThrough < u->w)
+    {
+        int x2 = x + amtThrough;
+        for (int i = 0; i < numParticlesToAdd; i++)
+            AddParticleWithRandomProperties(x2,y,COLOR_FRIENDLY,lifetimeMin,lifetimeMax,speedMin,speedMax,-2*M_PI, 2*M_PI);
+
+    }
+    //right side vertical, going down
+    if (amtThrough >= u->w && amtThrough < u->w + u->h)
+    {
+        int x2 = x + u->w;
+        int y2 = y + (amtThrough - u->w);
+        for (int i = 0; i < numParticlesToAdd; i++)
+            AddParticleWithRandomProperties(x2,y2,COLOR_FRIENDLY,lifetimeMin,lifetimeMax,speedMin,speedMax,-2*M_PI, 2*M_PI);
+    }
+    //bottom side horizontal, going right to left
+    if (amtThrough >= u->w+u->h && amtThrough < u->w*2 + u->h)
+    {
+        int x2 = (x+u->w) - (amtThrough - (u->w + u->h));
+        int y2 = y + u->h;
+        for (int i = 0; i < numParticlesToAdd; i++)
+            AddParticleWithRandomProperties(x2,y2,COLOR_FRIENDLY,lifetimeMin,lifetimeMax,speedMin,speedMax,-2*M_PI, 2*M_PI);
+
+    }
+    //left side vertical, going up
+    if (amtThrough >= u->w*2+u->h && amtThrough < u->w*2 + u->h*2)
+    {
+        int x2 = (x);
+        int y2 = y +u->h - (amtThrough - (u->w*2+u->h));
+        for (int i = 0; i < numParticlesToAdd; i++)
+            AddParticleWithRandomProperties(x2,y2,COLOR_FRIENDLY,lifetimeMin,lifetimeMax,speedMin,speedMax,-2*M_PI, 2*M_PI);
+
+    }
+
+
+}
 bool DebounceActive()
 {
     return (debounceTimer > 0);
@@ -418,7 +470,7 @@ void GetAbilityClickedInsideUI(MouseState mouseState, MouseState mouseStateLastF
                 players[0].abilityHeld = &currGameObjRunning->abilities[index]; 
                 currAbilityRunning =  &currGameObjRunning->abilities[index];
             }
-        }  
+        }   
     }
 
 }
@@ -1168,9 +1220,10 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     }
     e->encounter_PurchaseAugment.x = augmentX + 3 + offsetX;
     e->encounter_PurchaseAugment.y = 22 - (e->encounter_PurchaseAugment.h/2);
-    int purchaseCost = GetAugmentCost(e, e->difficultyUnlocked+1);
+    int purchaseCost = GetAugmentCost(e, e->difficultyUnlocked);
     if (e->bestProfited > 0)
     {
+        e->encounter_PurchaseAugment.isHighlighted = true;
         char* buttonText = calloc(NumDigits(purchaseCost),sizeof(char));
         sprintf(buttonText,"%i",purchaseCost);
         ChangeButtonText((Button*)(e->encounter_PurchaseAugment.data), buttonText);
@@ -1182,6 +1235,8 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     }
     if (purchaseCost > players[0].bankedGold || e->bestProfited <= 0)
     {
+        e->encounter_PurchaseAugment.isHighlighted = false;
+
         e->encounter_PurchaseAugment.enabled = false;
     }
     else
@@ -2491,6 +2546,7 @@ void UpdateButton(int rX, int rY, UIElement* u, MouseState mouseState, MouseStat
             if (PointInRect(mouseState.screenX,mouseState.screenY,r))
             {
                 b->activated = true;
+                u->isHighlighted = false;
             }
         }
     }
@@ -2777,7 +2833,8 @@ void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, Color bgC
 {
     ALLEGRO_COLOR col = GetColor(bgColor,0);
     ALLEGRO_COLOR colForeground = GetColor(foregroundColor,0);
-
+    if (u->isHighlighted)
+        DrawUIHighlight(u,x,y);
     if (u->elementType == ELEMENT_BUTTON)
     {
         DrawButton(u,x,y,*mouseState,u->enabled,col,((Button*)(u->data))->drawLine,colForeground);

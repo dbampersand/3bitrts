@@ -29,6 +29,7 @@
 
  GameState transitioningTo = {0};
  float transitionTimer = 0;
+ bool transitionAudioPlayed = false;
 
  GameObject** toSpawn = NULL;
  GameObject* deadFriendlyObjects;
@@ -45,6 +46,8 @@ bool TransitionTo(GameState state)
 {
     if (transitioningTo == state)
         return false;
+    transitionAudioPlayed = false;
+    printf("AAA\n");
     transitioningTo = state;
     transitionTimer = 0;
     return true;
@@ -625,6 +628,11 @@ void UpdateTransition(float dt)
             else
             {
                 transitionTimer += dt * 0.8f;
+            }
+            if (transitionAudioPlayed == false && transitionTimer >= 0.75f)
+            {
+                transitionAudioPlayed = true;
+                AddScreenshake(6,0.1f);
             }
         }
         else if (transitionDrawing == TRANSITION_TRIANGLES)
