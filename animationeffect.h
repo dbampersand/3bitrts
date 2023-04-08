@@ -33,7 +33,7 @@ void ProcessAnimationEffects(float dt);
 void AddAnimationEffect(char* path, int x, int y, int w, int h, float cd, bool ownedBy);
 void AddAnimationEffect_Prefab(AnimationEffect* animEffect, bool ownedBy, int x, int y);
 
-int AddAnimationEffectPrefab(char* path, int w, int h, float cd);
+int AddAnimationEffectPrefab(const char* path, int w, int h, float cd);
 
 #define MAX_ANIMATIONEFFECTS 64
 

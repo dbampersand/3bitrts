@@ -12,7 +12,11 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 100;  
 
-    CreateAOE(1,1,"", 0, 999, 0,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_NONE,false, -1, {f1})
+    CreateAOE(1,1,"", 999, 0, 0,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_NONE,false, -1, {f1})
+    enemies = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,10,999)
+    for i=1,#enemies+1 do
+        PushObj(GetX(GetObjRef()),GetY(GetObjRef()),enemies[i],200,0.1)
+    end
 end
 
 function onhit(x,y,objhit)

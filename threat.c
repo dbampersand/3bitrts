@@ -56,16 +56,24 @@ void RemoveObjFromAllThreatlists(GameObject* g)
         if (IsActive(g2))
         {
             Threat* next = &g2->threatList;
+            Threat* previous = &g2->threatList;
             while (1)
             {
                 if (next)
                 {
                     if (next->obj == g)
                     {
+                        Threat* patched = next->next;
+                        previous->next = patched;
+
                         next->obj = NULL;
                         next->threat = 0;
+                        //if this isn't the first element of the list (not malloced)
+                        if (next != &g2->threatList)
+                            free(next);
                         break;
                     }
+                    previous = next;
                     next = next->next;
                 }
                 else

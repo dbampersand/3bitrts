@@ -500,7 +500,7 @@ int L_EncounterSetNumUnitsToSelect(lua_State* l)
 int L_ObjectUsesMana(lua_State* l)
 {
     int index = lua_tonumber(l,1);
-    if (index < 0 || index > MAX_OBJS)
+    if (index < 0 || index >= MAX_OBJS)
         return 0;
     bool usesMana = lua_toboolean(l,2);
 
@@ -1038,9 +1038,7 @@ int L_GetAttackVelocity(lua_State* l)
 
 int L_AddAttackSprite(lua_State* l)
 {
-    const char* _path = lua_tostring(l,1);
-    char* path = calloc(strlen(_path)+1,sizeof(char));
-    strcpy(path,_path);
+    const char* path = lua_tostring(l,1);
     int w = lua_tonumber(l,2);
     int h = lua_tonumber(l,3);
     float cd = lua_tonumber(l,4);
@@ -1049,9 +1047,9 @@ int L_AddAttackSprite(lua_State* l)
     int before = numAnimationEffectsPrefabs;
     int index = AddAnimationEffectPrefab(path, w, h, cd);
 
-    if (before != index)
+    //if (before != index)
     {
-        free(path);
+        //free(path);
     }
     currGameObjRunning->numAttackEffectIndices++;
     if (!currGameObjRunning->onAttackEffectsIndices)

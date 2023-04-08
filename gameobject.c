@@ -1347,7 +1347,19 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
             free(g->abilities[i].description);
             g->abilities[i].description = NULL;
         }
+        if (g->abilities[i].name)
+            free(g->abilities[i].name);
     }
+    
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        RemoveEffect(&g->effects[i],NULL,true);
+    }
+    for (int i = 0; i < INVENTORY_SLOTS; i++)
+    {
+        RemoveItem(&g->inventory[i]);
+    }
+
     if (g->channelledAbility)
     {
         
@@ -1360,12 +1372,14 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
 
     if (g->description)
         free(g->description);
+    if (g->path)
+        free(g->path);
     g->description = NULL;
                 //if we've set the name in script
     if (g->name && g->name != g->prefab->name)
     {
-           free(g->name);
-           g->name = NULL;
+        free(g->name);
+        g->name = NULL;
     }
     int foundIndex = 0;
     for (int i = 0; i < numActiveObjects; i++)
@@ -1380,7 +1394,8 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
         activeObjects[i] = activeObjects[i+1];
     }
     numActiveObjects--;
-
+    
+    memset(g,0,sizeof(GameObject));
 
 
     

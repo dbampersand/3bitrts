@@ -474,3 +474,12 @@ int NumAttachedItems(GameObject* g)
     }
     return numItems;
 }
+void RemoveItem(Item* i)
+{
+    if (i->description)
+        free(i->description);
+    if (i->name)   
+        free(i->name);
+    if (i->path)
+        free(i->path);
+}

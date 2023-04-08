@@ -79,6 +79,8 @@ void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value)
 void AttachItem(GameObject* g, Item* i);
 void InitItems();
 
+void RemoveItem(Item* i);
+
 Item* GetRandomItem(ItemLevel i);
 int NumAttachedItems(GameObject* g);
 bool ItemIsPurchasable(Item* i);

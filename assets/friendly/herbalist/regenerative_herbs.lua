@@ -8,7 +8,7 @@ function setup()
     SetAbilityRange(60)
     SetDescription("Regenerative Herbs\n\nHeal over time effect. Stacks up to " .. maxStacks .. " times.");
     SetCooldown(4);
-    SetManaCost(20)
+    SetManaCost(10)
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/herbalist/audio/regenerative_herbs.wav",1.25)

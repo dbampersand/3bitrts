@@ -34,7 +34,7 @@ void AddAnimationEffect_Prefab(AnimationEffect* animEffect, bool ownedBy, int x,
         animationEffect_TOP = 0;
 }
 
-int AddAnimationEffectPrefab(char* path, int w, int h, float cd)
+int AddAnimationEffectPrefab(const char* path, int w, int h, float cd)
 {
     for (int i = 0; i < numAnimationEffectsPrefabs; i++)
     {
@@ -55,7 +55,7 @@ int AddAnimationEffectPrefab(char* path, int w, int h, float cd)
     a.rect.h = h;
     a.cd = cd; 
     a.timer = 0;
-    a.path = path;
+    a.path = sprites[a.sprite_index].path;
     Sprite* s = &sprites[a.sprite_index];
     int numColumns = al_get_bitmap_width(s->sprite) / w;
     int numRows = al_get_bitmap_height(s->sprite) / h;

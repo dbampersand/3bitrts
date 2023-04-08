@@ -1224,7 +1224,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     if (e->bestProfited > 0)
     {
         e->encounter_PurchaseAugment.isHighlighted = true;
-        char* buttonText = calloc(NumDigits(purchaseCost),sizeof(char));
+        char* buttonText = calloc(NumDigits(purchaseCost)+1,sizeof(char));
         sprintf(buttonText,"%i",purchaseCost);
         ChangeButtonText((Button*)(e->encounter_PurchaseAugment.data), buttonText);
         free(buttonText);
@@ -1357,6 +1357,11 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     if (!encounters[index]->unlocked)
     {
         DrawSprite(&sprites[LoadSprite("assets/ui/levelselect/padlock.png",false)],offsetX,0,0,0,0,FRIENDLY,false,false,false);
+        Rect r = (Rect){72,66,112,143};
+        if (PointInRect(mouseState->screenX,mouseState->screenY,r) && mouseState->mouse.buttons & 1 && !mouseStateLastFrame->mouse.buttons & 1)
+        {
+            AddScreenshake(4,0.2);
+        }
         e->encounter_ButtonConfirm.enabled = false;
         e->encounter_RerollAugments.enabled = false;
         e->encounter_PurchaseAugment.enabled = false;

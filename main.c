@@ -525,9 +525,10 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     //DebugDrawPathfinding(); 
     if (al_key_down(keyState,ALLEGRO_KEY_V))
     {
-        bool foundsd;
-        PointI gasdas = GetClosestPathablePoint((PointI){mouseState->worldX/_GRAIN,mouseState->worldY/_GRAIN},(PointI){mouseState->worldX/_GRAIN,mouseState->worldY/_GRAIN},&foundsd,4,4,true,32);   
-        al_draw_pixel(gasdas.x*_GRAIN,gasdas.y*_GRAIN,al_map_rgb(0,255,0));
+        char* path = "assets/enemies/firebreather/firebreather.lua";
+        GameObject* prefab = LoadPrefab(path);
+        GameObject* g =  AddGameobject(prefab,255,255,SOURCE_SPAWNED_FROM_MAP);
+        KillObj(g,true,true);
     }
     #ifdef DEBUG
         al_put_blended_pixel(DEBUG_P1.x,DEBUG_P1.y,al_map_rgb(0,255,0));

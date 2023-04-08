@@ -249,7 +249,7 @@ void AddGold(float count)
 }
 void UpdateGoldAnimationTimer(float dt)
 {
-    players[0].goldAnimationTimer += dt;
+    players[0].goldAnimationTimer += dt*3;
     if (players[0].goldAnimationTimer > 1)
     {
         players[0].goldAnimationTimer = 1;
