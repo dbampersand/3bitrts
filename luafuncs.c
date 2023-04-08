@@ -3564,6 +3564,10 @@ int L_AddAbility(lua_State* l)
     }
     if (shouldAdd)
     {
+        if (g->abilities[index].path)
+        {
+            RemoveAbility(&g->abilities[index],g);
+        }
         Ability* prefab = AddAbility(path); 
         if (!g->abilities[index].path)
         {

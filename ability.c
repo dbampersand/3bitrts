@@ -623,3 +623,25 @@ void ModifyAbilityCooldownTimer(Ability* a, float value)
         a->cdTimer = a->cooldown;
     
 }
+void RemoveAbility(Ability* a, GameObject* from)
+{
+    if (a->toggled)
+    {
+        ToggleAbility(a,from,false);
+    }
+    if (a->description)
+    {
+        free(a->description);
+        a->description = NULL;
+    }
+    if (a->name)
+        free(a->name);
+
+    luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_casted);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_setup);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_onhit);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_abilitytick);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_untoggle);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_ontimeout);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_onchanneled);
+}

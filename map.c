@@ -366,6 +366,15 @@ void SetMap(Map* m)
     if (m->collision)
         free(m->collision);
     m->collision = NULL;
+
+    if (currMap)
+    {
+        /*luaL_unref(luaState,LUA_REGISTRYINDEX,currMap->luafunc_update);
+        luaL_unref(luaState,LUA_REGISTRYINDEX,currMap->luafunc_setup);
+        luaL_unref(luaState,LUA_REGISTRYINDEX,currMap->luafunc_mapend);
+        luaL_unref(luaState,LUA_REGISTRYINDEX,currMap->luafunc_objectdied);*/
+    }
+
     currMap = m;
     CallLuaFunc(m->luafunc_setup);
 

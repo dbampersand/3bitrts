@@ -111,3 +111,5 @@ bool AbilityIsOnCooldown(Ability* a);
 bool AbilityCanBeCastOnGround(Ability* a);
 
 void ModifyAbilityCooldownTimer(Ability* a, float value);
+
+void RemoveAbility(Ability* a, GameObject* from);

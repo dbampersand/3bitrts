@@ -1334,21 +1334,13 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
         free(g->onAttackEffectsIndices);
         g->onAttackEffectsIndices = NULL;
     }
+    if (g->attackSoundIndices)
+        free(g->attackSoundIndices);
     RemoveObjFromSelection(g);
 
     for (int i = 0; i < MAX_ABILITIES; i++)
     {
-        if (g->abilities[i].toggled)
-        {
-            ToggleAbility(&g->abilities[i],g,false);
-        }
-        if (g->abilities[i].description)
-        {
-            free(g->abilities[i].description);
-            g->abilities[i].description = NULL;
-        }
-        if (g->abilities[i].name)
-            free(g->abilities[i].name);
+        RemoveAbility(&g->abilities[i],g);
     }
     
     for (int i = 0; i < MAX_EFFECTS; i++)
@@ -1394,7 +1386,13 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
         activeObjects[i] = activeObjects[i+1];
     }
     numActiveObjects--;
-    
+
+    luaL_unref(luaState,LUA_REGISTRYINDEX,g->luafunc_update);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,g->luafunc_setup);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,g->luafunc_kill);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,g->luafunc_onattack);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,g->luafunc_onmapchange);
+
     memset(g,0,sizeof(GameObject));
 
 

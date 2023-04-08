@@ -482,4 +482,11 @@ void RemoveItem(Item* i)
         free(i->name);
     if (i->path)
         free(i->path);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_setup);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_update);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_onattack);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_oneffect);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_attached);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_ondamaged);
+
 }
