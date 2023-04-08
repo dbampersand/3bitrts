@@ -31,6 +31,9 @@ void InitItems()
 Item* LoadItemFuncs(Item* i, lua_State* l)
 {
     int funcIndex;
+    i->description = NULL;
+    i->name = NULL;
+    i->path = NULL;
     if (luaL_loadbuffer(l, i->luaBuffer.buffer,strlen(i->luaBuffer.buffer),NULL) || lua_pcall(l, 0, 0, 0))
     {
         printf("%s\n\n---\nCan't load lua file:\n %s\n---\n\n\n",COL_ERR,lua_tostring(l,-1));
@@ -477,11 +480,20 @@ int NumAttachedItems(GameObject* g)
 void RemoveItem(Item* i)
 {
     if (i->description)
+    {   
         free(i->description);
+        i->description = NULL;
+    }
     if (i->name)   
+    {
         free(i->name);
+        i->name = NULL;
+    }
     if (i->path)
+    {
         free(i->path);
+        i->path = NULL;
+    }
     luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_setup);
     luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_update);
     luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_onattack);
