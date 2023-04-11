@@ -10,7 +10,7 @@ function setup()
     SetAbilityHint(HINT_CONE,rad);
     SetCooldown(12); 
     AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
-    SetDescription("[b]Throw Small Rock\n\nDeals damage in an area.")
+    SetDescription("[b]Breathe\n\nDeals damage in an cone.")
 end
 function casted(x,y,obj,headingx,headingy)
 

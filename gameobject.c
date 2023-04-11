@@ -2332,16 +2332,28 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
 
 }
 
-void DrawArrow(int cx, int cy, int targetx, int targety, ALLEGRO_COLOR color)
+void DrawArrow(int cx, int cy, int targetx, int targety, ALLEGRO_COLOR color, ALLEGRO_COLOR* bg)
 {
     int arrowangle = 215;
 
-    al_draw_line(cx,cy,targetx,targety,color,1);
     Point rotated = (Point){cx-targetx,cy-targety};
+
     float rx = rotated.x * cos(DegToRad(arrowangle)) - rotated.y * sin(DegToRad(arrowangle)) + cx;
     float ry = rotated.x * sin(DegToRad(arrowangle)) + rotated.y * cos(DegToRad(arrowangle)) + cy;
     float r2x = rotated.x * cos(DegToRad(-arrowangle)) - rotated.y * sin(DegToRad(-arrowangle)) + cx;
     float r2y = rotated.x * sin(DegToRad(-arrowangle)) + rotated.y * cos(DegToRad(-arrowangle)) + cy;
+
+
+    if (bg)
+    {
+        al_draw_line(cx,cy,targetx,targety,*bg,3);
+        al_draw_line(cx,cy,rx,ry,*bg,3);
+        al_draw_line(cx,cy,r2x,r2y,*bg,3);
+
+    }
+
+    al_draw_line(cx,cy,targetx,targety,color,1);
+
 
     al_draw_line(cx,cy,rx,ry,color,1);
     al_draw_line(cx,cy,r2x,r2y,color,1);
@@ -2360,7 +2372,9 @@ void DrawObjShadow(GameObject* g)
 
     lineW = lineW == 0 ? 2 : lineW;
     lineH = lineH == 0 ? 2 : lineH;
-    Rect r = (Rect){x+1,y+1,w+lineW-1,h+lineH-1};
+    Rect r = (Rect){x+1,y+1,w+lineW,h+lineH};
+
+
     DrawRoundedRect(r,BG,true);
 }
 void DrawObjShadows()
@@ -2480,7 +2494,7 @@ void DrawAggroIndicators()
     {
         GameObject* g = activeObjects[i];
         if (IsActive(g) && GetPlayerOwnedBy(g) != 0)
-        if (g->targObj && g->queue[0].commandType == COMMAND_ATTACK)
+        if (g->targObj && g->queue[0].commandType == COMMAND_ATTACK && g->baseDamage > 0)
         {
             float cx; float cy; 
             float cx2; float cy2;
@@ -2559,6 +2573,104 @@ void DrawChannellingEffect(GameObject* g)
     DrawRoundedRect(selectRect,c,false);
 
 }
+void DrawObjHeadingArrows()
+{
+
+    for (int i = 0; i < numActiveObjects; i++)
+    {
+        GameObject* g = activeObjects[i];
+
+        ALLEGRO_COLOR c = GetColor(GameObjToColor(g),GetPlayerOwnedBy(g));
+        if (IsOwnedByPlayer(g) && !IsSelectable(g))
+            c = BG;
+
+        Point c1; GetCentre(g,&c1.x,&c1.y);
+        Point c2; GetCentre(g->queue[0].target,&c2.x,&c2.y);
+
+
+        if (g->queue[0].commandType == COMMAND_NONE || g->queue[0].commandType == COMMAND_HOLD || g->queue[0].commandType == COMMAND_STOP)
+        {
+            continue;
+        }
+
+        if (g->queue[0].commandType == COMMAND_MOVE)
+        {
+            c2 = (Point){g->queue[0].x,g->queue[0].y};
+        }
+        int offset = 5;
+
+        Rect r = GetObjRect(g);
+        r.x -= offset/4.0f;
+        r.y -= offset/4.0f;
+        r.w += offset/2.0f;
+        r.h += offset/2.0f;
+        if (PointInRect(c2.x,c2.y,r) || g->speed <= 0)
+            continue;
+
+        float headingX = c1.x - c2.x;
+        float headingY = c1.y - c2.y;
+        Normalize(&headingX,&headingY);
+        
+        int offsetX; int offsetY;
+        c1.x = c1.x - (headingX * (GetWidth(g)+1));
+        c1.y = c1.y - (headingY * (GetHeight(g)+1));
+        c2.x = c1.x + (headingX * offset);
+        c2.y = c1.y + (headingY * offset);
+
+        int radius = 16;
+        float grain = 0.5f;
+
+        r = GetObjRect(g);
+        for (int j = 0;  j < 2; j++)
+        {
+
+            for (float i = 0; i < radius; i+= grain)
+            {
+                float cx; float cy;
+                GetCentre(g,&cx,&cy);
+
+                double startX; double startY;
+                double headingX; double headingY;
+
+                if (j == 0)
+                {
+                    startX = cx - radius/2.0f;
+                    startY = cy;
+                    headingX = c2.x - (startX + (i));
+                    headingY = c2.y - startY;
+
+                }   
+                else
+                {
+                    startX = cx;
+                    startY = cy - radius / 2.0f;
+                    headingX = c2.x - startX;
+                    headingY = c2.y - (startY + i);
+
+                }
+                double x; double y; 
+
+            
+
+                Normalize_D(&headingX,&headingY);
+
+                CircToRect(headingX,headingY, &x,&y);
+
+                float w = r.w+1;
+                float h = r.h+1;
+
+                float pX = (int)(cx + (x * w/2.0f));
+                float pY = (int)(cy + (y * h/2.0f));
+
+                al_draw_pixel(ToScreenSpace_X(pX),ToScreenSpace_Y(pY),BG);
+        }
+        }
+
+        if (g->speed > 0 && !ObjIsDecoration(g))
+           DrawArrow(ToScreenSpace_X(c1.x),ToScreenSpace_Y(c1.y),ToScreenSpace_X(c2.x),ToScreenSpace_Y(c2.y),c,&GROUND);
+
+    }
+}
 void DrawGameObj(GameObject* g, bool forceInverse)
 {   
     if (!(g->properties & OBJ_ACTIVE))
@@ -2591,8 +2703,8 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     bool isReversed = IsSelected(g) || forceInverse;
     isReversed = g->flashTimer > 0 ? !isReversed : isReversed;
 
-    float x = g->position.screenX + g->offset.x; 
-    float y = g->position.screenY + g->offset.y;
+    float x = floor(g->position.screenX + g->offset.x); 
+    float y = floor(g->position.screenY + g->offset.y);
     
     float percent = GetSummonPercent(g);  
 
@@ -2632,8 +2744,8 @@ void DrawGameObj(GameObject* g, bool forceInverse)
         c2.x = c1.x + (headingX * 5);
         c2.y = c1.y + (headingY * 5);
 
-        if (!ObjIsDecoration(g))
-            DrawArrow(ToScreenSpace_X(c1.x),ToScreenSpace_Y(c1.y),ToScreenSpace_X(c2.x),ToScreenSpace_Y(c2.y),c);
+       // if (!ObjIsDecoration(g))
+            //DrawArrow(ToScreenSpace_X(c1.x),ToScreenSpace_Y(c1.y),ToScreenSpace_X(c2.x),ToScreenSpace_Y(c2.y),c);
 
         if (ObjIsBoss(g))
         {
@@ -2935,7 +3047,7 @@ Rect GetObjRect(GameObject* g)
 {
     if (!g) return (Rect){0,0,0,0};
     if (g->spriteIndex <= 0) return (Rect){g->position.worldX,g->position.worldY,0,0};
-    Rect r = (Rect){g->position.worldX-1,g->position.worldY-1,al_get_bitmap_width(sprites[g->spriteIndex].sprite)+2,al_get_bitmap_height(sprites[g->spriteIndex].sprite)+2};
+    Rect r = (Rect){g->position.worldX,g->position.worldY,al_get_bitmap_width(sprites[g->spriteIndex].sprite)+1,al_get_bitmap_height(sprites[g->spriteIndex].sprite)+1};
     return r;
 }
 void SetMoveSpeed(GameObject* g, float value)

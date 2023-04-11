@@ -26,7 +26,6 @@ function setup()
 end
 
 function update(dt)
-    Print("gg");
     if (IsInCombat()) then
         if (timer < 2) then
             CastAbility(breathe,4,{{target=GetAttackTarget(GetObjRef())}});

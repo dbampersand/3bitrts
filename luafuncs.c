@@ -3538,6 +3538,14 @@ int L_ChangeMap(lua_State* l)
 
     return 0;
 }
+int L_Round(lua_State* l)
+{
+    float num = lua_tonumber(l,1);
+    int rounded = round(num);
+    lua_pushinteger(l,rounded);
+
+    return 1;
+}
 int L_AddAbility(lua_State* l)
 {
     GameObject* g;
@@ -4780,5 +4788,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetAggroGroup);
     lua_setglobal(luaState, "GetAggroGroup");
+
+    lua_pushcfunction(luaState, L_Round);
+    lua_setglobal(luaState, "Round");
 
 }

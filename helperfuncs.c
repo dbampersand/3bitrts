@@ -171,6 +171,18 @@ void Normalize(float* x, float* y)
     *x /= mag;
     *y /= mag;
 }
+void Normalize_D(double* x, double* y)
+{
+    float mag = sqrt((*x**x)+(*y**y));
+    if (mag == 0)
+    {
+        *x = 0; *y = 0;
+        return;
+    }
+    *x /= mag;
+    *y /= mag;
+
+}
 float magnitude(float* x, float* y)
 {
     return  sqrt((*x**x)+(*y**y));
@@ -401,4 +413,19 @@ float EaseInOutCubic(float f)
     {
         return  1 - pow(-2 * f + 2, 3) / 2.0f;
     }
+}
+//https://arxiv.org/ftp/arxiv/papers/1509/1509.06344.pdf
+void CircToRect(double u, double v, double* x, double* y)
+{
+    if (pow(u,2) >= pow(v,2))
+    {
+        *x = sign(u) * sqrt(pow(u,2) + pow(v,2));
+        *y = sign(u) * (v/u) * (sqrt(pow(u,2)+pow(v,2)));
+    }
+    if (pow(u,2) < pow(v,2))
+    {
+        *x = sign(v) * (u/v) * (sqrt(pow(u,2)+pow(v,2)));
+        *y = sign(v) * sqrt(pow(u,2) + pow(v,2));
+    }
+
 }

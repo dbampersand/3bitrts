@@ -58,10 +58,10 @@ void GenerateInvertedSprite(Sprite* s)
     }
 
     //corners
-    al_put_pixel(0,0,_TRANSPARENT);
-    al_put_pixel(w-1,0,_TRANSPARENT);
-    al_put_pixel(w,h,_TRANSPARENT);
-    al_put_pixel(0,h,_TRANSPARENT);
+    //al_put_pixel(0,0,_TRANSPARENT);
+    //al_put_pixel(w,0,_TRANSPARENT);
+    //al_put_pixel(w,h,_TRANSPARENT);
+    //al_put_pixel(0,h,_TRANSPARENT);
 
 
     al_unlock_bitmap(newSprite);
@@ -199,6 +199,7 @@ void DrawSprite(Sprite* sprite, int x, int y, float originX, float originY, floa
     int xFlip = flipX ? -1 : 1;
     int yFlip = flipY ? -1 : 1;
 
+
     if (sprite->sprite && !invert)
     {
         int w = al_get_bitmap_width(sprite->sprite);
@@ -210,7 +211,6 @@ void DrawSprite(Sprite* sprite, int x, int y, float originX, float originY, floa
 
         float oX = x + w * originX;
         float oY = y +  h * originY;
-
 
         al_draw_tinted_scaled_rotated_bitmap(sprite->sprite,tint,cx,cy,oX,oY,xFlip,yFlip,angle,0);
 

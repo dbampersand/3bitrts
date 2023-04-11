@@ -312,7 +312,7 @@ void ApplyAttack(Attack* a, GameObject* target)
         {
             ApplyEffect(&a->effects[i],a->ownedBy,target);
         }
-        if (a->shouldCallback)
+        if (a->shouldCallback && IsActive(a->ownedBy))
         {
             currAbilityRunning = a->cameFrom; 
             currGameObjRunning = a->ownedBy;
@@ -691,7 +691,7 @@ void DrawHintSoak(float cx, float cy, float radius, ALLEGRO_COLOR col)
         RotatePointF(&x,&y,cx,cy,DegToRad(90));
         RotatePointF(&endX,&endY,cx,cy,DegToRad(90));
         
-        DrawArrow((endX),(endY),(x),(y),col);
+        DrawArrow((endX),(endY),(x),(y),col,NULL);
     }
 
 }
@@ -758,7 +758,7 @@ void DrawAttack(Attack* a, float dt)
                 RotatePointF(&x,&y,a->screenX,a->screenY,DegToRad(90));
                 RotatePointF(&endX,&endY,a->screenX,a->screenY,DegToRad(90));
                 
-                DrawArrow((endX),(endY),(x),(y),col);
+                DrawArrow((endX),(endY),(x),(y),col,NULL);
             }*/
         }
     }
@@ -1045,24 +1045,25 @@ void UpdateAttack(Attack* a, float dt)
         currAbilityRunning = a->cameFrom;
         currGameObjRunning = a->ownedBy;
         //currAttackRunning = a;
-        
-        if (currAbilityRunning)
+        if (IsActive(currGameObjRunning))
         {
-            lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_abilitytick);
+            if (currAbilityRunning)
+            {
+                lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_abilitytick);
 
-            lua_pushnumber(luaState,a->x + a->radius/2.0f);
-            lua_pushnumber(luaState,a->y + a->radius/2.0f);
-            lua_pushnumber(luaState,a->timer);    
-            lua_pushinteger(luaState,currGameObjRunning-objects);
-            lua_pushinteger(luaState,a->target - objects);
-            lua_pushnumber(luaState,dt);
-            lua_pushinteger(luaState,a-attacks);
-            lua_pushnumber(luaState,a->duration);
+                lua_pushnumber(luaState,a->x + a->radius/2.0f);
+                lua_pushnumber(luaState,a->y + a->radius/2.0f);
+                lua_pushnumber(luaState,a->timer);    
+                lua_pushinteger(luaState,currGameObjRunning-objects);
+                lua_pushinteger(luaState,a->target - objects);
+                lua_pushnumber(luaState,dt);
+                lua_pushinteger(luaState,a-attacks);
+                lua_pushnumber(luaState,a->duration);
 
 
-            lua_pcall(luaState,8,0,0);
-        }
-
+                lua_pcall(luaState,8,0,0);
+            }
+}       
     }
     if (isSoak)
     {
@@ -1071,7 +1072,7 @@ void UpdateAttack(Attack* a, float dt)
 
     if (a->x < 0 || a->y < 0 || a->x > GetMapWidth() || a->y > GetMapHeight() || a->duration < 0)
     {
-        if (a->shouldCallback)
+        if (a->shouldCallback && IsActive(a->ownedBy))
         {
             currAbilityRunning = a->cameFrom;
             currGameObjRunning = a->ownedBy;

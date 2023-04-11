@@ -29,6 +29,7 @@ bool MoveTo(float* x, float* y, float toX, float toY, float speed, float delta);
 void MoveAngle(float* x, float* y, float dx, float dy, float speed, float delta);   
 bool CircleInRect(float cx, float cy, float rad, Rect r);
 void Normalize(float* x, float* y);
+void Normalize_D(double* x, double* y);
 double RandRange(double min, double max);
 int RandRangeI(int min, int max);
 float dot(float x1, float y1, float x2, float y2);
@@ -55,3 +56,5 @@ float PointsToAngleRad(float x1, float y1, float x2, float y2);
 int PointsToAngleDeg(int x1, int y1, int x2, int y2);
 
 float EaseInOutCubic(float f);
+
+void CircToRect(double u, double v, double* x, double* y);

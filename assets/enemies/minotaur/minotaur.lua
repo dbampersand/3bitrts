@@ -26,7 +26,7 @@ function setup()
 
 
     SetDamage(10);
-    SetMaxHP(10000,true)
+    SetMaxHP(12000,true)
     SetSpeed(10)
     SetObjectPush(true);
     ObjIsStunnable(GetObjRef(),false);
@@ -94,7 +94,6 @@ function update(dt)
         end
         
         if (state == STATE_HIBERNATING) then
-            Print("HIBERNATING")
         end
 
         CastAbility(bellow,1,{})

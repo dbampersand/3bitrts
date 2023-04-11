@@ -161,17 +161,19 @@ void InitVideo()
 }
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)
 {
-    int x = r.x; int y = r.y; int w = r.w; int h = r.h;
-
+    int x = r.x; 
+    int y = r.y; 
+    int x2 = r.x + r.w;
+    int y2 = r.y + r.h;
     if (filled)
-        al_draw_filled_rectangle(x,y,x+w-1,y+h+1,color);
+        al_draw_filled_rectangle(x+1,y+1,x2-1,y2-1,color);
     //horizontals
-    al_draw_line(x, y, x+w-1, y, color,1);
-    al_draw_line(x, y+h, x+w-1, y+h, color,1);
+    al_draw_line(x, y, x2-1, y, color,1);
+    al_draw_line(x, y2, x2-1, y2, color,1);
 
     //verticals
-    al_draw_line(x, y+1, x, y+h, color,1);
-    al_draw_line(x + w, y+1, x+w, y+h, color,1);
+    al_draw_line(x, y, x, y2-1, color,1);
+    al_draw_line(x2, y, x2, y2-1, color,1);
 }
 void DrawFilledRect_Dithered(Rect r, ALLEGRO_COLOR color)
 {

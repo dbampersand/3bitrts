@@ -1,5 +1,5 @@
 local time = 15
-local totalHeal = 1200
+local totalHeal = 1400
 local tickRate = 0.5
 
 function setup()
@@ -31,6 +31,8 @@ function casted(x,y,obj,headingx,headingy)
     f2["duration"] = time
 
     ApplyEffect(GetObjRef(),{f1,f2});
+
+
 
     return true; 
 end

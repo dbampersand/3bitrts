@@ -264,12 +264,21 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
 
             Rect selectRect;
-            selectRect.w = al_get_bitmap_width(s->sprite);
-            selectRect.h = (al_get_bitmap_height(s->sprite) * percent);
-            selectRect.x = x;
-            selectRect.y = (y + (al_get_bitmap_height(s->sprite) - selectRect.h));
+            //selectRect.w = al_get_bitmap_width(s->sprite);
+            //selectRect.h = (al_get_bitmap_height(s->sprite) * percent);
+            //selectRect.x = x;
+            //selectRect.y = (y + (al_get_bitmap_height(s->sprite) - selectRect.h));
+            
+            selectRect = GetObjRect(g);
+            
+            ToScreenSpace(&selectRect.x,&selectRect.y);
+            selectRect.x += g->offset.x;
+            selectRect.y += g->offset.y;
+
             if (g->stunTimer == 0)
                 DrawRoundedRect(selectRect, c,false);
+            
+
             //if (GetTotalShield(g) > 0)
             {
                 float r = (GetWidth(g) > GetHeight(g) ? GetWidth(g) : GetHeight(g)) * easeInOutBack(g->shieldSizeTimer);
@@ -286,6 +295,8 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         }
 
     }
+    DrawObjHeadingArrows();
+
     DrawSpriteDecorations(AFTER_GAMEOBJECTS);
 
     if (players[0].selecting)
