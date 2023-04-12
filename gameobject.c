@@ -27,10 +27,8 @@
 #include "particle.h"
 #include "settings.h"
 #include "effect.h"
-
 #include "pathfind.h"
 #include "replay.h"
-
  GameObject* objects = NULL;
  int objectsAllocated = 0; 
 
@@ -54,6 +52,13 @@ float* sinTable = NULL; // = &__sinTable[360];
 float* cosTable = NULL;// = &__cosTable[360];
 
 int numChannellingInfosDrawn = 0;
+
+bool IsInvertedSprite(GameObject* g)
+{
+    bool isReversed = IsSelected(g);
+    return g->flashTimer > 0 ? !isReversed : isReversed;;
+
+}
 void MoveObjTo(GameObject* g, float x, float y, bool objCanPush)
 {
     double dX = x - g->position.worldX;
@@ -320,16 +325,6 @@ void UpdateObject(GameObject* g, float dt)
     ProcessEffects(currGameObjRunning,dt);
     ProcessShields(currGameObjRunning,dt);
 
-
-    g->stunTimer -= dt;
-    if (g->stunTimer < 0)  
-        g->stunTimer = 0;
-    if (g->stunTimer > 0)
-    {
-        UpdatePush(g,dt);
-        return;
-    }
-    
     g->flashTimer -= dt;
     if (g->flashTimer < 0)
         g->flashTimer = 0;
@@ -343,6 +338,18 @@ void UpdateObject(GameObject* g, float dt)
             return;
         }
     }
+
+
+    g->stunTimer -= dt;
+    if (g->stunTimer < 0)  
+        g->stunTimer = 0;
+    if (g->stunTimer > 0)
+    {
+        UpdatePush(g,dt);
+        return;
+    }
+    
+
 
 
 
@@ -2700,9 +2707,10 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     }
 
 
-    bool isReversed = IsSelected(g) || forceInverse;
-    isReversed = g->flashTimer > 0 ? !isReversed : isReversed;
-
+    //bool isReversed = IsSelected(g) || forceInverse;
+   // isReversed = g->flashTimer > 0 ? !isReversed : isReversed;
+    bool isReversed = IsInvertedSprite(g) | forceInverse;
+   
     float x = floor(g->position.screenX + g->offset.x); 
     float y = floor(g->position.screenY + g->offset.y);
     
@@ -2784,7 +2792,8 @@ void DrawGameObj(GameObject* g, bool forceInverse)
         DrawEnrageEffect(g);
     }
     DrawEffectVisuals(g);
-    
+    if (g->stunTimer > 0)
+        DrawStunEffect(g);
 }
 void SetLightSize(GameObject* g, int size)
 {
@@ -3084,6 +3093,27 @@ void Stun(GameObject* source, GameObject* g, float value)
     {
         Ability* a = &g->abilities[i];
         a->cdTimer = _MAX(g->stunTimer,a->cdTimer);
+    }
+}
+void DrawStunEffect(GameObject* g)
+{
+    for (int x = 0; x < GetWidth(g)+1; x++)
+    {
+        for (int y = 0; y < GetHeight(g)+1; y++)
+        {
+            int x2 = x + g->position.screenX;
+            int y2 = y + g->position.screenY;
+
+
+            if (x % 2 == 0 && y % 2 != 0)
+            {
+                ALLEGRO_COLOR c = GetColor(GameObjToColor(g),0);
+                if (IsInvertedSprite(g))
+                    c = GROUND;
+                al_draw_pixel(x2,y2,c);
+            }
+        }
+
     }
 }
 

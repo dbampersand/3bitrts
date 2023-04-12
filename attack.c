@@ -783,7 +783,8 @@ void DrawAttack(Attack* a, float dt)
     else
     {
         al_draw_filled_circle((a->screenX),(a->screenY),a->radius,GetColor(a->color,a->playerOwnedBy));
-        al_draw_filled_circle((a->screenX+2),(a->screenY+2),a->radius,BG);
+        if (a->inactiveFor <= 0)
+            al_draw_filled_circle((a->screenX+2),(a->screenY+2),a->radius,BG);
 
     }
 }
@@ -827,6 +828,7 @@ void UpdateAttack(Attack* a, float dt)
 
     }
 
+
     float amtToIncreaseBy = (a->timer*a->timer*a->timer*a->timer);
 
     if (a->radius != a->targetRadius)
@@ -850,7 +852,8 @@ void UpdateAttack(Attack* a, float dt)
         a->radius = a->targetRadius;
     a->easing += dt*2.5f;
     a->timer += dt;
-
+    
+    
     Attack* copied = NULL;
     Attack copy = *a;
 

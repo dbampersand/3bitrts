@@ -404,3 +404,5 @@ void PrintDiedFrom(GameObject* obj, GameObject* damageSource, Effect* effectSour
 bool ObjIsBoss(GameObject* g);
 void DrawAggroIndicators();
 void DrawObjHeadingArrows();
+void DrawStunEffect(GameObject* g);
+bool IsInvertedSprite(GameObject* g);

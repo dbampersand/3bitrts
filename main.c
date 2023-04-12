@@ -276,8 +276,9 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             selectRect.y += g->offset.y;
 
             if (g->stunTimer == 0)
+            {
                 DrawRoundedRect(selectRect, c,false);
-            
+            }
 
             //if (GetTotalShield(g) > 0)
             {

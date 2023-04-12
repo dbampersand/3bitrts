@@ -1367,6 +1367,12 @@ int L_GetAbilityCooldownTimer(lua_State* l)
 
     GameObject* g = &objects[gameObjIndex];
     Ability* a = &g->abilities[abilityObjIndex];
+    
+    if (a->stacks == a->maxStacks)
+    {
+        lua_pushnumber(l,0);
+        return 1;
+    }
     lua_pushnumber(l,a->cdTimer);
     return 1;
 }
@@ -1548,6 +1554,16 @@ int L_SetMovePoint(lua_State* l)
         
         MoveCommand(obj,x-w/2,y-w/2,false);
     }
+    return 0;
+}
+int L_StopCommand(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    GameObject* obj = &objects[index];
+
+    StopCommand(&objects[index],false);
     return 0;
 }
 int L_EnableAI(lua_State* l)
@@ -4791,5 +4807,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_Round);
     lua_setglobal(luaState, "Round");
+
+    lua_pushcfunction(luaState, L_StopCommand);
+    lua_setglobal(luaState, "StopCommand");
 
 }
