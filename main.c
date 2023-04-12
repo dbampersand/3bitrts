@@ -277,7 +277,10 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
             if (g->stunTimer == 0)
             {
-                DrawRoundedRect(selectRect, c,false);
+                if (GetPlayerOwnedBy(g) == 0)
+                    DrawRoundedRect(selectRect, c,false);
+                else
+                    al_draw_rectangle((int)selectRect.x,(int)selectRect.y,(int)(selectRect.x + selectRect.w), (int)(selectRect.y + selectRect.h),c,1);
             }
 
             //if (GetTotalShield(g) > 0)
