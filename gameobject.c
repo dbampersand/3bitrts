@@ -1216,19 +1216,13 @@ bool loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
      free(cpy);
      return true;
 }
-void ScatterEffect(GameObject* g)
+void ScatterEffect_Sprite(Sprite* s, int xPos, int yPos, Color c)
 {
-
-    ALLEGRO_BITMAP* sprite = sprites[g->spriteIndex].sprite;
-    //if (IsSelected(g) && sprites[g->spriteIndex].inverseSprite)
-      //  sprite = sprites[g->spriteIndex].inverseSprite;
-    //if (!sprite)
-      //  return;
+    ALLEGRO_BITMAP* sprite = s->sprite;
     al_lock_bitmap(sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READONLY);
     int w = al_get_bitmap_width(sprite);
     int h = al_get_bitmap_height(sprite);
 
-    Color c = GameObjToColor(g);
     for (int x = 0; x < w; x++)
     {
         for (int y = 0; y < h; y++)
@@ -1236,13 +1230,17 @@ void ScatterEffect(GameObject* g)
             ALLEGRO_COLOR pixel = al_get_pixel(sprite, x, y);
             if (pixel.a)
             {
-                AddParticleWithRandomProperties(g->position.worldX+x,g->position.worldY+y,c, 0.15, 2, 0, 0.025,-M_PI,M_PI);
+                AddParticleWithRandomProperties(xPos+x,yPos+y,c, 0.15, 2, 0, 0.025,-M_PI,M_PI);
             }
         }
     }
     al_unlock_bitmap(sprite);
 
-
+}
+void ScatterEffect(GameObject* g)
+{
+    ScatterEffect_Sprite(&sprites[g->spriteIndex],g->position.worldX,g->position.worldY,GameObjToColor(g));
+    return;
 }
 void RemoveObjFromAllCommands(GameObject* g)
 {

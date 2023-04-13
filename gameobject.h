@@ -406,3 +406,5 @@ void DrawAggroIndicators();
 void DrawObjHeadingArrows();
 void DrawStunEffect(GameObject* g);
 bool IsInvertedSprite(GameObject* g);
+
+void ScatterEffect_Sprite(Sprite* s, int xPos, int yPos, Color c);

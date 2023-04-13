@@ -1168,10 +1168,6 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     UpdateButton(column+offsetX,row,&e->encounter_RerollAugments,*mouseState,*mouseStateLastFrame);
     DrawUIElement(&e->encounter_RerollAugments,column+offsetX,row,mouseState,e->encounter_RerollAugments.bgColor,e->unlocked ? COLOR_FRIENDLY : ALColorToCol(disabled));
     column += 32;
-    if (GetButtonIsClicked(&e->encounter_RerollAugments))
-    {
-        SetEncounterRandAugments(e);
-    }
 
     char* augmentDescriptionToDraw = NULL;
     for (int i = 0; i < MAX_AUGMENTS; i++)
@@ -1185,6 +1181,12 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 
         if (DrawAugmentPortrait(a,column+offsetX,row, mouseState, col))
             augmentDescriptionToDraw = description;
+
+        if (GetButtonIsClicked(&e->encounter_RerollAugments))
+        {
+            ScatterEffect_Sprite(&sprites[e->augments[i].portrait_sprite_index],column,row,ALColorToCol(col));
+        }
+
         //al_draw_text(ui.tinyFont,*color,column+offsetX,row,0,description);
         column += 24;
         //column += al_get_text_width(ui.tinyFont,description)+5;
@@ -1193,6 +1195,11 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
           //  row += al_get_font_line_height(ui.tinyFont)+2;
             //column = 16;
         }
+    }
+    if (GetButtonIsClicked(&e->encounter_RerollAugments))
+    {
+        SetEncounterRandAugments(e);
+
     }
 
 
@@ -1211,10 +1218,16 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 
         if (mouseStateLastFrame->mouse.buttons & 1 && !(mouseState->mouse.buttons & 1))
         {
-            if (PointInRect(mouseState->screenX,mouseState->screenY,drawRect))
+            Rect selectRect = drawRect;
+            selectRect.x -= 3;
+            selectRect.y -= 3;
+            selectRect.w += 5;
+            selectRect.h += 5;
+
+            if (PointInRect(mouseState->screenX,mouseState->screenY,drawRect) && i+1 != e->augment)
             {
                 e->augment = i+1;
-                SetEncounterRandAugments(currEncounterRunning);
+                SetEncounterRandAugments(e);
             }
         }
     }
