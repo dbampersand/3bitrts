@@ -112,7 +112,7 @@ void RandParticleAroundEdgeOfCircle(float cx, float cy, float r, float lifetime,
     float angle = RandRange(-2*M_PI,2*M_PI);
     float x = cx + cos(angle)*r;
     float y = cy + sin(angle)*r;
-    AddParticle(x,y,RandRange(1,lifetime),RandRange(maxspeed/2.0f,maxspeed),RadToDeg(angle),col);
+    AddParticle(x,y,RandRange(_MIN(lifetime,1),lifetime),RandRange(maxspeed/2.0f,maxspeed),RadToDeg(angle),col);
 }
 bool ParticleIsActive(int index)
 {

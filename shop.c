@@ -100,6 +100,23 @@ void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
     if (shop.shopState == SHOP_STATE_REROLLING)
     {
         shop.rerollAnimationTimer = clamp(shop.rerollAnimationTimer - dt*2.2f,0,1);
+        for (int i = 0; i < NUM_ITEM_POOLS; i++)
+        {
+            ShopItem* si = &shop.items[i];
+            if (si->enabled)
+            {
+                float r = si->radiusPercent * _SHOP_ITEM_RADIUS;
+
+                int w = si->item->spriteIndex_Icon > 0 ? GetWidthSprite(&sprites[si->item->spriteIndex_Icon]) : 24;
+                int h = si->item->spriteIndex_Icon > 0 ? GetHeightSprite(&sprites[si->item->spriteIndex_Icon]) : 24;
+
+                float cx = si->position.x + w/2.0f;
+                float cy = si->position.y + h/2.0f;
+
+
+                RandParticleAroundEdgeOfCircle(cx,cy,r, 2.0f,0.2f,COLOR_FRIENDLY);
+            }
+        }
         if (shop.rerollAnimationTimer <= 0)
         {
             RefreshShop();
@@ -253,7 +270,17 @@ void DrawShopItems(float dt, MouseState mouseState)
         }
         char* price = calloc(NumDigits(si->item->goldCost)+1,sizeof(char));
         sprintf(price,"%i",si->item->goldCost);
-        al_draw_text(ui.tinyFont,col,cx,si->position.y+h+3,ALLEGRO_ALIGN_CENTRE,price);
+        int numCharsToDisplay = strlen(price) * si->radiusPercent;
+        int bbx; int bby; int bbw; int bbh;
+        
+        al_get_text_dimensions(ui.tinyFont,price,&bbx,&bby,&bbw,&bbh);
+        
+        float wNumber = bbw * 2 * (si->radiusPercent); 
+
+        al_set_clipping_rectangle(cx-wNumber/2,0,wNumber,_SCREEN_SIZE);
+        al_draw_text(ui.tinyFont,col,cx ,si->position.y+h+3 - ( (1 - si->radiusPercent) * 2),ALLEGRO_ALIGN_CENTRE,price);
+        al_reset_clipping_rectangle();
+        
         free(price);
 
 
