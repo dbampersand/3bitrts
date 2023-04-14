@@ -749,7 +749,7 @@ SpriteDecoration AddCloud()
 
     return s;
 }
-float easeOutQuint(float x) {
+float EaseOutQuint(float x) {
     if (x > 1) return 1;
     return 1 - pow(1 - x, 5);
 }

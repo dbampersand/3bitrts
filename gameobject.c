@@ -3554,7 +3554,7 @@ void DrawChannelHint(GameObject* g, float dt)
                 float lineTimer = easedTimer * HINT_CIRCLE_LINE_SPEED > 1 ? 1 : easedTimer * HINT_CIRCLE_LINE_SPEED;
                 if (lineTimer >= 1)
                 {
-                    float arcTimer = easeOutQuint((easedTimer-(1/HINT_CIRCLE_LINE_SPEED))*HINT_CIRCLE_LINE_SPEED);
+                    float arcTimer = EaseOutQuint((easedTimer-(1/HINT_CIRCLE_LINE_SPEED))*HINT_CIRCLE_LINE_SPEED);
 
                     //divide by 2 as we draw both sides (passing negative to al_draw_arc)
                     float arcAngleDraw = ((arcTimer)*2*M_PI)/2.0f;

@@ -56,5 +56,7 @@ float PointsToAngleRad(float x1, float y1, float x2, float y2);
 int PointsToAngleDeg(int x1, int y1, int x2, int y2);
 
 float EaseInOutCubic(float f);
+float EaseInBounce(float f);
+float EaseOutBounce(float f);
 
 void CircToRect(double u, double v, double* x, double* y);

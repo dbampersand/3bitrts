@@ -12,6 +12,7 @@
 #include "allegro5/allegro_ttf.h"
 #include "ui.h"
 #include "encounter.h"
+#include "particle.h"
 
 Shop shop = {0};
 int rerollCost = 5;
@@ -72,28 +73,47 @@ void RefreshShop()
     shop.items[1].item = i2;
     shop.items[2].item = i3;
 
+
     shop.items[0].position.x = 70;
     shop.items[0].position.y = 41;   
     shop.items[0].desiredPosition = shop.items[0].position;
+    shop.items[0].enabled = true;
 
 
     shop.items[1].position.x = 115;
     shop.items[1].position.y = 41;    
     shop.items[1].desiredPosition = shop.items[1].position;
+    shop.items[1].enabled = true;
 
 
     shop.items[2].position.x = 92;
     shop.items[2].position.y = 86;   
     shop.items[2].desiredPosition = shop.items[2].position;
+    shop.items[2].enabled = true;
+    shop.shopState = SHOP_STATE_NORMAL;
 
 }
 void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 {
     ProcessAnimations(shop.currAnimation,dt);
 
+    if (shop.shopState == SHOP_STATE_REROLLING)
+    {
+        shop.rerollAnimationTimer = clamp(shop.rerollAnimationTimer - dt*2.2f,0,1);
+        if (shop.rerollAnimationTimer <= 0)
+        {
+            RefreshShop();
+        }
+    }
+    else
+    {
+        shop.rerollAnimationTimer = clamp(shop.rerollAnimationTimer + dt*1.5f,0,1);
+    }
+
+
     if (shop.currAnimation->hasLooped)
     {
-        float rad = 12;
+        float rad = _SHOP_ITEM_RADIUS;
         
 
         if (!shop.heldItem)
@@ -190,10 +210,13 @@ void DrawShopItems(float dt, MouseState mouseState)
     for (int i = 0; i < NUM_ITEM_POOLS; i++)
     {
         ShopItem* si = &shop.items[i];
+        if (!si->enabled)
+            continue;
+        si->radiusPercent = shop.shopState == SHOP_STATE_REROLLING ? EaseOutQuint(shop.rerollAnimationTimer) :  EaseInOutCubic(shop.rerollAnimationTimer);
 
         int w = si->item->spriteIndex_Icon > 0 ? GetWidthSprite(&sprites[si->item->spriteIndex_Icon]) : 24;
         int h = si->item->spriteIndex_Icon > 0 ? GetHeightSprite(&sprites[si->item->spriteIndex_Icon]) : 24;
-        float r = _MAX(w,h)/2.0f;
+        float r = _MAX(w,h)/2.0f * si->radiusPercent;
 
         float cx = si->position.x + w/2.0f;
         float cy = si->position.y + h/2.0f;
@@ -202,15 +225,31 @@ void DrawShopItems(float dt, MouseState mouseState)
         if (!ItemIsPurchasable(si->item))
             col = GROUND;
 
+        float wSprite = w * si->radiusPercent;
+        float hSprite = h * si->radiusPercent;
+
+        float sx = (w/2.0f) - wSprite / 2.0f;
+        float sy = (h/2.0f) - hSprite / 2.0f;
+
+        float dx = si->position.x + sx;
+        float dy = si->position.y + sy;
+
+
+        
+
+
         if ((!shop.heldItem || shop.heldItem == si) && ItemIsPurchasable(si->item) && dist(mouseState.screenX,mouseState.screenY,cx,cy) <= r)
         {
             al_draw_filled_circle(cx,cy, r,FRIENDLY);
-            DrawSprite(&sprites[si->item->spriteIndex_Icon],si->position.x,si->position.y,0,0,0,BG,false,false,false);
+            //DrawSprite(&sprites[si->item->spriteIndex_Icon],si->position.x,si->position.y,0,0,0,BG,false,false,false);
+            DrawSpriteRegion(&sprites[si->item->spriteIndex_Icon], sx,sy, wSprite, hSprite, dx,dy, BG, false);
+        
         }
         else
         {
             al_draw_circle(cx,cy, r,col,1);
-            DrawSprite(&sprites[si->item->spriteIndex_Icon],si->position.x,si->position.y,0,0,0,col,false,false,false);
+            DrawSpriteRegion(&sprites[si->item->spriteIndex_Icon], sx,sy, wSprite, hSprite, dx,dy, col, false);
+            //DrawSprite(&sprites[si->item->spriteIndex_Icon],si->position.x,si->position.y,0,0,0,col,false,false,false);
         }
         char* price = calloc(NumDigits(si->item->goldCost)+1,sizeof(char));
         sprintf(price,"%i",si->item->goldCost);
@@ -270,6 +309,10 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
         {
             Rect r = (Rect){slotX,slotY,24,24};
             bool invert = false;
+
+            ALLEGRO_COLOR background = BG;
+            ALLEGRO_COLOR foreground = FRIENDLY;
+
             if (g->inventory[i].enabled)
             {
                 if (clickedThisFrame && PointInRect(mouseState.screenX,mouseState.screenY,r))
@@ -278,8 +321,11 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
 
                     if (shop.removeClickedItem == &g->inventory[i])
                     {
+                        ScatterEffect_Sprite(&sprites[g->inventory[i].spriteIndex_Icon],slotX,slotY, COLOR_DAMAGE);
+
                         UnattachItem(&g->inventory[i]);
                         shop.removeClickedItem = NULL;
+
 
                     }
                     else
@@ -291,8 +337,6 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
             {
                 invert = !invert;
             }
-            ALLEGRO_COLOR background = BG;
-            ALLEGRO_COLOR foreground = FRIENDLY;
 
             if (shop.removeClickedItem == &g->inventory[i])
             {
@@ -306,8 +350,8 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
                 foreground = background;
                 background = temp;
             }
-            al_draw_filled_circle(slotX+12,slotY+12,12,background);
-            al_draw_circle(slotX+12,slotY+12,12,foreground,1);
+            al_draw_filled_circle(slotX+_SHOP_ITEM_RADIUS,slotY+_SHOP_ITEM_RADIUS,_SHOP_ITEM_RADIUS,background);
+            al_draw_circle(slotX+_SHOP_ITEM_RADIUS,slotY+_SHOP_ITEM_RADIUS,_SHOP_ITEM_RADIUS,foreground,1);
             DrawSprite(&sprites[g->inventory[i].spriteIndex_Icon],slotX,slotY,0,0,0,foreground,false,false,false);
             slotX += 25;
         }
@@ -327,9 +371,11 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
             {
                 BuyItem(shop.heldItem->item);
                 AttachItem(g,shop.heldItem->item);
+
+                shop.heldItem->enabled = false;
                 
                 shop.heldItem = NULL;
-                RefreshShop();
+                shop.shopState = SHOP_STATE_REROLLING;
             }
         }
         y += 24+4;
@@ -400,7 +446,7 @@ void DrawReroll(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
         if ((mouseStateLastFrame.mouse.buttons & 1)  && !(mouseState.mouse.buttons & 1))
         {
             AddGold(-rerollCost);
-            RefreshShop();
+            shop.shopState = SHOP_STATE_REROLLING;
         }
     }
     
@@ -424,5 +470,7 @@ void DrawShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
     DrawReroll(dt,mouseState,mouseStateLastFrame);
 
     DrawGoldCount(BG,ENEMY);
+
+    DrawParticles();
 
 }

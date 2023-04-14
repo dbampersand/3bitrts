@@ -489,7 +489,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
         DrawAllLevelSelects(mouseState,mouseStateLastFrame);
         encounterMoveTimer += dt;
-        encounterOffset = Towards(encounterOffset,encounterMoveTo,easeOutQuint(encounterMoveTimer)*_SCREEN_SIZE/8.0f);
+        encounterOffset = Towards(encounterOffset,encounterMoveTo,EaseOutQuint(encounterMoveTimer)*_SCREEN_SIZE/8.0f);
         DrawMouse(mouseState, NULL);
         DrawTransition(dt);
         DrawParticles();
@@ -545,6 +545,17 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         GameObject* g =  AddGameobject(prefab,255,255,SOURCE_SPAWNED_FROM_MAP);
         KillObj(g,true,true);
     }
+    if (al_key_down(keyState,ALLEGRO_KEY_F7))
+    {
+        AddGold(1000);
+    }
+    if (al_key_down(keyState,ALLEGRO_KEY_F8))
+    {
+        AddCompletionPercent(100);
+    }
+
+
+
     #ifdef DEBUG
         al_put_blended_pixel(DEBUG_P1.x,DEBUG_P1.y,al_map_rgb(0,255,0));
         al_put_blended_pixel(DEBUG_P2.x,DEBUG_P2.y,al_map_rgb(255,0,0));

@@ -414,6 +414,7 @@ float EaseInOutCubic(float f)
         return  1 - pow(-2 * f + 2, 3) / 2.0f;
     }
 }
+
 //https://arxiv.org/ftp/arxiv/papers/1509/1509.06344.pdf
 void CircToRect(double u, double v, double* x, double* y)
 {

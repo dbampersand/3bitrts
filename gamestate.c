@@ -281,6 +281,7 @@ void FinishTransition()
     }
     if (transitioningTo == GAMESTATE_IN_SHOP)
     {
+        MoveCam(0,0);
         gameState = GAMESTATE_IN_SHOP;
         RefreshShop();
 
@@ -814,7 +815,7 @@ void DrawTransition_Stairs(float dt)
 
     for (int i = 0; i < numStairs; i++)
     {
-        double p = (easeOutQuint(transitionTimer)); 
+        double p = (EaseOutQuint(transitionTimer)); 
 
         p -= ((i) / (float)numStairs)/(double)numStairs;
         p = clamp(p,0,1);

@@ -9,17 +9,31 @@
 
 typedef struct Item Item;
 
+#define _SHOP_ITEM_RADIUS 12
 
+typedef enum SHOP_STATE
+{
+    SHOP_STATE_REROLLING,
+    SHOP_STATE_NORMAL
+} SHOP_STATE;
 
 typedef struct ShopItem
 {
     Item* item;
     Point position;
     Point desiredPosition;
+
+    float timer;
+    float radiusPercent;
+
+    bool enabled;
 } ShopItem;
 
 typedef struct Shop
 {
+    SHOP_STATE shopState;
+    float rerollAnimationTimer;
+
     Animation* idleSprites;
     int numIdleSprites;
 
