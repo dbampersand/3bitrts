@@ -161,10 +161,16 @@ void InitVideo()
 }
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)
 {
-    int x = r.x; 
-    int y = r.y; 
-    int x2 = r.x + r.w;
-    int y2 = r.y + r.h;
+    float x = r.x; 
+    float y = r.y; 
+    float x2 = r.x + r.w;
+    float y2 = r.y + r.h;
+    //getting a precise output on mac just isnt working 
+    //so here's a TODO: fix this... eventually
+    #ifdef __APPLE__
+        al_draw_rectangle(x,y,x2,y2,color,0);
+        return;
+    #endif
     if (filled)
         al_draw_filled_rectangle(x+1,y+1,x2-1,y2-1,color);
     //horizontals

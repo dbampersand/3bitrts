@@ -40,6 +40,9 @@ typedef struct Shop
 
     float timer;
     int startX; int startY;
+
+    Item* removeClickedItem;
+
 } Shop;
 
 

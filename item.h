@@ -77,6 +77,7 @@ void ProcessItemsOnEffect(GameObject* g, Effect* e, float* value);
 void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value);
 
 void AttachItem(GameObject* g, Item* i);
+void UnattachItem(Item* i);
 void InitItems();
 
 void RemoveItem(Item* i);

@@ -178,7 +178,6 @@ void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
     }
 
 
-
 }
 bool ItemIsPurchasable(Item* i)
 {
@@ -230,6 +229,16 @@ void DrawShopItems(float dt, MouseState mouseState)
             al_draw_multiline_text(ui.font, FRIENDLY, 18, 184, 126, 10, ALLEGRO_ALIGN_LEFT, draw->item->description);
             al_reset_clipping_rectangle();
         }
+        else
+        {
+            if (shop.removeClickedItem)
+            {
+                al_set_clipping_rectangle(16,161,136,81);
+                al_draw_multiline_text(ui.boldFont, FRIENDLY, 18, 168, 126, 10, ALLEGRO_ALIGN_LEFT, "Drop this item into the void?");
+                al_reset_clipping_rectangle();
+
+            }
+        }
 
     }
 
@@ -240,6 +249,8 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
     int x = shop.startX * 2 + GetWidthSprite(&sprites[shop.spriteIndex_stall]);
     int y = shop.startY;
 
+    bool clickedThisFrame = (mouseState.mouse.buttons & 1) && !(mouseStateLastFrame.mouse.buttons & 1);
+    bool clickedOnAnInventorySlot = false;
 
     for (int i = 0; i < numActiveObjects; i++)
     {
@@ -253,10 +264,51 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
         
         float slotX = x;
         float slotY = y;
+
+
         for (int i = 0; i < INVENTORY_SLOTS; i++)
         {
-            al_draw_circle(slotX+12,slotY+12,12,FRIENDLY,1);
-            DrawSprite(&sprites[g->inventory[i].spriteIndex_Icon],slotX,slotY,0,0,0,FRIENDLY,false,false,false);
+            Rect r = (Rect){slotX,slotY,24,24};
+            bool invert = false;
+            if (g->inventory[i].enabled)
+            {
+                if (clickedThisFrame && PointInRect(mouseState.screenX,mouseState.screenY,r))
+                {
+                    clickedOnAnInventorySlot = true;
+
+                    if (shop.removeClickedItem == &g->inventory[i])
+                    {
+                        UnattachItem(&g->inventory[i]);
+                        shop.removeClickedItem = NULL;
+
+                    }
+                    else
+                        shop.removeClickedItem = &g->inventory[i];
+                }
+            }
+
+            if (PointInRect(mouseState.screenX,mouseState.screenY,r) && g->inventory[i].enabled)
+            {
+                invert = !invert;
+            }
+            ALLEGRO_COLOR background = BG;
+            ALLEGRO_COLOR foreground = FRIENDLY;
+
+            if (shop.removeClickedItem == &g->inventory[i])
+            {
+                foreground = DAMAGE;
+                invert = !invert;
+            }
+
+            if (invert)
+            {
+                ALLEGRO_COLOR temp = foreground;
+                foreground = background;
+                background = temp;
+            }
+            al_draw_filled_circle(slotX+12,slotY+12,12,background);
+            al_draw_circle(slotX+12,slotY+12,12,foreground,1);
+            DrawSprite(&sprites[g->inventory[i].spriteIndex_Icon],slotX,slotY,0,0,0,foreground,false,false,false);
             slotX += 25;
         }
         if (shop.heldItem)
@@ -323,6 +375,12 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
 
     if (!(mouseState.mouse.buttons & 1))
         shop.heldItem = NULL;
+
+    if (clickedThisFrame && !clickedOnAnInventorySlot)
+    {
+        shop.removeClickedItem = NULL;
+    }
+
 
 }
 void DrawReroll(float dt, MouseState mouseState, MouseState mouseStateLastFrame)

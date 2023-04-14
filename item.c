@@ -312,6 +312,11 @@ void AttachItem(GameObject* g, Item* i)
         }
     }
 }
+void UnattachItem(Item* i)
+{
+    RemoveItem(i);
+    memset(i,0,sizeof(Item));
+}
 void UpdateItem(Item* i, GameObject* g, float dt)
 {
 
