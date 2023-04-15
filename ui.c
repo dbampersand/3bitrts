@@ -1367,13 +1367,13 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
             selectedEncounterIndex = numEncounters-1;
 
     }
-    if (!encounters[index]->unlocked)
+    if (!e->unlocked)
     {
         DrawSprite(&sprites[LoadSprite("assets/ui/levelselect/padlock.png",false)],offsetX,0,0,0,0,FRIENDLY,false,false,false);
         Rect r = (Rect){72,66,112,143};
-        if (PointInRect(mouseState->screenX,mouseState->screenY,r) && mouseState->mouse.buttons & 1 && !(mouseStateLastFrame->mouse.buttons & 1))
+        if (selectedEncounterIndex == index && PointInRect(mouseState->screenX,mouseState->screenY,r) && mouseState->mouse.buttons & 1 && !(mouseStateLastFrame->mouse.buttons & 1))
         {
-            AddScreenshake(4,0.2);
+            AddScreenshake(3,0.2);
         }
         e->encounter_ButtonConfirm.enabled = false;
         e->encounter_RerollAugments.enabled = false;

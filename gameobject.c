@@ -2709,8 +2709,8 @@ void DrawGameObj(GameObject* g, bool forceInverse)
    // isReversed = g->flashTimer > 0 ? !isReversed : isReversed;
     bool isReversed = IsInvertedSprite(g) | forceInverse;
    
-    float x = floor(g->position.screenX + g->offset.x); 
-    float y = floor(g->position.screenY + g->offset.y);
+    float x = round(g->position.screenX + g->offset.x); 
+    float y = round(g->position.screenY + g->offset.y);
     
     float percent = GetSummonPercent(g);  
 

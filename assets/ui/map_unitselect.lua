@@ -6,7 +6,7 @@ function setup()
     PlayMusic("assets/audio/unitselect.wav",0.5,8);
 
     --CreateObject("assets/enemies/firebreather/firebreather.lua",256,256,TYPE_ENEMY,0);
-    CreateObject("assets/enemies/kobold_wizard/kobold_wizard.lua",170,256,TYPE_ENEMY,0);
+    --CreateObject("assets/enemies/kobold_wizard/kobold_wizard.lua",170,256,TYPE_ENEMY,0);
 
 end
 function update()

@@ -32,6 +32,7 @@ extern Ability* currAbilityRunning;
 extern Attack* currAttackRunning;
 extern ALLEGRO_KEYBOARD_STATE* keyStateLua;
 
+ void dumpstack (lua_State* l);
 void CallLuaFunc(int funcID);
 void init_lua();
 void LoadLuaFile(const char* filename, GameObject* g);

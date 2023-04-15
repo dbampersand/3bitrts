@@ -12,6 +12,7 @@ local fifthWave= false
 local sixthWave = false
 local seventhWave = false
 
+local debug = true;
 
 function setup()
     SetMapSprite("assets/encounters/02/map.png")
@@ -30,14 +31,14 @@ function setup()
 end
 
 function update(dt)
-    --if (_DEBUG) then
-      --  if (spawnedBoss == false) then
+    if (debug) then
+       if (spawnedBoss == false) then
 
-        --    CreateObject("assets/encounters/02/boss.lua",120,22,TYPE_ENEMY,5);
-          --  spawnedBoss = true;
-           -- do return end;
-      --  end
-    --end
+            local boss = CreateObject("assets/enemies/minotaur/minotaur.lua",120,22,TYPE_ENEMY,5,100);
+            spawnedBoss = true;
+            do return end;
+        end
+    end
 
     timer = timer + dt
 

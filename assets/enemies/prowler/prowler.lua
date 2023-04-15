@@ -24,7 +24,7 @@ function update(dt)
         target["target"]  = objToAttack;
 
 
-        CastAbility(spines,0.5,{target});
+        CastAbility(spines,0.95,{target});
     end
 
 end

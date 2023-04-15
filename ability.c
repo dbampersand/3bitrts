@@ -452,8 +452,10 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         lua_pushnumber(luaState,headingy);    
 
         lua_pcall(luaState,5,1,0);
+
+        dumpstack(luaState);
         bool b = lua_toboolean(luaState,-1);
-        if (b)
+        if (b || lua_isnil(luaState,1))
         {   
             if (a->stacks == a->maxStacks)
                 a->cdTimer = a->cooldown;

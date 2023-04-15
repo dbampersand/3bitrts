@@ -86,10 +86,16 @@ function update(dt)
                 CastAbility(hibernate, 0, {})
                 Print("HIBERNATING");
             end
+            if (GetAbilityCooldownTimer(GetObjRef(),summon) < 8) then
+                SetAbilityCooldownTimer(GetObjRef(),summon,0);
+                CastAbility(summon,0,{});
+            end
+
         end
         if (state == STATE_HIBERNATING and AbilityIsOnCooldown(GetObjRef(),hibernate) and ObjIsChannelling(GetObjRef()) == false) then
             ClearCommandQueue();
             SetChannelingSprite("assets/enemies/minotaur/minotaur_channeling.png");
+            
             state = STATE_NORMAL;
         end
         

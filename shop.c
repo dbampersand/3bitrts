@@ -206,7 +206,7 @@ void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 
         float cx = si->position.x + w/2.0f;
         float cy = si->position.y + h/2.0f;
-        if (ItemIsPurchasable(si->item)  && mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1) && dist(mouseState.screenX,mouseState.screenY,cx,cy) <= r)
+        if (shop.shopState != SHOP_STATE_REROLLING && ItemIsPurchasable(si->item)  && mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1) && dist(mouseState.screenX,mouseState.screenY,cx,cy) <= r)
         {
             shop.heldItem = &shop.items[i];
             shop.heldOffset.x = mouseState.screenX - si->position.x;
@@ -252,10 +252,7 @@ void DrawShopItems(float dt, MouseState mouseState)
         float dy = si->position.y + sy;
 
 
-        
-
-
-        if ((!shop.heldItem || shop.heldItem == si) && ItemIsPurchasable(si->item) && dist(mouseState.screenX,mouseState.screenY,cx,cy) <= r)
+        if (shop.shopState != SHOP_STATE_REROLLING && (!shop.heldItem || shop.heldItem == si) && ItemIsPurchasable(si->item) && dist(mouseState.screenX,mouseState.screenY,cx,cy) <= r)
         {
             al_draw_filled_circle(cx,cy, r,FRIENDLY);
             //DrawSprite(&sprites[si->item->spriteIndex_Icon],si->position.x,si->position.y,0,0,0,BG,false,false,false);
@@ -360,7 +357,7 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
                 }
             }
 
-            if (PointInRect(mouseState.screenX,mouseState.screenY,r) && g->inventory[i].enabled)
+            if ( PointInRect(mouseState.screenX,mouseState.screenY,r) && g->inventory[i].enabled)
             {
                 invert = !invert;
             }

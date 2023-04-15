@@ -37,7 +37,8 @@
  ALLEGRO_KEYBOARD_STATE* keyStateLua = NULL;
  bool _LOADING_PREFAB = false;
 
-static void dumpstack (lua_State* l) {
+void dumpstack (lua_State* l) 
+{
   int top=lua_gettop(l);
   for (int i=1; i <= top; i++) {
     printf("%d\t%s\t", i, luaL_typename(l,i));

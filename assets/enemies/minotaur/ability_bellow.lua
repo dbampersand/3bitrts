@@ -17,6 +17,7 @@ function casted(x,y,obj,headingx,headingy)
     for i=1,#enemies+1 do
         PushObj(GetX(GetObjRef()),GetY(GetObjRef()),enemies[i],200,0.1)
     end
+    return true;
 end
 
 function onhit(x,y,objhit)
