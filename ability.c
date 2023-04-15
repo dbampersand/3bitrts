@@ -453,8 +453,9 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
 
         lua_pcall(luaState,5,1,0);
 
-        dumpstack(luaState);
         bool b = lua_toboolean(luaState,-1);
+        //check if nil as the script may have forgotten to return a value
+        //if it didn't return an explicit value we can assume it meant to return true
         if (b || lua_isnil(luaState,1))
         {   
             if (a->stacks == a->maxStacks)
