@@ -198,7 +198,7 @@ void UpdatePlayerObjectInteractions(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KE
         players[0].amoveSelected = true;
     }
     
-    if (IsBindDownThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Center))
+    if (IsBindDown(keyState,currSettings.keymap.key_Center))
     {
         players[0].amoveSelected = false;
         CenterOnObj(players[0].selection[players[0].indexSelectedUnit]);
@@ -2634,6 +2634,7 @@ void DrawObjHeadingArrows()
         float grain = 0.5f;
 
         r = GetObjRect(g);
+        /*
         for (int j = 0;  j < 2; j++)
         {
 
@@ -2677,7 +2678,7 @@ void DrawObjHeadingArrows()
 
                 al_draw_pixel(ToScreenSpace_X(pX),ToScreenSpace_Y(pY),BG);
         }
-        }
+        }*/
 
         if (g->speed > 0 && !ObjIsDecoration(g))
            DrawArrow(ToScreenSpace_X(c1.x),ToScreenSpace_Y(c1.y),ToScreenSpace_X(c2.x),ToScreenSpace_Y(c2.y),c,&GROUND);
@@ -2717,8 +2718,8 @@ void DrawGameObj(GameObject* g, bool forceInverse)
    // isReversed = g->flashTimer > 0 ? !isReversed : isReversed;
     bool isReversed = IsInvertedSprite(g) | forceInverse;
    
-    float x = round(g->position.screenX + g->offset.x); 
-    float y = round(g->position.screenY + g->offset.y);
+    float x = (g->position.screenX + g->offset.x); 
+    float y = (g->position.screenY + g->offset.y);
     
     float percent = GetSummonPercent(g);  
 

@@ -1361,6 +1361,16 @@ int L_SetAbilityCooldownTimer(lua_State* l)
         a->cdTimer = a->cooldown;
     return 0;
 }
+int L_SetAbilityOnCooldown(lua_State* l)
+{
+    int gameObjIndex = lua_tonumber(l,1);
+    if (gameObjIndex < 0 || gameObjIndex >= MAX_OBJS)
+        return 0;
+    int abilityObjIndex = lua_tonumber(l,2);
+    if (abilityObjIndex < 0 || abilityObjIndex >= MAX_ABILITIES)
+        return 0;
+    GameObject* g = &objects[gameObjIndex];
+}
 int L_GetAbilityCooldownTimer(lua_State* l)
 {
     int gameObjIndex = lua_tonumber(l,1);
@@ -4452,6 +4462,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetAbilityCooldown);
     lua_setglobal(luaState, "SetAbilityCooldown");
+
+    lua_pushcfunction(luaState, L_SetAbilityOnCooldown);
+    lua_setglobal(luaState, "SetAbilityOnCooldown");
 
     lua_pushcfunction(luaState, L_GetShield);
     lua_setglobal(luaState, "GetShield");

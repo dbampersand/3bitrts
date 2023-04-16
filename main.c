@@ -111,7 +111,9 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
     UpdateAmbience(dt);
     numChannellingInfosDrawn =  0;
     if (gameState == GAMESTATE_IN_SHOP)
+    {
         UpdateShop(dt,*mouseState,*mouseStateLastFrame);
+    }
 
     if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS)
     {

@@ -955,7 +955,7 @@ void DrawStartScreen()
 }
 bool GameIsPaused() 
 {
-    return (console.active || ui.currentPanel || (gameState == GAMESTATE_MAIN_MENU || gameState == GAMESTATE_LOAD_SCREEN || gameState == GAMESTATE_LOAD_ENCOUNTER || gameState == GAMESTATE_IN_CHATBOX || gameState == GAMESTATE_END));
+    return (console.active || ui.currentPanel || (gameState == GAMESTATE_MAIN_MENU || gameState == GAMESTATE_LOAD_SCREEN || gameState == GAMESTATE_LOAD_ENCOUNTER || gameState == GAMESTATE_IN_CHATBOX || gameState == GAMESTATE_END) || gameState == GAMESTATE_IN_SHOP);
 }
 bool GameIsIngame()
 {
