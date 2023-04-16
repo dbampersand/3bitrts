@@ -76,5 +76,5 @@ int GetCameraMiddleX();
 int GetCameraMiddleY();
 
 
-
+void CenterOnObj(GameObject* g);
 

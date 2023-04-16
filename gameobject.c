@@ -197,6 +197,14 @@ void UpdatePlayerObjectInteractions(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KE
     {
         players[0].amoveSelected = true;
     }
+    
+    if (IsBindDownThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Center))
+    {
+        players[0].amoveSelected = false;
+        CenterOnObj(players[0].selection[players[0].indexSelectedUnit]);
+
+    }
+
     if (players[0].abilityHeld) 
         players[0].amoveSelected = false;   
     if (IsBindDownThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Tab))

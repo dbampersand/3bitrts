@@ -11,6 +11,7 @@
 #define _MAX(X,Y) ((X) > (Y) ? (X) : (Y))
 
 typedef struct GameObject GameObject;
+typedef struct MouseState MouseState;   
 
 #define MOUSECURSORSIZE 8
 
@@ -60,3 +61,7 @@ float EaseInBounce(float f);
 float EaseOutBounce(float f);
 
 void CircToRect(double u, double v, double* x, double* y);
+
+bool MouseClickedThisFrame(MouseState* previousFrame, MouseState* thisFrame);
+bool MouseReleasedThisFrame(MouseState* previousFrame, MouseState* thisFrame);
+

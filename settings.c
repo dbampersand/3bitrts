@@ -126,6 +126,8 @@ void SetDefaultSettings(Settings* setting)
     setting->slowdownPercent = 0.0f;
     setting->targetFPS = OPTION_60FPS;
 
+    setting->screenShakeFactor = 1.0f;
+
 
 
     setting->displayTimer = false;
@@ -163,10 +165,13 @@ void SetDefaultSettings(Settings* setting)
     setting->keymap.key_PanRight = (Key){"Pause",ALLEGRO_KEY_RIGHT};
     setting->keymap.key_PanUp = (Key){"Pause",ALLEGRO_KEY_UP};
     setting->keymap.key_PanDown = (Key){"Pause",ALLEGRO_KEY_DOWN};
+    setting->keymap.key_Center = (Key){"Center",ALLEGRO_KEY_SPACE};
+
 
     setting->keymap.key_HoldPosition = (Key){"Hold Position",ALLEGRO_KEY_H};
 
     setting->keymap.key_Console = (Key){"Activate Console",ALLEGRO_KEY_OPENBRACE};
+
 
 }
 

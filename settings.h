@@ -36,7 +36,7 @@ typedef struct Keymap
     Key key_PanRight;
     Key key_PanUp;
     Key key_PanDown;
-
+    Key key_Center;
 
     Key key_ctrlgroups[10];
 

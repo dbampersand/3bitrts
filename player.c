@@ -287,3 +287,9 @@ void ClearGold()
     players[0].goldAnimationTimer = 1;
     AddGold(-GetGold());
 }
+
+void CenterOnObj(GameObject* g)
+{
+    if (g)
+        FocusCameraOnPos(g->position.worldX, g->position.worldY);
+}

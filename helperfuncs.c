@@ -430,3 +430,11 @@ void CircToRect(double u, double v, double* x, double* y)
     }
 
 }
+bool MouseClickedThisFrame(MouseState* previousFrame, MouseState* thisFrame)
+{
+    return (!(previousFrame->mouse.buttons & 1) && (thisFrame->mouse.buttons & 1));
+}
+bool MouseReleasedThisFrame(MouseState* previousFrame, MouseState* thisFrame)
+{
+    return ((previousFrame->mouse.buttons & 1) && !(thisFrame->mouse.buttons & 1));
+}

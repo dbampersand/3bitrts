@@ -667,7 +667,7 @@ void UpdateTransition(float dt)
             if (transitionAudioPlayed == false && transitionTimer >= 0.925f)
             {
                 transitionAudioPlayed = true;
-                AddScreenshake(2,0.1f);
+                AddScreenshake(3.5f,0.1f);
 
                 float numParticlesToSpawn = 40;
                 for (int i = 0; i < numParticlesToSpawn; i++)

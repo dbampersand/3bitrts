@@ -1124,15 +1124,38 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
     }
 
 }
-void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame)
+void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
+
     for (int i = 0; i < numEncounters; i++)
     {
         int offset =  _SCREEN_SIZE*i - encounterOffset;//i*_SCREEN_SIZE - selectedEncounterIndex*_SCREEN_SIZE;
-        DrawLevelSelect(mouseState,mouseStateLastFrame,i,offset);
+        DrawLevelSelect(mouseState,mouseStateLastFrame,i,offset,keyStateThisFrame,keyStateLastFrame);
+    }
+
+    Encounter* e = encounters[selectedEncounterIndex];
+
+    if (e->encounter_ButtonLeft.enabled && IsBindDownThisFrame(keyStateThisFrame,keyStateLastFrame,currSettings.keymap.key_PanLeft))
+    {
+        PreviousEncounter();
+        //selectedEncounterIndex--;
+        if (selectedEncounterIndex < 0)
+            selectedEncounterIndex = 0;
+    }
+    if (e->encounter_ButtonRight.enabled && IsBindDownThisFrame(keyStateThisFrame,keyStateLastFrame,currSettings.keymap.key_PanRight))
+    {
+        //selectedEncounterIndex++;
+
+        NextEncounter();
+        if (selectedEncounterIndex >= numEncounters)
+            selectedEncounterIndex = numEncounters-1;
+    }
+    if (e->unlocked && IsBindDownThisFrame(keyStateThisFrame,keyStateLastFrame,currSettings.keymap.key_Center))
+    {
+        SetGameStateToChoosingParty();
     }
 }
-void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, int index, int offsetX)
+void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, int index, int offsetX, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
     Encounter* e = encounters[index];
 
@@ -1362,10 +1385,10 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     if (GetButtonIsClicked(&e->encounter_ButtonRight))
     {
         //selectedEncounterIndex++;
+
         NextEncounter();
         if (selectedEncounterIndex >= numEncounters)
             selectedEncounterIndex = numEncounters-1;
-
     }
     if (!e->unlocked)
     {
@@ -2249,6 +2272,10 @@ void InitControlsPanel()
     AddKeyInput(&ui.controlsPanel,"Control Group 0","Control Group 0",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[9].keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Control Group 0_2","Control Group 0_2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_ctrlgroups[9].secondKeyMappedTo);
     AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 0","Control Group 0");
+
+    AddKeyInput(&ui.controlsPanel,"Center","Center",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Center.keyMappedTo);
+    AddKeyInput(&ui.controlsPanel,"Center2","Center2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_Center.secondKeyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Center","Center");
 
 
     InitButton(&ui.controlsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));

@@ -487,7 +487,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     {
         al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
 
-        DrawAllLevelSelects(mouseState,mouseStateLastFrame);
+        DrawAllLevelSelects(mouseState,mouseStateLastFrame, keyState, keyStateLastFrame);
         encounterMoveTimer += dt;
         encounterOffset = Towards(encounterOffset,encounterMoveTo,EaseOutQuint(encounterMoveTimer)*_SCREEN_SIZE/8.0f);
         DrawMouse(mouseState, NULL);
