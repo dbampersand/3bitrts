@@ -197,7 +197,9 @@ void DrawFilledRect_Dithered(Rect r, ALLEGRO_COLOR color)
         r.w += r.h;
         r.x = 0;
     }
-    
+    if (r.w <= 0 || r.h <= 0)
+        return;
+
 
     al_lock_bitmap_region(al_get_target_bitmap(),r.x,r.y,r.w,r.h,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
     int dither = 2;
@@ -217,6 +219,8 @@ void DrawFilledRect_Dithered(Rect r, ALLEGRO_COLOR color)
 }
 void DrawOutlinedRect_Dithered(Rect r, ALLEGRO_COLOR color)
 {
+    
+    r.x--;
 
     if (r.y < 0)
     {
@@ -228,8 +232,8 @@ void DrawOutlinedRect_Dithered(Rect r, ALLEGRO_COLOR color)
         r.w += r.x;
         r.x = 0;
     }
-
-    r.x--;
+    if (r.w <= 0 || r.h <= 0)
+        return;
 
 
 
