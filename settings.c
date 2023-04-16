@@ -192,6 +192,7 @@ void WriteSettingsFile(char* path)
         "musicVolume: %f;\n"
         "slowdownPercent: %f;\n"
         "display_timer %i;\n"
+        "screen_shake_factor: %f\n"
         "key_Q %i;\n"
         "key_Q_Alt %i;\n"
         "key_W %i;\n"
@@ -262,6 +263,8 @@ void WriteSettingsFile(char* path)
         currSettings.slowdownPercent,
 
         currSettings.displayTimer ? 1 : 0,
+        
+        currSettings.screenShakeFactor,
         
         currSettings.keymap.key_Q.keyMappedTo,
         currSettings.keymap.key_Q.secondKeyMappedTo,
@@ -904,6 +907,14 @@ bool LoadSettingsFile(char* path)
                 else
                     currSettings.displayTimer = true;
             }
+
+            float screenShakeFactor  = FindToken(str,"screen_shake_factor");
+            if (screenShakeFactor >= 0)
+            {
+                currSettings.screenShakeFactor = screenShakeFactor;
+            }
+
+
 
             SetBinds(str);
 

@@ -815,6 +815,7 @@ void UpdateScreenPositions_Point(PointSpace* p)
 
 void AddScreenshake(float amt, float time)
 {
+    amt *= currSettings.screenShakeFactor;
     ScreenShake* s = &screenShakes[screenShakeTop];
     s->screenShakeAmount = amt;
     s->screenShakeTime = time;

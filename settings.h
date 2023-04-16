@@ -60,7 +60,7 @@ typedef struct Settings
 
     float slowdownPercent;
     int targetFPS;
-
+    float screenShakeFactor;
 
     //ACCESSIBILITY OPTIONS
     Keymap keymap;

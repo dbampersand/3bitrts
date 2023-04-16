@@ -2054,6 +2054,9 @@ void InitVideoOptionsPanel()
     AddText(&ui.videoOptionsPanel,33,180,"Label_TargetFPS","Target FPS");
     AddPulldownMenu(&ui.videoOptionsPanel,97,180,48,13,"Target FPS",currSettings.targetFPS,5,"30","60","90","144","240");
 
+    AddText(&ui.videoOptionsPanel,33,204,"Label_ScreenShakeFactor","Screen Shake");
+    AddSlider(&ui.videoOptionsPanel,120,204,45,10,"ScreenShake",currSettings.screenShakeFactor,&currSettings.screenShakeFactor);
+
 
     InitButton(&ui.videoOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
 
