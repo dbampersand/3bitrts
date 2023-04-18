@@ -250,7 +250,7 @@ void loadLuaGameMap(lua_State* l, const char* filename, Map* m)
     char* cpy = calloc(strlen(filename)+1,sizeof(char));
     strcpy(cpy,filename);
     m->lua_buffer.buffer = readFile(filename);
-
+    
 
 
      if (luaL_loadfile(l, filename) || lua_pcall(l, 0, 0, 0))
@@ -351,11 +351,16 @@ Map* LoadMap(char* path)
   m.spawnPoint.y = 180;
   loadLuaGameMap(luaState,path,&m);
   
+  int currMapIndex = currMap - maps;
   numMaps++;
   if (maps)
     maps = realloc(maps,numMaps*sizeof(Map));
   else
     maps = calloc(1,sizeof(Map));
+  //update stale pointer
+  if (currMapIndex  > 0)
+    currMap = &maps[currMapIndex];
+
   
   maps[numMaps-1] = m;
   return &maps[numMaps-1];
@@ -374,7 +379,6 @@ void SetMap(Map* m)
         luaL_unref(luaState,LUA_REGISTRYINDEX,currMap->luafunc_mapend);
         luaL_unref(luaState,LUA_REGISTRYINDEX,currMap->luafunc_objectdied);*/
     }
-
     currMap = m;
     CallLuaFunc(m->luafunc_setup);
 

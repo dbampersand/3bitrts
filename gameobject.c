@@ -2403,6 +2403,10 @@ void DrawMapHighlights()
 {
     if (!currSettings.lightEffectEnabled)
         return;
+    if (!currMap) return;
+    if (!currMap->spriteIndex)
+        return;
+
     ALLEGRO_BITMAP* screen = al_get_target_bitmap();
     al_lock_bitmap_region(sprites[currMap->spriteIndex].sprite,-players[0].cameraPos.x,-players[0].cameraPos.y,_SCREEN_SIZE,_SCREEN_SIZE,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READONLY);
     al_lock_bitmap(screen,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);

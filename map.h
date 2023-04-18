@@ -8,7 +8,7 @@
 typedef struct Sprite Sprite; 
 #define _MAPSIZE 256
 typedef struct GameObject GameObject;
-
+typedef struct ALLEGRO_BITMAP ALLEGRO_BITMAP;
 typedef enum CollisionMapValue {
     COLLISION_NEVER = 0,
     COLLISION_OPEN = 1,

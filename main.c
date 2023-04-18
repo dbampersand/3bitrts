@@ -37,6 +37,7 @@
 #include "console.h"
 #include "vectorshape.h"
 
+#include "editor.h"
 ALLEGRO_BITMAP* testBitmap;
 
 
@@ -606,6 +607,8 @@ int main(int argc, char* args[])
 
 
     fflush(stdout);
+
+    EditorSetMap("assets/encounters/0/map_1.lua");
 
     //printf("%lu\n",sizeof(Attack));
 
