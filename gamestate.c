@@ -18,6 +18,7 @@
 #include "shop.h"
 #include "console.h"
 #include "particle.h"
+#include "editor.h"
 
 #ifndef M_PI
     #define M_PI 3.14159265358979323846
@@ -949,13 +950,20 @@ void SetGameStateToInMenu()
     StopMusic();
     TransitionTo(GAMESTATE_MAIN_MENU);
 }
+void SetGameStateToInEditor()
+{
+    gameState = GAMESTATE_IN_EDITOR;
+    transitioningTo = GAMESTATE_IN_EDITOR;
+    EditorSetMap(currMap->path);
+}
+
 void DrawStartScreen()
 {
     
 }
 bool GameIsPaused() 
 {
-    return (console.active || ui.currentPanel || (gameState == GAMESTATE_MAIN_MENU || gameState == GAMESTATE_LOAD_SCREEN || gameState == GAMESTATE_LOAD_ENCOUNTER || gameState == GAMESTATE_IN_CHATBOX || gameState == GAMESTATE_END) || gameState == GAMESTATE_IN_SHOP);
+    return (console.active || ui.currentPanel || (gameState == GAMESTATE_MAIN_MENU || gameState == GAMESTATE_LOAD_SCREEN || gameState == GAMESTATE_LOAD_ENCOUNTER || gameState == GAMESTATE_IN_CHATBOX || gameState == GAMESTATE_END) || gameState == GAMESTATE_IN_SHOP || gameState == GAMESTATE_IN_EDITOR);
 }
 bool GameIsIngame()
 {

@@ -1413,7 +1413,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     DrawGoldCount(FRIENDLY,ENEMY);
 
 }
-void AddElement(Panel* p, UIElement* u)
+UIElement* AddElement(Panel* p, UIElement* u)
 {
     if (!p->elements)
     {
@@ -1429,6 +1429,8 @@ void AddElement(Panel* p, UIElement* u)
     }
     p->elements[p->numElements] = *u;
     p->numElements++;
+
+    return &p->elements[p->numElements-1];
 }
 void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, int h, int maxchars, KEY* mapTo)
 {
@@ -1454,7 +1456,7 @@ void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, i
     UpdateBind(&u);
 
 }
-void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h, bool shouldDrawLine)
+UIElement* AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h, bool shouldDrawLine)
 {
     Button* b = calloc(1,sizeof(Button));
     b->description = calloc(strlen(description)+1,sizeof(char));
@@ -1475,7 +1477,8 @@ void AddButton(Panel* p, char* name, char* description, int x, int y, int w, int
     u.sound_clickUp_Index = ui.uiClickedUpSound_Index;
     u.bgColor = COLOR_BG;
 
-    AddElement(p,&u);
+    UIElement* ref = AddElement(p,&u);
+    return ref;
 }
 void UpdateSlider(Slider* s, int x, int y, int w, int h, MouseState mouseState, MouseState mouseStateLastFrame)
 {
@@ -1584,7 +1587,7 @@ void ChangeButtonText(Button* b, char* newstr)
     b->description = calloc(strlen(newstr)+1,sizeof(char));
     strcpy(b->description,newstr);
 }
-void AddText(Panel* p,int x, int y, char* name, char* description)
+void AddText(Panel* p, int x, int y, char* name, char* description)
 {
     UIElement u = {0};
     UI_Text* t = calloc(1,sizeof(UI_Text));
@@ -1901,6 +1904,21 @@ void SetUITextStr(UI_Text* t, char* str)
         free(t->str);
     t->str = calloc(strlen(str)+1,sizeof(char));
     strcpy(t->str,str);
+}
+UI_Text* GetUIText(Panel* p, char* name)
+{
+    if (!p)
+        return NULL;
+    for (int i = 0; i < p->numElements; i++)
+    {
+        UIElement* u = &p->elements[i];
+        if (strcasecmp(u->name,name)==0)
+        {
+            UI_Text* t = (UI_Text*)u->data;
+            return t;
+        }
+    }
+    return NULL;
 }
 void UpdateLanternWidget(Widget* self, float dt)
 {

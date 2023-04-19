@@ -350,6 +350,8 @@ Map* LoadMap(char* path)
   m.spawnPoint.x = 80;
   m.spawnPoint.y = 180;
   loadLuaGameMap(luaState,path,&m);
+  m.path = calloc(strlen(path)+1,sizeof(char));
+  strcpy(m.path,path);
   
   int currMapIndex = currMap - maps;
   numMaps++;
@@ -492,16 +494,15 @@ void ChangeMap(const char* path)
     //if we're already in the shop
     if (gameState == GAMESTATE_IN_SHOP)
         return;
-
-    if (currEncounterRunning->goingToShop)
-        SetGameStateToInShop();
-    else
-        SetGameStateToChangingMap(path);
-
+    if (gameState != GAMESTATE_IN_EDITOR)
+    {
+        if (currEncounterRunning->goingToShop)
+            SetGameStateToInShop();
+        else
+            SetGameStateToChangingMap(path);
+    }
     if (pathToNextMap)
         free(pathToNextMap);
     pathToNextMap = calloc(strlen(path)+1,sizeof(char));
     strcpy(pathToNextMap,path);
-
-
 }

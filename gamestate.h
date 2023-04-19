@@ -18,8 +18,9 @@ typedef enum GameState {
     GAMESTATE_IN_SHOP = 11,
     GAMESTATE_EXIT = 12,
     GAMESTATE_PURCHASING_UNITS = 13,
+    GAMESTATE_IN_EDITOR = 14,
 
-    NUMGAMESTATES = 14
+    NUMGAMESTATES = 15
 } GameState;
 
 typedef enum TRANSITION
@@ -86,6 +87,7 @@ void SetGameStateToChangingMap();
 void SetGameStateToWatchingReplay();
 void SetGameStateToInShop();
 void SetGameStateToPurchasingUnits();
+void SetGameStateToInEditor();
 
 
 void Quit();

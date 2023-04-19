@@ -62,6 +62,6 @@ float EaseOutBounce(float f);
 
 void CircToRect(double u, double v, double* x, double* y);
 
-bool MouseClickedThisFrame(MouseState* previousFrame, MouseState* thisFrame);
-bool MouseReleasedThisFrame(MouseState* previousFrame, MouseState* thisFrame);
+bool MouseClickedThisFrame(MouseState* thisFrame, MouseState* previousFrame);
+bool MouseReleasedThisFrame(MouseState* thisFrame, MouseState* previousFrame);
 

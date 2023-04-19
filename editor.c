@@ -6,6 +6,9 @@
 #include "gameobject.h"
 #include "luafuncs.h"
 #include "helperfuncs.h"
+#include "player.h"
+#include <dirent.h>
+
 Editor editor = {0};
 
 
@@ -19,7 +22,7 @@ char* ExtractFunction(char* funcName, char* buffer)
 
     if (c == NULL) 
         return false;
-    while (c <= buffer + strlen(buffer))
+    while (c < buffer + strlen(buffer))
     {
         int dfsf = strcmp(c,funcName);
         if (strncmp(c,funcName,strlen(funcName)) == 0)
@@ -32,7 +35,7 @@ char* ExtractFunction(char* funcName, char* buffer)
             }
             bool foundFunc = false;
             bool isComment = false;
-            while (c2-- >= buffer)
+            while (c2-- > buffer)
             {
                 if (strncmp(c2,"function ",strlen("function ")) == 0)
                 {
@@ -179,9 +182,9 @@ void UpdateArgumentFloat(char** full, char* position, float f)
 void UpdatePosition(GameObject* g, float x, float y)
 {
     if (!g) return;
-    for (int i = 0; i < editor.numLines; i++)
+    for (int i = 0; i < editor.numSetupLines; i++)
     {
-        if (editor.lines[i].associated == g)
+        if (editor.setupLines[i].associated == g)
         {
             g->position.worldX = x;
             g->position.worldY = y;
@@ -189,71 +192,246 @@ void UpdatePosition(GameObject* g, float x, float y)
 
             //2-decimal precision for both
             int toIncreaseBy = NumDigits(x) + NumDigits(y) + 6;
-            //editor.lines[i].line = realloc(editor.lines[i].line,(strlen(editor.lines[i].line)+toIncreaseBy+1)*sizeof(char));
+            //editor.setupLines[i].line = realloc(editor.setupLines[i].line,(strlen(editor.setupLines[i].line)+toIncreaseBy+1)*sizeof(char));
 
-            char* xStr = GetPositionOfArgument(editor.lines[i].line,"SetAggroGroup",2);
-            UpdateArgumentFloat(&editor.lines[i].line,xStr,3);
-            char* yStr = GetPositionOfArgument(editor.lines[i].line,"CreateObject",3);
-            UpdateArgumentFloat(&editor.lines[i].line,yStr,4);
+            char* xStr = GetPositionOfArgument(editor.setupLines[i].line,"CreateObject",2);
+            UpdateArgumentFloat(&editor.setupLines[i].line,xStr,x);
+            char* yStr = GetPositionOfArgument(editor.setupLines[i].line,"CreateObject",3);
+            UpdateArgumentFloat(&editor.setupLines[i].line,yStr,y);
 
-            printf("%s\n",editor.lines[i].line);
+            printf("%s\n",editor.setupLines[i].line);
         }
     }
 }
 void RunAllLines()
 {
-    for (int i = 0; i < editor.numLines; i++)
+    for (int i = 0; i < editor.numSetupLines; i++)
     {
         int numObjsBefore = numActiveObjects;
-        if (editor.lines[i].line)
-            luaL_dostring(luaState,editor.lines[i].line);
+
+        char* line = editor.setupLines[i].line;
+        if (editor.setupLines[i].line)
+            luaL_dostring(luaState,editor.setupLines[i].line);
         if (numActiveObjects > numObjsBefore)
         {
-            editor.lines[i].associated = &objects[numActiveObjects-1];
+            editor.setupLines[i].associated = &objects[numActiveObjects-1];
         }
     }
+    if (pathToNextMap)
+        free(pathToNextMap);
+    pathToNextMap = NULL;
+    
+    for (int i = 0; i < editor.numEndLines; i++)
+    {
+        if (editor.endLines[i].line)
+            luaL_dostring(luaState,editor.endLines[i].line);
+    }
+
+    if (pathToNextMap)
+        ChangeButtonText(GetButtonB(&editor.editorUI.saveLoad,"NextMap"),pathToNextMap);
+    else
+        ChangeButtonText(GetButtonB(&editor.editorUI.saveLoad,"NextMap"),"(None)");
+        
+
 }
-void SplitLines(char* buffer)
+//TODO: support multiline arguments eg;
+// CreateObject(
+//              3,
+//              5)
+void SplitLines(char* buffer, EditorLine** lines, int* lineCount)
 {
     char* save = buffer;
 
-    char* line = strtok_r(buffer,"\n",&save);
-    editor.numLines = 0;
+    char* bufferLine = strtok_r(buffer,"\n",&save);
+    int numLines = 0;
     do 
     {
-        editor.numLines++;
+        numLines++;
 
-        if (!editor.lines)
-            editor.lines = calloc(1,sizeof(EditorLine));
+        if (!*lines)
+            *lines = calloc(1,sizeof(EditorLine));
 
-        editor.lines = realloc(editor.lines,editor.numLines * sizeof(EditorLine));
-        memset(&editor.lines[editor.numLines-1],0,sizeof(EditorLine));
 
-        editor.lines[editor.numLines-1].line = calloc(strlen(line)+1,sizeof(char));
-        strcpy(editor.lines[editor.numLines-1].line,line);
+        *lines = realloc(*lines,numLines * sizeof(EditorLine));
+
+        EditorLine* line = *lines;
+
+        memset(&line[numLines-1],0,sizeof(EditorLine));
+
+        line[numLines-1].line = calloc(strlen(bufferLine)+1,sizeof(char));
+        strcpy(line[numLines-1].line,bufferLine);
         
-        editor.lines[editor.numLines-1].lineNumber = editor.numLines-1;   
-        line = strtok_r(NULL,"\n",&save);   
-    } while (line != NULL);
+        line[numLines-1].lineNumber = numLines-1;   
+        bufferLine = strtok_r(NULL,"\n",&save);   
+    } while (bufferLine != NULL);
 
+    *lineCount = numLines;
 }
 
 void EditorSetMap(char* path)
 {
+    if (!path) 
+        return;
+    RemoveAllGameObjects();
     Map* m = LoadMap(path);
-    //SetMap(path);
+    //SetMap(m);
+    currMap = m;
 
     char* buff = ExtractFunction("setup",m->lua_buffer.buffer);
-    SplitLines(buff);
+    char* end = ExtractFunction("mapend",m->lua_buffer.buffer);
+
+    SplitLines(buff,&editor.setupLines,&editor.numSetupLines);
+    SplitLines(end,&editor.endLines,&editor.numEndLines);
+
+
+    for (int i = 0; i < editor.numEndLines; i++)
+    {
+        printf("%s\n",editor.endLines[i].line);
+    }
+    printf("%i\n",editor.numSetupLines);
+
     free(buff);
+    free(end);
+
 
     RunAllLines();
 
-    for (int i = 0; i < editor.numLines; i++)
+    for (int i = 0; i < editor.numSetupLines; i++)
     {
-        if (editor.lines[i].associated)
+        if (editor.setupLines[i].associated)
         {  
-            UpdatePosition(editor.lines[i].associated,4,5);
+            //UpdatePosition(editor.setupLines[i].associated,4,5);
         }
     }
+    ChangeButtonText(GetButtonB(&editor.editorUI.saveLoad,"Location"),path);
+    //ChangeButtonText(GetButtonB(&editor.editorUI.saveLoad,"NextMap"),);
+
+    if (editor.currentPath)
+        free(editor.currentPath);
+    editor.currentPath = calloc(strlen(path)+1,sizeof(char));
+
+    //get the folder we're in
+    bool normalChar = false;
+    for (int i = strlen(path)-1; i >= 0; i--)
+    {
+        if (isalnum(path[i]))
+        {
+            normalChar = true;
+        }
+
+        if (normalChar && (path[i] == '/' || path[i] == '\\'))
+        {
+            path[i+1] = '\0';
+            path[i] = '/';
+            break;
+        }
+    }
+
+    SetUITextStr(GetUIText(&editor.editorUI.fileSelector,"Path"),path);
+    strcpy(editor.currentPath,path);
+}   
+
+void PopulateFileList(Panel* p, char* path, int numPostfixes, ...)
+{
+    va_list argp;
+    va_start(argp, numPostfixes);
+    char** postfixes = calloc(numPostfixes,sizeof(char*));
+    for (int i = 0; i < numPostfixes; i++)
+    {
+        char* str = va_arg(argp, char*);
+
+        postfixes[i] = calloc(strlen(str)+1,sizeof(char));
+        strcpy(postfixes[i],str);
+    }
+
+    DIR *d;
+    struct dirent *dir;
+    d = opendir(path);
+
+    InitFileSelector(p);
+    int x = 40; int y = 40; int w = _SCREEN_SIZE-70; int h = 20;
+    if (d) {
+        while ((dir = readdir(d)) != NULL) {
+            if (strcmp(dir->d_name,".") != 0  && strcmp(dir->d_name,".DS_Store")!=0 && strlen(dir->d_name) > 0)
+            {
+                AddButton(p,"Path",dir->d_name,x,y,w,h,true);
+                y += h;
+            }
+
+        }
+    }
+
+    for (int i = 0; i < numPostfixes; i++)
+    {
+        free(postfixes[i]);
+    }
+    free(postfixes);
+
+
+
+}
+void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState)
+{
+    if (MouseClickedThisFrame(&mouseState, &mouseStateLastFrame))
+    {
+        editor.heldObject = GetClicked(mouseState.worldX,mouseState.worldY);
+    }
+
+    if (editor.heldObject)
+    {
+        UpdatePosition(editor.heldObject,mouseState.worldX,mouseState.worldY);
+    }
+
+    if (!(mouseState.mouse.buttons & 1))
+        editor.heldObject = NULL;
+
+    UpdatePanel(&editor.editorUI.saveLoad,&mouseState,&mouseStateLastFrame,keyState);
+    UpdatePanel(&editor.editorUI.fileSelector,&mouseState,&mouseStateLastFrame,keyState);
+
+    if (GetButton(&editor.editorUI.saveLoad,"Location"))
+    {
+        editor.editorUI.showFileSelector = true;
+        editor.editorUI.selectorPicked = EDITOR_FILE_CURRENT_MAP;
+
+        PopulateFileList(&editor.editorUI.fileSelector,editor.currentPath,1,".lua");
+
+    }
+    if (GetButton(&editor.editorUI.saveLoad,"NextMap"))
+    {
+        editor.editorUI.showFileSelector = true;
+        editor.editorUI.selectorPicked = EDITOR_FILE_NEXT_MAP;
+
+        PopulateFileList(&editor.editorUI.fileSelector,editor.currentPath,1,".lua");
+
+    }
+    if (GetButton(&editor.editorUI.fileSelector,"Back"))
+    {
+        editor.editorUI.showFileSelector = false;
+    }
+
+}
+void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
+{
+    DrawPanel(&editor.editorUI.saveLoad, &mouseState, 1);
+
+    if (editor.editorUI.showFileSelector)
+    {
+        DrawPanel(&editor.editorUI.fileSelector,&mouseState,1);
+    }
+}
+void InitFileSelector(Panel* p)
+{
+    ClearPanelElements(p);
+    AddButton(p,"Back","Back",0,0,35,10,true);
+    AddText(p,40,0,"Path","Path");
+
+}
+void InitEditorUI()
+{   
+    editor.editorUI.saveLoad = CreatePanel(1,UI_START_Y,_SCREEN_SIZE-1,_SCREEN_SIZE-UI_START_Y,1,true);
+    UIElement* loc = AddButton(&editor.editorUI.saveLoad,"Location","Location",1,1,_SCREEN_SIZE-2,13,true);
+    AddButton(&editor.editorUI.saveLoad,"NextMap","NextMap",1,1+loc->h+2,_SCREEN_SIZE-2,13,true);
+
+    editor.editorUI.fileSelector = CreatePanel(10,10,_SCREEN_SIZE-20,UI_START_Y-20,1,true);
+    InitFileSelector(&editor.editorUI.fileSelector);
 }   

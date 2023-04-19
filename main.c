@@ -70,6 +70,7 @@ void init()
     InitPlayers();
     InitMaps();
     InitAnimationEffects();
+    InitEditorUI();
 
     //memset(&gameOptions,0,sizeof(GameOptions));
 
@@ -121,7 +122,10 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
         if (IsBindDownThisFrame(keyState,keyStateLastFrame,currSettings.keymap.key_Console))
             ToggleConsole();
     }    
-
+    if (gameState == GAMESTATE_IN_EDITOR)
+    {
+        UpdateEditor(dt,*mouseState,*mouseStateLastFrame,keyState);
+    }
     if (!GameIsPaused())
     {
 
@@ -164,6 +168,12 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
     ProcessAnimationEffects(dt);
     UpdateWidgets(dt);
     UpdateChatbox(dt);
+
+
+    if (al_key_down(keyState,ALLEGRO_KEY_LCTRL) && al_key_down(keyState,ALLEGRO_KEY_M))
+    {
+        SetGameStateToInEditor();   
+    }
 }
 float aefesfsd = 0;
 
@@ -185,7 +195,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
 
     DrawSpriteDecorations(BEFORE_WORLD);
-    if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS || gameState == GAMESTATE_IN_CHATBOX)
+    if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS || gameState == GAMESTATE_IN_CHATBOX || gameState == GAMESTATE_IN_EDITOR)
         DrawMap(currMap,false);
     DrawSpriteDecorations(AFTER_WORLD);
     DrawMapHighlights();
@@ -395,7 +405,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
 
     DrawBufferedStrings();
-    if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS)
+    if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS || gameState == GAMESTATE_IN_EDITOR)
     {
 
         DrawDamageNumbers();
@@ -501,6 +511,12 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     if (gameState != GAMESTATE_MAIN_MENU)
          DrawUI(keyState, keyStateLastFrame, mouseState);
+
+    if (gameState == GAMESTATE_IN_EDITOR)
+    {
+        DrawEditorUI(dt,*mouseState,*mouseStateLastFrame);
+    }
+
     if (gameState == GAMESTATE_IN_SHOP)
     {
         DrawShop(dt,*mouseState,*mouseStateLastFrame);
@@ -608,7 +624,7 @@ int main(int argc, char* args[])
 
     fflush(stdout);
 
-    EditorSetMap("assets/encounters/0/map_1.lua");
+    //EditorSetMap("assets/encounters/0/map_1.lua");
 
     //printf("%lu\n",sizeof(Attack));
 
