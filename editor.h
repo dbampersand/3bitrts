@@ -21,10 +21,10 @@ typedef struct EditorLine
 
 typedef struct EditorUI
 {
-    Panel unitSelector;
     Panel saveLoad;
 
     Panel fileSelector;
+    Panel unitSelector;
 
     bool showFileSelector;
     EDITOR_FILE_SELECT selectorPicked;
@@ -59,3 +59,4 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
 void EditorSetMap(char* path);
 void InitEditorUI();
 void InitFileSelector();
+void PopulateUnitSelector(Panel* p);

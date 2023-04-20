@@ -29,6 +29,8 @@
 #include "effect.h"
 #include "pathfind.h"
 #include "replay.h"
+#include "editor.h"
+
  GameObject* objects = NULL;
  int objectsAllocated = 0; 
 
@@ -1538,6 +1540,7 @@ void LoadPrefabs(const char* dirPath)
 
     }
     qsort(prefabs,numPrefabs,sizeof(GameObject*),SortPrefabs);
+
 }
 bool IsSelected(GameObject* g)
 {

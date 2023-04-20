@@ -1869,11 +1869,15 @@ void UpdateScrollbar(Panel* p, MouseState* mouseState,MouseState* mouseStateLast
 {
     int w = SCROLLBARW;
     Rect scrollbar = (Rect){p->x+p->w-w,p->y,w,p->h};
-    if (mouseState->mouse.z != mouseStateLastFrame->mouse.z)
+
+    if (PointInRect(mouseState->screenX,mouseState->screenY,(Rect){p->x,p->y,p->w,p->h}))
     {
-        float v = mouseState->mouse.z - mouseStateLastFrame->mouse.z;
-        p->scrollPercent -= v/6.0f;
-        p->scrollPercent = clamp(p->scrollPercent,0,1);
+        if (mouseState->mouse.z != mouseStateLastFrame->mouse.z)
+        {
+            float v = mouseState->mouse.z - mouseStateLastFrame->mouse.z;
+            p->scrollPercent -= v/6.0f;
+            p->scrollPercent = clamp(p->scrollPercent,0,1);
+        }
     }
 
     if (mouseState->mouse.buttons & 1 && !(mouseStateLastFrame->mouse.buttons & 1))
@@ -1942,7 +1946,9 @@ void DeleteUIElement(UIElement* u)
     if (u->elementType == ELEMENT_BUTTON)
     {
         Button* b = (Button*)u->data;
-        if (b->description) free(b->description);
+        if (b->description) 
+            free(b->description);
+        b->description = NULL;
     }
     if (u->elementType == ELEMENT_SLIDER)
     {
@@ -1977,6 +1983,9 @@ void DeleteUIElement(UIElement* u)
     if (u->data)
         free(u->data);
 
+    u->name = NULL;
+    u->data = NULL;
+
 }
 void ClearPanelElements(Panel* p)
 {
@@ -1987,6 +1996,7 @@ void ClearPanelElements(Panel* p)
     free(p->elements);
     p->elements = NULL;
     p->numElements = 0;
+    p->numElementsAllocated = 0;
 }
 void GenerateFileListButtons(char* path, Panel* p)
 {

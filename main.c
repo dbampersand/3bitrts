@@ -89,6 +89,9 @@ void init()
     SetMap(mNull);
 
     LoadPrefabs("assets/friendly");
+    LoadPrefabs("assets/enemies");
+    PopulateUnitSelector(&editor.editorUI.unitSelector);
+
     InitPurchasingUnitsUI();
 
     toSpawn = NULL;
