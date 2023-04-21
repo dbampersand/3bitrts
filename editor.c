@@ -11,7 +11,149 @@
 
 Editor editor = {0};
 
+void InsertStr(char** start, char** location, char* str)
+{
+    if (!str)
+        return;
+     char* copy = calloc(strlen(*start)+1,sizeof(char));
+    strcpy(copy,*start);
 
+    size_t offset = *location - *start;
+
+    int lenBefore = strlen(*start);
+    int totalLen = strlen(*start) + strlen(str);
+    *start = realloc(*start, (totalLen +1) * sizeof(char));
+
+    memset(*start, 0, totalLen + 1);
+
+    strncpy(*start,copy,offset);
+    strcat(*start,str);
+    strcat(*start,copy+offset);
+
+    free(copy);
+
+    *location = &(*start)[offset];
+
+}
+void DeleteStr(char** start, char** location, int numChars)
+{
+    int offset = *location - *start;
+
+    if (numChars >= strlen(*start))
+    {
+        (*start)[0] = '\0';
+    }
+    else
+    {
+        int startLen = strlen(*start);
+        for (int i = offset; i < startLen - numChars; i++)
+        {
+            (*start)[i] = (*start)[i+numChars];
+        }
+        int j = (startLen-numChars) - 1;
+        (*start)[(startLen-numChars)] = '\0';
+    }
+    *start = realloc(*start,(strlen(*start) + 1) * sizeof(char));
+    *location = &(*start)[offset];
+}
+
+
+char* GetFunctionEndPoint(char* buffer)
+{
+    char* c = buffer;
+
+    bool foundFunc = false;
+
+    while (*(c++) != '\0')
+    {
+        foundFunc = false;
+        if (strncmp(c,"function ",strlen("function ")) == 0)
+        {
+            foundFunc = true;
+            char* c2 = c;
+            while ((c2--) != buffer && *c2 != '\n')
+            {
+                if (strncmp(c2,"--",strlen("--")) == 0)
+                {
+                    foundFunc = false;
+                    break;
+                }
+            }
+        }
+        if (foundFunc)
+            break;    
+    }
+    if (foundFunc)
+    {
+        while (strncmp((c--),"end",strlen("end")) != 0)
+        {
+
+        }
+    }
+
+    return c+1;
+
+
+}
+
+char* GetFunctionStartPosition(char* buffer, char* funcName)
+{
+    char* c = buffer;
+    char* full = c + strlen(funcName);
+
+    char* start;
+
+    if (c == NULL) 
+        return false;
+
+    bool funcExists = false;
+    while (c < buffer + strlen(buffer))
+    {
+        int dfsf = strcmp(c,funcName);
+        if (strncmp(c,funcName,strlen(funcName)) == 0)
+        {
+            char* c2 = c;
+            start = c2;
+            while (*(start++) != ')')
+            {
+
+            }
+            bool foundFunc = false;
+            bool isComment = false;
+            while (c2-- > buffer)
+            {
+                if (strncmp(c2,"function ",strlen("function ")) == 0)
+                {
+                    foundFunc = true;
+                }
+                if (*c2 == '\n')   
+                    break;
+                if (strcmp(c2,"--") == 0)
+                    isComment = true;
+
+            }
+            if (foundFunc && !isComment)
+            {
+                funcExists = true;
+                break;
+            }
+        }
+        c++;
+    }
+    c += strlen(funcName);
+    while (*(c++) != ')' && *c != '\0')
+    {
+
+    }
+  
+
+
+    if (funcExists)
+        return c;
+    else
+        return NULL;
+
+}   
 //extract function setup so we can run that one line at a time and create Line objects from that
 char* ExtractFunction(char* funcName, char* buffer)
 {
@@ -65,7 +207,6 @@ char* ExtractFunction(char* funcName, char* buffer)
 
     for (char* c2 = start; c2 < buffer + strlen(buffer); c2++)
     {
-        int dfsf = strncmp(c2+1,"function ",strlen("function "));
 
         if (isspace(*c2) && strncmp(c2+1,"function ",strlen("function ")) == 0)
         {
@@ -74,10 +215,10 @@ char* ExtractFunction(char* funcName, char* buffer)
         }
     }
     //remove the 'end' at the ending part of functions
-    while (*(end--) != 'd')
+    while (*(end--) != 'e')
     {
 
-    } end--;
+    }end++;
     int numChars = end - start;
     
     char* new = calloc((end-start)+1,sizeof(char));
@@ -212,13 +353,11 @@ void UpdatePosition(GameObject* g, float x, float y)
 }
 void RunAllLines()
 {
-    printf("LINE START\n\n");
     for (int i = 0; i < editor.numSetupLines; i++)
     {
         int numObjsBefore = numActiveObjects;
 
         char* line = editor.setupLines[i].line;
-        printf("%s\n",line);
         if (editor.setupLines[i].line)
             luaL_dostring(luaState,editor.setupLines[i].line);
         if (numActiveObjects > numObjsBefore)
@@ -273,20 +412,21 @@ void SplitLines(char* buffer, EditorLine** lines, int* lineCount)
             openBrackets = 0;
 
         
-        if ((isspace(*c) ||  *c == '\n') && openBrackets == 0)
+        if ((isspace(*c) ||  *c == '\n' || c == end-1) && openBrackets == 0)
         {
-            if (lineStart == c)
-                continue;
             numLines++;
             if (!*lines)
                 *lines = calloc(1,sizeof(EditorLine));
             
+            char after[2];
+            after[0] = *c;
+            after[1] = '\0';
+
+
             *c = '\0';
             
             char* bufferLine = lineStart;
             lineStart = c + 1;
-
-            printf("%s\n",lineStart);
 
             *lines = realloc(*lines,numLines * sizeof(EditorLine));
 
@@ -294,8 +434,10 @@ void SplitLines(char* buffer, EditorLine** lines, int* lineCount)
 
             memset(&line[numLines-1],0,sizeof(EditorLine));
 
-            line[numLines-1].line = calloc(strlen(bufferLine)+1,sizeof(char));
-            strcpy(line[numLines-1].line,bufferLine);
+            line[numLines-1].line = calloc(strlen(bufferLine)+2,sizeof(char));
+
+            strcat(line[numLines-1].line,bufferLine);
+            strcat(line[numLines-1].line,after);
             
             line[numLines-1].lineNumber = numLines-1; 
 
@@ -339,9 +481,21 @@ void EditorSetMap(char* path)
     char* buff = ExtractFunction("setup",m->lua_buffer.buffer);
     char* end = ExtractFunction("mapend",m->lua_buffer.buffer);
 
+    char* s = GetFunctionStartPosition(m->lua_buffer.buffer,"setup");
+    char* e = GetFunctionEndPoint(s);
+
+    int numChars = e - s;
+
+    char* str = calloc(numChars+1,sizeof(char));
+    strncpy(str,s,numChars);
 
     SplitLines(buff,&editor.setupLines,&editor.numSetupLines);
     SplitLines(end,&editor.endLines,&editor.numEndLines);
+
+    for (int i = 0; i < editor.numSetupLines; i++)
+    {
+        printf("%s\n",editor.setupLines[i].line);
+    }
 
 
     free(buff);
@@ -490,7 +644,27 @@ void AddObjLineToFile(GameObject* g, float x, float y, OBJ_FRIENDLINESS ownedBy,
     free(line);
 
 }
+void SaveMap()
+{
+    char* s = GetFunctionStartPosition(currMap->lua_buffer.buffer,"setup");
+    char* e = GetFunctionEndPoint(s);
 
+    DeleteStr(&currMap->lua_buffer.buffer, &s, (e-s));
+    
+    
+
+    s = GetFunctionStartPosition(currMap->lua_buffer.buffer,"setup");
+
+    for (int i = editor.numSetupLines-1; i >= 0; i--)
+    {
+        InsertStr(&currMap->lua_buffer.buffer, &s, editor.setupLines[i].line);
+    }
+
+    printf("START\n %s\n END\n",currMap->lua_buffer.buffer);
+
+
+
+}
 void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState)
 {
     if (MouseClickedThisFrame(&mouseState, &mouseStateLastFrame))
@@ -510,6 +684,12 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
     UpdatePanel(&editor.editorUI.fileSelector,&mouseState,&mouseStateLastFrame,keyState);
     UpdatePanel(&editor.editorUI.unitSelector,&mouseState,&mouseStateLastFrame,keyState);
 
+    UpdateButton(editor.editorUI.save.x,editor.editorUI.save.y,&editor.editorUI.save,mouseState,mouseStateLastFrame);
+
+    if (GetButtonIsClicked(&editor.editorUI.save))
+    {
+        SaveMap();
+    }
     if (GetButton(&editor.editorUI.saveLoad,"Location"))
     {
         editor.editorUI.showFileSelector = true;
@@ -647,7 +827,7 @@ void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFram
     }
     DrawPanel(&editor.editorUI.unitSelector,&mouseState,1);
 
-
+    DrawUIElement(&editor.editorUI.save,editor.editorUI.save.x,editor.editorUI.save.y,&mouseState,COLOR_BG,COLOR_FRIENDLY);
 }
 void InitFileSelector(Panel* p)
 {
@@ -679,4 +859,18 @@ void InitEditorUI()
     int unitSelectorH = 80;
 
     editor.editorUI.unitSelector = CreatePanel(_SCREEN_SIZE-1-unitSelectorW,20,unitSelectorW,unitSelectorH,1,true);
+
+    InitButton(&editor.editorUI.save,"Save","Save",10,10,40,20,0);
+
+    //InsertStr(&str,str,"aaaa");
+    char* str = calloc(10,sizeof(char));
+    strcpy(str,"123456789");
+    char* str2 = "123456789";
+
+    InsertStr(&str,&str,str2);
+
+    DeleteStr(&str,&str,9);
+    printf("%s\n",str);
+
+    free(str);
 }   

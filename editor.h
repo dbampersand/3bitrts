@@ -28,6 +28,8 @@ typedef struct EditorUI
 
     bool showFileSelector;
     EDITOR_FILE_SELECT selectorPicked;
+
+    UIElement save;
 } EditorUI;
 
 
@@ -48,6 +50,8 @@ typedef struct Editor
 
     GameObject* heldObject;
     EditorUI editorUI;
+
+
 
 } Editor;   
 
