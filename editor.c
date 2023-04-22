@@ -60,11 +60,13 @@ void DeleteStr(char** start, char** location, int numChars)
 
 char* GetFunctionEndPoint(char* buffer)
 {
+    if (!buffer)
+        return NULL;
     char* c = buffer;
 
     bool foundFunc = false;
 
-    while (*(c++) != '\0')
+    while (*(c++))
     {
         foundFunc = false;
         if (strncmp(c,"function ",strlen("function ")) == 0)
@@ -80,6 +82,8 @@ char* GetFunctionEndPoint(char* buffer)
                 }
             }
         }
+        if (*c == '\0')
+            foundFunc = true;
         if (foundFunc)
             break;    
     }
@@ -90,6 +94,10 @@ char* GetFunctionEndPoint(char* buffer)
 
         }
     }
+    else
+    {
+        return NULL;
+    }
 
     return c+1;
 
@@ -98,6 +106,8 @@ char* GetFunctionEndPoint(char* buffer)
 
 char* GetFunctionStartPosition(char* buffer, char* funcName)
 {
+    if (!buffer)
+        return NULL;
     char* c = buffer;
     char* full = c + strlen(funcName);
 
@@ -140,6 +150,9 @@ char* GetFunctionStartPosition(char* buffer, char* funcName)
         }
         c++;
     }
+    if (!funcExists)
+        return NULL;
+
     c += strlen(funcName);
     while (*(c++) != ')' && *c != '\0')
     {
@@ -148,10 +161,7 @@ char* GetFunctionStartPosition(char* buffer, char* funcName)
   
 
 
-    if (funcExists)
-        return c;
-    else
-        return NULL;
+    return c;
 
 }   
 //extract function setup so we can run that one line at a time and create Line objects from that
@@ -280,9 +290,38 @@ char* GetPositionOfArgument(char* str, char* functionToFind, int argumentToGet)
        
     if (argumentToGet == 1)
     {
-        position = strstr(position,"(")+1;
+        //position = strstr(position,"(")+1;
     }
     return position;
+}
+void UpdateArgumentStr(char** full, char* position, char* str)
+{
+    int numToMove = 0;
+    int numQuotes = 0;
+    for (int i = 1; i < strlen(position); i++)
+    {
+        if (position[i] == '"' && position[i-1] != '\\')
+            numQuotes++;
+        
+        numToMove++;
+
+        if (numQuotes == 2)
+            break;
+    }
+    DeleteStr(full,&position,numToMove-1);
+
+    char* copy = calloc(strlen(str)+3,sizeof(char));
+    strcat(copy,"\"");
+    strcat(copy,str);
+    strcat(copy,"\"");
+
+    InsertStr(full,&position,copy);
+     
+    free(copy);
+    printf("STR: %s\n",*full);
+
+
+
 }
 void UpdateArgumentFloat(char** full, char* position, float f)
 {
@@ -414,6 +453,15 @@ void SplitLines(char* buffer, EditorLine** lines, int* lineCount)
         
         if ((isspace(*c) ||  *c == '\n' || c == end-1) && openBrackets == 0)
         {
+            char* c2 = c;
+            bool isComment = false;
+            while (c2-- != buffer && (*c2 != '\0' || (*c2) != '\n'))
+            {
+                if (strncmp(c2,"--",strlen("--")))
+                {
+                    isComment = true;
+                }
+            }
             numLines++;
             if (!*lines)
                 *lines = calloc(1,sizeof(EditorLine));
@@ -440,6 +488,7 @@ void SplitLines(char* buffer, EditorLine** lines, int* lineCount)
             strcat(line[numLines-1].line,after);
             
             line[numLines-1].lineNumber = numLines-1; 
+            line->lineIsComment = isComment;
 
         }
 
@@ -492,10 +541,6 @@ void EditorSetMap(char* path)
     SplitLines(buff,&editor.setupLines,&editor.numSetupLines);
     SplitLines(end,&editor.endLines,&editor.numEndLines);
 
-    for (int i = 0; i < editor.numSetupLines; i++)
-    {
-        printf("%s\n",editor.setupLines[i].line);
-    }
 
 
     free(buff);
@@ -538,7 +583,6 @@ void EditorSetMap(char* path)
     SetUITextStr(GetUIText(&editor.editorUI.fileSelector,"Path"),path);
     strcpy(editor.currentPath,path);
 
-    printf("%i\n",numActiveObjects);
 }   
 
 void PopulateFileList(Panel* p, char* path, int numPostfixes, ...)
@@ -635,7 +679,6 @@ void AddObjLineToFile(GameObject* g, float x, float y, OBJ_FRIENDLINESS ownedBy,
     line = calloc(bufferSize+1,sizeof(char));
     sprintf(line,fmt,g->path,x,y,friendliness,completionPercent);
 
-    printf("LINE: %s\n",line);
 
     EditorLine* e = AddEditorLine(&editor.setupLines,&editor.numSetupLines,line);
     
@@ -644,26 +687,57 @@ void AddObjLineToFile(GameObject* g, float x, float y, OBJ_FRIENDLINESS ownedBy,
     free(line);
 
 }
-void SaveMap()
+void SaveFunction(char** buffer, char* funcName, EditorLine* lines, int numLines)
 {
-    char* s = GetFunctionStartPosition(currMap->lua_buffer.buffer,"setup");
+    char* s = GetFunctionStartPosition(*buffer,funcName);
     char* e = GetFunctionEndPoint(s);
 
-    DeleteStr(&currMap->lua_buffer.buffer, &s, (e-s));
+    if (s)
+        DeleteStr(buffer, &s, (e-s));
     
     
 
-    s = GetFunctionStartPosition(currMap->lua_buffer.buffer,"setup");
 
-    for (int i = editor.numSetupLines-1; i >= 0; i--)
+    if (!s)
     {
-        InsertStr(&currMap->lua_buffer.buffer, &s, editor.setupLines[i].line);
+        size_t len = snprintf(NULL,0,"\nfunction %s()\n",funcName);
+
+        char* start = calloc(len+1,sizeof(char));
+        sprintf(start,"\nfunction %s()\n",funcName);
+
+        char* end = "end\n";
+
+        size_t totalLength = strlen(*buffer) + strlen(start) + strlen(end);
+        *buffer = realloc(*buffer,(totalLength + 1) * sizeof(char));
+
+        memset((*buffer) + strlen(*buffer), 0, (strlen(start) + strlen(end) + 1) * sizeof(char));
+        
+        strcat(*buffer,start);
+        strcat(*buffer,end);
+
+        free(start);
+    }
+    s = GetFunctionStartPosition(*buffer,funcName);
+
+    for (int i = numLines-1; i >= 0; i--)
+    {
+        InsertStr(buffer, &s, lines[i].line);
+    }
+}
+void SaveMap()
+{
+    SaveFunction(&currMap->lua_buffer.buffer,"setup",editor.setupLines,editor.numSetupLines);
+    SaveFunction(&currMap->lua_buffer.buffer,"mapend",editor.endLines,editor.numEndLines);
+
+    ALLEGRO_FILE* file = al_fopen(currMap->path, "w");
+    if (file == NULL)
+    {
+        printf("Couldn't save file\n");   
+        return;
     }
 
-    printf("START\n %s\n END\n",currMap->lua_buffer.buffer);
-
-
-
+    al_fwrite(file,currMap->lua_buffer.buffer,strlen(currMap->lua_buffer.buffer) * sizeof(char));
+    al_fclose(file);
 }
 void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState)
 {
@@ -777,6 +851,28 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                                             strcpy(editor.nextMap,newPath);
                                             ChangeButtonText(GetButtonB(&editor.editorUI.saveLoad,"NextMap"),editor.nextMap);
                                             editor.editorUI.showFileSelector = false;
+
+
+                                            bool foundFunc = false;
+                                            for (int i = 0; i < editor.numEndLines; i++)
+                                            {
+                                                if (!editor.endLines[i].lineIsComment && strstr(editor.endLines[i].line,"ChangeMap("))
+                                                {
+                                                    foundFunc = true;
+
+                                                    char* c = GetPositionOfArgument(editor.endLines[i].line,"ChangeMap",1);
+                                                    UpdateArgumentStr(&editor.endLines[i].line,c,newPath);
+
+                                                }
+                                            }
+                                            if (!foundFunc)
+                                            {
+                                                char* str = calloc(strlen(newPath) + strlen("   ChangeMap(\"\")\n") + 1,sizeof(char));
+                                                sprintf(str,"   ChangeMap(\"%s\")\n",newPath);
+                                                AddEditorLine(&editor.endLines, &editor.numEndLines, str);
+
+                                                free(str);
+                                            }
                                         }
 
                                         break;
@@ -870,7 +966,6 @@ void InitEditorUI()
     InsertStr(&str,&str,str2);
 
     DeleteStr(&str,&str,9);
-    printf("%s\n",str);
 
     free(str);
 }   

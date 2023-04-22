@@ -17,6 +17,7 @@ typedef struct EditorLine
     char* line;
     int lineNumber;
     GameObject* associated;
+    bool lineIsComment;
 } EditorLine;
 
 typedef struct EditorUI
@@ -30,6 +31,7 @@ typedef struct EditorUI
     EDITOR_FILE_SELECT selectorPicked;
 
     UIElement save;
+
 } EditorUI;
 
 
