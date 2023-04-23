@@ -294,15 +294,30 @@ char* GetPositionOfArgument(char* str, char* functionToFind, int argumentToGet)
     }
     return position;
 }
-void UpdateArgumentStr(char** full, char* position, char* str)
+void UpdateArgumentStr(char** full, char* position, char* str, bool addQuotes)
 {
     int numToMove = 0;
     int numQuotes = 0;
+
+    bool numOpenBrackets = 0;
     for (int i = 1; i < strlen(position); i++)
     {
+        char* c = position + i;
         if (position[i] == '"' && position[i-1] != '\\')
             numQuotes++;
-        
+        if (position[i] == ',' && numQuotes == 0)
+        {
+            //no quotes so move it along 2 to account for no ""
+            numToMove += 2;
+            break;
+        }
+        if (position[i] == ')' && numOpenBrackets==0)
+            break;
+
+        if (position[i] == '(')
+            numOpenBrackets++;
+        if (position[i] == ')')
+            numOpenBrackets--;
         numToMove++;
 
         if (numQuotes == 2)
@@ -311,9 +326,11 @@ void UpdateArgumentStr(char** full, char* position, char* str)
     DeleteStr(full,&position,numToMove-1);
 
     char* copy = calloc(strlen(str)+3,sizeof(char));
-    strcat(copy,"\"");
+    if (addQuotes)
+        strcat(copy,"\"");
     strcat(copy,str);
-    strcat(copy,"\"");
+    if (addQuotes)
+        strcat(copy,"\"");
 
     InsertStr(full,&position,copy);
      
@@ -744,19 +761,33 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
     if (MouseClickedThisFrame(&mouseState, &mouseStateLastFrame))
     {
         editor.heldObject = GetClicked(mouseState.worldX,mouseState.worldY);
+        if (editor.heldObject)
+        {
+            editor.highlightedObject = editor.heldObject;  
+            editor.editorUI.heldObjectIsDecor = ObjIsDecoration(editor.heldObject);
+            ((Pulldown*)(GetUIElement(&editor.editorUI.unitOptions,"Owner")->data))->selectedIndex = GetPlayerOwnedBy_IncludeDecor(editor.heldObject);
+        } 
     }
-
     if (editor.heldObject)
     {
         UpdatePosition(editor.heldObject,mouseState.worldX,mouseState.worldY);
+
+
     }
 
     if (!(mouseState.mouse.buttons & 1))
         editor.heldObject = NULL;
 
+    if (mouseState.mouse.buttons & 2)
+    {
+        editor.heldObject = NULL;
+        editor.highlightedObject = NULL;   
+    }
+
     UpdatePanel(&editor.editorUI.saveLoad,&mouseState,&mouseStateLastFrame,keyState);
     UpdatePanel(&editor.editorUI.fileSelector,&mouseState,&mouseStateLastFrame,keyState);
     UpdatePanel(&editor.editorUI.unitSelector,&mouseState,&mouseStateLastFrame,keyState);
+    UpdatePanel(&editor.editorUI.unitOptions,&mouseState,&mouseStateLastFrame,keyState);
 
     UpdateButton(editor.editorUI.save.x,editor.editorUI.save.y,&editor.editorUI.save,mouseState,mouseStateLastFrame);
 
@@ -861,7 +892,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                                                     foundFunc = true;
 
                                                     char* c = GetPositionOfArgument(editor.endLines[i].line,"ChangeMap",1);
-                                                    UpdateArgumentStr(&editor.endLines[i].line,c,newPath);
+                                                    UpdateArgumentStr(&editor.endLines[i].line,c,newPath,true);
 
                                                 }
                                             }
@@ -912,6 +943,44 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         }
 
     }
+
+    if (editor.highlightedObject)
+    {
+        int ownedBefore = GetPlayerOwnedBy_IncludeDecor(editor.highlightedObject);
+        int ownedAfter = ((Pulldown*)(GetUIElement(&editor.editorUI.unitOptions,"Owner")->data))->selectedIndex;
+        if (ownedBefore != ownedAfter)
+        {
+            char* str;
+            if (ownedAfter == TYPE_FRIENDLY)
+                str = "TYPE_FRIENDLY";
+            if (ownedAfter == TYPE_ENEMY)
+                str = "TYPE_ENEMY";
+
+            for (int i = 0; i < editor.numSetupLines; i++)
+            {
+                if (editor.setupLines[i].associated == editor.highlightedObject)
+                {
+                    char* c = GetPositionOfArgument(editor.setupLines[i].line,"CreateObject",4);
+                    UpdateArgumentStr(&editor.setupLines[i].line,c,str,false);
+                }
+
+            }
+
+        }
+        SetOwnedBy(editor.highlightedObject,ownedAfter);
+        SetDecoration(editor.highlightedObject,editor.editorUI.heldObjectIsDecor);
+
+        ((Pulldown*)(GetUIElement(&editor.editorUI.unitOptions,"Owner")->data))->selectedIndex = GetPlayerOwnedBy_IncludeDecor(editor.highlightedObject);
+
+    }
+
+    int owner = ((Pulldown*)(GetUIElement(&editor.editorUI.unitOptions,"Owner")->data))->selectedIndex;
+    if (editor.highlightedObject)
+    {
+        SetOwnedBy(editor.highlightedObject,owner);
+        SetDecoration(editor.highlightedObject,editor.editorUI.heldObjectIsDecor);
+    }
+
 }
 void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 {
@@ -922,6 +991,9 @@ void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFram
         DrawPanel(&editor.editorUI.fileSelector,&mouseState,1);
     }
     DrawPanel(&editor.editorUI.unitSelector,&mouseState,1);
+    if (editor.highlightedObject)
+        DrawPanel(&editor.editorUI.unitOptions,&mouseState,1);
+
 
     DrawUIElement(&editor.editorUI.save,editor.editorUI.save.x,editor.editorUI.save.y,&mouseState,COLOR_BG,COLOR_FRIENDLY);
 }
@@ -956,16 +1028,9 @@ void InitEditorUI()
 
     editor.editorUI.unitSelector = CreatePanel(_SCREEN_SIZE-1-unitSelectorW,20,unitSelectorW,unitSelectorH,1,true);
 
-    InitButton(&editor.editorUI.save,"Save","Save",10,10,40,20,0);
+    UIElement* save = InitButton(&editor.editorUI.save,"Save","Save",10,10,40,20,0);
 
-    //InsertStr(&str,str,"aaaa");
-    char* str = calloc(10,sizeof(char));
-    strcpy(str,"123456789");
-    char* str2 = "123456789";
-
-    InsertStr(&str,&str,str2);
-
-    DeleteStr(&str,&str,9);
-
-    free(str);
+    editor.editorUI.unitOptions = CreatePanel(save->x,save->y+save->h+10,80,80,1,true);
+    UIElement* owner = AddPulldownMenu(&editor.editorUI.unitOptions,1,1,editor.editorUI.unitOptions.w-2,20,"Owner",1,2,"Friendly","Enemy");
+    AddCheckbox(&editor.editorUI.unitOptions,owner->x, owner->y + owner->h + 10,15,15,"IsDecor",&editor.editorUI.heldObjectIsDecor);
 }   

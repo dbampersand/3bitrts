@@ -319,8 +319,10 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
 void ChangeUIPanel(Panel* to);
 bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, MouseState* mouse);
-void InitButton(UIElement* u, char* name, char* description, int x, int y, int w, int h, int sprite);
+UIElement* InitButton(UIElement* u, char* name, char* description, int x, int y, int w, int h, int sprite);
 UIElement* AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h, bool shouldDrawLine);
+UIElement* AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int startIndex, int numElements, ...);
+UIElement* AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool* activated);
 void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, int h, int maxchars, KEY* mapTo);
 bool GetButtonIsClicked(UIElement* u);
 bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c,MouseState* mouseState);

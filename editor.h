@@ -27,10 +27,14 @@ typedef struct EditorUI
     Panel fileSelector;
     Panel unitSelector;
 
+    Panel unitOptions;
+
     bool showFileSelector;
     EDITOR_FILE_SELECT selectorPicked;
 
     UIElement save;
+
+    bool heldObjectIsDecor;
 
 } EditorUI;
 
@@ -51,6 +55,8 @@ typedef struct Editor
     Map* map;
 
     GameObject* heldObject;
+    GameObject* highlightedObject;
+    
     EditorUI editorUI;
 
 

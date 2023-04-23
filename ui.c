@@ -1551,7 +1551,7 @@ void TabGroup(int numPanels, ...)
     free(list);
     va_end(argp);
 }
-void InitButton(UIElement* u, char* name, char* description, int x, int y, int w, int h, int sprite)
+UIElement* InitButton(UIElement* u, char* name, char* description, int x, int y, int w, int h, int sprite)
 {
     Button* b = calloc(1,sizeof(Button));
 
@@ -1572,6 +1572,8 @@ void InitButton(UIElement* u, char* name, char* description, int x, int y, int w
     u->sound_clickUp_Index = ui.uiClickedUpSound_Index;
     u->enabled = true;
     u->bgColor = COLOR_BG;
+
+    return u;
 
 }
 void ChangeButtonText(Button* b, char* newstr)
@@ -1701,7 +1703,7 @@ void DrawCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive,MouseSt
         al_draw_rectangle(x+2,y+2,x+w-2,y+h-2,GetColor(col,0),1);
     }
 }
-void AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool* activated)
+UIElement* AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool* activated)
 {
     Checkbox* c = calloc(1,sizeof(Checkbox));
     UIElement u = {0};
@@ -1719,7 +1721,9 @@ void AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool* activat
     u.enabled = true;
     u.bgColor = COLOR_BG;
     
-    AddElement(p,&u);
+    UIElement* ref = AddElement(p,&u);
+
+    return ref;
 }
 void AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled, float* v)
 {
@@ -1738,9 +1742,10 @@ void AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled, f
     u.elementType = ELEMENT_SLIDER;
     u.bgColor = COLOR_BG;
 
-    AddElement(p,&u);
+    UIElement* ref = AddElement(p,&u);
+    
 }
-void AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int startIndex, int numElements, ...)
+UIElement* AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int startIndex, int numElements, ...)
 {
     va_list argp;
     va_start(argp, numElements);
@@ -1772,7 +1777,9 @@ void AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int s
     u.elementType = ELEMENT_PULLDOWN;
     u.bgColor = COLOR_BG;
 
-    AddElement(panel,&u);
+    UIElement* ref = AddElement(panel,&u);
+
+    return ref;
 
 }
 bool UpdatePulldownMenu(Pulldown* p, int x, int y, int w, int h, MouseState mouseState, MouseState mouseStateLastFrame)
