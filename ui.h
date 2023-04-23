@@ -315,10 +315,10 @@ Rect GetAbilityPortraitRect(int index);
 void InitUI();  
 void InitFonts();
 void DrawMenus(MouseState* mouseState);
-void UpdateKeyInput(int rX, int rY, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame);
-void UpdateButton(int rX, int rY, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame);
+void UpdateKeyInput(int rX, int rY, int w, int h, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame);
+void UpdateButton(int rX, int rY, int w, int h, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame);
 bool UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
-void GetUILocation(Panel* p, UIElement* uF, int* x, int* y);
+void GetUILocation(Panel* p, UIElement* uF, int* x, int* y, int* w, int* h, bool update);
 UIElement* GetUIElement(Panel* p, char* name);
 void UpdatePanel(Panel* p, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
 void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseStateLastFrame, float dt);
@@ -363,3 +363,6 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
 void InitPurchasingUnitsUI();
 void ClearChatbox();
 void ClearPanel(Panel* p);
+void SetTextInputStr(UIElement* u, char* str);
+void ClearTextInputStr(UIElement* u);
+

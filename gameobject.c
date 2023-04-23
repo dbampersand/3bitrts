@@ -2247,6 +2247,8 @@ bool ObjectCanPush(GameObject* g)
 }
 float GetSummonPercent(GameObject* g)
 {
+    if (g->summonMax == 0)
+        return 1;
     float summPercent = g->summonTime / g->summonMax;
     summPercent = clamp(summPercent,0,1);
     if (g->summonTime < g->summonMax)

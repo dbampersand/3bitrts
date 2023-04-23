@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ui.h"
-
+#include "point.h"
 
 typedef struct Map Map;
 typedef struct GameObject GameObject;
@@ -28,6 +28,7 @@ typedef struct EditorUI
     Panel unitSelector;
 
     Panel unitOptions;
+    Panel mapImageEditor;
 
     bool showFileSelector;
     EDITOR_FILE_SELECT selectorPicked;
@@ -55,6 +56,7 @@ typedef struct Editor
     Map* map;
 
     GameObject* heldObject;
+    Point heldObjectOffset;
     GameObject* highlightedObject;
     
     EditorUI editorUI;

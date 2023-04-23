@@ -143,22 +143,37 @@ void FocusCameraOnPos(float x, float y)
 }
 void MoveCam(float x, float y)  
 {
+    float maxW; float maxH;
+    maxW = _MAX(GetMapWidth(),_SCREEN_SIZE);
+    maxH = _MAX(GetMapHeight(),_SCREEN_SIZE);
+    float minW = 0;
+    float minH = 0;
+
+    if (gameState == GAMESTATE_IN_EDITOR)
+    {
+        minW -= _SCREEN_SIZE;
+        minH -= _SCREEN_SIZE;
+        maxW += _SCREEN_SIZE;
+        maxH += _SCREEN_SIZE;
+
+    }
+
     players[0].cameraPos.x = x;
     players[0].cameraPos.y = y;
     
 
-    if (x < 0)
-        players[0].cameraPos.x = 0;
-    if (y < 0)
-        players[0].cameraPos.y = 0;
+    if (x < minW)
+        players[0].cameraPos.x = minW;
+    if (y < minH)
+        players[0].cameraPos.y = minH;
     
-    if (x + _SCREEN_SIZE > _MAX(GetMapWidth(),_SCREEN_SIZE))
+    if (x + _SCREEN_SIZE > maxW)
     {
-        players[0].cameraPos.x = _MAX(GetMapWidth(),_SCREEN_SIZE) - _SCREEN_SIZE;
+        players[0].cameraPos.x = maxW - _SCREEN_SIZE;
     }
-    if (y + _SCREEN_SIZE > _MAX(GetMapHeight(),_SCREEN_SIZE))
+    if (y + _SCREEN_SIZE > maxH)
     {
-        players[0].cameraPos.y = _MAX(GetMapHeight(),_SCREEN_SIZE) - _SCREEN_SIZE;
+        players[0].cameraPos.y = maxH - _SCREEN_SIZE;
     }
 
 }

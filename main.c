@@ -128,6 +128,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
     if (gameState == GAMESTATE_IN_EDITOR)
     {
         UpdateEditor(dt,*mouseState,*mouseStateLastFrame,keyState, keyStateLastFrame);
+        MoveCamera(*mouseState,keyState,dt);
     }
     if (!GameIsPaused())
     {
@@ -412,7 +413,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     {
 
         DrawDamageNumbers();
-        UpdateButton(ui.menuButton.x,ui.menuButton.y,&ui.menuButton,*mouseState,*mouseStateLastFrame);
+        UpdateButton(ui.menuButton.x,ui.menuButton.y,ui.menuButton.w,ui.menuButton.h,&ui.menuButton,*mouseState,*mouseStateLastFrame);
         DrawUIElement(&ui.menuButton,ui.menuButton.x,ui.menuButton.y,mouseState,ui.menuButton.bgColor, COLOR_FRIENDLY);
 
         if (gameState == GAMESTATE_INGAME)
@@ -441,7 +442,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             }
 
             Rect r = (Rect){ui.nextLevelButton.x+1,ui.nextLevelButton.y+2,ui.nextLevelButton.w-3,ui.nextLevelButton.h-3};
-            UpdateButton(ui.nextLevelButton.x,ui.nextLevelButton.y,&ui.nextLevelButton,*mouseState,*mouseStateLastFrame);
+            UpdateButton(ui.nextLevelButton.x,ui.nextLevelButton.y,ui.nextLevelButton.w,ui.nextLevelButton.h,&ui.nextLevelButton,*mouseState,*mouseStateLastFrame);
 
             float distFrom = currMap->percentComplete - currMap->percentCompleteShowing;
             currMap->percentCompleteShowing = Towards(currMap->percentCompleteShowing,currMap->percentComplete, dt*10*(distFrom));

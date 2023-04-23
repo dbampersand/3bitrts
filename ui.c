@@ -261,16 +261,16 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
         purchaseUI->next.enabled = true;
 
 
-    UpdateButton(purchaseUI->back.x,purchaseUI->back.y,&purchaseUI->back,mouseState,mouseStateLastFrame);
+    UpdateButton(purchaseUI->back.x,purchaseUI->back.y,purchaseUI->back.w,purchaseUI->back.h,&purchaseUI->back,mouseState,mouseStateLastFrame);
     DrawUIElement(&purchaseUI->back,purchaseUI->back.x,purchaseUI->back.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY);
 
-    UpdateButton(purchaseUI->next.x,purchaseUI->next.y,&purchaseUI->next,mouseState,mouseStateLastFrame);
+    UpdateButton(purchaseUI->next.x,purchaseUI->next.y,purchaseUI->next.w,purchaseUI->next.h,&purchaseUI->next,mouseState,mouseStateLastFrame);
     DrawUIElement(&purchaseUI->next,purchaseUI->next.x,purchaseUI->next.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY);
 
-    UpdateButton(purchaseUI->returnButton.x,purchaseUI->returnButton.y,&purchaseUI->returnButton,mouseState,mouseStateLastFrame);
+    UpdateButton(purchaseUI->returnButton.x,purchaseUI->returnButton.y,purchaseUI->returnButton.w,purchaseUI->returnButton.h,&purchaseUI->returnButton,mouseState,mouseStateLastFrame);
     DrawUIElement(&purchaseUI->returnButton,purchaseUI->returnButton.x,purchaseUI->returnButton.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY);
 
-    UpdateButton(purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,&purchaseUI->purchaseButton,mouseState,mouseStateLastFrame);
+    UpdateButton(purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,purchaseUI->purchaseButton.w,purchaseUI->purchaseButton.h,&purchaseUI->purchaseButton,mouseState,mouseStateLastFrame);
     DrawUIElement(&purchaseUI->purchaseButton,purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY);
 
 
@@ -562,9 +562,9 @@ void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame)
             }
         }
 
-        UpdateButton(45,194,&ui.choosingUnits_Back,*mouseState,*mouseStateLastFrame);
-        UpdateButton(109,194,&ui.choosingUnits_GO,*mouseState,*mouseStateLastFrame);
-        UpdateButton(ui.choosingUnits_Hire.x,ui.choosingUnits_Hire.y,&ui.choosingUnits_Hire,*mouseState,*mouseStateLastFrame);
+        UpdateButton(45,194,ui.choosingUnits_Back.w,ui.choosingUnits_Back.h,&ui.choosingUnits_Back,*mouseState,*mouseStateLastFrame);
+        UpdateButton(109,194,ui.choosingUnits_GO.w,ui.choosingUnits_GO.h,&ui.choosingUnits_GO,*mouseState,*mouseStateLastFrame);
+        UpdateButton(ui.choosingUnits_Hire.x,ui.choosingUnits_Hire.y,ui.choosingUnits_Hire.w,ui.choosingUnits_Hire.h,&ui.choosingUnits_Hire,*mouseState,*mouseStateLastFrame);
 
         if (GetButtonIsClicked(&ui.choosingUnits_Hire))
         {
@@ -642,7 +642,7 @@ void DrawReplayUI(Replay* r, MouseState* mouseState, MouseState* mouseStateLastF
     al_draw_filled_rectangle(position.x,position.y,position.x+position.w,position.h,FRIENDLY);
 
     DrawButton(&replayPlayButton,replayPlayButton.x,replayPlayButton.y,*mouseState,true,BG,true,FRIENDLY);
-    UpdateButton(replayPlayButton.x,replayPlayButton.y,&replayPlayButton,*mouseState,*mouseStateLastFrame);
+    UpdateButton(replayPlayButton.x,replayPlayButton.y,replayPlayButton.w,replayPlayButton.h,&replayPlayButton,*mouseState,*mouseStateLastFrame);
 
     if (GetButtonIsClicked(&replayPlayButton))
     {
@@ -657,7 +657,7 @@ void DrawReplayUI(Replay* r, MouseState* mouseState, MouseState* mouseStateLastF
         }
     }
     DrawButton(&replayBackButton,replayBackButton.x,replayBackButton.y,*mouseState,true,BG,true,FRIENDLY);
-    UpdateButton(replayBackButton.x,replayBackButton.y,&replayBackButton,*mouseState,*mouseStateLastFrame);
+    UpdateButton(replayBackButton.x,replayBackButton.y,replayBackButton.w,replayBackButton.h,&replayBackButton,*mouseState,*mouseStateLastFrame);
     if (GetButtonIsClicked(&replayBackButton))
     {
         SetGameStateToInMenu();
@@ -1189,7 +1189,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     int row = 50;
     int column = 16;
 
-    UpdateButton(column+offsetX,row,&e->encounter_RerollAugments,*mouseState,*mouseStateLastFrame);
+    UpdateButton(column+offsetX,row,e->encounter_RerollAugments.w,e->encounter_RerollAugments.h,&e->encounter_RerollAugments,*mouseState,*mouseStateLastFrame);
     DrawUIElement(&e->encounter_RerollAugments,column+offsetX,row,mouseState,e->encounter_RerollAugments.bgColor,e->unlocked ? COLOR_FRIENDLY : ALColorToCol(disabled));
     column += 32;
 
@@ -1279,7 +1279,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     {
         e->encounter_PurchaseAugment.enabled = true;
     }
-    UpdateButton(e->encounter_PurchaseAugment.x,e->encounter_PurchaseAugment.y,&e->encounter_PurchaseAugment,*mouseState,*mouseStateLastFrame);
+    UpdateButton(e->encounter_PurchaseAugment.x,e->encounter_PurchaseAugment.y,e->encounter_PurchaseAugment.w,e->encounter_PurchaseAugment.h,&e->encounter_PurchaseAugment,*mouseState,*mouseStateLastFrame);
     DrawUIElement(&e->encounter_PurchaseAugment,e->encounter_PurchaseAugment.x,e->encounter_PurchaseAugment.y,mouseState,COLOR_BG,e->unlocked ? COLOR_FRIENDLY : ALColorToCol(disabled));
 
     if (GetButtonIsClicked(&e->encounter_PurchaseAugment))
@@ -1345,9 +1345,9 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 
 
 
-    UpdateButton(16+offsetX,224,&e->encounter_ButtonLeft,*mouseState,*mouseStateLastFrame);
-    UpdateButton(80+offsetX,224,&e->encounter_ButtonConfirm,*mouseState,*mouseStateLastFrame);
-    UpdateButton(192+offsetX,224,&e->encounter_ButtonRight,*mouseState,*mouseStateLastFrame);
+    UpdateButton(16+offsetX,224,e->encounter_ButtonLeft.w,e->encounter_ButtonLeft.h,&e->encounter_ButtonLeft,*mouseState,*mouseStateLastFrame);
+    UpdateButton(80+offsetX,224,e->encounter_ButtonConfirm.w,e->encounter_ButtonConfirm.h,&e->encounter_ButtonConfirm,*mouseState,*mouseStateLastFrame);
+    UpdateButton(192+offsetX,224,e->encounter_ButtonRight.w,e->encounter_ButtonRight.h,&e->encounter_ButtonRight,*mouseState,*mouseStateLastFrame);
 
     if (index > 0 && (index > 0 && (!encounters[index-1]->encounterShouldBeSkipped)))
     {
@@ -1456,6 +1456,16 @@ void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, i
     AddElement(p,&u);
     UpdateBind(&u);
 
+}
+void ClearTextInputStr(UIElement* u)
+{
+    TextInput* t = (TextInput*)u->data;
+    memset(t->text,0,sizeof(char)*t->maxChars);
+}   
+void SetTextInputStr(UIElement* u, char* str)
+{
+    TextInput* t = (TextInput*)u->data;
+    strncpy(t->text,str,t->maxChars);
 }
 UIElement* AddTextInput(Panel* p, int x, int y, int w, int h,char* name, char* description, int maxChars, bool onlyAllowNumbers)
 {
@@ -2545,7 +2555,7 @@ void UpdateTabButtons(Panel* p, MouseState* mouseState, MouseState* mouseStateLa
     {
             Button* b = (Button*)p->backButton.data;
 
-        UpdateButton(x,y,&p->backButton,*mouseState,*mouseStateLastFrame);
+        UpdateButton(x,y,p->backButton.w,p->backButton.h,&p->backButton,*mouseState,*mouseStateLastFrame);
         if (b->activated)
         {
             ChangeUIPanel(p->back);
@@ -2560,7 +2570,7 @@ void UpdateTabButtons(Panel* p, MouseState* mouseState, MouseState* mouseStateLa
         int w; int h; 
         h = al_get_bitmap_height(sprites[b->spriteIndex].sprite);
         w = al_get_bitmap_width(sprites[b->spriteIndex].sprite);
-        UpdateButton(x,y,&tab->tabButton,*mouseState,*mouseStateLastFrame);
+        UpdateButton(x,y,tab->tabButton.w,tab->tabButton.h,&tab->tabButton,*mouseState,*mouseStateLastFrame);
         if (b->activated)
         {
             ChangeUIPanel(tab);
@@ -2568,13 +2578,13 @@ void UpdateTabButtons(Panel* p, MouseState* mouseState, MouseState* mouseStateLa
         y += h;
     }
 }
-void UpdateKeyInput(int rX, int rY, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
+void UpdateKeyInput(int rX, int rY, int w, int h, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
 {
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     //ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
 
     KeyInput* t = (KeyInput*)u->data;
-    Rect r = (Rect){rX,rY,u->w,u->h};
+    Rect r = (Rect){rX,rY,w,h};
 
     if (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1))
     {
@@ -2628,10 +2638,10 @@ void UpdateKeyInput(int rX, int rY, UIElement* u, MouseState mouseState, MouseSt
         }
     }
 }
-void UpdateTextInput(int rX, int rY, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
+void UpdateTextInput(int rX, int rY, int w, int h, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
     TextInput* t = (TextInput*)u->data;
-    Rect r = (Rect){rX,rY,u->w,u->h};
+    Rect r = (Rect){rX,rY,w,h};
 
     if (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1))
     {
@@ -2695,7 +2705,7 @@ void UpdateTextInput(int rX, int rY, UIElement* u, MouseState mouseState, MouseS
         }
     }
 }
-void UpdateButton(int rX, int rY, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame)
+void UpdateButton(int rX, int rY, int w, int h, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame)
 {
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     //ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
@@ -2704,7 +2714,7 @@ void UpdateButton(int rX, int rY, UIElement* u, MouseState mouseState, MouseStat
     b->activated = false;
     if (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1))
     {
-        Rect r = (Rect){rX,rY,u->w,u->h};
+        Rect r = (Rect){rX,rY,w,h};
         if (PointInRect(mouseState.screenX,mouseState.screenY,r))
         {
             if (!b->clicked)
@@ -2716,7 +2726,8 @@ void UpdateButton(int rX, int rY, UIElement* u, MouseState mouseState, MouseStat
     }
     if (mouseStateLastFrame.mouse.buttons & 1 && !(mouseState.mouse.buttons & 1))
     {
-        Rect r = (Rect){rX,rY,u->w,u->h};
+        Rect r = (Rect){rX,rY,w,h};
+
         if (b->clicked)
         {
             if (PointInRect(mouseState.screenX,mouseState.screenY,r))
@@ -2735,36 +2746,37 @@ bool UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* m
 {
     if (!u->enabled)
         return false;
-    int x; int y;
-    GetUILocation(p,u,&x,&y);
-   
+    int x; int y; 
+    int w; int h;
+    GetUILocation(p,u,&x,&y, &w,&h,true);
+
     if (u->elementType == ELEMENT_BUTTON)
     {
-        UpdateButton(x,y,u,*mouseState,*mouseStateLastFrame);
+        UpdateButton(x,y,w,h,u,*mouseState,*mouseStateLastFrame);
     }
     if (u->elementType == ELEMENT_KEYINPUT)
     {
-        UpdateKeyInput(x,y,u,*mouseState,*mouseStateLastFrame,keyStateThisFrame);
+        UpdateKeyInput(x,y,w,h,u,*mouseState,*mouseStateLastFrame,keyStateThisFrame);
     }
     if (u->elementType == ELEMENT_TEXTINPUT)
     {
-        UpdateTextInput(x,y,u,*mouseState,*mouseStateLastFrame,keyStateThisFrame,keyStateLastFrame);
+        UpdateTextInput(x,y,w,h,u,*mouseState,*mouseStateLastFrame,keyStateThisFrame,keyStateLastFrame);
     }
 
 
     if (u->elementType == ELEMENT_SLIDER)
     {
-        UpdateSlider((Slider*)u->data, x,  y, u->w, u->h, *mouseState, *mouseStateLastFrame);
+        UpdateSlider((Slider*)u->data, x,  y, w, h, *mouseState, *mouseStateLastFrame);
     }
     if (u->elementType == ELEMENT_CHECKBOX)
     {
-        UpdateCheckbox((Checkbox*)u->data, x,  y, u->w,u->h,true,*mouseState, *mouseStateLastFrame);
+        UpdateCheckbox((Checkbox*)u->data, x,  y,w,h,true,*mouseState, *mouseStateLastFrame);
         Checkbox* c = (Checkbox*)u->data;
        // bool b = *c->activated;
     }
     if (u->elementType == ELEMENT_PULLDOWN)
     {
-        return UpdatePulldownMenu((Pulldown*)u->data, x,  y, u->w,u->h,*mouseState, *mouseStateLastFrame);
+        return UpdatePulldownMenu((Pulldown*)u->data, x,  y, w,h,*mouseState, *mouseStateLastFrame);
     }
 
     return false;
@@ -3102,7 +3114,7 @@ int GetPanelMaxY(Panel* p)
     return maxY;
 }
 
-void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)
+void GetUILocation(Panel* p, UIElement* uF, int* x, int* y, int* w, int* h, bool update)
 {
     int maxY = GetPanelMaxY(p);
     int currX=p->x+p->padding; int currY=p->y+p->padding; 
@@ -3128,7 +3140,25 @@ void GetUILocation(Panel* p, UIElement* uF, int* x, int* y)
     }*/
     *x = p->x + uF->x;
     *y = (p->y  + uF->y) - ((maxY+p->padding-p->h) * p->scrollPercent);
+    *h = uF->h;
+    *w = uF->w;
 
+    //if we want the 'update' position
+    //which is changed to clamp the rectangle to the panel size
+    if (update)
+    {
+        if (*y + *h >= p->y + p->h)
+        {
+            *h -= ((*y+*h) - (p->y+p->h));
+            *h = _MAX(0,*h);
+        }
+        if (*y < p->y)
+        {
+            *y += (p->y - *y);
+            *h -= (p->y - *y);
+            *h = _MAX(0,*h);
+        }
+    }
     if (p->tabs)
     {
         //*x += 25;
@@ -3203,8 +3233,8 @@ void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent)
     for (int i = 0; i < p->numElements; i++)
     {
         UIElement* u = ((UIElement*)&p->elements[i]);
-        int x; int y;
-        GetUILocation(p, u, &x, &y);
+        int x; int y; int w; int h;
+        GetUILocation(p, u, &x, &y, &w, &h,false);
         DrawUIElement(u,x,y,mouseState,u->bgColor, COLOR_FRIENDLY);
 
     }
@@ -3519,9 +3549,9 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
 
 
 
-    UpdateButton(ui.endScreen_Back.x,ui.endScreen_Back.y,&ui.endScreen_Back,*mouseState,*mouseStateLastFrame);
-    UpdateButton(ui.endScreen_Retry.x,ui.endScreen_Retry.y,&ui.endScreen_Retry,*mouseState,*mouseStateLastFrame);
-    UpdateButton(ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,&ui.endScreen_SaveReplay,*mouseState,*mouseStateLastFrame);
+    UpdateButton(ui.endScreen_Back.x,ui.endScreen_Back.y,ui.endScreen_Back.w,ui.endScreen_Back.h,&ui.endScreen_Back,*mouseState,*mouseStateLastFrame);
+    UpdateButton(ui.endScreen_Retry.x,ui.endScreen_Retry.y,ui.endScreen_Retry.w,ui.endScreen_Retry.h,&ui.endScreen_Retry,*mouseState,*mouseStateLastFrame);
+    UpdateButton(ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,ui.endScreen_SaveReplay.w,ui.endScreen_SaveReplay.h,&ui.endScreen_SaveReplay,*mouseState,*mouseStateLastFrame);
 
     DrawUIElement(&ui.endScreen_Back,ui.endScreen_Back.x,ui.endScreen_Back.y,mouseState,ui.endScreen_Back.bgColor,COLOR_FRIENDLY);
     DrawUIElement(&ui.endScreen_Retry,ui.endScreen_Retry.x,ui.endScreen_Retry.y,mouseState,ui.endScreen_Retry.bgColor,COLOR_FRIENDLY);

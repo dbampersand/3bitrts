@@ -415,6 +415,9 @@ void UpdateArgumentFloat(char** full, char* position, float f, bool decimal)
 } 
 void UpdatePosition(GameObject* g, float x, float y)
 {
+    x -= editor.heldObjectOffset.x;
+    y -= editor.heldObjectOffset.y;
+
     if (!g) return;
     for (int i = 0; i < editor.numSetupLines; i++)
     {
@@ -422,6 +425,8 @@ void UpdatePosition(GameObject* g, float x, float y)
         {
             g->position.worldX = x;
             g->position.worldY = y;
+
+
             UpdateScreenPositions(g);
 
             //2-decimal precision for both
@@ -712,7 +717,7 @@ void AddObjLineToFile(GameObject* g, float x, float y, OBJ_FRIENDLINESS ownedBy,
 {
     char* line = NULL; 
 
-    char* fmt = "CreateObject(\"%s\",%.2f,%.2f,%s,%.2f)";
+    char* fmt = "   CreateObject(\"%s\",%.2f,%.2f,%s,%.2f)\n";
     char* friendliness;
     if (ownedBy == TYPE_ENEMY)
         friendliness = "TYPE_ENEMY";
@@ -793,9 +798,30 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         editor.heldObject = GetClicked(mouseState.worldX,mouseState.worldY);
         if (editor.heldObject)
         {
+            editor.heldObjectOffset.x = mouseState.worldX - editor.heldObject->position.worldX;
+            editor.heldObjectOffset.y = mouseState.worldY - editor.heldObject->position.worldY;
+
             editor.highlightedObject = editor.heldObject;  
             editor.editorUI.heldObjectIsDecor = ObjIsDecoration(editor.heldObject);
             ((Pulldown*)(GetUIElement(&editor.editorUI.unitOptions,"Owner")->data))->selectedIndex = GetPlayerOwnedBy_IncludeDecor(editor.heldObject);
+            
+            UIElement* aggroGroup = GetUIElement(&editor.editorUI.unitOptions,"AggroGroup");
+            if (editor.heldObject->aggroGroupSet)
+            {
+                char* fmt = "%i";
+                int numAggroChars = snprintf(NULL,0,fmt,editor.heldObject->aggroGroup); 
+
+                char* str = calloc(numAggroChars+1,sizeof(char));
+                sprintf(str,fmt,editor.heldObject->aggroGroup);
+                SetTextInputStr(aggroGroup,str);
+                free(str);
+
+            }
+            else
+            {   
+                ClearTextInputStr(aggroGroup);
+            }
+
         } 
     }
     if (editor.heldObject)
@@ -818,8 +844,10 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
     UpdatePanel(&editor.editorUI.fileSelector,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
     UpdatePanel(&editor.editorUI.unitSelector,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
     UpdatePanel(&editor.editorUI.unitOptions,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
+    UpdatePanel(&editor.editorUI.mapImageEditor,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
 
-    UpdateButton(editor.editorUI.save.x,editor.editorUI.save.y,&editor.editorUI.save,mouseState,mouseStateLastFrame);
+
+    UpdateButton(editor.editorUI.save.x,editor.editorUI.save.y,editor.editorUI.save.w,editor.editorUI.save.h,&editor.editorUI.save,mouseState,mouseStateLastFrame);
 
     if (GetButtonIsClicked(&editor.editorUI.save))
     {
@@ -1014,6 +1042,8 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                 {
                     if (editor.setupLines[i].associated == editor.highlightedObject)
                     {
+                        editor.highlightedObject->aggroGroup = aggroGroupAfter;
+                        editor.highlightedObject->aggroGroupSet = true;
                         if (strstr(editor.setupLines[i].line,"SetAggroGroup"))
                         {
                             char* arg = GetPositionOfArgument(editor.setupLines[i].line,"SetAggroGroup",2);
@@ -1073,7 +1103,7 @@ void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFram
     if (editor.highlightedObject)
         DrawPanel(&editor.editorUI.unitOptions,&mouseState,1);
 
-
+    DrawPanel(&editor.editorUI.mapImageEditor,&mouseState,1);
     DrawUIElement(&editor.editorUI.save,editor.editorUI.save.x,editor.editorUI.save.y,&mouseState,COLOR_BG,COLOR_FRIENDLY);
 }
 void InitFileSelector(Panel* p)
@@ -1114,4 +1144,6 @@ void InitEditorUI()
     UIElement* setDecor = AddCheckbox(&editor.editorUI.unitOptions,owner->x, owner->y + owner->h + 10,15,15,"IsDecor",&editor.editorUI.heldObjectIsDecor);
     AddTextInput(&editor.editorUI.unitOptions,setDecor->x,setDecor->y + setDecor->h + 10,editor.editorUI.unitOptions.w-2,20, "AggroGroup","",4,true);
 
+    int mapImageEditorH = 40;
+    editor.editorUI.mapImageEditor = CreatePanel(editor.editorUI.unitSelector.x, editor.editorUI.unitSelector.y + editor.editorUI.unitSelector.h+2,editor.editorUI.unitSelector.w,mapImageEditorH,1,true);
 }   

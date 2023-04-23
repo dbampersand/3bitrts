@@ -1687,7 +1687,8 @@ int L_SetAggroGroup(lua_State* l)
     g->aggroGroup = group;
     g->aggroGroupSet = true;
 
-    return 0;
+    lua_pushnumber(l,g - objects);
+    return 1;
 }
 int L_GetAggroGroup(lua_State* l)
 {

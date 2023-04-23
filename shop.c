@@ -163,7 +163,7 @@ void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
             
         }
     }
-    UpdateButton(shop.continueButton.x,shop.continueButton.y,&shop.continueButton,mouseState,mouseStateLastFrame);
+    UpdateButton(shop.continueButton.x,shop.continueButton.y,shop.continueButton.w,shop.continueButton.h,&shop.continueButton,mouseState,mouseStateLastFrame);
     if (GetButtonIsClicked(&shop.continueButton))
     {
         SetGameStateToChangingMap();
