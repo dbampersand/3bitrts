@@ -11,6 +11,33 @@
 
 Editor editor = {0};
 
+char* GetCallEnd(char* str, char* func)
+{
+    char* start = strstr(str,func);
+    int numBrackets = 0;
+    char* end = NULL;
+    bool insideQuotes = false;
+    for (char* c = start; c < start + strlen(start); c++)
+    {
+        if (*c == '"')
+            insideQuotes = !insideQuotes;
+        if (!insideQuotes)
+        {
+            if (*c == '(')
+                numBrackets++;
+            if (*c == ')')
+                numBrackets--;
+
+            if (*c == ')' && numBrackets == 0)
+            {
+                end = c;
+                break;
+            }
+        }
+
+    }
+    return end;
+}
 void InsertStr(char** start, char** location, char* str)
 {
     if (!str)
@@ -340,7 +367,7 @@ void UpdateArgumentStr(char** full, char* position, char* str, bool addQuotes)
 
 
 }
-void UpdateArgumentFloat(char** full, char* position, float f)
+void UpdateArgumentFloat(char** full, char* position, float f, bool decimal)
 {
     int numToMove = 0;
     for (int i = 0; i < strlen(position); i++)
@@ -359,7 +386,10 @@ void UpdateArgumentFloat(char** full, char* position, float f)
 
 
     char* digits = calloc(NumDigits(f) + 4, sizeof(char));
-    sprintf(digits,"%.2f",f);
+    if (decimal)
+        sprintf(digits,"%.2f",f);
+    else
+        sprintf(digits,"%i",(int)f);
 
 
     char* before = calloc((strlen(*full) - strlen(position)) + 1,sizeof(char));
@@ -399,9 +429,9 @@ void UpdatePosition(GameObject* g, float x, float y)
             //editor.setupLines[i].line = realloc(editor.setupLines[i].line,(strlen(editor.setupLines[i].line)+toIncreaseBy+1)*sizeof(char));
 
             char* xStr = GetPositionOfArgument(editor.setupLines[i].line,"CreateObject",2);
-            UpdateArgumentFloat(&editor.setupLines[i].line,xStr,x);
+            UpdateArgumentFloat(&editor.setupLines[i].line,xStr,x,true);
             char* yStr = GetPositionOfArgument(editor.setupLines[i].line,"CreateObject",3);
-            UpdateArgumentFloat(&editor.setupLines[i].line,yStr,y);
+            UpdateArgumentFloat(&editor.setupLines[i].line,yStr,y,true);
 
             printf("%s\n",editor.setupLines[i].line);
         }
@@ -971,6 +1001,55 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         SetDecoration(editor.highlightedObject,editor.editorUI.heldObjectIsDecor);
 
         ((Pulldown*)(GetUIElement(&editor.editorUI.unitOptions,"Owner")->data))->selectedIndex = GetPlayerOwnedBy_IncludeDecor(editor.highlightedObject);
+    
+        char* aggroGroupText = ((TextInput*)(GetUIElement(&editor.editorUI.unitOptions,"AggroGroup")->data))->text;
+        if (strlen(aggroGroupText) > 0)
+        {
+            int aggroGroupBefore = editor.highlightedObject->aggroGroup;
+            int aggroGroupAfter = atoi(aggroGroupText);
+
+            if (aggroGroupBefore != aggroGroupAfter)
+            {
+                for (int i = 0; i < editor.numSetupLines; i++)
+                {
+                    if (editor.setupLines[i].associated == editor.highlightedObject)
+                    {
+                        if (strstr(editor.setupLines[i].line,"SetAggroGroup"))
+                        {
+                            char* arg = GetPositionOfArgument(editor.setupLines[i].line,"SetAggroGroup",2);
+                            UpdateArgumentFloat(&editor.setupLines[i].line,arg,aggroGroupAfter,false);
+
+                            printf("%s\n",editor.setupLines[i].line);
+                        }
+                        else
+                        {
+                            char* pos = strstr(editor.setupLines[i].line,"CreateObject");
+
+                            InsertStr(&editor.setupLines[i].line,&pos,"SetAggroGroup(");
+                            char* posEnd = GetCallEnd(editor.setupLines[i].line,"CreateObject") + 1;
+                            
+                            int numChars = snprintf(NULL,0,",%.2f)",(float)aggroGroupAfter);
+                            char* args = calloc(numChars+1,sizeof(char));
+                            sprintf(args,",%.2f)",(float)aggroGroupAfter);
+                            InsertStr(&editor.setupLines[i].line,&posEnd,args);
+
+                            free(args);
+
+                            printf("%s\n",editor.setupLines[i].line);
+
+                        }
+                        break;
+                    }
+                }
+            }
+
+        }
+        else
+        {
+            editor.highlightedObject->aggroGroup = 0;
+            editor.highlightedObject->aggroGroupSet = 0;
+
+        }
 
     }
 

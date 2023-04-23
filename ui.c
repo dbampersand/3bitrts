@@ -2637,10 +2637,6 @@ void UpdateTextInput(int rX, int rY, UIElement* u, MouseState mouseState, MouseS
     {
         if (PointInRect(mouseState.screenX,mouseState.screenY,r))
         {
-            if (!t->clicked)
-            {
-                PlaySound(&sounds[u->sound_clickUp_Index],0.5f,0);
-            }
             t->clicked = true;
         }
         else
@@ -2648,7 +2644,8 @@ void UpdateTextInput(int rX, int rY, UIElement* u, MouseState mouseState, MouseS
             t->clicked = false;
         }
     }
-
+    if (al_key_down(keyStateThisFrame,ALLEGRO_KEY_ENTER))
+        t->clicked = false;
 
     if (t->clicked)
     {
