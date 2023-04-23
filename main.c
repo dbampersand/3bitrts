@@ -127,7 +127,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
     }    
     if (gameState == GAMESTATE_IN_EDITOR)
     {
-        UpdateEditor(dt,*mouseState,*mouseStateLastFrame,keyState);
+        UpdateEditor(dt,*mouseState,*mouseStateLastFrame,keyState, keyStateLastFrame);
     }
     if (!GameIsPaused())
     {

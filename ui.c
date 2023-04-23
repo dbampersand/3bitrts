@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <ctype.h>
 
 #include "allegro5/allegro_primitives.h"
 #include "allegro5/allegro.h"
@@ -1456,6 +1457,32 @@ void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, i
     UpdateBind(&u);
 
 }
+UIElement* AddTextInput(Panel* p, int x, int y, int w, int h,char* name, char* description, int maxChars, bool onlyAllowNumbers)
+{
+    TextInput* t = calloc(1,sizeof(TextInput));
+    t->allowsInteraction = true;
+    t->text = calloc(maxChars+1,sizeof(char));
+    t->maxChars = maxChars;
+    t->onlyAllowNumbers = onlyAllowNumbers;
+    
+    UIElement u = {0};
+    u.data = (void*)t;
+    u.w = w;    
+    u.h = h;
+    u.y = y;
+    u.name = calloc(strlen(name)+1,sizeof(char));
+    strcpy(u.name,name);
+    u.elementType = ELEMENT_TEXTINPUT;
+    u.x = x;
+    u.enabled = true;
+    u.sound_clickDown_Index = ui.uiClickedSound_Index;
+    u.sound_clickUp_Index = ui.uiClickedUpSound_Index;
+    u.bgColor = COLOR_BG;
+
+    UIElement* ref = AddElement(p,&u);
+    return ref;
+}
+
 UIElement* AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h, bool shouldDrawLine)
 {
     Button* b = calloc(1,sizeof(Button));
@@ -2601,6 +2628,76 @@ void UpdateKeyInput(int rX, int rY, UIElement* u, MouseState mouseState, MouseSt
         }
     }
 }
+void UpdateTextInput(int rX, int rY, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
+{
+    TextInput* t = (TextInput*)u->data;
+    Rect r = (Rect){rX,rY,u->w,u->h};
+
+    if (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1))
+    {
+        if (PointInRect(mouseState.screenX,mouseState.screenY,r))
+        {
+            if (!t->clicked)
+            {
+                PlaySound(&sounds[u->sound_clickUp_Index],0.5f,0);
+            }
+            t->clicked = true;
+        }
+        else
+        {
+            t->clicked = false;
+        }
+    }
+
+
+    if (t->clicked)
+    {
+
+        for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
+        {
+            if (al_key_down(keyStateThisFrame,i) && !al_key_down(keyStateLastFrame,i))
+            {
+                const char* keyName = al_keycode_to_name(i);
+                char key;
+                if (strlen(keyName) == 1)
+                    key = keyName[0];
+                else
+                {
+                    if (strcmp(keyName,"BACKSPACE")==0)
+                        key = 8;   
+                }
+                //backspace
+                if (key == 8)
+                {
+                    if (strlen(t->text) > 0)
+                    {
+                        t->text[strlen(t->text)-1] = '\0';
+                    }
+                }
+                if (t->onlyAllowNumbers)
+                {
+                    if (isdigit(key)) 
+                    {
+                        if (strlen(t->text) < t->maxChars)
+                            t->text[strlen(t->text)] = key;
+                    }
+
+                }
+                else
+                {
+                    if (isalnum(key)) 
+                    {
+                        if (strlen(t->text) < t->maxChars)
+                            t->text[strlen(t->text)] = key;
+                    }
+
+                }
+                break;
+            }
+
+        }
+    }
+}
 void UpdateButton(int rX, int rY, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame)
 {
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
@@ -2637,7 +2734,7 @@ void UpdateButton(int rX, int rY, UIElement* u, MouseState mouseState, MouseStat
         b->clicked = false;
     }
 }
-bool UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
+bool UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
     if (!u->enabled)
         return false;
@@ -2652,6 +2749,11 @@ bool UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* m
     {
         UpdateKeyInput(x,y,u,*mouseState,*mouseStateLastFrame,keyStateThisFrame);
     }
+    if (u->elementType == ELEMENT_TEXTINPUT)
+    {
+        UpdateTextInput(x,y,u,*mouseState,*mouseStateLastFrame,keyStateThisFrame,keyStateLastFrame);
+    }
+
 
     if (u->elementType == ELEMENT_SLIDER)
     {
@@ -2670,13 +2772,13 @@ bool UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* m
 
     return false;
 }
-void UpdatePanel(Panel* p, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
+void UpdatePanel(Panel* p, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
     if (p)
     {
         for (int i = p->numElements-1; i  >= 0; i--)
         {
-            if (UpdateElement(p,&p->elements[i],mouseState,mouseStateLastFrame, keyStateThisFrame))
+            if (UpdateElement(p,&p->elements[i],mouseState,mouseStateLastFrame, keyStateThisFrame, keyStateLastFrame))
             {
                 break;
             }
@@ -2759,7 +2861,7 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_
 
     if (ui.currentPanel)
     {
-        UpdatePanel(ui.currentPanel,mouseState,mouseStateLastFrame, keyState);
+        UpdatePanel(ui.currentPanel,mouseState,mouseStateLastFrame, keyState, keyStateLastFrame);
     }
     int displayW = al_get_display_width(display);
     int displayH = al_get_display_height(display);
@@ -2911,6 +3013,44 @@ void DrawKeyInput(UIElement* u, int x, int y, MouseState mouseState, bool isActi
     }
 
 }
+void DrawTextInput(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor)
+{
+    TextInput* t = (TextInput*)u->data;
+    //ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    ALLEGRO_FONT* font = ui.font;
+    Rect button = (Rect){x,y,u->w,u->h};
+
+    if (!t->text)
+    {
+        UpdateBind(u);
+    }
+
+    if (t->clicked && isActive)
+    {
+        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,FRIENDLY);
+        al_draw_rectangle(x,y,x+u->w,y+u->h,BG,1);
+        al_draw_text(ui.tinyFont,BG,x+u->w/2, y + u->h /2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,t->text);
+     }
+    else
+    {
+        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,bgColor);
+        if (isActive)
+        {
+            al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
+        }
+        else
+        {   
+            DrawOutlinedRect_Dithered(button,FRIENDLY);
+        }
+        al_draw_text(ui.tinyFont,FRIENDLY,x+u->w/2,y + u->h / 2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,t->text);
+
+    }
+    if (PointInRect(mouseState.screenX,mouseState.screenY,button) && isActive && !t->clicked)
+    {
+        al_draw_rectangle(x+2,y+2,x+u->w-2,y+u->h-2,FRIENDLY,1);
+    }
+
+}
 void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, Color bgColor, Color foregroundColor)
 {
     ALLEGRO_COLOR col = GetColor(bgColor,0);
@@ -2940,6 +3080,10 @@ void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, Color bgC
     if (u->elementType == ELEMENT_KEYINPUT)
     {
         DrawKeyInput(u,x,y,*mouseState,u->enabled,col);
+    }
+    if (u->elementType == ELEMENT_TEXTINPUT)
+    {
+        DrawTextInput(u,x,y,*mouseState,u->enabled,col);
     }
 
 

@@ -67,7 +67,7 @@ extern Editor editor;
 
 void EditorSetMap(char* path);
 void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFrame);
-void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState);
+void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
 void EditorSetMap(char* path);
 void InitEditorUI();
 void InitFileSelector();

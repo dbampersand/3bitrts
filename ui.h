@@ -42,6 +42,17 @@ typedef struct KeyInput
     KEY* mappedTo;
 } KeyInput;
 
+typedef struct TextInput
+{
+    int x; int y; int w; int h;
+    bool allowsInteraction;
+    bool clicked;
+    char* text;
+    int maxChars;
+    bool onlyAllowNumbers;
+} TextInput;
+
+
 typedef struct Scrollbar
 {
     float percent;
@@ -65,6 +76,7 @@ typedef enum UIElement_Type
     ELEMENT_TEXT=4,
     ELEMENT_KEYINPUT=5,
     ELEMENT_PULLDOWN=6,
+    ELEMENT_TEXTINPUT=7
 
     //ELEMENT_CHATBOX
 
@@ -305,10 +317,10 @@ void InitFonts();
 void DrawMenus(MouseState* mouseState);
 void UpdateKeyInput(int rX, int rY, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame);
 void UpdateButton(int rX, int rY, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame);
-bool UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame);
+bool UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
 void GetUILocation(Panel* p, UIElement* uF, int* x, int* y);
 UIElement* GetUIElement(Panel* p, char* name);
-void UpdatePanel(Panel* p, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame);
+void UpdatePanel(Panel* p, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
 void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseStateLastFrame, float dt);
 bool GetButton(Panel* p, char* name);
 KeyInput* GetKeyInput(Panel* p, char* name);
@@ -332,6 +344,7 @@ bool cb(int line_num, const char *line, int size, void *extra);
 void SetOptions();
 void SetUITextStr(UI_Text* t, char* str);
 void AddText(Panel* p, int x, int y, char* name, char* description);
+UIElement* AddTextInput(Panel* p, int x, int y, int w, int h,char* name, char* description, int maxChars, bool onlyAllowNumbers);
 UI_Text* GetUIText(Panel* p, char* name);
 void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame);
 void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame);

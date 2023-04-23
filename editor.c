@@ -756,7 +756,7 @@ void SaveMap()
     al_fwrite(file,currMap->lua_buffer.buffer,strlen(currMap->lua_buffer.buffer) * sizeof(char));
     al_fclose(file);
 }
-void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState)
+void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
     if (MouseClickedThisFrame(&mouseState, &mouseStateLastFrame))
     {
@@ -784,10 +784,10 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         editor.highlightedObject = NULL;   
     }
 
-    UpdatePanel(&editor.editorUI.saveLoad,&mouseState,&mouseStateLastFrame,keyState);
-    UpdatePanel(&editor.editorUI.fileSelector,&mouseState,&mouseStateLastFrame,keyState);
-    UpdatePanel(&editor.editorUI.unitSelector,&mouseState,&mouseStateLastFrame,keyState);
-    UpdatePanel(&editor.editorUI.unitOptions,&mouseState,&mouseStateLastFrame,keyState);
+    UpdatePanel(&editor.editorUI.saveLoad,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
+    UpdatePanel(&editor.editorUI.fileSelector,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
+    UpdatePanel(&editor.editorUI.unitSelector,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
+    UpdatePanel(&editor.editorUI.unitOptions,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
 
     UpdateButton(editor.editorUI.save.x,editor.editorUI.save.y,&editor.editorUI.save,mouseState,mouseStateLastFrame);
 
@@ -1032,5 +1032,7 @@ void InitEditorUI()
 
     editor.editorUI.unitOptions = CreatePanel(save->x,save->y+save->h+10,80,80,1,true);
     UIElement* owner = AddPulldownMenu(&editor.editorUI.unitOptions,1,1,editor.editorUI.unitOptions.w-2,20,"Owner",1,2,"Friendly","Enemy");
-    AddCheckbox(&editor.editorUI.unitOptions,owner->x, owner->y + owner->h + 10,15,15,"IsDecor",&editor.editorUI.heldObjectIsDecor);
+    UIElement* setDecor = AddCheckbox(&editor.editorUI.unitOptions,owner->x, owner->y + owner->h + 10,15,15,"IsDecor",&editor.editorUI.heldObjectIsDecor);
+    AddTextInput(&editor.editorUI.unitOptions,setDecor->x,setDecor->y + setDecor->h + 10,editor.editorUI.unitOptions.w-2,20, "AggroGroup","",4,true);
+
 }   
