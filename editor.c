@@ -12,6 +12,167 @@
 #include "allegro5/allegro_primitives.h"
 
 Editor editor = {0};
+void DecreaseMapDimensions(EDITOR_HANDLE handle, int x, int y)
+{
+    ALLEGRO_BITMAP* old = sprites[currMap->spriteIndex].sprite;
+    int w = al_get_bitmap_width(old) - abs(x); 
+    int h = al_get_bitmap_height(old) - abs(y); 
+
+    ALLEGRO_BITMAP* before = al_get_target_bitmap();
+    ALLEGRO_BITMAP* new = al_create_bitmap(w,h);
+    al_set_target_bitmap(new);
+    int drawOffsetX = 0;
+    int drawOffsetY = 0;
+    int sx = 0;
+    int sy = 0;
+
+    if (x > 0)
+    {
+        //drawOffsetX = abs(x);   
+    }
+    if (handle == HANDLE_TOP || handle == HANDLE_LEFT)
+    {
+        sx = x;
+        sy = y;
+    }
+
+    al_draw_tinted_bitmap_region(sprites[currMap->spriteIndex].sprite,WHITE,sx,sy,w,h,drawOffsetX,drawOffsetY,0);
+    al_draw_tinted_bitmap_region(sprites[currMap->secondLayerSpriteIndex].sprite,WHITE,sx,sy,w,h,drawOffsetX,drawOffsetY,0);
+
+    sprites[currMap->spriteIndex].sprite = new;
+
+    al_destroy_bitmap(old);
+    al_set_target_bitmap(before);
+
+    PreprocessMap(currMap,0);
+
+    MoveCam(players[0].cameraPos.x-sx,players[0].cameraPos.y);
+    MoveCam(players[0].cameraPos.x,players[0].cameraPos.y-sy);
+
+    if (sx != 0 || sy != 0)
+    {
+        for (int i = 0; i < editor.numSetupLines; i++)
+        {
+            if (editor.setupLines[i].associated)
+            {
+                float xNew = editor.setupLines[i].associated->position.worldX - sx;
+                float yNew = editor.setupLines[i].associated->position.worldY - sy;
+
+                UpdatePosition(editor.setupLines[i].associated,xNew,yNew);
+            }
+        }   
+
+    }
+}
+void IncreaseMapDimensions(int x, int y)
+{
+    ALLEGRO_BITMAP* old = sprites[currMap->spriteIndex].sprite;
+    int w = al_get_bitmap_width(old) + abs(x); 
+    int h = al_get_bitmap_height(old) + abs(y); 
+
+    ALLEGRO_BITMAP* before = al_get_target_bitmap();
+
+
+    ALLEGRO_BITMAP* new = al_create_bitmap(w,h);
+    al_set_target_bitmap(new);
+    int drawOffsetX = 0;
+    int drawOffsetY = 0;
+    
+    if (x <= 0)
+    {
+        drawOffsetX = abs(x);   
+    }
+    if (y <= 0)
+    {
+        drawOffsetY = abs(y);
+    }
+
+    al_draw_tinted_bitmap(sprites[currMap->spriteIndex].sprite,WHITE,drawOffsetX,drawOffsetY,0);
+    al_draw_tinted_bitmap(sprites[currMap->secondLayerSpriteIndex].sprite,WHITE,drawOffsetX,drawOffsetY,0);
+
+    sprites[currMap->spriteIndex].sprite = new;
+
+
+    al_destroy_bitmap(old);
+    al_set_target_bitmap(before);
+
+    PreprocessMap(currMap,0);
+    if (x < 0)
+        MoveCam(players[0].cameraPos.x+abs(x),players[0].cameraPos.y);
+    if (y < 0)
+        MoveCam(players[0].cameraPos.x,players[0].cameraPos.y+abs(y));
+
+    if (drawOffsetX != 0 || drawOffsetY != 0)
+    {
+        for (int i = 0; i < editor.numSetupLines; i++)
+        {
+            if (editor.setupLines[i].associated)
+            {
+                float xNew = editor.setupLines[i].associated->position.worldX + drawOffsetX;
+                float yNew = editor.setupLines[i].associated->position.worldY + drawOffsetY;
+
+                UpdatePosition(editor.setupLines[i].associated,xNew,yNew);
+            }
+        }   
+
+    }
+}       
+void ChangeMapDimensions_Handle(EDITOR_HANDLE handle, MouseState mouseState)
+{
+    Rect handleRect = GetMapHandleRect(handle);
+    int edgeOffsetY =  mouseState.worldY - handleRect.y - editor.handleOffset;
+    int edgeOffsetX =  mouseState.worldX - handleRect.x - editor.handleOffset;
+
+    if (handle == HANDLE_TOP)
+    {
+        if (edgeOffsetY < 0)
+        {
+            IncreaseMapDimensions(0,edgeOffsetY);
+        }
+        if (edgeOffsetY > 0)
+        {
+            DecreaseMapDimensions(handle,0,edgeOffsetY);
+        }
+    }
+    if (handle == HANDLE_RIGHT)
+    {
+        if (edgeOffsetX > 0)
+        {
+            IncreaseMapDimensions(edgeOffsetX,0);
+        }
+        if (edgeOffsetX < 0)
+        {
+            DecreaseMapDimensions(handle,edgeOffsetX,0);
+        }
+    }
+    if (handle == HANDLE_BOTTOM)
+    {
+        if (edgeOffsetY > 0)
+        {
+            IncreaseMapDimensions(0,edgeOffsetY);
+        }
+        if (edgeOffsetY < 0)
+        {
+            DecreaseMapDimensions(handle,0,edgeOffsetY);
+        }
+    }
+    if (handle == HANDLE_LEFT)
+    {
+        if (edgeOffsetX < 0)
+        {
+            IncreaseMapDimensions(edgeOffsetX,0);
+        }
+        if (edgeOffsetX > 0)
+        {
+            DecreaseMapDimensions(handle,edgeOffsetX,0);
+        }
+
+    }
+
+
+}
+
+
 void SetEditorStateToNormal()
 {
     editor.editorState = EDITOR_STATE_NORMAL;
@@ -814,7 +975,6 @@ void SaveMap()
     al_draw_tinted_bitmap(sprites[currMap->spriteIndex].sprite,WHITE,0,0,0);
     al_draw_tinted_bitmap(sprites[currMap->secondLayerSpriteIndex].sprite,al_map_rgb(0,0,0),0,0,0);
     
-    
     char* path = sprites[currMap->spriteIndex].path;
     al_save_bitmap(path,combined);
 
@@ -852,13 +1012,27 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                 ClearTextInputStr(aggroGroup);
             }
 
+        }
+        else
+        {
+            editor.heldHandle = CheckMapHandleClicked(mouseState);
+            if (editor.heldHandle != HANDLE_NONE)
+            {
+                Rect handle = GetMapHandleRect(editor.heldHandle);
+                editor.handleOffset = mouseState.worldX - handle.x;
+            }   
+
         } 
+    }
+    if (editor.heldHandle && !(mouseState.mouse.buttons & 1))
+    {   
+        ChangeMapDimensions_Handle(editor.heldHandle,mouseState);
+        editor.heldHandle = HANDLE_NONE;
     }
     if (editor.heldObject)
     {
         UpdatePosition(editor.heldObject,mouseState.worldX,mouseState.worldY);
     }
-
     if (!(mouseState.mouse.buttons & 1))
         editor.heldObject = NULL;
 
@@ -917,9 +1091,23 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
     {
         editor.editorState = EDITOR_STATE_NORMAL;
     }
-    if ((editor.editorState == EDITOR_STATE_PAINTING || editor.editorState == PAINTING_MODE_ERASING) && mouseState.mouse.buttons & 1)
+    if ((editor.editorState == EDITOR_STATE_PAINTING) && mouseState.mouse.buttons & 1)
     {
+        if (editor.paintingMode == PAINTING_MODE_DRAW_FIRST_LAYER || editor.paintingMode == PAINTING_MODE_SECOND_LAYER)
+        {
+            int offsetX = 0; int offsetY = 0;
+            if (mouseState.worldX < 0)
+                offsetX = mouseState.worldX;
+            if (mouseState.worldY < 0)
+                offsetY = mouseState.worldY;
+            if (mouseState.worldX > GetMapWidth())
+                offsetX = mouseState.worldX - GetMapWidth();
+            if (mouseState.worldY > GetMapHeight())
+                offsetY = mouseState.worldY - GetMapHeight();
+            IncreaseMapDimensions(offsetX,offsetY);
 
+            
+        }
         float brushSize = editor.paintSize;
         brushSize = PAINT_SIZE_MIN + (PAINT_SIZE_MAX*brushSize);
 
@@ -939,6 +1127,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         {
             c = _TRANSPARENT;
         }
+
         int opBefore; int srcBefore; int dstBefore;
         al_get_blender(&opBefore, &srcBefore, &dstBefore);
         al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_ZERO);
@@ -1210,6 +1399,49 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
     }
 
 }
+bool HandleIsVertical(EDITOR_HANDLE handle)
+{
+    return (handle == HANDLE_TOP || handle == HANDLE_BOTTOM);
+}
+bool HandleIsHorizontal(EDITOR_HANDLE handle)
+{
+    return (handle == HANDLE_LEFT || handle == HANDLE_RIGHT);
+}
+
+Rect GetMapHandleRect(EDITOR_HANDLE handle)
+{   
+    int offset = 10;
+    int size = 10; 
+
+    int depth = 3; 
+
+    if (handle == HANDLE_TOP) return (Rect){(GetMapWidth()/2.0f - size/2.0f), -offset, size,depth};
+    if (handle == HANDLE_RIGHT) return  (Rect){(GetMapWidth() + offset),GetMapHeight()/2.0f-size/2.0f, depth, size};
+    if (handle == HANDLE_BOTTOM) return  (Rect){(GetMapWidth()/2.0f - size/2.0f),GetMapHeight()+offset, offset, depth};
+    if (handle == HANDLE_LEFT) return (Rect){(0 - offset),GetMapHeight()/2.0f-size/2.0f, depth, size};
+
+
+}
+void DrawMapHandles()
+{
+    DrawFilledRectWorld(GetMapHandleRect(HANDLE_TOP),al_map_rgb(255,0,0));
+    DrawFilledRectWorld(GetMapHandleRect(HANDLE_RIGHT),al_map_rgb(255,0,0));
+    DrawFilledRectWorld(GetMapHandleRect(HANDLE_BOTTOM),al_map_rgb(255,0,0));
+    DrawFilledRectWorld(GetMapHandleRect(HANDLE_LEFT),al_map_rgb(255,0,0));
+}
+EDITOR_HANDLE CheckMapHandleClicked(MouseState mouse)
+{
+    if (PointInRect(mouse.worldX,mouse.worldY,GetMapHandleRect(HANDLE_TOP)))
+        return HANDLE_TOP;
+    if (PointInRect(mouse.worldX,mouse.worldY,GetMapHandleRect(HANDLE_RIGHT)))
+        return HANDLE_RIGHT;
+    if (PointInRect(mouse.worldX,mouse.worldY,GetMapHandleRect(HANDLE_BOTTOM)))
+        return HANDLE_BOTTOM;
+    if (PointInRect(mouse.worldX,mouse.worldY,GetMapHandleRect(HANDLE_LEFT)))
+        return HANDLE_LEFT;
+    return HANDLE_NONE;
+
+}
 void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 {
     DrawPanel(&editor.editorUI.saveLoad, &mouseState, 1);
@@ -1241,6 +1473,51 @@ void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFram
         
         al_draw_filled_circle(mouseState.screenX,mouseState.screenY,brushSize,c);
     }   
+
+    int edgeOffsetX = 0;
+    int edgeOffsetY = 0;
+    int edgeOffsetW = 0;
+    int edgeOffsetH = 0;
+
+    if (editor.heldHandle)
+    {
+        if (editor.heldHandle == HANDLE_TOP)
+        {
+            Rect handle = GetMapHandleRect(HANDLE_TOP);
+            
+            edgeOffsetY =  mouseState.worldY - handle.y - editor.handleOffset;
+            edgeOffsetH -= edgeOffsetY;
+        }
+        if (editor.heldHandle == HANDLE_RIGHT)
+        {
+            Rect handle = GetMapHandleRect(HANDLE_RIGHT);
+            
+            edgeOffsetW =  mouseState.worldX - handle.x - editor.handleOffset;
+        }
+        if (editor.heldHandle == HANDLE_BOTTOM)
+        {
+            Rect handle = GetMapHandleRect(HANDLE_BOTTOM);
+            
+            edgeOffsetH =  mouseState.worldY - handle.y - editor.handleOffset;
+        }
+        if (editor.heldHandle == HANDLE_LEFT)
+        {
+            Rect handle = GetMapHandleRect(HANDLE_LEFT);
+            
+            edgeOffsetX =  mouseState.worldX - handle.x - editor.handleOffset;
+            edgeOffsetW -= edgeOffsetX;
+
+        }
+
+
+    }
+
+
+    Rect r = (Rect){-1 + edgeOffsetX,-1+edgeOffsetY,GetMapWidth()+2+edgeOffsetW, GetMapHeight()+2+edgeOffsetH};
+    ToScreenSpace(&r.x,&r.y);
+    al_draw_rectangle(r.x,r.y,r.x+r.w,r.y+r.h,al_map_rgb(255,0,0),1);
+
+    DrawMapHandles();
 }
 void InitFileSelector(Panel* p)
 {

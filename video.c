@@ -624,6 +624,8 @@ void ProcessSpriteDecorations(float dt)
                 
 void DrawSpriteDecorations(RenderOrder renderOrder)
 {
+    if (gameState == GAMESTATE_IN_EDITOR)   
+        return;
     for (int i = 0; i < MAX_SPRITE_DECORATIONS; i++)
     {
         SpriteDecoration* s = &spriteDecorations[i];
@@ -854,4 +856,9 @@ float GetScreenshake()
 
     }
     return total;
+}
+void DrawFilledRectWorld(Rect r, ALLEGRO_COLOR col)
+{
+    ToScreenSpace(&r.x,&r.y);
+    al_draw_filled_rectangle(r.x,r.y,r.x+r.w,r.y+r.h,col);
 }

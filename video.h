@@ -149,3 +149,4 @@ void DrawLight(int lightSize, float r, float g, float b, float intensity, float 
 void AddScreenshake(float amt, float time);
 float GetScreenshake();
 void UpdateScreenshake(float dt);
+void DrawFilledRectWorld(Rect r, ALLEGRO_COLOR col);
