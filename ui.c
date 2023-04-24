@@ -1762,7 +1762,7 @@ UIElement* AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool* a
 
     return ref;
 }
-void AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled, float* v)
+UIElement* AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled, float* v)
 {
     Slider* s = calloc(1,sizeof(Slider));
     UIElement u = {0};
@@ -1780,7 +1780,7 @@ void AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled, f
     u.bgColor = COLOR_BG;
 
     UIElement* ref = AddElement(p,&u);
-    
+    return ref;
 }
 UIElement* AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int startIndex, int numElements, ...)
 {

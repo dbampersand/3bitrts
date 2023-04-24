@@ -65,3 +65,4 @@ void CircToRect(double u, double v, double* x, double* y);
 bool MouseClickedThisFrame(MouseState* thisFrame, MouseState* previousFrame);
 bool MouseReleasedThisFrame(MouseState* thisFrame, MouseState* previousFrame);
 
+bool KeyPressedThisFrame(int key, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);

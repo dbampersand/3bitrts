@@ -9,7 +9,21 @@
 #include "player.h"
 #include <dirent.h>
 
+#include "allegro5/allegro_primitives.h"
+
 Editor editor = {0};
+void SetEditorStateToNormal()
+{
+    editor.editorState = EDITOR_STATE_NORMAL;
+    editor.paintingMode = PAINTING_MODE_NONE;
+}
+
+void SetEditorStateToDrawing()
+{
+    editor.heldObject = NULL;
+    editor.highlightedObject = NULL;
+    editor.editorState = EDITOR_STATE_PAINTING;
+}
 
 char* GetCallEnd(char* str, char* func)
 {
@@ -790,10 +804,26 @@ void SaveMap()
 
     al_fwrite(file,currMap->lua_buffer.buffer,strlen(currMap->lua_buffer.buffer) * sizeof(char));
     al_fclose(file);
+
+    ALLEGRO_BITMAP* before = al_get_target_bitmap();
+
+    int w = al_get_bitmap_width(sprites[currMap->spriteIndex].sprite); int h = al_get_bitmap_height(sprites[currMap->spriteIndex].sprite);
+    
+    ALLEGRO_BITMAP* combined = al_create_bitmap(w,h);
+    al_set_target_bitmap(combined);
+    al_draw_tinted_bitmap(sprites[currMap->spriteIndex].sprite,WHITE,0,0,0);
+    al_draw_tinted_bitmap(sprites[currMap->secondLayerSpriteIndex].sprite,al_map_rgb(0,0,0),0,0,0);
+    
+    
+    char* path = sprites[currMap->spriteIndex].path;
+    al_save_bitmap(path,combined);
+
+    al_destroy_bitmap(combined);
+    al_set_target_bitmap(before);
 }
 void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
-    if (MouseClickedThisFrame(&mouseState, &mouseStateLastFrame))
+    if (editor.editorState == EDITOR_STATE_NORMAL && MouseClickedThisFrame(&mouseState, &mouseStateLastFrame))
     {
         editor.heldObject = GetClicked(mouseState.worldX,mouseState.worldY);
         if (editor.heldObject)
@@ -827,8 +857,6 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
     if (editor.heldObject)
     {
         UpdatePosition(editor.heldObject,mouseState.worldX,mouseState.worldY);
-
-
     }
 
     if (!(mouseState.mouse.buttons & 1))
@@ -848,6 +876,97 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
 
 
     UpdateButton(editor.editorUI.save.x,editor.editorUI.save.y,editor.editorUI.save.w,editor.editorUI.save.h,&editor.editorUI.save,mouseState,mouseStateLastFrame);
+
+    if (GetButton(&editor.editorUI.mapImageEditor,"Draw") || KeyPressedThisFrame(ALLEGRO_KEY_B,keyState,keyStateLastFrame))
+    {
+        if (editor.editorState == EDITOR_STATE_PAINTING && editor.paintingMode == PAINTING_MODE_DRAW_FIRST_LAYER)
+        {
+            SetEditorStateToNormal();
+        }
+        else
+        {
+            SetEditorStateToDrawing();
+            editor.paintingMode = PAINTING_MODE_DRAW_FIRST_LAYER;
+        }
+    }
+    if (GetButton(&editor.editorUI.mapImageEditor,"SecondLayer") || KeyPressedThisFrame(ALLEGRO_KEY_G,keyState,keyStateLastFrame))
+    {
+        if (editor.editorState == EDITOR_STATE_PAINTING && editor.paintingMode == PAINTING_MODE_SECOND_LAYER)
+        {
+            SetEditorStateToNormal();
+        }
+        else
+        {
+            SetEditorStateToDrawing();
+            editor.paintingMode = PAINTING_MODE_SECOND_LAYER;
+        }
+    }
+    if (GetButton(&editor.editorUI.mapImageEditor,"Erase") || KeyPressedThisFrame(ALLEGRO_KEY_E,keyState,keyStateLastFrame))
+    {
+        if (editor.editorState == EDITOR_STATE_PAINTING && editor.paintingMode == PAINTING_MODE_ERASING)
+        {
+            SetEditorStateToNormal();
+        }
+        else
+        {
+            SetEditorStateToDrawing();
+            editor.paintingMode = PAINTING_MODE_ERASING;
+        }
+    }
+    if (editor.editorState  == EDITOR_STATE_PAINTING && (KeyPressedThisFrame(ALLEGRO_KEY_ENTER,keyState,keyStateLastFrame) || KeyPressedThisFrame(ALLEGRO_KEY_ESCAPE,keyState,keyStateLastFrame)))
+    {
+        editor.editorState = EDITOR_STATE_NORMAL;
+    }
+    if ((editor.editorState == EDITOR_STATE_PAINTING || editor.editorState == PAINTING_MODE_ERASING) && mouseState.mouse.buttons & 1)
+    {
+
+        float brushSize = editor.paintSize;
+        brushSize = PAINT_SIZE_MIN + (PAINT_SIZE_MAX*brushSize);
+
+        ALLEGRO_BITMAP* before = al_get_target_bitmap();
+        if (editor.paintingMode == PAINTING_MODE_DRAW_FIRST_LAYER)
+            al_set_target_bitmap(sprites[currMap->spriteIndex].sprite);
+        if (editor.paintingMode == PAINTING_MODE_SECOND_LAYER)   
+            al_set_target_bitmap(sprites[currMap->secondLayerSpriteIndex].sprite);
+
+
+        ALLEGRO_COLOR c = WHITE;
+        if (editor.paintingMode == PAINTING_MODE_DRAW_FIRST_LAYER || editor.paintingMode == PAINTING_MODE_SECOND_LAYER)
+        {
+            c = WHITE;
+        }
+        else if (editor.paintingMode == PAINTING_MODE_ERASING)
+        {
+            c = _TRANSPARENT;
+        }
+        int opBefore; int srcBefore; int dstBefore;
+        al_get_blender(&opBefore, &srcBefore, &dstBefore);
+        al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_ZERO);
+
+        if (editor.paintingMode == PAINTING_MODE_ERASING)
+        {
+            al_set_target_bitmap(sprites[currMap->spriteIndex].sprite);
+            al_draw_filled_circle(mouseState.worldX, mouseState.worldY,brushSize,c);
+            al_set_target_bitmap(sprites[currMap->secondLayerSpriteIndex].sprite);
+            al_draw_filled_circle(mouseState.worldX, mouseState.worldY,brushSize,c);
+        }
+        else if (editor.paintingMode == PAINTING_MODE_SECOND_LAYER)
+        {
+            al_draw_filled_circle(mouseState.worldX, mouseState.worldY,brushSize,c);
+        }
+        else if (editor.paintingMode == PAINTING_MODE_DRAW_FIRST_LAYER)
+        {
+            al_set_target_bitmap(sprites[currMap->spriteIndex].sprite);
+            al_draw_filled_circle(mouseState.worldX, mouseState.worldY,brushSize,c);
+            al_set_target_bitmap(sprites[currMap->secondLayerSpriteIndex].sprite);
+            al_draw_filled_circle(mouseState.worldX, mouseState.worldY,brushSize,_TRANSPARENT);
+        }
+            
+        
+
+        al_set_blender(opBefore,srcBefore,dstBefore);
+        al_set_target_bitmap(before);
+    }
 
     if (GetButtonIsClicked(&editor.editorUI.save))
     {
@@ -1105,6 +1224,23 @@ void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFram
 
     DrawPanel(&editor.editorUI.mapImageEditor,&mouseState,1);
     DrawUIElement(&editor.editorUI.save,editor.editorUI.save.x,editor.editorUI.save.y,&mouseState,COLOR_BG,COLOR_FRIENDLY);
+
+    if (editor.editorState == EDITOR_STATE_PAINTING)
+    {
+        float brushSize = editor.paintSize;
+        brushSize = PAINT_SIZE_MIN + (PAINT_SIZE_MAX*brushSize);
+
+
+        ALLEGRO_COLOR c;
+        if (editor.paintingMode == PAINTING_MODE_DRAW_FIRST_LAYER)
+            c = GROUND;
+        if (editor.paintingMode == PAINTING_MODE_SECOND_LAYER)
+            c = GROUND_DARK;
+        if (editor.paintingMode == PAINTING_MODE_ERASING)
+            c = BG;
+        
+        al_draw_filled_circle(mouseState.screenX,mouseState.screenY,brushSize,c);
+    }   
 }
 void InitFileSelector(Panel* p)
 {
@@ -1144,6 +1280,11 @@ void InitEditorUI()
     UIElement* setDecor = AddCheckbox(&editor.editorUI.unitOptions,owner->x, owner->y + owner->h + 10,15,15,"IsDecor",&editor.editorUI.heldObjectIsDecor);
     AddTextInput(&editor.editorUI.unitOptions,setDecor->x,setDecor->y + setDecor->h + 10,editor.editorUI.unitOptions.w-2,20, "AggroGroup","",4,true);
 
-    int mapImageEditorH = 40;
+    int mapImageEditorH = 80;
     editor.editorUI.mapImageEditor = CreatePanel(editor.editorUI.unitSelector.x, editor.editorUI.unitSelector.y + editor.editorUI.unitSelector.h+2,editor.editorUI.unitSelector.w,mapImageEditorH,1,true);
+    UIElement* draw = AddButton(&editor.editorUI.mapImageEditor,"Draw","Draw",1,1,editor.editorUI.mapImageEditor.w-2,10,true);
+    UIElement* drawSecondLayer = AddButton(&editor.editorUI.mapImageEditor,"SecondLayer","SecondLayer",draw->x,draw->y+draw->h+2,editor.editorUI.mapImageEditor.w-2,draw->h,true);
+    UIElement* erase = AddButton(&editor.editorUI.mapImageEditor,"Erase","Erase",drawSecondLayer->x,drawSecondLayer->y+drawSecondLayer->h+2,editor.editorUI.mapImageEditor.w-2,drawSecondLayer->h,true);
+    UIElement* paintSize = AddSlider(&editor.editorUI.mapImageEditor,erase->x,erase->y+erase->h,erase->w,10,"PaintSize",editor.paintSize,&editor.paintSize);
+
 }   

@@ -366,3 +366,4 @@ void ClearPanel(Panel* p);
 void SetTextInputStr(UIElement* u, char* str);
 void ClearTextInputStr(UIElement* u);
 
+UIElement* AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled, float* v);

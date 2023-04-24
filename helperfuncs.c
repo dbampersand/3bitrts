@@ -438,3 +438,7 @@ bool MouseReleasedThisFrame(MouseState* thisFrame, MouseState* previousFrame)
 {
     return ((previousFrame->mouse.buttons & 1) && !(thisFrame->mouse.buttons & 1));
 }
+bool KeyPressedThisFrame(int key, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
+{
+    return (al_key_down(keyState,key) && !al_key_down(keyStateLastFrame,key));
+}

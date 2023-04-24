@@ -7,6 +7,21 @@ typedef struct Map Map;
 typedef struct GameObject GameObject;
 typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE;
 
+#define PAINT_SIZE_MIN 1
+#define PAINT_SIZE_MAX 40
+typedef enum EDITOR_STATE
+{
+    EDITOR_STATE_NORMAL = 0,
+    EDITOR_STATE_HOLDING_UNIT = 1,
+    EDITOR_STATE_PAINTING = 2
+}EDITOR_STATE;
+typedef enum PAINTING_MODE
+{
+    PAINTING_MODE_NONE,
+    PAINTING_MODE_DRAW_FIRST_LAYER,
+    PAINTING_MODE_SECOND_LAYER,
+    PAINTING_MODE_ERASING
+}PAINTING_MODE;
 typedef enum EDITOR_FILE_SELECT
 {
     EDITOR_FILE_CURRENT_MAP = 1,
@@ -60,7 +75,10 @@ typedef struct Editor
     GameObject* highlightedObject;
     
     EditorUI editorUI;
+    EDITOR_STATE editorState;
+    PAINTING_MODE paintingMode;
 
+    float paintSize;
 
 
 } Editor;   
