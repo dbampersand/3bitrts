@@ -174,9 +174,12 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
     UpdateChatbox(dt);
 
 
-    if (al_key_down(keyState,ALLEGRO_KEY_LCTRL) && al_key_down(keyState,ALLEGRO_KEY_M))
+    if (al_key_down(keyState,ALLEGRO_KEY_LCTRL) && KeyPressedThisFrame(ALLEGRO_KEY_M,keyState,keyStateLastFrame))
     {
-        SetGameStateToInEditor();   
+        if (gameState != GAMESTATE_IN_EDITOR)
+            SetGameStateToInEditor(); 
+        else
+            SetGameStateToInGame();  
     }
 }
 float aefesfsd = 0;

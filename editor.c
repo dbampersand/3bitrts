@@ -502,15 +502,13 @@ void UpdateArgumentStr(char** full, char* position, char* str, bool addQuotes)
     int numQuotes = 0;
 
     bool numOpenBrackets = 0;
-    for (int i = 1; i < strlen(position); i++)
+    for (int i = 0; i < strlen(position); i++)
     {
         char* c = position + i;
-        if (position[i] == '"' && position[i-1] != '\\')
+        if (position[i] == '"')
             numQuotes++;
-        if (position[i] == ',' && numQuotes == 0)
+        if ((position[i] == ',' || position[i] == ')') && numQuotes == 0)
         {
-            //no quotes so move it along 2 to account for no ""
-            numToMove += 2;
             break;
         }
         if (position[i] == ')' && numOpenBrackets==0)
@@ -525,7 +523,7 @@ void UpdateArgumentStr(char** full, char* position, char* str, bool addQuotes)
         if (numQuotes == 2)
             break;
     }
-    DeleteStr(full,&position,numToMove-1);
+    DeleteStr(full,&position,numToMove);
 
     char* copy = calloc(strlen(str)+3,sizeof(char));
     if (addQuotes)
@@ -814,7 +812,7 @@ void EditorSetMap(char* path)
 
 void PopulateFileList(Panel* p, char* path, int numPostfixes, ...)
 {
-    va_list argp;
+    va_list argp;   
     va_start(argp, numPostfixes);
     char** postfixes = calloc(numPostfixes,sizeof(char*));
     for (int i = 0; i < numPostfixes; i++)
@@ -892,7 +890,7 @@ void AddObjLineToFile(GameObject* g, float x, float y, OBJ_FRIENDLINESS ownedBy,
 {
     char* line = NULL; 
 
-    char* fmt = "   CreateObject(\"%s\",%.2f,%.2f,%s,%.2f)\n";
+    char* fmt = "    CreateObject(\"%s\",%.2f,%.2f,%s,%.2f)\n";
     char* friendliness;
     if (ownedBy == TYPE_ENEMY)
         friendliness = "TYPE_ENEMY";
@@ -1177,6 +1175,16 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         PopulateFileList(&editor.editorUI.fileSelector,editor.currentPath,1,".lua");
 
     }
+    if (GetButton(&editor.editorUI.mapImageEditor,"MapPath"))
+    {
+        editor.editorUI.showFileSelector = true;
+        editor.editorUI.selectorPicked = EDITOR_FILE_MAP_SPRITE;
+
+        PopulateFileList(&editor.editorUI.fileSelector,editor.currentPath,1,".png");
+
+    }
+
+
     if (GetButton(&editor.editorUI.fileSelector,"Back"))
     {
         editor.editorUI.showFileSelector = false;
@@ -1239,6 +1247,34 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                                             EditorSetMap(newPath);
                                             editor.editorUI.showFileSelector = false;
 
+                                        }
+                                        if (editor.editorUI.selectorPicked == EDITOR_FILE_MAP_SPRITE)
+                                        {
+                                            currMap->spriteIndex = LoadSprite(newPath,true);
+                                            PreprocessMap(currMap,0);
+                                            editor.editorUI.showFileSelector = false;
+                                            bool foundSetMapSprite = false;
+
+                                            for (int i = 0; i < editor.numSetupLines; i++)
+                                            {
+                                                if (!editor.setupLines[i].lineIsComment &&  strstr(editor.setupLines[i].line,"SetMapSprite"))
+                                                {
+                                                    char* start = GetPositionOfArgument(editor.setupLines[i].line,"SetMapSprite",1);
+
+                                                    UpdateArgumentStr(&editor.setupLines[i].line,start,newPath,true);
+                                                    foundSetMapSprite = true;
+                                                    break;
+                                                }
+                                            }   
+                                            if (!foundSetMapSprite)
+                                            {
+                                                char* fmt = "    SetMapSprite(\"%s\")\n";
+                                                int numChars = snprintf(NULL,0,fmt,newPath);
+                                                char* fullStr = calloc(numChars+1,sizeof(char));
+                                                sprintf(fullStr,fmt,newPath);
+                                                AddEditorLine(&editor.setupLines,&editor.numSetupLines, fullStr);
+                                                free(fullStr);
+                                            }
                                         }
                                         if (editor.editorUI.selectorPicked == EDITOR_FILE_NEXT_MAP)
                                         {
@@ -1446,10 +1482,6 @@ void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFram
 {
     DrawPanel(&editor.editorUI.saveLoad, &mouseState, 1);
 
-    if (editor.editorUI.showFileSelector)
-    {
-        DrawPanel(&editor.editorUI.fileSelector,&mouseState,1);
-    }
     DrawPanel(&editor.editorUI.unitSelector,&mouseState,1);
     if (editor.highlightedObject)
         DrawPanel(&editor.editorUI.unitOptions,&mouseState,1);
@@ -1518,6 +1550,12 @@ void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFram
     al_draw_rectangle(r.x,r.y,r.x+r.w,r.y+r.h,al_map_rgb(255,0,0),1);
 
     DrawMapHandles();
+
+    if (editor.editorUI.showFileSelector)
+    {
+        DrawPanel(&editor.editorUI.fileSelector,&mouseState,1);
+    }
+
 }
 void InitFileSelector(Panel* p)
 {
@@ -1562,6 +1600,6 @@ void InitEditorUI()
     UIElement* draw = AddButton(&editor.editorUI.mapImageEditor,"Draw","Draw",1,1,editor.editorUI.mapImageEditor.w-2,10,true);
     UIElement* drawSecondLayer = AddButton(&editor.editorUI.mapImageEditor,"SecondLayer","SecondLayer",draw->x,draw->y+draw->h+2,editor.editorUI.mapImageEditor.w-2,draw->h,true);
     UIElement* erase = AddButton(&editor.editorUI.mapImageEditor,"Erase","Erase",drawSecondLayer->x,drawSecondLayer->y+drawSecondLayer->h+2,editor.editorUI.mapImageEditor.w-2,drawSecondLayer->h,true);
-    UIElement* paintSize = AddSlider(&editor.editorUI.mapImageEditor,erase->x,erase->y+erase->h,erase->w,10,"PaintSize",editor.paintSize,&editor.paintSize);
-
+    UIElement* paintSize = AddSlider(&editor.editorUI.mapImageEditor,erase->x,erase->y+erase->h+2,erase->w,10,"PaintSize",editor.paintSize,&editor.paintSize);
+    UIElement* path = AddButton(&editor.editorUI.mapImageEditor,"MapPath","MapPath",paintSize->x,paintSize->y+paintSize->h+10,paintSize->w,10,true);
 }   

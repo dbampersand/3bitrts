@@ -33,7 +33,8 @@ typedef enum PAINTING_MODE
 typedef enum EDITOR_FILE_SELECT
 {
     EDITOR_FILE_CURRENT_MAP = 1,
-    EDITOR_FILE_NEXT_MAP = 2
+    EDITOR_FILE_NEXT_MAP = 2,
+    EDITOR_FILE_MAP_SPRITE = 3
 } EDITOR_FILE_SELECT;
 typedef struct EditorLine
 {

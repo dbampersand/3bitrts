@@ -1609,6 +1609,8 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
     if (!g)
         return;
     if (dV == 0) return;
+    if (currMap->collisionMapHeight == 0)
+        return;
     Sprite* s = &sprites[g->spriteIndex];
     if (ObjIsDecoration(g)) 
         dV = -dV;
