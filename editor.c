@@ -12,6 +12,12 @@
 #include "allegro5/allegro_primitives.h"
 
 Editor editor = {0};
+bool FileExists(char* path)
+{   
+    ALLEGRO_FILE* f = al_fopen(path,"r");
+    return (f != NULL);
+}
+
 void EditorSetMapSprite(char* newPath)
 {
     currMap->spriteIndex = LoadSprite(newPath,true);
@@ -838,8 +844,8 @@ void EditorSetMap(char* path)
         }
     }
 
-    SetUITextStr(GetUIText(&editor.editorUI.fileSelector,"Path"),path);
-    strcpy(editor.currentPath,path);
+    SetUITextStr(GetUIText(&editor.editorUI.fileSelector,"Path"),pathCopy);
+    strcpy(editor.currentPath,pathCopy);
 
     free(pathCopy);
 }   
@@ -1068,7 +1074,18 @@ void SaveMap()
 }
 void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
-    if (editor.editorState == EDITOR_STATE_NORMAL && MouseClickedThisFrame(&mouseState, &mouseStateLastFrame))
+    if (editor.editorUI.showFileNamingUI)
+        UpdatePanel(&editor.editorUI.fileNamingUI,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
+
+    if (editor.editorUI.showFileSelector)
+        UpdatePanel(&editor.editorUI.fileSelector,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
+
+    UpdatePanel(&editor.editorUI.saveLoad,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
+    UpdatePanel(&editor.editorUI.unitSelector,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
+    UpdatePanel(&editor.editorUI.unitOptions,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
+    UpdatePanel(&editor.editorUI.mapImageEditor,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
+
+    if (!_PANEL_CLICKED_THIS_FRAME && editor.editorState == EDITOR_STATE_NORMAL && MouseClickedThisFrame(&mouseState, &mouseStateLastFrame))
     {
         editor.heldObject = GetClicked(mouseState.worldX,mouseState.worldY);
         if (editor.heldObject)
@@ -1126,16 +1143,6 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         editor.heldObject = NULL;
         editor.highlightedObject = NULL;   
     }
-    if (editor.editorUI.showFileNamingUI)
-        UpdatePanel(&editor.editorUI.fileNamingUI,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
-
-    if (editor.editorUI.showFileSelector)
-        UpdatePanel(&editor.editorUI.fileSelector,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
-
-    UpdatePanel(&editor.editorUI.saveLoad,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
-    UpdatePanel(&editor.editorUI.unitSelector,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
-    UpdatePanel(&editor.editorUI.unitOptions,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
-    UpdatePanel(&editor.editorUI.mapImageEditor,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
 
 
 
@@ -1179,7 +1186,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
     {
         editor.editorState = EDITOR_STATE_NORMAL;
     }
-    if ((editor.editorState == EDITOR_STATE_PAINTING) && mouseState.mouse.buttons & 1)
+    if (!_PANEL_CLICKED_THIS_FRAME && (editor.editorState == EDITOR_STATE_PAINTING) && mouseState.mouse.buttons & 1)
     {
         if (editor.paintingMode == PAINTING_MODE_DRAW_FIRST_LAYER || editor.paintingMode == PAINTING_MODE_SECOND_LAYER)
         {
@@ -1297,6 +1304,13 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
             {
                 if (!strstr(fullStr,".lua"))
                     strcat(fullStr,".lua");
+
+                if (FileExists(fullStr))
+                {
+                    free(fullStr);
+                    printf("Could not save %s: file already exists",fullStr);
+                    return;
+                }
                 
                 char* fmt = "function setup()\n\nend\nfunction update()\n\nend\nfunction mapend()\n\nend";
                 ALLEGRO_FILE* file = al_fopen(fullStr, "w");
@@ -1305,7 +1319,6 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                     printf("Couldn't save file\n");   
                     free(fullStr);
                     return;
-
                 }
                 al_fwrite(file,fmt,strlen(fmt));
 
@@ -1317,6 +1330,14 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
             {
                 if (!strstr(fullStr,".png"))
                     strcat(fullStr,".png");
+
+                if (FileExists(fullStr))
+                {
+                    free(fullStr);
+                    printf("Could not save %s: file already exists",fullStr);
+                    return;
+                }
+
                 ALLEGRO_BITMAP* before = al_get_target_bitmap();                
                 Sprite* new = NewSprite(256,256);
                 new->path = calloc(strlen(fullStr)+1,sizeof(char));
