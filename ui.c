@@ -42,6 +42,8 @@ char* stackDrawBuffer = NULL;
 
 float debounceTimer = 0;
 float debounceTime = 0.15;
+bool _PANEL_CLICKED_THIS_FRAME = false;
+
 void DrawUIHighlight(UIElement* u, float x, float y)
 {
     int total = u->w*2 + u->h*2;
@@ -2020,8 +2022,16 @@ void DeleteUIElement(UIElement* u)
     if (u->elementType == ELEMENT_KEYINPUT)
     {
         KeyInput* t = (KeyInput*)u->data;
-        free(t->text);
+        if (t->text)
+            free(t->text);
     }
+    if (u->elementType == ELEMENT_TEXTINPUT)
+    {
+        TextInput* t = (TextInput*)u->data;
+        if (t->text)
+            free(t->text);
+    }
+
     if (u->name)
         free(u->name);
     if (u->data)
@@ -2785,13 +2795,22 @@ void UpdatePanel(Panel* p, MouseState* mouseState, MouseState* mouseStateLastFra
 {
     if (p)
     {
-        for (int i = p->numElements-1; i  >= 0; i--)
+        if (!_PANEL_CLICKED_THIS_FRAME)
         {
-            if (UpdateElement(p,&p->elements[i],mouseState,mouseStateLastFrame, keyStateThisFrame, keyStateLastFrame))
+            for (int i = p->numElements-1; i  >= 0; i--)
             {
-                break;
+                
+                if (UpdateElement(p,&p->elements[i],mouseState,mouseStateLastFrame, keyStateThisFrame, keyStateLastFrame))
+                {
+                    break;
+                }
             }
         }
+        Rect r = (Rect){p->x,p->y,p->w,p->h};
+
+        if (MouseClickedThisFrame(mouseState,mouseStateLastFrame) && PointInRect(mouseState->screenX,mouseState->screenY,r))
+            _PANEL_CLICKED_THIS_FRAME = true;
+
     }
     UpdateScrollbar(p,mouseState,mouseStateLastFrame);
 

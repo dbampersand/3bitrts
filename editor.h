@@ -49,12 +49,15 @@ typedef struct EditorUI
     Panel saveLoad;
 
     Panel fileSelector;
+    Panel fileNamingUI;
     Panel unitSelector;
 
     Panel unitOptions;
     Panel mapImageEditor;
 
     bool showFileSelector;
+    bool showFileNamingUI;
+
     EDITOR_FILE_SELECT selectorPicked;
 
     UIElement save;

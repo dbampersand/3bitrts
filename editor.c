@@ -827,7 +827,7 @@ void PopulateFileList(Panel* p, char* path, int numPostfixes, ...)
     struct dirent *dir;
     d = opendir(path);
 
-    InitFileSelector(p);
+    InitFileSelector(p,&editor.editorUI.fileNamingUI);
     int x = 40; int y = 40; int w = _SCREEN_SIZE-70; int h = 20;
     if (d) {
         while ((dir = readdir(d)) != NULL) {
@@ -949,6 +949,36 @@ void SaveFunction(char** buffer, char* funcName, EditorLine* lines, int numLines
         InsertStr(buffer, &s, lines[i].line);
     }
 }
+void SetNextMap(char* path)
+{
+    bool foundFunc = false;
+    if (editor.nextMap)
+        free(editor.nextMap);
+    editor.nextMap = calloc(strlen(path)+1,sizeof(char));
+    strcpy(editor.nextMap,path);
+
+    ChangeButtonText(GetButtonB(&editor.editorUI.saveLoad,"NextMap"),editor.nextMap);
+
+    for (int i = 0; i < editor.numEndLines; i++)
+    {
+        if (!editor.endLines[i].lineIsComment && strstr(editor.endLines[i].line,"ChangeMap("))
+        {
+            foundFunc = true;
+
+            char* c = GetPositionOfArgument(editor.endLines[i].line,"ChangeMap",1);
+            UpdateArgumentStr(&editor.endLines[i].line,c,path,true);
+
+        }
+    }
+    if (!foundFunc)
+    {
+        char* str = calloc(strlen(path) + strlen("   ChangeMap(\"\")\n") + 1,sizeof(char));
+        sprintf(str,"   ChangeMap(\"%s\")\n",path);
+        AddEditorLine(&editor.endLines, &editor.numEndLines, str);
+
+        free(str);
+    }
+}
 void SaveMap()
 {
     SaveFunction(&currMap->lua_buffer.buffer,"setup",editor.setupLines,editor.numSetupLines);
@@ -1039,9 +1069,13 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         editor.heldObject = NULL;
         editor.highlightedObject = NULL;   
     }
+    if (editor.editorUI.showFileNamingUI)
+        UpdatePanel(&editor.editorUI.fileNamingUI,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
+
+    if (editor.editorUI.showFileSelector)
+        UpdatePanel(&editor.editorUI.fileSelector,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
 
     UpdatePanel(&editor.editorUI.saveLoad,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
-    UpdatePanel(&editor.editorUI.fileSelector,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
     UpdatePanel(&editor.editorUI.unitSelector,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
     UpdatePanel(&editor.editorUI.unitOptions,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
     UpdatePanel(&editor.editorUI.mapImageEditor,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
@@ -1189,6 +1223,67 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
     {
         editor.editorUI.showFileSelector = false;
     }
+    if (GetButton(&editor.editorUI.fileSelector,"New"))
+    {
+        editor.editorUI.showFileNamingUI = true;
+       
+    }
+    if (GetButton(&editor.editorUI.fileNamingUI,"Confirm"))
+    {
+        char* name = ((TextInput*)(GetUIElement(&editor.editorUI.fileNamingUI,"FileName")->data))->text;
+        if (strlen(name) > 0)
+        {
+            char* fullStr = calloc(strlen(name)+strlen(editor.currentPath)+strlen(".lua")+3,sizeof(char));
+
+            strcat(fullStr,editor.currentPath);
+            if (fullStr[strlen(fullStr)-1] != '/')
+                strcat(fullStr,"/");
+            strcat(fullStr,name);
+
+
+            //create a new lua file and populate it with boilerplate
+            if (editor.editorUI.selectorPicked == EDITOR_FILE_CURRENT_MAP || editor.editorUI.selectorPicked == EDITOR_FILE_NEXT_MAP)
+            {
+                if (!strstr(fullStr,".lua"))
+                    strcat(fullStr,".lua");
+                
+                char* fmt = "function setup()\n\nend\nfunction update()\n\nend\nfunction mapend()\n\nend";
+                ALLEGRO_FILE* file = al_fopen(fullStr, "w");
+                if (file == NULL)
+                {
+                    printf("Couldn't save file\n");   
+                    return;
+
+                }
+                al_fwrite(file,fmt,strlen(fmt));
+
+                al_fclose(file);
+
+
+            }
+            if (editor.editorUI.selectorPicked == EDITOR_FILE_CURRENT_MAP)
+            {
+                EditorSetMap(fullStr);
+            }
+            if (editor.editorUI.selectorPicked == EDITOR_FILE_NEXT_MAP)
+            {
+                SetNextMap(fullStr);
+            }
+
+            editor.editorUI.showFileSelector = false;
+            editor.editorUI.showFileNamingUI = false;
+
+
+            free(fullStr);
+        }
+    }
+    if (GetButton(&editor.editorUI.fileNamingUI,"Cancel"))
+    {
+        editor.editorUI.showFileNamingUI = false;
+
+    }
+
+
 
     if (editor.editorUI.showFileSelector)
     {
@@ -1278,34 +1373,8 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                                         }
                                         if (editor.editorUI.selectorPicked == EDITOR_FILE_NEXT_MAP)
                                         {
-                                            if (editor.nextMap)
-                                                free(editor.nextMap);
-                                            editor.nextMap = calloc(strlen(newPath)+1,sizeof(char));
-                                            strcpy(editor.nextMap,newPath);
-                                            ChangeButtonText(GetButtonB(&editor.editorUI.saveLoad,"NextMap"),editor.nextMap);
                                             editor.editorUI.showFileSelector = false;
-
-
-                                            bool foundFunc = false;
-                                            for (int i = 0; i < editor.numEndLines; i++)
-                                            {
-                                                if (!editor.endLines[i].lineIsComment && strstr(editor.endLines[i].line,"ChangeMap("))
-                                                {
-                                                    foundFunc = true;
-
-                                                    char* c = GetPositionOfArgument(editor.endLines[i].line,"ChangeMap",1);
-                                                    UpdateArgumentStr(&editor.endLines[i].line,c,newPath,true);
-
-                                                }
-                                            }
-                                            if (!foundFunc)
-                                            {
-                                                char* str = calloc(strlen(newPath) + strlen("   ChangeMap(\"\")\n") + 1,sizeof(char));
-                                                sprintf(str,"   ChangeMap(\"%s\")\n",newPath);
-                                                AddEditorLine(&editor.endLines, &editor.numEndLines, str);
-
-                                                free(str);
-                                            }
+                                            SetNextMap(newPath);
                                         }
 
                                         break;
@@ -1554,14 +1623,34 @@ void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFram
     if (editor.editorUI.showFileSelector)
     {
         DrawPanel(&editor.editorUI.fileSelector,&mouseState,1);
+        if (editor.editorUI.showFileNamingUI)
+            DrawPanel(&editor.editorUI.fileNamingUI,&mouseState,1);
+
     }
 
 }
-void InitFileSelector(Panel* p)
+void InitFileSelector(Panel* p, Panel* fileNamingUI)
 {
     ClearPanelElements(p);
-    AddButton(p,"Back","Back",0,0,35,10,true);
+    ClearPanelElements(fileNamingUI);
+
+    UIElement back = *AddButton(p,"Back","Back",0,0,35,10,true);
+    AddButton(p,"New","New",back.x,back.y+back.h+2,35,10,true);
+
     AddText(p,40,0,"Path","Path");
+
+    int fileNamingH = 80;
+
+    int buttonW = 50;
+
+    *fileNamingUI =  CreatePanel(1,_SCREEN_SIZE/2.0f - fileNamingH/2.0f,_SCREEN_SIZE-2,fileNamingH,1,true);
+    UIElement textInp = *AddTextInput(&editor.editorUI.fileNamingUI,2,2,_SCREEN_SIZE-4,20, "FileName","",100,false);
+    AddButton(fileNamingUI,"Confirm","Confirm",_SCREEN_SIZE/2.0f - buttonW,textInp.y+textInp.h+5,buttonW, 20,true);
+    AddButton(fileNamingUI,"Cancel","Cancel",_SCREEN_SIZE/2.0f + buttonW,textInp.y+textInp.h+5,buttonW, 20,true);
+
+
+
+    
 }
 void PopulateUnitSelector(Panel* p)
 {
@@ -1581,7 +1670,7 @@ void InitEditorUI()
     AddButton(&editor.editorUI.saveLoad,"NextMap","NextMap",1,1+loc->h+2,_SCREEN_SIZE-2,13,true);
 
     editor.editorUI.fileSelector = CreatePanel(10,10,_SCREEN_SIZE-20,UI_START_Y-20,1,true);
-    InitFileSelector(&editor.editorUI.fileSelector);
+    InitFileSelector(&editor.editorUI.fileSelector, &editor.editorUI.fileNamingUI);
 
     int unitSelectorW = 80;
     int unitSelectorH = 80;

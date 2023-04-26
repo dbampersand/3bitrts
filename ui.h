@@ -280,6 +280,8 @@ extern Chatbox* chatboxShowing;
 extern UI ui;
 extern char* stackDrawBuffer;
 
+extern bool _PANEL_CLICKED_THIS_FRAME;
+
 typedef struct MouseState MouseState;
 typedef struct Ability Ability;
 typedef struct Replay Replay;
