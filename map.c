@@ -370,7 +370,7 @@ Map* LoadMap(char* path)
 
 void SetMap(Map* m)
 {
-    if (m->collision)
+     if (m->collision)
         free(m->collision);
     m->collision = NULL;
 

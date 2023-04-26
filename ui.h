@@ -297,6 +297,8 @@ void ActivateDebounce();
 void UpdateDebounce(float dt);
 bool DebounceActive();
 
+
+void DisableButton(UIElement* u);
 Panel CreatePanel(int x, int y, int w, int h, int padding, bool showBorder);
 Widget* CreateWidget(GameState gameStateToAttach, Sprite* spr, int x, int y, float originX, float originY, Widget_DrawOrder drawOrder, int id, void* func);
 void DrawMouse(MouseState* mouseState, GameObject* mousedOver);

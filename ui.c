@@ -44,6 +44,14 @@ float debounceTimer = 0;
 float debounceTime = 0.15;
 bool _PANEL_CLICKED_THIS_FRAME = false;
 
+void DisableButton(UIElement* u)
+{
+    Button* b = (Button*)u->data;
+    b->activated = false;
+    b->clicked = false;
+
+}
+
 void DrawUIHighlight(UIElement* u, float x, float y)
 {
     int total = u->w*2 + u->h*2;
@@ -2545,12 +2553,13 @@ bool GetButton(Panel* p, char* name)
         {
             if (strcasecmp(u->name,name)==0)
             {
-                Button* b = (Button*)u->data;
+                return GetButtonIsClicked(u);
+               /* Button* b = (Button*)u->data;
                 if (b->activated)
                 {
                     PlaySound(&sounds[u->sound_clickDown_Index],0.5f,0);
                 }
-                return (b->activated);
+                return (b->activated);*/
             }
         }
     }
@@ -2719,7 +2728,8 @@ void UpdateButton(int rX, int rY, int w, int h, UIElement* u, MouseState mouseSt
 {
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     //ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
-
+    if (_PANEL_CLICKED_THIS_FRAME)
+        return;
     Button* b = (Button*)u->data;
     b->activated = false;
     if (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1))
@@ -2801,7 +2811,7 @@ void UpdatePanel(Panel* p, MouseState* mouseState, MouseState* mouseStateLastFra
             {
                 
                 if (UpdateElement(p,&p->elements[i],mouseState,mouseStateLastFrame, keyStateThisFrame, keyStateLastFrame))
-                {
+                {   
                     break;
                 }
             }
@@ -3353,6 +3363,8 @@ void LoadCursorSprite(UI* ui, int* index, char* path)
 }
 bool GetButtonIsClicked(UIElement* u)
 {
+    if (_PANEL_CLICKED_THIS_FRAME)
+        return false;
     if (u->enabled)
     {
         if (u->elementType == ELEMENT_BUTTON)

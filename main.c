@@ -86,6 +86,7 @@ void init()
     Map* m = LoadMap("assets/ui/map_unitselect.lua");  
     Map* mNull = LoadMap("assets/ui/map_null.lua");  
 
+
     SetMap(mNull);
 
     LoadPrefabs("assets/friendly");
@@ -112,8 +113,9 @@ void init()
 
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseStateLastFrame)
 {   
-    _PANEL_CLICKED_THIS_FRAME = false;
-    
+    if (!(mouseState->mouse.buttons & 1))
+        _PANEL_CLICKED_THIS_FRAME = false;
+
     UpdateAmbience(dt);
     numChannellingInfosDrawn =  0;
     if (gameState == GAMESTATE_IN_SHOP)
@@ -180,7 +182,12 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
         if (gameState != GAMESTATE_IN_EDITOR)
             SetGameStateToInEditor(); 
         else
-            SetGameStateToInGame();  
+        {
+            if (strcmp(currMap->path,"assets/ui/map_unitselect.lua") == 0)
+                SetGameStateToChoosingParty();
+            else
+                SetGameStateToInGame(); 
+        } 
     }
 }
 float aefesfsd = 0;

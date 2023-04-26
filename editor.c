@@ -12,6 +12,36 @@
 #include "allegro5/allegro_primitives.h"
 
 Editor editor = {0};
+void EditorSetMapSprite(char* newPath)
+{
+    currMap->spriteIndex = LoadSprite(newPath,true);
+    PreprocessMap(currMap,0);
+
+    bool foundSetMapSprite;
+
+    for (int i = 0; i < editor.numSetupLines; i++)
+    {
+        if (!editor.setupLines[i].lineIsComment &&  strstr(editor.setupLines[i].line,"SetMapSprite"))
+        {
+            char* start = GetPositionOfArgument(editor.setupLines[i].line,"SetMapSprite",1);
+
+            UpdateArgumentStr(&editor.setupLines[i].line,start,newPath,true);
+            foundSetMapSprite = true;
+            break;
+        }
+    }   
+    if (!foundSetMapSprite)
+    {
+        char* fmt = "    SetMapSprite(\"%s\")\n";
+        int numChars = snprintf(NULL,0,fmt,newPath);
+        char* fullStr = calloc(numChars+1,sizeof(char));
+        sprintf(fullStr,fmt,newPath);
+        AddEditorLine(&editor.setupLines,&editor.numSetupLines, fullStr);
+        free(fullStr);
+    }
+
+
+}
 void DecreaseMapDimensions(EDITOR_HANDLE handle, int x, int y)
 {
     ALLEGRO_BITMAP* old = sprites[currMap->spriteIndex].sprite;
@@ -790,17 +820,20 @@ void EditorSetMap(char* path)
 
     //get the folder we're in
     bool normalChar = false;
-    for (int i = strlen(path)-1; i >= 0; i--)
+
+    char* pathCopy = calloc(strlen(path)+1,sizeof(char));
+    strcpy(pathCopy,path);
+    for (int i = strlen(pathCopy)-1; i >= 0; i--)
     {
-        if (isalnum(path[i]))
+        if (isalnum(pathCopy[i]))
         {
             normalChar = true;
         }
 
-        if (normalChar && (path[i] == '/' || path[i] == '\\'))
+        if (normalChar && (pathCopy[i] == '/' || pathCopy[i] == '\\'))
         {
-            path[i+1] = '\0';
-            path[i] = '/';
+            pathCopy[i+1] = '\0';
+            pathCopy[i] = '/';
             break;
         }
     }
@@ -808,6 +841,7 @@ void EditorSetMap(char* path)
     SetUITextStr(GetUIText(&editor.editorUI.fileSelector,"Path"),path);
     strcpy(editor.currentPath,path);
 
+    free(pathCopy);
 }   
 
 void PopulateFileList(Panel* p, char* path, int numPostfixes, ...)
@@ -979,6 +1013,27 @@ void SetNextMap(char* path)
         free(str);
     }
 }
+ALLEGRO_BITMAP* CreateCombinedBitmap(int w, int h, int numBitmaps, ...)
+{
+    ALLEGRO_BITMAP* before = al_get_target_bitmap();
+
+    ALLEGRO_BITMAP* combined = al_create_bitmap(w,h);
+    al_set_target_bitmap(combined);
+
+    va_list argp;   
+    va_start(argp, numBitmaps);
+    for (int i = 0; i < numBitmaps; i++)
+    {
+        ALLEGRO_BITMAP* b = va_arg(argp, ALLEGRO_BITMAP*);
+        ALLEGRO_COLOR c = va_arg(argp,ALLEGRO_COLOR);
+
+        al_draw_tinted_bitmap(b,c,0,0,0);
+    }
+
+    al_set_target_bitmap(before);
+    return combined;
+
+}
 void SaveMap()
 {
     SaveFunction(&currMap->lua_buffer.buffer,"setup",editor.setupLines,editor.numSetupLines);
@@ -994,20 +1049,22 @@ void SaveMap()
     al_fwrite(file,currMap->lua_buffer.buffer,strlen(currMap->lua_buffer.buffer) * sizeof(char));
     al_fclose(file);
 
-    ALLEGRO_BITMAP* before = al_get_target_bitmap();
+   // ALLEGRO_BITMAP* before = al_get_target_bitmap();
 
     int w = al_get_bitmap_width(sprites[currMap->spriteIndex].sprite); int h = al_get_bitmap_height(sprites[currMap->spriteIndex].sprite);
     
-    ALLEGRO_BITMAP* combined = al_create_bitmap(w,h);
-    al_set_target_bitmap(combined);
-    al_draw_tinted_bitmap(sprites[currMap->spriteIndex].sprite,WHITE,0,0,0);
-    al_draw_tinted_bitmap(sprites[currMap->secondLayerSpriteIndex].sprite,al_map_rgb(0,0,0),0,0,0);
-    
+    //ALLEGRO_BITMAP* combined = al_create_bitmap(w,h);
+    //al_set_target_bitmap(combined);
+    //al_draw_tinted_bitmap(sprites[currMap->spriteIndex].sprite,WHITE,0,0,0);
+    //al_draw_tinted_bitmap(sprites[currMap->secondLayerSpriteIndex].sprite,al_map_rgb(0,0,0),0,0,0);
+    ALLEGRO_BITMAP* combined = CreateCombinedBitmap(w,h,2,sprites[currMap->spriteIndex].sprite,WHITE,sprites[currMap->secondLayerSpriteIndex].sprite,al_map_rgb(0,0,0));
+
+
     char* path = sprites[currMap->spriteIndex].path;
     al_save_bitmap(path,combined);
 
     al_destroy_bitmap(combined);
-    al_set_target_bitmap(before);
+    //al_set_target_bitmap(before);
 }
 void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
@@ -1081,7 +1138,6 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
     UpdatePanel(&editor.editorUI.mapImageEditor,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
 
 
-    UpdateButton(editor.editorUI.save.x,editor.editorUI.save.y,editor.editorUI.save.w,editor.editorUI.save.h,&editor.editorUI.save,mouseState,mouseStateLastFrame);
 
     if (GetButton(&editor.editorUI.mapImageEditor,"Draw") || KeyPressedThisFrame(ALLEGRO_KEY_B,keyState,keyStateLastFrame))
     {
@@ -1188,11 +1244,6 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         al_set_blender(opBefore,srcBefore,dstBefore);
         al_set_target_bitmap(before);
     }
-
-    if (GetButtonIsClicked(&editor.editorUI.save))
-    {
-        SaveMap();
-    }
     if (GetButton(&editor.editorUI.saveLoad,"Location"))
     {
         editor.editorUI.showFileSelector = true;
@@ -1252,6 +1303,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                 if (file == NULL)
                 {
                     printf("Couldn't save file\n");   
+                    free(fullStr);
                     return;
 
                 }
@@ -1261,6 +1313,28 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
 
 
             }
+            if (editor.editorUI.selectorPicked == EDITOR_FILE_MAP_SPRITE)
+            {
+                if (!strstr(fullStr,".png"))
+                    strcat(fullStr,".png");
+                ALLEGRO_BITMAP* before = al_get_target_bitmap();                
+                Sprite* new = NewSprite(256,256);
+                new->path = calloc(strlen(fullStr)+1,sizeof(char));
+                strcpy(new->path,fullStr);
+                al_set_target_bitmap(new->sprite);
+                al_clear_to_color(WHITE);    
+
+                al_save_bitmap(fullStr,new->sprite);
+
+                al_set_target_bitmap(before);
+
+                currMap->spriteIndex = new - sprites;
+                GenerateInvertedSprite(&sprites[currMap->spriteIndex]);
+
+                EditorSetMapSprite(fullStr);
+                
+            }
+
             if (editor.editorUI.selectorPicked == EDITOR_FILE_CURRENT_MAP)
             {
                 EditorSetMap(fullStr);
@@ -1269,9 +1343,16 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
             {
                 SetNextMap(fullStr);
             }
+            
+            DisableButton(GetUIElement(&editor.editorUI.fileNamingUI,"Confirm"));
+            DisableButton(GetUIElement(&editor.editorUI.fileNamingUI,"Cancel"));
 
             editor.editorUI.showFileSelector = false;
             editor.editorUI.showFileNamingUI = false;
+
+
+
+
 
 
             free(fullStr);
@@ -1345,31 +1426,8 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                                         }
                                         if (editor.editorUI.selectorPicked == EDITOR_FILE_MAP_SPRITE)
                                         {
-                                            currMap->spriteIndex = LoadSprite(newPath,true);
-                                            PreprocessMap(currMap,0);
+                                            EditorSetMapSprite(newPath);
                                             editor.editorUI.showFileSelector = false;
-                                            bool foundSetMapSprite = false;
-
-                                            for (int i = 0; i < editor.numSetupLines; i++)
-                                            {
-                                                if (!editor.setupLines[i].lineIsComment &&  strstr(editor.setupLines[i].line,"SetMapSprite"))
-                                                {
-                                                    char* start = GetPositionOfArgument(editor.setupLines[i].line,"SetMapSprite",1);
-
-                                                    UpdateArgumentStr(&editor.setupLines[i].line,start,newPath,true);
-                                                    foundSetMapSprite = true;
-                                                    break;
-                                                }
-                                            }   
-                                            if (!foundSetMapSprite)
-                                            {
-                                                char* fmt = "    SetMapSprite(\"%s\")\n";
-                                                int numChars = snprintf(NULL,0,fmt,newPath);
-                                                char* fullStr = calloc(numChars+1,sizeof(char));
-                                                sprintf(fullStr,fmt,newPath);
-                                                AddEditorLine(&editor.setupLines,&editor.numSetupLines, fullStr);
-                                                free(fullStr);
-                                            }
                                         }
                                         if (editor.editorUI.selectorPicked == EDITOR_FILE_NEXT_MAP)
                                         {
@@ -1501,6 +1559,13 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
     {
         SetOwnedBy(editor.highlightedObject,owner);
         SetDecoration(editor.highlightedObject,editor.editorUI.heldObjectIsDecor);
+    }
+
+    UpdateButton(editor.editorUI.save.x,editor.editorUI.save.y,editor.editorUI.save.w,editor.editorUI.save.h,&editor.editorUI.save,mouseState,mouseStateLastFrame);
+
+    if (GetButtonIsClicked(&editor.editorUI.save))
+    {
+        SaveMap();
     }
 
 }
@@ -1691,4 +1756,4 @@ void InitEditorUI()
     UIElement* erase = AddButton(&editor.editorUI.mapImageEditor,"Erase","Erase",drawSecondLayer->x,drawSecondLayer->y+drawSecondLayer->h+2,editor.editorUI.mapImageEditor.w-2,drawSecondLayer->h,true);
     UIElement* paintSize = AddSlider(&editor.editorUI.mapImageEditor,erase->x,erase->y+erase->h+2,erase->w,10,"PaintSize",editor.paintSize,&editor.paintSize);
     UIElement* path = AddButton(&editor.editorUI.mapImageEditor,"MapPath","MapPath",paintSize->x,paintSize->y+paintSize->h+10,paintSize->w,10,true);
-}   
+ }   

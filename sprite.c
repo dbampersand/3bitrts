@@ -119,6 +119,7 @@ Sprite* NewSprite(int w, int h)
     {
         maxSprites+=32;
         sprites = realloc(sprites,maxSprites*sizeof(Sprite));
+        memset(sprites+numSprites,0,(maxSprites - numSprites) * sizeof(Sprite));
     }
     ALLEGRO_BITMAP* b = al_create_bitmap(w,h);
     ALLEGRO_BITMAP* before = al_get_target_bitmap();
@@ -130,6 +131,7 @@ Sprite* NewSprite(int w, int h)
 
     Sprite* s = &sprites[numSprites];
     s->sprite = b;
+    s->inverseSprite = sprites[0].inverseSprite;
     numSprites++;
     return s;
 }
