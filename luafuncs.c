@@ -2150,7 +2150,9 @@ int L_SetDecoration(lua_State* l)
     {
         SetDecoration(&objects[obj],set);
     }
-    return 0;
+    GameObject* g = &objects[obj];
+    lua_pushnumber(l,objects - g);
+    return 1;
 }
 int L_IsDecoration(lua_State* l)
 {

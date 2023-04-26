@@ -3640,8 +3640,10 @@ int GetNumPlayerControlledObjs(Player* p)
     }
     return count;
 }
-void SetDecoration(GameObject* g, bool b)
+//returns true if the object state has been changed
+bool SetDecoration(GameObject* g, bool b)
 {
+    int before = g->properties & OBJ_IS_DECORATION;
     if (g)
     {
         if (b)
@@ -3653,6 +3655,11 @@ void SetDecoration(GameObject* g, bool b)
             g->properties &= ~OBJ_IS_DECORATION;
         }
     }
+    int after = g->properties & OBJ_IS_DECORATION;
+
+    if (before != after)
+        return true;
+    return false;
    
 }
 bool ObjIsDecoration(GameObject* g)

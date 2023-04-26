@@ -56,7 +56,11 @@ void DecreaseMapDimensions(EDITOR_HANDLE handle, int x, int y)
 
     ALLEGRO_BITMAP* before = al_get_target_bitmap();
     ALLEGRO_BITMAP* new = al_create_bitmap(w,h);
+
+
     al_set_target_bitmap(new);
+    al_clear_to_color(al_map_rgba(0,0,0,0));
+
     int drawOffsetX = 0;
     int drawOffsetY = 0;
     int sx = 0;
@@ -489,7 +493,7 @@ char* GetPositionOfArgument(char* str, char* functionToFind, int argumentToGet)
         if (position[i] == '(')
         {
             position += i + 1;
-            break;
+                break;
         }
     }
 
@@ -519,11 +523,14 @@ char* GetPositionOfArgument(char* str, char* functionToFind, int argumentToGet)
                 break;
             }
             if (position[j] == ',' && !hasOpenBracket)
+            {
+                position += j + 1;
                 break;
+            }
         }
 
-        if (strstr(position,","))
-            position = strstr(position,",")+1;
+       // if (strstr(position,","))
+         //   position = strstr(position,",")+1;
     }   
        
     if (argumentToGet == 1)
@@ -1117,6 +1124,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         }
         else
         {
+            editor.highlightedObject = NULL;
             editor.heldHandle = CheckMapHandleClicked(mouseState);
             if (editor.heldHandle != HANDLE_NONE)
             {
@@ -1136,8 +1144,9 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         UpdatePosition(editor.heldObject,mouseState.worldX,mouseState.worldY);
     }
     if (!(mouseState.mouse.buttons & 1))
+    {
         editor.heldObject = NULL;
-
+    }
     if (mouseState.mouse.buttons & 2)
     {
         editor.heldObject = NULL;
@@ -1489,9 +1498,24 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         {
             GameObject* toSpawn = prefabs[i];
             GameObject* g = AddGameobject(toSpawn,GetCameraMiddleX(),GetCameraMiddleY(),SOURCE_SPAWNED_FROM_MAP);
+            SetOwnedBy(g,TYPE_ENEMY);
             AddObjLineToFile(g,g->position.worldX,g->position.worldY,GetPlayerOwnedBy(g),0,0);
         }
 
+    }
+    if (editor.highlightedObject && KeyPressedThisFrame(ALLEGRO_KEY_BACKSPACE, keyState,keyStateLastFrame))
+    {
+        for (int i = 0; i < editor.numSetupLines; i++)
+        {
+            if (editor.setupLines[i].associated == editor.highlightedObject)
+            {
+                KillObj(editor.highlightedObject,false,false);
+                memset(editor.setupLines[i].line,0,strlen(editor.setupLines[i].line)*sizeof(char));
+                editor.highlightedObject = NULL;
+                editor.heldObject = NULL;
+                break;
+            }
+        }
     }
 
     if (editor.highlightedObject)
@@ -1518,7 +1542,39 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
 
         }
         SetOwnedBy(editor.highlightedObject,ownedAfter);
-        SetDecoration(editor.highlightedObject,editor.editorUI.heldObjectIsDecor);
+        if (SetDecoration(editor.highlightedObject,editor.editorUI.heldObjectIsDecor))
+        {
+            for (int i = 0; i < editor.numSetupLines; i++)
+            {
+                if (editor.setupLines[i].associated == editor.highlightedObject)
+                {
+                    if (strstr(editor.setupLines[i].line,"SetDecoration"))
+                    {
+                        char* arg = GetPositionOfArgument(editor.setupLines[i].line,"SetDecoration",2);
+                        if (ObjIsDecoration(editor.highlightedObject))
+                            UpdateArgumentStr(&editor.setupLines[i].line,arg,"true",false);
+                        else
+                            UpdateArgumentStr(&editor.setupLines[i].line,arg,"false",false);
+
+
+                        printf("%s\n",editor.setupLines[i].line);
+                    }
+                    else
+                    {
+                        char* pos = strstr(editor.setupLines[i].line,"CreateObject");
+
+                        InsertStr(&editor.setupLines[i].line,&pos,"SetDecoration(");
+                        char* posEnd = GetCallEnd(editor.setupLines[i].line,"CreateObject") + 1;
+                        char* args = ",true)";
+                        InsertStr(&editor.setupLines[i].line,&posEnd,args);
+
+                        printf("%s\n",editor.setupLines[i].line);
+
+                    }
+                    break;
+                }
+            }
+        }
 
         ((Pulldown*)(GetUIElement(&editor.editorUI.unitOptions,"Owner")->data))->selectedIndex = GetPlayerOwnedBy_IncludeDecor(editor.highlightedObject);
     
@@ -1578,8 +1634,8 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
     int owner = ((Pulldown*)(GetUIElement(&editor.editorUI.unitOptions,"Owner")->data))->selectedIndex;
     if (editor.highlightedObject)
     {
-        SetOwnedBy(editor.highlightedObject,owner);
-        SetDecoration(editor.highlightedObject,editor.editorUI.heldObjectIsDecor);
+        //SetOwnedBy(editor.highlightedObject,owner);
+        //SetDecoration(editor.highlightedObject,editor.editorUI.heldObjectIsDecor);
     }
 
     UpdateButton(editor.editorUI.save.x,editor.editorUI.save.y,editor.editorUI.save.w,editor.editorUI.save.h,&editor.editorUI.save,mouseState,mouseStateLastFrame);
@@ -1601,20 +1657,22 @@ bool HandleIsHorizontal(EDITOR_HANDLE handle)
 
 Rect GetMapHandleRect(EDITOR_HANDLE handle)
 {   
-    int offset = 10;
-    int size = 10; 
+    int offset = 16;
+    int size = 30; 
 
-    int depth = 3; 
+    int depth = 8; 
 
     if (handle == HANDLE_TOP) return (Rect){(GetMapWidth()/2.0f - size/2.0f), -offset, size,depth};
     if (handle == HANDLE_RIGHT) return  (Rect){(GetMapWidth() + offset),GetMapHeight()/2.0f-size/2.0f, depth, size};
-    if (handle == HANDLE_BOTTOM) return  (Rect){(GetMapWidth()/2.0f - size/2.0f),GetMapHeight()+offset, offset, depth};
+    if (handle == HANDLE_BOTTOM) return  (Rect){(GetMapWidth()/2.0f - size/2.0f),GetMapHeight()+offset, size, depth};
     if (handle == HANDLE_LEFT) return (Rect){(0 - offset),GetMapHeight()/2.0f-size/2.0f, depth, size};
 
 
 }
 void DrawMapHandles()
 {
+    if (!currMap->spriteIndex)
+        return;
     DrawFilledRectWorld(GetMapHandleRect(HANDLE_TOP),al_map_rgb(255,0,0));
     DrawFilledRectWorld(GetMapHandleRect(HANDLE_RIGHT),al_map_rgb(255,0,0));
     DrawFilledRectWorld(GetMapHandleRect(HANDLE_BOTTOM),al_map_rgb(255,0,0));
@@ -1622,6 +1680,8 @@ void DrawMapHandles()
 }
 EDITOR_HANDLE CheckMapHandleClicked(MouseState mouse)
 {
+    if (!currMap->spriteIndex)
+        return HANDLE_NONE;
     if (PointInRect(mouse.worldX,mouse.worldY,GetMapHandleRect(HANDLE_TOP)))
         return HANDLE_TOP;
     if (PointInRect(mouse.worldX,mouse.worldY,GetMapHandleRect(HANDLE_RIGHT)))
@@ -1761,7 +1821,7 @@ void InitEditorUI()
     int unitSelectorW = 80;
     int unitSelectorH = 80;
 
-    editor.editorUI.unitSelector = CreatePanel(_SCREEN_SIZE-1-unitSelectorW,20,unitSelectorW,unitSelectorH,1,true);
+    editor.editorUI.unitSelector = CreatePanel(_SCREEN_SIZE-10-unitSelectorW,20,unitSelectorW,unitSelectorH,1,true);
 
     UIElement* save = InitButton(&editor.editorUI.save,"Save","Save",10,10,40,20,0);
 

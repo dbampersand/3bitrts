@@ -373,7 +373,7 @@ void LoadPrefabs(const char* dirPath);
 int GetNumObjectsInRect(Rect* r, bool onlyPlayerChoosable);
 void RemoveAllGameObjects();
 int GetNumPlayerControlledObjs(Player* p);
-void SetDecoration(GameObject* g, bool b);
+bool SetDecoration(GameObject* g, bool b);
 bool x(GameObject* g);
 void SetInvincible(GameObject* g, bool b);
 bool ObjIsInvincible(GameObject* g);
