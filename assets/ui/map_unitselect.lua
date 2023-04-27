@@ -5,12 +5,11 @@ function setup()
     
 
     PlayMusic("assets/audio/unitselect.wav",0.5,8);
+    SetSpawnPoint(77,126)
 end
 function update()
 
 end 
 
 function mapend()
-   ChangeMap("assets/ui/DFSFD.lua")
-
 end

@@ -8,7 +8,7 @@
 #include "helperfuncs.h"
 #include "player.h"
 #include <dirent.h>
-
+#include "encounter.h"
 #include "allegro5/allegro_primitives.h"
 
 Editor editor = {0};
@@ -631,8 +631,11 @@ void UpdateArgumentFloat(char** full, char* position, float f, bool decimal)
 } 
 void UpdatePosition(GameObject* g, float x, float y)
 {
-    x -= editor.heldObjectOffset.x;
-    y -= editor.heldObjectOffset.y;
+    if (editor.heldObject && editor.heldObject == g)
+    {
+        x -= editor.heldObjectOffset.x;
+        y -= editor.heldObjectOffset.y;
+    }
 
     if (!g) return;
     for (int i = 0; i < editor.numSetupLines; i++)
@@ -1081,6 +1084,7 @@ void SaveMap()
 }
 void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
+    SpawnPointRectIsMoved(mouseState,mouseStateLastFrame);
     if (editor.editorUI.showFileNamingUI)
         UpdatePanel(&editor.editorUI.fileNamingUI,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
 
@@ -1606,9 +1610,9 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                             InsertStr(&editor.setupLines[i].line,&pos,"SetAggroGroup(");
                             char* posEnd = GetCallEnd(editor.setupLines[i].line,"CreateObject") + 1;
                             
-                            int numChars = snprintf(NULL,0,",%.2f)",(float)aggroGroupAfter);
+                            int numChars = snprintf(NULL,0,",%i)",aggroGroupAfter);
                             char* args = calloc(numChars+1,sizeof(char));
-                            sprintf(args,",%.2f)",(float)aggroGroupAfter);
+                            sprintf(args,",%i)",aggroGroupAfter);
                             InsertStr(&editor.setupLines[i].line,&posEnd,args);
 
                             free(args);
@@ -1693,8 +1697,75 @@ EDITOR_HANDLE CheckMapHandleClicked(MouseState mouse)
     return HANDLE_NONE;
 
 }
+Rect GetSpawnPointRect()
+{
+    int numToSpawn = 1;
+    if (currEncounterRunning)
+    {
+        numToSpawn = currEncounterRunning->numUnitsToSelect;
+    }
+    Rect r = (Rect){currMap->spawnPoint.x,currMap->spawnPoint.y, numToSpawn * 16, 16};
+    return r;
+}
+void DrawSpawnPoint()
+{
+    Rect r = GetSpawnPointRect();
+    DrawFilledRectWorld(r,al_map_rgba(255,0,128,128));
+}
+void UpdateSpawnPointStr()
+{
+    bool foundSpawnPoint = false;
+    for (int i = 0; i < editor.numSetupLines; i++)
+    {
+        if (strstr(editor.setupLines[i].line,"SetSpawnPoint") && !editor.setupLines[i].lineIsComment)
+        {
+            foundSpawnPoint = true;
+            char* xStr = GetPositionOfArgument(editor.setupLines[i].line,"SetSpawnPoint",1);
+            UpdateArgumentFloat(&editor.setupLines[i].line,xStr,currMap->spawnPoint.x,false);
+            char* yStr = GetPositionOfArgument(editor.setupLines[i].line,"SetSpawnPoint",2);
+            UpdateArgumentFloat(&editor.setupLines[i].line,yStr,currMap->spawnPoint.y,false);
+
+        }
+    }   
+    if (!foundSpawnPoint)
+    {
+        char* fmt = "    SetSpawnPoint(%i,%i)\n";
+        int numChars = snprintf(NULL,0,fmt,(int)currMap->spawnPoint.x,(int)currMap->spawnPoint.y);
+        char* line = calloc(numChars+1,sizeof(char));
+        sprintf(line,fmt,(int)currMap->spawnPoint.x,(int)currMap->spawnPoint.y);
+        EditorLine* e = AddEditorLine(&editor.setupLines,&editor.numSetupLines,line);
+        free(line);
+    }
+}
+void SpawnPointRectIsMoved(MouseState mouseState, MouseState mouseStateLastFrame)
+{
+    Rect r = GetSpawnPointRect();
+    if (MouseClickedThisFrame(&mouseState,&mouseStateLastFrame) && PointInRect(mouseState.worldX,mouseState.worldY,r))
+    {
+        editor.spawnPointHeld = true;
+        editor.spawnPointHeldOffset.x = mouseState.worldX - currMap->spawnPoint.x;
+        editor.spawnPointHeldOffset.y = mouseState.worldY - currMap->spawnPoint.y;
+    }
+    if (!(mouseState.mouse.buttons & 1))
+    {
+        if (editor.spawnPointHeld)
+        {
+            UpdateSpawnPointStr();
+        }
+        editor.spawnPointHeld = false;
+    }
+    if (editor.spawnPointHeld)
+    {
+        currMap->spawnPoint.x = mouseState.worldX - editor.spawnPointHeldOffset.x;
+        currMap->spawnPoint.y = mouseState.worldY - editor.spawnPointHeldOffset.y;
+        currMap->spawnPoint.x = clamp(currMap->spawnPoint.x,0,GetMapWidth()-r.w);
+        currMap->spawnPoint.y = clamp(currMap->spawnPoint.y,0,GetMapHeight()-r.h);
+
+    }
+}
 void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 {
+    DrawSpawnPoint();
     DrawPanel(&editor.editorUI.saveLoad, &mouseState, 1);
 
     DrawPanel(&editor.editorUI.unitSelector,&mouseState,1);
