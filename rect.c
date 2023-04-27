@@ -37,9 +37,9 @@ void GetRectIntersectBound(float x, float y, float w, float h, float x2, float y
 }
 bool PointInRect(float x, float y, Rect r)
 {
-    if (x > r.x && x < r.x + r.w)
+    if (x >= r.x && x <= r.x + r.w)
     {
-        if (y > r.y && y < r.y + r.h)
+        if (y >= r.y && y <= r.y + r.h)
         {
             return true;
         }

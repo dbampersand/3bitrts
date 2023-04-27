@@ -281,6 +281,7 @@ extern UI ui;
 extern char* stackDrawBuffer;
 
 extern bool _PANEL_CLICKED_THIS_FRAME;
+extern bool _TEXTINPUT_HIGHLIGHTED;
 
 typedef struct MouseState MouseState;
 typedef struct Ability Ability;

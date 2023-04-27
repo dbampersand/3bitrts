@@ -1099,7 +1099,8 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
 
     UpdatePanel(&editor.editorUI.saveLoad,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
     UpdatePanel(&editor.editorUI.unitSelector,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
-    UpdatePanel(&editor.editorUI.unitOptions,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
+    if (editor.highlightedObject)
+        UpdatePanel(&editor.editorUI.unitOptions,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
     UpdatePanel(&editor.editorUI.mapImageEditor,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
 
     if (!_PANEL_CLICKED_THIS_FRAME && editor.editorState == EDITOR_STATE_NORMAL && MouseClickedThisFrame(&mouseState, &mouseStateLastFrame))
@@ -1139,7 +1140,10 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
             if (editor.heldHandle != HANDLE_NONE)
             {
                 Rect handle = GetMapHandleRect(editor.heldHandle);
-                editor.handleOffset = mouseState.worldX - handle.x;
+                if (HandleIsVertical(editor.heldHandle))
+                    editor.handleOffset = mouseState.worldY - handle.y;
+                else
+                    editor.handleOffset = mouseState.worldX - handle.x;
             }   
 
         } 
@@ -1513,7 +1517,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         }
 
     }
-    if (editor.highlightedObject && KeyPressedThisFrame(ALLEGRO_KEY_BACKSPACE, keyState,keyStateLastFrame))
+    if (!_TEXTINPUT_HIGHLIGHTED && editor.highlightedObject && KeyPressedThisFrame(ALLEGRO_KEY_BACKSPACE, keyState,keyStateLastFrame))
     {
         for (int i = 0; i < editor.numSetupLines; i++)
         {
@@ -1679,7 +1683,7 @@ Rect GetMapHandleRect(EDITOR_HANDLE handle)
 
 
 }
-void DrawMapHandles()
+void DrawMapHandles(MouseState mouseState)
 {
     if (!currMap->spriteIndex)
         return;
@@ -1687,6 +1691,50 @@ void DrawMapHandles()
     DrawFilledRectWorld(GetMapHandleRect(HANDLE_RIGHT),al_map_rgb(255,0,0));
     DrawFilledRectWorld(GetMapHandleRect(HANDLE_BOTTOM),al_map_rgb(255,0,0));
     DrawFilledRectWorld(GetMapHandleRect(HANDLE_LEFT),al_map_rgb(255,0,0));
+
+    int edgeOffsetX = 0;
+    int edgeOffsetY = 0;
+    int edgeOffsetW = 0;
+    int edgeOffsetH = 0;
+
+    if (editor.heldHandle)
+    {
+        if (editor.heldHandle == HANDLE_TOP)
+        {
+            Rect handle = GetMapHandleRect(HANDLE_TOP);
+            
+            edgeOffsetY =  mouseState.worldY - handle.y - editor.handleOffset;
+            edgeOffsetH -= edgeOffsetY;
+        }
+        if (editor.heldHandle == HANDLE_RIGHT)
+        {
+            Rect handle = GetMapHandleRect(HANDLE_RIGHT);
+            
+            edgeOffsetW =  mouseState.worldX - handle.x - editor.handleOffset;
+        }
+        if (editor.heldHandle == HANDLE_BOTTOM)
+        {
+            Rect handle = GetMapHandleRect(HANDLE_BOTTOM);
+            
+            edgeOffsetH =  mouseState.worldY - handle.y - editor.handleOffset;
+        }
+        if (editor.heldHandle == HANDLE_LEFT)
+        {
+            Rect handle = GetMapHandleRect(HANDLE_LEFT);
+            
+            edgeOffsetX =  mouseState.worldX - handle.x - editor.handleOffset;
+            edgeOffsetW -= edgeOffsetX;
+
+        }
+
+
+    }
+
+
+    Rect r = (Rect){-1 + edgeOffsetX,-1+edgeOffsetY,GetMapWidth()+2+edgeOffsetW, GetMapHeight()+2+edgeOffsetH};
+    ToScreenSpace(&r.x,&r.y);
+    al_draw_rectangle(r.x,r.y,r.x+r.w,r.y+r.h,al_map_rgb(255,0,0),1);
+
 }
 EDITOR_HANDLE CheckMapHandleClicked(MouseState mouse)
 {
@@ -1771,6 +1819,8 @@ void SpawnPointRectIsMoved(MouseState mouseState, MouseState mouseStateLastFrame
 }
 void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 {
+    DrawMapHandles(mouseState);
+
     DrawSpawnPoint();
     DrawPanel(&editor.editorUI.saveLoad, &mouseState, 1);
 
@@ -1798,50 +1848,9 @@ void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFram
         al_draw_filled_circle(mouseState.screenX,mouseState.screenY,brushSize,c);
     }   
 
-    int edgeOffsetX = 0;
-    int edgeOffsetY = 0;
-    int edgeOffsetW = 0;
-    int edgeOffsetH = 0;
-
-    if (editor.heldHandle)
-    {
-        if (editor.heldHandle == HANDLE_TOP)
-        {
-            Rect handle = GetMapHandleRect(HANDLE_TOP);
-            
-            edgeOffsetY =  mouseState.worldY - handle.y - editor.handleOffset;
-            edgeOffsetH -= edgeOffsetY;
-        }
-        if (editor.heldHandle == HANDLE_RIGHT)
-        {
-            Rect handle = GetMapHandleRect(HANDLE_RIGHT);
-            
-            edgeOffsetW =  mouseState.worldX - handle.x - editor.handleOffset;
-        }
-        if (editor.heldHandle == HANDLE_BOTTOM)
-        {
-            Rect handle = GetMapHandleRect(HANDLE_BOTTOM);
-            
-            edgeOffsetH =  mouseState.worldY - handle.y - editor.handleOffset;
-        }
-        if (editor.heldHandle == HANDLE_LEFT)
-        {
-            Rect handle = GetMapHandleRect(HANDLE_LEFT);
-            
-            edgeOffsetX =  mouseState.worldX - handle.x - editor.handleOffset;
-            edgeOffsetW -= edgeOffsetX;
-
-        }
+    
 
 
-    }
-
-
-    Rect r = (Rect){-1 + edgeOffsetX,-1+edgeOffsetY,GetMapWidth()+2+edgeOffsetW, GetMapHeight()+2+edgeOffsetH};
-    ToScreenSpace(&r.x,&r.y);
-    al_draw_rectangle(r.x,r.y,r.x+r.w,r.y+r.h,al_map_rgb(255,0,0),1);
-
-    DrawMapHandles();
 
     if (editor.editorUI.showFileSelector)
     {

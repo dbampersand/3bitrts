@@ -42,7 +42,9 @@ char* stackDrawBuffer = NULL;
 
 float debounceTimer = 0;
 float debounceTime = 0.15;
+
 bool _PANEL_CLICKED_THIS_FRAME = false;
+bool _TEXTINPUT_HIGHLIGHTED = false;
 
 void DisableButton(UIElement* u)
 {
@@ -2667,18 +2669,21 @@ void UpdateTextInput(int rX, int rY, int w, int h, UIElement* u, MouseState mous
         if (PointInRect(mouseState.screenX,mouseState.screenY,r))
         {
             t->clicked = true;
+            _TEXTINPUT_HIGHLIGHTED = true;
         }
         else
         {
             t->clicked = false;
+            _TEXTINPUT_HIGHLIGHTED = false;
         }
     }
     if (al_key_down(keyStateThisFrame,ALLEGRO_KEY_ENTER))
+    {
         t->clicked = false;
-
+        _TEXTINPUT_HIGHLIGHTED = false;
+    }
     if (t->clicked)
     {
-
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
         {
             if (al_key_down(keyStateThisFrame,i) && !al_key_down(keyStateLastFrame,i))
