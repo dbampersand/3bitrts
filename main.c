@@ -186,7 +186,10 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
             if (strcmp(currMap->path,"assets/ui/map_unitselect.lua") == 0)
                 SetGameStateToChoosingParty();
             else
+            {   
+                _COMING_FROM_EDITOR = true;
                 SetGameStateToInGame(); 
+            }
         } 
     }
 }

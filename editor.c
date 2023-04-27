@@ -663,6 +663,7 @@ void UpdatePosition(GameObject* g, float x, float y)
 }
 void RunAllLines()
 {
+    
     for (int i = 0; i < editor.numSetupLines; i++)
     {
         int numObjsBefore = numActiveObjects;
@@ -670,9 +671,14 @@ void RunAllLines()
         char* line = editor.setupLines[i].line;
         if (editor.setupLines[i].line)
             luaL_dostring(luaState,editor.setupLines[i].line);
+
         if (numActiveObjects > numObjsBefore)
         {
             editor.setupLines[i].associated = &objects[numActiveObjects-1];
+            if (ObjIsDecoration(editor.setupLines[i].associated))
+            {
+                GameObject* g = editor.setupLines[i].associated;
+            }   
         }
     }
 
@@ -722,7 +728,7 @@ void SplitLines(char* buffer, EditorLine** lines, int* lineCount)
             openBrackets = 0;
 
         
-        if ((isspace(*c) ||  *c == '\n' || c == end-1) && openBrackets == 0)
+        if ((*c == '\n' || c == end-1) && openBrackets == 0)
         {
             char* c2 = c;
             bool isComment = false;

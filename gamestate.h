@@ -72,6 +72,8 @@ extern GameState gameState;
 
 extern  TRANSITION transitionDrawing;
 
+extern bool _COMING_FROM_EDITOR;
+
 
 
 bool TransitionTo(GameState state);

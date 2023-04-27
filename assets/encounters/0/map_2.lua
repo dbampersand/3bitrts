@@ -3,11 +3,12 @@ local miniboss = -1
 function setup()
     SetMapSprite("assets/encounters/0/map_2.png")
 
-    CreateObject("assets/enemies/kobold_wizard/kobold_wizard.lua",70,62,TYPE_ENEMY,0);
-    CreateObject("assets/enemies/kobold_wizard/kobold_wizard.lua",205,64,TYPE_ENEMY,0);
+    SetDecoration(CreateObject("assets/enemies/kobold_wizard/kobold_wizard.lua",52.00,48.00,TYPE_ENEMY,0),false);
+    CreateObject("assets/enemies/kobold_wizard/kobold_wizard.lua",188.00,48.00,TYPE_ENEMY,0);
     CreateObject("assets/enemies/kobold_wizard/kobold_wizard.lua",205,184,TYPE_ENEMY,0);
 
     miniboss = CreateObject("assets/enemies/nix/nix.lua",142,117,TYPE_ENEMY,0); 
+    Print(miniboss);
     SetDecoration(miniboss,true);
     SetInvincible(miniboss,true);
 

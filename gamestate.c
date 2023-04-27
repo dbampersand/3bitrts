@@ -24,6 +24,7 @@
     #define M_PI 3.14159265358979323846
 #endif
 
+bool _COMING_FROM_EDITOR = false;
 
  GameStats gameStats = {0};
  bool combatStarted = false;
@@ -152,7 +153,10 @@ void FinishTransition()
         ClearSpriteDecorations();
         //AddClouds(12);
         RandomSpriteDecor(16,dirtSprites,numDirtSprites);
-        SetMap(LoadMap(encounterGoingTo->mapPath));
+        if (!_COMING_FROM_EDITOR)
+            SetMap(LoadMap(encounterGoingTo->mapPath));
+        if (_COMING_FROM_EDITOR)
+            SetMap(LoadMap(currMap->path));
 
         int xPos = currMap->spawnPoint.x;
         int yPos = currMap->spawnPoint.y;
@@ -184,7 +188,6 @@ void FinishTransition()
                 HoldCommand(activeObjects[i],false);
             }
         }
-        FocusCameraOnPos(camPos.x,camPos.y);
         memset(&gameStats,0,sizeof(GameState));
 
         ClearGold();
@@ -204,6 +207,8 @@ void FinishTransition()
 
         gameState = GAMESTATE_INGAME;
         transitioningTo = GAMESTATE_INGAME;
+
+        FocusCameraOnPos(camPos.x,camPos.y);
 
         //free(toSpawn);
 
@@ -358,7 +363,7 @@ void FinishTransition()
     }
     //ClearParticles();
 
-    
+    _COMING_FROM_EDITOR = false;
 }
 void SetGameStateToPurchasingUnits()
 {
