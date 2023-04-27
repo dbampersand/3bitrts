@@ -1525,6 +1525,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
             {
                 KillObj(editor.highlightedObject,false,false);
                 memset(editor.setupLines[i].line,0,strlen(editor.setupLines[i].line)*sizeof(char));
+                editor.setupLines[i].associated = NULL;
                 editor.highlightedObject = NULL;
                 editor.heldObject = NULL;
                 break;

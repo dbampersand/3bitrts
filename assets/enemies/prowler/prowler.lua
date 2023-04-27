@@ -29,6 +29,9 @@ function update(dt)
 
         CastAbility(spines,0.95,{target});
     end
+    if (~IsInCombat()) then
+        SetAbilityOnCooldown()
+    end
 
 end
 
