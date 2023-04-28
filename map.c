@@ -341,31 +341,67 @@ void loadLuaGameMap(lua_State* l, const char* filename, Map* m)
      }
      free(cpy);
 }
+void DeleteMap(Map* m)
+{
+    if (m->path)
+        free(m->path);
+    if (m->highlightMap)
+        free(m->highlightMap);
+
+    if (m->name)   
+        free(m->name);
+
+    if (m->lua_buffer.buffer)
+        free(m->lua_buffer.buffer);
+    if (m->collision)
+        free(m->collision);
+    
+    luaL_unref(luaState,LUA_REGISTRYINDEX,m->luafunc_update);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,m->luafunc_setup);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,m->luafunc_mapend);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,m->luafunc_objectdied);
+
+    memset(m,0,sizeof(Map));
+}
 
 Map* LoadMap(char* path)
 {
-  Map m;
-  memset(&m,0,sizeof(Map));
-  m.automaticWinCheck = true;
-  m.spawnPoint.x = 80;
-  m.spawnPoint.y = 180;
-  loadLuaGameMap(luaState,path,&m);
-  m.path = calloc(strlen(path)+1,sizeof(char));
-  strcpy(m.path,path);
-  
-  int currMapIndex = currMap - maps;
-  numMaps++;
-  if (maps)
-    maps = realloc(maps,numMaps*sizeof(Map));
-  else
-    maps = calloc(1,sizeof(Map));
-  //update stale pointer
-  if (currMapIndex  > 0)
-    currMap = &maps[currMapIndex];
+    Map m;
 
-  
-  maps[numMaps-1] = m;
-  return &maps[numMaps-1];
+    memset(&m,0,sizeof(Map));
+    m.automaticWinCheck = true;
+    m.spawnPoint.x = 80;
+    m.spawnPoint.y = 180;
+    loadLuaGameMap(luaState,path,&m);
+    m.path = calloc(strlen(path)+1,sizeof(char));
+    strcpy(m.path,path);
+
+    int currMapIndex = currMap - maps;
+    numMaps++;
+    if (maps)
+        maps = realloc(maps,numMaps*sizeof(Map));
+    else
+        maps = calloc(1,sizeof(Map));
+    //update stale pointer
+    if (currMapIndex  > 0)
+        currMap = &maps[currMapIndex];
+
+    int foundIndex = numMaps-1;
+    bool foundMap = false;
+    for (int i = 0; i < numMaps-1; i++)
+    {
+        if (maps[i].path && strcmp(path,maps[i].path))
+        {
+            foundIndex = i;
+            foundMap = true;
+            DeleteMap(&maps[i]);
+            numMaps--;
+        }
+    }
+
+
+    maps[foundIndex] = m;
+    return &maps[foundIndex];
 }
 
 void SetMap(Map* m)

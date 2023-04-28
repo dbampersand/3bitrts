@@ -2687,6 +2687,17 @@ int L_GetStacks(lua_State* l)
     lua_pushnumber(l,a->stacks);
     return 1;
 }
+int L_GetMaxStacks(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    int abilityIndex = lua_tonumber(l,2);
+
+    GameObject* obj = &objects[objIndex];
+    Ability* a = &obj->abilities[abilityIndex];
+    lua_pushnumber(l,a->maxStacks);
+    return 1;
+
+}
 int L_Normalize(lua_State* l)
 {
     float x = lua_tonumber(l,1);
@@ -4594,6 +4605,10 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetStacks);
     lua_setglobal(luaState, "GetStacks");
+
+    lua_pushcfunction(luaState, L_GetMaxStacks);
+    lua_setglobal(luaState, "GetMaxStacks");
+
 
     lua_pushcfunction(luaState, L_GetAbilityRef);
     lua_setglobal(luaState, "GetAbilityRef");

@@ -3382,7 +3382,9 @@ bool GetButtonIsClicked(UIElement* u)
                     PlaySound(&sounds[u->sound_clickDown_Index],0.5f,0);
                 }
             }
-            return b->activated;
+            bool isActive = b->activated;
+            b->activated = false;
+            return isActive;
         }
     }
     return false;

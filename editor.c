@@ -743,12 +743,15 @@ void SplitLines(char* buffer, EditorLine** lines, int* lineCount)
             if (!*lines)
                 *lines = calloc(1,sizeof(EditorLine));
             
-            char after[2];
-            after[0] = *c;
-            after[1] = '\0';
+            char after[3];
+            after[0] = '\r';
+            after[1] = *c;
+            after[2] = '\0';
 
 
             *c = '\0';
+            if (*(c - 1) == '\r')
+                *(c - 1) = '\0';
             
             char* bufferLine = lineStart;
             lineStart = c + 1;
@@ -1061,7 +1064,7 @@ void SaveMap()
     SaveFunction(&currMap->lua_buffer.buffer,"setup",editor.setupLines,editor.numSetupLines);
     SaveFunction(&currMap->lua_buffer.buffer,"mapend",editor.endLines,editor.numEndLines);
 
-    ALLEGRO_FILE* file = al_fopen(currMap->path, "w");
+    ALLEGRO_FILE* file = al_fopen(currMap->path, "wb");
     if (file == NULL)
     {
         printf("Couldn't save file\n");   
@@ -1336,7 +1339,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                 }
                 
                 char* fmt = "function setup()\n\nend\nfunction update()\n\nend\nfunction mapend()\n\nend";
-                ALLEGRO_FILE* file = al_fopen(fullStr, "w");
+                ALLEGRO_FILE* file = al_fopen(fullStr, "wb");
                 if (file == NULL)
                 {
                     printf("Couldn't save file\n");   

@@ -258,6 +258,8 @@ void FinishTransition()
     {
         gameState = GAMESTATE_CHOOSING_UNITS;
         transitioningTo = GAMESTATE_CHOOSING_UNITS;
+        RemoveAllGameObjects();
+        RemoveAllAttacks();
         //SetMap(&maps[0]);
         players[0].cameraPos.x = 0;
         players[0].cameraPos.y = 0;
@@ -266,6 +268,8 @@ void FinishTransition()
 
         ClearGold();
         AddGold(players[0].bankedGold);
+
+        SetMap(LoadMap("assets/ui/map_unitselect.lua"));
 
 
     }
