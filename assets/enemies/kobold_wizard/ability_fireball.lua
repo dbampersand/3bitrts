@@ -20,7 +20,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 80;
 
     projectile = CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj),"",ATTACK_PROJECTILE_ANGLE,25,4,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,{f1})
-    SetAttackInactive(projectile,2)
+    SetAttackInactive(projectile,1)
 
     return true; 
 end

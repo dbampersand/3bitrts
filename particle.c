@@ -49,7 +49,7 @@ void AddParticleWithRandomProperties(float x, float y, Color color, float lifeti
     AddParticle(x,y,RandRange(lifetimeMin,lifetimeMax),RandRange(speedMin,speedMax),RandRange(minAngle,maxAngle),color);
 }
 
-void AddParticle(float x, float y, short lifetime, float speed, float angle, Color colour)
+void AddParticle(float x, float y, float lifetime, float speed, float angle, Color colour)
 {
     particle_x[PARTICLES_TOP] = x;
     particle_y[PARTICLES_TOP] = y;

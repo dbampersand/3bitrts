@@ -177,6 +177,7 @@ typedef struct GameObject
     int* attackSoundIndices;
     int numAttackSounds;    
 
+    float lastDamage;
     float flashTimer;
 
     bool deathTimerActivated;
@@ -221,6 +222,7 @@ typedef struct GameObject
     float pushSpeed;
 
     bool objIsPushable;
+
 
 } GameObject;
 

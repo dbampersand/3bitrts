@@ -33,6 +33,7 @@
         "cstdlib": "c",
         "allegro_primitives.h": "c",
         "ability.h": "c",
-        "allegro_image.h": "c"
+        "allegro_image.h": "c",
+        "CAVE.C": "cpp"
     }
 }

@@ -283,6 +283,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             c = BG;
 
 
+
         if (!ObjIsInvincible(g) && g->summonTime > g->summonMax)
         {
             float percent = GetSummonPercent(g);  
@@ -306,13 +307,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             selectRect.x += g->offset.x;
             selectRect.y += g->offset.y;
 
-            if (g->stunTimer == 0)
-            {
-                if (GetPlayerOwnedBy(g) == 0)
-                    DrawRoundedRect(selectRect, c,false);
-                else
-                    al_draw_rectangle((int)selectRect.x,(int)selectRect.y,(int)(selectRect.x + selectRect.w), (int)(selectRect.y + selectRect.h),c,1);
-            }
 
             //if (GetTotalShield(g) > 0)
             {
@@ -327,6 +321,17 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                 DrawHealthBar(g,c);
             else if (currSettings.displayHealthBar == OPTION_HPBAR_NEVER && (!IsOwnedByPlayer(g)))
                 DrawHealthBar(g,c);
+
+            if (g->flashTimer > 0)
+                c = DAMAGE;
+            if (g->stunTimer == 0)
+            {
+                if (GetPlayerOwnedBy(g) == 0)
+                    DrawRoundedRect(selectRect, c,false);
+                else
+                    al_draw_rectangle((int)selectRect.x,(int)selectRect.y,(int)(selectRect.x + selectRect.w), (int)(selectRect.y + selectRect.h),c,1);
+            }
+
         }
 
     }
