@@ -157,7 +157,7 @@ typedef struct Panel
     bool showBorder;
 
 } Panel;
-#define SCROLLBARW 6;
+#define SCROLLBARW 6
 typedef enum UI_AnimState
 {
     UI_ANIMATE_STATIC = 0,
@@ -330,7 +330,7 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_
 bool GetButton(Panel* p, char* name);
 KeyInput* GetKeyInput(Panel* p, char* name);
 Button* GetButtonB(Panel* p, char* name);
-void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, Color bgColor, Color foregroundColor);
+void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, Color bgColor, Color foregroundColor, bool fromPanel);
 void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent);
 void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, int index, int offsetX, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
 void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
@@ -360,7 +360,7 @@ void ClearPanelElements(Panel* p);
 void GenerateFileListButtons(char* path, Panel* p);
 void DrawReplayUI(Replay* r, MouseState* mouseState, MouseState* mouseStateLastFrame);
 void DrawButtonText(UIElement* u,int x, int y, ALLEGRO_COLOR col);
-void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected, ALLEGRO_COLOR foregroundColor);
+void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected, ALLEGRO_COLOR foregroundColor, bool fromPanel);
 void ChangeButtonImage(UIElement* u, int spriteIndex);
 void DrawTimer(bool enabled);
 char* GetButtonText(UIElement* u);

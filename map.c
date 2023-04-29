@@ -353,6 +353,8 @@ void DeleteMap(Map* m)
 
     if (m->lua_buffer.buffer)
         free(m->lua_buffer.buffer);
+    if (m->lua_buffer.functions)
+        free(m->lua_buffer.functions);
     if (m->collision)
         free(m->collision);
     
@@ -390,12 +392,13 @@ Map* LoadMap(char* path)
     bool foundMap = false;
     for (int i = 0; i < numMaps-1; i++)
     {
-        if (maps[i].path && strcmp(path,maps[i].path))
+        if (maps[i].path && strcmp(path,maps[i].path)==0)
         {
             foundIndex = i;
             foundMap = true;
             DeleteMap(&maps[i]);
             numMaps--;
+            break;
         }
     }
 

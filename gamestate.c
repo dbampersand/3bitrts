@@ -260,6 +260,8 @@ void FinishTransition()
         transitioningTo = GAMESTATE_CHOOSING_UNITS;
         RemoveAllGameObjects();
         RemoveAllAttacks();
+        SetMap(LoadMap("assets/ui/map_unitselect.lua"));
+
         //SetMap(&maps[0]);
         players[0].cameraPos.x = 0;
         players[0].cameraPos.y = 0;
@@ -269,7 +271,6 @@ void FinishTransition()
         ClearGold();
         AddGold(players[0].bankedGold);
 
-        SetMap(LoadMap("assets/ui/map_unitselect.lua"));
 
 
     }
@@ -394,8 +395,6 @@ void SetGameStateToChangingMap()
 }
 void SpawnPartySelects()
 {
-    RemoveAllGameObjects();
-    SetMap(&maps[0]);
     int xPos = 17;  
     
     #define NUMUNITSPERROW 3

@@ -428,7 +428,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
         DrawDamageNumbers();
         UpdateButton(ui.menuButton.x,ui.menuButton.y,ui.menuButton.w,ui.menuButton.h,&ui.menuButton,*mouseState,*mouseStateLastFrame);
-        DrawUIElement(&ui.menuButton,ui.menuButton.x,ui.menuButton.y,mouseState,ui.menuButton.bgColor, COLOR_FRIENDLY);
+        DrawUIElement(&ui.menuButton,ui.menuButton.x,ui.menuButton.y,mouseState,ui.menuButton.bgColor, COLOR_FRIENDLY,false);
 
         if (gameState == GAMESTATE_INGAME)
         {
@@ -471,7 +471,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                 
             al_draw_filled_rectangle(r.x,r.y,r.x + (r.w * nrmPercentComplete),r.y+r.h,FRIENDLY);
             
-            DrawUIElement(&ui.nextLevelButton,ui.nextLevelButton.x,ui.nextLevelButton.y,mouseState,ui.nextLevelButton.bgColor,COLOR_FRIENDLY);
+            DrawUIElement(&ui.nextLevelButton,ui.nextLevelButton.x,ui.nextLevelButton.y,mouseState,ui.nextLevelButton.bgColor,COLOR_FRIENDLY,false);
 
             memset(percentCompletionStr,0,(NumDigits(INT_MIN)+3)*sizeof(char));
             sprintf(percentCompletionStr,"%i%%",(int)floor(currMap->percentComplete));

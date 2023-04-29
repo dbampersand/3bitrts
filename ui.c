@@ -274,16 +274,16 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
 
 
     UpdateButton(purchaseUI->back.x,purchaseUI->back.y,purchaseUI->back.w,purchaseUI->back.h,&purchaseUI->back,mouseState,mouseStateLastFrame);
-    DrawUIElement(&purchaseUI->back,purchaseUI->back.x,purchaseUI->back.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY);
+    DrawUIElement(&purchaseUI->back,purchaseUI->back.x,purchaseUI->back.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY,false);
 
     UpdateButton(purchaseUI->next.x,purchaseUI->next.y,purchaseUI->next.w,purchaseUI->next.h,&purchaseUI->next,mouseState,mouseStateLastFrame);
-    DrawUIElement(&purchaseUI->next,purchaseUI->next.x,purchaseUI->next.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY);
+    DrawUIElement(&purchaseUI->next,purchaseUI->next.x,purchaseUI->next.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY,false);
 
     UpdateButton(purchaseUI->returnButton.x,purchaseUI->returnButton.y,purchaseUI->returnButton.w,purchaseUI->returnButton.h,&purchaseUI->returnButton,mouseState,mouseStateLastFrame);
-    DrawUIElement(&purchaseUI->returnButton,purchaseUI->returnButton.x,purchaseUI->returnButton.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY);
+    DrawUIElement(&purchaseUI->returnButton,purchaseUI->returnButton.x,purchaseUI->returnButton.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY,false);
 
     UpdateButton(purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,purchaseUI->purchaseButton.w,purchaseUI->purchaseButton.h,&purchaseUI->purchaseButton,mouseState,mouseStateLastFrame);
-    DrawUIElement(&purchaseUI->purchaseButton,purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY);
+    DrawUIElement(&purchaseUI->purchaseButton,purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY,false);
 
 
     if ((GetButtonIsClicked(&purchaseUI->back) || IsBindDownThisFrame(keyStateThisFrame,keyStateLastFrame,currSettings.keymap.key_PanLeft)) && purchaseUI->currentIndex != 0)
@@ -591,9 +591,9 @@ void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame)
         {
             ui.choosingUnits_GO.enabled = false;
         }
-        DrawUIElement(&ui.choosingUnits_Back,ui.choosingUnits_Back.x,ui.choosingUnits_Back.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY);
-        DrawUIElement(&ui.choosingUnits_GO,ui.choosingUnits_GO.x,ui.choosingUnits_GO.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY);
-        DrawUIElement(&ui.choosingUnits_Hire,ui.choosingUnits_Hire.x,ui.choosingUnits_Hire.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY);
+        DrawUIElement(&ui.choosingUnits_Back,ui.choosingUnits_Back.x,ui.choosingUnits_Back.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY,false);
+        DrawUIElement(&ui.choosingUnits_GO,ui.choosingUnits_GO.x,ui.choosingUnits_GO.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY,false);
+        DrawUIElement(&ui.choosingUnits_Hire,ui.choosingUnits_Hire.x,ui.choosingUnits_Hire.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY,false);
 
 
         char* number = calloc(log10(INT_MAX)*2+2,sizeof(char));
@@ -653,7 +653,7 @@ void DrawReplayUI(Replay* r, MouseState* mouseState, MouseState* mouseStateLastF
     al_draw_rectangle(19,5,222,13,FRIENDLY,1);
     al_draw_filled_rectangle(position.x,position.y,position.x+position.w,position.h,FRIENDLY);
 
-    DrawButton(&replayPlayButton,replayPlayButton.x,replayPlayButton.y,*mouseState,true,BG,true,FRIENDLY);
+    DrawButton(&replayPlayButton,replayPlayButton.x,replayPlayButton.y,*mouseState,true,BG,true,FRIENDLY,false);
     UpdateButton(replayPlayButton.x,replayPlayButton.y,replayPlayButton.w,replayPlayButton.h,&replayPlayButton,*mouseState,*mouseStateLastFrame);
 
     if (GetButtonIsClicked(&replayPlayButton))
@@ -668,7 +668,7 @@ void DrawReplayUI(Replay* r, MouseState* mouseState, MouseState* mouseStateLastF
             ChangeButtonImage(&replayPlayButton,LoadSprite("assets/ui/button_play.png",true));
         }
     }
-    DrawButton(&replayBackButton,replayBackButton.x,replayBackButton.y,*mouseState,true,BG,true,FRIENDLY);
+    DrawButton(&replayBackButton,replayBackButton.x,replayBackButton.y,*mouseState,true,BG,true,FRIENDLY,false);
     UpdateButton(replayBackButton.x,replayBackButton.y,replayBackButton.w,replayBackButton.h,&replayBackButton,*mouseState,*mouseStateLastFrame);
     if (GetButtonIsClicked(&replayBackButton))
     {
@@ -1202,7 +1202,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     int column = 16;
 
     UpdateButton(column+offsetX,row,e->encounter_RerollAugments.w,e->encounter_RerollAugments.h,&e->encounter_RerollAugments,*mouseState,*mouseStateLastFrame);
-    DrawUIElement(&e->encounter_RerollAugments,column+offsetX,row,mouseState,e->encounter_RerollAugments.bgColor,e->unlocked ? COLOR_FRIENDLY : ALColorToCol(disabled));
+    DrawUIElement(&e->encounter_RerollAugments,column+offsetX,row,mouseState,e->encounter_RerollAugments.bgColor,e->unlocked ? COLOR_FRIENDLY : ALColorToCol(disabled),false);
     column += 32;
 
     char* augmentDescriptionToDraw = NULL;
@@ -1292,7 +1292,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
         e->encounter_PurchaseAugment.enabled = true;
     }
     UpdateButton(e->encounter_PurchaseAugment.x,e->encounter_PurchaseAugment.y,e->encounter_PurchaseAugment.w,e->encounter_PurchaseAugment.h,&e->encounter_PurchaseAugment,*mouseState,*mouseStateLastFrame);
-    DrawUIElement(&e->encounter_PurchaseAugment,e->encounter_PurchaseAugment.x,e->encounter_PurchaseAugment.y,mouseState,COLOR_BG,e->unlocked ? COLOR_FRIENDLY : ALColorToCol(disabled));
+    DrawUIElement(&e->encounter_PurchaseAugment,e->encounter_PurchaseAugment.x,e->encounter_PurchaseAugment.y,mouseState,COLOR_BG,e->unlocked ? COLOR_FRIENDLY : ALColorToCol(disabled),false);
 
     if (GetButtonIsClicked(&e->encounter_PurchaseAugment))
     {
@@ -1378,9 +1378,9 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
         e->encounter_ButtonRight.enabled = false;
     }
 
-    DrawUIElement(&e->encounter_ButtonLeft,14+offsetX,224,mouseState,e->encounter_ButtonLeft.bgColor,COLOR_FRIENDLY);
-    DrawUIElement(&e->encounter_ButtonConfirm,80+offsetX,224,mouseState,e->encounter_ButtonConfirm.bgColor,COLOR_FRIENDLY);
-    DrawUIElement(&e->encounter_ButtonRight,194+offsetX,224,mouseState,e->encounter_ButtonRight.bgColor,COLOR_FRIENDLY);
+    DrawUIElement(&e->encounter_ButtonLeft,14+offsetX,224,mouseState,e->encounter_ButtonLeft.bgColor,COLOR_FRIENDLY,false);
+    DrawUIElement(&e->encounter_ButtonConfirm,80+offsetX,224,mouseState,e->encounter_ButtonConfirm.bgColor,COLOR_FRIENDLY,false);
+    DrawUIElement(&e->encounter_ButtonRight,194+offsetX,224,mouseState,e->encounter_ButtonRight.bgColor,COLOR_FRIENDLY,false);
 
 
     if (GetButtonIsClicked(&e->encounter_ButtonLeft))
@@ -2955,12 +2955,41 @@ void DrawButtonText(UIElement* u,int x, int y, ALLEGRO_COLOR col)
     }
     al_draw_text(ui.font,col,textX,textY,align,b->description);
 }   
-void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected, ALLEGRO_COLOR foregroundColor)
+void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected, ALLEGRO_COLOR foregroundColor, bool fromPanel)
 {
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
+    int panelX; int panelY; int panelW; int panelH;
+    al_get_clipping_rectangle(&panelX,&panelY,&panelW,&panelH);
+    Rect panel = (Rect){panelX,panelY,panelW,panelH};
     Button* b = (Button*)u->data;
     ALLEGRO_FONT* font = ui.font;
     Rect button = (Rect){x,y,(int)u->w,(int)u->h};
+
+    Rect clip = (Rect){x,y,button.w,button.h};
+
+    if (fromPanel)
+    {
+        if (button.x + button.w > panelX + panelW)
+        {
+            //clip.w -= (button.x+button.w) - panelX + panelW;
+        }
+        if (button.y + button.h > panelY + panelH)
+        {
+           // clip.h -= (button.y+button.h) - panelY + panelH;
+        }
+        //button.w = _MAX(button.w,0);
+        //button.h = _MAX(button.h,0);
+        //clip.w = _MAX(clip.w,0);
+        //clip.h = _MAX(clip.h,0);
+
+        clip.x = clamp(clip.x,panel.x,panel.x+panel.w);
+        clip.y = clamp(clip.y,panel.y,panel.y+panel.h);
+        clip.w = _MAX(0,button.w);
+        clip.h = _MAX(0,(panel.y+panel.h) - button.y+button.h);
+
+
+        al_set_clipping_rectangle(clip.x,clip.y,clip.w,clip.h);
+    }
 
     int align = b->drawLine ? ALLEGRO_ALIGN_CENTRE : ALLEGRO_ALIGN_LEFT;
     int textX; int textY;
@@ -3006,6 +3035,9 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
     {
         DrawSprite(&sprites[b->spriteIndex],x,y,0.5f,0.5f,0,foregroundColor,false,false,false);
     }
+    if (fromPanel)
+        al_reset_clipping_rectangle();
+
 
 }
 void UIDrawText(UIElement* u, int x, int y)
@@ -3094,7 +3126,7 @@ void DrawTextInput(UIElement* u, int x, int y, MouseState mouseState, bool isAct
     }
 
 }
-void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, Color bgColor, Color foregroundColor)
+void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, Color bgColor, Color foregroundColor, bool fromPanel)
 {
     ALLEGRO_COLOR col = GetColor(bgColor,0);
     ALLEGRO_COLOR colForeground = GetColor(foregroundColor,0);
@@ -3102,7 +3134,7 @@ void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, Color bgC
         DrawUIHighlight(u,x,y);
     if (u->elementType == ELEMENT_BUTTON)
     {
-        DrawButton(u,x,y,*mouseState,u->enabled,col,((Button*)(u->data))->drawLine,colForeground);
+        DrawButton(u,x,y,*mouseState,u->enabled,col,((Button*)(u->data))->drawLine,colForeground,fromPanel);
     }
     if (u->elementType == ELEMENT_TEXT)
     {
@@ -3188,9 +3220,12 @@ void GetUILocation(Panel* p, UIElement* uF, int* x, int* y, int* w, int* h, bool
         }
         if (*y < p->y)
         {
-            *y += (p->y - *y);
             *h -= (p->y - *y);
+            *y += (p->y - *y);
             *h = _MAX(0,*h);
+
+            if (*y + *h < p->y)
+                *h = 0;
         }
     }
     if (p->tabs)
@@ -3218,7 +3253,7 @@ void DrawPanelTabs(Panel* p, MouseState* mouseState)
             h = al_get_bitmap_height(sprites[b->spriteIndex].sprite);
             w = al_get_bitmap_width(sprites[b->spriteIndex].sprite);
             al_draw_rectangle(x,y,x+w,y+h,FRIENDLY,1);
-            DrawButton(&tab->tabButton,x,y,*mouseState,true,BG,true,FRIENDLY);
+            DrawButton(&tab->tabButton,x,y,*mouseState,true,BG,true,FRIENDLY,false);
             //DrawSprite(&sprites[b->spriteIndex],p->x,y,FRIENDLY,false);
             y += h;
         } 
@@ -3254,7 +3289,7 @@ void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent)
     int currX=p->x+p->padding; int currY=p->y+p->padding; 
     if (p->backButton.data)
     {
-        DrawButton(&p->backButton,p->x,p->y,*mouseState,true,BG,true,FRIENDLY);
+        DrawButton(&p->backButton,p->x,p->y,*mouseState,true,BG,true,FRIENDLY,false);
         currY+=p->backButton.h;
     }
 
@@ -3266,12 +3301,16 @@ void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent)
     }
     for (int i = 0; i < p->numElements; i++)
     {
+        al_set_clipping_rectangle(p->x-1,p->y,p->w,p->h*panelShownPercent-1);
+
         UIElement* u = ((UIElement*)&p->elements[i]);
         int x; int y; int w; int h;
         GetUILocation(p, u, &x, &y, &w, &h,false);
-        DrawUIElement(u,x,y,mouseState,u->bgColor, COLOR_FRIENDLY);
+        DrawUIElement(u,x,y,mouseState,u->bgColor, COLOR_FRIENDLY,true);
 
     }
+    al_set_clipping_rectangle(p->x-1,p->y,p->w,p->h*panelShownPercent-1);
+
     if (p->tabs)
     {
         DrawPanelTabs(p, mouseState);
@@ -3369,7 +3408,12 @@ void LoadCursorSprite(UI* ui, int* index, char* path)
 bool GetButtonIsClicked(UIElement* u)
 {
     if (_PANEL_CLICKED_THIS_FRAME)
+    {
+        Button* b = (Button*)(u->data);
+        b->activated = false;
+
         return false;
+    }
     if (u->enabled)
     {
         if (u->elementType == ELEMENT_BUTTON)
@@ -3591,9 +3635,9 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
     UpdateButton(ui.endScreen_Retry.x,ui.endScreen_Retry.y,ui.endScreen_Retry.w,ui.endScreen_Retry.h,&ui.endScreen_Retry,*mouseState,*mouseStateLastFrame);
     UpdateButton(ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,ui.endScreen_SaveReplay.w,ui.endScreen_SaveReplay.h,&ui.endScreen_SaveReplay,*mouseState,*mouseStateLastFrame);
 
-    DrawUIElement(&ui.endScreen_Back,ui.endScreen_Back.x,ui.endScreen_Back.y,mouseState,ui.endScreen_Back.bgColor,COLOR_FRIENDLY);
-    DrawUIElement(&ui.endScreen_Retry,ui.endScreen_Retry.x,ui.endScreen_Retry.y,mouseState,ui.endScreen_Retry.bgColor,COLOR_FRIENDLY);
-    DrawUIElement(&ui.endScreen_SaveReplay,ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,mouseState,ui.endScreen_SaveReplay.bgColor,COLOR_FRIENDLY);
+    DrawUIElement(&ui.endScreen_Back,ui.endScreen_Back.x,ui.endScreen_Back.y,mouseState,ui.endScreen_Back.bgColor,COLOR_FRIENDLY,false);
+    DrawUIElement(&ui.endScreen_Retry,ui.endScreen_Retry.x,ui.endScreen_Retry.y,mouseState,ui.endScreen_Retry.bgColor,COLOR_FRIENDLY,false);
+    DrawUIElement(&ui.endScreen_SaveReplay,ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,mouseState,ui.endScreen_SaveReplay.bgColor,COLOR_FRIENDLY,false);
     
     int x = 86;
     int y = 139;

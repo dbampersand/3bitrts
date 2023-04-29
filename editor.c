@@ -15,6 +15,7 @@ Editor editor = {0};
 bool FileExists(char* path)
 {   
     ALLEGRO_FILE* f = al_fopen(path,"r");
+    al_fclose(f);
     return (f != NULL);
 }
 
@@ -642,22 +643,25 @@ void UpdatePosition(GameObject* g, float x, float y)
     {
         if (editor.setupLines[i].associated == g)
         {
-            g->position.worldX = x;
-            g->position.worldY = y;
+            if (editor.setupLines[i].line)
+            {
+                g->position.worldX = x;
+                g->position.worldY = y;
 
 
-            UpdateScreenPositions(g);
+                UpdateScreenPositions(g);
 
-            //2-decimal precision for both
-            int toIncreaseBy = NumDigits(x) + NumDigits(y) + 6;
-            //editor.setupLines[i].line = realloc(editor.setupLines[i].line,(strlen(editor.setupLines[i].line)+toIncreaseBy+1)*sizeof(char));
+                //2-decimal precision for both
+                int toIncreaseBy = NumDigits(x) + NumDigits(y) + 6;
+                //editor.setupLines[i].line = realloc(editor.setupLines[i].line,(strlen(editor.setupLines[i].line)+toIncreaseBy+1)*sizeof(char));
 
-            char* xStr = GetPositionOfArgument(editor.setupLines[i].line,"CreateObject",2);
-            UpdateArgumentFloat(&editor.setupLines[i].line,xStr,x,true);
-            char* yStr = GetPositionOfArgument(editor.setupLines[i].line,"CreateObject",3);
-            UpdateArgumentFloat(&editor.setupLines[i].line,yStr,y,true);
+                char* xStr = GetPositionOfArgument(editor.setupLines[i].line,"CreateObject",2);
+                UpdateArgumentFloat(&editor.setupLines[i].line,xStr,x,true);
+                char* yStr = GetPositionOfArgument(editor.setupLines[i].line,"CreateObject",3);
+                UpdateArgumentFloat(&editor.setupLines[i].line,yStr,y,true);
 
-            printf("%s\n",editor.setupLines[i].line);
+                printf("%s\n",editor.setupLines[i].line);
+            }
         }
     }
 }
@@ -762,7 +766,7 @@ void SplitLines(char* buffer, EditorLine** lines, int* lineCount)
 
             memset(&line[numLines-1],0,sizeof(EditorLine));
 
-            line[numLines-1].line = calloc(strlen(bufferLine)+2,sizeof(char));
+            line[numLines-1].line = calloc(strlen(bufferLine)+strlen(after)+1,sizeof(char));
 
             strcat(line[numLines-1].line,bufferLine);
             strcat(line[numLines-1].line,after);
@@ -1833,7 +1837,7 @@ void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFram
         DrawPanel(&editor.editorUI.unitOptions,&mouseState,1);
 
     DrawPanel(&editor.editorUI.mapImageEditor,&mouseState,1);
-    DrawUIElement(&editor.editorUI.save,editor.editorUI.save.x,editor.editorUI.save.y,&mouseState,COLOR_BG,COLOR_FRIENDLY);
+    DrawUIElement(&editor.editorUI.save,editor.editorUI.save.x,editor.editorUI.save.y,&mouseState,COLOR_BG,COLOR_FRIENDLY,false);
 
     if (editor.editorState == EDITOR_STATE_PAINTING)
     {
@@ -1890,7 +1894,7 @@ void InitFileSelector(Panel* p, Panel* fileNamingUI)
 }
 void PopulateUnitSelector(Panel* p)
 {
-    int x = 0; int y = 0; int w = p->w;
+    int x = 0; int y = 0; int w = p->w-SCROLLBARW-1;
     for (int i = 0; i < numPrefabs; i++)
     {
         int h = 16;
