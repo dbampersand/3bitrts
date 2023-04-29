@@ -8,11 +8,13 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",186.00,181.00,TYPE_ENEMY,0),1);
     SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",235.00,170.00,TYPE_ENEMY,0),1);
 
-    SetAggroGroup(CreateObject("assets/enemies/nuul/nuul.lua",164.00,278.00,TYPE_ENEMY,0),2);
-    SetAggroGroup(CreateObject("assets/enemies/kobold_crossbow/kobold_crossbow.lua",205.00,303.00,TYPE_ENEMY,0),2);
-    SetAggroGroup(CreateObject("assets/enemies/kobold_crossbow/kobold_crossbow.lua",130.00,301.00,TYPE_ENEMY,0),2);
+    SetAggroGroup(CreateObject("assets/enemies/nuul/nuul.lua",152.00,359.00,TYPE_ENEMY,0),2);
+    SetAggroGroup(CreateObject("assets/enemies/kobold_crossbow/kobold_crossbow.lua",192.00,395.00,TYPE_ENEMY,0),2);
+    SetAggroGroup(CreateObject("assets/enemies/kobold_crossbow/kobold_crossbow.lua",111.00,393.00,TYPE_ENEMY,0),2);
 
     SetSpawnPoint(180,34)
+    CreateObject("assets/enemies/kobold_saboteur/kobold_saboteur.lua",143.00,250.00,TYPE_ENEMY,0.00)
+    CreateObject("assets/enemies/kobold_saboteur/kobold_saboteur.lua",208.00,253.00,TYPE_ENEMY,0.00)
 end
 
 function update(dt)

@@ -76,6 +76,9 @@ void DecreaseMapDimensions(EDITOR_HANDLE handle, int x, int y)
         sx = x;
         sy = y;
     }
+    currMap->spawnPoint.x -= sx;
+    currMap->spawnPoint.y -= sy;
+    UpdateSpawnPointStr();
 
     al_draw_tinted_bitmap_region(sprites[currMap->spriteIndex].sprite,WHITE,sx,sy,w,h,drawOffsetX,drawOffsetY,0);
     al_draw_tinted_bitmap_region(sprites[currMap->secondLayerSpriteIndex].sprite,WHITE,sx,sy,w,h,drawOffsetX,drawOffsetY,0);
@@ -127,6 +130,9 @@ void IncreaseMapDimensions(int x, int y)
     {
         drawOffsetY = abs(y);
     }
+    currMap->spawnPoint.x += drawOffsetX;
+    currMap->spawnPoint.y += drawOffsetY;
+    UpdateSpawnPointStr();
 
     al_draw_tinted_bitmap(sprites[currMap->spriteIndex].sprite,WHITE,drawOffsetX,drawOffsetY,0);
     al_draw_tinted_bitmap(sprites[currMap->secondLayerSpriteIndex].sprite,WHITE,drawOffsetX,drawOffsetY,0);
@@ -788,6 +794,8 @@ void EditorSetMap(char* path)
     Map* m = LoadMap(path);
     //SetMap(m);
     currMap = m;
+    path = currMap->path;
+
 
     if (editor.setupLines)
     {
@@ -1326,7 +1334,11 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
             strcat(fullStr,editor.currentPath);
             if (fullStr[strlen(fullStr)-1] != '/')
                 strcat(fullStr,"/");
+            for (int i = 0; i < strlen(name); i++)
+                name[i] = tolower(name[i]);
             strcat(fullStr,name);
+
+
 
 
             //create a new lua file and populate it with boilerplate
@@ -1427,7 +1439,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                 Button* b = (Button*)u->data;
                 if (GetButtonIsClicked(u))
                 {
-                    char* newPath = calloc(strlen(editor.currentPath)+strlen(b->description)+2,sizeof(char));
+                    char* newPath = calloc(strlen(editor.currentPath)+strlen(b->description)+3,sizeof(char));
                     DIR *d;
                        struct dirent *dir;
                     d = opendir(editor.currentPath);  
@@ -1460,6 +1472,8 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                     else
                     {
                         strcat(newPath,editor.currentPath);
+                        if (newPath[strlen(newPath)-1] != '/')
+                            strcat(newPath,"/");
                         strcat(newPath,b->description);
 
                         

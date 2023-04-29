@@ -2985,7 +2985,7 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
         clip.x = clamp(clip.x,panel.x,panel.x+panel.w) - 1;
         clip.y = clamp(clip.y,panel.y,panel.y+panel.h) - 1;
         clip.w = _MAX(0,button.w) + 1;
-        clip.h = _MAX(0,(panel.y+panel.h) - button.y+button.h) + 1;
+        clip.h = _MAX(0,(panel.y+panel.h) - clip.y);
 
 
         al_set_clipping_rectangle(clip.x,clip.y,clip.w,clip.h);
