@@ -9,6 +9,7 @@ function setup()
     SetSpawnPoint(77,126)
 
 
+    CreateObject("assets/enemies/kobold_wizard/kobold_wizard.lua",236.00,120.00,TYPE_ENEMY,0.00)
 end
 
 function update()

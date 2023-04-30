@@ -5,11 +5,10 @@
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
 		"abcdefghijklmnopqrstuvwxyz",
 		"1234567890!?.,@£$%&+-*/=()",
-		"[]><'\"~_^\\;:-"
+		"[]><'\"#~`_^\\;:|{}"
 	],
 	"glyph-color": "white",
 	"in-kerning": [
-		"u i -2",
 		""
 	],
 	"glyph-width": 8,
@@ -36,9 +35,6 @@
 	"font-license-url": "",
 	"font-sample-text": "",
 	"font-preview-text": [
-		"ggggg",
-		"ggggg",
-		"Target",
-		""
+		"Set"
 	]
 }
