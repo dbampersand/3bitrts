@@ -25,6 +25,7 @@
 #include "item.h"
 #include "shop.h"
 #include "vectorshape.h"
+#include "timer.h"
 
 #include "allegro5/allegro_font.h"
 
@@ -60,7 +61,63 @@ void dumpstack (lua_State* l)
         break;
     }
   }
+  fflush(stdout);
 }
+void PrintVal(lua_State* l, int i)
+{
+    printf("%s: ",luaL_typename(l,i));
+    int typeVal = lua_type(l,i);
+    if (typeVal == LUA_TNUMBER)
+    {
+        printf("%f\n",lua_tonumber(l,i));
+    }
+    if (typeVal == LUA_TBOOLEAN)
+    {
+        printf("%s\n",lua_toboolean(l,i) == true ? "True" : "False");
+    }
+    if (typeVal == LUA_TSTRING)
+    {
+        printf("%s\n",lua_tostring(l,i));
+    }
+    printf("\n");
+
+
+
+}
+int L_After(lua_State* l)
+{
+    lua_CFunction func = lua_tocfunction(l,1);
+    float time = lua_tonumber(l,2);
+    int top = lua_gettop(l);
+    Timer t = {0};
+
+    lua_newtable(l);
+    lua_rotate(l,1,1);
+
+    for (int i = 4; i <= top+1; i++)
+    {
+        lua_pushnumber(l,i-3);
+        lua_pushvalue(l,i);
+       // PrintVal(l,lua_gettop(l));
+
+        lua_settable(l,1);
+    }
+    lua_pop(l,top);
+    
+    int j = luaL_ref(l,LUA_REGISTRYINDEX);
+
+    t.func = func;
+    t.registryIndex = j;
+    t.timer = time;
+    t.obj = currGameObjRunning;
+    t.ability = currAbilityRunning;
+    t.attack = currAttackRunning;
+
+    AddTimer(t);
+
+
+}
+
 int L_GetHeadingVector(lua_State* l)
 {
     float x = lua_tonumber(l,1);
@@ -1177,13 +1234,12 @@ int L_CreateCircularProjectiles(lua_State* l)
     const char* portrait = lua_tostring(l,3);
     const int attackType = lua_tonumber(l,4);
     const int speed = lua_tonumber(l,5);
-    const int duration = lua_tonumber(l,6);
+    const int duration = lua_tonumber(l,6);   
     const bool shouldCallback = lua_toboolean(l, 7);
     const int properties = lua_tonumber(l,8);
     const int numProjectiles = lua_tonumber(l,9);
     const int color = lua_tonumber(l,10);
     const float angleOffset = DegToRad(lua_tonumber(l,11));
-
 
     size_t len =  lua_rawlen(l,12);
 
@@ -4842,5 +4898,7 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_StopCommand);
     lua_setglobal(luaState, "StopCommand");
+    lua_pushcfunction(luaState, L_After);
+    lua_setglobal(luaState, "After");
 
 }

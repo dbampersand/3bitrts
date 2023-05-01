@@ -2689,21 +2689,30 @@ void UpdateTextInput(int rX, int rY, int w, int h, UIElement* u, MouseState mous
             if (al_key_down(keyStateThisFrame,i) && !al_key_down(keyStateLastFrame,i))
             {
                 const char* keyName = al_keycode_to_name(i);
-                char key;
+                char key = 0;
+                bool shift = al_key_down(keyStateThisFrame,ALLEGRO_KEY_LSHIFT);
+
                 if (strlen(keyName) == 1)
                     key = keyName[0];
                 else
                 {
-                    if (strcmp(keyName,"BACKSPACE")==0)
+                    if (i == ALLEGRO_KEY_BACKSPACE)
                         key = 8;   
+
+                    if (i == ALLEGRO_KEY_MINUS)
+                        key = '-';   
+                    if (i == ALLEGRO_KEY_MINUS && shift)
+                        key = '_';
                 }
                 //backspace
                 if (key == 8)
                 {
                     if (strlen(t->text) > 0)
                     {
+                        int jdfgdf = strlen(t->text);
                         t->text[strlen(t->text)-1] = '\0';
                     }
+                    break;
                 }
                 if (t->onlyAllowNumbers)
                 {
@@ -2716,11 +2725,8 @@ void UpdateTextInput(int rX, int rY, int w, int h, UIElement* u, MouseState mous
                 }
                 else
                 {
-                    if (isalnum(key)) 
-                    {
-                        if (strlen(t->text) < t->maxChars)
-                            t->text[strlen(t->text)] = key;
-                    }
+                    if (strlen(t->text) < t->maxChars)
+                        t->text[strlen(t->text)] = key;
 
                 }
                 break;

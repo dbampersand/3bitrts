@@ -34,6 +34,9 @@
         "allegro_primitives.h": "c",
         "ability.h": "c",
         "allegro_image.h": "c",
-        "CAVE.C": "cpp"
+        "CAVE.C": "cpp",
+        "sound.h": "c",
+        "lualib.h": "c",
+        "encounter.h": "c"
     }
 }

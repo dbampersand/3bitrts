@@ -67,6 +67,8 @@ void AddDirtSprites(int numToAdd, ALLEGRO_BITMAP* sprite)
 }
 void DisplayCollision()
 {
+    if (GetMapWidth() == 0 || GetMapHeight() == 0 || !currMap->collision)
+        return;
     for (int x = 0; x < GetMapWidth(); x += _GRAIN)
     {
         for (int y = 0; y < GetMapHeight(); y += _GRAIN)

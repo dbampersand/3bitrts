@@ -1,18 +1,15 @@
-local burn = -1
-local fireball = -1
+local charge = -1
 
 function setup()
-    SetSprite("assets/enemies/kobold_wizard/kobold_wizard.png");
+    SetSprite("assets/enemies/kobold_crusher/kobold_crusher.png");
 
     SetDamage(35);
     SetMaxHP(750,true)
     SetSpeed(120)
     SetRange(32);
 
-    fireball = AddAbility(GetObjRef(),"assets/enemies/kobold_wizard/ability_fireball.lua",0);
-    burn = AddAbility(GetObjRef(),"assets/enemies/kobold_wizard/ability_burn.lua",1);
-
-
+    charge = AddAbility(GetObjRef(),"assets/enemies/kobold_crusher/ability_charge.lua",0);
+    
     SetAttackSounds({
         "assets/audio/attacks/melee_hammer/hammer_1.wav",
         "assets/audio/attacks/melee_hammer/hammer_2.wav",

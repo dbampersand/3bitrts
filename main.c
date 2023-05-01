@@ -38,6 +38,8 @@
 #include "vectorshape.h"
 
 #include "editor.h"
+#include "timer.h"
+
 ALLEGRO_BITMAP* testBitmap;
 
 
@@ -169,6 +171,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
             if (replay.playing)
                 replay.framePlayPosition++;
         }
+        UpdateTimers(dt);
     }
     ProcessSpriteDecorations(dt);
     UpdateParticles(dt);

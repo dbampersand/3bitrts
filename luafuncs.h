@@ -40,3 +40,4 @@ void SetLuaFuncs();
 float GetTableField(lua_State* l, int tableIndex, const char* name, bool* isAField);
 int CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const char* portrait, int attackType, int speed, int duration, bool shouldCallback, int properties, GameObject* targ, uint32_t color, Effect* effects, size_t len);
 void SetLuaKeyEnums(lua_State* l);
+void PrintVal(lua_State* l, int i);

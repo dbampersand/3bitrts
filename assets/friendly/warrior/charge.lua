@@ -44,8 +44,10 @@ function casted(x,y,obj,headingx,headingy)
     ApplyEffect(GetObjRef(),{speed});
 
     SetMovePoint(GetObjRef(),x, y, true, false)
-    CreateCircularProjectiles(xPos,yPos,"",ATTACK_PROJECTILE_ANGLE,sp,duration,true,ATTACK_HITS_ENEMIES,12,COLOR_FRIENDLY_DAMAGE,0,{f1,f2})
-
+    --CreateCircularProjectiles(xPos,yPos,"",ATTACK_PROJECTILE_ANGLE,sp,duration,true,ATTACK_HITS_ENEMIES,12,COLOR_FRIENDLY_DAMAGE,0,{f1,f2})
+    After(CreateCircularProjectiles,0.05,x,y,"",ATTACK_PROJECTILE_ANGLE,sp,duration,true,ATTACK_HITS_ENEMIES,12,COLOR_FRIENDLY_DAMAGE,0,{f1,f2});
+    --After(Print,0.1,"asdf")
+    
     --aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,false,-1, {f1})
     return true; 
 end
