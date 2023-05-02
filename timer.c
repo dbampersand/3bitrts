@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "luafuncs.h"
+#include "gameobject.h"
 void AddTimer(Timer t)
 {
     if (!timers)
@@ -40,6 +41,8 @@ void UpdateTimer(int index, float dt)
 {
     Timer* t = timers[index];
     t->timer -= dt;
+    if (!IsActive(t->obj))
+        DeleteTimer(index);
     if (t->timer <= 0)
     {
         currGameObjRunning = t->obj;

@@ -12,7 +12,7 @@ function setup()
     SetDamage(15);
     SetMaxHP(750,true)
     SetSpeed(120)
-    SetRange(128);
+    SetRange(32);
 
     dropBomb = AddAbility(GetObjRef(),"assets/enemies/kobold_saboteur/ability_drop_bomb.lua",0);
 

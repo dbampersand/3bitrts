@@ -1,8 +1,8 @@
 function setup()
     SetMapSprite("assets/encounters/0/map_5.png")
 
-    CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",86.00,237.00,TYPE_ENEMY,0)
-    CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",108.00,239.00,TYPE_ENEMY,0)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",80.00,228.00,TYPE_ENEMY,0),1)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",100.00,228.00,TYPE_ENEMY,0),1)
 
     CreateObject("assets/enemies/cannon/cannon.lua",44.00,140.00,TYPE_ENEMY,0);
     CreateObject("assets/enemies/cannon/cannon.lua",46.00,198.00,TYPE_ENEMY,0);
@@ -10,26 +10,26 @@ function setup()
     CreateObject("assets/enemies/cannon/cannon.lua",152,175,TYPE_ENEMY,0);
     CreateObject("assets/enemies/cannon/cannon.lua",152,250,TYPE_ENEMY,0);
 
-    CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",87.00,172.00,TYPE_ENEMY,0)
-    CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",84.00,143.00,TYPE_ENEMY,0)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",80.00,132.00,TYPE_ENEMY,0),2)
 
-    CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",107.00,171.00,TYPE_ENEMY,0)
-    CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",108.00,142.00,TYPE_ENEMY,0)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",100.00,160.00,TYPE_ENEMY,0),2)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",100.00,132.00,TYPE_ENEMY,0),2)
 
-    CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",121.00,40.00,TYPE_ENEMY,0)
-    CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",144.00,56.00,TYPE_ENEMY,0)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",112.00,32.00,TYPE_ENEMY,0),3)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",136.00,48.00,TYPE_ENEMY,0),3)
 
     SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",301.00,48.00,TYPE_ENEMY,0),4)
-    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",316.00,84.00,TYPE_ENEMY,0),4)
-    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",288.00,128.00,TYPE_ENEMY,0),4)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",308.00,76.00,TYPE_ENEMY,0),4)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",280.00,120.00,TYPE_ENEMY,0),4)
 
-    SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",277.00,72.00,TYPE_ENEMY,0),4)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",268.00,64.00,TYPE_ENEMY,0),4)
 
     SetSpawnPoint(81,484)
 
     SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",404.00,264.00,TYPE_ENEMY,0.00),5)
-    SetAggroGroup(CreateObject("assets/enemies/kobold_crossbow/kobold_crossbow.lua",344.00,227.00,TYPE_ENEMY,0.00),5)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_crossbow/kobold_crossbow.lua",336.00,216.00,TYPE_ENEMY,0.00),5)
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",360.00,267.00,TYPE_ENEMY,0.00),5)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_crusher/kobold_crusher.lua",102.00,200.00,TYPE_ENEMY,0.00),1)
 end
 
 function update(dt)
@@ -43,6 +43,6 @@ function kill()
 end
 
 function mapend()
-    ChangeMap("assets/encounters/0/map_final.lua")
+    ChangeMap("assets/encounters/0/map_6.lua")
     return false;
 end

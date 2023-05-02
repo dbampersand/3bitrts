@@ -1725,7 +1725,7 @@ int L_SetAttackCircle(lua_State* l)
             a->properties |= ATTACK_DRAW_CIRCLE;
         }
         else
-            a->properties &= !(ATTACK_PROPERTIES)ATTACK_DRAW_CIRCLE;
+            a->properties &= ~(ATTACK_PROPERTIES)ATTACK_DRAW_CIRCLE;
     }
     return 0;
 }
@@ -3406,7 +3406,7 @@ int L_SetObjectPush(lua_State* l)
     if (b)
         currGameObjRunning->properties |= OBJ_CAN_PUSH;
     else
-        currGameObjRunning->properties &= !OBJ_CAN_PUSH;
+        currGameObjRunning->properties &= ~OBJ_CAN_PUSH;
     return 0;
 }
 int L_IsInCombat(lua_State* l)
@@ -3482,6 +3482,7 @@ int L_GetAttackInactive(lua_State* l)
 
 int L_CastAbility(lua_State* l)
 {
+
     if (ObjIsChannelling(currGameObjRunning))
     {
         lua_pushboolean(l,false);
