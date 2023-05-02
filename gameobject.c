@@ -30,6 +30,7 @@
 #include "pathfind.h"
 #include "replay.h"
 #include "editor.h"
+#include "easings.h"
 
 GameObject* objects = NULL;
 int objectsAllocated = 0;
@@ -295,6 +296,8 @@ void UpdateObject(GameObject* g, float dt)
     for (int i = 0; i < MAX_ABILITIES; i++)
     {
         currGameObjRunning->abilities[i].timeSinceLastCast += dt;
+        LowerAbilityCooldown(&currGameObjRunning->abilities[i],dt);
+        /* 
         currGameObjRunning->abilities[i].cdTimer -= dt;
         if (currGameObjRunning->abilities[i].cdTimer < 0)
         {
@@ -302,7 +305,7 @@ void UpdateObject(GameObject* g, float dt)
             currGameObjRunning->abilities[i].stacks++;
             if (currGameObjRunning->abilities[i].stacks > currGameObjRunning->abilities[i].maxStacks)
                 currGameObjRunning->abilities[i].stacks = currGameObjRunning->abilities[i].maxStacks;
-        }
+        }*/
     }
     g->nextFootstepTime -= dt;
     if (g->nextFootstepTime < 0)
@@ -2924,6 +2927,8 @@ void AttackTarget(GameObject* g, float dt)
         return;
     if (!g->targObj)
         return;
+
+    float miss = RandRange(0,100);
     if (GetPlayerOwnedBy(g) == GetPlayerOwnedBy(g->targObj))
     {
         return;
@@ -2944,7 +2949,6 @@ void AttackTarget(GameObject* g, float dt)
         PlayAttackSound(g);
 
         float damage = g->baseDamage;
-        ProcessItemsOnAttack(g, dt, &damage);
 
         //    g->targObj->health -= damage;
 
@@ -2965,6 +2969,12 @@ void AttackTarget(GameObject* g, float dt)
 
             AddAnimationEffect_Prefab(ae, g->properties & OBJ_OWNED_BY, midX, midY);
         }
+        if (miss < g->missChance)
+        {
+            return;
+        }
+        ProcessItemsOnAttack(g, dt, &damage);
+
         if (g->targObj)
         {
             float cx;
@@ -3141,6 +3151,12 @@ void AddSpeed(GameObject* g, float value)
     if (!g)
         return;
     g->speed += value;
+}
+void AddMissChance(GameObject* g, float value)
+{
+    if (!g)
+        return;
+    g->missChance += value;
 }
 void ModifyMaxHP(GameObject* g, float value)
 {

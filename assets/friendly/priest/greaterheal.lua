@@ -12,7 +12,7 @@ function casted(x,y,obj,headingx,headingy)
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HEAL
-    f1["value"] = 200;  
+    f1["value"] = 350;  
 
     ApplyEffect(obj,{f1})
     return true;

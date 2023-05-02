@@ -402,18 +402,7 @@ int PointsToAngleDeg(int x1, int y1, int x2, int y2)
     float f = PointsToAngleRad(x1,y1,x2,y2);
     return RadToDeg(f);
 }
-//based on https://easings.net/#easeInOutCubic
-float EaseInOutCubic(float f)
-{
-    if (f < 0.5f)
-    {
-        return 4 * f * f * f;
-    }
-    else
-    {
-        return  1 - pow(-2 * f + 2, 3) / 2.0f;
-    }
-}
+
 
 //https://arxiv.org/ftp/arxiv/papers/1509/1509.06344.pdf
 void CircToRect(double u, double v, double* x, double* y)

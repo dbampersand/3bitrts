@@ -648,3 +648,15 @@ void RemoveAbility(Ability* a, GameObject* from)
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_ontimeout);
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_onchanneled);
 }
+
+void LowerAbilityCooldown(Ability* a, float amt)
+{
+    a->cdTimer -= amt;
+    if (a->cdTimer < 0)
+    {
+        a->cdTimer = a->cooldown;
+        a->stacks++;
+        if (a->stacks > a->maxStacks)
+            a->stacks = a->maxStacks;
+    }
+}

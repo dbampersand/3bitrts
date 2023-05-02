@@ -16,6 +16,7 @@
 #include "map.h"
 #include "helperfuncs.h"
 #include "player.h"
+#include "easings.h"
 
 #include "allegro5/allegro_font.h"
 
@@ -785,30 +786,7 @@ SpriteDecoration AddCloud()
 
     return s;
 }
-float EaseOutQuint(float x) {
-    if (x > 1) return 1;
-    return 1 - pow(1 - x, 5);
-}
-float easeInCirc(float x) {
-    return 1 - sqrt(1 - pow(x, 2));
-}
-float easeOutCirc(float x){
-    return sqrt(1 - pow(x - 1, 2));
-}
-float easeInOutQuint(float x)
-{
-    if (x < 0.5f)
-    {
-        return 16 * x * x * x * x * x;
-    }
-    return 1 - pow(-2 * x + 2, 5) / 2.0f;
-}
-float easeOutExpo(float x)
-{
-    if (x >= 1)
-        return 1;
-    else return (1 - pow(2, -10 * x));
-}
+
 void UpdateScreenPositions_Point(PointSpace* p)
 {
     p->screenX = ToScreenSpace_X(p->worldX);

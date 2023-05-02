@@ -28,6 +28,7 @@
 #include "dirent.h"
 #include "replay.h"
 #include "particle.h"
+#include "easings.h"
 
 Widget* Widgets_States[NUMGAMESTATES] = {0};
 int numSprites_States[NUMGAMESTATES] = {0};

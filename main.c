@@ -36,6 +36,7 @@
 #include "item.h"
 #include "console.h"
 #include "vectorshape.h"
+#include "easings.h"
 
 #include "editor.h"
 #include "timer.h"

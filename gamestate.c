@@ -19,6 +19,7 @@
 #include "console.h"
 #include "particle.h"
 #include "editor.h"
+#include "easings.h"
 
 #ifndef M_PI
     #define M_PI 3.14159265358979323846
@@ -700,34 +701,6 @@ void UpdateTransition(float dt)
     transitionTimer = clamp(transitionTimer,0,1);
 
 }
-//based on https://easings.net/#easeOutBack
-float easeOutBack(float x) 
-{
-    const float c1 = 1.70158f;
-    const float c3 = c1 + 1;
-
-    return 1 + c3 * pow(x - 1, 3) + c1 * pow(x - 1, 2);
-}
-//based on https://easings.net/#easeOutSine
-float easeOutSine(float x)
-{
-  return sin((x * M_PI) / 2.0f);
-}
-//based on https://easings.net/#easeInOutBack
-float easeInOutBack(float x) 
-{
-    const float c1 = 1.70158f;
-    const float c2 = c1 * 1.525f;
-    
-    if (x < 0.5f)
-    {
-        return (pow(2 * x, 2) * ((c2 + 1) * 2 * x - c2)) / 2.0f;
-    }
-    else
-    {
-        return (pow(2 * x - 2, 2) * ((c2 + 1) * (x * 2 - 2) + c2) + 2) / 2.0f;
-    }
-}
 
 
 #define TRANSITION_CHAIN_SIZE 5
@@ -839,14 +812,6 @@ void DrawTransition_Stairs(float dt)
         
     }
 
-}
-float easeOutCubic(float x)
-{
-    return 1 - pow(1 - x, 3);
-}   
-float easeInOutSine(float x)
-{
-    return -(cos(M_PI * x) - 1) / 2.0f;
 }
 void DrawTransition_Circle(float dt)
 {

@@ -18,7 +18,7 @@ function casted(x,y,obj,headingx,headingy)
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 60;  
+    f1["value"] = 80;  
 
     local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 0.25, 0.25, false, ATTACK_HITS_ENEMIES, COLOR_FRIENDLY_DAMAGE, DITHER_NONE,false, -1, {f1});
 

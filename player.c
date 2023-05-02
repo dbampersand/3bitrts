@@ -9,6 +9,7 @@
 #include "item.h"
 #include "allegro5/allegro_ttf.h"
 #include <math.h>
+#include "easings.h"
 float cameraSpeed = 260;
 Player* players  = NULL;
 

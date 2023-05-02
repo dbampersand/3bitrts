@@ -15,7 +15,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["name"] = "Regen"
     f1["trigger"] = TRIGGER_TIMER
     f1["type"] = EFFECT_HEAL
-    f1["value"] = 35;
+    f1["value"] = 45;
     f1["duration"] = 12
     f1["triggersPerSecond"] = 1 
     f1["overwrites"] = true

@@ -223,6 +223,7 @@ typedef struct GameObject
 
     bool objIsPushable;
 
+    float missChance;
 
 } GameObject;
 
@@ -328,6 +329,7 @@ void Stun(GameObject* source, GameObject* g, float value);
 
 void SetMoveSpeed(GameObject* g, float value);
 void AddSpeed(GameObject* g, float value);
+void AddMissChance(GameObject* g, float value);
 void AddDamage(GameObject* g, float value);
 void ModifyMaxHP(GameObject* g, float value);
 void AddMana(GameObject* g, float mana);

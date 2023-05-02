@@ -760,7 +760,7 @@ void SplitLines(char* buffer, EditorLine** lines, int* lineCount)
 
 
             *c = '\0';
-            if (*(c - 1) == '\r')
+            if ((c - 1) >= buffer && *(c - 1) == '\r')
                 *(c - 1) = '\0';
             
             char* bufferLine = lineStart;

@@ -26,6 +26,7 @@
 #include "shop.h"
 #include "vectorshape.h"
 #include "timer.h"
+#include "easings.h"
 
 #include "allegro5/allegro_font.h"
 
@@ -1417,6 +1418,17 @@ int L_SetAbilityCooldownTimer(lua_State* l)
         a->cdTimer = a->cooldown;
     return 0;
 }
+int L_ReduceCooldown(lua_State* l)
+{
+    int gameObjIndex = lua_tonumber(l,1);
+    int abilityObjIndex = lua_tonumber(l,2);
+    int cd = lua_tonumber(l,3);
+
+    GameObject* g = &objects[gameObjIndex];
+    Ability* a = &g->abilities[abilityObjIndex];
+    LowerAbilityCooldown(a,cd);
+    return 0;
+}
 int L_SetAbilityOnCooldown(lua_State* l)
 {
     int gameObjIndex = lua_tonumber(l,1);
@@ -2350,10 +2362,30 @@ int L_GetClosestObjectInRange(lua_State* l)
     float closestDist = range;
     GameObject* closestObj = NULL;
 
+    int friendliness = lua_tonumber(l,4);
+    int thisObjFriendliness = GetPlayerOwnedBy(currGameObjRunning);
+
+
     for (int i = 0; i < numActiveObjects; i++)
     {
         if (!IsActive(activeObjects[i]))
             continue;
+        if (friendliness == TYPE_FRIENDLY)
+        {
+            if (thisObjFriendliness != GetPlayerOwnedBy(activeObjects[i]))
+            {
+                continue;
+            }
+        }
+        if (friendliness == TYPE_ENEMY)
+        {
+            if (thisObjFriendliness == GetPlayerOwnedBy(activeObjects[i]))
+            {
+                continue;
+            }
+        }
+
+            
         float cx; float cy;
         GetCentre(activeObjects[i],&cx,&cy);
         if (dist(cx,cy,x,y) < closestDist)
@@ -2362,7 +2394,57 @@ int L_GetClosestObjectInRange(lua_State* l)
             closestDist = dist(cx,cy,x,y);
         }
     }
-    lua_pushnumber(l,closestObj-objects);
+    if (closestObj != NULL)
+        lua_pushnumber(l,closestObj-objects);
+    else
+        lua_pushnumber(l,-1);
+    return 1;
+
+}
+int L_GetFurthestObjectInRange(lua_State* l)
+{
+    float x = lua_tonumber(l,1);
+    float y = lua_tonumber(l,2);
+    float range = lua_tonumber(l,3);
+    int friendliness = lua_tonumber(l,4);
+    
+    int thisObjFriendliness = GetPlayerOwnedBy(currGameObjRunning);
+
+
+    float furthestDist = 0;
+    GameObject* furthestObj = NULL;
+
+    for (int i = 0; i < numActiveObjects; i++)
+    {
+        if (!IsActive(activeObjects[i]))
+            continue;
+        if (friendliness == TYPE_FRIENDLY)
+        {
+            if (thisObjFriendliness != GetPlayerOwnedBy(activeObjects[i]))
+            {
+                continue;
+            }
+        }
+        if (friendliness == TYPE_ENEMY)
+        {
+            if (thisObjFriendliness == GetPlayerOwnedBy(activeObjects[i]))
+            {
+                continue;
+            }
+        }
+
+        float cx; float cy;
+        GetCentre(activeObjects[i],&cx,&cy);
+        if (dist(cx,cy,x,y) > furthestDist)
+        {
+            furthestObj = activeObjects[i];
+            furthestDist = dist(cx,cy,x,y);
+        }
+    }
+    if (furthestObj != NULL)
+        lua_pushnumber(l,furthestObj-objects);
+    else
+        lua_pushnumber(l,-1);
     return 1;
 
 }
@@ -2960,6 +3042,9 @@ void SetGlobals(lua_State* l)
 
     lua_pushinteger(l,EFFECT_SPEED);
     lua_setglobal(l,"EFFECT_SPEED");
+
+    lua_pushinteger(l,EFFECT_MISS_CHANCE);
+    lua_setglobal(l,"EFFECT_MISS_CHANCE");
 
     lua_pushinteger(l,EFFECT_SHIELD);
     lua_setglobal(l,"EFFECT_SHIELD");
@@ -4138,6 +4223,7 @@ int L_RemoveFromCount(lua_State* l)
     objects[index].isRemovedFromCount = b;
     return 0;
 }
+
 void SetLuaKeyEnums(lua_State* l)
 {
     //TODO: Update these when a key is changed in settings
@@ -4901,5 +4987,12 @@ void SetLuaFuncs()
     lua_setglobal(luaState, "StopCommand");
     lua_pushcfunction(luaState, L_After);
     lua_setglobal(luaState, "After");
+
+    lua_pushcfunction(luaState, L_ReduceCooldown);
+    lua_setglobal(luaState, "ReduceCooldown");
+
+    lua_pushcfunction(luaState, L_GetFurthestObjectInRange);
+    lua_setglobal(luaState, "GetFurthestObjectInRange");
+
 
 }

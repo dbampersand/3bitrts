@@ -7,6 +7,7 @@
 #include "particle.h"
 #include "helperfuncs.h"
 #include "colors.h"
+#include "easings.h"
 
 #include "allegro5/allegro_primitives.h"
 
@@ -144,6 +145,11 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
         }
         AddSpeed(target,value*sign);
     }
+    if (e->effectType == EFFECT_MISS_CHANCE)
+    {
+        AddMissChance(target,value*sign);
+    }
+
     if (e->effectType == EFFECT_SHIELD)
     {
         AttachShield(target,e->duration,value*sign);

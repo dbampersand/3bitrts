@@ -20,5 +20,5 @@ function update()
 end
 function mapend()
 
-   ChangeMap("assets/encounters/0/map_final.lua")
+   ChangeMap("assets/encounters/0/map_7.lua")
 end

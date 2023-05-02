@@ -125,11 +125,6 @@ void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO
 void SetDisplaySize();
 void InitVideo();
 void DrawFilledRect_Dithered(Rect r, ALLEGRO_COLOR color);
-float EaseOutQuint(float x);
-float easeInCirc(float x);
-float easeOutCirc(float x);
-float easeInOutQuint(float x);
-float easeOutExpo(float x);
 
 
 void ProcessSpriteDecorations(float dt);

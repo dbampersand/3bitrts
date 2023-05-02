@@ -13,7 +13,7 @@
 #include "ui.h"
 #include "encounter.h"
 #include "particle.h"
-
+#include "easings.h"
 Shop shop = {0};
 int rerollCost = 5;
 

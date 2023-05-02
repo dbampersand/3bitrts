@@ -113,7 +113,3 @@ void AddDeadGameObject(GameObject* g);
 void GoTutorial();
 void WinGame();
 void LoseGame();
-
-float easeOutBack(float x); 
-float easeInOutBack(float x);
-float easeOutSine(float x);
