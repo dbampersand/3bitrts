@@ -54,6 +54,8 @@ typedef struct Effect
     EFFECT_TRIGGER trigger;
     EFFECT_TYPE effectType;
     GameObject* from;
+    int playerOwnedBy;
+    
     char* name;
     char* description;
     bool canStack;

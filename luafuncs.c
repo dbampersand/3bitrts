@@ -2989,6 +2989,15 @@ int L_MObj(lua_State* l)
     currGameObjRunning = before;
     return 0;
 }
+int L_Clamp(lua_State* l)
+{
+    float toClamp = lua_tonumber(l,1);
+    float min = lua_tonumber(l,2);
+    float max = lua_tonumber(l,3);
+
+    lua_pushnumber(l,clamp(toClamp,min,max));
+    return 1;
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -3499,6 +3508,16 @@ int L_IsInCombat(lua_State* l)
     lua_pushboolean(l,IsInCombat(currGameObjRunning));
     return 1;
 }
+int L_ObjIsValidIndex(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index >= 0 && index < MAX_OBJS)
+        lua_pushboolean(l,true);
+    else
+        lua_pushboolean(l,false);
+    return 1;
+
+}
 int L_IsAlive(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -3575,10 +3594,12 @@ int L_CastAbility(lua_State* l)
     }
     int index = lua_tonumber(l,1);
         
-    if (index < 0)
-        index = 0;
-    if (index >= MAX_ABILITIES) 
-        index = MAX_ABILITIES-1;
+    if (index < 0 || index >= MAX_ABILITIES)
+    {
+        printf("%s: L_CastAbility: index out of range: %i\n",(currGameObjRunning && currGameObjRunning->name) ? currGameObjRunning->name : "",index);
+        lua_pushboolean(l,false);
+        return 1;
+    }
 
     Ability* ability = &currGameObjRunning->abilities[index];
     if (ability->stacks == 0 && AbilityIsOnCooldown(ability))//.cdTimer > 0.001f)
@@ -4059,6 +4080,22 @@ int L_GetAttackPosition(lua_State* l)
     lua_pushnumber(l,a->y);
     lua_settable(l,-3);
 
+    return 1;
+
+}
+int L_GetDist(lua_State* l)
+{
+    int objOne = lua_tonumber(l,1);
+    int objTwo = lua_tonumber(l,2);
+
+    if (objOne < 0 || objOne >= MAX_OBJS || objTwo < 0 || objTwo >= MAX_OBJS)
+    {
+        printf("L_GetDist: index out of range: %i, %i\n",objOne,objTwo);
+        lua_pushnumber(l,-1);
+        return 1;
+    }
+    float dist = GetDist(&objects[objOne],&objects[objTwo]);
+    lua_pushnumber(l,dist);
     return 1;
 
 }
@@ -4994,5 +5031,13 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_GetFurthestObjectInRange);
     lua_setglobal(luaState, "GetFurthestObjectInRange");
 
+    lua_pushcfunction(luaState, L_Clamp);
+    lua_setglobal(luaState, "Clamp");
+
+    lua_pushcfunction(luaState, L_GetDist);
+    lua_setglobal(luaState, "GetDist");
+
+    lua_pushcfunction(luaState, L_ObjIsValidIndex);
+    lua_setglobal(luaState, "ObjIsValidIndex");
 
 }

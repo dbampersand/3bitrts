@@ -225,9 +225,8 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
     DrawCommandQueue(players[0].selection[players[0].indexSelectedUnit]);
     
-    DrawAttacks(dt);
 
-        UpdateGoldAnimationTimer(dt);
+    UpdateGoldAnimationTimer(dt);
 
 
     if (gameState == GAMESTATE_CHOOSING_UNITS)
@@ -274,6 +273,8 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
         }
     }
+    DrawAttacks(dt);
+
     //Draw health bars on top of all objects
     for (int i = 0; i < numActiveObjects; i++)
     {

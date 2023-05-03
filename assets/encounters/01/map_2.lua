@@ -3,20 +3,18 @@ local timer = 0
 function setup()
     SetMapSprite("assets/encounters/01/map_2.png")
 
-    CreateObject("assets/enemies/viper/viper.lua",221,102,TYPE_ENEMY,0);
-    CreateObject("assets/enemies/cobra/cobra.lua",209,134, TYPE_ENEMY,0);
+    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",212.00,100.00,TYPE_ENEMY,0),1);
+    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",200.00,124.00, TYPE_ENEMY,0),1);
 
-    CreateObject("assets/enemies/viper/viper.lua",344,211,TYPE_ENEMY,0) ;
-    CreateObject("assets/enemies/cobra/cobra.lua",400,211,TYPE_ENEMY,0);
-    CreateObject("assets/enemies/viper/viper.lua",324,265,TYPE_ENEMY,0) ;
-    CreateObject("assets/enemies/cobra/cobra.lua",389,283,TYPE_ENEMY,0);
+    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",347.00,188.00,TYPE_ENEMY,0),2) ;
+    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",383.00,166.00,TYPE_ENEMY,0),2);
+    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",384.00,287.00,TYPE_ENEMY,0),3);
     
-    CreateObject("assets/enemies/scorpion/scorpion.lua",389,262,TYPE_ENEMY,0);
-    CreateObject("assets/enemies/scorpion/scorpion.lua",422,260,TYPE_ENEMY,0);
+    SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",373.00,258.00,TYPE_ENEMY,0),3);
 
-    SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",180,320,TYPE_ENEMY,0),4);
-    SetAggroGroup(CreateObject("assets/enemies/wadjet/wadjet.lua",180,344,TYPE_ENEMY,0),4);
-    SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",180,320,TYPE_ENEMY,0),4);
+    SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",101.00,315.00,TYPE_ENEMY,0),5);
+    SetAggroGroup(CreateObject("assets/enemies/wadjet/wadjet.lua",110.00,356.00,TYPE_ENEMY,0),5);
+    SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",101.00,288.00,TYPE_ENEMY,0),5);
 
 
     CreateObject("assets/decor/curebox.lua",374,307,TYPE_ENEMY,0);
@@ -25,6 +23,9 @@ function setup()
 
     SetSpawnPoint(35,115)
     
+    SetAggroGroup(CreateObject("assets/enemies/kobold_crusher/kobold_crusher.lua",331.00,294.00,TYPE_ENEMY,0.00),3)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_crossbow/kobold_crossbow.lua",223.00,303.00,TYPE_ENEMY,0.00),4)
+    SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",252.00,329.00,TYPE_ENEMY,0.00),4)
 end
 
 function update(dt)

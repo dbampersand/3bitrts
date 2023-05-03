@@ -205,7 +205,6 @@ void PreprocessMap(Map* map, int randSpritesToAdd)
     al_lock_bitmap(sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
 
     al_set_target_bitmap(sprite);
-    
 
    for (int y = 0; y < h; y++) {
       for (int x = 0; x < w; x++) {
@@ -230,7 +229,8 @@ void PreprocessMap(Map* map, int randSpritesToAdd)
 
     map->secondLayerSpriteIndex = secondLayer - sprites;
    al_set_target_bitmap(secondLayer->sprite);
-   al_lock_bitmap(secondLayer->sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+    al_lock_bitmap(secondLayer->sprite,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
+
     for (int y = 0; y < h; y++) {
       for (int x = 0; x < w; x++) {
         ALLEGRO_COLOR pixel = al_get_pixel(sprite, x, y);

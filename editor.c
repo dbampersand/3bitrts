@@ -1056,6 +1056,7 @@ ALLEGRO_BITMAP* CreateCombinedBitmap(int w, int h, int numBitmaps, ...)
 
     ALLEGRO_BITMAP* combined = al_create_bitmap(w,h);
     al_set_target_bitmap(combined);
+    al_clear_to_color(al_map_rgba(0,0,0,0));
 
     va_list argp;   
     va_start(argp, numBitmaps);

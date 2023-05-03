@@ -875,7 +875,7 @@ bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c, MouseState* mo
 {
     Rect r = (Rect){x,y,16,16};
 
-    if (e->enabled)
+    if (e->enabled && e->trigger != TRIGGER_INSTANT)
     {
         if (e->spriteIndex_Portrait > 0)
             DrawSprite(&sprites[e->spriteIndex_Portrait],x,y,0.5f,0.5f,0,FRIENDLY,false,false,false);

@@ -225,8 +225,10 @@ void CureEffect(GameObject* g, Effect* e, int numEffects, bool removeAllStacks)
         if (e == e2)
             continue;
 
-        if (!e2->from || GetPlayerOwnedBy_IncludeDecor(e2->from) != GetPlayerOwnedBy_IncludeDecor(g) || GetPlayerOwnedBy(e2->from) == TYPE_DECORATION)
+        if (!e2->from || e2->playerOwnedBy != GetPlayerOwnedBy_IncludeDecor(g) || e2->playerOwnedBy == TYPE_DECORATION)
         {
+            if (!e2->enabled)
+                continue;
             if (RemoveEffect(e2,g,removeAllStacks))
                 i--;
             numEffects--;
@@ -377,6 +379,8 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
     //not an elegant solution but it works
     Effect eNew = CopyEffect(e);
     e = &eNew;
+
+    e->playerOwnedBy = GetPlayerOwnedBy(from);
     
     if (HasAugment(currEncounterRunning,AUGMENT_BAD_EFFECT_TIME))
     {

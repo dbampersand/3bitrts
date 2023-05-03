@@ -1,5 +1,5 @@
     function setup()
-    SetSprite("assets/enemies/viper/viper.png");
+    SetSprite("assets/enemies/cobra/cobra.png");
 
     SetDamage(20);
     SetMaxHP(650,true)
