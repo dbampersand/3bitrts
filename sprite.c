@@ -166,21 +166,23 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
     {
         maxSprites+=32;
         sprites = realloc(sprites,maxSprites*sizeof(Sprite));
+
     }
 
     if (sprite)
     {
         SetSpriteToWhite(sprite);
-        Sprite loadedSprite;
+        Sprite loadedSprite = {0};
         loadedSprite.sprite = sprite;
         loadedSprite.path = calloc(strlen(path)+1,sizeof(char));
         strcpy(loadedSprite.path,path);
         sprites[numSprites] = loadedSprite;
-        numSprites++;
         if (needsInverted)
-            GenerateInvertedSprite(&sprites[numSprites-1]);
+            GenerateInvertedSprite(&sprites[numSprites]);
         else
-            sprites[numSprites-1].inverseSprite = 0x0;
+            sprites[numSprites].inverseSprite = 0x0;
+       
+        numSprites++;    
         return numSprites-1;
 
     }
@@ -191,11 +193,20 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
 
     return 0;
 }
+Sprite* LoadSprite_Pointer(const char* path, bool needsInverted)
+{
+    int index = LoadSprite(path, needsInverted);   
+
+    return &sprites[index];
+}
+
 void DrawSprite(Sprite* sprite, int x, int y, float originX, float originY, float angle, ALLEGRO_COLOR tint, bool invert, bool flipX, bool flipY)
 {
 
     //if the index is 0, never draw 
     if (sprite == sprites || !sprite)
+        return;
+    if (!sprite->sprite)    
         return;
 
     int xFlip = flipX ? -1 : 1;

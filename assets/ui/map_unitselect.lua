@@ -9,6 +9,7 @@ function setup()
     SetSpawnPoint(77,126)
 
 
+    CreateObject("assets/enemies/web_spinner/web_spinner.lua",228.00,139.00,TYPE_ENEMY,0.00)
 end
 
 function update()

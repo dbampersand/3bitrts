@@ -1406,7 +1406,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     }
     if (!e->unlocked)
     {
-        DrawSprite(&sprites[LoadSprite("assets/ui/levelselect/padlock.png",false)],offsetX,0,0,0,0,FRIENDLY,false,false,false);
+        DrawSprite(LoadSprite_Pointer("assets/ui/levelselect/padlock.png",false),offsetX,0,0,0,0,FRIENDLY,false,false,false);
         Rect r = (Rect){72,66,112,143};
         if (selectedEncounterIndex == index && PointInRect(mouseState->screenX,mouseState->screenY,r) && mouseState->mouse.buttons & 1 && !(mouseStateLastFrame->mouse.buttons & 1))
         {
