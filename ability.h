@@ -40,6 +40,8 @@ typedef struct Ability
     int luafunc_untoggle;
     int luafunc_ontimeout;
     int luafunc_onchanneled;
+    int luafunc_parentdeath;
+
 
     float range;
     //float length;

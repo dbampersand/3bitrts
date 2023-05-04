@@ -835,6 +835,7 @@ void EditorSetMap(char* path)
 
 
 
+
     free(buff);
     free(end);
 
@@ -847,7 +848,10 @@ void EditorSetMap(char* path)
         {  
             //UpdatePosition(editor.setupLines[i].associated,4,5);
         }
+        
     }
+    editor.editorUI.goingShop = currEncounterRunning->goingToShop;
+
     ChangeButtonText(GetButtonB(&editor.editorUI.saveLoad,"Location"),path);
     //ChangeButtonText(GetButtonB(&editor.editorUI.saveLoad,"NextMap"),);
 
@@ -1104,8 +1108,32 @@ void SaveMap()
     al_destroy_bitmap(combined);
     //al_set_target_bitmap(before);
 }
+void UpdateGoingShop()
+{
+    bool goingShop = editor.editorUI.goingShop;
+    bool foundStr = false;
+    for (int i = 0; i < editor.numEndLines; i++)
+    {
+        if (strstr(editor.endLines[i].line,"GoShop"))
+        {
+            char* arg = GetPositionOfArgument(editor.endLines[i].line,"GoShop",1);
+            UpdateArgumentStr(&editor.endLines[i].line,arg,goingShop == true ? "true" : "false",false);
+            foundStr = true;
+        }
+    }
+    if (!foundStr)
+    {
+        char* fmt = "    GoShop(%s)\n";
+        int numChars = snprintf(NULL,0,fmt,goingShop == true ? "true" : "false");
+        char* str = calloc(numChars+1,sizeof(char));
+        sprintf(str,fmt,goingShop == true ? "true" : "false");
+        AddEditorLine(&editor.endLines,&editor.numEndLines,str);
+        free(str);
+    }
+}
 void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
+    bool previousGoingShop = editor.editorUI.goingShop;
     SpawnPointRectIsMoved(mouseState,mouseStateLastFrame);
     if (editor.editorUI.showFileNamingUI)
         UpdatePanel(&editor.editorUI.fileNamingUI,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
@@ -1114,6 +1142,10 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         UpdatePanel(&editor.editorUI.fileSelector,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
 
     UpdatePanel(&editor.editorUI.saveLoad,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
+    if (previousGoingShop != editor.editorUI.goingShop)
+    {
+        UpdateGoingShop();
+    }
     UpdatePanel(&editor.editorUI.unitSelector,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
     if (editor.highlightedObject)
         UpdatePanel(&editor.editorUI.unitOptions,&mouseState,&mouseStateLastFrame,keyState, keyStateLastFrame);
@@ -1350,8 +1382,8 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
 
                 if (FileExists(fullStr))
                 {
-                    free(fullStr);
                     printf("Could not save %s: file already exists",fullStr);
+                    free(fullStr);
                     return;
                 }
                 
@@ -1920,9 +1952,14 @@ void PopulateUnitSelector(Panel* p)
 }
 void InitEditorUI()
 {   
-    editor.editorUI.saveLoad = CreatePanel(1,UI_START_Y,_SCREEN_SIZE-1,_SCREEN_SIZE-UI_START_Y,1,true);
+
+    UIElement* save = InitButton(&editor.editorUI.save,"Save","Save",10,10,40,20,0);
+
+    editor.editorUI.saveLoad = CreatePanel(1,UI_START_Y-save->y,_SCREEN_SIZE-1,_SCREEN_SIZE-UI_START_Y+save->y,1,true);
     UIElement* loc = AddButton(&editor.editorUI.saveLoad,"Location","Location",1,1,_SCREEN_SIZE-2,13,true);
-    AddButton(&editor.editorUI.saveLoad,"NextMap","NextMap",1,1+loc->h+2,_SCREEN_SIZE-2,13,true);
+    loc = AddButton(&editor.editorUI.saveLoad,"NextMap","NextMap",1,1+loc->h+2,_SCREEN_SIZE-2,13,true);
+    AddCheckbox(&editor.editorUI.saveLoad,loc->x+1, loc->y + loc->h + 2,15,15,"GoShop",&editor.editorUI.goingShop);
+
 
     editor.editorUI.fileSelector = CreatePanel(10,10,_SCREEN_SIZE-20,UI_START_Y-20,1,true);
     InitFileSelector(&editor.editorUI.fileSelector, &editor.editorUI.fileNamingUI);
@@ -1932,7 +1969,6 @@ void InitEditorUI()
 
     editor.editorUI.unitSelector = CreatePanel(_SCREEN_SIZE-10-unitSelectorW,20,unitSelectorW,unitSelectorH,1,true);
 
-    UIElement* save = InitButton(&editor.editorUI.save,"Save","Save",10,10,40,20,0);
 
     editor.editorUI.unitOptions = CreatePanel(save->x,save->y+save->h+10,80,80,1,true);
     UIElement* owner = AddPulldownMenu(&editor.editorUI.unitOptions,1,1,editor.editorUI.unitOptions.w-2,20,"Owner",1,2,"Friendly","Enemy");

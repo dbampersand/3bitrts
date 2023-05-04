@@ -63,6 +63,7 @@ typedef struct EditorUI
     UIElement save;
 
     bool heldObjectIsDecor;
+    bool goingShop;
 
 } EditorUI;
 

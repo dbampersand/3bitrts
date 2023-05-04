@@ -36,6 +36,6 @@ function kill()
 end
 
 function mapend()
-    ChangeMap("assets/encounters/01/map_final.lua")
+    ChangeMap("assets/encounters/01/map_5.lua")
     return false;
 end

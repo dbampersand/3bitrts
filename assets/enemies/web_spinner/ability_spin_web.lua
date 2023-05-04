@@ -48,3 +48,7 @@ end
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     SetAttackVelocity(attackRef,GetAttackVelocity(attackRef)+dt*32);
 end
+
+function parentdeath(x, y, durationLeft, parent, target, attackRef)
+    RemoveAttack(attackRef);
+end

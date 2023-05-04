@@ -11,6 +11,9 @@ local moveTimer = 0
 local timeToMove = 0.4
 
 local actionTimer = RandRange(1,2.5)
+
+local atk = -1
+
 function setup()
     SetSprite("assets/enemies/web_spinner/web_spinner.png");
 
@@ -46,7 +49,7 @@ function update(dt)
                 moving = true
             else
                 local castTarget = GetRandomUnit(TYPE_ENEMY,TYPE_ANY,GetAbilityRange(GetObjRef(),spinWeb),1)[1];
-                CastAbility(spinWeb,1,{{target = castTarget}});
+                atk = CastAbility(spinWeb,1,{{target = castTarget}});
             end
             
             if (moving) then
@@ -60,7 +63,7 @@ function update(dt)
                 if (GetAbilityCooldown(GetObjRef(),spinWeb) <= 0) then
                     moving = false;
                     local castTarget = GetRandomUnit(TYPE_ENEMY,TYPE_ANY,GetAbilityRange(GetObjRef(),spinWeb),1)[1];
-                    CastAbility(spinWeb,1,{{target = castTarget}});
+                    atk = CastAbility(spinWeb,1,{{target = castTarget}});
                 end
             end
         end
@@ -68,5 +71,4 @@ function update(dt)
 end
 
 function kill()
-
 end

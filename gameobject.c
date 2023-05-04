@@ -1348,7 +1348,46 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
     {
         activeObjects[i] = activeObjects[i + 1];
     }
+
     numActiveObjects--;
+
+    if (trigger)
+    {
+        for (int i = 0; i < attack_top; i++)
+        {
+            Attack* a = &attacks[i];
+            if (a->ownedBy == g)
+            {
+                Ability* ab = a->cameFrom;
+                if (ab)
+                {
+                    if (ab->luafunc_parentdeath >= 0 && AttackIsActive(a))
+                    {
+                        int attackTopBefore = attack_top;
+
+                        lua_rawgeti(luaState,LUA_REGISTRYINDEX,ab->luafunc_parentdeath);
+                        lua_pushnumber(luaState,a->x + a->radius/2.0f);
+                        lua_pushnumber(luaState,a->y + a->radius/2.0f);
+                        lua_pushnumber(luaState,a->timer);    
+                        lua_pushinteger(luaState,g-objects);
+                        lua_pushinteger(luaState,a->target - objects);
+                        lua_pushinteger(luaState,a-attacks);
+                        lua_pushnumber(luaState,a->duration);
+
+                        lua_pcall(luaState,7,0,0);
+
+                        if (attack_top < attackTopBefore)
+                        {
+                            //removeattack was called
+                            i--;
+                        }
+                    }
+                }
+
+            }
+        }
+
+    }
 
     luaL_unref(luaState, LUA_REGISTRYINDEX, g->luafunc_update);
     luaL_unref(luaState, LUA_REGISTRYINDEX, g->luafunc_setup);

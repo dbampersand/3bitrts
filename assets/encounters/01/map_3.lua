@@ -42,4 +42,5 @@ end
 function mapend()
     ChangeMap("assets/encounters/01/map_4.lua")
     return false;
+    GoShop(true)
 end
