@@ -16,13 +16,13 @@ typedef struct Ability Ability;
 
 typedef enum ATTACK_TYPE
 {
-    ATTACK_AOE = 0,
-    ATTACK_PROJECTILE_TARGETED,
-    ATTACK_PROJECTILE_POINT,
-    ATTACK_PROJECTILE_ANGLE,
-    ATTACK_MELEE,
-    ATTACK_CONE,
-    ATTACK_SHAPE
+    ATTACK_AOE = 1,
+    ATTACK_PROJECTILE_TARGETED = 2,
+    ATTACK_PROJECTILE_POINT = 4,
+    ATTACK_PROJECTILE_ANGLE = 8,
+    ATTACK_MELEE = 16,
+    ATTACK_CONE = 32,
+    ATTACK_SHAPE = 64
 } ATTACK_TYPE;
 
 typedef enum ATTACK_PROPERTIES
@@ -99,7 +99,7 @@ void InitAttacks();
 void RemoveAttack(int attackindex);
 void RemoveAllAttacks();
 void DrawAttack(Attack* a, float dt);
-void DrawAttacks(float dt);
+void DrawAttacks(float dt, int type);
 void UpdateAttacks(float dt);
 void UpdateAttack(Attack* a, float dt);
 void ApplyAttack(Attack* a, GameObject* target);

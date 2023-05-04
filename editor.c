@@ -1,3 +1,4 @@
+
 #include "editor.h"
 #include "map.h"
 #include <string.h>
@@ -24,7 +25,7 @@ void EditorSetMapSprite(char* newPath)
     currMap->spriteIndex = LoadSprite(newPath,true);
     PreprocessMap(currMap,0);
 
-    bool foundSetMapSprite;
+    bool foundSetMapSprite = false;
 
     for (int i = 0; i < editor.numSetupLines; i++)
     {
@@ -43,7 +44,7 @@ void EditorSetMapSprite(char* newPath)
         int numChars = snprintf(NULL,0,fmt,newPath);
         char* fullStr = calloc(numChars+1,sizeof(char));
         sprintf(fullStr,fmt,newPath);
-        AddEditorLine(&editor.setupLines,&editor.numSetupLines, fullStr);
+        AddEditorLine(&editor.setupLines,&editor.numSetupLines, fullStr,true);
         free(fullStr);
     }
 
@@ -943,17 +944,32 @@ void PopulateFileList(Panel* p, char* path, int numPostfixes, ...)
 
 
 }
-EditorLine* AddEditorLine(EditorLine** lines, int* numLines, char* str)
+EditorLine* AddEditorLine(EditorLine** lines, int* numLines, char* str, bool end)
 {
     *lines = realloc(*lines,((*numLines)+1)*sizeof(EditorLine));
 
 
-    EditorLine* li = &(*lines)[*numLines];
+    EditorLine* li;
 
+    //if we want to place it at the start of the function or the end
+    if (end)
+    {
+        li = &(*lines)[*numLines];
 
+        memset(li,0,sizeof(EditorLine));
 
-    memset(li,0,sizeof(EditorLine));
-
+        li->line = calloc(strlen(str)+1,sizeof(char));
+        strcpy(li->line,str);
+    }
+    if (!end)
+    {
+        for (int i = *numLines; i >= 0; i--)
+        {
+            (*lines)[i] = (*lines)[i-1];
+        }
+        li = &(*lines)[0];
+        memset(li,0,sizeof(EditorLine));
+    }
     li->line = calloc(strlen(str)+1,sizeof(char));
     strcpy(li->line,str);
     (*numLines)++;
@@ -980,7 +996,7 @@ void AddObjLineToFile(GameObject* g, float x, float y, OBJ_FRIENDLINESS ownedBy,
     sprintf(line,fmt,g->path,x,y,friendliness,completionPercent);
 
 
-    EditorLine* e = AddEditorLine(&editor.setupLines,&editor.numSetupLines,line);
+    EditorLine* e = AddEditorLine(&editor.setupLines,&editor.numSetupLines,line,true);
     
     e->associated = g;
     
@@ -1049,7 +1065,7 @@ void SetNextMap(char* path)
     {
         char* str = calloc(strlen(path) + strlen("   ChangeMap(\"\")\n") + 1,sizeof(char));
         sprintf(str,"   ChangeMap(\"%s\")\n",path);
-        AddEditorLine(&editor.endLines, &editor.numEndLines, str);
+        AddEditorLine(&editor.endLines, &editor.numEndLines, str,true);
 
         free(str);
     }
@@ -1116,20 +1132,19 @@ void UpdateGoingShop()
     {
         if (strstr(editor.endLines[i].line,"GoShop"))
         {
-            char* arg = GetPositionOfArgument(editor.endLines[i].line,"GoShop",1);
-            UpdateArgumentStr(&editor.endLines[i].line,arg,goingShop == true ? "true" : "false",false);
-            foundStr = true;
+            memset(editor.endLines[i].line,0,strlen(editor.endLines[i].line)*sizeof(char));
+
+            //char* arg = GetPositionOfArgument(editor.endLines[i].line,"GoShop",1);
+            //UpdateArgumentStr(&editor.endLines[i].line,arg,goingShop == true ? "true" : "false",false);
+            //foundStr = true;
         }
     }
-    if (!foundStr)
-    {
-        char* fmt = "    GoShop(%s)\n";
-        int numChars = snprintf(NULL,0,fmt,goingShop == true ? "true" : "false");
-        char* str = calloc(numChars+1,sizeof(char));
-        sprintf(str,fmt,goingShop == true ? "true" : "false");
-        AddEditorLine(&editor.endLines,&editor.numEndLines,str);
-        free(str);
-    }
+    char* fmt = "\n    GoShop(%s)";
+    int numChars = snprintf(NULL,0,fmt,goingShop == true ? "true" : "false");
+    char* str = calloc(numChars+1,sizeof(char));
+    sprintf(str,fmt,goingShop == true ? "true" : "false");
+    AddEditorLine(&editor.endLines,&editor.numEndLines,str,false);
+    free(str);
 }
 void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
@@ -1826,6 +1841,7 @@ void UpdateSpawnPointStr()
     bool foundSpawnPoint = false;
     for (int i = 0; i < editor.numSetupLines; i++)
     {
+        char* c = editor.setupLines[i].line;
         if (strstr(editor.setupLines[i].line,"SetSpawnPoint") && !editor.setupLines[i].lineIsComment)
         {
             foundSpawnPoint = true;
@@ -1842,7 +1858,7 @@ void UpdateSpawnPointStr()
         int numChars = snprintf(NULL,0,fmt,(int)currMap->spawnPoint.x,(int)currMap->spawnPoint.y);
         char* line = calloc(numChars+1,sizeof(char));
         sprintf(line,fmt,(int)currMap->spawnPoint.x,(int)currMap->spawnPoint.y);
-        EditorLine* e = AddEditorLine(&editor.setupLines,&editor.numSetupLines,line);
+        EditorLine* e = AddEditorLine(&editor.setupLines,&editor.numSetupLines,line,true);
         free(line);
     }
 }

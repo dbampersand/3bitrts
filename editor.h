@@ -120,6 +120,6 @@ bool HandleIsVertical(EDITOR_HANDLE handle);
 bool HandleIsHorizontal(EDITOR_HANDLE handle);
 void UpdateArgumentStr(char** full, char* position, char* str, bool addQuotes);
 char* GetPositionOfArgument(char* str, char* functionToFind, int argumentToGet);
-EditorLine* AddEditorLine(EditorLine** lines, int* numLines, char* str);
+EditorLine* AddEditorLine(EditorLine** lines, int* numLines, char* str, bool end);
 void SpawnPointRectIsMoved(MouseState mouseState, MouseState mouseStateLastFrame);
 void UpdateSpawnPointStr();

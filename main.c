@@ -260,6 +260,8 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     DrawObjShadows();
     DrawAggroIndicators();
+    DrawAttacks(dt,ATTACK_AOE | ATTACK_CONE | ATTACK_SHAPE);
+
     for (int i = 0; i < numActiveObjects; i++)
     {
         DrawChannelHint(activeObjects[i],dt);
@@ -273,7 +275,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
         }
     }
-    DrawAttacks(dt);
+    DrawAttacks(dt, ATTACK_PROJECTILE_TARGETED | ATTACK_PROJECTILE_TARGETED | ATTACK_PROJECTILE_ANGLE | ATTACK_MELEE);
 
     //Draw health bars on top of all objects
     for (int i = 0; i < numActiveObjects; i++)

@@ -3,24 +3,24 @@ local timer = 0
 function setup()
     SetMapSprite("assets/encounters/01/map_1.png")
 
-    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",115,296,TYPE_ENEMY,0),1);
-    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",131,296,TYPE_ENEMY,0),1);
+    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",106.00,363.00,TYPE_ENEMY,0),1);
+    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",129.00,358.00,TYPE_ENEMY,0),1);
    
-    CreateObject("assets/decor/curebox.lua",104,260,TYPE_ENEMY,0);
-    CreateObject("assets/decor/curebox.lua",120,260,TYPE_ENEMY,0);
-    CreateObject("assets/decor/curebox.lua",136,260,TYPE_ENEMY,0);
+    CreateObject("assets/decor/curebox.lua",92.00,313.00,TYPE_ENEMY,0);
+    CreateObject("assets/decor/curebox.lua",113.00,312.00,TYPE_ENEMY,0);
+    CreateObject("assets/decor/curebox.lua",135.00,316.00,TYPE_ENEMY,0);
 
-    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",80,184, TYPE_ENEMY,0),2);
-    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",100,180,TYPE_ENEMY,0),2);
-    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",164,184,TYPE_ENEMY,0),2);
+    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",87.00,242.00, TYPE_ENEMY,0),2);
+    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",119.00,218.00,TYPE_ENEMY,0),2);
+    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",148.00,207.00,TYPE_ENEMY,0),2);
 
 
-    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",130,48,TYPE_ENEMY,0),3);
-    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",180,48,TYPE_ENEMY,0),3);
+    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",104.00,114.00,TYPE_ENEMY,0),3);
+    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",158.00,98.00,TYPE_ENEMY,0),3);
 
-    SetAggroGroup(CreateObject("assets/enemies/caduceus/caduceus.lua",156,48,TYPE_ENEMY,0),3);
+    SetAggroGroup(CreateObject("assets/enemies/caduceus/caduceus.lua",182.00,150.00,TYPE_ENEMY,0),3);
 
-    SetSpawnPoint(120,460)
+    SetSpawnPoint(120,537)
     
 end
 
