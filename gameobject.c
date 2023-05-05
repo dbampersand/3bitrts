@@ -869,7 +869,7 @@ void RemoveObjFromSelection(GameObject* g)
         }
     }
 }
-GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE source)
+GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE source, int playerOwnedBy)
 {
     if (!prefab)
         return NULL;
@@ -890,8 +890,11 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
     *found = *prefab;
     currGameObjRunning = found;
 
+
+
     // memset(found->abilities,0,sizeof(Ability)*4);
     memset(currGameObjRunning, 0, sizeof(GameObject));
+
 
     currGameObjRunning->numAttackSounds = prefab->numAttackSounds;
     currGameObjRunning->attackSoundIndices = calloc(prefab->numAttackSounds, sizeof(int));
@@ -942,6 +945,8 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
         currGameObjRunning->completionPercent = 0;
 
     currGameObjRunning->ressurectionCost = 50;
+
+    SetOwnedBy(currGameObjRunning, playerOwnedBy);
 
     if (!loadLuaGameObj(luaState, found->path, found))
     {

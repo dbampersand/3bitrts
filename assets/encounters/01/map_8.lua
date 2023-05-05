@@ -14,7 +14,7 @@ function update()
 
 end
 function mapend()
+    GoShop(false)
 
    ChangeMap("assets/encounters/01/map_final.lua")
-    GoShop(true)
 end

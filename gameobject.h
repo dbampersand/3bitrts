@@ -296,7 +296,7 @@ void SetControlGroups(ALLEGRO_KEYBOARD_STATE* keyState);
 int GetCtrlGroup(int index);
 void SetCtrlGroup(int index, GameObject** list, int numUnitsSelected);
 void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
-GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE source);
+GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE source, int playerOwnedBy);
 bool CheckFuncExists(const char* funcName, LuaBuffer* lua_buffer);
 bool loadLuaGameObj(lua_State* l,const char* filename, GameObject* g);
 GameObject* LoadPrefab(const char* path);

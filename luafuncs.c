@@ -318,8 +318,8 @@ int L_SetAttackPosition(lua_State* l)
     int index = lua_tonumber(l,1);
     
     Attack* a = &attacks[index];
-    a->x = lua_tonumber(l,2) - a->radius/2.0f;
-    a->y = lua_tonumber(l,3) - a->radius/2.0f;
+    a->x = lua_tonumber(l,2);
+    a->y = lua_tonumber(l,3);
 
     return 0;
 }
@@ -2298,13 +2298,13 @@ int L_CreateObject(lua_State* l)
     if (!prefabFound)
     {
         GameObject* prefab = LoadPrefab(l_path);
-        g = AddGameobject(prefab,x,y,source);
+        g = AddGameobject(prefab,x,y,source,ownedBy);
         SetOwnedBy(g, ownedBy);
 
     }
     else
     {
-        g = AddGameobject(g,x,y,source);
+        g = AddGameobject(g,x,y,source,ownedBy);
         SetOwnedBy(g, ownedBy);
     }
     if (PLAYER == TYPE_DECORATION)
@@ -2977,13 +2977,13 @@ int L_MObj(lua_State* l)
     if (!prefabFound)
     {
         GameObject* prefab = LoadPrefab(l_path);
-        g = AddGameobject(prefab,x,y,PLAYER);
+        g = AddGameobject(prefab,x,y,SOURCE_SPAWNED_FROM_MAP,PLAYER);
         SetOwnedBy(g, PLAYER);
 
     }
     else
     {
-        g = AddGameobject(g,x,y,source);
+        g = AddGameobject(g,x,y,source,PLAYER);
         SetOwnedBy(g, PLAYER);
     }
     currGameObjRunning = before;
@@ -3945,7 +3945,7 @@ int L_CopyObject(lua_State* l)
     }
     if (g)
     {
-        GameObject* g2 = AddGameobject(g,x,y,SOURCE_SPAWNED_FROM_OBJ);
+        GameObject* g2 = AddGameobject(g,x,y,SOURCE_SPAWNED_FROM_OBJ,GetPlayerOwnedBy(g));
         for (int i = 0; i < MAX_ABILITIES; i++)
         {
             g2->abilities[i].cdTimer = g->abilities[i].cdTimer;

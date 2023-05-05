@@ -36,6 +36,6 @@ end
 
 function abilitytick(x, y, durationLeft)
     center = GetCentre(GetObjRef());
-    SetAttackPosition(cone,center.x,center.y)
+    SetAttackPosition(cone,GetX(GetObjRef()),GetY(GetObjRef()))
     SetAttackTarget(cone,objTargetting);
 end

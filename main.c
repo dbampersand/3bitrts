@@ -591,7 +591,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     {
         char* path = "assets/enemies/firebreather/firebreather.lua";
         GameObject* prefab = LoadPrefab(path);
-        GameObject* g =  AddGameobject(prefab,255,255,SOURCE_SPAWNED_FROM_MAP);
+        GameObject* g =  AddGameobject(prefab,255,255,SOURCE_SPAWNED_FROM_MAP,TYPE_ENEMY);
         KillObj(g,true,true);
     }
     if (al_key_down(keyState,ALLEGRO_KEY_F7))

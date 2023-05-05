@@ -111,7 +111,6 @@ Attack* CreateAoE(float x, float y, char* effectPortrait, float radius, float ti
     a.effects = calloc(numEffects,sizeof(Effect));
     memcpy(a.effects,effects,sizeof(Effect)*numEffects);
     a.numEffects = numEffects;
-    //a.ownedBy = currGameObjRunning;
     a.properties = properties;
     a.cameFrom = currAbilityRunning;
     a.shouldCallback = shouldCallback;
@@ -923,7 +922,7 @@ void UpdateAttack(Attack* a, float dt)
             int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
             bool cond1 = (a->properties & ATTACK_HITS_ENEMIES && objOwnedBy != a->playerOwnedBy);
             bool cond2 = (a->properties & ATTACK_HITS_FRIENDLIES && objOwnedBy == a->playerOwnedBy);
-            if (!a->cameFrom)
+            if (!a->ownedBy)
             {
                 cond1 = (a->properties & ATTACK_HITS_ENEMIES && objOwnedBy == 1);
                 cond2 = (a->properties & ATTACK_HITS_FRIENDLIES && objOwnedBy == 0);
@@ -1073,7 +1072,7 @@ void UpdateAttack(Attack* a, float dt)
         free(copied->effects);
     }
 
-    if (a->x < 0 || a->y < 0 || a->x > GetMapWidth() || a->y > GetMapHeight() || a->duration < 0)
+    if (a->x + a->radius < 0 || a->y + a->radius < 0 || a->x - a->radius > GetMapWidth() || a->y - a->radius > GetMapHeight() || a->duration < 0)
     {
         if (a->shouldCallback && IsActive(a->ownedBy))
         {

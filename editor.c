@@ -793,6 +793,8 @@ void EditorSetMap(char* path)
         return;
     RemoveAllGameObjects();
     Map* m = LoadMap(path);
+    currEncounterRunning->goingToShop = false;
+
     //SetMap(m);
     currMap = m;
     path = currMap->path;
@@ -963,7 +965,7 @@ EditorLine* AddEditorLine(EditorLine** lines, int* numLines, char* str, bool end
     }
     if (!end)
     {
-        for (int i = *numLines; i >= 0; i--)
+        for (int i = (*numLines); i >= 1; i--)
         {
             (*lines)[i] = (*lines)[i-1];
         }
@@ -1580,7 +1582,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         if (GetButtonIsClicked(u))
         {
             GameObject* toSpawn = prefabs[i];
-            GameObject* g = AddGameobject(toSpawn,GetCameraMiddleX(),GetCameraMiddleY(),SOURCE_SPAWNED_FROM_MAP);
+            GameObject* g = AddGameobject(toSpawn,GetCameraMiddleX(),GetCameraMiddleY(),SOURCE_SPAWNED_FROM_MAP,TYPE_ENEMY);
             SetOwnedBy(g,TYPE_ENEMY);
             AddObjLineToFile(g,g->position.worldX,g->position.worldY,GetPlayerOwnedBy(g),0,0);
         }

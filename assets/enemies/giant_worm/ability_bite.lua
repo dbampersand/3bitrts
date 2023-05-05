@@ -1,0 +1,40 @@
+local dps = 20
+local duration = 60
+local ticksPerSec = 3
+
+function setup()
+
+    SetAbilityRange(200)
+    --AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    SetAbilityHint(HINT_CIRCLE,radius);
+    SetCooldown(14); 
+    AbilitySetPortrait("assets/enemies/web_spinner/ability_bite.png");
+    SetDescription("[b]Bite\n\nBites the target, injecting a toxin.")
+end
+
+function casted(x,y,obj,headingx,headingy)
+
+    local f1 = {};
+    f1["trigger"] = TRIGGER_TIMER;
+    f1["type"] = EFFECT_HURT;
+    f1["value"] = dps / ticksPerSec;
+    f1["ticksPerSecond"] = ticksPerSec
+    f1["duration"] = duration
+
+    ApplyEffect(obj,{f1});
+
+
+
+
+    PlaySound("assets/enemies/viper/audio/bite.wav",1);
+    return true; 
+end
+
+function onhit(x,y,objhit)
+end
+
+function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
+end
+
+function parentdeath(x, y, durationLeft, parent, target, attackRef)
+end
