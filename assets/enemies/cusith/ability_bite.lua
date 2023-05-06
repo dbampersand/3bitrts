@@ -2,12 +2,13 @@ local cone = -1
 local objTargetting = -1
 
 local radius = 60
+local length = 140
 function setup()
 
     SetAbilityRange(500)
     --AbilitySetCastType(ABILITY_CONE);
-    SetAbilityHint(HINT_CONE,radius);
-    SetCooldown(2); 
+    SetAbilityHint(HINT_CONE,radius,false,length);
+    SetCooldown(4); 
     AbilitySetPortrait("assets/enemies/cusith/ability_bite.png");
     SetDescription("[b]Bite\n\nDeals damage in a cone.")
 
@@ -27,7 +28,7 @@ function casted(x,y,obj,headingx,headingy)
     center = GetCentre(GetObjRef());
     centertarget = GetCentre(obj);
     objTargetting = obj;
-    cone = CreateCone(center.x,center.y,centertarget.x,centertarget.y,"", radius, 0, 0, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER,140, {f1})
+    cone = CreateCone(center.x,center.y,centertarget.x,centertarget.y,"", radius, 0, 0, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER,length, {f1})
     SetAttackTarget(cone,objTargetting);
 
     return true; 

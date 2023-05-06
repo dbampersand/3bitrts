@@ -3566,8 +3566,11 @@ void DrawChannelHint(GameObject* g, float dt)
             {
                 float angle;
                 angle = atan2(y2 - y, x2 - x);
-                float length = a->range; // dist(x,y,x2,y2);
-                DrawCone(ToScreenSpace_X(x), ToScreenSpace_Y(y), RadToDeg(angle), a->hintRadius, a->range, ENEMY);
+                float length = a->hintLength;
+                if (a->hintLength == 0)
+                    length = a->range;
+                
+                DrawCone(ToScreenSpace_X(x), ToScreenSpace_Y(y), RadToDeg(angle), a->hintRadius, length, ENEMY);
             }
         }
     }

@@ -430,29 +430,60 @@ bool RectInCone(Rect r, int cx, int cy, float angle, float radius, float length)
     float dx = _MIN(cx-r.x,cx-r.x+r.w);
     float dy = _MIN(cy-r.y,cy-r.y+r.h);
 
-        Point rc = (Point){r.x+r.w/2.0f,r.y+r.h/2.0f};
+    Point rc = (Point){r.x+r.w/2.0f,r.y+r.h/2.0f};
 
-        Point tl = (Point){r.x,r.y};
-        Point tr = (Point){r.x+r.w,r.y};
-        Point bl = (Point){r.x,r.y+r.h};
-        Point br = (Point){r.x+r.w,r.y+r.h};
+    Point tl = (Point){r.x,r.y};
+    Point tr = (Point){r.x+r.w,r.y};
+    Point bl = (Point){r.x,r.y+r.h};
+    Point br = (Point){r.x+r.w,r.y+r.h};
 
     Point points[5] = {
         rc, tl, tr, bl, br
     };
+    angle -= 45;
+
+    radius = radius * M_PI/180.0f;
+    angle = angle * M_PI/180.0f;
+
+
     for (int i = 0; i < 5; i++)
     {
         if (PointInCircle(points[i].x,points[i].y,cx,cy,length))
         {      
-            
+
             int startX; int startY; int endX; int endY;
-            GetConeVertices(cx,cy,&startX,&startY,&endX,&endY,angle,radius,length);
+            //GetConeVertices(cx,cy,&startX,&startY,&endX,&endY,angle,radius,length);
+            int x2 = cx + length; int y2 = cy + length;
+            int x3 = cx + length; int y3 = cy + length;
+
+
+            RotatePoint(&x2,&y2,cx,cy, -radius/2.0f+angle);
+            RotatePoint(&x3,&y3,cx,cy, radius/2.0f+angle);
+
+            float xLine2 = x2-cx; float yLine2 = y2-cy;
+            float xLine3 = x3-cx; float yLine3 = y3-cy;
+
+            Normalize(&xLine2,&yLine2);
+            Normalize(&xLine3,&yLine3);
+
+            xLine2 *= length;
+            yLine2 *= length;
+            xLine3 *= length;
+            yLine3 *= length;
+
+            startX = x2;
+            startY = y2;
+
+            endX = x3;
+            endY = y3;
+
+
 
             if (isInsideSector(points[i].x, points[i].y,cx,cy,startX,startY,endX,endY,length,radius,angle))
             {
                 return true;
             }
-    }
+        }   
 
     }
     return false;

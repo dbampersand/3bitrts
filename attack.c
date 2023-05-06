@@ -763,17 +763,18 @@ void DrawAttack(Attack* a, float dt)
     }
     else if (a->attackType == ATTACK_CONE)
     {
-        float x2 = ToScreenSpace_X(a->targx); float y2 = ToScreenSpace_Y(a->targy);
+        float x2 = ToScreenSpace_X(a->targx); 
+        float y2 = ToScreenSpace_Y(a->targy);
         if (a->target)
         {
             GetCentre(a->target,&x2,&y2);
-            Normalize(&x2,&y2);
-            x2 *= a->screenX + a->range;
-            y2 *= a->screenY + a->range;
+            //Normalize(&x2,&y2);
+            //x2 *= a->screenX + a->range;
+            //y2 *= a->screenY + a->range;
             //al_put_pixel(x2,y2,POISON);
         }
         float angle = RadToDeg(atan2(y2-a->y,x2-a->x));
-        DrawCone((a->x),(a->y),angle,a->radius,a->range,col);
+        DrawCone(ToScreenSpace_X(a->x),ToScreenSpace_Y(a->y),angle,a->radius,a->range,col);
     }
     else if (a->attackType == ATTACK_SHAPE)
     {
@@ -1018,16 +1019,16 @@ void UpdateAttack(Attack* a, float dt)
                 float x2 = a->targx; float y2 = a->targy;
                 if (a->target)
                 {
-                    x2 = a->target->position.worldX;
-                    y2 = a->target->position.worldY;
+                    GetCentre(a->target,&x2,&y2);
+
+                   // x2 = a->target->position.worldX;
+                    //y2 = a->target->position.worldY;
                 }
 
                 float angle;
-                angle = atan2(y2 - y, x2 - x);
-                float length = a->range;//dist(x,y,x2,y2);
-                
+                angle = RadToDeg(atan2(y2 - a->y, x2 - a->x));
                 Rect r = GetObjRect(activeObjects[i]);
-                if (RectInCone(r,x,y,angle,a->targetRadius,length))
+                if (RectInCone(r,a->x,a->y,angle,a->targetRadius,a->range))
                 {
                     ApplyAttack(a,activeObjects[i]);
                 }

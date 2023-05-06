@@ -44,24 +44,24 @@ function update(dt)
     howlTimer = howlTimer + dt
 
     if (howlTimer > howlCD) then
-        SetMovePoint(128,128);
-        CastAbility(howl,3,{});
-        SetAbilityCooldownTimer(GetObjRef(),howl,0);
-        if (howlTimer > howlCD + GetAbilityCooldown(GetObjRef(),howl)*3) then
-            howlTimer = 0
-        end
-        do return end;
+       -- SetMovePoint(128,128);
+        --CastAbility(howl,3,{});
+        --SetAbilityCooldownTimer(GetObjRef(),howl,0);
+        --if (howlTimer > howlCD + GetAbilityCooldown(GetObjRef(),howl)*3) then
+         --   howlTimer = 0
+        --end
+        --do return end;
     end
 
-    CastAbility(callPack,3,{})
+    --CastAbility(callPack,3,{})
     local biteTarget = {};
     biteTarget["target"] = GetHighestThreat();
 
     CastAbility(bite,1,{biteTarget})
 
-    CastAbility(spin,4,{});
+    --CastAbility(spin,4,{});
 
-    CastAbility(focus,0,{});
+    --CastAbility(focus,0,{});
 
 end
 

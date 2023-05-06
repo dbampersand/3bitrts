@@ -26,7 +26,7 @@ function setup()
 
 
     SetDamage(10);
-    SetMaxHP(12000,true)
+    SetMaxHP(16000,true)
     SetSpeed(10)
     SetObjectPush(true);
     ObjIsStunnable(GetObjRef(),false);

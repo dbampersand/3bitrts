@@ -27,6 +27,7 @@
 #include "vectorshape.h"
 #include "timer.h"
 #include "easings.h"
+#include "particle.h"
 
 #include "allegro5/allegro_font.h"
 
@@ -2185,7 +2186,13 @@ int L_Teleport(lua_State* l)
     if (index >= 0 && index < MAX_OBJS)
     {
         GameObject* obj = &objects[index];
+        ScatterEffect(obj);
+        for (int i = 0; i < RandRange(3,30); i++)
+            AddParticleWithRandomProperties(obj->position.worldX+RandRange(0,GetWidth(obj)),obj->position.worldY+RandRange(0,GetHeight(obj)),GameObjToColor(obj),1,3,0.1,3,2*-M_PI,2*M_PI);
         Teleport(obj,lua_tonumber(l,2),lua_tonumber(l,3),true);
+        for (int i = 0; i < RandRange(3,30); i++)
+            AddParticleWithRandomProperties(obj->position.worldX+RandRange(0,GetWidth(obj)),obj->position.worldY+RandRange(0,GetHeight(obj)),GameObjToColor(obj),1,3,0.1,3,2*-M_PI,2*M_PI);
+
     }
     return 0;
 }
@@ -3729,6 +3736,14 @@ int L_SetAbilityHint(lua_State* l)
     else
     {
         currAbilityRunning->hintSoak = false;
+    }
+    if (lua_isnumber(l,4))
+    {
+        currAbilityRunning->hintLength = lua_tonumber(l,4);
+    }
+    else
+    {
+        currAbilityRunning->hintLength = 0;
     }
 
     return 0;

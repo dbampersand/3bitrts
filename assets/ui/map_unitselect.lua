@@ -7,6 +7,7 @@ function setup()
     PlayMusic("assets/audio/unitselect.wav",0.5,8);
 
     SetSpawnPoint(77,126)
+    CreateObject("assets/enemies/cusith/cusith.lua",255,128,TYPE_ENEMY,5);
 
 
 end

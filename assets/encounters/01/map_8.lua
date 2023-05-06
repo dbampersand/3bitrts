@@ -16,5 +16,5 @@ end
 function mapend()
     GoShop(false)
 
-   ChangeMap("assets/encounters/01/map_final.lua")
+   ChangeMap("assets/encounters/01/map_9.lua")
 end

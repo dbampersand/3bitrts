@@ -54,7 +54,7 @@ end
 function untoggle()
 end
 
-function onhit(x,y,objhit)
+function onhit(x,y,objHit)
     PushObj(x,y,objHit,90,0.1);
     ShakeScreen(0.5,0.1)
 

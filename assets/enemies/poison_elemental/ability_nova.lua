@@ -24,7 +24,8 @@ function casted(x,y,obj,headingx,headingy)
     f1["triggersPerSecond"] = 2
     f1["duration"] = duration
     f1["maxStacks"] = 10
-    f1["canStack"] = true;  
+    f1["canStack"] = true;
+    f1["name"] = "Nova"  
 
 
     local offset = 0;

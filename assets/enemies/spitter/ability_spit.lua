@@ -6,6 +6,9 @@ local radiusLooseAim = 30
 
 local speed = 35
 local duration = 8
+
+local aoeDPS = 2
+local aoeTickrate = 0.5
 function setup()
 
     SetAbilityRange(200)
@@ -14,7 +17,7 @@ function setup()
     SetCooldown(0.5); 
     SetAbilityMaxStacks(30,30)
     AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
-    SetDescription("[b]Bite\n\nDeals damage over time.")
+    SetDescription("[b]Spit\n\nSpits a large number of projectiles towards the target.")
 end
 function casted(x,y,obj,headingx,headingy)
 
@@ -40,7 +43,16 @@ function casted(x,y,obj,headingx,headingy)
 end
 
 function onhit(x,y,objhit)
-end
+    local f1 = {};
+    f1["trigger"] = TRIGGER_TIMER;
+    f1["type"] = EFFECT_HURT;
+    f1["value"] = aoeDPS * aoeTickrate;
+    f1["duration"] = 20
+    f1["name"] = "Spit"
+    f1["canStack"] = true
+    f1["maxStacks"] = 20
 
+    aoe = CreateAOE(x,y,"", 15, .75, 10,false,ATTACK_HITS_ENEMIES,COLOR_POISON,DITHER_DAMAGE_QUARTER,false, -1, {f1})
+end
 function abilitytick(x, y, durationLeft)
 end

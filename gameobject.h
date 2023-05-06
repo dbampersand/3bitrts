@@ -412,3 +412,4 @@ void DrawStunEffect(GameObject* g);
 bool IsInvertedSprite(GameObject* g);
 
 void ScatterEffect_Sprite(Sprite* s, int xPos, int yPos, Color c);
+void ScatterEffect(GameObject* g);
