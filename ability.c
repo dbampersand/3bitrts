@@ -659,7 +659,7 @@ void RemoveAbility(Ability* a, GameObject* from)
 
 void LowerAbilityCooldown(Ability* a, float amt)
 {
-    a->cdTimer -= amt;
+    a->cdTimer -= amt ;
     if (a->cdTimer < 0)
     {
         a->cdTimer = a->cooldown;

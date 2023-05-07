@@ -225,6 +225,8 @@ typedef struct GameObject
 
     float missChance;
 
+    float cooldownRate;
+
 } GameObject;
 
 #define MAX_LIGHT_SIZE 90 
@@ -340,6 +342,7 @@ void AddAttackSpeed(GameObject* g, float speed);
 void AddAttackRange(GameObject* g, float range);
 void AddArmor(GameObject* g, float armor);
 void AddLifesteal(GameObject* g, float value);
+void AddCooldownRate(GameObject* g, float value);
 void SetObjIsBoss(GameObject* g, bool value);
 
 void Teleport(GameObject* g, float x, float y, bool updateold);
@@ -413,3 +416,5 @@ bool IsInvertedSprite(GameObject* g);
 
 void ScatterEffect_Sprite(Sprite* s, int xPos, int yPos, Color c);
 void ScatterEffect(GameObject* g);
+
+bool GameObjectIndexInRange(int index);

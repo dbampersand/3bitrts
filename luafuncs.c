@@ -2255,7 +2255,8 @@ int L_CreateObject(lua_State* l)
     float summonTime = lua_tonumber(l,5);
     float completionPercent = DEFAULT_COMPLETION_PERCENT; 
     bool applyCompletion = false;
-
+    if (gameState == GAMESTATE_IN_EDITOR)
+        summonTime = 0; 
     GameObject* before = currGameObjRunning;
 
     int ownedBy = PLAYER;
@@ -3005,6 +3006,29 @@ int L_Clamp(lua_State* l)
     lua_pushnumber(l,clamp(toClamp,min,max));
     return 1;
 }
+int L_IsInAttackRange(lua_State* l)
+{
+    int g1 = lua_tonumber(l,1);
+    int g2 = lua_tonumber(l,2);
+
+    if (GameObjectIndexInRange(g1) && GameObjectIndexInRange(g2))
+    {
+        GameObject* g = &objects[g1];
+        GameObject* targ = &objects[g2];
+
+        float range = GetAttackRange(g);
+
+        lua_pushboolean(l,RectDist(g, targ) < GetAttackRange(g));
+        return 1;
+    }   
+    else
+    {
+        printf("L_IsInAttackRange: index out of range: %i, %i\n",g1,g2);
+        lua_pushboolean(l,false);
+        return 1;
+    }
+
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -3094,6 +3118,9 @@ void SetGlobals(lua_State* l)
 
     lua_pushinteger(l,EFFECT_HURT_PERCENT);
     lua_setglobal(l,"EFFECT_HURT_PERCENT");
+
+    lua_pushinteger(l,EFFECT_COOLDOWN_RATE);
+    lua_setglobal(l,"EFFECT_COOLDOWN_RATE");
 
 
 
@@ -5054,5 +5081,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_ObjIsValidIndex);
     lua_setglobal(luaState, "ObjIsValidIndex");
+
+    lua_pushcfunction(luaState, L_IsInAttackRange);
+    lua_setglobal(luaState, "IsInAttackRange");
 
 }

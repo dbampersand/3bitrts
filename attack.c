@@ -362,7 +362,6 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
     al_clear_to_color(al_map_rgba(0,0,0,0));
     al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
 
-
     if (dither == DITHER_NONE)
     {
         al_unlock_bitmap(al_get_target_bitmap());
@@ -670,7 +669,8 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
             }
         }
     }
-    al_unlock_bitmap(al_get_target_bitmap());
+    if (al_get_target_bitmap() && al_is_bitmap_locked(al_get_target_bitmap()))
+        al_unlock_bitmap(al_get_target_bitmap());
 
     al_set_target_bitmap(before);
 }

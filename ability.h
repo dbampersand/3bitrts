@@ -69,9 +69,6 @@ typedef struct Ability
 
     float timeSinceLastCast;
 
-
-
-
 } Ability;
 
 #define NUM_ABILITY_FUNCTIONS 7

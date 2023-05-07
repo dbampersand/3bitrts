@@ -178,7 +178,10 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         AddLifesteal(target,value * sign);
     }
-
+    if (e->effectType == EFFECT_COOLDOWN_RATE)
+    {
+        AddCooldownRate(target,value * sign);
+    }
 
 
 

@@ -209,6 +209,7 @@ void InitColors()
     EffectColors[EFFECT_ADD_MANA] = COLOR_HEAL;
     EffectColors[EFFECT_ARMOR] = COLOR_SHIELD;
     EffectColors[EFFECT_LIFESTEAL] = COLOR_HEAL;
+    EffectColors[EFFECT_COOLDOWN_RATE] = COLOR_SPEED;
 
 
 

@@ -7,9 +7,9 @@ function setup()
     PlayMusic("assets/audio/unitselect.wav",0.5,8);
 
     SetSpawnPoint(77,126)
-    CreateObject("assets/enemies/cusith/cusith.lua",255,128,TYPE_ENEMY,5);
 
 
+    CreateObject("assets/enemies/apprentice_lich/apprentice_lich.lua",222.00,134.00,TYPE_ENEMY,0.00)
 end
 
 function update()

@@ -296,7 +296,7 @@ void UpdateObject(GameObject* g, float dt)
     for (int i = 0; i < MAX_ABILITIES; i++)
     {
         currGameObjRunning->abilities[i].timeSinceLastCast += dt;
-        LowerAbilityCooldown(&currGameObjRunning->abilities[i],dt);
+        LowerAbilityCooldown(&currGameObjRunning->abilities[i],dt*g->cooldownRate);
         /* 
         currGameObjRunning->abilities[i].cdTimer -= dt;
         if (currGameObjRunning->abilities[i].cdTimer < 0)
@@ -892,10 +892,11 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
 
 
 
+
     // memset(found->abilities,0,sizeof(Ability)*4);
     memset(currGameObjRunning, 0, sizeof(GameObject));
 
-
+    currGameObjRunning->cooldownRate = 1;
     currGameObjRunning->numAttackSounds = prefab->numAttackSounds;
     currGameObjRunning->attackSoundIndices = calloc(prefab->numAttackSounds, sizeof(int));
     memcpy(currGameObjRunning->attackSoundIndices, prefab->attackSoundIndices, sizeof(int) * prefab->numAttackSounds);
@@ -3676,6 +3677,10 @@ void AddLifesteal(GameObject* g, float value)
 {
     g->lifesteal += value;
 }
+void AddCooldownRate(GameObject* g, float value)
+{
+    g->cooldownRate += value;
+}
 void SetObjIsBoss(GameObject* g, bool value)
 {
     g->isBoss = value;
@@ -3688,4 +3693,8 @@ bool ObjIsBoss(GameObject* g)
 int GetNumActiveObjects()
 {
     return numActiveObjects;
+}
+bool GameObjectIndexInRange(int index)
+{
+    return (index >= 0 && index < MAX_OBJS);
 }
