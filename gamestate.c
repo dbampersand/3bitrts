@@ -927,6 +927,7 @@ void SetGameStateToInEditor()
     gameState = GAMESTATE_IN_EDITOR;
     transitioningTo = GAMESTATE_IN_EDITOR;
     EditorSetMap(currMap->path);
+    players[0].abilityHeld = NULL;
 }
 
 void DrawStartScreen()

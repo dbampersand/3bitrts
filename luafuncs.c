@@ -117,7 +117,7 @@ int L_After(lua_State* l)
 
     AddTimer(t);
 
-
+    return 0;
 }
 
 int L_GetHeadingVector(lua_State* l)
@@ -899,6 +899,8 @@ int L_GetAttackTarget(lua_State* l)
     if (index < 0 || index >= MAX_OBJS)
     {
         printf("L_GetAttackTarget: invalid index: %i",index);
+        lua_pushnumber(l,-1);
+        return 1;
     }
     Threat* t = GetHighestThreat(&objects[index].threatList);
 
@@ -1439,6 +1441,7 @@ int L_SetAbilityOnCooldown(lua_State* l)
     if (abilityObjIndex < 0 || abilityObjIndex >= MAX_ABILITIES)
         return 0;
     GameObject* g = &objects[gameObjIndex];
+    return 0;
 }
 int L_GetAbilityCooldownTimer(lua_State* l)
 {
@@ -1753,9 +1756,17 @@ int L_SetAggroGroup(lua_State* l)
         return 0;
     }
     GameObject* g = &objects[objIndex];
-    g->aggroGroup = group;
-    g->aggroGroupSet = true;
 
+    if (group > 0)
+    {
+        g->aggroGroup = group;
+        g->aggroGroupSet = true;
+    }
+    else
+    {
+        g->aggroGroup = 0;
+        g->aggroGroupSet = false;
+    }
     lua_pushnumber(l,g - objects);
     return 1;
 }
@@ -1969,7 +1980,7 @@ int L_CreateAOE(lua_State* l)
     size_t len =  lua_rawlen(l,13);
     Effect effects[len];    
     memset(effects,0,sizeof(Effect)*len);
-    for (int i = 1; i < len+1; i++)
+        for (int i = 1; i < len+1; i++)
     {
         Effect e;
         e = GetEffectFromTable(l, 13, i);
@@ -3160,6 +3171,8 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,ATTACK_HITS_FRIENDLIES);
     lua_setglobal(l,"ATTACK_HITS_FRIENDLIES");
 
+    lua_pushinteger(l,HINT_NONE);
+    lua_setglobal(l,"HINT_NONE");
     lua_pushinteger(l,HINT_LINE);
     lua_setglobal(l,"HINT_LINE");
     lua_pushinteger(l,HINT_CIRCLE);
@@ -3746,6 +3759,10 @@ int L_SetAbilityHint(lua_State* l)
         printf("SetAbilityHint needs to be called from an ability.\n");
         return 0;
     }
+    if (strcmp(currAbilityRunning->path,"assets/enemies/exploding_zombie/ability_explode.lua")==0)
+    {
+         printf("gg");
+    }
     currAbilityRunning->targetingHint = lua_tonumber(l,1);
     if (lua_isnumber(l,2))
     {
@@ -4301,6 +4318,69 @@ int L_RemoveFromCount(lua_State* l)
     }
     objects[index].isRemovedFromCount = b;
     return 0;
+}
+int L_GetTargetingHint(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    int abilityIndex = lua_tonumber(l,2);   
+
+    if (!GameObjectIndexInRange(objIndex) || !AbilityIndexInRange(abilityIndex))
+    {
+        printf("L_GetTargetingHint: index not in range: %i, %i\n",objIndex,abilityIndex);
+        lua_pushnumber(l,HINT_NONE);
+        return 1;
+    }
+    GameObject* g = &objects[objIndex];
+    Ability* a = &g->abilities[abilityIndex];
+    lua_pushnumber(l,a->targetingHint);
+    return 1;
+}
+int L_GetHintRadius(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    int abilityIndex = lua_tonumber(l,2);   
+    if (!GameObjectIndexInRange(objIndex) || !AbilityIndexInRange(abilityIndex))
+    {
+        printf("L_GetHintRadius: index not in range: %i, %i\n",objIndex,abilityIndex);
+        lua_pushnumber(l,0);
+        return 1;
+    }
+    GameObject* g = &objects[objIndex];
+    Ability* a = &g->abilities[abilityIndex];
+    lua_pushnumber(l,a->hintRadius);
+    return 1;
+}
+int L_GetHintSoak(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    int abilityIndex = lua_tonumber(l,2);   
+
+    if (!GameObjectIndexInRange(objIndex) || !AbilityIndexInRange(abilityIndex))
+    {
+        printf("L_GetHintSoak: index not in range: %i, %i\n",objIndex,abilityIndex);
+        lua_pushboolean(l,false);
+        return 1;
+    }
+    GameObject* g = &objects[objIndex];
+    Ability* a = &g->abilities[abilityIndex];
+    lua_pushboolean(l,a->hintSoak);
+    return 1;
+}
+int L_HintLength(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    int abilityIndex = lua_tonumber(l,2);   
+
+    if (GameObjectIndexInRange(objIndex) && AbilityIndexInRange(abilityIndex))
+    {
+        printf("L_HintLength: index not in range: %i, %i\n",objIndex,abilityIndex);
+        lua_pushnumber(l,0);
+        return 1;
+    }
+    GameObject* g = &objects[objIndex];
+    Ability* a = &g->abilities[abilityIndex];
+    lua_pushnumber(l,a->hintLength);
+    return 1;
 }
 
 void SetLuaKeyEnums(lua_State* l)
@@ -5084,5 +5164,14 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_IsInAttackRange);
     lua_setglobal(luaState, "IsInAttackRange");
+
+    lua_pushcfunction(luaState, L_GetTargetingHint);
+    lua_setglobal(luaState, "GetTargetingHint");
+    lua_pushcfunction(luaState, L_GetHintRadius);
+    lua_setglobal(luaState, "GetHintRadius");
+    lua_pushcfunction(luaState, L_GetHintSoak);
+    lua_setglobal(luaState, "GetHintSoak");
+    lua_pushcfunction(luaState, L_HintLength);
+    lua_setglobal(luaState, "HintLength");
 
 }

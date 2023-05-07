@@ -114,3 +114,5 @@ void ModifyAbilityCooldownTimer(Ability* a, float value);
 
 void RemoveAbility(Ability* a, GameObject* from);
 void LowerAbilityCooldown(Ability* a, float amt);
+
+bool AbilityIndexInRange(int index);

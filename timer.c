@@ -42,7 +42,10 @@ void UpdateTimer(int index, float dt)
     Timer* t = timers[index];
     t->timer -= dt;
     if (!IsActive(t->obj))
+    {
         DeleteTimer(index);
+        return;
+    }
     if (t->timer <= 0)
     {
         currGameObjRunning = t->obj;

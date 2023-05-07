@@ -120,6 +120,7 @@ void IncreaseMapDimensions(int x, int y)
 
     ALLEGRO_BITMAP* new = al_create_bitmap(w,h);
     al_set_target_bitmap(new);
+    al_clear_to_color(al_map_rgba(0,0,0,0));
     int drawOffsetX = 0;
     int drawOffsetY = 0;
     
@@ -1665,11 +1666,19 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         ((Pulldown*)(GetUIElement(&editor.editorUI.unitOptions,"Owner")->data))->selectedIndex = GetPlayerOwnedBy_IncludeDecor(editor.highlightedObject);
     
         char* aggroGroupText = ((TextInput*)(GetUIElement(&editor.editorUI.unitOptions,"AggroGroup")->data))->text;
-        if (strlen(aggroGroupText) > 0)
+        //if (strlen(aggroGroupText) > 0)
         {
             int aggroGroupBefore = editor.highlightedObject->aggroGroup;
-            int aggroGroupAfter = atoi(aggroGroupText);
+            int aggroGroupAfter;//= atoi(aggroGroupText);
+            if (strlen(aggroGroupText) > 0)
+                aggroGroupAfter = atoi(aggroGroupText);
+            else
+            {
+                editor.highlightedObject->aggroGroup = 0;
+                editor.highlightedObject->aggroGroupSet = 0;
 
+                aggroGroupAfter = 0;
+            }
             if (aggroGroupBefore != aggroGroupAfter)
             {
                 for (int i = 0; i < editor.numSetupLines; i++)
@@ -1706,12 +1715,6 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                     }
                 }
             }
-
-        }
-        else
-        {
-            editor.highlightedObject->aggroGroup = 0;
-            editor.highlightedObject->aggroGroupSet = 0;
 
         }
 
@@ -1753,6 +1756,7 @@ Rect GetMapHandleRect(EDITOR_HANDLE handle)
     if (handle == HANDLE_BOTTOM) return  (Rect){(GetMapWidth()/2.0f - size/2.0f),GetMapHeight()+offset, size, depth};
     if (handle == HANDLE_LEFT) return (Rect){(0 - offset),GetMapHeight()/2.0f-size/2.0f, depth, size};
 
+    return (Rect){0,0,0,0};
 
 }
 void DrawMapHandles(MouseState mouseState)

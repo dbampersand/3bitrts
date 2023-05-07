@@ -6,8 +6,8 @@ local toll = -1
 function setup()
     SetSprite("assets/enemies/skeleton_minion_melee/skeleton_minion_melee.png");
 
-    SetDamage(20);
-    SetMaxHP(900,true)
+    SetDamage(15);
+    SetMaxHP(500,true)
     SetSpeed(80)
     SetRange(50);
 

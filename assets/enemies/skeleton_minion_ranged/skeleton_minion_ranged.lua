@@ -4,8 +4,8 @@ local rain = -1
 function setup()
     SetSprite("assets/enemies/skeleton_minion_ranged/skeleton_minion_ranged.png");
 
-    SetDamage(20);
-    SetMaxHP(900,true)
+    SetDamage(35);
+    SetMaxHP(350,true)
     SetSpeed(80)
     SetRange(140);
 

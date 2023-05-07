@@ -890,11 +890,16 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
     *found = *prefab;
     currGameObjRunning = found;
 
+    
+
 
 
 
     // memset(found->abilities,0,sizeof(Ability)*4);
     memset(currGameObjRunning, 0, sizeof(GameObject));
+
+    currGameObjRunning->position.worldX = x;
+    currGameObjRunning->position.worldY = y;
 
     currGameObjRunning->cooldownRate = 1;
     currGameObjRunning->numAttackSounds = prefab->numAttackSounds;

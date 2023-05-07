@@ -668,3 +668,7 @@ void LowerAbilityCooldown(Ability* a, float amt)
             a->stacks = a->maxStacks;
     }
 }
+bool AbilityIndexInRange(int index)
+{
+    return (index >= 0 && index < MAX_ABILITIES);
+}

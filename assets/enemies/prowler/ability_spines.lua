@@ -31,8 +31,6 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
-    Print("headingx: " .. headingx .. ", headingy: " .. headingy);
-
     heading = {headingx = headingx, headingy = headingy};
     ticker = CreateTicker(time);
     
