@@ -3759,10 +3759,6 @@ int L_SetAbilityHint(lua_State* l)
         printf("SetAbilityHint needs to be called from an ability.\n");
         return 0;
     }
-    if (strcmp(currAbilityRunning->path,"assets/enemies/exploding_zombie/ability_explode.lua")==0)
-    {
-         printf("gg");
-    }
     currAbilityRunning->targetingHint = lua_tonumber(l,1);
     if (lua_isnumber(l,2))
     {

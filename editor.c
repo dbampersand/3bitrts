@@ -1871,6 +1871,15 @@ void UpdateSpawnPointStr()
 void SpawnPointRectIsMoved(MouseState mouseState, MouseState mouseStateLastFrame)
 {
     Rect r = GetSpawnPointRect();
+
+    Point before = (Point){currMap->spawnPoint.x,currMap->spawnPoint.y};
+
+    currMap->spawnPoint.x = clamp(currMap->spawnPoint.x,0,GetMapWidth()-r.w);
+    currMap->spawnPoint.y = clamp(currMap->spawnPoint.y,0,GetMapHeight()-r.h);
+    if (before.x != currMap->spawnPoint.x || before.x != currMap->spawnPoint.y)
+    {
+        UpdateSpawnPointStr();
+    }
     if (MouseClickedThisFrame(&mouseState,&mouseStateLastFrame) && PointInRect(mouseState.worldX,mouseState.worldY,r))
     {
         editor.spawnPointHeld = true;
