@@ -664,9 +664,9 @@ void UpdatePosition(GameObject* g, float x, float y)
                 //editor.setupLines[i].line = realloc(editor.setupLines[i].line,(strlen(editor.setupLines[i].line)+toIncreaseBy+1)*sizeof(char));
 
                 char* xStr = GetPositionOfArgument(editor.setupLines[i].line,"CreateObject",2);
-                UpdateArgumentFloat(&editor.setupLines[i].line,xStr,x,true);
+                UpdateArgumentFloat(&editor.setupLines[i].line,xStr,x+GetWidth(g)/2.0f,true);
                 char* yStr = GetPositionOfArgument(editor.setupLines[i].line,"CreateObject",3);
-                UpdateArgumentFloat(&editor.setupLines[i].line,yStr,y,true);
+                UpdateArgumentFloat(&editor.setupLines[i].line,yStr,y+GetHeight(g)/2.0f,true);
 
                 printf("%s\n",editor.setupLines[i].line);
             }
@@ -1978,6 +1978,7 @@ void PopulateUnitSelector(Panel* p)
         int h = 16;
         UIElement* u = AddButton(p,"UnitSelector",prefabs[i]->name,x,y,w,h,true);
         ChangeButtonImage(u,prefabs[i]->spriteIndex);
+        SetUIElementFont(u,ui.tinyFont);
         y += h;
     }
 }

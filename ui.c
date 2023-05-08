@@ -54,7 +54,13 @@ void DisableButton(UIElement* u)
     b->clicked = false;
 
 }
-
+ALLEGRO_FONT* GetElementFont(UIElement* u)
+{
+    ALLEGRO_FONT* f = u->font;
+    if (!f)
+        f = ui.font;
+    return f;
+}
 void DrawUIHighlight(UIElement* u, float x, float y)
 {
     int total = u->w*2 + u->h*2;
@@ -1455,6 +1461,7 @@ void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, i
 
     UIElement u = {0};
     u.data = (void*)t;
+    u.font = ui.tinyFont;
     u.w = w;    
     u.h = h;
     u.y = y;
@@ -2945,6 +2952,10 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_
 
 
 }
+void SetUIElementFont(UIElement* u, ALLEGRO_FONT* f)
+{
+    u->font = f;
+}
 void DrawButtonText(UIElement* u,int x, int y, ALLEGRO_COLOR col)
 {
     Button* b = (Button*)u->data;
@@ -2960,7 +2971,9 @@ void DrawButtonText(UIElement* u,int x, int y, ALLEGRO_COLOR col)
         textX = x+3;
         textY = y + u->h/2 - al_get_font_line_height(ui.font)/2.0;
     }
-    al_draw_text(ui.font,col,textX,textY,align,b->description);
+    ALLEGRO_FONT* font = GetElementFont(u);
+    
+    al_draw_text(font,col,textX,textY,align,b->description);
 }   
 void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected, ALLEGRO_COLOR foregroundColor, bool fromPanel)
 {
@@ -2969,10 +2982,11 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
     al_get_clipping_rectangle(&panelX,&panelY,&panelW,&panelH);
     Rect panel = (Rect){panelX,panelY,panelW,panelH};
     Button* b = (Button*)u->data;
-    ALLEGRO_FONT* font = ui.font;
     Rect button = (Rect){x,y,(int)u->w,(int)u->h};
 
     Rect clip = (Rect){x,y,button.w,button.h};
+
+    ALLEGRO_FONT* font = GetElementFont(u);
 
     if (fromPanel)
     {
@@ -3015,7 +3029,7 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
     {
         al_draw_filled_rectangle(x,y,x+u->w,y+u->h,foregroundColor);
         al_draw_rectangle(x,y,x+u->w,y+u->h,bgColor,1);
-        al_draw_text(ui.font,BG,textX,textY,align,b->description);
+        al_draw_text(font,BG,textX,textY,align,b->description);
     }
     else 
     {
@@ -3031,7 +3045,6 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
                 DrawOutlinedRect_Dithered(button,foregroundColor);
             }
         }
-        //al_draw_text(ui.font,FRIENDLY,textX,textY,align,b->description);
         DrawButtonText(u,x,y,foregroundColor);
     }
     if (PointInRect(mouseState.screenX,mouseState.screenY,button) && isActive && !b->clicked)
@@ -3050,7 +3063,7 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
 void UIDrawText(UIElement* u, int x, int y)
 {
    UI_Text* t = u->data;
-   //al_draw_text(ui.font,FRIENDLY,x,y,ALLEGRO_ALIGN_LEFT,t->str);
+
    Text te = (Text){.f = ui.font,ui.boldFont,.x=x,.y=y,.color=FRIENDLY,.lineHeight=al_get_font_line_height(ui.font)};
 
    al_do_multiline_text(ui.font,256,t->str,cb,&te);
@@ -3061,7 +3074,7 @@ void DrawKeyInput(UIElement* u, int x, int y, MouseState mouseState, bool isActi
 {
     KeyInput* k = (KeyInput*)u->data;
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
-    ALLEGRO_FONT* font = ui.font;
+    ALLEGRO_FONT* font = GetElementFont(u);
     Rect button = (Rect){x,y,u->w,u->h};
 
     if (!k->text)
@@ -3073,7 +3086,7 @@ void DrawKeyInput(UIElement* u, int x, int y, MouseState mouseState, bool isActi
     {
         al_draw_filled_rectangle(x,y,x+u->w,y+u->h,FRIENDLY);
         al_draw_rectangle(x,y,x+u->w,y+u->h,BG,1);
-        al_draw_text(ui.tinyFont,BG,x+u->w/2, y + u->h /2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,k->text);
+        al_draw_text(font,BG,x+u->w/2, y + u->h /2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,k->text);
      }
     else
     {
@@ -3086,7 +3099,7 @@ void DrawKeyInput(UIElement* u, int x, int y, MouseState mouseState, bool isActi
         {   
             DrawOutlinedRect_Dithered(button,FRIENDLY);
         }
-        al_draw_text(ui.tinyFont,FRIENDLY,x+u->w/2,y + u->h / 2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,k->text);
+        al_draw_text(font,FRIENDLY,x+u->w/2,y + u->h / 2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,k->text);
 
     }
     if (PointInRect(mouseState.screenX,mouseState.screenY,button) && isActive && !k->clicked)
@@ -3099,7 +3112,7 @@ void DrawTextInput(UIElement* u, int x, int y, MouseState mouseState, bool isAct
 {
     TextInput* t = (TextInput*)u->data;
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
-    ALLEGRO_FONT* font = ui.font;
+    ALLEGRO_FONT* font = GetElementFont(u);
     Rect button = (Rect){x,y,u->w,u->h};
 
     if (!t->text)
@@ -3111,7 +3124,7 @@ void DrawTextInput(UIElement* u, int x, int y, MouseState mouseState, bool isAct
     {
         al_draw_filled_rectangle(x,y,x+u->w,y+u->h,FRIENDLY);
         al_draw_rectangle(x,y,x+u->w,y+u->h,BG,1);
-        al_draw_text(ui.tinyFont,BG,x+u->w/2, y + u->h /2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,t->text);
+        al_draw_text(font,BG,x+u->w/2, y + u->h /2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,t->text);
      }
     else
     {
@@ -3124,7 +3137,7 @@ void DrawTextInput(UIElement* u, int x, int y, MouseState mouseState, bool isAct
         {   
             DrawOutlinedRect_Dithered(button,FRIENDLY);
         }
-        al_draw_text(ui.tinyFont,FRIENDLY,x+u->w/2,y + u->h / 2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,t->text);
+        al_draw_text(font,FRIENDLY,x+u->w/2,y + u->h / 2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,t->text);
 
     }
     if (PointInRect(mouseState.screenX,mouseState.screenY,button) && isActive && !t->clicked)

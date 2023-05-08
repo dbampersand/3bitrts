@@ -7,6 +7,7 @@
 #include "sound.h"
 #include "settings.h"
 #include "colors.h"
+
 //error printf colour
 #define COL_ERR  "\x1B[31m"
 
@@ -131,6 +132,7 @@ typedef struct UIElement
     Color bgColor;
 
     bool isHighlighted;
+    ALLEGRO_FONT* font;
 
 } UIElement;
 
@@ -372,3 +374,4 @@ void SetTextInputStr(UIElement* u, char* str);
 void ClearTextInputStr(UIElement* u);
 
 UIElement* AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled, float* v);
+void SetUIElementFont(UIElement* u, ALLEGRO_FONT* f);

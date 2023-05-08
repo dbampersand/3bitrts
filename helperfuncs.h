@@ -58,7 +58,7 @@ int PointsToAngleDeg(int x1, int y1, int x2, int y2);
 
 
 void CircToRect(double u, double v, double* x, double* y);
-
+    
 bool MouseClickedThisFrame(MouseState* thisFrame, MouseState* previousFrame);
 bool MouseReleasedThisFrame(MouseState* thisFrame, MouseState* previousFrame);
 

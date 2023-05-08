@@ -5,7 +5,7 @@ local timer = 0;
 function setup()
     SetSprite("assets/enemies/giant_ooze/giant_ooze.png");
 
-    SetDamage(40);
+    SetDamage(20);
     SetMaxHP(4500,true)
     SetSpeed(60)
     SetRange(10);

@@ -3241,7 +3241,7 @@ void Teleport(GameObject* g, float x, float y, bool updateOld)
     PointI here = (PointI){x / _GRAIN, y / _GRAIN};
     bool found = false;
 
-    PointI move = GetClosestPathablePoint(target, here, &found, ((GetWidth(g)) / (float)_GRAIN) + 1, ((GetHeight(g)) / (float)_GRAIN) + 1, true, 32);
+    PointI move = GetClosestPathablePoint(target, here, &found, ((GetWidth(g)) / (float)_GRAIN), ((GetHeight(g)) / (float)_GRAIN), true, 32);
     // g->position.worldX = move.x*_GRAIN;
     // g->position.worldY = move.y*_GRAIN;
     if (updateOld)
