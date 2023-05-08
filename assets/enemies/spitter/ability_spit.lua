@@ -53,6 +53,7 @@ function onhit(x,y,objhit)
     f1["maxStacks"] = 20
 
     aoe = CreateAOE(x,y,"", 15, .75, 10,false,ATTACK_HITS_ENEMIES,COLOR_POISON,DITHER_DAMAGE_QUARTER,false, -1, {f1})
+    PushObj(x,y,objhit,100,0.1)
 end
 function abilitytick(x, y, durationLeft)
 end

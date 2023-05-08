@@ -1497,6 +1497,7 @@ UIElement* AddTextInput(Panel* p, int x, int y, int w, int h,char* name, char* d
     
     UIElement u = {0};
     u.data = (void*)t;
+    u.font = ui.tinyFont;
     u.w = w;    
     u.h = h;
     u.y = y;

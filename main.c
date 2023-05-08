@@ -73,7 +73,6 @@ void init()
     InitPlayers();
     InitMaps();
     InitAnimationEffects();
-    InitEditorUI();
 
     //memset(&gameOptions,0,sizeof(GameOptions));
 
@@ -81,6 +80,8 @@ void init()
     InitAbilities();
     InitParticles();
     InitUI();
+    InitEditorUI();
+
     InitConsole();
 
     InitLoadscreen("assets/ui/startscreen/fullstartscreen.png","assets/ui/startscreen/mask.png");

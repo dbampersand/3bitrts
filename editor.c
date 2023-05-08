@@ -2005,7 +2005,7 @@ void InitEditorUI()
     editor.editorUI.unitOptions = CreatePanel(save->x,save->y+save->h+10,80,80,1,true);
     UIElement* owner = AddPulldownMenu(&editor.editorUI.unitOptions,1,1,editor.editorUI.unitOptions.w-2,20,"Owner",1,2,"Friendly","Enemy");
     UIElement* setDecor = AddCheckbox(&editor.editorUI.unitOptions,owner->x, owner->y + owner->h + 10,15,15,"IsDecor",&editor.editorUI.heldObjectIsDecor);
-    AddTextInput(&editor.editorUI.unitOptions,setDecor->x,setDecor->y + setDecor->h + 10,editor.editorUI.unitOptions.w-2,20, "AggroGroup","",4,true);
+    UIElement* aggro = AddTextInput(&editor.editorUI.unitOptions,setDecor->x,setDecor->y + setDecor->h + 10,editor.editorUI.unitOptions.w-2,20, "AggroGroup","",4,true);
 
     int mapImageEditorH = 80;
     editor.editorUI.mapImageEditor = CreatePanel(editor.editorUI.unitSelector.x, editor.editorUI.unitSelector.y + editor.editorUI.unitSelector.h+2,editor.editorUI.unitSelector.w,mapImageEditorH,1,true);

@@ -372,7 +372,7 @@ void FinishTransition()
 }
 void SetGameStateToPurchasingUnits()
 {
-    transitionDrawing = TRANSITION_CHEVRONS;
+    transitionDrawing = TRANSITION_MOUNTAINS;
     TransitionTo(GAMESTATE_PURCHASING_UNITS);
 }
 void SetGameStateToWatchingReplay()
@@ -819,6 +819,35 @@ void DrawTransition_Circle(float dt)
     al_draw_filled_circle(_SCREEN_SIZE/2.0f,_SCREEN_SIZE/2.0f,_SCREEN_SIZE*p,BG);
 
 }
+void DrawTransition_Mountains(float dt)
+{
+    int numMountains = 1;
+    int w = _SCREEN_SIZE / numMountains;
+    int h = _SCREEN_SIZE;
+
+    double p = easeInOutQuint(transitionTimer);
+    
+    int offsetY = _SCREEN_SIZE - (_SCREEN_SIZE * p) * 2;
+
+    for (int i = 0; i < numMountains; i++)
+    {
+        int offsetX = (w/2.0f) + (i * w);
+        
+        float x1 = offsetX - w/2.0f;
+        float y1 = h + offsetY;
+
+        float x2 = offsetX;
+        float y2 = offsetY;
+
+        float x3 = offsetX + w/2.0f;
+        float y3 = h + offsetY;
+
+
+        al_draw_filled_triangle(x1,y1,x2,y2,x3,y3,FRIENDLY);
+        al_draw_filled_rectangle(x1,y1,x3,_SCREEN_SIZE,FRIENDLY);
+
+    }
+}
 void DrawTransition_Chevrons(float dt)
 {
     int numChevrons = 16;
@@ -895,6 +924,11 @@ void DrawTransition(float dt)
     {
         DrawTransition_Chevrons(dt);
     }
+    if (transitionDrawing == TRANSITION_MOUNTAINS)
+    {
+        DrawTransition_Mountains(dt);
+    }
+
     if (transitionDrawing == TRANSITION_CIRCLE)
     {
         DrawTransition_Circle(dt);

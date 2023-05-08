@@ -5,7 +5,7 @@ function setup()
     SetAbilityRange(200)
     --AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_LINE,80);
-    SetCooldown(8); 
+    SetCooldown(16); 
     AbilitySetPortrait("assets/enemies/skeleton_basher/ability_bash.png");
     SetDescription("[b]Raise\n\nRessurects a ranged or melee minion.")
 end
@@ -21,7 +21,7 @@ function casted(x,y,obj,headingx,headingy)
     else
         CreateObject("assets/enemies/skeleton_minion_melee/skeleton_minion_melee.lua",spawnPoint.x,spawnPoint.y,TYPE_FRIENDLY,1.5);
     end
-    
+
 
     PlaySound("assets/enemies/viper/audio/bite.wav",1);
     return true; 

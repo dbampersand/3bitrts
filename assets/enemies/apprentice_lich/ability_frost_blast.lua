@@ -7,7 +7,7 @@ function setup()
     SetAbilityRange(200)
     --AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_LINE,80);
-    SetCooldown(6); 
+    SetCooldown(8); 
     AbilitySetPortrait("assets/enemies/skeleton_basher/ability_bash.png");
     SetDescription("[b]Frost Blast\n\nPushes away a target and slows them.")
 end
@@ -29,7 +29,7 @@ function casted(x,y,obj,headingx,headingy)
     f2["duration"] = duration
 
 
-    PushObj(GetX(GetObjRef()),GetY(GetObjRef()),obj,600,0.1);
+    PushObj(GetX(GetObjRef()),GetY(GetObjRef()),obj,300,0.1);
 
     ApplyEffect(obj,{f1,f2});
 
