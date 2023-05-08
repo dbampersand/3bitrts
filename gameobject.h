@@ -18,7 +18,6 @@
 #include "luafuncs.h"
 
 
-#define MAX_PATHFINDING_NODES_HELD 20
 #define MINIMUM_RANGE 6
 #define SHIELD_EFFECT_TIME 0.5f
 #define INVENTORY_SLOTS 3
@@ -189,6 +188,7 @@ typedef struct GameObject
     PathfindNode pathNodes[MAX_PATHFINDING_NODES_HELD];
     int currentPathingNode;
     bool pathfindNeedsRefresh;
+    int numPathnodes;
 
     bool shouldProcessAI;
 

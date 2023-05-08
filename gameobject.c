@@ -932,7 +932,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
 
     currGameObjRunning->manaRegen = 1;
 
-    currGameObjRunning->aggroRadius = 60;
+    currGameObjRunning->aggroRadius = 40;
 
     SetMoveSpeed(currGameObjRunning, 50);
     SetHPRegen(currGameObjRunning, 1);
@@ -2006,10 +2006,10 @@ void DoCurrentPathingNode(GameObject* g)
         else
         {
             g->currentPathingNode++;
-            if (g->currentPathingNode >= MAX_PATHFINDING_NODES_HELD || ((_FRAMES + (g - objects)) % MAX_OBJS) == 0)
+            if (g->currentPathingNode >= g->numPathnodes || ((_FRAMES + (g - objects)) % MAX_OBJS) == 0)
             {
                 AStar(currentIndex, targetIndex, &success, GetWidth(g), GetHeight(g), g);
-                g->currentPathingNode = 0;
+                //g->currentPathingNode = 0;
             }
         }
     }
@@ -2057,7 +2057,7 @@ void Move(GameObject* g, float delta)
 
     if (g->speed == 0)
         return;
-#define DIST_DELTA 1
+    #define DIST_DELTA 1
 
     PointSpace before = g->position;
     int w = GetWidth(g);  // al_get_bitmap_width(sprites[g->spriteIndex].sprite);

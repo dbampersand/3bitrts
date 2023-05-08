@@ -29,7 +29,7 @@ function setup()
         "assets/audio/attacks/melee_bite/bite_4.wav",
         "assets/audio/attacks/melee_bite/bite_5.wav"
     });
-
+    SetObjectPush(true)
     indicator = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", GetHintRadius(GetObjRef(),explode), 9999, 9999, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, -1, {})
 
 
@@ -38,14 +38,13 @@ function latesetup()
 
 end
 function update(dt)
-    if (IsAlive(targ) == false) then
-        targ = GetAttackTarget(GetObjRef())
+    if (IsInCombat() and IsAlive(targ) == false) then
+        targ = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,9999,1)[1]
+        Print(targ)
     end
     if (IsAlive(targ)) then
-        EnableAI(GetObjRef(),false)
-        SetAttackTarget(GetObjRef(),targ);
-    else
-        EnableAI(GetObjRef(),true)
+       SetMovePoint(GetObjRef(),GetX(targ),GetY(targ),true,true); 
+       SetAttackTarget(GetObjRef(),targ);
     end
     if (IsInCombat() and targ >= 0) then
         if (IsInAttackRange(GetObjRef(),targ)) then

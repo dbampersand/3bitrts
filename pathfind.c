@@ -11,6 +11,8 @@
  Queue closedSet = {0};
  PathfindMap pathfindmap = {0};
 
+PathfindNode _DEBUG_LAST_PATHFIND[MAX_PATHFINDING_NODES_HELD];
+
 void DebugDrawPathfinding()
 {
     for (int i = 0; i < closedSet.numElements; i++)
@@ -22,6 +24,11 @@ void DebugDrawPathfinding()
     {
         PathfindNode p = openSet.elements[i];
         al_draw_circle(ToScreenSpace_X(p.p.x*_GRAIN),ToScreenSpace_Y(p.p.y*_GRAIN),2,al_map_rgba(255,0,255,255),1);
+    }
+    for (int i = 0; i < openSet.numElements; i++)
+    {
+        PathfindNode p = _DEBUG_LAST_PATHFIND[i];
+        al_draw_circle(ToScreenSpace_X(p.p.x),ToScreenSpace_Y(p.p.y),2,al_map_rgba(255,255,255,255),1);
     }
 }
 
@@ -251,11 +258,16 @@ void GetPath(PathfindNode* currentNode, GameObject* g)
     {
         if (i < MAX_PATHFINDING_NODES_HELD)
         {
-            g->pathNodes[i] = *p;
-            g->pathNodes[i].p.x *= _GRAIN;
-            g->pathNodes[i].p.y *= _GRAIN;
+            g->pathNodes[i-1] = *p;
+            g->pathNodes[i-1].p.x *= _GRAIN;
+            g->pathNodes[i-1].p.y *= _GRAIN;
+            p = p->parent;
+
+            _DEBUG_LAST_PATHFIND[i-1] = g->pathNodes[i-1];
+
         }
     }
+    g->numPathnodes = _MIN(MAX_PATHFINDING_NODES_HELD,numNodes);
 
 
 }
@@ -370,12 +382,12 @@ void AStar(PointI here, PointI target, bool* success, float w, float h, GameObje
                 if (set == NODE_INSIDE_CLOSED_LIST)
                     continue;
 
-                bool walkable = (RectIsFree(child.p.x-1,child.p.y-1,w+1,h+1,ObjectCanPush(g)),false);
+                bool walkable = RectIsFree(child.p.x,child.p.y,w,h,!ObjectCanPush(g));
                 //bool walkable = PointIsFree(child.p.x,child.p.y,false);
                 
-                float distcurrchild = (x != currentNode.p.x && y != currentNode.p.y) ? 1.41421356237f : 1;
+                float distcurrchild = (x != currentNode.p.x && y != currentNode.p.y) ? 1 : 1;
 
-                child.g = currentNode.g + distcurrchild + (walkable ? 1 : 100);
+                child.g = currentNode.g + distcurrchild + (walkable ? 1 : 9999);
                 
                 child.h = dist(child.p.x,child.p.y,target.x,target.y);
                 child.h *= (1+TIEBREAK);// + (walkable ? 1 : 100);

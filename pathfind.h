@@ -4,10 +4,11 @@
 #include "stdint.h"
 #include "stdlib.h"
 #include "stdbool.h"
-#define PATHFIND_DEPTH 128
+#define PATHFIND_DEPTH 1024
 #define TIEBREAK 1/(float)PATHFIND_DEPTH   
     
 #define PATHFIND_SEARCH_MAX PATHFIND_DEPTH
+#define MAX_PATHFINDING_NODES_HELD 60
 
 typedef enum NODE_IN_SET
 {
@@ -42,6 +43,7 @@ extern Queue openSet;
 extern Queue closedSet;
 extern PathfindMap pathfindmap;
 
+extern PathfindNode _DEBUG_LAST_PATHFIND[MAX_PATHFINDING_NODES_HELD];
 
 
 typedef struct GameObject GameObject;

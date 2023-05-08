@@ -92,7 +92,7 @@ bool RectIsFree(int x, int y, int w, int h, bool caresAboutUnits)
 {
     for (int x2 = x; x2 < x + w; x2++)
     {
-        if (!LineIsFree(x2,y,caresAboutUnits,h) || RectIsInUI(x2*_GRAIN,y*_GRAIN,w*_GRAIN,h*_GRAIN))
+        if (!LineIsFree(x2,y,caresAboutUnits,h))
                 return false;
         
     }
@@ -100,13 +100,13 @@ bool RectIsFree(int x, int y, int w, int h, bool caresAboutUnits)
 }
 bool LineIsFree(int x, int y, bool caresAboutUnits, int h)
 {
-    if (y + h > GetMapHeight()/_GRAIN || y < 0 || x < 0 || x >= GetMapWidth()/_GRAIN)
+    if (y + h + 1 > GetMapHeight()/_GRAIN || y < 0 || x < 0 || x >= GetMapWidth()/_GRAIN)
         return false;
 
     int startIndex = GetIndex(currMap->collisionMapHeight,x,y);
     
 
-    for (int index = startIndex; index < startIndex + h; index++)
+    for (int index = startIndex; index <= startIndex + h; index++)
     {
         CollisionMapValue m = currMap->collision[index];    
         if (caresAboutUnits)

@@ -4,7 +4,7 @@ function setup()
 
     SetAbilityRange(10)
     AbilitySetCastType(ABILITY_INSTANT);
-    SetAbilityHint(HINT_LINE,80);
+    SetAbilityHint(HINT_CIRCLE,80);
     SetCooldown(15); 
     AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
     SetDescription("[b]Squeeze\n\nDeals a third of the health of units in an area.")
@@ -17,10 +17,10 @@ function casted(x,y,obj,headingx,headingy)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_TIMER;
-    f1["duration"] = 0.2
+    f1["duration"] = 0.4
     f1["triggersPerSecond"] = 1
     f1["type"] = EFFECT_HURT_PERCENT;
-    f1["value"] = 0.34;  
+    f1["value"] = 0.15 
     f1["name"] = "Squeeze"
     f1["overwrites"] = true
 
