@@ -660,6 +660,10 @@ void UpdateTransition(float dt)
         {
             transitionTimer += dt * 1.6f;
         }
+        else if (transitionDrawing == TRANSITION_MOUNTAINS)
+        {
+            transitionTimer += dt;
+        }
         else
         {
             if (transitionTimer < 0.4f)

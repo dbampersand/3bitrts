@@ -2738,7 +2738,7 @@ void DrawGameObj(GameObject* g, bool forceInverse)
         {
             GameObject* g2 = g->queue[0].target;
             Point c3;
-            GetCentre(g2, &c3.x, &c3.y);
+            GetCentre_Screen(g2, &c3.x, &c3.y);
             // al_draw_circle(ToScreenSpace_X(c3.x),ToScreenSpace_Y(c3.y),_MAX(GetWidth(g->queue[0].target),GetHeight(g->queue[0].target))+2,c,1);
             int offset = 4;
             al_draw_triangle(

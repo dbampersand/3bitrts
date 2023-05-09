@@ -37,14 +37,14 @@ void DeleteTimer(int index)
 
     numTimers--;
 }
-void UpdateTimer(int index, float dt)
+bool UpdateTimer(int index, float dt)
 {
     Timer* t = timers[index];
     t->timer -= dt;
     if (!IsActive(t->obj))
     {
         DeleteTimer(index);
-        return;
+        return true;
     }
     if (t->timer <= 0)
     {
@@ -62,16 +62,19 @@ void UpdateTimer(int index, float dt)
             lua_pushnumber(luaState,i);
             lua_gettable(luaState,1);
         }
-        lua_remove (luaState,1);
+        lua_remove(luaState,1);
         func(luaState);
         DeleteTimer(index);
-        return;
+        return true;
     }
+    return false;
 }
 void UpdateTimers(float dt)
 {
     for (int i = 0; i < numTimers; i++)
     {
-        UpdateTimer(i,dt);
+        //returns true on deletion
+        if (UpdateTimer(i,dt))
+            i--;
     }
 }

@@ -74,7 +74,6 @@ void DrawUIHighlight(UIElement* u, float x, float y)
     float speedMin = 0.1f;
     float speedMax = 0.9f;
 
-
     //we are on the top of the rectangle
     if (amtThrough >= 0 && amtThrough < u->w)
     {
@@ -498,7 +497,11 @@ void DrawMouse(MouseState* mouseState, GameObject* mousedOver)
 {
     MouseState mouse = *mouseState;
     //ToScreenSpaceI(&mouse.x,&mouse.y);
-
+    if (!GameIsIngame())
+    {
+        mousedOver = NULL; 
+        players[0].abilityHeld = NULL;
+    }
     if (players[0].abilityHeld)
     {
         ALLEGRO_COLOR color = FRIENDLY;
@@ -593,6 +596,7 @@ void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame)
         if (numUnitsSelected==e->numUnitsToSelect)
         {
             ui.choosingUnits_GO.enabled = true;
+            DrawUIHighlight(&ui.choosingUnits_GO,ToWorldSpace_X(ui.choosingUnits_GO.x),ToWorldSpace_Y(ui.choosingUnits_GO.y));
         }
         else
         {

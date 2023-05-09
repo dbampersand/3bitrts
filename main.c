@@ -81,7 +81,7 @@ void init()
     InitParticles();
     InitUI();
     InitEditorUI();
-
+        
     InitConsole();
 
     InitLoadscreen("assets/ui/startscreen/fullstartscreen.png","assets/ui/startscreen/mask.png");
@@ -452,6 +452,8 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                 {
                     ui.nextLevelButton.enabled = true;
                     currMap->percentComplete = 100;
+
+
                 }
                 else
                     ui.nextLevelButton.enabled = false;
@@ -466,6 +468,10 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                 {
                     ui.nextLevelButton.enabled = false;
                 }
+            }
+            if (ui.nextLevelButton.enabled)
+            {
+                DrawUIHighlight(&ui.nextLevelButton,ToWorldSpace_X(ui.nextLevelButton.x),ToWorldSpace_Y(ui.nextLevelButton.y));
             }
 
             Rect r = (Rect){ui.nextLevelButton.x+1,ui.nextLevelButton.y+2,ui.nextLevelButton.w-3,ui.nextLevelButton.h-3};
@@ -496,6 +502,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             
             //al_draw_text(ui.font,BG,ui.nextLevelButton.x+ui.nextLevelButton.w/2,ui.nextLevelButton.y+ui.nextLevelButton.h/2,ALLEGRO_ALIGN_CENTER,GetButtonText(&ui.nextLevelButton));
             al_reset_clipping_rectangle();
+
 
             if (GetButtonIsClicked(&ui.nextLevelButton))
             {
@@ -535,8 +542,9 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         encounterMoveTimer += dt;
         encounterOffset = Towards(encounterOffset,encounterMoveTo,EaseOutQuint(encounterMoveTimer)*_SCREEN_SIZE/8.0f);
         DrawMouse(mouseState, NULL);
-        DrawTransition(dt);
         DrawParticles();
+        DrawTransition(dt);
+
 
         return;
     }

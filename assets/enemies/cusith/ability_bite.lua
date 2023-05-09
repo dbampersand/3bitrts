@@ -1,12 +1,14 @@
 local cone = -1
 local objTargetting = -1
 
-local radius = 60
+local radius = 80
 local length = 140
+
 function setup()
 
     SetAbilityRange(500)
     --AbilitySetCastType(ABILITY_CONE);
+    AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_CONE,radius,false,length);
     SetCooldown(4); 
     AbilitySetPortrait("assets/enemies/cusith/ability_bite.png");

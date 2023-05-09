@@ -661,10 +661,10 @@ int L_GetGamestate(lua_State* l)
 int L_GetHighestThreat(lua_State* l)
 {
     Threat* t = GetHighestThreat(&currGameObjRunning->threatList);
-    if (t)
+    if (t && t->obj)
         lua_pushnumber(l,t->obj-objects);
     else
-        return 0;
+        lua_pushnumber(l,-1);
     return 1;
 }
 int L_GetRotation(lua_State* l)
@@ -3714,6 +3714,11 @@ int L_CastAbility(lua_State* l)
         else
             target = NULL;
         Ability* a = &currGameObjRunning->abilities[index];
+        if (AbilityShouldBeCastOnTarget(a) && !target)
+        {
+            lua_pushboolean(l,false);
+            return 1; 
+        }
         SetObjChannelling(currGameObjRunning,a,channelTime,x,y,target,headingx,headingy);
         lua_pushboolean(l,true);
         return 1;
@@ -4378,7 +4383,24 @@ int L_HintLength(lua_State* l)
     lua_pushnumber(l,a->hintLength);
     return 1;
 }
+int L_DegToHeadingVector(lua_State* l)
+{
+    float angle = lua_tonumber(l,1);
+    angle = DegToRad(angle);
+    float x = cos(angle);
+    float y = sin(angle);
 
+    lua_pushnumber(l,1);
+    lua_newtable(l);
+
+    lua_pushnumber(l,x);
+    lua_setfield(l,-2,"headingx");
+
+    lua_pushnumber(l,y);
+    lua_setfield(l,-2,"headingy");
+
+    return 1;
+}
 void SetLuaKeyEnums(lua_State* l)
 {
     //TODO: Update these when a key is changed in settings
@@ -5169,5 +5191,8 @@ void SetLuaFuncs()
     lua_setglobal(luaState, "GetHintSoak");
     lua_pushcfunction(luaState, L_HintLength);
     lua_setglobal(luaState, "HintLength");
+
+    lua_pushcfunction(luaState, L_DegToHeadingVector);
+    lua_setglobal(luaState, "DegToHeadingVector");
 
 }

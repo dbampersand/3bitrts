@@ -375,3 +375,5 @@ void ClearTextInputStr(UIElement* u);
 
 UIElement* AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled, float* v);
 void SetUIElementFont(UIElement* u, ALLEGRO_FONT* f);
+
+void DrawUIHighlight(UIElement* u, float x, float y);

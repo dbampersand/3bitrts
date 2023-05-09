@@ -8,7 +8,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(20); 
-    AbilitySetPortrait("assets/enemies/skeleton_basher/ability_toll.png");
+    AbilitySetPortrait("assets/enemies/skeleton_minion_melee/ability_toll.png");
     SetDescription("[b]Toll\n\nCreates an area of bonus attack speed.")
 end
 function casted(x,y,obj,headingx,headingy)

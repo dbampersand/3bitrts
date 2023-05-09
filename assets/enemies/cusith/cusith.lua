@@ -13,10 +13,10 @@ local howlCD = 30
 function setup()
     SetSprite("assets/enemies/cusith/cusith.png");
     SetChannelingSprite("assets/enemies/cusith/cusith_channelling.png")
-    SetDamage(0);
+    SetDamage(30);
     SetMaxHP(maxHP,true)
     SetSpeed(80)
-    SetRange(40);
+    SetRange(80);
     SetAttackSpeed(GetObjRef(),1)
     SetObjIsBoss(GetObjRef(),true);
 
@@ -25,6 +25,7 @@ function setup()
     callPack = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_call_pack.lua",2);
     spin = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_spin.lua",3);
     focus = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_focus.lua",4);
+    focus = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_fangs.lua",5);
 
     SetAttackSounds({
         "assets/audio/attacks/melee_bite/bite_1.wav",
@@ -41,28 +42,26 @@ function untoggle()
 end
 function update(dt)
 
-    howlTimer = howlTimer + dt
+    if (IsInCombat()) then
+        howlTimer = howlTimer + dt
 
-    if (howlTimer > howlCD) then
-       -- SetMovePoint(128,128);
-        --CastAbility(howl,3,{});
-        --SetAbilityCooldownTimer(GetObjRef(),howl,0);
-        --if (howlTimer > howlCD + GetAbilityCooldown(GetObjRef(),howl)*3) then
-         --   howlTimer = 0
-        --end
-        --do return end;
+        if (howlTimer > howlCD) then
+            SetMovePoint(128,128);
+            CastAbility(howl,3,{});
+            SetAbilityCooldownTimer(GetObjRef(),howl,0);
+            if (howlTimer > howlCD + GetAbilityCooldown(GetObjRef(),howl)*3) then
+                howlTimer = 0
+            end
+            do return end;
+        end
+
+        CastAbility(callPack,3,{})
+        CastAbility(bite,1,{{target = GetHighestThreat()}})
+        CastAbility(spin,4,{});
+        CastAbility(focus,0,{});
+
+        CastAbility(fangs,1,{});
     end
-
-    --CastAbility(callPack,3,{})
-    local biteTarget = {};
-    biteTarget["target"] = GetHighestThreat();
-
-    CastAbility(bite,1,{biteTarget})
-
-    --CastAbility(spin,4,{});
-
-    --CastAbility(focus,0,{});
-
 end
 
 function kill()
