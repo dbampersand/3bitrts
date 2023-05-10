@@ -2,8 +2,12 @@ local range = 200
 local radius = 20
 local time = 1.25;
 
-local heading = {};
+local attacks = {}
+
+
 local timer = 0;
+
+local numAttacks = 2
 
 local numSegments = range / radius;
 local segmentsMade = 0
@@ -11,10 +15,11 @@ local segmentsMade = 0
 local ticker = -1
 local radius = 15
 
-local startX = 0;
-local startY = 0;
+local startRadius = 30
 
 local timeBeforeDamage = 0.35;
+
+
 
 function setup()
 
@@ -37,6 +42,22 @@ function casted(x,y,obj,headingx,headingy)
 
     startX = GetX(GetObjRef());
     startY = GetY(GetObjRef());
+
+    local angToSpawn = -startRadius
+    local move = startRadius / numAttacks
+    for i = 1, numAttacks do    
+        
+        angToSpawn = angToSpawn + move
+    end
+    local posOne = RotatePoint(startX,startY,GetX(GetObjRef()),GetY(GetObjRef()),-startAngle/2.0f)
+
+    
+    attacks[1].startX = posOne.x;
+    attacks[1].startY = posOne.y;
+
+    local posOne = RotatePoint(startX,startY,GetX(GetObjRef()),GetY(GetObjRef()),-startAngle/2.0f)
+
+
 
     return true; 
 end

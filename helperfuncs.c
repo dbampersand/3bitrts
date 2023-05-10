@@ -13,6 +13,9 @@
 #include "colors.h"
 #include "player.h"
 
+#ifndef F_PI
+    #define F_PI 3.14159265358979323846f
+#endif
 
 void swapPoints(float* x, float* y, float* x2, float* y2)
 {
@@ -331,7 +334,7 @@ float DegToRad(float deg)
 }
 float RadToDeg(float rad)
 {
-    return rad * 180/M_PI;
+    return rad * 180/F_PI;
 }
 bool CircleRectDist(int cx, int cy, float radius, Rect r)
 {
@@ -395,7 +398,7 @@ float PointsToAngleRad(float x1, float y1, float x2, float y2)
 {
     float dx = x2 - x1;
     float dy = y2 - y1;
-    return atan2(dy, dx); 
+    return atan2f(dy, dx); 
 }
 int PointsToAngleDeg(int x1, int y1, int x2, int y2)
 {

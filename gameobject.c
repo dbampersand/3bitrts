@@ -2375,27 +2375,30 @@ void DrawMapHighlights()
         return;
 
     ALLEGRO_BITMAP* screen = al_get_target_bitmap();
-    al_lock_bitmap_region(sprites[currMap->spriteIndex].sprite, -players[0].cameraPos.x, -players[0].cameraPos.y, _SCREEN_SIZE, _SCREEN_SIZE, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
+    //al_lock_bitmap_region(sprites[currMap->spriteIndex].sprite, players[0].cameraPos.x, players[0].cameraPos.y, _SCREEN_SIZE, _SCREEN_SIZE, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
     al_lock_bitmap(screen, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READWRITE);
 
     clock_t begin = clock();
+
+
+    al_set_target_bitmap(screen);
 
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g = activeObjects[i];
         if (g->lightSize > 0)
-            if (IsActive(g) && IsOwnedByPlayer(g))
+            if (IsOwnedByPlayer(g))
             {
-                al_set_target_bitmap(screen);
-                // DrawMapHighlight(g,30,screen);
                 DrawMapHighlight(g, g->lightSize, screen);
             }
     }
-
     clock_t end = clock();
     double time = (double)(end - begin) / CLOCKS_PER_SEC;
+    
+    //printf("%f\n",time);
 
-    al_unlock_bitmap(sprites[currMap->spriteIndex].sprite);
+
+    //al_unlock_bitmap(sprites[currMap->spriteIndex].sprite);
     al_unlock_bitmap(screen);
 
     int beforeOp;
@@ -2413,7 +2416,7 @@ void DrawMapHighlights()
     al_set_target_bitmap(scratchMap);
 
     al_clear_to_color(_TRANSPARENT);
-    al_draw_bitmap(sprites[currMap->spriteIndex].inverseSprite, -players[0].cameraPos.x, -players[0].cameraPos.y, 0);
+    //al_draw_bitmap(sprites[currMap->spriteIndex].inverseSprite, -players[0].cameraPos.x, -players[0].cameraPos.y, 0);
 
     for (int i = 0; i < numActiveObjects; i++)
     {
@@ -2457,10 +2460,8 @@ void DrawMapHighlights()
         }
     }
 
-    // TODO: investigate if we can have this locked, doesn't seem to work w/ locking
-    // al_lock_bitmap(scratchMap,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
-    al_convert_mask_to_alpha(scratchMap, WHITE);
-    // al_unlock_bitmap(scratchMap);
+    al_set_blender(ALLEGRO_DEST_MINUS_SRC, ALLEGRO_ONE, ALLEGRO_INVERSE_ALPHA);
+    al_draw_tinted_bitmap(sprites[currMap->spriteIndex].inverseSprite,BG, -players[0].cameraPos.x, -players[0].cameraPos.y, 0);
 
     al_set_blender(beforeOp, beforeSrc, beforeDst);
 
@@ -2468,6 +2469,9 @@ void DrawMapHighlights()
 
     al_set_target_bitmap(screen);
     al_draw_bitmap(scratchMap, 0, 0, 0);
+
+    al_set_blender(beforeOp, beforeSrc, beforeDst);
+
 }
 void DrawAggroIndicators()
 {
@@ -2877,7 +2881,6 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
     // Use circle algorithm to get the points to end at
     // Then calculate the angle between gCX and gCY and that point
     // Then go from g to that point
-
     float cxf;
     float cyf;
     GetCentre(g, &cxf, &cyf);
@@ -2889,6 +2892,11 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
     int x = -r;
     int y = 0;
     int err = 2 - 2 * r;
+
+    int mapW = GetMapWidth();
+    int mapH = GetMapHeight();
+    int mapRange = mapW * mapH -1;
+
 
     while (x < 0)
     {
@@ -2910,23 +2918,48 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
 
         for (int i = 0; i < 4; i++)
         {
-            int angle = (angles[i]); // PointsToAngleRad(cx,cy,points[i].x,points[i].y);
+            int angle = (angles[i]);
             float moveX = cosTable[angle];
             float moveY = sinTable[angle];
 
             float mX = cx;
             float mY = cy;
 
-            for (int steps = 0; steps < lightSize; steps++)
+            int numSteps = lightSize;
+
+            //get max number of steps so we don't overrun the bounds of the array
+            //faster as we don't need to check bounds in the tight loop
+            float totalMoveX = lightSize * (moveX);
+            float totalMoveY = lightSize * (moveY);
+
+            int numStepsX = lightSize;
+            int numStepsY = lightSize;
+
+            if (mX + totalMoveX >= mapW-1)
+            {
+                numStepsX = mapW - mX - 1;
+            }
+            if (mX + totalMoveX < 0)
+            {
+                numStepsX = totalMoveX - (mX + totalMoveX);
+            }
+            if (mY + totalMoveY >= mapH-1)
+            {
+                numStepsY = mapH - mY - 1;
+            }
+            if (mY + totalMoveY < 0)
+            {
+                numStepsY = totalMoveY - (mY + totalMoveY);
+            }
+            numSteps = _MIN(numStepsX,numStepsY);
+
+            for (int steps = 0; steps < numSteps; steps++)
             {
                 mX += moveX;
                 mY += moveY;
 
-                // ALLEGRO_COLOR col = al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);//al_get_pixel(sprites[currMap->spriteIndex].sprite,mX,mY);
-                int index = GetIndex(GetHeightSprite(&sprites[currMap->spriteIndex]), mX, mY);
-                if (index < 0 || index >= GetMapWidth() * GetMapHeight())
-                    break;
-                // if (col.a <= 0.001f)
+                int index = GetIndex(mapH, mX, mY);
+
                 if (currMap->highlightMap[index])
                 {
                     float screenSpaceX = mX;
