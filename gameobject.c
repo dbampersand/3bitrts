@@ -2393,7 +2393,7 @@ void DrawMapHighlights()
     clock_t end = clock();
     double time = (double)(end - begin) / CLOCKS_PER_SEC;
     
-    printf("DrawMapHighlights time: %f\n",time);
+   // printf("DrawMapHighlights time: %f\n",time);
 
 
     //al_unlock_bitmap(sprites[currMap->spriteIndex].sprite);

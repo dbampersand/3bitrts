@@ -147,8 +147,7 @@ void FinishTransition()
     if (transitioningTo == GAMESTATE_INGAME)
     {
         gameStats.timeTaken = 0;
-        NewReplay();
-
+        NewReplay();    
         RemoveAllGameObjects();
 
         ClearSpriteDecorations();

@@ -44,6 +44,10 @@ const char* REPLAY_HEADER = "REP";
 
 void InitReplay()
 {
+    #ifndef _REPLAY
+        return;
+    #endif
+
     replay.frames = NULL;
     replay.numFrames = 0;
     replay.playing = true;
@@ -55,6 +59,10 @@ void InitReplay()
 }
 void NewReplay()
 {
+    #ifndef _REPLAY
+        return;
+    #endif
+
     bufferPosition = 0; 
     if (!replayBuffer)
         replayBuffer = malloc(REPLAY_PREALLOC*sizeof(char));
@@ -68,6 +76,9 @@ void NewReplay()
 }
 void LoadFrame(ALLEGRO_BITMAP* screen, ReplayFrame* frame)
 {
+    #ifndef _REPLAY
+        return;
+    #endif
     if (!frame) return;
     int x=0; int y=0;
     /*al_lock_bitmap(screen,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_WRITEONLY);
@@ -132,6 +143,10 @@ void LoadFrame(ALLEGRO_BITMAP* screen, ReplayFrame* frame)
 }
 void RecordReplay(ALLEGRO_BITMAP* screen)
 {
+    #ifndef _REPLAY
+        return;
+    #endif
+
     //create new frame
     ReplayFrame rf = SaveFrame(screen);
     replay.numFrames++;
@@ -161,6 +176,9 @@ void RecordReplay(ALLEGRO_BITMAP* screen)
 }
 void PlayReplay(ALLEGRO_BITMAP* screen)
 {
+    #ifndef _REPLAY
+        return;
+    #endif
     //replay.framePlayPosition++;
     if (replay.framePlayPosition >= replay.numFrames)
     {
@@ -181,6 +199,11 @@ void PlayReplay(ALLEGRO_BITMAP* screen)
 //TODO: look into compressing this or appending it to an already compressed file
 void SerializeSection(Replay* r, bool finished)
 {
+    #ifndef _REPLAY
+        return;
+    #endif
+
+    clock_t begin = clock();
    r->totalFrames += r->numFrames;
 
     bool firstWrite = false;
@@ -202,16 +225,39 @@ void SerializeSection(Replay* r, bool finished)
    {
         ReplayFrame* rf = &r->frames[i];
         fwrite(&rf->numObjects, sizeof(rf->numObjects),1,tempFile);
+
+        GameObject* g;
+
+        const int totalSize = sizeof(g->position.worldX) + sizeof(g->position.worldY) + sizeof(g->health) + sizeof(g->maxHP) + sizeof(g->spriteIndex);
+        char* str = malloc(rf->numObjects*totalSize);
+
+        size_t position = 0;
+
         for (int i = 0; i < rf->numObjects; i++)
         {
-            GameObject* g = &rf->objects[i];
-            fwrite(&g->position.worldX, sizeof(g->position.worldX),1,tempFile);
-            fwrite(&g->position.worldY, sizeof(g->position.worldY),1,tempFile);
-            fwrite(&g->health, sizeof(g->health),1,tempFile);
-            fwrite(&g->maxHP, sizeof(g->maxHP),1,tempFile);
+            g = &rf->objects[i];
+            //fwrite(&g->position.worldX, sizeof(g->position.worldX),1,tempFile);
+            //fwrite(&g->position.worldY, sizeof(g->position.worldY),1,tempFile);
+            //fwrite(&g->health, sizeof(g->health),1,tempFile);
+            //fwrite(&g->maxHP, sizeof(g->maxHP),1,tempFile);
+            memcpy(str+position,(&g->position.worldX),sizeof(g->position.worldX));
+            position += sizeof(g->position.worldX);
+            memcpy(str+position,(&g->position.worldY),sizeof(g->position.worldY));
+            position += sizeof(g->position.worldY);
+            memcpy(str+position,(&g->health),sizeof(g->health));
+            position += sizeof(g->health);
+            memcpy(str+position,(&g->maxHP),sizeof(g->maxHP));
+            position += sizeof(g->maxHP);
+            memcpy(str+position,(&g->spriteIndex),sizeof(g->spriteIndex));
+            position += sizeof(g->spriteIndex);
 
-            fwrite(&g->spriteIndex, sizeof(g->spriteIndex),1,tempFile);
+
+
+            //fwrite(&g->spriteIndex, sizeof(g->spriteIndex),1,tempFile);
         }
+        fwrite(str,totalSize,1,tempFile);
+        free(str);
+
         fwrite(&rf->numAttacks, sizeof(rf->numAttacks),1,tempFile);
         for (int i = 0; i < rf->numAttacks; i++)
         {
@@ -277,14 +323,20 @@ void SerializeSection(Replay* r, bool finished)
 
    bufferPosition = 0;
 
+    clock_t end = clock();
+    double time = (double)(end - begin) / CLOCKS_PER_SEC;
+    printf("SerializeSection time: %f\n",time);
 
    
-
 }
 
 
 ReplayFrame SaveFrame(ALLEGRO_BITMAP* screen)
 {
+    #ifndef _REPLAY
+        return (ReplayFrame){0};
+    #endif
+
    // if (!frameTest)
     //{
     //    frameTest = malloc(_SCREEN_SIZE * _SCREEN_SIZE*(sizeof(char)+sizeof(uint16_t)));
@@ -427,6 +479,9 @@ int def(FILE *source, FILE *dest, int level)
 //taken from http://zlib.net/zlib_how.html
 int inf(FILE *source, FILE *dest)
 {
+    #ifndef _REPLAY
+        return -1;
+    #endif
 
     int ret;
     unsigned have;
@@ -482,6 +537,10 @@ int inf(FILE *source, FILE *dest)
 //taken from http://zlib.net/zlib_how.html  
 void zerr(int ret)
 {
+    #ifndef _REPLAY
+        return;
+    #endif
+
     fputs("zpipe: ", stderr);
     switch (ret) {
     case Z_ERRNO:
@@ -505,6 +564,9 @@ void zerr(int ret)
 }
 void RemoveReplay(Replay* r)
 {
+    #ifndef _REPLAY
+        return;
+    #endif
     if (!r) return;
     if (r->frames)
     {
@@ -538,6 +600,10 @@ void RemoveReplay(Replay* r)
 
 bool LoadReplay(char* path)
 {
+    #ifndef _REPLAY
+        return false;
+    #endif
+
     FILE* f = fopen(path, "rb");
     if (f)
     {
@@ -751,6 +817,10 @@ bool LoadReplay(char* path)
 }
 void SaveSpriteReplay(FILE* f, Sprite* s)
 {
+    #ifndef _REPLAY
+        return;
+    #endif
+
     uint32_t w = GetWidthSprite(s);
     uint32_t h = GetHeightSprite(s);
 
@@ -770,6 +840,9 @@ void SaveSpriteReplay(FILE* f, Sprite* s)
 }
 void SaveReplaySpriteTable(FILE* f, FILE* to)
 {
+    #ifndef _REPLAY
+        return;
+    #endif
 
     int32_t spritesIndices[numSprites];
     memset(spritesIndices,0,numSprites*sizeof(int32_t));
@@ -850,6 +923,10 @@ void SaveReplaySpriteTable(FILE* f, FILE* to)
 }
 void ReplayToDisk(Replay* r)
 {
+    #ifndef _REPLAY
+        return;
+    #endif
+
     //zlib to compress
     r->framePlayPosition = 0;
     

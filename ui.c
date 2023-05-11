@@ -2140,12 +2140,16 @@ void InitLoadReplayPanel()
 }
 void InitMainMenuPanel()
 {
+    int y = 0;
+    int yMove = 16 + padding;
     ui.mainMenuPanel = CreatePanel(29,70,160,144,15,false);
-    AddButton(&ui.mainMenuPanel,"Return","Start Game",0,16,96,16,false);
-    AddButton(&ui.mainMenuPanel,"Tutorial","Tutorial",0,32+(padding),96,16,false);
-    AddButton(&ui.mainMenuPanel,"Load Replay","Load Replay",0,48+(padding*2),96,16,false);
-    AddButton(&ui.mainMenuPanel,"Options","Options",0,64+(padding*3),96,16,false);
-    AddButton(&ui.mainMenuPanel,"Exit","Exit Game",0,80+(padding*4),96,16,false);
+    AddButton(&ui.mainMenuPanel,"Return","Start Game",0,(y+=yMove),96,16,false);
+    AddButton(&ui.mainMenuPanel,"Tutorial","Tutorial",0,(y+=yMove),96,16,false);
+    #ifdef _REPLAY
+        AddButton(&ui.mainMenuPanel,"Load Replay","Load Replay",0,(y+=yMove),96,16,false);
+    #endif
+    AddButton(&ui.mainMenuPanel,"Options","Options",0,(y+=yMove),96,16,false);
+    AddButton(&ui.mainMenuPanel,"Exit","Exit Game",0,(y+=yMove),96,16,false);
 
 }
 void InitPausePanel()
@@ -2241,10 +2245,17 @@ void InitChoosingUnitButtons()
 void InitEndScreen()
 {
     //endScreen
-    InitButton(&ui.endScreen_Back,"Back","Back",10,224,72,16,0);
-    InitButton(&ui.endScreen_Retry,"Retry","Retry",91,224,72,16,0);
-    InitButton(&ui.endScreen_SaveReplay,"Save Replay","Save Replay",172,224,72,16,0);
+    int w = 104;
+    int x2 = 136;
 
+    #ifdef _REPLAY
+        w = 72;
+        x2 = 91;
+        InitButton(&ui.endScreen_SaveReplay,"Save Replay","Save Replay",172,224,72,16,0);
+    #endif
+
+    InitButton(&ui.endScreen_Back,"Back","Back",10,224,w,16,0);
+    InitButton(&ui.endScreen_Retry,"Retry","Retry",x2,224,w,16,0);
 }
 void InitGameUI()
 {
@@ -3432,6 +3443,7 @@ void LoadCursorSprite(UI* ui, int* index, char* path)
 }
 bool GetButtonIsClicked(UIElement* u)
 {
+
     if (_PANEL_CLICKED_THIS_FRAME)
     {
         Button* b = (Button*)(u->data);
@@ -3658,12 +3670,14 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
 
     UpdateButton(ui.endScreen_Back.x,ui.endScreen_Back.y,ui.endScreen_Back.w,ui.endScreen_Back.h,&ui.endScreen_Back,*mouseState,*mouseStateLastFrame);
     UpdateButton(ui.endScreen_Retry.x,ui.endScreen_Retry.y,ui.endScreen_Retry.w,ui.endScreen_Retry.h,&ui.endScreen_Retry,*mouseState,*mouseStateLastFrame);
-    UpdateButton(ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,ui.endScreen_SaveReplay.w,ui.endScreen_SaveReplay.h,&ui.endScreen_SaveReplay,*mouseState,*mouseStateLastFrame);
-
+    #ifdef _REPLAY
+        UpdateButton(ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,ui.endScreen_SaveReplay.w,ui.endScreen_SaveReplay.h,&ui.endScreen_SaveReplay,*mouseState,*mouseStateLastFrame);
+    #endif
     DrawUIElement(&ui.endScreen_Back,ui.endScreen_Back.x,ui.endScreen_Back.y,mouseState,ui.endScreen_Back.bgColor,COLOR_FRIENDLY,false);
     DrawUIElement(&ui.endScreen_Retry,ui.endScreen_Retry.x,ui.endScreen_Retry.y,mouseState,ui.endScreen_Retry.bgColor,COLOR_FRIENDLY,false);
-    DrawUIElement(&ui.endScreen_SaveReplay,ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,mouseState,ui.endScreen_SaveReplay.bgColor,COLOR_FRIENDLY,false);
-    
+    #ifdef _REPLAY
+        DrawUIElement(&ui.endScreen_SaveReplay,ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,mouseState,ui.endScreen_SaveReplay.bgColor,COLOR_FRIENDLY,false);
+    #endif
     int x = 86;
     int y = 139;
     if (encounterGoingTo)
@@ -3701,13 +3715,14 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
         }
 
     }
-    if (GetButtonIsClicked(&ui.endScreen_SaveReplay))
-    {
-        ReplayToDisk(&replay);
-        ui.endScreen_SaveReplay.enabled = false;
-        RemoveReplay(&replay);
-
-    }
+    #ifdef _REPLAY
+        if (GetButtonIsClicked(&ui.endScreen_SaveReplay))
+        {
+            ReplayToDisk(&replay);
+            ui.endScreen_SaveReplay.enabled = false;
+            RemoveReplay(&replay);
+        }
+    #endif
 
     free(buffer);
 }

@@ -119,7 +119,6 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
 {   
     if (!(mouseState->mouse.buttons & 1))
         _PANEL_CLICKED_THIS_FRAME = false;
-
     UpdateAmbience(dt);
     numChannellingInfosDrawn =  0;
     if (gameState == GAMESTATE_IN_SHOP)
@@ -206,6 +205,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     al_grab_mouse(display);
     al_set_target_bitmap(SCREEN);
 
+
     for (int i = 0; i < numActiveObjects; i++)
     {
         UpdateScreenPositions(activeObjects[i]);
@@ -219,6 +219,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     DrawSpriteDecorations(BEFORE_WORLD);
     if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS || gameState == GAMESTATE_IN_CHATBOX || gameState == GAMESTATE_IN_EDITOR)
         DrawMap(currMap,false);
+
     DrawSpriteDecorations(AFTER_WORLD);
     DrawMapHighlights();
 
@@ -442,7 +443,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
         if (gameState == GAMESTATE_INGAME)
         {
-            char percentCompletionStr[NumDigits(INT_MIN)+3];
+            char percentCompletionStr[NumDigits(INT_MAX)+3];
             if (currMap->automaticWinCheck || currMap->percentComplete >= 100)
             {
                 if (GetNumEnemyObjects() == 0 || currMap->percentComplete >= 100 || currMap->forceNextLevelButtonEnabled)
@@ -489,7 +490,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             
             DrawUIElement(&ui.nextLevelButton,ui.nextLevelButton.x,ui.nextLevelButton.y,mouseState,ui.nextLevelButton.bgColor,COLOR_FRIENDLY,false);
 
-            memset(percentCompletionStr,0,(NumDigits(INT_MIN)+3)*sizeof(char));
+            memset(percentCompletionStr,0,(NumDigits(INT_MAX)+3)*sizeof(char));
             sprintf(percentCompletionStr,"%i%%",(int)floorf(currMap->percentComplete));
 
             //al_draw_text(ui.font,FRIENDLY,ui.nextLevelButton.x+ui.nextLevelButton.w/2,ui.nextLevelButton.y+ui.nextLevelButton.h/2,ALLEGRO_ALIGN_CENTER,GetButtonText(&ui.nextLevelButton));
@@ -841,7 +842,7 @@ int main(int argc, char* args[])
             _FRAMES++;
             totalRenderTime += time;
 
-            printf("Total time: %f\n",time);
+           // printf("Total time: %f\n",time);
             fflush(stdout);
             
             //sort activeobjects so we have less cache misses 
