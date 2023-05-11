@@ -250,11 +250,11 @@ void UpdateGoldTextString(int gold)
 }
 void AddGold(float count)
 {
-    int before = floor(players[0].gold);
+    int before = floorf(players[0].gold);
     players[0].gold += count;
 
     //if there's been a change of at least 1 gold
-    if (before != (int)floor(players[0].gold))
+    if (before != (int)floorf(players[0].gold))
     {
         if (players[0].goldAnimationTimer >= 1)
         {
@@ -295,7 +295,7 @@ void DrawGoldCount(ALLEGRO_COLOR colorPositive, ALLEGRO_COLOR colorNegative)
 
     DrawSprite(&sprites[ui.gold_element_sprite_index],x,y,0,0,0,colorPositive,false,false,false);
 
-    ALLEGRO_COLOR c = floor(players[0].gold) >= 0 ? colorPositive : colorNegative;
+    ALLEGRO_COLOR c = floorf(players[0].gold) >= 0 ? colorPositive : colorNegative;
     al_draw_text(ui.tinyFont,c,x+GetWidthSprite(&sprites[ui.gold_element_sprite_index])+2,y,ALLEGRO_ALIGN_LEFT,players[0].goldText);
 }
 void ClearGold()

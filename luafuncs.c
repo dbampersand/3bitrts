@@ -130,7 +130,7 @@ int L_GetHeadingVector(lua_State* l)
     float dx = x2 - x;
     float dy = y2 - y;
 
-    float angle = atan2(dy,dx);
+    float angle = atan2f(dy,dx);
 
     float xHeading = cosf(angle);
     float yHeading = sinf(angle);
@@ -396,31 +396,29 @@ int L_GetRandomUnit(lua_State* l)
         GameObject* g = activeObjects[i];
         if (ObjIsDecoration(g) && friend != TYPE_DECORATION)
             continue;
-        if (IsActive(g))
+        if (GetDist(g,currGameObjRunning) < range)
         {
-            if (GetDist(g,currGameObjRunning) < range)
+            if (ObjHasType(g,typeHint))
             {
-                if (ObjHasType(g,typeHint))
+                if (friend == TYPE_ENEMY)
                 {
-                    if (friend == TYPE_ENEMY)
+                    if (GetPlayerOwnedBy_IncludeDecor(g) != GetPlayerOwnedBy_IncludeDecor(currGameObjRunning))
                     {
-                        if (GetPlayerOwnedBy_IncludeDecor(g) != GetPlayerOwnedBy_IncludeDecor(currGameObjRunning))
-                        {
-                            list[numObjs] = g;
-                            numObjs++;
-                        }
+                        list[numObjs] = g;
+                        numObjs++;
                     }
-                    if (friend == TYPE_FRIENDLY)
+                }
+                if (friend == TYPE_FRIENDLY)
+                {
+                    if (GetPlayerOwnedBy_IncludeDecor(g) == GetPlayerOwnedBy_IncludeDecor(currGameObjRunning))
                     {
-                        if (GetPlayerOwnedBy_IncludeDecor(g) == GetPlayerOwnedBy_IncludeDecor(currGameObjRunning))
-                        {
-                            list[numObjs] = g;
-                            numObjs++;
-                        }
+                        list[numObjs] = g;
+                        numObjs++;
                     }
                 }
             }
         }
+        
     }
     if (numObjs > 0)
     {
@@ -457,29 +455,28 @@ int L_GetRandomUnit(lua_State* l)
             if (ObjIsDecoration(g) && friend != TYPE_DECORATION)
                 continue;
 
-            if (IsActive(g))
+          
+            if (GetDist(g,currGameObjRunning) < range)
             {
-                if (GetDist(g,currGameObjRunning) < range)
+                if (friend == TYPE_ENEMY)
                 {
-                    if (friend == TYPE_ENEMY)
+                    if (GetPlayerOwnedBy_IncludeDecor(g) != GetPlayerOwnedBy_IncludeDecor(currGameObjRunning))
                     {
-                        if (GetPlayerOwnedBy_IncludeDecor(g) != GetPlayerOwnedBy_IncludeDecor(currGameObjRunning))
-                        {
-                            list[numObjs] = g;
-                            numObjs++;
-                        }
+                        list[numObjs] = g;
+                        numObjs++;
                     }
-                    if (friend == TYPE_FRIENDLY)
-                    {
-                        if (GetPlayerOwnedBy_IncludeDecor(g) == GetPlayerOwnedBy_IncludeDecor(currGameObjRunning))
-                        {
-                            list[numObjs] = g;
-                            numObjs++;
-                        }
-                    }
-
                 }
+                if (friend == TYPE_FRIENDLY)
+                {
+                    if (GetPlayerOwnedBy_IncludeDecor(g) == GetPlayerOwnedBy_IncludeDecor(currGameObjRunning))
+                    {
+                        list[numObjs] = g;
+                        numObjs++;
+                    }
+                }
+
             }
+        
         }
         if (numObjs > 0)
         {
@@ -731,7 +728,6 @@ int L_GetBetween(lua_State* l)
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g2 = activeObjects[i];
-        if (IsActive(g2))
         if (LineIntersectsObj(g2,x1,y1,x2,y2))
         {
             lua_pushnumber(l,numObjs);
@@ -1225,7 +1221,7 @@ int L_CreateConeProjectiles(lua_State* l)
     for (int i = 0; i < numProjectiles; i++)
     {
         float angle = (i) *  radius / (float)numProjectiles;
-        CreateProjectile(l,x,y, x-cos(angle+startAngle), y-sin(angle+startAngle), portrait, attackType, speed, duration, shouldCallback, properties, NULL, color, effects, len);
+        CreateProjectile(l,x,y, x-cosf(angle+startAngle), y-sinf(angle+startAngle), portrait, attackType, speed, duration, shouldCallback, properties, NULL, color, effects, len);
     }
     return 0;
 }
@@ -1279,7 +1275,7 @@ int L_CreateCircularProjectiles(lua_State* l)
     for (int i = 0; i < numProjectiles; i++)
     {
         float angle = M_PI / (float)numProjectiles*i*2; 
-        CreateProjectile(l,x,y, x+cos(angle+angleOffset), y+sin(angle+angleOffset), portrait, attackType, speed, duration, shouldCallback, properties, targ,color, effects, len);
+        CreateProjectile(l,x,y, x+cosf(angle+angleOffset), y+sinf(angle+angleOffset), portrait, attackType, speed, duration, shouldCallback, properties, targ,color, effects, len);
 
     }
     for (int i = 0; i < len; i++)
@@ -1304,12 +1300,9 @@ int L_NumObjectsOwnedByPlayer(lua_State* l)
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g = activeObjects[i];
-        if (IsActive(g))
+        if (GetPlayerOwnedBy_IncludeDecor(activeObjects[i]) == player)
         {
-            if (GetPlayerOwnedBy_IncludeDecor(activeObjects[i]) == player)
-            {
-                numObjs++;
-            }
+            numObjs++;
         }
     }
     lua_pushnumber(l,numObjs);
@@ -2387,8 +2380,6 @@ int L_GetClosestObjectInRange(lua_State* l)
 
     for (int i = 0; i < numActiveObjects; i++)
     {
-        if (!IsActive(activeObjects[i]))
-            continue;
         if (friendliness == TYPE_FRIENDLY)
         {
             if (thisObjFriendliness != GetPlayerOwnedBy(activeObjects[i]))
@@ -2435,8 +2426,6 @@ int L_GetFurthestObjectInRange(lua_State* l)
 
     for (int i = 0; i < numActiveObjects; i++)
     {
-        if (!IsActive(activeObjects[i]))
-            continue;
         if (friendliness == TYPE_FRIENDLY)
         {
             if (thisObjFriendliness != GetPlayerOwnedBy(activeObjects[i]))
@@ -2479,8 +2468,6 @@ int L_GetObjectsInRange(lua_State* l)
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g = activeObjects[i];
-        if (!IsActive(g))
-            continue;
         float cx; float cy;
         GetCentre(g,&cx,&cy);
         if (GetPlayerOwnedBy(g) == ownedBy)
@@ -2689,7 +2676,7 @@ int L_GetAllObjsByFriendliness(lua_State* l)
     {
         GameObject* g = activeObjects[i];
 
-        if (IsActive(g) && GetPlayerOwnedBy(g) == friendliness)
+        if (GetPlayerOwnedBy(g) == friendliness)
         {
             index++;
             lua_pushnumber(l,index);
@@ -4387,8 +4374,8 @@ int L_DegToHeadingVector(lua_State* l)
 {
     float angle = lua_tonumber(l,1);
     angle = DegToRad(angle);
-    float x = cos(angle);
-    float y = sin(angle);
+    float x = cosf(angle);
+    float y = sinf(angle);
 
     lua_pushnumber(l,1);
     lua_newtable(l);

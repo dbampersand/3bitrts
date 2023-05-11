@@ -18,10 +18,7 @@
  int PARTICLES_TOP = 0;
 void ClearParticles()
 {
-    for (int i = 0; i < MAX_PARTICLES; i++)
-    {
-        particle_properties[i] &= ~PARTICLE_ENABLED;
-    }
+    memset(particle_properties,0,sizeof(particle_properties[0])*MAX_PARTICLES);
 }
 
 void UpdateParticles(float dt)
@@ -76,7 +73,7 @@ void InitParticles()
 
     PARTICLES_TOP = 0;
 }
-float GetParticleAlpha(int index)
+inline float GetParticleAlpha(int index)
 {
     return particle_lifetime[index] / (float)particle_lifetime_total[index];
 }
@@ -110,11 +107,11 @@ void DrawParticles()
 void RandParticleAroundEdgeOfCircle(float cx, float cy, float r, float lifetime, float maxspeed, Color col)
 {
     float angle = RandRange(-2*M_PI,2*M_PI);
-    float x = cx + cos(angle)*r;
-    float y = cy + sin(angle)*r;
+    float x = cx + cosf(angle)*r;
+    float y = cy + sinf(angle)*r;
     AddParticle(x,y,RandRange(_MIN(lifetime,1),lifetime),RandRange(maxspeed/2.0f,maxspeed),RadToDeg(angle),col);
 }
-bool ParticleIsActive(int index)
+inline bool ParticleIsActive(int index)
 {
     return (particle_properties[index] & PARTICLE_ENABLED);
 }

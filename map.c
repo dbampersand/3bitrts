@@ -73,7 +73,7 @@ void DisplayCollision()
     {
         for (int y = 0; y < GetMapHeight(); y += _GRAIN)
         {
-            int idx = GetIndex(currMap->collisionMapHeight, floor(x / (float)_GRAIN), floor(y / (float)_GRAIN));
+            int idx = GetIndex(currMap->collisionMapHeight, floorf(x / (float)_GRAIN), floorf(y / (float)_GRAIN));
             if (currMap->collision[idx])
             {
                 ALLEGRO_COLOR c;
@@ -151,8 +151,8 @@ void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
     h+=_GRAIN;
 
 
-    int indexLeft = GetIndex(currMap->collisionMapHeight, floor((x) / (float)_GRAIN), floor((y) / (float)_GRAIN));
-    int indexRight = GetIndex(currMap->collisionMapHeight, ceil((x+w) / (float)_GRAIN), ceil((y+h) / (float)_GRAIN));
+    int indexLeft = GetIndex(currMap->collisionMapHeight, floorf((x) / (float)_GRAIN), floorf((y) / (float)_GRAIN));
+    int indexRight = GetIndex(currMap->collisionMapHeight, ceilf((x+w) / (float)_GRAIN), ceilf((y+h) / (float)_GRAIN));
     
 
     for (int xn = x/_GRAIN; xn < ceil((x + w)/_GRAIN); xn++)
@@ -428,10 +428,8 @@ void SetMap(Map* m)
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g = activeObjects[i];
-        if (IsActive(g))
-        {
-            CallLuaFunc(g->luafunc_onmapchange);
-        }
+        CallLuaFunc(g->luafunc_onmapchange);
+        
     }
 
        
@@ -473,7 +471,7 @@ void UpdateMap(Map* m, float dt)
     {
         //CallLuaFunc(m->luafunc_update);
         lua_rawgeti(luaState,LUA_REGISTRYINDEX,m->luafunc_update);
-        lua_pushnumber(luaState,dt);
+        lua_pushnumber(luaState,(double)dt);
         lua_pcall(luaState,1,0,0);
 
     }

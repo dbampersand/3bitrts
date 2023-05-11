@@ -137,7 +137,7 @@ void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
         {
             float r = RandRange(0,1);
             //Play animation other than the default idle 
-            if (r > 0.6)
+            if (r > 0.6f)
             {
                 Animation* to = shop.currAnimation;
                 while (to == shop.currAnimation)
@@ -187,7 +187,7 @@ void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
     {
         ShopItem* si = &shop.items[i];
 
-        si->desiredPosition.y += sin((shop.timer)*6)/16.0f;
+        si->desiredPosition.y += sinf((shop.timer)*6)/16.0f;
 
         if (si == shop.heldItem)
             continue;
@@ -319,7 +319,7 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
     {
         GameObject* g = activeObjects[i];
 
-        if (!IsActive(g) || !IsOwnedByPlayer(g) || !g->playerChoosable)
+        if (!IsOwnedByPlayer(g) || !g->playerChoosable)
             continue;
 
         DrawSprite(&sprites[g->spriteIndex],x,y,0,0,0,FRIENDLY,false,false,false);

@@ -454,13 +454,11 @@ void UpdateItems(float dt)
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g = activeObjects[i];
-        if (IsActive(g))
+        for (int j = 0; j < INVENTORY_SLOTS; j++)
         {
-            for (int j = 0; j < INVENTORY_SLOTS; j++)
-            {
-                UpdateItem(&g->inventory[j],g,dt);
-            }
+            UpdateItem(&g->inventory[j],g,dt);
         }
+        
     }
     currGameObjRunning = before;
 

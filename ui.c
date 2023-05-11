@@ -364,9 +364,9 @@ void DrawTimer(bool enabled)
 {   
     if (enabled)
     {
-        int hours = floor(gameStats.timeTaken/(60.0f*60.0f));
-        int minutes = floor(gameStats.timeTaken/(60.0f) - hours*60);    
-        int seconds = floor(gameStats.timeTaken - minutes*60); 
+        int hours = floorf(gameStats.timeTaken/(60.0f*60.0f));
+        int minutes = floorf(gameStats.timeTaken/(60.0f) - hours*60);    
+        int seconds = floorf(gameStats.timeTaken - minutes*60); 
 
         size_t buffsiz = snprintf(NULL, 0, "%i:%i",minutes,seconds);
         char* buff = calloc(buffsiz+1,sizeof(char));
@@ -955,7 +955,7 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
         al_draw_filled_rectangle(xStackCounter,yStackCounter,xStackCounter+sizeStackCounter,yStackCounter+sizeStackCounter,BG);
         al_draw_rectangle(xStackCounter,yStackCounter,xStackCounter+sizeStackCounter,yStackCounter+sizeStackCounter,*c,1);
 
-        const int maxchars = ceil(log10(pow(2,sizeof(a->stacks)*8)))+2;
+        const int maxchars = ceilf(log10(pow(2,sizeof(a->stacks)*8)))+2;
         if (!stackDrawBuffer)
             stackDrawBuffer = calloc(maxchars,sizeof(char));
         memset(stackDrawBuffer,0,maxchars*sizeof(char));
@@ -1041,7 +1041,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             if (selected->abilities[0].description)
             {
                 int h = GetDescriptionBoxH(selected->abilities[0].description,100,ui.font,UI_PADDING);
-                int x = 33 + ceil(UI_PADDING/2.0f);
+                int x = 33 + ceilf(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
                 DrawDescriptionBox(selected->abilities[0].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
             }
@@ -1052,7 +1052,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             if (selected->abilities[1].description)
             {
                 int h = GetDescriptionBoxH(selected->abilities[1].description,100,ui.font,UI_PADDING);
-                int x = 65 + ceil(UI_PADDING/2.0f);
+                int x = 65 + ceilf(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
                 DrawDescriptionBox(selected->abilities[1].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
             }
@@ -1063,7 +1063,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             if (selected->abilities[2].description)
             {
                 int h = GetDescriptionBoxH(selected->abilities[2].description,100,ui.font,UI_PADDING);
-                int x = 97 + ceil(UI_PADDING/2.0f);
+                int x = 97 + ceilf(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
                 DrawDescriptionBox(selected->abilities[2].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
 
@@ -1075,7 +1075,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             if (selected->abilities[3].description)
             {
                 int h = GetDescriptionBoxH(selected->abilities[3].description,100,ui.font,UI_PADDING);
-                int x = 129 + ceil(UI_PADDING/2.0f);
+                int x = 129 + ceilf(UI_PADDING/2.0f);
                 int y = 221 - h - 3;
                 DrawDescriptionBox(selected->abilities[3].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
             }
@@ -1087,7 +1087,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                 if (selected->abilities[4].description)
                 {
                     int h = GetDescriptionBoxH(selected->abilities[4].description,100,ui.font,UI_PADDING);
-                    int x = 140 + ceil(UI_PADDING/2.0f);
+                    int x = 140 + ceilf(UI_PADDING/2.0f);
                     int y = 221 - h - 3;
                     DrawDescriptionBox(selected->abilities[4].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
                 }
@@ -1996,7 +1996,7 @@ UI_Text* GetUIText(Panel* p, char* name)
 void UpdateLanternWidget(Widget* self, float dt)
 {
     self->timer += dt;
-    self->rotation = sin(self->timer) * 0.1f;
+    self->rotation = sinf(self->timer) * 0.1f;
 }
 UIElement* GetUIElement(Panel* p, char* name)
 {
@@ -2529,7 +2529,7 @@ Widget* CreateWidget(GameState gameStateToAttach, Sprite* spr, int x, int y, flo
 
     if ((numSprites_States[gameStateToAttach] + 1) % NUMSPRITESTATESTOALLOC == 0)
     {
-        int reallocTo = ceil(numSprites_States[gameStateToAttach] + NUMSPRITESTATESTOALLOC)/(float)NUMSPRITESTATESTOALLOC+1;
+        int reallocTo = ceilf((float)numSprites_States[gameStateToAttach] + NUMSPRITESTATESTOALLOC)/(float)NUMSPRITESTATESTOALLOC+1;
         Widgets_States[gameStateToAttach] = realloc(Widgets_States[gameStateToAttach],NUMSPRITESTATESTOALLOC * reallocTo*sizeof(Widget));
     }
     Widgets_States[gameStateToAttach][numSprites_States[gameStateToAttach]] = s;
@@ -3635,9 +3635,9 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
     al_draw_text(ui.font,ENEMY,90,124,0,"Random damaging pools");
 
     //Write time taken
-    int hours = floor(gameStats.timeTaken/(60.0f*60.0f));
-    int minutes = floor(gameStats.timeTaken/(60.0f) - hours*60);    
-    int seconds = floor(gameStats.timeTaken - minutes*60); 
+    int hours = floorf(gameStats.timeTaken/(60.0f*60.0f));
+    int minutes = floorf(gameStats.timeTaken/(60.0f) - hours*60.0f);    
+    int seconds = floorf(gameStats.timeTaken - minutes*60.0f); 
     buffer = realloc(buffer,(strlen("Time: ")+log10(pow(2,sizeof(hours)*8+1))*3+4)*sizeof(char));
     sprintf(buffer,"Time: %i:%i:%i",hours,minutes,seconds);
     al_draw_text(ui.font,FRIENDLY,17,173,0,buffer);

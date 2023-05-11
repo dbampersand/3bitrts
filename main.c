@@ -208,8 +208,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
     for (int i = 0; i < numActiveObjects; i++)
     {
-        if (IsActive(activeObjects[i])) 
-            UpdateScreenPositions(activeObjects[i]);
+        UpdateScreenPositions(activeObjects[i]);
     }
     for (int i = 0; i < MAX_ATTACKS; i++)
     {
@@ -222,7 +221,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         DrawMap(currMap,false);
     DrawSpriteDecorations(AFTER_WORLD);
     DrawMapHighlights();
-
 
 
     DrawCommandQueue(players[0].selection[players[0].indexSelectedUnit]);
@@ -263,7 +261,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     DrawObjShadows();
     DrawAggroIndicators();
     DrawAttacks(dt,ATTACK_AOE | ATTACK_CONE | ATTACK_SHAPE);
-
+    
     for (int i = 0; i < numActiveObjects; i++)
     {
         DrawChannelHint(activeObjects[i],dt);
@@ -283,8 +281,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g = activeObjects[i];
-        if (!IsActive(g))
-            continue;
         ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
         if (ObjIsDecoration(g))
             c = BG;
@@ -320,7 +316,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             //if (GetTotalShield(g) > 0)
             {
                 float r = (GetWidth(g) > GetHeight(g) ? GetWidth(g) : GetHeight(g)) * easeInOutBack(g->shieldSizeTimer);
-                al_draw_circle(floor(x+GetWidth(g)/2),floor(y+GetHeight(g)/2),r,c,1);
+                al_draw_circle(floorf(x+GetWidth(g)/2),floorf(y+GetHeight(g)/2),r,c,1);
             }
 
             
@@ -494,7 +490,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             DrawUIElement(&ui.nextLevelButton,ui.nextLevelButton.x,ui.nextLevelButton.y,mouseState,ui.nextLevelButton.bgColor,COLOR_FRIENDLY,false);
 
             memset(percentCompletionStr,0,(NumDigits(INT_MIN)+3)*sizeof(char));
-            sprintf(percentCompletionStr,"%i%%",(int)floor(currMap->percentComplete));
+            sprintf(percentCompletionStr,"%i%%",(int)floorf(currMap->percentComplete));
 
             //al_draw_text(ui.font,FRIENDLY,ui.nextLevelButton.x+ui.nextLevelButton.w/2,ui.nextLevelButton.y+ui.nextLevelButton.h/2,ALLEGRO_ALIGN_CENTER,GetButtonText(&ui.nextLevelButton));
             DrawButtonText(&ui.nextLevelButton,ui.nextLevelButton.x,ui.nextLevelButton.y,FRIENDLY);
@@ -632,8 +628,9 @@ int main(int argc, char* args[])
     init();
     printf("%lu\n",sizeof(ReplayFrame));
 
+    float totalRenderTime = 0.00001f;
 
-    double dt = 1 / (double)_TARGET_FPS * (1-currSettings.slowdownPercent);
+    double dt = 1 / (double)_TARGET_FPS * (double)(1-(double)currSettings.slowdownPercent);
     
     ALLEGRO_TIMER* _FPS_TIMER = al_create_timer(dt);
 
@@ -788,7 +785,7 @@ int main(int argc, char* args[])
                 al_set_timer_speed(_FPS_TIMER,1/(double)_TARGET_FPS);
 
             }
-            dt = 1 / (double)_TARGET_FPS * (1-currSettings.slowdownPercent);
+            dt = 1 / (double)_TARGET_FPS * (double)(1-(double)currSettings.slowdownPercent);
 
             clock_t begin = clock();
 
@@ -823,7 +820,11 @@ int main(int argc, char* args[])
                 UpdateInterface(dt,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
             if (gameState == GAMESTATE_EXIT)
                 break;
+            begin = clock();
             Render(dt, &mouseState, &mouseStateLastFrame, &keyState, &keyStateLastFrame);
+            clock_t end = clock();
+            double time = (double)(end - begin) / CLOCKS_PER_SEC;
+
             if (gameState == GAMESTATE_INGAME)
                 RecordReplay(SCREEN);
             DrawConsole();
@@ -837,11 +838,9 @@ int main(int argc, char* args[])
             mouseStateLastFrame = mouseState;
             keyStateLastFrame = keyState;
             _FRAMES++;
-            clock_t end = clock();
-            double time = (double)(end - begin) / CLOCKS_PER_SEC;
+            totalRenderTime += time;
 
-            //printf("Total time: %f\n",time);
-
+            printf("Total time: %f\n",time);
             fflush(stdout);
             
             //sort activeobjects so we have less cache misses 

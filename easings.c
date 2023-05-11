@@ -14,7 +14,7 @@ float easeOutBack(float x)
 }
 float easeOutSine(float x)
 {
-  return sin((x * M_PI) / 2.0f);
+  return sinf((x * M_PI) / 2.0f);
 }
 
 float easeInOutBack(float x) 

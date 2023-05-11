@@ -47,7 +47,7 @@ void SortAntiClockwise(Point** points, int numPoints)
     {   
         p[i].x = pointD[i].x;
         p[i].y = pointD[i].y;
-        p[i].a = atan2(pointD[i].y - center.y, pointD[i].x - center.x);
+        p[i].a = atan2f(pointD[i].y - center.y, pointD[i].x - center.x);
     }
     qsort(p,numPoints,sizeof(PointSortStruct),SortPoints);
 

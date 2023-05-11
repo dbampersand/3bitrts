@@ -197,7 +197,7 @@ void FindEnemiesToAttack(GameObject* g)
         GameObject* g2 = activeObjects[i];  
 
         if (!ObjIsDecoration(g2) || (ObjIsDecoration(g2) && allowAmovingDecor))
-            if ((IsActive(g2) && GetPlayerOwnedBy(g) != GetPlayerOwnedBy(g2) && !ObjIsInvincible(g2)))
+            if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(g2) && !ObjIsInvincible(g2))
             {
                 float gDist = GetDist(g,g2);
                 if (gDist <= g->aggroRadius)

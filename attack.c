@@ -219,65 +219,64 @@ int NumUnitsInsideAttack(Attack* a)
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g = activeObjects[i];
-        if (IsActive(g))
-        {
-            Rect r = GetObjRect(activeObjects[i]);
-            if (CircleInRect(a->x,a->y,a->targetRadius,r))
-            {   
-                int abilityOwnedBy = a->playerOwnedBy;//GetPlayerOwnedBy(a->ownedBy);
 
-                if (a->playerOwnedBy != GetPlayerOwnedBy(activeObjects[i]))
+        Rect r = GetObjRect(activeObjects[i]);
+        if (CircleInRect(a->x,a->y,a->targetRadius,r))
+        {   
+            int abilityOwnedBy = a->playerOwnedBy;//GetPlayerOwnedBy(a->ownedBy);
+
+            if (a->playerOwnedBy != GetPlayerOwnedBy(activeObjects[i]))
+            {
+                if (a->properties & ATTACK_HITS_ENEMIES)
                 {
-                    if (a->properties & ATTACK_HITS_ENEMIES)
-                    {
-                        int abilityOwnedBy = a->playerOwnedBy;//GetPlayerOwnedBy(a->ownedBy);
-                        int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
+                    int abilityOwnedBy = a->playerOwnedBy;//GetPlayerOwnedBy(a->ownedBy);
+                    int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
 
-                        if (a->ownedBy)
+                    if (a->ownedBy)
+                    {
+                        if (objOwnedBy != abilityOwnedBy)
                         {
-                            if (objOwnedBy != abilityOwnedBy)
-                            {
-                                numObjects++;
-                                continue;
-                            }
-                        }
-                        else
-                        {
-                            if (objOwnedBy == TYPE_FRIENDLY)
-                            {
-                                numObjects++;
-                                continue;
-                            }
+                            numObjects++;
+                            continue;
                         }
                     }
-                }
-                else if (a->playerOwnedBy == GetPlayerOwnedBy(activeObjects[i]))
-                {
-                    if (a->properties & ATTACK_HITS_FRIENDLIES)
+                    else
                     {
-                        int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
-                        int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
-                        if (a->ownedBy)
+                        if (objOwnedBy == TYPE_FRIENDLY)
                         {
-                            if (objOwnedBy == abilityOwnedBy)
-                            {
-                                numObjects++;
-                                continue;
-                            }
+                            numObjects++;
+                            continue;
                         }
-                        else
-                        {
-                            if (objOwnedBy == TYPE_ENEMY)
-                            {
-                                numObjects++;
-                                continue;
-                            }
-                        }
-
                     }
                 }
             }
+            else if (a->playerOwnedBy == GetPlayerOwnedBy(activeObjects[i]))
+            {
+                if (a->properties & ATTACK_HITS_FRIENDLIES)
+                {
+                    int abilityOwnedBy = GetPlayerOwnedBy(a->ownedBy);
+                    int objOwnedBy = GetPlayerOwnedBy(activeObjects[i]);
+                    if (a->ownedBy)
+                    {
+                        if (objOwnedBy == abilityOwnedBy)
+                        {
+                            numObjects++;
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (objOwnedBy == TYPE_ENEMY)
+                        {
+                            numObjects++;
+                            continue;
+                        }
+                    }
+
+                }
+            }
         }
+    
 
     }
     return numObjects;
@@ -773,7 +772,7 @@ void DrawAttack(Attack* a, float dt)
             //y2 *= a->screenY + a->range;
             //al_put_pixel(x2,y2,POISON);
         }
-        float angle = RadToDeg(atan2(y2-a->y,x2-a->x));
+        float angle = RadToDeg(atan2f(y2-a->y,x2-a->x));
         DrawCone(ToScreenSpace_X(a->x),ToScreenSpace_Y(a->y),angle,a->radius,a->range,col);
     }
     else if (a->attackType == ATTACK_SHAPE)
@@ -817,9 +816,9 @@ void UpdateAttack(Attack* a, float dt)
         float maxAngle;
         float movingAngle;
         if (a->attackType == ATTACK_PROJECTILE_POINT)
-           movingAngle = atan2(a->y - a->targy, a->x - a->targx);
+           movingAngle = atan2f(a->y - a->targy, a->x - a->targx);
         else
-            movingAngle = atan2(-a->targy,-a->targx);
+            movingAngle = atan2f(-a->targy,-a->targx);
 
         minAngle = movingAngle - DegToRad(90);
         maxAngle = movingAngle + DegToRad(90);
@@ -885,6 +884,8 @@ void UpdateAttack(Attack* a, float dt)
         if (a->inactiveFor > 0)
             return;
 
+
+
         if (a->cameFrom)
         {
             if (a->cameFrom->castType != ABILITY_TOGGLE)
@@ -896,6 +897,9 @@ void UpdateAttack(Attack* a, float dt)
         {
             a->duration -= dt;
         }
+
+        if (a->timer < a->tickrate)
+            return;
 
 
         if (AttackIsSoak(a))
@@ -1026,7 +1030,7 @@ void UpdateAttack(Attack* a, float dt)
                 }
 
                 float angle;
-                angle = RadToDeg(atan2(y2 - a->y, x2 - a->x));
+                angle = RadToDeg(atan2f(y2 - a->y, x2 - a->x));
                 Rect r = GetObjRect(activeObjects[i]);
                 if (RectInCone(r,a->x,a->y,angle,a->targetRadius,a->range))
                 {
@@ -1099,7 +1103,7 @@ void UpdateAttack(Attack* a, float dt)
 }
 void UpdateAttacks(float dt)
 {
-    for (int i = 0; i < MAX_ATTACKS; i++)
+    for (int i = 0; i < attack_top; i++)
     {
         Attack* a = &attacks[i];
         if (a->properties & ATTACK_ACTIVE)
@@ -1111,10 +1115,10 @@ void UpdateAttacks(float dt)
 void DrawAttacks(float dt, int type)
 {
     //al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
-    for (int i = 0; i < MAX_ATTACKS; i++)
+    for (int i = 0; i < attack_top; i++)
     {
         Attack* a = &attacks[i];
-        if (a->properties & ATTACK_ACTIVE)
+        //if (a->properties & ATTACK_ACTIVE)
         {
             if (a->attackType & type)
                 DrawAttack(a,dt);

@@ -30,22 +30,17 @@ void DrawMinimap(MouseState mouseState)
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g = activeObjects[i];
-        if (IsActive(g))
-        {
-            float gX = x + (g->position.worldX * scale);
-            float gY = y + (g->position.worldY * scale);
-            float gW = GetWidth(g) * scale;
-            float gH = GetHeight(g) * scale;
-            gW = gW < 1 ? 1 : gW;
-            gH = gH < 1 ? 1 : gH; 
+        float gX = x + (g->position.worldX * scale);
+        float gY = y + (g->position.worldY * scale);
+        float gW = GetWidth(g) * scale;
+        float gH = GetHeight(g) * scale;
+        gW = gW < 1 ? 1 : gW;
+        gH = gH < 1 ? 1 : gH; 
 
 
-            ALLEGRO_COLOR c = GetColor(COLOR_DEFAULT,GetPlayerOwnedBy(g));
-            
-            al_draw_rectangle(gX,gY, gX+gW, gY+gH,c,1);
-
-        }
-
+        ALLEGRO_COLOR c = GetColor(COLOR_DEFAULT,GetPlayerOwnedBy(g));
+        
+        al_draw_rectangle(gX,gY, gX+gW, gY+gH,c,1);
     }
 
     float xScreen = players[0].cameraPos.x;

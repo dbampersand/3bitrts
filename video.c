@@ -65,9 +65,9 @@ void DrawLight(int lightSize, float r, float g, float b, float intensity, float 
         worldX -= lightSize;
         worldY -= lightSize;
 
-        float x = worldX;
-        float y = worldY;
-        ToScreenSpace(&x,&y);
+        int x = worldX;
+        int y = worldY;
+        ToScreenSpaceI(&x,&y);
         al_draw_tinted_bitmap(lights[lightSize],col,x,y,0);
     }
 
@@ -151,8 +151,8 @@ void InitVideo()
     for (int a = -360; a < 360; a++)
     {
         float rad = DegToRad(a);
-        __sinTable[a+360] = sin(rad);
-        __cosTable[a+360] = cos(rad);
+        __sinTable[a+360] = sinf(rad);
+        __cosTable[a+360] = cosf(rad);
     }
     sinTable = &__sinTable[360];
     cosTable = &__cosTable[360];
@@ -378,8 +378,8 @@ bool isInsideSector(int x, int y, int cx, int cy, float startX, float startY, fl
 void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO_COLOR col, float length)
 {
    al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
-    start = Normalise(start,0, M_PI*2);
-    end = Normalise(end, 0, M_PI*2);
+    start = Normalise(start,0, (float)M_PI*2);
+    end = Normalise(end, 0, (float)M_PI*2);
 
     int sign = start < end ? 1 : -1;
 
@@ -388,9 +388,9 @@ void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO
     if (sign == -1)
     {
         float temp = start;
-        end -= radius * M_PI/180.0f - (length*M_PI/180.0f)+1;
-        float rad = (360-radius) * M_PI/180.0f;
-        start -= rad + (length*M_PI/180.0f)-1;
+        end -= radius * (float)M_PI/180.0f - (length*(float)M_PI/180.0f)+1;
+        float rad = (360-radius) * (float)M_PI/180.0f;
+        start -= rad + (length*(float)M_PI/180.0f)-1;
     }
 
     float theta = start;
@@ -399,8 +399,8 @@ void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO
     {
         while (theta <= end) {
             float xn; float yn;
-            xn = xc + radius * (sin(theta));
-            yn = yc + radius * (cos(theta));
+            xn = xc + radius * (sinf(theta));
+            yn = yc + radius * (cosf(theta));
             al_put_pixel(xn, yn, col);
             theta += inc;
         }
@@ -409,8 +409,8 @@ void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO
     {
         while (theta >= end) {
             float xn; float yn;
-            xn = xc + radius * (sin(theta));
-            yn = yc + radius * (cos(theta));
+            xn = xc + radius * (sinf(theta));
+            yn = yc + radius * (cosf(theta));
             al_put_pixel(xn, yn, col);
             theta += inc * -1;
         }
@@ -442,8 +442,8 @@ bool RectInCone(Rect r, int cx, int cy, float angle, float radius, float length)
     };
     angle -= 45;
 
-    radius = radius * M_PI/180.0f;
-    angle = angle * M_PI/180.0f;
+    radius = radius * (float)M_PI/180.0f;
+    angle = angle * (float)M_PI/180.0f;
 
 
     for (int i = 0; i < 5; i++)
@@ -500,7 +500,7 @@ void GetConeVertices(int cx, int cy, int* x1, int* y1, int* x2, int* y2, float a
 
     radius = DegToRad(radius);//radius * M_PI/180.0f;
 
-    RotatePoint(x1,y1,cx,cy, radius/2.0+angle);
+    RotatePoint(x1,y1,cx,cy, radius/2.0f+angle);
     RotatePoint(x2,y2,cx,cy, -radius/2.0f+angle);
 
 }
@@ -511,9 +511,9 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
     int x2 = x + length; int y2 = y + length;
     int x3 = x + length; int y3 = y + length;
 
-    radius = radius * M_PI/180.0f;
-    angle = angle * M_PI/180.0f;
-    float l_r = length * M_PI/180.0f;
+    radius = radius * (float)M_PI/180.0f;
+    angle = angle * (float)M_PI/180.0f;
+    float l_r = length * (float)M_PI/180.0f;
 
     RotatePoint(&x2,&y2,x,y, -radius/2.0f+angle);
     RotatePoint(&x3,&y3,x,y, radius/2.0f+angle);
@@ -544,8 +544,8 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
 
     float angle2 = atan2(y-y2,x-x2);
     float angle3 = atan2(y-y3,x-x3);
-    angle2 -= (angle+(90*M_PI/180.0f)) * 2;
-    angle3 -= (angle+(90*M_PI/180.0f)) * 2;
+    angle2 -= (angle+(90*(float)M_PI/180.0f)) * 2;
+    angle3 -= (angle+(90*(float)M_PI/180.0f)) * 2;
 
     if (angle2 > angle3)
     {
@@ -769,7 +769,7 @@ SpriteDecoration AddCloud()
     int h = GetHeightSprite(&sprites[s.spriteIndex]);
 
 
-    int randSpawn = RandRange(0,4);
+    int randSpawn = RandRangeI(0,4);
     //left
     if (randSpawn == 0)
     {
@@ -859,7 +859,7 @@ float GetScreenshake()
         float time = (s->screenShakeTime / s->screenShakeTimeTotal);
 
         float v = easeOutExpo(time);
-        float shake = sin(_FRAMES) * s->screenShakeAmount * v;
+        float shake = sinf(_FRAMES) * s->screenShakeAmount * v;
 
         total += shake;
 

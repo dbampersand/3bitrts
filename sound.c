@@ -288,8 +288,8 @@ void PlaySoundAtPosition(Sound* s, float relativeVolume, int x, int y)
     float yPercent = (y - camY) / _SCREEN_SIZE;
 
     float distance = dist(x,y,camX,camY) / (_SCREEN_SIZE/4);
-    if (distance <= 0.0001)
-        distance = 0.0001;
+    if (distance <= 0.0001f)
+        distance = 0.0001f;
 
     float volumeGain = 1 / distance;//clamp(1 / distance,0,1); 
     volumeGain = clamp(volumeGain,0,1);
@@ -371,7 +371,7 @@ void PlayMusic(const char* path, float musicGain, float loopPoint)
     musicVolMixer2 = 0;
 
     al_set_audio_stream_playmode(musicFadingTo,ALLEGRO_PLAYMODE_LOOP);
-    al_set_audio_stream_loop_secs(musicFadingTo,loopPoint,al_get_audio_stream_length_secs(musicFadingTo));
+    al_set_audio_stream_loop_secs(musicFadingTo,(double)loopPoint,al_get_audio_stream_length_secs(musicFadingTo));
     musicState = MUSICSTATE_PLAYING;
     musicGain2 = musicGain;
     UpdateMusic(0);

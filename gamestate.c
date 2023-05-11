@@ -184,7 +184,7 @@ void FinishTransition()
 
         for (int i = 0; i < numActiveObjects; i++)
         {
-            if (IsActive(activeObjects[i]) && IsOwnedByPlayer(activeObjects[i]))
+            if (IsOwnedByPlayer(activeObjects[i]))
             {
                 HoldCommand(activeObjects[i],false);
             }
@@ -196,10 +196,7 @@ void FinishTransition()
 
         for (int i = 0; i < numActiveObjects; i++)
         {
-            if (IsActive(activeObjects[i]))
-            {
-                CureAll(activeObjects[i]);
-            }   
+            CureAll(activeObjects[i]);
         }
 
 
@@ -326,7 +323,7 @@ void FinishTransition()
 
         for (int i = 0; i < numActiveObjects; i++)
         {
-            if (IsActive(activeObjects[i]) && IsOwnedByPlayer(activeObjects[i]))
+            if (IsOwnedByPlayer(activeObjects[i]))
             {
                // objects[i].position.worldX = xPos;
                 //objects[i].position.worldY = yPos;
@@ -349,14 +346,12 @@ void FinishTransition()
         RemoveAllAttacks();
         for (int i = 0; i < numActiveObjects; i++)
         {
-            if (IsActive(activeObjects[i]))
-            {
-                CureAll(activeObjects[i]);
-            }   
+            CureAll(activeObjects[i]);
+            
         }
         for (int i = 0; i < numActiveObjects; i++)
         {
-            if (IsActive(activeObjects[i]) && IsOwnedByPlayer(activeObjects[i]))
+            if (IsOwnedByPlayer(activeObjects[i]))
             {
                 HoldCommand(activeObjects[i],false);
             }
@@ -702,7 +697,8 @@ void UpdateTransition(float dt)
         transitionTimer -= dt;
     }
     transitionTimer = clamp(transitionTimer,0,1);
-
+    if (!GameStateIsTransition(&gameState) && transitionTimer <= 0)
+        transitionDrawing = TRANSITION_NONE;
 }
 
 
@@ -906,7 +902,7 @@ void DrawTransition_Door(float dt)
     DrawSprite(&sprites[doorIndR],_SCREEN_SIZE-w,0,0.5f,0.5f,0,FRIENDLY,false,true,false);
 }
 void DrawTransition(float dt)
-{
+{   
     if (transitionDrawing == TRANSITION_CHAINS)
     {
         DrawTransition_Chains(dt);
@@ -944,6 +940,7 @@ bool GameStateIsTransition(GameState* g)
 }
 void SetGameStateToEndscreen()
 {
+    transitionDrawing = TRANSITION_CIRCLE;
     //transitioningTo = GAMESTATE_END;
     //transitionTimer = 0;    
     SerializeSection(&replay,true);

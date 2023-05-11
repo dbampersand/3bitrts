@@ -31,7 +31,7 @@ void MoveAngle(float* x, float* y, float dx, float dy, float speed, float delta)
 bool CircleInRect(float cx, float cy, float rad, Rect r);
 void Normalize(float* x, float* y);
 void Normalize_D(double* x, double* y);
-double RandRange(double min, double max);
+float RandRange(float min, float max);
 int RandRangeI(int min, int max);
 float dot(float x1, float y1, float x2, float y2);
 float distSq(float x1, float y1, float x2, float y2);
@@ -58,7 +58,7 @@ int PointsToAngleDeg(int x1, int y1, int x2, int y2);
 
 
 void CircToRect(double u, double v, double* x, double* y);
-    
+
 bool MouseClickedThisFrame(MouseState* thisFrame, MouseState* previousFrame);
 bool MouseReleasedThisFrame(MouseState* thisFrame, MouseState* previousFrame);
 

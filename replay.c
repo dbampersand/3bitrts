@@ -184,8 +184,8 @@ void SerializeSection(Replay* r, bool finished)
    r->totalFrames += r->numFrames;
 
     bool firstWrite = false;
-   if (!tempFile)
-   {
+    if (!tempFile)
+    {
         remove("replays/" TEMP_REPLAY_NAME);
         tempFile = fopen("replays/" TEMP_REPLAY_NAME , "wb+");
 
@@ -195,8 +195,8 @@ void SerializeSection(Replay* r, bool finished)
         uint32_t frames = r->numFrames; uint32_t totalFrames = r->totalFrames;
         fwrite(&frames,sizeof(frames),1,tempFile);
 
-   } 
-   
+    } 
+    
 
    for (int i = 0; i < r->numFrames; i++)
    {

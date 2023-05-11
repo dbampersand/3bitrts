@@ -25,6 +25,7 @@ typedef enum GameState {
 
 typedef enum TRANSITION
 {
+    TRANSITION_NONE,
     TRANSITION_CHAINS,
     TRANSITION_DOOR,
     TRANSITION_STAIRS,

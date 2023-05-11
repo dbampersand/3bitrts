@@ -379,7 +379,7 @@ void UpdateObject(GameObject* g, float dt)
     }
 
     UpdateChannellingdObj(currGameObjRunning, dt);
-    if (!IsActive(currGameObjRunning) || ObjIsDecoration(g))
+    if (ObjIsDecoration(g))
         return;
 
     if (currGameObjRunning->properties & OBJ_ACTIVE && !IsOwnedByPlayer(currGameObjRunning))
@@ -438,7 +438,7 @@ void UpdateObject(GameObject* g, float dt)
                     for (int i = 0; i < numActiveObjects; i++)
                     {
                         GameObject* g2 = activeObjects[i];
-                        if (IsActive(g2) && !ObjIsDecoration(g2))
+                        if (!ObjIsDecoration(g2))
                         {
                             if (GetPlayerOwnedBy(g2) != GetPlayerOwnedBy(currGameObjRunning))
                             {
@@ -473,10 +473,10 @@ void UpdateObject(GameObject* g, float dt)
                     currGameObjRunning->attackTimer = currGameObjRunning->attackSpeed;
                     GameObject* g = currGameObjRunning;
                     GameObject* g2 = g->targObj;
-                    float angle = (atan2(g2->position.worldY - g->position.worldY, g2->position.worldX - g->position.worldX));
+                    float angle = (atan2f(g2->position.worldY - g->position.worldY, g2->position.worldX - g->position.worldX));
 
                     currGameObjRunning->offset.x = cos(angle);
-                    currGameObjRunning->offset.y = sin(angle);
+                    currGameObjRunning->offset.y = sinf(angle);
                 }
             }
         }
@@ -665,7 +665,7 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
             {
                 GameObject* obj = activeObjects[i];
 
-                if (ObjIsBoss(obj) || !IsActive(obj) || ObjIsDecoration(obj))
+                if (ObjIsBoss(obj) || ObjIsDecoration(obj))
                     continue;
                 Rect rObj = GetObjRect(obj);
                 if (CheckIntersect(rObj, r))
@@ -677,7 +677,7 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
             for (int i = 0; i < numActiveObjects; i++)
             {
                 GameObject* obj = activeObjects[i];
-                if (ObjIsBoss(obj) || !IsActive(obj) || ObjIsDecoration(obj))
+                if (ObjIsBoss(obj)  || ObjIsDecoration(obj))
                     continue;
                 Sprite* sp = &sprites[obj->spriteIndex];
                 int j = al_get_bitmap_width(sp->sprite);
@@ -818,7 +818,7 @@ int GetNumObjectsInRect(Rect* r, bool onlyPlayerChoosable)
     int j = 0;
     for (int i = 0; i < numActiveObjects; i++)
     {
-        if (!IsActive(activeObjects[i]) || ObjIsDecoration(activeObjects[i]))
+        if (ObjIsDecoration(activeObjects[i]))
             continue;
 
         if (onlyPlayerChoosable && !activeObjects[i]->playerChoosable)
@@ -1218,28 +1218,26 @@ void RemoveObjFromAllCommands(GameObject* g)
 {
     for (int i = 0; i < numActiveObjects; i++)
     {
-        if (IsActive(activeObjects[i]))
+        for (int j = 0; j < MAX_QUEUED_CMD; j++)
         {
-            for (int j = 0; j < MAX_QUEUED_CMD; j++)
+            if (activeObjects[i]->queue[j].target == g)
             {
-                if (activeObjects[i]->queue[j].target == g)
+                if (CountCommands(activeObjects[i]) == 1)
                 {
-                    if (CountCommands(activeObjects[i]) == 1)
-                    {
-                        float cx;
-                        float cy;
-                        GetCentre(g, &cx, &cy);
-                        ClearCommandQueue(activeObjects[i]);
-                        AttackMoveCommand(activeObjects[i], cx, cy, false);
-                        objects[i].targObj = NULL;
-                    }
-                    else
-                    {
-                        NextCommand(activeObjects[i]);
-                    }
+                    float cx;
+                    float cy;
+                    GetCentre(g, &cx, &cy);
+                    ClearCommandQueue(activeObjects[i]);
+                    AttackMoveCommand(activeObjects[i], cx, cy, false);
+                    objects[i].targObj = NULL;
+                }
+                else
+                {
+                    NextCommand(activeObjects[i]);
                 }
             }
         }
+        
     }
 }
 void KillObj(GameObject* g, bool trigger, bool spawnParticles)
@@ -1611,7 +1609,7 @@ void CheckCollisions(GameObject* g, bool x, float dV, bool objectCanPush)
         Rect rG = (Rect){g->position.worldX, g->position.worldY, GetWidth(g), GetHeight(g)};
 
         GameObject* g2 = activeObjects[i];
-        if ((!IsActive(g2) || g2 == g))
+        if (g2 == g)
             continue;
         Sprite* s2 = &sprites[g2->spriteIndex];
         Rect r2 = (Rect){g2->position.worldX, g2->position.worldY, GetWidth(g2), GetHeight(g2)};
@@ -1915,10 +1913,10 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
     if (dV == 0)
         return;
 
-    int indexTop = GetIndex(currMap->collisionMapHeight, floor(posX / (float)_GRAIN), floor(posY / (float)_GRAIN));
-    int indexRight = GetIndex(currMap->collisionMapHeight, floor((posX + w) / (float)_GRAIN), floor((posY) / (float)_GRAIN));
-    int indexBottom = GetIndex(currMap->collisionMapHeight, floor((posX) / (float)_GRAIN), floor((posY + h) / (float)_GRAIN));
-    int indexLeft = GetIndex(currMap->collisionMapHeight, floor((posX) / (float)_GRAIN), floor((posY) / (float)_GRAIN));
+    int indexTop = GetIndex(currMap->collisionMapHeight, floorf(posX / (float)_GRAIN), floorf(posY / (float)_GRAIN));
+    int indexRight = GetIndex(currMap->collisionMapHeight, floorf((posX + w) / (float)_GRAIN), floorf((posY) / (float)_GRAIN));
+    int indexBottom = GetIndex(currMap->collisionMapHeight, floorf((posX) / (float)_GRAIN), floorf((posY + h) / (float)_GRAIN));
+    int indexLeft = GetIndex(currMap->collisionMapHeight, floorf((posX) / (float)_GRAIN), floorf((posY) / (float)_GRAIN));
 
     if (x)
     {
@@ -1976,8 +1974,8 @@ void GetTilesAroundPoint(Point p, float w, float h, int indexes[2])
     float x = p.x;
     float y = p.y;
 
-    int indexLeft = GetIndex(currMap->collisionMapHeight, floor((x) / (float)_GRAIN), floor((y) / (float)_GRAIN));
-    int indexRight = GetIndex(currMap->collisionMapHeight, floor((x + w) / (float)_GRAIN), floor((y + h) / (float)_GRAIN));
+    int indexLeft = GetIndex(currMap->collisionMapHeight, floorf((x) / (float)_GRAIN), floorf((y) / (float)_GRAIN));
+    int indexRight = GetIndex(currMap->collisionMapHeight, floorf((x + w) / (float)_GRAIN), floorf((y + h) / (float)_GRAIN));
 
     indexes[0] = indexLeft;
     indexes[1] = indexRight;
@@ -2117,15 +2115,15 @@ void Move(GameObject* g, float delta)
         // GetCentre(g->targObj,&xtarg,&ytarg);
     }
 
-    double moveX = xtarg - g->position.worldX;
-    double moveY = ytarg - g->position.worldY;
+    float moveX = xtarg - g->position.worldX;
+    float moveY = ytarg - g->position.worldY;
 
-    double d = sqrt(moveX * moveX + moveY * moveY);
+    float d = sqrt(moveX * moveX + moveY * moveY);
 
     float speed = _MAX(0, g->speed);
 
-    double dX = (moveX / d * speed) * delta;
-    double dY = (moveY / d * speed) * delta;
+    float dX = (moveX / d * speed) * delta;
+    float dY = (moveY / d * speed) * delta;
 
     if (d <= DIST_DELTA)
     {
@@ -2141,7 +2139,7 @@ void Move(GameObject* g, float delta)
 
         return;
     }
-    double mDist = sqrt(dX * dX + dY * dY);
+    float mDist = sqrt(dX * dX + dY * dY);
     if (d <= mDist)
     {
         dX = xtarg - g->position.worldX;
@@ -2166,7 +2164,7 @@ void Move(GameObject* g, float delta)
     {
         // if we're moving at > 1 pixels per second, we need to move it in subdivisions
         // a bit of a hack but will work until collision is refactored
-        int numMoves = ceil(fabs(dY));
+        int numMoves = ceilf(fabsf(dY));
         dY /= numMoves;
         for (int i = 0; i < numMoves; i++)
         {
@@ -2175,7 +2173,7 @@ void Move(GameObject* g, float delta)
             CheckCollisions(g, false, dY, ObjectCanPush(g));
             CheckCollisionsWorld(g, false, dY);
         }
-        numMoves = ceil(fabs(dX));
+        numMoves = ceilf(fabsf(dX));
         dX /= numMoves;
         for (int i = 0; i < numMoves; i++)
         {
@@ -2322,10 +2320,10 @@ void DrawArrow(int cx, int cy, int targetx, int targety, ALLEGRO_COLOR color, AL
 
     Point rotated = (Point){cx - targetx, cy - targety};
 
-    float rx = rotated.x * cos(DegToRad(arrowangle)) - rotated.y * sin(DegToRad(arrowangle)) + cx;
-    float ry = rotated.x * sin(DegToRad(arrowangle)) + rotated.y * cos(DegToRad(arrowangle)) + cy;
-    float r2x = rotated.x * cos(DegToRad(-arrowangle)) - rotated.y * sin(DegToRad(-arrowangle)) + cx;
-    float r2y = rotated.x * sin(DegToRad(-arrowangle)) + rotated.y * cos(DegToRad(-arrowangle)) + cy;
+    float rx = rotated.x * cos(DegToRad(arrowangle)) - rotated.y * sinf(DegToRad(arrowangle)) + cx;
+    float ry = rotated.x * sinf(DegToRad(arrowangle)) + rotated.y * cos(DegToRad(arrowangle)) + cy;
+    float r2x = rotated.x * cos(DegToRad(-arrowangle)) - rotated.y * sinf(DegToRad(-arrowangle)) + cx;
+    float r2y = rotated.x * sinf(DegToRad(-arrowangle)) + rotated.y * cos(DegToRad(-arrowangle)) + cy;
 
     if (bg)
     {
@@ -2343,12 +2341,12 @@ void DrawObjShadow(GameObject* g)
 {
     float percent = GetSummonPercent(g);
     int w = GetWidth(g);
-    int h = ceil(GetHeight(g) * percent);
+    int h = ceilf(GetHeight(g) * percent);
     int x = g->position.screenX + g->offset.x;
-    int y = g->position.screenY + g->offset.y + ceil(GetHeight(g) * (1 - percent));
+    int y = g->position.screenY + g->offset.y + ceilf(GetHeight(g) * (1 - percent));
 
-    int lineW = (ceil(w / 16.0f));
-    int lineH = (ceil(h / 16.0f));
+    int lineW = (ceilf(w / 16.0f));
+    int lineH = (ceilf(h / 16.0f));
 
     lineW = lineW == 0 ? 2 : lineW;
     lineH = lineH == 0 ? 2 : lineH;
@@ -2360,7 +2358,7 @@ void DrawObjShadows()
 {
     for (int i = 0; i < numActiveObjects; i++)
     {
-        if (IsActive(activeObjects[i]) && !ObjIsDecoration(activeObjects[i]) && !ObjIsInvincible(activeObjects[i]) && objects[i].summonTime > objects[i].summonMax)
+        if (!ObjIsDecoration(activeObjects[i]) && !ObjIsInvincible(activeObjects[i]) && objects[i].summonTime > objects[i].summonMax)
             DrawObjShadow(activeObjects[i]);
     }
 }
@@ -2412,7 +2410,6 @@ void DrawMapHighlights()
     {
         scratchMap = al_create_bitmap(_SCREEN_SIZE, _SCREEN_SIZE);
     }
-
     al_set_target_bitmap(scratchMap);
 
     al_clear_to_color(_TRANSPARENT);
@@ -2422,8 +2419,8 @@ void DrawMapHighlights()
     {
         GameObject* g = activeObjects[i];
         int offset = i * 16;
-        float lightSize = g->lightSize + (sin(offset + (_FRAMES / 16.0f)) * 1.15f);
-        if (IsActive(g) && IsOwnedByPlayer(g))
+        float lightSize = g->lightSize + (sinf(offset + (_FRAMES / 16.0f)) * 1.15f);
+        if (IsOwnedByPlayer(g))
         {
             g->lightR = 2;
             g->lightG = 1;
@@ -2432,7 +2429,7 @@ void DrawMapHighlights()
 
             DrawLight(lightSize, g->lightR, g->lightG, g->lightB, g->lightIntensity, g->position.worldX + GetWidth(g) / 2, g->position.worldY + GetHeight(g) / 2);
         }
-        if (IsActive(g) && !IsOwnedByPlayer(g) && !ObjIsDecoration(g))
+        if (IsOwnedByPlayer(g) && !ObjIsDecoration(g))
         {
             g->lightR = ENEMY.r;
             g->lightG = ENEMY.g;
@@ -2441,7 +2438,7 @@ void DrawMapHighlights()
 
             DrawLight(lightSize, g->lightR, g->lightG, g->lightB, g->lightIntensity, g->position.worldX + GetWidth(g) / 2, g->position.worldY + GetHeight(g) / 2);
         }
-        else if (IsActive(g) && ObjIsDecoration(g))
+        else if (ObjIsDecoration(g))
         {
             g->lightR = FRIENDLY.r;
             g->lightG = FRIENDLY.g;
@@ -2478,7 +2475,7 @@ void DrawAggroIndicators()
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g = activeObjects[i];
-        if (IsActive(g) && GetPlayerOwnedBy(g) != 0)
+        if (GetPlayerOwnedBy(g) != 0)
             if (g->targObj && g->queue[0].commandType == COMMAND_ATTACK && g->baseDamage > 0)
             {
                 float cx;
@@ -3412,8 +3409,6 @@ GameObject* GetClicked(float x, float y)
 {
     for (int i = 0; i < numActiveObjects; i++)
     {
-        if (!IsActive(activeObjects[i]))
-            continue;
         Rect r = GetObjRect(activeObjects[i]);
         if (PointInRect(x, y, r))
         {
@@ -3583,7 +3578,7 @@ void DrawChannelHint(GameObject* g, float dt)
 
                     // divide by 2 as we draw both sides (passing negative to al_draw_arc)
                     float arcAngleDraw = ((arcTimer)*2 * M_PI) / 2.0f;
-                    float startAngle = atan2(y - y2, x - x2);
+                    float startAngle = atan2f(y - y2, x - x2);
 
                     al_draw_arc(cx, cy, a->hintRadius, startAngle, arcAngleDraw, col, 1);
                     al_draw_arc(cx, cy, a->hintRadius, startAngle, -arcAngleDraw, col, 1);
@@ -3604,7 +3599,7 @@ void DrawChannelHint(GameObject* g, float dt)
             if (a->targetingHint == HINT_CONE)
             {
                 float angle;
-                angle = atan2(y2 - y, x2 - x);
+                angle = atan2f(y2 - y, x2 - x);
                 float length = a->hintLength;
                 if (a->hintLength == 0)
                     length = a->range;
@@ -3633,7 +3628,7 @@ int GetNumPlayerControlledObjs(Player* p)
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g = activeObjects[i];
-        if (IsActive(g) && !g->isRemovedFromCount)
+        if (!g->isRemovedFromCount)
         {
             if (GetPlayerOwnedBy(g) == (p - players))
             {

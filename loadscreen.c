@@ -137,7 +137,7 @@ void UpdateLoadscreenSprites(float dt)
             continue;
 
         float vX =  cos(sp->angle) * sp->v * dt;
-        float vY =  sin(sp->angle) * sp->v * dt;
+        float vY =  sinf(sp->angle) * sp->v * dt;
         sp->position.x += vX;
         sp->position.y += vY;
 

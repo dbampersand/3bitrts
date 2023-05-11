@@ -50,7 +50,7 @@ bool CircleInRect(float cx, float cy, float rad, Rect r)
    return (dx * dx + dy * dy) <= rad * rad;
 }
 
-int GetIndex(int w, int x, int y)
+inline int GetIndex(int w, int x, int y)
 {
     return (x * w) + y;
 }
@@ -64,7 +64,7 @@ bool MoveTo(float* x, float* y, float toX, float toY, float speed, float delta)
         float moveX = toX - *x;
         float moveY = toY - *y;
 
-        float dist = sqrt(moveX*moveX+moveY*moveY);
+        float dist = sqrtf(moveX*moveX+moveY*moveY);
 
         if (dist <= DIST_DELTA)
         {
@@ -165,7 +165,7 @@ void MoveAngle(float* x, float* y, float dx, float dy, float speed, float delta)
 }
 void Normalize(float* x, float* y)
 {
-    float mag = sqrt((*x**x)+(*y**y));
+    float mag = sqrtf((*x**x)+(*y**y));
     if (mag == 0)
     {
         *x = 0; *y = 0;
@@ -176,7 +176,7 @@ void Normalize(float* x, float* y)
 }
 void Normalize_D(double* x, double* y)
 {
-    float mag = sqrt((*x**x)+(*y**y));
+    float mag = sqrtf((*x**x)+(*y**y));
     if (mag == 0)
     {
         *x = 0; *y = 0;
@@ -188,11 +188,11 @@ void Normalize_D(double* x, double* y)
 }
 float magnitude(float* x, float* y)
 {
-    return  sqrt((*x**x)+(*y**y));
+    return  sqrtf((*x**x)+(*y**y));
 }
-double RandRange(double min, double max)
+float RandRange(float min, float max)
 {
-   return ((max - min) * ((double)rand() / RAND_MAX)) + min;
+   return ((max - min) * ((float)rand() / RAND_MAX)) + min;
 }    
 int RandRangeI(int min, int max)
 {
@@ -267,14 +267,14 @@ float dist(float x1, float y1, float x2, float y2)
     float moveX = x2 - x1;
     float moveY = y2 - y1;
 
-    return sqrt(moveX*moveX+moveY*moveY);
+    return sqrtf(moveX*moveX+moveY*moveY);
 }
 void ClampToRadius(float* x, float* y, float cx, float cy, float radius)
 {
 
     float distX = *x - cx; 
     float distY = *y - cy;
-    float dist = sqrt(distX*distX+distY*distY);
+    float dist = sqrtf(distX*distX+distY*distY);
             
 
     *x = *x - cx;
@@ -289,15 +289,15 @@ bool PointInCircle(float x, float y, float cx, float cy, float radius)
 }
 float cotan(float i)
 {
-    return 1 / tan(i);
+    return 1 / tanf(i);
 }
 void RotatePoint(int* x, int* y, int cx, int cy, float angle)
 {
     *x -= cx;
     *y -= cy;
 
-    int xN = *x * cos(angle) - *y * sin(angle);
-    int yN = *y * cos(angle) + *x * sin(angle);
+    int xN = *x * cosf(angle) - *y * sinf(angle);
+    int yN = *y * cosf(angle) + *x * sinf(angle);
 
     *x = xN + cx;
     *y = yN + cy;
@@ -307,8 +307,8 @@ void RotatePointF(float* x, float* y, float cx, float cy, float angle)
     *x -= cx;
     *y -= cy;
 
-    float xN = *x * cos(angle) - *y * sin(angle);
-    float yN = *y * cos(angle) + *x * sin(angle);
+    float xN = *x * cosf(angle) - *y * sinf(angle);
+    float yN = *y * cosf(angle) + *x * sinf(angle);
 
     *x = xN + cx;
     *y = yN + cy;
@@ -319,7 +319,7 @@ float Normalise(float v, float start, float end)
     float w = end-start;
     float offset = v - start;
 
-    return (offset - (floor(offset/w)*w))+start;
+    return (offset - (floorf(offset/w)*w))+start;
 }
 int sign(float j)
 {
@@ -365,7 +365,7 @@ int NumDigits(int i)
     }
     if (i == INT_MIN)
         i = INT_MAX;
-    return (int)ceil(log10(i)) + 1 + negative;
+    return (int)ceilf(log10(i)) + 1 + negative;
 }
 float Towards(float f, float to, float maxDist)
 {
@@ -392,8 +392,6 @@ Point Towards_Angled(Point from, Point target, float maxDist)
     end.y = from.y + to.y / distDelta;
     return end;
 }
-
-
 float PointsToAngleRad(float x1, float y1, float x2, float y2)
 {
     float dx = x2 - x1;
@@ -410,15 +408,15 @@ int PointsToAngleDeg(int x1, int y1, int x2, int y2)
 //https://arxiv.org/ftp/arxiv/papers/1509/1509.06344.pdf
 void CircToRect(double u, double v, double* x, double* y)
 {
-    if (pow(u,2) >= pow(v,2))
+    if (powf(u,2) >= powf(v,2))
     {
-        *x = sign(u) * sqrt(pow(u,2) + pow(v,2));
-        *y = sign(u) * (v/u) * (sqrt(pow(u,2)+pow(v,2)));
+        *x = sign(u) * sqrtf(powf(u,2) + powf(v,2));
+        *y = sign(u) * (v/u) * (sqrtf(powf(u,2)+powf(v,2)));
     }
-    if (pow(u,2) < pow(v,2))
+    if (powf(u,2) < powf(v,2))
     {
-        *x = sign(v) * (u/v) * (sqrt(pow(u,2)+pow(v,2)));
-        *y = sign(v) * sqrt(pow(u,2) + pow(v,2));
+        *x = sign(v) * (u/v) * (sqrtf(powf(u,2)+powf(v,2)));
+        *y = sign(v) * sqrtf(powf(u,2) + powf(v,2));
     }
 
 }

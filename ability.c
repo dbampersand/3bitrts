@@ -117,13 +117,10 @@ void CastAbilityOnMouse(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState
         if (AbilityShouldBeCastOnTarget(players[0].abilityHeld))
             for (int i = 0; i < numActiveObjects; i++)
             {
-                if (IsActive(activeObjects[i]))
+                if (PointInRect(mouseState->worldX,mouseState->worldY,GetObjRect(activeObjects[i])))
                 {
-                    if (PointInRect(mouseState->worldX,mouseState->worldY,GetObjRect(activeObjects[i])))
-                    {
-                        target = activeObjects[i];
-                        break;
-                    }
+                    target = activeObjects[i];
+                    break;
                 }
             }
             

@@ -261,15 +261,15 @@ void WriteSettingsFile(char* path)
 
         currSettings.displayHealthBar,
 
-        currSettings.masterVolume,
-        currSettings.sfxVolume,
-        currSettings.musicVolume,
+        (double)currSettings.masterVolume,
+        (double)currSettings.sfxVolume,
+        (double)currSettings.musicVolume,
 
-        currSettings.slowdownPercent,
+        (double)currSettings.slowdownPercent,
 
         currSettings.displayTimer ? 1 : 0,
         
-        currSettings.screenShakeFactor,
+        (double)currSettings.screenShakeFactor,
         
         currSettings.keymap.key_Q.keyMappedTo,
         currSettings.keymap.key_Q.secondKeyMappedTo,
