@@ -210,7 +210,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     {
         UpdateScreenPositions(activeObjects[i]);
     }
-    for (int i = 0; i < MAX_ATTACKS; i++)
+    for (int i = 0; i < attack_top; i++)
     {
         if (AttackIsActive(&attacks[i]))
             UpdateScreenPositionsAttack(&attacks[i]);
@@ -626,6 +626,7 @@ void DrawMainMenu()
 int main(int argc, char* args[])
 {
     init();
+    GenerateAngleDeg();
     printf("%lu\n",sizeof(ReplayFrame));
 
     float totalRenderTime = 0.00001f;

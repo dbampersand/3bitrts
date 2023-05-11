@@ -475,7 +475,7 @@ void UpdateObject(GameObject* g, float dt)
                     GameObject* g2 = g->targObj;
                     float angle = (atan2f(g2->position.worldY - g->position.worldY, g2->position.worldX - g->position.worldX));
 
-                    currGameObjRunning->offset.x = cos(angle);
+                    currGameObjRunning->offset.x = cosf(angle);
                     currGameObjRunning->offset.y = sinf(angle);
                 }
             }
@@ -1362,10 +1362,10 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
 
     if (trigger)
     {
-        for (int i = 0; i < attack_top; i++)
+        for (int i = 0; i < MAX_ATTACKS; i++)
         {
             Attack* a = &attacks[i];
-            if (a->ownedBy == g)
+            if (AttackIsActive(a) && a->ownedBy == g)
             {
                 Ability* ab = a->cameFrom;
                 if (ab)
@@ -2320,10 +2320,10 @@ void DrawArrow(int cx, int cy, int targetx, int targety, ALLEGRO_COLOR color, AL
 
     Point rotated = (Point){cx - targetx, cy - targety};
 
-    float rx = rotated.x * cos(DegToRad(arrowangle)) - rotated.y * sinf(DegToRad(arrowangle)) + cx;
-    float ry = rotated.x * sinf(DegToRad(arrowangle)) + rotated.y * cos(DegToRad(arrowangle)) + cy;
-    float r2x = rotated.x * cos(DegToRad(-arrowangle)) - rotated.y * sinf(DegToRad(-arrowangle)) + cx;
-    float r2y = rotated.x * sinf(DegToRad(-arrowangle)) + rotated.y * cos(DegToRad(-arrowangle)) + cy;
+    float rx = rotated.x * cosf(DegToRad(arrowangle)) - rotated.y * sinf(DegToRad(arrowangle)) + cx;
+    float ry = rotated.x * sinf(DegToRad(arrowangle)) + rotated.y * cosf(DegToRad(arrowangle)) + cy;
+    float r2x = rotated.x * cosf(DegToRad(-arrowangle)) - rotated.y * sinf(DegToRad(-arrowangle)) + cx;
+    float r2y = rotated.x * sinf(DegToRad(-arrowangle)) + rotated.y * cosf(DegToRad(-arrowangle)) + cy;
 
     if (bg)
     {
@@ -2393,7 +2393,7 @@ void DrawMapHighlights()
     clock_t end = clock();
     double time = (double)(end - begin) / CLOCKS_PER_SEC;
     
-    //printf("%f\n",time);
+    printf("DrawMapHighlights time: %f\n",time);
 
 
     //al_unlock_bitmap(sprites[currMap->spriteIndex].sprite);
@@ -2897,27 +2897,18 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
 
     while (x < 0)
     {
-        PointI points[4];
-        points[0].x = cx - x;
-        points[0].y = cy + y;
-        points[1].x = cx - y;
-        points[1].y = cy - x;
-        points[2].x = cx + x;
-        points[2].y = cy - y;
-        points[3].x = cx + y;
-        points[3].y = cy + x;
 
-        int angles[4];
-        angles[0] = PointsToAngleDeg(cx, cy, points[0].x, points[0].y);
-        angles[1] = angles[0] + 90;
-        angles[2] = PointsToAngleDeg(cx, cy, points[2].x, points[2].y);
-        angles[3] = (angles[2] + 90);
+        Point angles[4];
+        GetLightAngle(&angles[0].x,&angles[0].y,-x,y);
+        GetLightAngle(&angles[1].x,&angles[1].y,-x,-y);
+        GetLightAngle(&angles[2].x,&angles[2].y,x,-y);
+        GetLightAngle(&angles[3].x,&angles[3].y,x,y);
 
         for (int i = 0; i < 4; i++)
         {
-            int angle = (angles[i]);
-            float moveX = cosTable[angle];
-            float moveY = sinTable[angle];
+
+            float moveX = (angles[i].x);//cosTable[angle];
+            float moveY = (angles[i].y);//sinTable[angle];
 
             float mX = cx;
             float mY = cy;

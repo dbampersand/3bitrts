@@ -232,6 +232,13 @@ typedef struct GameObject
 #define MAX_LIGHT_SIZE 90 
 #define LIGHT_FACTOR 0.01f;
 
+float _LIGHT_X_ANGLES[MAX_LIGHT_SIZE*2][MAX_LIGHT_SIZE*2];
+float _LIGHT_Y_ANGLES[MAX_LIGHT_SIZE*2][MAX_LIGHT_SIZE*2];
+
+float* lightXAngles;
+float* lightYAngles;
+
+
 #define NUM_GAMEOBJECT_FUNCTIONS 5
 
 #define MAX_OBJS 64

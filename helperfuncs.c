@@ -17,6 +17,11 @@
     #define F_PI 3.14159265358979323846f
 #endif
 
+#define RAD_TO_DEG_CONST 180 / F_PI
+#define DEG_TO_RAD_CONST F_PI / 180.0f;
+
+
+
 void swapPoints(float* x, float* y, float* x2, float* y2)
 {
     float x3 = *x; float y3 = *y;
@@ -330,11 +335,11 @@ int sign(float j)
 }
 float DegToRad(float deg)
 {
-    return deg * M_PI/180.0f;
+    return deg * DEG_TO_RAD_CONST;
 }
 float RadToDeg(float rad)
 {
-    return rad * 180/F_PI;
+    return rad * RAD_TO_DEG_CONST;
 }
 bool CircleRectDist(int cx, int cy, float radius, Rect r)
 {
@@ -431,4 +436,29 @@ bool MouseReleasedThisFrame(MouseState* thisFrame, MouseState* previousFrame)
 bool KeyPressedThisFrame(int key, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
     return (al_key_down(keyState,key) && !al_key_down(keyStateLastFrame,key));
+}
+
+void GenerateAngleDeg()
+{
+    float cx = MAX_LIGHT_SIZE;
+    float cy = MAX_LIGHT_SIZE;
+    
+    for (int x = 0; x < MAX_LIGHT_SIZE*2; x++)
+    {
+        for (int y = 0; y < MAX_LIGHT_SIZE*2; y++)
+        {
+            float ang = PointsToAngleRad(cx,cy,x,y);
+            _LIGHT_X_ANGLES[x][y] = cosf(ang);
+            _LIGHT_Y_ANGLES[x][y] = sinf(ang);
+        }
+    }
+}
+
+void GetLightAngle(float* xPtr,float* yPtr, int x, int y)
+{
+    x += MAX_LIGHT_SIZE;
+    y += MAX_LIGHT_SIZE;
+
+    *xPtr = _LIGHT_X_ANGLES[x][y];
+    *yPtr = _LIGHT_Y_ANGLES[x][y];
 }

@@ -7,6 +7,7 @@
 #include "pointspace.h"
 #define DIST_DELTA 1
 
+
 #define _MIN(X,Y) ((X) < (Y) ? (X) : (Y))
 #define _MAX(X,Y) ((X) > (Y) ? (X) : (Y))
 
@@ -63,3 +64,7 @@ bool MouseClickedThisFrame(MouseState* thisFrame, MouseState* previousFrame);
 bool MouseReleasedThisFrame(MouseState* thisFrame, MouseState* previousFrame);
 
 bool KeyPressedThisFrame(int key, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
+void GenerateAngleDeg();
+
+void GetLightAngle(float* xPtr,float* yPtr, int x, int y);
+//float GetLightAngleY(int x,int y);

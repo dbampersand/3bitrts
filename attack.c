@@ -1103,7 +1103,7 @@ void UpdateAttack(Attack* a, float dt)
 }
 void UpdateAttacks(float dt)
 {
-    for (int i = 0; i < attack_top; i++)
+    for (int i = 0; i < MAX_ATTACKS; i++)
     {
         Attack* a = &attacks[i];
         if (a->properties & ATTACK_ACTIVE)
