@@ -7,15 +7,20 @@ local yMax = 220
 local atk = -1;
 
 
+local ticksPerSec = 3
+local dps = 15
+local numAttacks = 3
+
 function setup()
     SetAbilityRange(20)
     SetCooldown(20);
     AbilitySetPortrait("assets/enemies/cusith/ability_focus.png");
-    SetDescription("[b]Focus\n\nLowers movement speed in an area.")
+    SetDescription("[b]Focus\n\nLowers movement speed and deals damage in an area.")
     
 end
 
 function casted(x,y,obj,headingx,headingy)
+
 
     local f1 = {}
     f1["trigger"] = TRIGGER_CONST
@@ -25,20 +30,22 @@ function casted(x,y,obj,headingx,headingy)
     f1["overwrites"] = true
     f1["name"] = "Focus"
 
-    x = RandRange(xMin,xMax);
-    y = RandRange(yMin,yMax);
+    local f2 = {}
+    f2["trigger"] = TRIGGER_INSTANT
+    f2["type"] = EFFECT_HURT
+    f2["value"] = dps / ticksPerSec
 
-    atk = CreateAOE(x,y,"", 50, 0.1, 12, true, ATTACK_HITS_ENEMIES, COLOR_SPEED, DITHER_NONE, false, GetObjRef(), {f1})
-    
-    x = RandRange(xMin,xMax);
-    y = RandRange(yMin,yMax);
 
-    atk = CreateAOE(x,y,"", 50, 0.1, 12, true, ATTACK_HITS_ENEMIES, COLOR_SPEED, DITHER_NONE, false, GetObjRef(), {f1})
-   
-    x = RandRange(xMin,xMax);
-    y = RandRange(yMin,yMax);
 
-    atk = CreateAOE(x,y,"", 50, 0.1, 12, true, ATTACK_HITS_ENEMIES, COLOR_SPEED, DITHER_NONE, false, GetObjRef(), {f1})
+    targets = GetObjsByName("Pillar")
+    local samples = GetSampleIndices(3,1,#targets);
+    local numTargs =  math.min(#targets, numAttacks)
+    for i = 1, numTargs do
+        local targ = targets[samples[i]]
+        atk = CreateAOE(GetX(targ),GetY(targ),"", 50, ticksPerSec, 12, true, ATTACK_HITS_ENEMIES, COLOR_SPEED, DITHER_NONE, false, -1, {f1,f2})
+        
+    end
+
     return true;
 end
 

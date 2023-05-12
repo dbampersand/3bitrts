@@ -1005,3 +1005,7 @@ void GoTutorial()
     SetGameStateToLoadingEncounter(NULL,0,currEncounterRunning);
     ChangeUIPanel(NULL);
 }
+bool GameStateIsDrawingMap(GameState gameState)
+{
+    return (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS || gameState == GAMESTATE_IN_CHATBOX || gameState == GAMESTATE_IN_EDITOR);
+}

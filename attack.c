@@ -1115,10 +1115,10 @@ void UpdateAttacks(float dt)
 void DrawAttacks(float dt, int type)
 {
     //al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
-    for (int i = 0; i < attack_top; i++)
+    for (int i = 0; i < MAX_ATTACKS; i++)
     {
         Attack* a = &attacks[i];
-        //if (a->properties & ATTACK_ACTIVE)
+        if (a->properties & ATTACK_ACTIVE)
         {
             if (a->attackType & type)
                 DrawAttack(a,dt);

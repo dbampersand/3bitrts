@@ -102,6 +102,8 @@ void UpdateTransition(float dt);
 void DrawTransition(float dt);
 void FinishTransition();
 bool GameStateIsTransition(GameState* g);
+bool GameStateIsDrawingMap(GameState gameState);
+
 bool GameIsPaused();
 bool GameIsIngame();
 

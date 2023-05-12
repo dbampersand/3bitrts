@@ -11,8 +11,6 @@ function casted(x,y,obj,headingx,headingy)
     CreateObject("assets/enemies/wolf/wolf.lua",128,128,TYPE_FRIENDLY,2);
     CreateObject("assets/enemies/wolf/wolf.lua",128,128,TYPE_FRIENDLY,2);
     CreateObject("assets/enemies/wolf/wolf.lua",128,128,TYPE_FRIENDLY,2);
-    CreateObject("assets/enemies/wolf/wolf.lua",128,128,TYPE_FRIENDLY,2);
-    CreateObject("assets/enemies/wolf/wolf.lua",128,128,TYPE_FRIENDLY,2);
 
     return true; 
 end

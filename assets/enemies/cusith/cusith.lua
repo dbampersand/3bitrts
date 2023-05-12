@@ -6,6 +6,7 @@ local bite = 0
 local callPack = 0
 local spin = 0
 local focus = 0
+local fangs
 
 local howlTimer = 0
 local howlCD = 30
@@ -25,7 +26,7 @@ function setup()
     callPack = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_call_pack.lua",2);
     spin = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_spin.lua",3);
     focus = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_focus.lua",4);
-    focus = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_fangs.lua",5);
+    fangs = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_fangs.lua",5);
 
     SetAttackSounds({
         "assets/audio/attacks/melee_bite/bite_1.wav",
@@ -58,9 +59,12 @@ function update(dt)
         CastAbility(callPack,3,{})
         CastAbility(bite,1,{{target = GetHighestThreat()}})
         CastAbility(spin,4,{});
-        CastAbility(focus,0,{});
-
-        CastAbility(fangs,1,{});
+        if (GetHP(GetObjRef()) < 0.75 * GetMaxHP(GetObjRef())) then
+            CastAbility(fangs,1,{{target = GetAttackTarget(GetObjRef())}});
+        end
+        if (GetHP(GetObjRef()) < 0.4 * GetMaxHP(GetObjRef())) then
+            CastAbility(focus,0,{});
+        end
     end
 end
 

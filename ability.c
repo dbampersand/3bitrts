@@ -355,7 +355,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
 }
 bool AbilityShouldBeCastOnTarget(Ability* a)
 {
-    return (a->castType & ABILITY_INSTANT) || ((a->castType & ABILITY_TARGET_FRIENDLY) | (a->castType & ABILITY_TARGET_ENEMY) | (a->castType & ABILITY_TARGET_ALL));
+    return ((a->castType & ABILITY_TARGET_FRIENDLY) | (a->castType & ABILITY_TARGET_ENEMY) | (a->castType & ABILITY_TARGET_ALL));
 }
 bool AbilityCanBeCastOnGround(Ability* a)
 {

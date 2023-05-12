@@ -3027,6 +3027,31 @@ int L_IsInAttackRange(lua_State* l)
     }
 
 }
+int L_GetObjsByName(lua_State* l)
+{
+    const char* name = lua_tostring(l,1);
+    if (!name)
+    {
+        printf("L_GetObjsByName: no string parameter supplied.\n");
+        return 0;
+    }
+    lua_newtable(l);
+
+    int numSelectedObjs = 0;
+    for (int i = 0; i < numActiveObjects; i++)
+    {
+        GameObject* g = activeObjects[i];
+        if (g->name && strcmp(g->name,name) == 0)
+        {
+            lua_pushnumber(l,numSelectedObjs+1);
+            lua_pushnumber(l,g-objects);
+            lua_settable(l,-3);
+
+            numSelectedObjs++;
+        }
+    }
+    return 1;
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -3670,6 +3695,7 @@ int L_CastAbility(lua_State* l)
     {
         if (GetDist(currGameObjRunning,target) > ability->range)
         {
+            printf("L_CastAbility: out of range: %s",ability->path);
             lua_pushboolean(l,false);
             return 0;
         }
@@ -3704,7 +3730,7 @@ int L_CastAbility(lua_State* l)
         if (AbilityShouldBeCastOnTarget(a) && !target)
         {
             lua_pushboolean(l,false);
-            return 1; 
+            return 1;
         }
         SetObjChannelling(currGameObjRunning,a,channelTime,x,y,target,headingx,headingy);
         lua_pushboolean(l,true);
@@ -4387,6 +4413,49 @@ int L_DegToHeadingVector(lua_State* l)
     lua_setfield(l,-2,"headingy");
 
     return 1;
+}
+int L_GetSampleIndices(lua_State* l)
+{
+    //returns n random unique indices in a range
+    int numIndices = lua_tonumber(l,1);
+    int min = lua_tonumber(l,2);
+    int max = lua_tonumber(l,3);
+
+    if ((max - min)+1 < numIndices)
+    {
+        printf("L_GetSampleIndices: range too small. NumIndices: %i, min: %i, max: %i\n",numIndices,min,max);
+        return 0;
+    }
+    
+    int* selected = calloc(numIndices,sizeof(int));
+    int numSelected = 0;
+    
+    while (numSelected < numIndices)
+    {
+        int r = RandRangeI(min,max);
+        bool select = true;
+        for (int i = 0; i < numSelected; i++)
+        {
+            if (selected[i] == r)
+                select = false;
+        }
+
+        if (select)
+        {
+            selected[numSelected] = r;
+            numSelected++;
+        }
+    }
+    lua_newtable(l);
+    for (int i = 0; i < numSelected; i++)
+    {
+        lua_pushnumber(l,i+1);
+        lua_pushnumber(l,selected[i]);
+        lua_settable(l,-3);
+    }
+    free(selected);
+    return 1;
+
 }
 void SetLuaKeyEnums(lua_State* l)
 {
@@ -5181,5 +5250,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_DegToHeadingVector);
     lua_setglobal(luaState, "DegToHeadingVector");
+
+    lua_pushcfunction(luaState, L_GetObjsByName);
+    lua_setglobal(luaState, "GetObjsByName");
+
+    lua_pushcfunction(luaState, L_GetSampleIndices);
+    lua_setglobal(luaState, "GetSampleIndices");
 
 }

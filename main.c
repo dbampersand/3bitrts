@@ -56,7 +56,6 @@ void init()
     al_install_mouse();
     al_install_keyboard();
 
-
     InitPath();
     
     InitSettings("config.cfg");
@@ -86,6 +85,8 @@ void init()
 
     InitLoadscreen("assets/ui/startscreen/fullstartscreen.png","assets/ui/startscreen/mask.png");
     LoadEncounters("assets/encounters",luaState);
+
+    currMap = NULL;
 
     Map* m = LoadMap("assets/ui/map_unitselect.lua");  
     Map* mNull = LoadMap("assets/ui/map_null.lua");  
@@ -210,17 +211,18 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     {
         UpdateScreenPositions(activeObjects[i]);
     }
-    for (int i = 0; i < attack_top; i++)
+    for (int i = 0; i < MAX_ATTACKS; i++)
     {
         if (AttackIsActive(&attacks[i]))
             UpdateScreenPositionsAttack(&attacks[i]);
     }
 
     DrawSpriteDecorations(BEFORE_WORLD);
-    if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS || gameState == GAMESTATE_IN_CHATBOX || gameState == GAMESTATE_IN_EDITOR)
+    if (GameStateIsDrawingMap(gameState))
         DrawMap(currMap,false);
 
     DrawSpriteDecorations(AFTER_WORLD);
+    if (GameStateIsDrawingMap(gameState))
     DrawMapHighlights();
 
 
@@ -259,89 +261,100 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             }
         }
     }
-    DrawObjShadows();
-    DrawAggroIndicators();
-    DrawAttacks(dt,ATTACK_AOE | ATTACK_CONE | ATTACK_SHAPE);
-    
-    for (int i = 0; i < numActiveObjects; i++)
+    if (GameStateIsDrawingMap(gameState))
     {
-        DrawChannelHint(activeObjects[i],dt);
-        if ((i == objSelected || activeObjects[i] == players[0].clickedThisFrame) && !ObjIsInvincible(activeObjects[i]))
+        DrawObjShadows();
+        DrawAggroIndicators();
+    }
+    if (GameStateIsDrawingMap(gameState))
+    {
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            DrawGameObj(activeObjects[i],true);
-        }
-        else
-        {
-            DrawGameObj(activeObjects[i],false);
+            DrawChannelHint(activeObjects[i],dt);
+            if ((i == objSelected || activeObjects[i] == players[0].clickedThisFrame) && !ObjIsInvincible(activeObjects[i]))
+            {
+                DrawGameObj(activeObjects[i],true);
+            }
+            else
+            {
+                DrawGameObj(activeObjects[i],false);
 
+            }
         }
     }
-    DrawAttacks(dt, ATTACK_PROJECTILE_TARGETED | ATTACK_PROJECTILE_TARGETED | ATTACK_PROJECTILE_ANGLE | ATTACK_MELEE);
+    DrawAttacks(dt,ATTACK_AOE | ATTACK_CONE | ATTACK_SHAPE);
+
+    if (GameStateIsDrawingMap(gameState))
+        DrawAttacks(dt, ATTACK_PROJECTILE_TARGETED | ATTACK_PROJECTILE_TARGETED | ATTACK_PROJECTILE_ANGLE | ATTACK_MELEE);
 
     //Draw health bars on top of all objects
-    for (int i = 0; i < numActiveObjects; i++)
+    if (GameStateIsDrawingMap(gameState))
     {
-        GameObject* g = activeObjects[i];
-        ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
-        if (ObjIsDecoration(g))
-            c = BG;
-        if (IsOwnedByPlayer(g) && !IsSelectable(g))
-            c = BG;
-
-
-
-        if (!ObjIsInvincible(g) && g->summonTime > g->summonMax)
+        for (int i = 0; i < numActiveObjects; i++)
         {
-            float percent = GetSummonPercent(g);  
-
-            Sprite* s = ObjIsChannelling(g) ? &sprites[g->channelingSpriteIndex] :  &sprites[g->spriteIndex];
-
-            float x = g->position.screenX + g->offset.x; 
-            float y = g->position.screenY + g->offset.y;
-            //ToScreenSpace(&x,&y);
-
-
-            Rect selectRect;
-            //selectRect.w = al_get_bitmap_width(s->sprite);
-            //selectRect.h = (al_get_bitmap_height(s->sprite) * percent);
-            //selectRect.x = x;
-            //selectRect.y = (y + (al_get_bitmap_height(s->sprite) - selectRect.h));
-            
-            selectRect = GetObjRect(g);
-            
-            ToScreenSpace(&selectRect.x,&selectRect.y);
-            selectRect.x += g->offset.x;
-            selectRect.y += g->offset.y;
+            GameObject* g = activeObjects[i];
+            ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
+            if (ObjIsDecoration(g))
+                c = BG;
+            if (IsOwnedByPlayer(g) && !IsSelectable(g))
+                c = BG;
 
 
-            //if (GetTotalShield(g) > 0)
+
+            if (!ObjIsInvincible(g) && g->summonTime > g->summonMax)
             {
-                float r = (GetWidth(g) > GetHeight(g) ? GetWidth(g) : GetHeight(g)) * easeInOutBack(g->shieldSizeTimer);
-                al_draw_circle(floorf(x+GetWidth(g)/2),floorf(y+GetHeight(g)/2),r,c,1);
-            }
+                float percent = GetSummonPercent(g);  
 
-            
-            if (currSettings.displayHealthBar == OPTION_HPBAR_ALWAYS)
-                DrawHealthBar(g,c);
-            else if (currSettings.displayHealthBar == OPTION_HPBAR_SELECTED && (IsOwnedByPlayer(g) && IsSelected(g)))
-                DrawHealthBar(g,c);
-            else if (currSettings.displayHealthBar == OPTION_HPBAR_NEVER && (!IsOwnedByPlayer(g)))
-                DrawHealthBar(g,c);
+                Sprite* s = ObjIsChannelling(g) ? &sprites[g->channelingSpriteIndex] :  &sprites[g->spriteIndex];
 
-            if (g->flashTimer > 0)
-                c = DAMAGE;
-            if (g->stunTimer == 0)
-            {
-                if (GetPlayerOwnedBy(g) == 0)
-                    DrawRoundedRect(selectRect, c,false);
-                else
-                    al_draw_rectangle((int)selectRect.x,(int)selectRect.y,(int)(selectRect.x + selectRect.w), (int)(selectRect.y + selectRect.h),c,1);
+                float x = g->position.screenX + g->offset.x; 
+                float y = g->position.screenY + g->offset.y;
+                //ToScreenSpace(&x,&y);
+
+
+                Rect selectRect;
+                //selectRect.w = al_get_bitmap_width(s->sprite);
+                //selectRect.h = (al_get_bitmap_height(s->sprite) * percent);
+                //selectRect.x = x;
+                //selectRect.y = (y + (al_get_bitmap_height(s->sprite) - selectRect.h));
+                
+                selectRect = GetObjRect(g);
+                
+                ToScreenSpace(&selectRect.x,&selectRect.y);
+                selectRect.x += g->offset.x;
+                selectRect.y += g->offset.y;
+
+
+                //if (GetTotalShield(g) > 0)
+                {
+                    float r = (GetWidth(g) > GetHeight(g) ? GetWidth(g) : GetHeight(g)) * easeInOutBack(g->shieldSizeTimer);
+                    al_draw_circle(floorf(x+GetWidth(g)/2),floorf(y+GetHeight(g)/2),r,c,1);
+                }
+
+                
+                if (currSettings.displayHealthBar == OPTION_HPBAR_ALWAYS)
+                    DrawHealthBar(g,c);
+                else if (currSettings.displayHealthBar == OPTION_HPBAR_SELECTED && (IsOwnedByPlayer(g) && IsSelected(g)))
+                    DrawHealthBar(g,c);
+                else if (currSettings.displayHealthBar == OPTION_HPBAR_NEVER && (!IsOwnedByPlayer(g)))
+                    DrawHealthBar(g,c);
+
+                if (g->flashTimer > 0)
+                    c = DAMAGE;
+                if (g->stunTimer == 0)
+                {
+                    if (GetPlayerOwnedBy(g) == 0)
+                        DrawRoundedRect(selectRect, c,false);
+                    else
+                        al_draw_rectangle((int)selectRect.x,(int)selectRect.y,(int)(selectRect.x + selectRect.w), (int)(selectRect.y + selectRect.h),c,1);
+                }
+
             }
 
         }
-
     }
-    DrawObjHeadingArrows();
+    if (GameStateIsDrawingMap(gameState))
+        DrawObjHeadingArrows();
 
     DrawSpriteDecorations(AFTER_GAMEOBJECTS);
 
@@ -434,7 +447,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
 
     DrawBufferedStrings();
-    if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_CHOOSING_UNITS || gameState == GAMESTATE_IN_EDITOR)
+    if (GameStateIsDrawingMap(gameState))
     {
 
         DrawDamageNumbers();
@@ -816,16 +829,15 @@ int main(int argc, char* args[])
 
             UpdateTransition(dt);
 
+            begin = clock();
+
             //if (!ui.currentPanel)
                 Update(dt,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
             if (!console.active)
                 UpdateInterface(dt,&keyState,&mouseState, &keyStateLastFrame, &mouseStateLastFrame);
             if (gameState == GAMESTATE_EXIT)
                 break;
-            begin = clock();
             Render(dt, &mouseState, &mouseStateLastFrame, &keyState, &keyStateLastFrame);
-            clock_t end = clock();
-            double time = (double)(end - begin) / CLOCKS_PER_SEC;
 
             if (gameState == GAMESTATE_INGAME)
                 RecordReplay(SCREEN);
@@ -836,13 +848,15 @@ int main(int argc, char* args[])
             al_set_target_bitmap(backbuffer);
             al_draw_scaled_bitmap(SCREEN,0,0,_SCREEN_SIZE,_SCREEN_SIZE, drawposx+GetScreenshake(), drawposy,_SCREEN_SIZE*_RENDERSIZE,_SCREEN_SIZE*_RENDERSIZE,0);
             al_flip_display();
+            clock_t end = clock();
+            double time = (double)(end - begin) / CLOCKS_PER_SEC;
 
             mouseStateLastFrame = mouseState;
             keyStateLastFrame = keyState;
             _FRAMES++;
             totalRenderTime += time;
 
-           // printf("Total time: %f\n",time);
+            //printf("Total time: %f\n",time);
             fflush(stdout);
             
             //sort activeobjects so we have less cache misses 
