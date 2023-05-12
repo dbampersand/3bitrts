@@ -32,8 +32,8 @@ function casted(x,y,obj,headingx,headingy)
 
 
    -- Teleport(GetObjRef(),GetMouseX(),GetMouseY());
-    xPos = GetX();
-    yPos = GetY();
+    xPos = GetX(GetObjRef());
+    yPos = GetY(GetObjRef());
     local sp = 50 
     local duration = 2.25
     local speed = {};

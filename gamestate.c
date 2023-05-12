@@ -296,6 +296,7 @@ void FinishTransition()
     }
     if (transitioningTo == GAMESTATE_CHANGE_MAP)
     {
+        RemoveAllAttacks();
 
         combatStarted = false;
 
@@ -326,6 +327,7 @@ void FinishTransition()
             {
                // objects[i].position.worldX = xPos;
                 //objects[i].position.worldY = yPos;
+
                 DeleteThreatList(activeObjects[i]);
                 UpdateObjPosition(activeObjects[i],xPos,yPos);
                 SetTargetPosition(activeObjects[i],xPos,yPos);
@@ -342,11 +344,10 @@ void FinishTransition()
         }
         FocusCameraOnPos(camPos.x,camPos.y);
 
-        RemoveAllAttacks();
+        printf("%i\n",attack_top);
         for (int i = 0; i < numActiveObjects; i++)
         {
             CureAll(activeObjects[i]);
-            
         }
         for (int i = 0; i < numActiveObjects; i++)
         {

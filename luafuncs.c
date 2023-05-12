@@ -1127,7 +1127,7 @@ int CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const c
 {
 
         
-    Attack a;
+    Attack a = {0};
     //a.x = currGameObjRunning->position.worldX + w/2;
     //a.y = currGameObjRunning->position.worldY + h/2;
     a.x = cx;
@@ -1274,7 +1274,7 @@ int L_CreateCircularProjectiles(lua_State* l)
     }       
     for (int i = 0; i < numProjectiles; i++)
     {
-        float angle = M_PI / (float)numProjectiles*i*2; 
+        float angle = M_PI / (float)numProjectiles*(i+1)*2; 
         CreateProjectile(l,x,y, x+cosf(angle+angleOffset), y+sinf(angle+angleOffset), portrait, attackType, speed, duration, shouldCallback, properties, targ,color, effects, len);
 
     }

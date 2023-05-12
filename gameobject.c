@@ -3163,7 +3163,7 @@ bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems, f
 
     AddThreat(source, g, value);
 
-    if (g->aggroGroupSet)
+    if (g->aggroGroupSet && g->aggroGroup > 0)
         for (int i = 0; i < numActiveObjects; i++)
         {
             GameObject* g2 = activeObjects[i];

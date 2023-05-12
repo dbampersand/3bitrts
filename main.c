@@ -266,6 +266,8 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         DrawObjShadows();
         DrawAggroIndicators();
     }
+    DrawAttacks(dt,ATTACK_AOE | ATTACK_CONE | ATTACK_SHAPE);
+
     if (GameStateIsDrawingMap(gameState))
     {
         for (int i = 0; i < numActiveObjects; i++)
@@ -282,7 +284,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             }
         }
     }
-    DrawAttacks(dt,ATTACK_AOE | ATTACK_CONE | ATTACK_SHAPE);
 
     if (GameStateIsDrawingMap(gameState))
         DrawAttacks(dt, ATTACK_PROJECTILE_TARGETED | ATTACK_PROJECTILE_TARGETED | ATTACK_PROJECTILE_ANGLE | ATTACK_MELEE);

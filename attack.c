@@ -176,12 +176,12 @@ void RemoveAttack(int attackindex)
     }
 
     a->properties = '\0';
-
-    if (attack_top <= 0)
-        return;
+    //if (attack_top <= 0)
+        //return;
     attack_top--;
     numActiveAttacks--;
     freeAttacks[attack_top] = attackindex;
+
     if (a->effects)
     {
         for (int i = 0; i < a->numEffects; i++)
@@ -797,7 +797,7 @@ bool AttackIsProjectile(Attack* a)
 }
 void UpdateAttack(Attack* a, float dt)
 {
-    if (!AttackIsActive(a) )
+    if (!AttackIsActive(a))
         return;
     a->inactiveFor -= dt; 
     if (a->inactiveFor < 0)
@@ -985,6 +985,10 @@ void UpdateAttack(Attack* a, float dt)
              //   continue;
             
             Rect r = GetObjRect(activeObjects[i]);
+
+            GameObject* two = activeObjects[i];
+            GameObject* one = a->ownedBy;
+
             
             if (a->attackType == ATTACK_AOE || a->attackType == ATTACK_PROJECTILE_TARGETED || a->attackType ==   ATTACK_PROJECTILE_POINT ||a->attackType == ATTACK_PROJECTILE_ANGLE)
             {

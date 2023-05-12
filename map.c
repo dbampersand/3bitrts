@@ -495,6 +495,7 @@ void RedrawMapSegmentUnderObj(GameObject* g)
 }
 int GetMapWidth()
 {
+    #ifdef _REPLAY
     if (gameState == GAMESTATE_WATCHING_REPLAY)
     {
         if (replay.frames)
@@ -503,17 +504,20 @@ int GetMapWidth()
             return GetWidthSprite(&replay.sprites[current->mapSpriteIndex]);
         }
     }
+    #endif
     if (GetWidthSprite(&sprites[currMap->spriteIndex]) == 0)
         return 1;
     return GetWidthSprite(&sprites[currMap->spriteIndex]);
 }
 int GetMapHeight()
 {
-        if (gameState == GAMESTATE_WATCHING_REPLAY)
+    #ifdef _REPLAY
+    if (gameState == GAMESTATE_WATCHING_REPLAY)
     {
         ReplayFrame* current = &replay.frames[replay.framePlayPosition];
         return GetHeightSprite(&replay.sprites[current->mapSpriteIndex]);
     }
+    #endif
     if (GetHeightSprite(&sprites[currMap->spriteIndex]) == 0)
         return 1;
 

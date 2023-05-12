@@ -7,7 +7,7 @@ local indicator = -1
 function setup()
     SetSprite("assets/enemies/exploding_zombie/exploding_zombie.png");
 
-    SetDamage(0);
+    SetDamage(1);
     SetMaxHP(400,true)
     SetSpeed(20)
     SetRange(10);
