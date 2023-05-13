@@ -1217,6 +1217,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     column += 32;
 
     char* augmentDescriptionToDraw = NULL;
+    bool isRerolling = GetButtonIsClicked(&e->encounter_RerollAugments);
     for (int i = 0; i < MAX_AUGMENTS; i++)
     {
         Augment* a = &e->augments[i];
@@ -1229,7 +1230,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
         if (DrawAugmentPortrait(a,column+offsetX,row, mouseState, col))
             augmentDescriptionToDraw = description;
 
-        if (GetButtonIsClicked(&e->encounter_RerollAugments))
+        if (isRerolling)
         {
             ScatterEffect_Sprite(&sprites[e->augments[i].portrait_sprite_index],column,row,ALColorToCol(col));
         }
@@ -1243,10 +1244,9 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
             //column = 16;
         }
     }
-    if (GetButtonIsClicked(&e->encounter_RerollAugments))
+    if (isRerolling)
     {
         SetEncounterRandAugments(e);
-
     }
 
 

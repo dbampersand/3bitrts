@@ -45,6 +45,7 @@ function kill()
 end
 
 function mapend()
+    GoShop(true)
     ChangeMap("assets/encounters/03/map_4.lua")
     return false;
 end

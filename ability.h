@@ -88,6 +88,8 @@ typedef struct lua_State lua_State;
 typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE;
 typedef struct MouseState MouseState;
 
+void SetAbilityOnCooldown(Ability* a);
+
 void SetManaCost(Ability* a, float mana);
 
 void LoadAbility(const char* path, lua_State* l, Ability* a);

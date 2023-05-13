@@ -1,5 +1,6 @@
 
 local damage = 70
+local armorDuration = 20
 function setup()
     AbilitySetCastType(Bor(ABILITY_POINT,ABILITY_TARGET_ENEMY)); 
     AbilitySetPortrait("assets/friendly/warrior/icon_charge.png");
@@ -7,7 +8,7 @@ function setup()
 
     SetAbilityRange(60)
     SetCooldown(20);
-    SetDescription("Charge\n\nCharges the target, dealing " .. damage  .. "damage to targets around you.")
+    SetDescription("Charge\n\nCharges the target, dealing " .. damage  .. "damage to targets around you. Increases armor for " .. armorDuration " seconds.")
 
 end
 
@@ -41,12 +42,18 @@ function casted(x,y,obj,headingx,headingy)
     speed["type"] = EFFECT_SPEED; 
     speed["value"] = 400; 
     speed["duration"] = 0.1
-    ApplyEffect(GetObjRef(),{speed});
+
+    local armor = {};
+    armor["trigger"] = TRIGGER_CONST;
+    armor["type"] = EFFECT_ARMOR; 
+    armor["value"] = 10; 
+    armor["duration"] = armorDuration
+
+
+    ApplyEffect(GetObjRef(),{speed,armor});
 
     SetMovePoint(GetObjRef(),x, y, true, false)
-    --CreateCircularProjectiles(xPos,yPos,"",ATTACK_PROJECTILE_ANGLE,sp,duration,true,ATTACK_HITS_ENEMIES,12,COLOR_FRIENDLY_DAMAGE,0,{f1,f2})
     After(CreateCircularProjectiles,0.02,x,y,"",ATTACK_PROJECTILE_ANGLE,sp,duration,true,ATTACK_HITS_ENEMIES,12,COLOR_FRIENDLY_DAMAGE,0,{f1,f2});
-    --aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,false,-1, {f1})
     return true; 
 end
 

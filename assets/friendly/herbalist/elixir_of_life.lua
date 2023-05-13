@@ -1,12 +1,13 @@
-local heal = 400
+local heal = 800
 local duration = 5
+
 function setup()
     AbilitySetPortrait("assets/friendly/herbalist/icon_elixir_of_life.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
     SetAbilityRange(60)
     SetDescription("Elixir of Life\n\nA large heal over time effect.")
     SetManaCost(8)
-    SetAbilityMaxStacks(3);
+    SetAbilityMaxStacks(4);
     SetAbilityCooldown(GetObjRef(),GetAbilityRef(),20);
 end
 function casted(x,y,obj,headingx,headingy)

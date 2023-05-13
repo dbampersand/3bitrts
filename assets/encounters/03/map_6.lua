@@ -25,5 +25,7 @@ function update()
 
 end
 function mapend()
+    GoShop(true)
 
+   ChangeMap("assets/encounters/03/map_7.lua")
 end

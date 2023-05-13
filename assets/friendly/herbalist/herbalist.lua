@@ -4,9 +4,9 @@ function setup()
     SetSprite("assets/friendly/herbalist/herbalist.png");
     AddAbility(GetObjRef(),"assets/friendly/herbalist/elixir_of_life.lua",0)    
     AddAbility(GetObjRef(),"assets/friendly/herbalist/regenerative_herbs.lua",1)    
-    AddAbility(GetObjRef(),"assets/friendly/herbalist/panacea.lua",2)    
     AddAbility(GetObjRef(),"assets/friendly/herbalist/dissolve.lua",3)    
-    AddAbility(GetObjRef(),"assets/friendly/herbalist/mix.lua",4)    
+    AddAbility(GetObjRef(),"assets/friendly/herbalist/mix.lua",2)    
+    AddAbility(GetObjRef(),"assets/friendly/herbalist/panacea.lua",4)    
 
 
     AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05);

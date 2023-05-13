@@ -1275,11 +1275,7 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
         {
             if (!ObjIsDecoration(g))
             {
-                if (HasAugment(currEncounterRunning, AUGMENT_BAD_DEATHINCDMG))
-                {
-                    Bad_AugmentDeathAddDamage(g, currEncounterRunning->augment);
-                }
-                if (HasAugment(currEncounterRunning, AUGMENT_BAD_ENEMY_EXPLODES))
+                if (GetPlayerOwnedBy(g) == 1 && HasAugment(currEncounterRunning, AUGMENT_BAD_DEATHINCDMG))
                 {
                     Bad_AugmentDeathAddDamage(g, currEncounterRunning->augment);
                 }
@@ -3100,6 +3096,16 @@ void Stun(GameObject* source, GameObject* g, float value)
     if (!g->objectIsStunnable)
         return;
     g->stunTimer += value;
+
+    if (ObjIsChannelling(g))
+    {
+        g->properties &= ~OBJ_IS_CHANNELLING;
+        SetAbilityOnCooldown(g->channelledAbility);
+        g->channellingTime = 0;
+        g->channellingTotal = 0;
+        g->channelled_target = NULL;
+        g->channelledAbility = NULL;
+    }
 
     for (int i = 0; i < MAX_ABILITIES; i++)
     {

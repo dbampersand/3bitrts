@@ -1036,7 +1036,7 @@ int L_SetDamage(lua_State* l)
     if (currGameObjRunning)
     {
         float add = 0;
-        if (currEncounterRunning)
+        if (currEncounterRunning && !IsOwnedByPlayer(currGameObjRunning)) 
             add = GetAugmentDamageBonus(damage,currEncounterRunning->augment);
         currGameObjRunning->baseDamage = damage + add;
     }

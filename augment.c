@@ -53,7 +53,7 @@ void InitAugments()
 }
 float GetAugmentDamageBonus(int damage, int augmentLevel)
 {
-    return damage*(augmentLevel/10.0f);
+    return damage*(augmentLevel/4.0f);
 }
 float GetAugmentHealthBonus(int health, int augmentLevel)
 {
@@ -405,15 +405,16 @@ void Bad_EnemyExplodes(GameObject* g, int augmentLevel)
     GetCentre(g,&x,&y);
     Effect e;
     e.trigger = TRIGGER_TIMER;
-    e.effectType = EFFECT_ATTACKDAMAGE;
+    e.effectType = EFFECT_HURT;
     e.from = NULL;
-    e.value = augmentLevel * 30;
+    e.value = augmentLevel * 5;
     e.numTriggers = 1;
     e.timer = 0;
     e.duration = 0;
     e.tickTime = 0;
     e.enabled = false;
     e.spriteIndex_Portrait = 0;
+    e.name = NULL;
 
     CreateAoE(x,y, NULL, 10, 3, 1,false, ATTACK_HITS_FRIENDLIES, ALColorToCol(ENEMY), DITHER_VERTICAL_EIGTH, 1, &e, NULL, NULL);
 }

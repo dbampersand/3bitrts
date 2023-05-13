@@ -29,6 +29,16 @@ int numAbilitiesAllocated = 0;
 SoundIndex ability_UI_click_sound = {0};
 SoundIndex ability_UI_click_up_sound ={0};   
 
+
+void SetAbilityOnCooldown(Ability* a)
+{
+    if (a->stacks == a->maxStacks)
+        a->cdTimer = a->cooldown;
+    a->stacks--;
+    if (a->stacks < 0)
+        a->stacks = 0;
+
+}
 void InitAbilities()
 {
     ability_UI_click_sound = LoadSound("assets/audio/ability_down.wav");
@@ -463,11 +473,7 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         //if it didn't return an explicit value we can assume it meant to return true
         if (b || lua_isnil(luaState,1))
         {   
-            if (a->stacks == a->maxStacks)
-                a->cdTimer = a->cooldown;
-            a->stacks--;
-            if (a->stacks < 0)
-                a->stacks = 0;
+            SetAbilityOnCooldown(a);
         }
         else
         {
