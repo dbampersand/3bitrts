@@ -13,7 +13,7 @@ local numAttacks = 3
 
 function setup()
     SetAbilityRange(20)
-    SetCooldown(20);
+    SetCooldown(15);
     AbilitySetPortrait("assets/enemies/cusith/ability_focus.png");
     SetDescription("[b]Focus\n\nLowers movement speed and deals damage in an area.")
     

@@ -4457,6 +4457,61 @@ int L_GetSampleIndices(lua_State* l)
     return 1;
 
 }
+int L_GetObjectsInCone(lua_State* l)
+{
+    int objFriendliness = lua_tonumber(l,1);
+    int fromX = lua_tonumber(l,2);
+    int fromY = lua_tonumber(l,3);
+    int toX = lua_tonumber(l,4);
+    int toY = lua_tonumber(l,5);
+    float radius = lua_tonumber(l,6);
+    float length = lua_tonumber(l,7);
+
+    int thisFriendliness = GetPlayerOwnedBy(currGameObjRunning);
+
+    int* selected = calloc(numActiveObjects,sizeof(int));
+
+    int numSelected = 0;
+
+    
+    float angle = RadToDeg(atan2f(toY - fromY, toX - fromX));
+
+    for (int i = 0; i < numActiveObjects; i++)
+    {
+        Rect r = GetObjRect(activeObjects[i]);
+        if (!RectInCone(r,fromX,fromY,angle,radius,length))
+        {
+            continue;
+        }
+
+        if (objFriendliness & TYPE_FRIENDLY)
+        {
+            if (GetPlayerOwnedBy(activeObjects[i]) == thisFriendliness)
+            {
+                selected[numSelected] = activeObjects[i] - objects;
+                numSelected++;
+            }
+        }
+        if (objFriendliness & TYPE_ENEMY)
+        {
+            if (GetPlayerOwnedBy(activeObjects[i]) != thisFriendliness)
+            {
+                selected[numSelected] = activeObjects[i] - objects;
+                numSelected++;
+            }
+        }
+
+    }
+    lua_newtable(l);
+    for (int i = 0; i < numSelected; i++)
+    {
+        lua_pushnumber(l,i+1);
+        lua_pushnumber(l,selected[i]);
+        lua_settable(l,-3);
+    }
+    free(selected);
+    return 1;
+}
 void SetLuaKeyEnums(lua_State* l)
 {
     //TODO: Update these when a key is changed in settings
@@ -5256,5 +5311,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetSampleIndices);
     lua_setglobal(luaState, "GetSampleIndices");
+
+    lua_pushcfunction(luaState, L_GetObjectsInCone);
+    lua_setglobal(luaState, "GetObjectsInCone");
 
 }

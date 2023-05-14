@@ -380,7 +380,7 @@ bool ObjHasType(GameObject* g, GAMEOBJ_TYPE_HINT typeHint);
 bool ObjIsChannelling(GameObject* g);
 void SetObjChannelling(GameObject* g, Ability* a, float time,float x, float y, GameObject* target, float heading_x, float heading_y);
 void UpdateChannellingdObj(GameObject* g, float dt);
-void DrawChannelHint(GameObject* g, float dt);
+void DrawChannelHint(GameObject* g, float dt, MouseState mouseState);
 
 void LoadFolderPrefabs(const char* dirPath, char* name);
 void LoadPrefabs(const char* dirPath);

@@ -59,6 +59,30 @@ bool IsInvertedSprite(GameObject* g)
     bool isReversed = IsSelected(g);
     return g->flashTimer > 0 ? !isReversed : isReversed;
 }
+void MoveObjStepped(GameObject* g, float dX, float dY, float w, float h)
+{
+
+    int numMoves = ceilf(fabsf(dY));
+    dY /= numMoves;
+    for (int i = 0; i < numMoves; i++)
+    {
+        g->position.worldY += dY;
+
+        CheckCollisions(g, false, dY, ObjectCanPush(g));
+        CheckCollisionsWorld(g, false, dY);
+    }
+    numMoves = ceilf(fabsf(dX));
+    dX /= numMoves;
+    for (int i = 0; i < numMoves; i++)
+    {
+        g->position.worldX += dX;
+
+        CheckCollisions(g, true, dX, ObjectCanPush(g));
+        CheckCollisionsWorld(g, true, dX);
+    }
+    SetMapCollisionRect(g->position.worldX, g->position.worldY, w, h, true);
+
+}
 void MoveObjTo(GameObject* g, float x, float y, bool objCanPush)
 {
     double dX = x - g->position.worldX;
@@ -83,10 +107,10 @@ void UpdatePush(GameObject* g, float dt)
         float amtToMove = time * g->pushSpeed * dt;
 
         Point moveTo;
-        moveTo.x = g->position.worldX + amtToMove * g->pushDir.x;
-        moveTo.y = g->position.worldY + amtToMove * g->pushDir.y;
+        moveTo.x = g->pushDir.x * amtToMove;
+        moveTo.y = g->pushDir.y * amtToMove;
 
-        MoveObjTo(g, moveTo.x, moveTo.y, true);
+        MoveObjStepped(g, moveTo.x, moveTo.y, GetWidth(g),GetHeight(g));
     }
     else
     {
@@ -2160,25 +2184,7 @@ void Move(GameObject* g, float delta)
     {
         // if we're moving at > 1 pixels per second, we need to move it in subdivisions
         // a bit of a hack but will work until collision is refactored
-        int numMoves = ceilf(fabsf(dY));
-        dY /= numMoves;
-        for (int i = 0; i < numMoves; i++)
-        {
-            g->position.worldY += dY;
-
-            CheckCollisions(g, false, dY, ObjectCanPush(g));
-            CheckCollisionsWorld(g, false, dY);
-        }
-        numMoves = ceilf(fabsf(dX));
-        dX /= numMoves;
-        for (int i = 0; i < numMoves; i++)
-        {
-            g->position.worldX += dX;
-
-            CheckCollisions(g, true, dX, ObjectCanPush(g));
-            CheckCollisionsWorld(g, true, dX);
-        }
-        SetMapCollisionRect(g->position.worldX, g->position.worldY, w, h, true);
+        MoveObjStepped(g,dX,dY,w,h);
     }
 
     if (g->nextFootstepTime <= 0 && (before.worldX != g->position.worldX || before.worldY != g->position.worldY))
@@ -3516,17 +3522,22 @@ void UpdateChannellingdObj(GameObject* g, float dt)
     }
 }
 float ang = 0;
-void DrawChannelHint(GameObject* g, float dt)
+void DrawChannelHint(GameObject* g, float dt, MouseState mouseState)
 {
     if (IsActive(g))
     {
-
-        if (ObjIsChannelling(g) && g->channelledAbility)
+        bool isHeldAbility = (GameObjectIsSelectedIndex(g) && players[0].abilityHeld);
+        if ((ObjIsChannelling(g) && g->channelledAbility) || isHeldAbility)
         {
             Ability* a = g->channelledAbility;
 
+            if (isHeldAbility)
+                a = players[0].abilityHeld;
+
             float hintTimer = 1 - g->channellingTime / g->channellingTotal;
             if (hintTimer > 1)
+                hintTimer = 1;
+            if (isHeldAbility)
                 hintTimer = 1;
 
             float easedTimer = easeOutCirc(hintTimer);
@@ -3545,6 +3556,12 @@ void DrawChannelHint(GameObject* g, float dt)
             {
                 x2 = g->channelled_x;
                 y2 = g->channelled_y;
+            }
+
+            if (isHeldAbility)
+            {
+                x2 = mouseState.worldX;
+                y2 = mouseState.worldY;
             }
 
             if (a->targetingHint == HINT_LINE)

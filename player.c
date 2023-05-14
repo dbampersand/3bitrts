@@ -309,3 +309,11 @@ void CenterOnObj(GameObject* g)
     if (g)
         FocusCameraOnPos(g->position.worldX, g->position.worldY);
 }
+bool GameObjectIsSelectedIndex(GameObject* g)
+{
+    return (g == GetPlayerSelectedIndex());
+}
+GameObject* GetPlayerSelectedIndex()
+{
+    return players[0].selection[players[0].indexSelectedUnit];
+}

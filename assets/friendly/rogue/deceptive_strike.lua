@@ -3,7 +3,7 @@ function setup()
     AbilitySetPortrait("assets/friendly/rogue/icon_shiv.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(50)
-    SetDescription("Deceptive Strike\n\nDeals damage and reduces the cooldown of stab by 2 seconds.")
+    SetDescription("Deceptive Strike\n\nDeals damage and reduces the cooldown of Backstab by 2 seconds.")
     SetCooldown(8)
 end
 function casted(x,y,obj,headingx,headingy)
@@ -16,7 +16,7 @@ function casted(x,y,obj,headingx,headingy)
 
     ApplyEffect(obj,{f1})   
 
-    ReduceCooldown(GetObjRef(),0,2);
+    ReduceCooldown(GetObjRef(),0,3);
 
     
 

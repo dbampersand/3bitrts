@@ -47,6 +47,8 @@ typedef struct ALLEGRO_KEYBOARD_STATE ALLEGRO_KEYBOARD_STATE;
 typedef struct MouseState MouseState; 
 typedef struct Item Item;
 
+bool GameObjectIsSelectedIndex(GameObject* g);
+GameObject* GetPlayerSelectedIndex();
 
 void RemoveFromSelection(Player* p, int index);
 void RemoveGameObjectFromSelection(Player* p, GameObject* g);

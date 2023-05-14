@@ -1,4 +1,4 @@
-local radius = 60
+local radius = 80
 
 local length = 0.1
 

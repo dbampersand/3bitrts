@@ -272,7 +272,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     {
         for (int i = 0; i < numActiveObjects; i++)
         {
-            DrawChannelHint(activeObjects[i],dt);
+            DrawChannelHint(activeObjects[i],dt,*mouseState);
             if ((i == objSelected || activeObjects[i] == players[0].clickedThisFrame) && !ObjIsInvincible(activeObjects[i]))
             {
                 DrawGameObj(activeObjects[i],true);

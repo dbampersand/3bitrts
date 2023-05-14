@@ -58,7 +58,7 @@ function update(dt)
 
         CastAbility(callPack,3,{})
         CastAbility(bite,1,{{target = GetHighestThreat()}})
-        CastAbility(spin,4,{});
+        CastAbility(spin,2,{});
         if (GetHP(GetObjRef()) < 0.75 * GetMaxHP(GetObjRef())) then
             CastAbility(fangs,1,{{target = GetAttackTarget(GetObjRef())}});
         end
