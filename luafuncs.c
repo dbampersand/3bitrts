@@ -3861,7 +3861,7 @@ int L_AddAbility(lua_State* l)
         //g->abilities[index] = CloneAbilityPrefab(prefab,l);
         CloneAbilityPrefab(prefab,l,&g->abilities[index]);
         
-        }
+    }
     
     lua_pushnumber(l,index);
 

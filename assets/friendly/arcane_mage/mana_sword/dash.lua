@@ -2,8 +2,6 @@ local radius = 20
 function setup()
     AbilitySetPortrait("assets/friendly/arcane_mage/mana_sword/icon_dash.png");
     AbilitySetCastType(ABILITY_POINT);
-    SetAbilityHint(HINT_CIRCLE,radius)
-
     SetDescription("Dash\n\nDashes at the target. Deals damage and stuns around the target.");
     SetCooldown(8);
     SetAbilityRange(50);    

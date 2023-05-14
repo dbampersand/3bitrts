@@ -52,8 +52,8 @@ void DrawHeldAbility(MouseState* mouseState)
     GetCentre_Screen(g, &cx, &cy);
     int w; int h;
 
-    float radiusX = players[0].abilityHeld->range + (GetWidth(g));
-    float radiusY = players[0].abilityHeld->range + (GetHeight(g));
+    float radiusX = players[0].abilityHeld->range + (GetWidth(g)/2.0f);
+    float radiusY = players[0].abilityHeld->range + (GetHeight(g)/2.0f);
 
     if (players[0].abilityHeld->targetingHint != HINT_CONE)
         al_draw_ellipse(cx,cy,radiusX,radiusY,FRIENDLY,0);
@@ -423,19 +423,8 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
     }
     if (g && (!(a->castType & ABILITY_INSTANT) &&  !(a->castType & ABILITY_TOGGLE)))
     {
-        float tx = x; float ty = y;
-        if (target)
-        {
-            GetCentre(target,&tx,&ty);
-        }
-        float cx; float cy;
-        GetCentre(g,&cx,&cy); 
-        float distance = dist(cx,cy,tx,ty);
-        if (target)
-            distance = RectDist(g,target);
-        if (distance > a->range)
+        if (!AbilityCanBeCast(a,g,target,x,y))
             return false;
-
     }
     if (target == NULL && AbilityShouldBeCastOnTarget(a) && !AbilityCanBeCastOnGround(a))
         return false;
@@ -583,7 +572,9 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
     {
         float cx; float cy;
         GetCentre(g,&cx,&cy);
-        if (dist(cx,cy,x,y) <= a->range)
+        float f = dist(cx,cy,x,y);
+        float f2 = RectDist_R(GetObjRect(g),(Rect){x,y,0,0});
+        if (f2 <= a->range)
             return true;
         else
             return false;
