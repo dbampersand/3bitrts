@@ -82,7 +82,7 @@ void DecreaseMapDimensions(EDITOR_HANDLE handle, int x, int y)
     UpdateSpawnPointStr();
 
     al_draw_tinted_bitmap_region(sprites[currMap->spriteIndex].sprite,WHITE,sx,sy,w,h,drawOffsetX,drawOffsetY,0);
-    al_draw_tinted_bitmap_region(sprites[currMap->secondLayerSpriteIndex].sprite,WHITE,sx,sy,w,h,drawOffsetX,drawOffsetY,0);
+    al_draw_tinted_bitmap_region(sprites[currMap->secondLayerSpriteIndex].sprite,al_map_rgba(128,128,128,255),sx,sy,w,h,drawOffsetX,drawOffsetY,0);
 
     sprites[currMap->spriteIndex].sprite = new;
 
@@ -137,7 +137,7 @@ void IncreaseMapDimensions(int x, int y)
     UpdateSpawnPointStr();
 
     al_draw_tinted_bitmap(sprites[currMap->spriteIndex].sprite,WHITE,drawOffsetX,drawOffsetY,0);
-    al_draw_tinted_bitmap(sprites[currMap->secondLayerSpriteIndex].sprite,WHITE,drawOffsetX,drawOffsetY,0);
+    al_draw_tinted_bitmap(sprites[currMap->secondLayerSpriteIndex].sprite,al_map_rgba(128,128,128,255),drawOffsetX,drawOffsetY,0);
 
     sprites[currMap->spriteIndex].sprite = new;
 
@@ -887,6 +887,8 @@ void EditorSetMap(char* path)
     strcpy(editor.currentPath,pathCopy);
 
     free(pathCopy);
+
+    FocusCameraOnPos(currMap->spawnPoint.x,currMap->spawnPoint.y);
 }   
 
 void PopulateFileList(Panel* p, char* path, int numPostfixes, ...)
@@ -1300,7 +1302,6 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
             al_set_target_bitmap(sprites[currMap->spriteIndex].sprite);
         if (editor.paintingMode == PAINTING_MODE_SECOND_LAYER)   
             al_set_target_bitmap(sprites[currMap->secondLayerSpriteIndex].sprite);
-
 
         ALLEGRO_COLOR c = WHITE;
         if (editor.paintingMode == PAINTING_MODE_DRAW_FIRST_LAYER || editor.paintingMode == PAINTING_MODE_SECOND_LAYER)

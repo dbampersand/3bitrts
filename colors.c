@@ -121,7 +121,7 @@ unsigned char HashColor(ALLEGRO_COLOR c)
 void InitColors()
 {
     BG = al_map_rgba(24,5,26,255);
-    GROUND = al_map_rgba(73,73,202,255);
+    GROUND = al_map_rgba(74,64,201,255);
 
     ENEMY = al_map_rgba(95,247,247,255);
     FRIENDLY = al_map_rgba(242,246,255,255);
@@ -135,7 +135,7 @@ void InitColors()
     SPEED = al_map_rgba(248,232,22,255);
     SHIELD = al_map_rgba(106,171,235,255); 
 
-    GROUND_DARK = al_map_rgba(53,40,84,255);
+    GROUND_DARK = al_map_rgba(54,37,99,255);
     EDGE_HIGHLIGHT = al_map_rgba(167,112,213,255);
     _TRANSPARENT = al_map_rgba(0,0,0,0);
     BG_DECOR = al_map_rgba((BG.r*255)+10,(BG.g*255)+15,(BG.b*255)+10,255);

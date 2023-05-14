@@ -762,8 +762,8 @@ void DrawAttack(Attack* a, float dt)
     }
     else if (a->attackType == ATTACK_CONE)
     {
-        float x2 = ToScreenSpace_X(a->targx); 
-        float y2 = ToScreenSpace_Y(a->targy);
+        float x2 = (a->targx); 
+        float y2 = (a->targy);
         if (a->target)
         {
             GetCentre(a->target,&x2,&y2);

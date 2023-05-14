@@ -462,7 +462,7 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
             ClampToRadius(&x,&y,cx,cy,a->range);
 
         lua_pushinteger(luaState,x);
-        lua_pushinteger(luaState,y);    
+            lua_pushinteger(luaState,y);    
         lua_pushinteger(luaState,(int)(target-objects));    
         lua_pushnumber(luaState,headingx);
         lua_pushnumber(luaState,headingy);    

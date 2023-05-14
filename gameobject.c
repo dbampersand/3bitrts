@@ -59,7 +59,7 @@ bool IsInvertedSprite(GameObject* g)
     bool isReversed = IsSelected(g);
     return g->flashTimer > 0 ? !isReversed : isReversed;
 }
-void MoveObjStepped(GameObject* g, float dX, float dY, float w, float h)
+void MoveObjStepped(GameObject* g, float dX, float dY, float w, float h, bool push)
 {
 
     int numMoves = ceilf(fabsf(dY));
@@ -68,7 +68,7 @@ void MoveObjStepped(GameObject* g, float dX, float dY, float w, float h)
     {
         g->position.worldY += dY;
 
-        CheckCollisions(g, false, dY, ObjectCanPush(g));
+        CheckCollisions(g, false, dY, push);
         CheckCollisionsWorld(g, false, dY);
     }
     numMoves = ceilf(fabsf(dX));
@@ -77,7 +77,7 @@ void MoveObjStepped(GameObject* g, float dX, float dY, float w, float h)
     {
         g->position.worldX += dX;
 
-        CheckCollisions(g, true, dX, ObjectCanPush(g));
+        CheckCollisions(g, true, dX, push);
         CheckCollisionsWorld(g, true, dX);
     }
     SetMapCollisionRect(g->position.worldX, g->position.worldY, w, h, true);
@@ -110,7 +110,7 @@ void UpdatePush(GameObject* g, float dt)
         moveTo.x = g->pushDir.x * amtToMove;
         moveTo.y = g->pushDir.y * amtToMove;
 
-        MoveObjStepped(g, moveTo.x, moveTo.y, GetWidth(g),GetHeight(g));
+        MoveObjStepped(g, moveTo.x, moveTo.y, GetWidth(g),GetHeight(g),true);
     }
     else
     {
@@ -2184,7 +2184,7 @@ void Move(GameObject* g, float delta)
     {
         // if we're moving at > 1 pixels per second, we need to move it in subdivisions
         // a bit of a hack but will work until collision is refactored
-        MoveObjStepped(g,dX,dY,w,h);
+        MoveObjStepped(g,dX,dY,w,h,ObjectCanPush(g));
     }
 
     if (g->nextFootstepTime <= 0 && (before.worldX != g->position.worldX || before.worldY != g->position.worldY))

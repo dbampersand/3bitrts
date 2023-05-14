@@ -4,8 +4,8 @@ local maxMana = 150
 function setup()
     SetSprite("assets/friendly/chromamancer/chronomancer.png");
     
-    AddAbility(GetObjRef(),"assets/friendly/chromamancer/illusion.lua",0)    
-    AddAbility(GetObjRef(),"assets/friendly/chromamancer/chromophore.lua",1)    
+    AddAbility(GetObjRef(),"assets/friendly/chromamancer/ultraviolet.lua",0)    
+    AddAbility(GetObjRef(),"assets/friendly/chromamancer/infrared.lua",1)    
     AddAbility(GetObjRef(),"assets/friendly/chromamancer/iridesce.lua",2)    
     AddAbility(GetObjRef(),"assets/friendly/chromamancer/saturate.lua",3)    
 

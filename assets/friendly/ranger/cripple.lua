@@ -8,7 +8,7 @@ function setup()
     SetAbilityRange(length)
     SetAbilityHint(HINT_CONE,radius,false,length)
     SetDescription("Cripple\n\nPushes targets away and slows them.")
-    SetCooldown(1);
+    SetCooldown(10);
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/ranger/audio/cripple.wav",1.25)
