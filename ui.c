@@ -1185,7 +1185,6 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 
     ALLEGRO_COLOR disabled = GROUND_DARK;
 
-
     char* augmentStr = calloc(NumDigits(e->augment)+1,sizeof(char));
     sprintf(augmentStr,"%i",e->augment);
 
@@ -1257,6 +1256,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     int augmentX = 96;
     if (e->augment <= 0)
         e->augment = 1; 
+    e->difficultyUnlocked = _MIN(e->difficultyUnlocked,MAX_DIFFICULTY_LEVELS);
     for (int i = 0; i < e->difficultyUnlocked; i++)
     {
         Rect drawRect = (Rect){augmentX+offsetX,20,GetWidthSprite(&sprites[ui.augmentIconIndex]),GetHeightSprite(&sprites[ui.augmentIconIndex])};
@@ -1281,7 +1281,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     e->encounter_PurchaseAugment.x = augmentX + 3 + offsetX;
     e->encounter_PurchaseAugment.y = 22 - (e->encounter_PurchaseAugment.h/2);
     int purchaseCost = GetAugmentCost(e, e->difficultyUnlocked);
-    if (e->bestProfited > 0)
+    if (e->bestProfited > 0 && e->difficultyUnlocked < MAX_DIFFICULTY_LEVELS)
     {
         e->encounter_PurchaseAugment.isHighlighted = true;
         char* buttonText = calloc(NumDigits(purchaseCost)+1,sizeof(char));
@@ -1291,9 +1291,9 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     }
     else
     {
-        ChangeButtonText((Button*)(e->encounter_PurchaseAugment.data), "Locked");
+        ChangeButtonText((Button*)(e->encounter_PurchaseAugment.data), e->difficultyUnlocked == MAX_DIFFICULTY_LEVELS ? "Max" : "Locked" );
     }
-    if (purchaseCost > players[0].bankedGold || e->bestProfited <= 0)
+    if (purchaseCost > players[0].bankedGold || e->bestProfited <= 0 || e->difficultyUnlocked == MAX_DIFFICULTY_LEVELS)
     {
         e->encounter_PurchaseAugment.isHighlighted = false;
         e->encounter_PurchaseAugment.enabled = false;
@@ -1389,9 +1389,9 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
         e->encounter_ButtonRight.enabled = false;
     }
 
-    DrawUIElement(&e->encounter_ButtonLeft,14+offsetX,224,mouseState,e->encounter_ButtonLeft.bgColor,COLOR_FRIENDLY,false);
-    DrawUIElement(&e->encounter_ButtonConfirm,80+offsetX,224,mouseState,e->encounter_ButtonConfirm.bgColor,COLOR_FRIENDLY,false);
-    DrawUIElement(&e->encounter_ButtonRight,194+offsetX,224,mouseState,e->encounter_ButtonRight.bgColor,COLOR_FRIENDLY,false);
+    DrawUIElement(&e->encounter_ButtonLeft,14+offsetX,226,mouseState,e->encounter_ButtonLeft.bgColor,COLOR_FRIENDLY,false);
+    DrawUIElement(&e->encounter_ButtonConfirm,80+offsetX,226,mouseState,e->encounter_ButtonConfirm.bgColor,COLOR_FRIENDLY,false);
+    DrawUIElement(&e->encounter_ButtonRight,194+offsetX,226,mouseState,e->encounter_ButtonRight.bgColor,COLOR_FRIENDLY,false);
 
 
     if (GetButtonIsClicked(&e->encounter_ButtonLeft))

@@ -69,6 +69,8 @@ typedef struct Encounter
 } Encounter;
 
 #define NUM_ENCOUNTER_FUNCTIONS 3
+#define MAX_DIFFICULTY_LEVELS 10
+
 
 
 void LoadEncounter(char* dirPath,lua_State* l);

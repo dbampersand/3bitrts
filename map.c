@@ -100,7 +100,7 @@ bool RectIsFree(int x, int y, int w, int h, bool caresAboutUnits)
 }
 bool LineIsFree(int x, int y, bool caresAboutUnits, int h)
 {
-    if (y + h + 1 > GetMapHeight()/_GRAIN || y < 0 || x < 0 || x >= GetMapWidth()/_GRAIN)
+    if (y + h + 1 >= (GetUIStartHeight())/(float)_GRAIN  || y < 0 || x < 0 || x >= GetMapWidth()/_GRAIN)
         return false;
 
     int startIndex = GetIndex(currMap->collisionMapHeight,x,y);

@@ -24,7 +24,7 @@ function setup()
 
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",268.00,64.00,TYPE_ENEMY,0),4)
 
-    SetSpawnPoint(81,484)
+    SetSpawnPoint(81,486)
 
     SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",404.00,264.00,TYPE_ENEMY,0.00),5)
     SetAggroGroup(CreateObject("assets/enemies/kobold_crossbow/kobold_crossbow.lua",336.00,216.00,TYPE_ENEMY,0.00),5)

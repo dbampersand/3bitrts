@@ -3263,9 +3263,12 @@ void Teleport(GameObject* g, float x, float y, bool updateOld)
     x -= GetWidth(g) / 2.0f;
     y -= GetHeight(g) / 2.0f;
 
-    PointI target = (PointI){x / _GRAIN, y / _GRAIN};
+    if (y + GetHeight(g) > GetUIStartHeight())
+        y = GetUIStartHeight() - GetHeight(g);
 
-    PointI here = (PointI){x / _GRAIN, y / _GRAIN};
+    PointI target = (PointI){x / (float)_GRAIN, y / (float)_GRAIN};
+
+    PointI here = (PointI){x / (float)_GRAIN, y / (float)_GRAIN};
     bool found = false;
 
     PointI move = GetClosestPathablePoint(target, here, &found, ((GetWidth(g)) / (float)_GRAIN), ((GetHeight(g)) / (float)_GRAIN), true, 32);
@@ -3277,7 +3280,7 @@ void Teleport(GameObject* g, float x, float y, bool updateOld)
     UpdateObjPosition(g, move.x * _GRAIN, move.y * _GRAIN);
 
     SetTargetPosition(g, g->position.worldX, g->position.worldY);
-    SetMapCollisionRect(g->position.worldX, g->position.worldY, GetWidth(g), GetHeight(g), true);
+    SetMapCollisionRect(g->position.worldX, g->position.worldY, GetWidth(g)+1, GetHeight(g)+1, true);
     return;
 }
 void GetOffsetCenter(GameObject* g, float* x, float* y)
