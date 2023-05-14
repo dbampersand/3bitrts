@@ -38,7 +38,7 @@ function ontimeout(x,y,obj,dt,target)
 
     AddAbility(obj,"assets/friendly/arcane_mage/bolt.lua",0)
     AddAbility(obj,"assets/friendly/arcane_mage/teleport.lua",1)
-    AddAbility(obj,"assets/friendly/arcane_mage/summon_elemental.lua",2)
+    AddAbility(obj,"assets/friendly/arcane_mage/arcane_wave.lua",2)
     AddAbility(obj,"assets/friendly/arcane_mage/mana_sword.lua",3);
 end
 function onhit(x,y,objhit)

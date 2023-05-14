@@ -4457,6 +4457,18 @@ int L_GetSampleIndices(lua_State* l)
     return 1;
 
 }
+int L_AddMana(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    if (!GameObjectIndexInRange(objIndex))
+    {
+        printf("L_AddMana: index out of range: %i\n",objIndex);
+        return 0;
+    }
+    float manaToAdd = lua_tonumber(l,2);
+    AddMana(&objects[objIndex],manaToAdd);
+    return 0;
+}
 int L_GetObjectsInCone(lua_State* l)
 {
     int objFriendliness = lua_tonumber(l,1);
@@ -5314,5 +5326,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetObjectsInCone);
     lua_setglobal(luaState, "GetObjectsInCone");
+
+    lua_pushcfunction(luaState, L_AddMana);
+    lua_setglobal(luaState, "AddMana");
 
 }

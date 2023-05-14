@@ -454,7 +454,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         DrawDamageNumbers();
         UpdateButton(ui.menuButton.x,ui.menuButton.y,ui.menuButton.w,ui.menuButton.h,&ui.menuButton,*mouseState,*mouseStateLastFrame);
         DrawUIElement(&ui.menuButton,ui.menuButton.x,ui.menuButton.y,mouseState,ui.menuButton.bgColor, COLOR_FRIENDLY,false);
-
+        
         if (gameState == GAMESTATE_INGAME)
         {
             char percentCompletionStr[NumDigits(INT_MAX)+3];
@@ -486,7 +486,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                 DrawUIHighlight(&ui.nextLevelButton,ToWorldSpace_X(ui.nextLevelButton.x),ToWorldSpace_Y(ui.nextLevelButton.y));
             }
 
-            Rect r = (Rect){ui.nextLevelButton.x+1,ui.nextLevelButton.y+2,ui.nextLevelButton.w-3,ui.nextLevelButton.h-3};
+            Rect r = (Rect){ui.nextLevelButton.x+1,ui.nextLevelButton.y+1,ui.nextLevelButton.w-3,ui.nextLevelButton.h-3};
             UpdateButton(ui.nextLevelButton.x,ui.nextLevelButton.y,ui.nextLevelButton.w,ui.nextLevelButton.h,&ui.nextLevelButton,*mouseState,*mouseStateLastFrame);
 
             float distFrom = currMap->percentComplete - currMap->percentCompleteShowing;

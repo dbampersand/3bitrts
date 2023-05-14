@@ -2262,7 +2262,7 @@ void InitGameUI()
     InitButton(&ui.menuButton,"Menu","Menu",213,4,40,11,0);
 
     int w = 80;
-    InitButton(&ui.nextLevelButton,"Descend","Descend",_SCREEN_SIZE/2-w/2,10,w,10,0);
+    InitButton(&ui.nextLevelButton,"Descend","Descend",_SCREEN_SIZE/2-w/2,10,w,12,0);
     ui.nextLevelButton.enabled = false;
     ui.nextLevelButton.bgColor =  COLOR__TRANSPARENT; 
 
@@ -2976,11 +2976,11 @@ void DrawButtonText(UIElement* u,int x, int y, ALLEGRO_COLOR col)
 {
     Button* b = (Button*)u->data;
     int align = b->drawLine ? ALLEGRO_ALIGN_CENTRE : ALLEGRO_ALIGN_LEFT;
-    int textX; int textY;
+    float textX; float textY;
     if (align == ALLEGRO_ALIGN_CENTRE)
     {
-        textX = x + u->w/2;
-        textY = y + u->h/2 - al_get_font_line_height(ui.font)/2.0;
+        textX = x + u->w/2.0f;
+        textY = y + u->h/2.0f - al_get_font_line_height(ui.font)/2.0;
     }
     if (align == ALLEGRO_ALIGN_LEFT)
     {
@@ -2989,7 +2989,7 @@ void DrawButtonText(UIElement* u,int x, int y, ALLEGRO_COLOR col)
     }
     ALLEGRO_FONT* font = GetElementFont(u);
     
-    al_draw_text(font,col,textX,textY,align,b->description);
+    al_draw_text(font,col,textX,floor(textY),align,b->description);
 }   
 void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected, ALLEGRO_COLOR foregroundColor, bool fromPanel)
 {

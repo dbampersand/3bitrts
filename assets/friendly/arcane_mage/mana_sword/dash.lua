@@ -1,7 +1,9 @@
-
+local radius = 20
 function setup()
     AbilitySetPortrait("assets/friendly/arcane_mage/mana_sword/icon_dash.png");
     AbilitySetCastType(ABILITY_POINT);
+    SetAbilityHint(HINT_CIRCLE,radius)
+
     SetDescription("Dash\n\nDashes at the target. Deals damage and stuns around the target.");
     SetCooldown(8);
     SetAbilityRange(50);    
@@ -22,7 +24,7 @@ function casted(x,y,obj,headingx,headingy)
 
 
     Teleport(GetObjRef(),x,y);
-    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",20,0.1,0.1,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_VERTICAL_HALF,false,-1,{f1,f2});
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",radius,0.1,0.1,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_VERTICAL_HALF,false,-1,{f1,f2});
 
     return true;
 end

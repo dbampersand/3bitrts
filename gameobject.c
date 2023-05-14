@@ -3443,11 +3443,8 @@ int GetHeight(GameObject* g)
         return al_get_bitmap_height(replay.sprites[g->spriteIndex].sprite) > 1 ? al_get_bitmap_height(replay.sprites[g->spriteIndex].sprite) : 1;
     return al_get_bitmap_height(sprites[g->spriteIndex].sprite) > 1 ? al_get_bitmap_height(sprites[g->spriteIndex].sprite) : 1;
 }
-
-float RectDist(GameObject* g1, GameObject* g2)
+float RectDist_R(Rect r1, Rect r2)
 {
-    Rect r1 = GetObjRect(g1); //(Rect){g1->position.worldX,g1->position.worldY,GetWidth(g1),GetHeight(g1)};
-    Rect r2 = GetObjRect(g2); //(Rect){g2->position.worldX,g2->position.worldY,GetWidth(g2),GetHeight(g2)};
     if (CheckIntersect(r1, r2))
         return 0;
     Rect unioned = UnionRectR(r1, r2);
@@ -3460,6 +3457,13 @@ float RectDist(GameObject* g1, GameObject* g2)
     // float dist = (unioned.w+unioned.h) - (r1.w+r2.w+r1.h+r2.h);
     float dist = sqrt(unioned.w * unioned.w + unioned.h * unioned.h);
     return dist;
+
+}
+float RectDist(GameObject* g1, GameObject* g2)
+{
+    Rect r1 = GetObjRect(g1); //(Rect){g1->position.worldX,g1->position.worldY,GetWidth(g1),GetHeight(g1)};
+    Rect r2 = GetObjRect(g2); //(Rect){g2->position.worldX,g2->position.worldY,GetWidth(g2),GetHeight(g2)};
+    return RectDist_R(r1,r2);
 }
 
 bool IsInCombat(GameObject* g)

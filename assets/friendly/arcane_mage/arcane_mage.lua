@@ -6,7 +6,7 @@ function setup()
 
     AddAbility(GetObjRef(),"assets/friendly/arcane_mage/bolt.lua",0)
     AddAbility(GetObjRef(),"assets/friendly/arcane_mage/teleport.lua",1)
-    AddAbility(GetObjRef(),"assets/friendly/arcane_mage/summon_elemental.lua",2)
+    AddAbility(GetObjRef(),"assets/friendly/arcane_mage/arcane_wave.lua",2)
     AddAbility(GetObjRef(),"assets/friendly/arcane_mage/mana_sword.lua",3);
 
 

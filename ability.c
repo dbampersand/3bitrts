@@ -198,6 +198,8 @@ int GetAbilityIndexClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_ST
 }
 void CloneAbilityPrefab(Ability* prefab, lua_State* l, Ability* cloneTo)
 {
+    memset(cloneTo,0,sizeof(Ability));
+
     Ability* a = cloneTo;
     a->path = prefab->path;
     a->luabuffer = prefab->luabuffer;
@@ -394,6 +396,8 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
             return false;
         }
     }
+    if (a->castType & ABILITY_ANGLE)
+        goto cast;
     if (target && ((a->castType & ABILITY_TARGET_ALL || a->castType & ABILITY_TARGET_ENEMY || a->castType & ABILITY_TARGET_FRIENDLY) || a->castType & ABILITY_NONE))
     {
         bool ownedByG = IsOwnedByPlayer(g);
@@ -460,7 +464,8 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         GetCentre(g, &cx,&cy);
         if (a->castType != ABILITY_INSTANT)
             ClampToRadius(&x,&y,cx,cy,a->range);
-
+        if (!target)
+            target = currGameObjRunning;
         lua_pushinteger(luaState,x);
             lua_pushinteger(luaState,y);    
         lua_pushinteger(luaState,(int)(target-objects));    
