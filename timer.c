@@ -3,7 +3,9 @@
 #include <string.h>
 #include "luafuncs.h"
 #include "gameobject.h"
-void AddTimer(Timer t)
+#include "stdbool.h"
+
+Timer* AddTimer(Timer t)
 {
     if (!timers)
     {
@@ -24,6 +26,8 @@ void AddTimer(Timer t)
     timers[numTimers] = tNew;
 
     numTimers++;
+
+    return tNew;
 }
 void DeleteTimer(int index)
 {
@@ -51,6 +55,13 @@ bool UpdateTimer(int index, float dt)
         currGameObjRunning = t->obj;
         currAbilityRunning = t->ability;
         currAttackRunning = t->attack;
+ 
+        if (currAbilityRunning->luafunc_timerbeforetick)
+        {
+            lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_timerbeforetick);
+            lua_pushnumber(luaState,(size_t)t);
+            lua_pcall(luaState,1,0,0);
+        }
 
         void (*func)(lua_State*) = (void*)(t->func);
         lua_settop(luaState,0);
@@ -78,3 +89,25 @@ void UpdateTimers(float dt)
             i--;
     }
 }
+void UpdateTimerArgument(Timer* t, int argumentPosition, float* f, const char* str, bool* b)
+{
+    lua_settop(luaState,0);
+    lua_rawgeti(luaState,LUA_REGISTRYINDEX,t->registryIndex);
+    lua_pushnumber(luaState,argumentPosition);
+    if (f)
+    {
+        lua_pushnumber(luaState,*f);
+    }
+    if (str)
+    {
+        lua_pushstring(luaState,str);
+    }
+    if (b)
+    {
+        lua_pushboolean(luaState,*b);
+    }
+    lua_settable(luaState,-3);
+
+    luaL_unref(luaState,LUA_REGISTRYINDEX,t->registryIndex);
+    t->registryIndex = luaL_ref(luaState,LUA_REGISTRYINDEX);
+}   

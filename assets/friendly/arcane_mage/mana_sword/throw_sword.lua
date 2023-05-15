@@ -19,7 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     CureNamedEffect(GetObjRef(), "Mana Sword", 1);
     AddAbility(GetObjRef(),"assets/friendly/arcane_mage/bolt.lua",0)
     AddAbility(GetObjRef(),"assets/friendly/arcane_mage/teleport.lua",1)
-    AddAbility(GetObjRef(),"assets/friendly/arcane_mage/arcan_wave.lua",2)
+    AddAbility(GetObjRef(),"assets/friendly/arcane_mage/arcane_wave.lua",2)
     AddAbility(GetObjRef(),"assets/friendly/arcane_mage/mana_sword.lua",3);
 
     ApplyEffect(obj,{f1});

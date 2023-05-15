@@ -302,7 +302,7 @@ void DoCommands(GameObject* g)
             if (AbilityCanBeCast(c->ability,g,c->target,c->x,c->y))
             {
                 Command before = *c;
-                CastAbility(g,c->ability,c->x,c->y,c->x-g->position.worldX,c->y-g->position.worldY,c->target);
+                CastAbility(g,c->ability,c->x+MOUSECURSORSIZE,c->y+MOUSECURSORSIZE,c->x-g->position.worldX+MOUSECURSORSIZE,c->y-g->position.worldY+MOUSECURSORSIZE,c->target);
                 if (!CmdEqual(before,g->queue[0]))
                 {
                     //if casting the ability has modified the queue

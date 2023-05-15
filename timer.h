@@ -3,6 +3,8 @@
 #include "lua-5.4.3/src/lauxlib.h"
 #include "lua-5.4.3/src/lualib.h"
 #include "lua-5.4.3/src/luaconf.h"
+#include <stdbool.h>
+
 typedef struct GameObject GameObject;
 typedef struct Ability Ability;
 typedef struct Attack Attack;
@@ -24,6 +26,8 @@ Timer** timers;
 int numTimers;
 int timerMax;
 
-void AddTimer(Timer t);
+
+Timer* AddTimer(Timer t);
 void DeleteTimer(int index);
 void UpdateTimers(float dt);
+void UpdateTimerArgument(Timer* t, int argumentPosition, float* f, const char* str, bool* b);

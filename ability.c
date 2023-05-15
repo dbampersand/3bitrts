@@ -196,8 +196,11 @@ int GetAbilityIndexClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_ST
 
     return -1;
 }
-void CloneAbilityPrefab(Ability* prefab, lua_State* l, Ability* cloneTo)
+void CloneAbilityPrefab(Ability* prefab, lua_State* l, Ability* cloneTo, GameObject* from)
 {
+    if (AbilityIsInitialised(cloneTo))
+        RemoveAbility(cloneTo,from);
+
     memset(cloneTo,0,sizeof(Ability));
 
     Ability* a = cloneTo;
@@ -359,6 +362,14 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         }
         else
             a->luafunc_onchanneled = -1;
+        if (CheckFuncExists("timerbeforetick",&a->luabuffer))
+        {
+            lua_getglobal(l, "timerbeforetick");
+            funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+            a->luafunc_timerbeforetick = funcIndex;
+        }
+        else
+            a->luafunc_timerbeforetick = -1;
 
 
 
@@ -455,8 +466,8 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
             ClampToRadius(&x,&y,cx,cy,a->range);
         if (!target)
             target = currGameObjRunning;
-        lua_pushinteger(luaState,x);
-            lua_pushinteger(luaState,y);    
+        lua_pushnumber(luaState,x);
+        lua_pushnumber(luaState,y);    
         lua_pushinteger(luaState,(int)(target-objects));    
         lua_pushnumber(luaState,headingx);
         lua_pushnumber(luaState,headingy);    
@@ -579,7 +590,7 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
         else
             return false;
     }
-    if (GetDist(g,target) >= a->range)
+    if (target && GetDist(g,target) >= a->range)
         return false;
     if (target == NULL && AbilityShouldBeCastOnTarget(a))
         return false;
@@ -655,6 +666,8 @@ void RemoveAbility(Ability* a, GameObject* from)
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_untoggle);
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_ontimeout);
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_onchanneled);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_timerbeforetick);
+
 }
 
 void LowerAbilityCooldown(Ability* a, float amt)

@@ -10,6 +10,7 @@ function setup()
 
     
 
+    CreateObject("assets/enemies/kobold_crusher/kobold_crusher.lua",236.00,146.00,TYPE_ENEMY,0.00)
 end
 
 function update()

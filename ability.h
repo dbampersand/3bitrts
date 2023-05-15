@@ -41,6 +41,7 @@ typedef struct Ability
     int luafunc_ontimeout;
     int luafunc_onchanneled;
     int luafunc_parentdeath;
+    int luafunc_timerbeforetick; //used for updating arguments of timers on the same frame as they tick - timers in this case meaning L_After
 
 
     float range;
@@ -93,7 +94,7 @@ void SetAbilityOnCooldown(Ability* a);
 void SetManaCost(Ability* a, float mana);
 
 void LoadAbility(const char* path, lua_State* l, Ability* a);
-void CloneAbilityPrefab(Ability* prefab, lua_State* l, Ability* cloneTo);
+void CloneAbilityPrefab(Ability* prefab, lua_State* l, Ability* cloneTo, GameObject* from);
 Ability* AddAbility(const char* path);
 bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, float headingy, GameObject* target);
 float GetManaCost(Ability* a);

@@ -989,6 +989,13 @@ void UpdateAttack(Attack* a, float dt)
             GameObject* two = activeObjects[i];
             GameObject* one = a->ownedBy;
 
+            //if we have a projectile made by an object that hits friendlies
+            //we don't want to immediately absorb them all so skip past
+            if (a->attackType == ATTACK_PROJECTILE_POINT || a->attackType == ATTACK_PROJECTILE_ANGLE || a->attackType == ATTACK_PROJECTILE_TARGETED)
+            {
+                if (a->ownedBy == activeObjects[i])
+                    continue;
+            }
             
             if (a->attackType == ATTACK_AOE || a->attackType == ATTACK_PROJECTILE_TARGETED || a->attackType ==   ATTACK_PROJECTILE_POINT ||a->attackType == ATTACK_PROJECTILE_ANGLE)
             {

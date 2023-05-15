@@ -487,6 +487,9 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             }
 
             Rect r = (Rect){ui.nextLevelButton.x+1,ui.nextLevelButton.y+1,ui.nextLevelButton.w-3,ui.nextLevelButton.h-3};
+            #ifdef  __APPLE__
+                r.y += 1;
+            #endif
             UpdateButton(ui.nextLevelButton.x,ui.nextLevelButton.y,ui.nextLevelButton.w,ui.nextLevelButton.h,&ui.nextLevelButton,*mouseState,*mouseStateLastFrame);
 
             float distFrom = currMap->percentComplete - currMap->percentCompleteShowing;

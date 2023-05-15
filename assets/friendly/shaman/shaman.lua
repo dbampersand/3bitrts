@@ -2,8 +2,8 @@ local maxHP = 800;
 
 function setup()
     SetSprite("assets/friendly/shaman/shaman.png");
-    AddAbility(GetObjRef(),"assets/friendly/shaman/stoneskin_totem.lua",0)    
-    AddAbility(GetObjRef(),"assets/friendly/shaman/swift_totem.lua",1)    
+    AddAbility(GetObjRef(),"assets/friendly/shaman/healing_claws.lua",0)    
+    AddAbility(GetObjRef(),"assets/friendly/shaman/spirits.lua",1)    
     AddAbility(GetObjRef(),"assets/friendly/shaman/flame_totem.lua",2)    
     AddAbility(GetObjRef(),"assets/friendly/shaman/healing_stream.lua",3)    
     AddAbility(GetObjRef(),"assets/friendly/shaman/healing_rain.lua",4)    

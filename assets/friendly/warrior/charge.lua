@@ -53,11 +53,16 @@ function casted(x,y,obj,headingx,headingy)
     ApplyEffect(GetObjRef(),{speed,armor});
 
     SetMovePoint(GetObjRef(),x, y, true, false)
-    After(CreateCircularProjectiles,0.02,x,y,"",ATTACK_PROJECTILE_ANGLE,sp,duration,true,ATTACK_HITS_ENEMIES,12,COLOR_FRIENDLY_DAMAGE,0,{f1,f2});
+    After(CreateCircularProjectiles,0.08,x,y,"",ATTACK_PROJECTILE_ANGLE,sp,duration,true,ATTACK_HITS_ENEMIES,12,COLOR_FRIENDLY_DAMAGE,0,{f1,f2});
     return true; 
 end
 
 function untoggle()
+end
+
+function timerbeforetick(timer) 
+    UpdateTimerArgument(timer,1,GetX(GetObjRef()))
+    UpdateTimerArgument(timer,2,GetY(GetObjRef()))
 end
 
 function onhit(x,y,objHit)

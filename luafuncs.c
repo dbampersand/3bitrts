@@ -115,11 +115,39 @@ int L_After(lua_State* l)
     t.ability = currAbilityRunning;
     t.attack = currAttackRunning;
 
-    AddTimer(t);
+    Timer* ref = AddTimer(t);
+    lua_pushnumber(l,(size_t)ref);
+    return 1;
+}
+int L_UpdateTimerArgument(lua_State* l)
+{
+    size_t pointer = lua_tonumber(l,1);
+        Timer* t = (Timer*)pointer;
 
+    int argument = lua_tonumber(l,2);
+    float valueF;
+    const char* str = NULL;
+    bool b;
+
+
+
+    if (lua_isnumber(l,3))
+    {
+        valueF = lua_tonumber(l,3);
+        UpdateTimerArgument(t,argument,&valueF,NULL,NULL);
+    }
+    if (lua_isstring(l,3))
+    {
+        str = lua_tostring(l,3);
+        UpdateTimerArgument(t,argument,NULL,str,NULL);
+    }
+    if (lua_isboolean(l,3))
+    {
+        b = lua_toboolean(l,3);
+        UpdateTimerArgument(t,argument,NULL,NULL,&b);
+    }
     return 0;
 }
-
 int L_GetHeadingVector(lua_State* l)
 {
     float x = lua_tonumber(l,1);
@@ -1137,6 +1165,7 @@ int CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const c
     a.targetRadius = a.radius;
     a.target = targ;
     float x2 = x; float y2 = y;
+
     if (attackType == ATTACK_PROJECTILE_ANGLE)
     {
         x2 = x - cx ;  y2 = y - cy;
@@ -1220,7 +1249,7 @@ int L_CreateConeProjectiles(lua_State* l)
 
     for (int i = 0; i < numProjectiles; i++)
     {
-        float angle = (i) *  radius / (float)numProjectiles;
+        float angle = (i) *  (radius*2) / (float)numProjectiles;
         CreateProjectile(l,x,y, x-cosf(angle+startAngle), y-sinf(angle+startAngle), portrait, attackType, speed, duration, shouldCallback, properties, NULL, color, effects, len);
     }
     return 0;
@@ -3859,7 +3888,7 @@ int L_AddAbility(lua_State* l)
             g->numAbilities++;
         }
         //g->abilities[index] = CloneAbilityPrefab(prefab,l);
-        CloneAbilityPrefab(prefab,l,&g->abilities[index]);
+        CloneAbilityPrefab(prefab,l,&g->abilities[index],g);
         
     }
     
@@ -4171,6 +4200,16 @@ int L_GetDist(lua_State* l)
     lua_pushnumber(l,dist);
     return 1;
 
+}
+int L_DistXY(lua_State* l)
+{
+    float x1 = lua_tonumber(l,1);
+    float y1 = lua_tonumber(l,2);
+    float x2 = lua_tonumber(l,3);
+    float y2 = lua_tonumber(l,4);
+
+    lua_pushnumber(l,dist(x1,y1,x2,y2));
+    return 1;
 }
 int L_GetEffects(lua_State* l)
 {
@@ -5329,5 +5368,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_AddMana);
     lua_setglobal(luaState, "AddMana");
+
+    lua_pushcfunction(luaState, L_UpdateTimerArgument);
+    lua_setglobal(luaState, "UpdateTimerArgument");
+
+    lua_pushcfunction(luaState, L_DistXY);
+    lua_setglobal(luaState, "DistXY");
 
 }
