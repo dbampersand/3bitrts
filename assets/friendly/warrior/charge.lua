@@ -7,7 +7,7 @@ function setup()
     SetAbilityHint(HINT_LINE,1);
 
     SetAbilityRange(60)
-    SetCooldown(20);
+    SetCooldown(0.1);
     SetDescription("Charge\n\nCharges the target, dealing " .. damage  .. "damage to targets around you. Increases armor for " .. armorDuration " seconds.")
 
 end

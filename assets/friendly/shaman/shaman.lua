@@ -4,7 +4,7 @@ function setup()
     SetSprite("assets/friendly/shaman/shaman.png");
     AddAbility(GetObjRef(),"assets/friendly/shaman/healing_claws.lua",0)    
     AddAbility(GetObjRef(),"assets/friendly/shaman/spirits.lua",1)    
-    AddAbility(GetObjRef(),"assets/friendly/shaman/flame_totem.lua",2)    
+    AddAbility(GetObjRef(),"assets/friendly/shaman/embody.lua",2)    
     AddAbility(GetObjRef(),"assets/friendly/shaman/healing_stream.lua",3)    
     AddAbility(GetObjRef(),"assets/friendly/shaman/healing_rain.lua",4)    
 

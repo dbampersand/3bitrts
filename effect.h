@@ -81,7 +81,7 @@ typedef struct Effect
     Ability* abilityFrom;
 
 } Effect;
-
+void GetNumEffects(GameObject* g);
 void ApplyEffect(Effect* e, GameObject* from, GameObject* target);
 void ProcessEffects(GameObject* g, float dt);
 bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove);

@@ -344,7 +344,6 @@ void FinishTransition()
         }
         FocusCameraOnPos(camPos.x,camPos.y);
 
-        printf("%i\n",attack_top);
         for (int i = 0; i < numActiveObjects; i++)
         {
             CureAll(activeObjects[i]);

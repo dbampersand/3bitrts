@@ -200,7 +200,7 @@ void CloneAbilityPrefab(Ability* prefab, lua_State* l, Ability* cloneTo, GameObj
 {
     if (AbilityIsInitialised(cloneTo))
         RemoveAbility(cloneTo,from);
-
+    
     memset(cloneTo,0,sizeof(Ability));
 
     Ability* a = cloneTo;

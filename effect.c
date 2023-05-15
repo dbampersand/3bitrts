@@ -86,9 +86,6 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
 
 
     
-    //If it's a trigger_const we've already added the value to it
-    if (e->trigger == TRIGGER_CONST)
-        value = e->value;
 
     if (!remove)
         for (int i = 0; i < ceil(value/4.0f); i++)
@@ -99,11 +96,15 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
         }
 
         
-    if (!IsOwnedByPlayer(from))
+    if (!IsOwnedByPlayer(from) && e->effectType == EFFECT_HURT)
     {
         if (currEncounterRunning)
             value += GetAugmentAbilityDamage(value,currEncounterRunning->augment);
     }
+    //If it's a trigger_const we've already added the value to it
+    if (e->trigger == TRIGGER_CONST)
+        value = e->value;
+
     int sign = 1; 
     if (remove) sign = -1;
     if (e->effectType == EFFECT_MAXHP)
@@ -287,15 +288,13 @@ bool RemoveEffect(Effect* e, GameObject* from, bool removeAllStacks)
     if (from)
     {
 
-        int numToMove = MAX_EFFECTS - (e - from->effects) - 1;
-        memcpy(e,e+1,numToMove);
 
+        for (int i = e - from->effects; i < MAX_EFFECTS-1; i++)
+        {
+            from->effects[i] = from->effects[i+1];
+        }
+        memset(&from->effects[MAX_EFFECTS-1],0,sizeof(Effect));
         e->from = NULL;
-
-        //for (int i = e - from->effects; i < MAX_EFFECTS-1; i++)
-        //{
-          //  from->effects[i] = from->effects[i+1];
-        //}
 
     }
     return true;
@@ -374,6 +373,7 @@ Effect CopyEffect(Effect* e)
 void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
 {
     if (!e) return;
+
 
     InitializeEffectVisual(e,RandRange(target->position.worldX,target->position.worldX+GetWidth(target)),RandRange(target->position.worldY,target->position.worldY+GetHeight(target)));
 
