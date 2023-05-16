@@ -84,9 +84,6 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
         ProcessItemsOnEffect(from,e,&v);
     float value = v * e->stacks;
 
-
-    
-
     if (!remove)
         for (int i = 0; i < ceil(value/4.0f); i++)
         {

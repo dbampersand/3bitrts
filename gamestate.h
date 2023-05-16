@@ -19,8 +19,10 @@ typedef enum GameState {
     GAMESTATE_EXIT = 12,
     GAMESTATE_PURCHASING_UNITS = 13,
     GAMESTATE_IN_EDITOR = 14,
+    GAMESTATE_IN_3D = 15,
 
-    NUMGAMESTATES = 15
+
+    NUMGAMESTATES = 16
 } GameState;
 
 typedef enum TRANSITION

@@ -37,6 +37,7 @@
 #include "console.h"
 #include "vectorshape.h"
 #include "easings.h"
+#include "3d.h"
 
 #include "editor.h"
 #include "timer.h"
@@ -113,6 +114,8 @@ void init()
     InitPathfinding();
     LoadShop();
 
+    Init3d();
+    gameState = GAMESTATE_IN_3D;
     //PlayMusic("assets/audio/intro.wav",0.5f,0);
 }
 
@@ -588,6 +591,13 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
     DrawMenus(mouseState);
     DrawWidgets(gameState, DRAWORDER_AFTERUI);
+
+        if (gameState == GAMESTATE_IN_3D)
+    {
+        Update3D(dt,*mouseStateLastFrame,*mouseState,keyState);
+        VoxelRender();
+    }
+
     DrawMouse(mouseState, mousedOver);
     players[0].clickedThisFrame = NULL;
 
@@ -623,8 +633,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     {
         AddCompletionPercent(100);
     }
-
-
     #ifdef DEBUG
         al_put_blended_pixel(DEBUG_P1.x,DEBUG_P1.y,al_map_rgb(0,255,0));
         al_put_blended_pixel(DEBUG_P2.x,DEBUG_P2.y,al_map_rgb(255,0,0));
@@ -804,6 +812,7 @@ int main(int argc, char* args[])
                 al_set_timer_speed(_FPS_TIMER,1/(double)_TARGET_FPS);
 
             }
+
             dt = 1 / (double)_TARGET_FPS * (double)(1-(double)currSettings.slowdownPercent);
 
             clock_t begin = clock();
@@ -860,7 +869,7 @@ int main(int argc, char* args[])
             _FRAMES++;
             totalRenderTime += time;
 
-            //printf("Total time: %f\n",time);
+            printf("Total time: %f\n",time);
             fflush(stdout);
             
             //sort activeobjects so we have less cache misses 

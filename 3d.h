@@ -1,0 +1,57 @@
+#pragma once
+#include "colors.h"
+#include "video.h"
+#include "sprite.h"
+
+
+#define VOXEL_WORLD_SIZE 256
+#define CHUNK_SIZE (VOXEL_WORLD_SIZE / 32)
+#define NUM_CHUNKS (VOXEL_WORLD_SIZE/CHUNK_SIZE)
+
+
+#define PLAYER_VELOCITY_ADD 50
+#define PLAYER_MAX_SPEED 50
+#define _GRAVITY 9.8f
+#define _FRICTION 8.0f
+
+
+#define _TURN_MAG 0.1f
+
+typedef struct Cube
+{
+    float x; float y; float z;
+    float w; float h; float d;
+}Cube;
+
+typedef struct Voxel
+{
+    Color c;
+
+} Voxel;
+
+typedef struct Point3
+{
+    float x; float y; float z;
+} Point3;
+
+typedef struct Quaternion
+{
+    float x;
+    float y; 
+    float z;
+    float w;
+}Quaternion;
+extern Point3 worldPos;
+extern Point3 rotation;
+
+Voxel world[VOXEL_WORLD_SIZE][VOXEL_WORLD_SIZE][VOXEL_WORLD_SIZE];
+bool chunks[NUM_CHUNKS][NUM_CHUNKS][NUM_CHUNKS];
+
+void Init3d();
+void VoxelRender();
+static inline int GetVoxelOffset(int x, int y, int z, int width, int height);
+void Update3D(float dt, MouseState mouseStateLastFrame, MouseState mouseState, ALLEGRO_KEYBOARD_STATE* keyState);
+Point3 NormalizeP3(Point3 p);
+Point3 MultMatrix(float matrix[3][3], Point3 p);
+void GetCamMatrix(Quaternion q, float m[3][3]);
+Quaternion EulerToQuart(Point3 angle);
