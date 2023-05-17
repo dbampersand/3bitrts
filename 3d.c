@@ -3,10 +3,14 @@
 #include "sprite.h"
 #include <math.h>
 #include "helperfuncs.h"
+#include <limits.h>
+#include <float.h>
+#include "allegro5/allegro_primitives.h"
+
 Point3 rotation = {0};
 
 Point3 playerVelocity = {0};
-Cube playerPosition = {VOXEL_WORLD_SIZE/2,VOXEL_WORLD_SIZE/2,VOXEL_WORLD_SIZE/2,10,10,20};
+Cube playerPosition = {VOXEL_WORLD_SIZE/2,VOXEL_WORLD_SIZE/2,VOXEL_WORLD_SIZE/2,10,10,1};
 
 float camMatrix[3][3];
 
@@ -36,8 +40,9 @@ bool CheckCube(Cube c, int stepSize)
         {
             for (int z = c.z; z >= c.z - ((c.d*2)-stepSize); z--)
             {
+
                 if (!RangeCheck(x,y,z))
-                    return false;
+                    return true;
                     
                 if (!IsAir(world[x][y][z]))
                     return false;
@@ -46,16 +51,55 @@ bool CheckCube(Cube c, int stepSize)
     }
     return true;
 }   
-
+float dist3(float x, float y, float z)
+{
+    return sqrtf(x*x+y*y+z*z);
+}
+float GenerateDistToNearest(float x, float y, float z)
+{
+    float lowestDist = FLT_MAX;
+    for (int x2 = 0; x2 < NUM_CHUNKS; x2++)
+    {
+        for (int y2 = 0; y2 < NUM_CHUNKS; y2++)
+        {
+            for (int z2 = 0; z2 < NUM_CHUNKS; z2++)
+            {
+                if (chunks[x2][y2][z2].hasVoxels)
+                {
+                    float dist = dist3((x-x2)*CHUNK_SIZE,(y-y2)*CHUNK_SIZE,(z-z2)*CHUNK_SIZE);
+                    if (dist < lowestDist)
+                        lowestDist = dist;
+                }
+            }
+        }
+    }
+    if (lowestDist < 1) 
+        lowestDist = 1;
+    printf("%f\n",lowestDist);
+    return lowestDist;
+}
+void GenerateChunkDistanceCache()
+{
+    for (int x = 0; x < NUM_CHUNKS; x++)
+    {
+        for (int y = 0; y < NUM_CHUNKS; y++)
+        {
+            for (int z = 0; z < NUM_CHUNKS; z++)
+            {
+                chunks[x][y][z].distToNearest = GenerateDistToNearest(x,y,z);
+            }
+        }
+    }
+}
 void DoPlayerCollisions(Cube* player, float x, float y, float z)
 {
-    #define STEP_SIZE 5
     for (int i = 0; i < fabsf(z); i++)
     {   
         player->z += sign(z); 
         if (!CheckCube(*player,STEP_SIZE))
         {
-            while (!CheckCube(*player,STEP_SIZE))
+            int maxSteps = 50;
+            while (!CheckCube(*player,STEP_SIZE) || maxSteps-- <= 0)
                 player->z -= sign(z);
             break;
         }
@@ -63,9 +107,11 @@ void DoPlayerCollisions(Cube* player, float x, float y, float z)
     for (int i = 0; i < fabsf(y); i++)
     {   
         player->y += sign(y); 
+
         if (!CheckCube(*player,STEP_SIZE))
         {
-            while (!CheckCube(*player,STEP_SIZE))
+            int maxSteps = 50;
+            while (!CheckCube(*player,STEP_SIZE) || maxSteps-- <= 0)
                 player->y -= sign(y);
             break;
         }
@@ -75,7 +121,8 @@ void DoPlayerCollisions(Cube* player, float x, float y, float z)
         player->x += sign(x); 
         if (!CheckCube(*player,STEP_SIZE))
         {
-            while (!CheckCube(*player,STEP_SIZE))
+            int maxSteps = 50;
+            while (!CheckCube(*player,STEP_SIZE) || maxSteps-- <= 0)
                 player->x -= sign(x);
             break;
         }
@@ -95,7 +142,7 @@ void AddVoxel(int x, int y, int z, Color c)
     int chunkY = (int)(floor(y/CHUNK_SIZE));
     int chunkZ = (int)(floor(z/CHUNK_SIZE));
 
-    chunks[chunkX][chunkY][chunkZ] = true;
+    chunks[chunkX][chunkY][chunkZ].hasVoxels = true;
     world[x][y][z].c = c;
 }
 
@@ -133,10 +180,17 @@ void GenTestWorld()
                             AddVoxel(x,y,z,v->c); 
                         }
                     }       
+                    if (rand()%20000 == 0)
+                    {
+                        //v->c = rand() % (COLOR_ALL-1);    
+                        //AddVoxel(x,y,z,v->c); 
+                    }
+
 
             }
         }
     }
+    GenerateChunkDistanceCache();
 }
 void Init3d()
 {
@@ -231,8 +285,6 @@ Voxel VoxelCastRay(float startX, float startY, float startZ, Point3 dir)
     if (!RangeCheck(startX,startY,startZ))
 		return (Voxel){0};
 
-	float _VOXELSIZE = 100;
-
 	float endX = startX+(dir.x);
 	float endY = startY+(dir.y);
 	float endZ = startZ+(dir.z);
@@ -255,28 +307,22 @@ Voxel VoxelCastRay(float startX, float startY, float startZ, Point3 dir)
         if (!IsAir(v))
             return v;
 
-        x += dir.x;
-        y += dir.y;
-        z += dir.z;
+        int chunkX = (int)((x/CHUNK_SIZE));
+        int chunkY = (int)((y/CHUNK_SIZE));
+        int chunkZ = (int)((z/CHUNK_SIZE));
+
+        Chunk* c = &chunks[chunkX][chunkY][chunkZ];
+        printf("distto: %f\n",c->distToNearest);
+        printf("%f,%f,%f\n",dir.x * c->distToNearest,dir.y * c->distToNearest,dir.z * c->distToNearest);
+        x += dir.x * c->distToNearest;
+        y += dir.y * c->distToNearest;
+        z += dir.z * c->distToNearest;
 
 
-        int chunkX = (int)(floor(x/CHUNK_SIZE));
-        int chunkY = (int)(floor(y/CHUNK_SIZE));
-        int chunkZ = (int)(floor(z/CHUNK_SIZE));
+        //chunkX = clamp(chunkX,0,NUM_CHUNKS-1);
+        //chunkY = clamp(chunkY,0,NUM_CHUNKS-1);
+        //chunkZ = clamp(chunkZ,0,NUM_CHUNKS-1);
 
-        chunkX = clamp(chunkX,0,NUM_CHUNKS-1);
-        chunkY = clamp(chunkY,0,NUM_CHUNKS-1);
-        chunkZ = clamp(chunkZ,0,NUM_CHUNKS-1);
-
-
-
-        if (!chunks[chunkX][chunkY][chunkZ])
-        {
-            x += CHUNK_SIZE * dir.x;
-            y += CHUNK_SIZE * dir.y;
-            z += CHUNK_SIZE * dir.z;
-
-        }
         if (!RangeCheck(x,y,z)) 
         {
             x = clamp(x,0,VOXEL_WORLD_SIZE-1);
@@ -297,12 +343,11 @@ Point3 VecCross(Point3 P, Point3 Q)
 Point3 GetForwardVector(Point3 v)
 {
     return (Point3){
-                    cos(v.z)*cos(v.x),
-                    -sin(v.z),
+        cos(v.z)*cos(v.x),
+        -sin(v.z),
+        cos(v.z)*sin(v.x),
 
-    cos(v.z)*sin(v.x),
-
-                    };
+            };
 
 }
 Point3 GetLeftVector(Point3 v)
@@ -360,7 +405,6 @@ void Update3D(float dt, MouseState mouseStateLastFrame, MouseState mouseState, A
     float mouseMoveX = (mouseThis.x - wScreen) * _TURN_MAG;
     float mouseMoveY = (mouseThis.y - hScreen) * _TURN_MAG;
 
-    printf("%f,%f\n",mouseMoveX,mouseMoveY);
 
 
     rotation.z -= mouseMoveX * dt;
@@ -375,7 +419,7 @@ void Update3D(float dt, MouseState mouseStateLastFrame, MouseState mouseState, A
 }
 void VoxelRender()
 {   
-    al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_WRITEONLY);
+    //al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_WRITEONLY);
     float mat[3][3]; 
     GetCamMatrix(EulerToQuart(rotation),mat);
 
@@ -387,9 +431,9 @@ void VoxelRender()
     int pxH = 1;
 
 
-    for (int x = 0; x < _SCREEN_SIZE; x++)
+    for (int x = 0; x < _SCREEN_SIZE; x += PIXEL_SIZE)
     {
-        for (int y = 0; y < _SCREEN_SIZE; y++)
+        for (int y = 0; y < _SCREEN_SIZE; y += PIXEL_SIZE)
         {   
             float pX = (2.0f * (x + 0.5f) / (float)_SCREEN_SIZE - 1.0f) * scale;
 			float pY = (1.0f  - 2.0f * (y + 0.5f) / (float)_SCREEN_SIZE) * scale; 
@@ -397,17 +441,19 @@ void VoxelRender()
 			Point3 angle = (Point3){1,pX,pY};
 			angle = MultMatrix(mat, angle);
 			NormalizeP3(angle);
-
+            printf("start!\n");
             Voxel v = VoxelCastRay(playerPosition.x,playerPosition.y,playerPosition.z, angle);
+            printf("end!\n");
+            
             ALLEGRO_COLOR c = GetColor(v.c,0);
             if (v.c == 0)   
                 c = BG;
 
-            al_put_pixel(x,y,c);
+            al_draw_filled_rectangle(x,y,x+PIXEL_SIZE,y+PIXEL_SIZE,c);
 
             //al_draw_pixel(0,0,al_map_rgb(rand()%255,rand()%255,rand()%255));
         }
     }   
-    al_unlock_bitmap(al_get_target_bitmap());
+    //al_unlock_bitmap(al_get_target_bitmap());
 
 }

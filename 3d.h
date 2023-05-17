@@ -3,17 +3,21 @@
 #include "video.h"
 #include "sprite.h"
 
+#define PIXEL_SIZE 1
+#define STEP_SIZE 2
 
-#define VOXEL_WORLD_SIZE 256
+#define DISTANCE_FIELD_MAX 32
+
+
+#define VOXEL_WORLD_SIZE 1024
 #define CHUNK_SIZE (VOXEL_WORLD_SIZE / 32)
-#define NUM_CHUNKS (VOXEL_WORLD_SIZE/CHUNK_SIZE)
+#define NUM_CHUNKS (VOXEL_WORLD_SIZE / CHUNK_SIZE)
 
 
 #define PLAYER_VELOCITY_ADD 50
 #define PLAYER_MAX_SPEED 50
 #define _GRAVITY 9.8f
 #define _FRICTION 8.0f
-
 
 #define _TURN_MAG 0.1f
 
@@ -26,6 +30,7 @@ typedef struct Cube
 typedef struct Voxel
 {
     Color c;
+    float distFunc;
 
 } Voxel;
 
@@ -44,8 +49,14 @@ typedef struct Quaternion
 extern Point3 worldPos;
 extern Point3 rotation;
 
+typedef struct Chunk
+{
+    bool hasVoxels;
+    float distToNearest;
+}Chunk;
+
 Voxel world[VOXEL_WORLD_SIZE][VOXEL_WORLD_SIZE][VOXEL_WORLD_SIZE];
-bool chunks[NUM_CHUNKS][NUM_CHUNKS][NUM_CHUNKS];
+Chunk chunks[NUM_CHUNKS][NUM_CHUNKS][NUM_CHUNKS];
 
 void Init3d();
 void VoxelRender();
