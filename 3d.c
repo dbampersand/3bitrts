@@ -6,6 +6,26 @@
 #include <limits.h>
 #include <float.h>
 #include "allegro5/allegro_primitives.h"
+#include <stdio.h>
+
+typedef struct VOXEL_ARGS
+{
+    int threadIndex;
+    int x; int y; int w; int h;
+    float fov;
+    float scale;
+    float mat[3][3];
+
+} VOXEL_ARGS;
+typedef struct CHUNK_GEN_THREAD_DATA
+{
+    int threadIndex; int x; int y; int z; int w; int h; int d;
+}CHUNK_GEN_THREAD_DATA;
+CHUNK_GEN_THREAD_DATA chunkThreadData[NUM_THREADS];
+
+
+
+
 
 Point3 rotation = {0};
 
@@ -17,9 +37,27 @@ float camMatrix[3][3];
 ALLEGRO_MOUSE_STATE mousePrev;
 ALLEGRO_MOUSE_STATE mouseThis;
 
-Point3 upV = (Point3){0, 0, 1};
-Point3 rightV = (Point3){0, 1, 0};
-Point3 frontV = (Point3){1, 0, 0};
+ALLEGRO_COLOR _T_PIXELS[_SCREEN_SIZE][_SCREEN_SIZE];
+
+volatile bool threadsFinished[NUM_THREADS];
+VOXEL_ARGS threadData[NUM_THREADS];
+
+//Point3 rightV = (Point3){0, 1, 0};
+//Point3 frontV = (Point3){1, 0, 0};
+#define upV (Point3){0, 0, 1}
+
+
+bool RenderThreadsFinished()
+{
+    for (int i = 0; i < NUM_THREADS; i++)
+    {
+        if (threadsFinished[i] == false)
+        {   
+            return false;
+        }
+    }
+    return true;
+}
 
 
 static inline bool IsAir(Voxel v)
@@ -57,16 +95,24 @@ float dist3(float x, float y, float z)
 }
 float GenerateDistToNearest(float x, float y, float z)
 {
-    float lowestDist = FLT_MAX;
-    for (int x2 = 0; x2 < NUM_CHUNKS; x2++)
+    float lowestDist = DISTANCE_FIELD_MAX;
+    if (!chunks[(int)(x/CHUNK_SIZE)][(int)(y/CHUNK_SIZE)][(int)(z/CHUNK_SIZE)].hasVoxels)
+        return DISTANCE_FIELD_MAX;
+    for (int x2 = x - DISTANCE_FIELD_MAX/2; x2 < x+DISTANCE_FIELD_MAX/2; x2++)
     {
-        for (int y2 = 0; y2 < NUM_CHUNKS; y2++)
+        for (int y2 = y - DISTANCE_FIELD_MAX/2; y2 < y + DISTANCE_FIELD_MAX/2; y2++)
         {
-            for (int z2 = 0; z2 < NUM_CHUNKS; z2++)
+            for (int z2 = z - DISTANCE_FIELD_MAX/2; z2 < z + DISTANCE_FIELD_MAX/2; z2++)
             {
-                if (chunks[x2][y2][z2].hasVoxels)
+                if (!RangeCheck(x2,y2,z2))
+                    continue;
+
+                if (!IsAir(world[x2][y2][z2]))
                 {
-                    float dist = dist3((x-x2)*CHUNK_SIZE,(y-y2)*CHUNK_SIZE,(z-z2)*CHUNK_SIZE);
+                    if (x == x2 && y == y2 && z == z2)
+                        continue;
+
+                    float dist = fabsf(x-x2) + fabsf(y-y2) + fabsf(z-z2); //dist3((x-x2),(y-y2),(z-z2));
                     if (dist < lowestDist)
                         lowestDist = dist;
                 }
@@ -75,21 +121,30 @@ float GenerateDistToNearest(float x, float y, float z)
     }
     if (lowestDist < 1) 
         lowestDist = 1;
-    printf("%f\n",lowestDist);
     return lowestDist;
 }
-void GenerateChunkDistanceCache()
+
+static void* GenerateChunkDistanceCache(ALLEGRO_THREAD* t, void* args)
 {
-    for (int x = 0; x < NUM_CHUNKS; x++)
+    CHUNK_GEN_THREAD_DATA* da = (CHUNK_GEN_THREAD_DATA*)args;
+    int x = da->x;
+    int y = da->y;
+    int z = da->z;
+    int w = da->w;
+    int h = da->h;
+    int d = da->d;
+
+    for (int x2 = 0; x2 < x + w; x2++)
     {
-        for (int y = 0; y < NUM_CHUNKS; y++)
+        for (int y2 = 0; y2 < x + h; y2++)
         {
-            for (int z = 0; z < NUM_CHUNKS; z++)
+            for (int z2 = 0; z2 < z + d; z2++)
             {
-                chunks[x][y][z].distToNearest = GenerateDistToNearest(x,y,z);
+                world[x2][y2][z2].distFunc = GenerateDistToNearest(x2,y2,z2);
             }
         }
     }
+    threadsFinished[da->threadIndex] = true;
 }
 void DoPlayerCollisions(Cube* player, float x, float y, float z)
 {
@@ -145,7 +200,6 @@ void AddVoxel(int x, int y, int z, Color c)
     chunks[chunkX][chunkY][chunkZ].hasVoxels = true;
     world[x][y][z].c = c;
 }
-
 void GenTestWorld()
 {
     playerPosition.x = VOXEL_WORLD_SIZE/2;
@@ -190,7 +244,38 @@ void GenTestWorld()
             }
         }
     }
-    GenerateChunkDistanceCache();
+    ALLEGRO_THREAD* threads[NUM_THREADS];   
+
+    int cubeSize = VOXEL_WORLD_SIZE/NUM_THREADS;
+
+    for (int i = 0; i < NUM_THREADS; i++)
+    {
+        threadsFinished[i] = false;
+        int x = 0; 
+        int y = 0;
+        int z = VOXEL_WORLD_SIZE/(i+1);
+
+        int w = VOXEL_WORLD_SIZE;
+        int h = VOXEL_WORLD_SIZE;
+        int d = VOXEL_WORLD_SIZE / NUM_THREADS;
+
+        CHUNK_GEN_THREAD_DATA dat = (CHUNK_GEN_THREAD_DATA){i,x,y,z,w,h,d};
+        chunkThreadData[i] = dat;
+
+        threads[i] = al_create_thread(GenerateChunkDistanceCache,&chunkThreadData[i]);
+        al_start_thread(threads[i]);
+        //GenerateChunkDistanceCache(x,y,z,w,h,d);
+
+    }
+    while (!RenderThreadsFinished())
+    {
+        
+    }
+    for (int i = 0; i < NUM_THREADS; i++)
+        al_destroy_thread(threads[i]);
+
+
+    printf("fin\n");
 }
 void Init3d()
 {
@@ -304,24 +389,13 @@ Voxel VoxelCastRay(float startX, float startY, float startZ, Point3 dir)
     while (1)
     {
         Voxel v = world[(int)(x)][(int)(y)][(int)(z)];
+
         if (!IsAir(v))
             return v;
 
-        int chunkX = (int)((x/CHUNK_SIZE));
-        int chunkY = (int)((y/CHUNK_SIZE));
-        int chunkZ = (int)((z/CHUNK_SIZE));
-
-        Chunk* c = &chunks[chunkX][chunkY][chunkZ];
-        printf("distto: %f\n",c->distToNearest);
-        printf("%f,%f,%f\n",dir.x * c->distToNearest,dir.y * c->distToNearest,dir.z * c->distToNearest);
-        x += dir.x * c->distToNearest;
-        y += dir.y * c->distToNearest;
-        z += dir.z * c->distToNearest;
-
-
-        //chunkX = clamp(chunkX,0,NUM_CHUNKS-1);
-        //chunkY = clamp(chunkY,0,NUM_CHUNKS-1);
-        //chunkZ = clamp(chunkZ,0,NUM_CHUNKS-1);
+        x += dir.x * v.distFunc;
+        y += dir.y * v.distFunc;
+        z += dir.z * v.distFunc;
 
         if (!RangeCheck(x,y,z)) 
         {
@@ -417,9 +491,52 @@ void Update3D(float dt, MouseState mouseStateLastFrame, MouseState mouseState, A
 
     UpdatePlayer3D(dt,keyState);
 }
+
+
+static void* VoxelRenderLines(ALLEGRO_THREAD *thr, void* v)
+{
+    VOXEL_ARGS* va = (VOXEL_ARGS*)v;
+
+    float mat[3][3];
+    mat[0][0] = va->mat[0][0];
+    mat[0][1] = va->mat[0][1];
+    mat[0][2] = va->mat[0][2];
+    mat[1][0] = va->mat[1][0];
+    mat[1][1] = va->mat[1][1];
+    mat[1][2] = va->mat[1][2];
+    mat[2][0] = va->mat[2][0];
+    mat[2][1] = va->mat[2][1];
+    mat[2][2] = va->mat[2][2];
+
+    float fov = va->fov;
+    float scale = va->scale;
+
+    for (int x = va->x; x < va->x + va->w; x += PIXEL_SIZE)
+    {
+        for (int y = va->y; y < va->y + va->h; y += PIXEL_SIZE)
+        {   
+            float pX = (2.0f * (x + 0.5f) / (float)_SCREEN_SIZE - 1.0f) * scale;
+			float pY = (1.0f  - 2.0f * (y + 0.5f) / (float)_SCREEN_SIZE) * scale; 
+
+			Point3 angle = (Point3){1,pX,pY};
+			angle = MultMatrix(mat, angle);
+			NormalizeP3(angle);
+            Voxel v = VoxelCastRay(playerPosition.x,playerPosition.y,playerPosition.z, angle);
+            
+            ALLEGRO_COLOR c = GetColor(v.c,0);
+            if (v.c == 0)   
+                c = BG;
+                
+            _T_PIXELS[x][y] = c;
+            //al_draw_filled_rectangle(x,y,x+PIXEL_SIZE,y+PIXEL_SIZE,c);
+
+        }
+    }
+    threadsFinished[va->threadIndex] = true;
+}
 void VoxelRender()
 {   
-    //al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_WRITEONLY);
+    al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_WRITEONLY);
     float mat[3][3]; 
     GetCamMatrix(EulerToQuart(rotation),mat);
 
@@ -430,7 +547,45 @@ void VoxelRender()
     int pxW = 1;
     int pxH = 1;
 
+    ALLEGRO_THREAD* threads[NUM_THREADS];
 
+    for (int i = 0; i < NUM_THREADS; i++)
+    {
+        threadsFinished[i] = false;
+
+        int x = 0;
+        int y = i * (_SCREEN_SIZE / NUM_THREADS);
+        int w = _SCREEN_SIZE;
+        int h = _SCREEN_SIZE / NUM_THREADS;
+        VOXEL_ARGS va = (VOXEL_ARGS){i,x,y,w,h,fov,scale};
+        va.mat[0][0] = mat[0][0];
+        va.mat[0][1] = mat[0][1];
+        va.mat[0][2] = mat[0][2];
+
+        va.mat[1][0] = mat[1][0];
+        va.mat[1][1] = mat[1][1];
+        va.mat[1][2] = mat[1][2];
+
+        va.mat[2][0] = mat[2][0];
+        va.mat[2][1] = mat[2][1];
+        va.mat[2][2] = mat[2][2];
+
+        threadData[i] = va;
+
+
+        threads[i] = al_create_thread(VoxelRenderLines,&threadData[i]);
+        al_start_thread(threads[i]);
+
+    }
+    while (!RenderThreadsFinished())
+    {
+        
+    }
+    for (int i = 0; i < NUM_THREADS; i++)
+    {
+        al_destroy_thread(threads[i]);
+    }
+    /*
     for (int x = 0; x < _SCREEN_SIZE; x += PIXEL_SIZE)
     {
         for (int y = 0; y < _SCREEN_SIZE; y += PIXEL_SIZE)
@@ -441,9 +596,7 @@ void VoxelRender()
 			Point3 angle = (Point3){1,pX,pY};
 			angle = MultMatrix(mat, angle);
 			NormalizeP3(angle);
-            printf("start!\n");
             Voxel v = VoxelCastRay(playerPosition.x,playerPosition.y,playerPosition.z, angle);
-            printf("end!\n");
             
             ALLEGRO_COLOR c = GetColor(v.c,0);
             if (v.c == 0)   
@@ -453,7 +606,15 @@ void VoxelRender()
 
             //al_draw_pixel(0,0,al_map_rgb(rand()%255,rand()%255,rand()%255));
         }
-    }   
-    //al_unlock_bitmap(al_get_target_bitmap());
+    }   */
+    for (int x = 0; x < _SCREEN_SIZE; x += PIXEL_SIZE)
+    {
+        for (int y = 0; y < _SCREEN_SIZE; y += PIXEL_SIZE)
+        {   
+            al_put_pixel(x,y,_T_PIXELS[x][y]);
+        }
+    }
+
+    al_unlock_bitmap(al_get_target_bitmap());
 
 }

@@ -11,8 +11,8 @@ function setup()
     CreateObject("assets/decor/curebox.lua",135.00,316.00,TYPE_ENEMY,0);
 
     SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",87.00,242.00, TYPE_ENEMY,0),2);
-    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",119.00,218.00,TYPE_ENEMY,0),2);
-    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",148.00,207.00,TYPE_ENEMY,0),2);
+    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",116.00,216.00,TYPE_ENEMY,0),2);
+    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",148.00,204.00,TYPE_ENEMY,0),2);
 
 
     SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",104.00,114.00,TYPE_ENEMY,0),3);
@@ -22,6 +22,7 @@ function setup()
 
     SetSpawnPoint(120,537)
     
+    CreateObject("assets/enemies/viper/viper.lua",164.00,260.00,TYPE_ENEMY,0.00)
 end
 
 function update(dt)

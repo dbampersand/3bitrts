@@ -114,8 +114,8 @@ void init()
     InitPathfinding();
     LoadShop();
 
-    Init3d();
-    gameState = GAMESTATE_IN_3D;
+    //Init3d();
+    //gameState = GAMESTATE_IN_3D;
     //PlayMusic("assets/audio/intro.wav",0.5f,0);
 }
 
@@ -592,7 +592,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     DrawMenus(mouseState);
     DrawWidgets(gameState, DRAWORDER_AFTERUI);
 
-        if (gameState == GAMESTATE_IN_3D)
+    if (gameState == GAMESTATE_IN_3D)
     {
         Update3D(dt,*mouseStateLastFrame,*mouseState,keyState);
         VoxelRender();
