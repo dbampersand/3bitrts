@@ -114,8 +114,8 @@ void init()
     InitPathfinding();
     LoadShop();
 
-    //Init3d();
-    //gameState = GAMESTATE_IN_3D;
+    Init3d();
+    gameState = GAMESTATE_IN_3D;
     //PlayMusic("assets/audio/intro.wav",0.5f,0);
 }
 
@@ -592,13 +592,14 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     DrawMenus(mouseState);
     DrawWidgets(gameState, DRAWORDER_AFTERUI);
 
-    if (gameState == GAMESTATE_IN_3D)
+
+    DrawMouse(mouseState, mousedOver);
+        if (gameState == GAMESTATE_IN_3D)
     {
         Update3D(dt,*mouseStateLastFrame,*mouseState,keyState);
         VoxelRender();
     }
 
-    DrawMouse(mouseState, mousedOver);
     players[0].clickedThisFrame = NULL;
 
     if (gameState == GAMESTATE_LOAD_SCREEN || gameState == GAMESTATE_LOAD_ENCOUNTER) 

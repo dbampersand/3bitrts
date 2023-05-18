@@ -15,12 +15,12 @@
 #define NUM_CHUNKS (VOXEL_WORLD_SIZE / CHUNK_SIZE)
 
 
-#define PLAYER_VELOCITY_ADD 50
-#define PLAYER_MAX_SPEED 50
+#define PLAYER_VELOCITY_ADD 2000
+#define PLAYER_MAX_SPEED 2
 #define _GRAVITY 9.8f
-#define _FRICTION 8.0f
+#define _FRICTION 250
 
-#define _TURN_MAG 0.1f
+#define _TURN_MAG 0.8f
 
 typedef struct Cube
 {
