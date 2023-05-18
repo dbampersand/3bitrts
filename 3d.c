@@ -253,7 +253,7 @@ float GenerateDistToNearest(float x, float y, float z)
 {
     float lowestDist = DISTANCE_FIELD_MAX;
     if (!chunks[(int)(x/CHUNK_SIZE)][(int)(y/CHUNK_SIZE)][(int)(z/CHUNK_SIZE)].hasVoxels)
-        return DISTANCE_FIELD_MAX;
+        return DISTANCE_FIELD_MAX/sqrtf(DISTANCE_FIELD_MAX);
     for (int x2 = x - DISTANCE_FIELD_MAX/2; x2 < x+DISTANCE_FIELD_MAX/2; x2++)
     {
         for (int y2 = y - DISTANCE_FIELD_MAX/2; y2 < y + DISTANCE_FIELD_MAX/2; y2++)
@@ -261,14 +261,18 @@ float GenerateDistToNearest(float x, float y, float z)
             for (int z2 = z - DISTANCE_FIELD_MAX/2; z2 < z + DISTANCE_FIELD_MAX/2; z2++)
             {
                 if (!RangeCheck(x2,y2,z2))
+                {   
+                    lowestDist = 1;
                     continue;
-
+                }
                 if (!IsAir(world[x2][y2][z2]))
                 {
                     if (x == x2 && y == y2 && z == z2)
                         continue;
+                    //float dist = _MAX(_MAX(fabsf(x-x2),fabsf(y-y2)),fabsf(z-z2));
+                    //float dist = fabsf(x-x2) + fabsf(y-y2) + fabsf(z-z2);
+                    float dist = dist3((x-x2),(y-y2),(z-z2));
 
-                    float dist = fabsf(x-x2) + fabsf(y-y2) + fabsf(z-z2); //dist3((x-x2),(y-y2),(z-z2));
                     if (dist < lowestDist)
                         lowestDist = dist;
                 }
@@ -277,7 +281,8 @@ float GenerateDistToNearest(float x, float y, float z)
     }
     if (lowestDist < 1) 
         lowestDist = 1;
-    return lowestDist;
+    lowestDist /= sqrtf(DISTANCE_FIELD_MAX);
+    return (lowestDist);
 }
 
 static void* GenerateChunkDistanceCache(ALLEGRO_THREAD* t, void* args)
@@ -589,19 +594,12 @@ Voxel VoxelCastRay(float startX, float startY, float startZ, Point3 dir)
     if (!RangeCheck(startX,startY,startZ))
 		return (Voxel){0};
 
-	float endX = startX+(dir.x);
-	float endY = startY+(dir.y);
-	float endZ = startZ+(dir.z);
-
-	Point3 ray = (Point3){endX - startX, endY - startY, endZ - startZ};
-
-	int stepX = ray.x >= 0 ? 1 : -1;
-	int stepY = ray.y >= 0 ? 1 : -1;
-	int stepZ = ray.z >= 0 ? 1 : -1;
 
     float x = startX;
     float y = startY;
     float z = startZ;
+
+    
 
 
     bool found = false;
@@ -612,17 +610,44 @@ Voxel VoxelCastRay(float startX, float startY, float startZ, Point3 dir)
         if (!IsAir(v))
             return v;
 
-        x += dir.x * v.distFunc;
-        y += dir.y * v.distFunc;
-        z += dir.z * v.distFunc;
+        float deltaX = dir.x * v.distFunc;
+        float deltaY = dir.y * v.distFunc;
+        float deltaZ = dir.z * v.distFunc;
+
+        float xNew = x + deltaX;
+        float yNew = y + deltaY;
+        float zNew = z + deltaZ;
+        //if (!RangeCheck(xNew,yNew,zNew))
+          //  goto range;
+
+        x = xNew;
+        y = yNew;
+        z = zNew;
+
+        /*y = yNew;
+        v = world[(int)(x)][(int)(y)][(int)(z)];
+        if (!IsAir(v))
+            return v;
+
+        x = xNew;
+        v = world[(int)(x)][(int)(y)][(int)(z)];
+        if (!IsAir(v))
+            return v;
+
+            
+        z = zNew;
+        v = world[(int)(x)][(int)(y)][(int)(z)];
+        if (!IsAir(v))
+            return v;*/
 
         if (!RangeCheck(x,y,z)) 
         {
-            x = clamp(x,0,VOXEL_WORLD_SIZE-1);
-            y = clamp(y,0,VOXEL_WORLD_SIZE-1);
-            z = clamp(z,0,VOXEL_WORLD_SIZE-1);
+            //range:
+                x = clamp(x,0,VOXEL_WORLD_SIZE-1);
+                y = clamp(y,0,VOXEL_WORLD_SIZE-1);
+                z = clamp(z,0,VOXEL_WORLD_SIZE-1);
 
-            return world[(int)x][(int)y][(int)z];
+                return world[(int)x][(int)y][(int)z];
         }
 
     }
@@ -734,8 +759,6 @@ void UpdatePlayer3D(float dt, ALLEGRO_KEYBOARD_STATE* keyState)
    // playerVelocity.x = clamp(playerVelocity.x,-PLAYER_MAX_SPEED,PLAYER_MAX_SPEED);
    // playerVelocity.y = clamp(playerVelocity.y,-PLAYER_MAX_SPEED,PLAYER_MAX_SPEED);
     
-    printf("p: %f,%f,%f\n",playerPosition.x,playerPosition.y,playerPosition.z);
-
     MovePlayer(playerVelocity.x,playerVelocity.y,playerVelocity.z);
 }
 float _MOUSE_POSITION_CENTER_X;
@@ -760,11 +783,13 @@ void Update3D(float dt, MouseState mouseStateLastFrame, MouseState mouseState, A
     //z is yaw
     //y is roll
 
+    if (al_key_down(keyState,ALLEGRO_KEY_E))
+    {
     rotation.z -= mouseMoveX * dt;
     rotation.x -= mouseMoveY * dt;
 
-
-    al_set_mouse_xy(display,128*_RENDERSIZE,128*_RENDERSIZE);
+        al_set_mouse_xy(display,128*_RENDERSIZE,128*_RENDERSIZE);
+    }
     MouseState after = GetMouseClamped();
     _MOUSE_POSITION_CENTER_X = after.screenX;
     _MOUSE_POSITION_CENTER_Y = after.screenY;
@@ -799,9 +824,8 @@ static void* VoxelRenderLines(ALLEGRO_THREAD *thr, void* v)
     {
         for (int y = va->y; y < va->y + va->h; y += PIXEL_SIZE)
         {   
-            float pX = (2.0f * (x + 0.5f) / (float)_SCREEN_SIZE - 1.0f) * scale;
-			float pY = (1.0f  - 2.0f * (y + 0.5f) / (float)_SCREEN_SIZE) * scale; 
-
+            float pX = (2.0f * (x) / (float)_SCREEN_SIZE - 1.0f) * scale;
+			float pY = (1.0f  - 2.0f * (y) / (float)_SCREEN_SIZE) * scale; 
 			Point3 angle = (Point3){1,pX,pY};
 			angle = MultMatrix(mat, angle);
 			NormalizeP3(angle);
