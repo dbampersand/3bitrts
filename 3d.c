@@ -48,6 +48,8 @@ VOXEL_ARGS threadData[NUM_THREADS];
 #define rightV (Point3){0, 1, 0}
 
 void PreprocessWorld();
+bool RangeCheck(int x, int y, int z);
+
 void normalizeQ(Quaternion* q)
 {
     float abs = sqrtf(q->x * q->x + q->y * q->y + q->z * q->z + q->w * q->w);
@@ -104,15 +106,29 @@ Quaternion IdentityQ()
 {
     return (Quaternion){0,0,0,1};
 }
-
 void AddVoxel(int x, int y, int z, Color c)
 {
+    if (!RangeCheck(x,y,z))
+        return;
     int chunkX = (int)(floor(x/CHUNK_SIZE));
     int chunkY = (int)(floor(y/CHUNK_SIZE));
     int chunkZ = (int)(floor(z/CHUNK_SIZE));
 
     chunks[chunkX][chunkY][chunkZ].hasVoxels = true;
     world[x][y][z].c = c;
+}
+void AddVoxelLine(int x, int y, int z, int w, int h, int d, Color c)
+{
+    for (int x2 = x; x2 < x + w; x2++)
+    {
+        for (int y2 = y; y2 < y + h; y2++)
+        {
+            for (int z2 = z; z2 < z + d; z2++)
+            {
+                AddVoxel(x2,y2,z2,c);
+            }
+        }   
+    }
 }
 
 void ClearWorld()
@@ -134,11 +150,6 @@ void LoadWorld(char* path, int w, int h, int d)
     {
         int xStart = 0;
         int yStart = i * h;
-
-        if (i == d-1)
-        {
-            printf("gg");
-        }
 
         for (int x = xStart; x < xStart + w; x++)
         {
@@ -172,6 +183,8 @@ void LoadWorld(char* path, int w, int h, int d)
     al_destroy_bitmap(sprite);
     al_set_target_bitmap(before);
     PreprocessWorld();
+
+    printf("finished\n");
 }
 
 bool RenderThreadsFinished()
@@ -199,16 +212,24 @@ bool RangeCheck(int x, int y, int z)
 
 bool CheckCube(Cube c, int stepSize, int* hitX, int* hitY, int* hitZ)
 {
-    for (int x = c.x - c.w/2.0f; x < c.x + c.w; x++)
+    for (int x = c.x - c.w/2.0f; x < c.x + c.w/2.0f; x++)
     {   
-        for (int y = c.y-c.y/2.0f; y < c.y + c.h; y++)
+        for (int y = c.y-c.h/2.0f; y < c.y + c.h/2.0f; y++)
         {
-            for (int z = c.z; z >= c.z - ((c.d*2)); z--)
+            for (int z = c.z; z >= c.z - ((c.d)); z--)
             {
 
                 if (!RangeCheck(x,y,z))
-                    return true;
-                    
+                {
+                    if (hitX)
+                        *hitX = x;
+                    if (hitY)
+                        *hitY = y;
+                    if (hitZ)
+                        *hitZ = z;
+
+                    return false;
+                }   
                 if (!IsAir(world[x][y][z]))
                 {
                     if (hitX)
@@ -281,63 +302,104 @@ static void* GenerateChunkDistanceCache(ALLEGRO_THREAD* t, void* args)
     }
     threadsFinished[da->threadIndex] = true;
 }
-void DoPlayerCollisions(Cube* player, float x, float y, float z)
+void DoPlayerCollisions(Cube* player, float x, float y, float z, bool* onGround)
 {
     int hitX; 
     int hitY; 
     int hitZ;
-    for (int i = 0; i < fabsf(z); i++)
-    {   
-        player->z += sign(z); 
-        if (!CheckCube(*player,STEP_SIZE,&hitX,&hitY,&hitZ))
-        {
-            int maxSteps = 50;
-            while (!CheckCube(*player,STEP_SIZE,&hitX,&hitY,&hitZ) || maxSteps-- <= 0)
+
+    double i;
+
+
+    float numSteps; 
+
+
+    numSteps = fabsf(y) > 1 ? ceil(fabsf(y)) : 1;
+    if (fabsf(y) > 0)
+    {
+        for (float i = 0; i < numSteps; i++)
+        {   
+            player->y += y / numSteps; 
+
+            if (!CheckCube(*player,STEP_SIZE,&hitX,&hitY,&hitZ))
             {
-                player->z -= sign(z);
+                int maxSteps = 50;
+                while (!CheckCube(*player,STEP_SIZE,&hitX,&hitY,&hitZ) && maxSteps > 0)
+                {
+                    maxSteps--;
+
+                    if (hitZ <= player->z - player->d + STEP_SIZE)
+                    {
+                        z = 0;
+                        player->z++;
+                    }
+                    player->y -=  y / numSteps;
+                }
             }
-            break;
         }
     }
-    for (int i = 0; i < fabsf(y); i++)
-    {   
-        player->y += sign(y); 
-
-        if (!CheckCube(*player,STEP_SIZE,&hitX,&hitY,&hitZ))
-        {
-            int maxSteps = 50;
-            while (!CheckCube(*player,STEP_SIZE,&hitX,&hitY,&hitZ) || maxSteps-- <= 0)
+    numSteps = fabsf(x) > 1 ? ceil(fabsf(x)) : 1;
+    if (fabsf(x) > 0)
+    {
+        for (float i = 0; i < numSteps; i++)
+        {   
+            player->x +=  x / numSteps; 
+            if (!CheckCube(*player,STEP_SIZE,&hitX,&hitY,&hitZ))
             {
-                if (hitZ < player->z + player->d - STEP_SIZE)
-                    player->z = hitZ;
-                player->y -= sign(y);
+                int maxSteps = 50;
+                while (!CheckCube(*player,STEP_SIZE,&hitX,&hitY,&hitZ) && maxSteps > 0)
+                {
+                    maxSteps--;
+                    if (hitZ <= player->z - player->d + STEP_SIZE)
+                    {   
+                        z = 0;
+                        player->z++;
+                    }
+                    player->x -= x / numSteps;
+                }
             }
-            break;
-        }
-    }
-    for (int i = 0; i < fabsf(x); i++)
-    {   
-        player->x += sign(x); 
-        if (!CheckCube(*player,STEP_SIZE,&hitX,&hitY,&hitZ))
-        {
-            int maxSteps = 50;
-            while (!CheckCube(*player,STEP_SIZE,&hitX,&hitY,&hitZ) || maxSteps-- <= 0)
-            {
-                if (hitZ < player->z + player->d - STEP_SIZE)
-                    player->z = hitZ;
-
-                player->x -= sign(x);
-            }
-            break;
         }
     }
 
+    numSteps = fabsf(z) > 1 ? ceil(fabsf(z)) : 1;
+    *onGround = false;
+    if (fabsf(z) > 0)
+    {
+        for (float i = 0; i < numSteps; i++)
+        {   
+            player->z += z / numSteps; 
+            if (!CheckCube(*player,STEP_SIZE,&hitX,&hitY,&hitZ))
+            {
+                *onGround = true;
+                int maxSteps = 50;
+                while (!CheckCube(*player,STEP_SIZE,&hitX,&hitY,&hitZ) && maxSteps > 0)
+                {
+                    maxSteps--;
+                    player->z -= z / numSteps;
 
+
+                }
+            }
+        }
+    }
+    if (player->z < 0)
+    {
+        player->z = player->h;
+    }
+    if (player->z + player->h > VOXEL_WORLD_SIZE)
+    {
+        player->z = VOXEL_WORLD_SIZE - player->h;
+    }
 }
 
 void MovePlayer(float x, float y, float z)
 {
-    DoPlayerCollisions(&playerPosition,x,y,-z);
+    bool onGround = false;
+    DoPlayerCollisions(&playerPosition,x,y,-z, &onGround);
+    if (onGround)
+    {
+        playerVelocity.z = 0;   
+    }
 }
 void PreprocessWorld()
 {
@@ -408,6 +470,10 @@ void GenTestWorld()
 
                     if (x >= 30 && y >= 30 && x <= 60 && y <= 60)
                         AddVoxel(x,y,z,COLOR_DAMAGE);
+                    if (x >= 200 && y >= 200 && x <= 230 && y <= 230 && z > 0 && z < 30)
+                        AddVoxel(x,y,z,COLOR_SPEED);
+                    
+
                     if (rand()%20000 == 0)
                     {
                         //v->c = rand() % (COLOR_ALL-1);    
@@ -418,17 +484,20 @@ void GenTestWorld()
             }
         }
     }
+    for (int i = 0; i < 30/STEP_SIZE; i++)
+    {
+        AddVoxelLine(170+i,200,i*STEP_SIZE,30,30,STEP_SIZE,COLOR_BG);
+    }
     PreprocessWorld();
-    printf("fin\n");
 }
 void Init3d()
 {
-    GenTestWorld(); 
-    //LoadWorld("assets/room.png",255,255,255);
+    //GenTestWorld(); 
+    LoadWorld("assets/room.png",255,255,255);
 
     playerPosition.x = 128;
     playerPosition.y = 128;
-    playerPosition.z = 10;
+    playerPosition.z = 5;
 
 }
 static inline int GetVoxelOffset(int x, int y, int z, int width, int height)
@@ -581,8 +650,8 @@ Point3 GetLeftVector(Point3 v)
 }
 void UpdatePlayer3D(float dt, ALLEGRO_KEYBOARD_STATE* keyState)
 {
-    //playerVelocity.z += _GRAVITY * dt;
-    //playerVelocity.z = clamp(playerVelocity.z,-_GRAVITY,_GRAVITY);
+    playerVelocity.z += _GRAVITY * dt;
+    playerVelocity.z = clamp(playerVelocity.z,-_GRAVITY,_GRAVITY);
 
     if (al_key_down(keyState,ALLEGRO_KEY_Z))
     {
@@ -599,16 +668,18 @@ void UpdatePlayer3D(float dt, ALLEGRO_KEYBOARD_STATE* keyState)
     Point3 rot = ToEulerAngles(rotQ);
 
     bool moveKeyDown = false;
+    playerVelocity.x = 0;
+    playerVelocity.y = 0;
+
     if (al_key_down(keyState,ALLEGRO_KEY_W))
     {
         Point3 fwd = GetForwardVector(rot);
 
-        playerVelocity.x += fwd.x * PLAYER_VELOCITY_ADD * dt;
-        playerVelocity.y += fwd.y * PLAYER_VELOCITY_ADD * dt;
+        playerVelocity.x += fwd.x * PLAYER_MAX_SPEED;// * PLAYER_VELOCITY_ADD * dt;
+        playerVelocity.y += fwd.y * PLAYER_MAX_SPEED;// * PLAYER_VELOCITY_ADD * dt;
 
-        playerPosition.x += fwd.x;
-        playerPosition.y += fwd.y;
-        playerPosition.z += fwd.z;
+        //playerPosition.x += fwd.x;
+        //playerPosition.y += fwd.y;
 
         moveKeyDown = true;
     }
@@ -616,8 +687,12 @@ void UpdatePlayer3D(float dt, ALLEGRO_KEYBOARD_STATE* keyState)
     {
         Point3 fwd = GetForwardVector(rot);
 
-        playerVelocity.x -= fwd.x * PLAYER_VELOCITY_ADD * dt;
-        playerVelocity.y -= fwd.y * PLAYER_VELOCITY_ADD * dt;
+        playerVelocity.x -= fwd.x * PLAYER_MAX_SPEED; // * PLAYER_VELOCITY_ADD * dt;
+        playerVelocity.y -= fwd.y * PLAYER_MAX_SPEED;// * PLAYER_VELOCITY_ADD * dt;
+
+        //        playerPosition.x -= fwd.x;
+        //playerPosition.y -= fwd.y;
+
         moveKeyDown = true;
 
     }
@@ -625,8 +700,12 @@ void UpdatePlayer3D(float dt, ALLEGRO_KEYBOARD_STATE* keyState)
     {
         Point3 l = GetLeftVector(rot);
 
-        playerVelocity.x -= l.x * PLAYER_VELOCITY_ADD * dt;
-        playerVelocity.y -= l.y * PLAYER_VELOCITY_ADD * dt;
+        playerVelocity.x -= l.x * PLAYER_MAX_SPEED;// * PLAYER_VELOCITY_ADD * dt;
+        playerVelocity.y -= l.y * PLAYER_MAX_SPEED;// * PLAYER_VELOCITY_ADD * dt;
+
+       //         playerPosition.x -= l.x;
+        //playerPosition.y -= l.y;
+
         moveKeyDown = true;
 
     }
@@ -636,40 +715,47 @@ void UpdatePlayer3D(float dt, ALLEGRO_KEYBOARD_STATE* keyState)
     {
         Point3 l = GetLeftVector(rot);
 
-        playerVelocity.x += l.x * PLAYER_VELOCITY_ADD * dt;
-        playerVelocity.y += l.y * PLAYER_VELOCITY_ADD * dt;
+        playerVelocity.x += l.x * PLAYER_MAX_SPEED;// * PLAYER_VELOCITY_ADD * dt;
+        playerVelocity.y += l.y * PLAYER_MAX_SPEED; // PLAYER_VELOCITY_ADD * dt;
+
+        //playerPosition.x += l.x;
+        //playerPosition.y += l.y;
+
         moveKeyDown = true;
 
     }
     if (!moveKeyDown)
     {    
-        playerVelocity.x = Towards(playerVelocity.x,0,_FRICTION*dt);
-        playerVelocity.y = Towards(playerVelocity.y,0,_FRICTION*dt);
+       // playerVelocity.x = Towards(playerVelocity.x,0,_FRICTION*dt);
+        //playerVelocity.y = Towards(playerVelocity.y,0,_FRICTION*dt);
     }
-    playerVelocity.x = clamp(playerVelocity.x,-PLAYER_MAX_SPEED,PLAYER_MAX_SPEED);
-    playerVelocity.y = clamp(playerVelocity.y,-PLAYER_MAX_SPEED,PLAYER_MAX_SPEED);
+    Point3 fwd = GetForwardVector(rot);
 
-    //playerPosition.x += playerVelocity.x;
-    //playerPosition.y += playerVelocity.y;
-    //playerPosition.z += playerVelocity.z;
+   // playerVelocity.x = clamp(playerVelocity.x,-PLAYER_MAX_SPEED,PLAYER_MAX_SPEED);
+   // playerVelocity.y = clamp(playerVelocity.y,-PLAYER_MAX_SPEED,PLAYER_MAX_SPEED);
+    
+    printf("p: %f,%f,%f\n",playerPosition.x,playerPosition.y,playerPosition.z);
 
-    //MovePlayer(playerVelocity.x,playerVelocity.y,playerVelocity.z);
+    MovePlayer(playerVelocity.x,playerVelocity.y,playerVelocity.z);
 }
+float _MOUSE_POSITION_CENTER_X;
+float _MOUSE_POSITION_CENTER_Y;
+
 void Update3D(float dt, MouseState mouseStateLastFrame, MouseState mouseState, ALLEGRO_KEYBOARD_STATE* keyState)
 {
     //al_get_mouse_state(&mouseThis);
 
     //not sure why it needs to be multiplied by this
     //perhaps hidpi stuff? - test on other monitor
-    int dpi = al_get_monitor_dpi(0);
-    printf("%i\n",dpi);
     int wScreen = al_get_display_width(display)/2.0f;
     int hScreen = al_get_display_height(display)/2.0f;
 
 
-    float mouseMoveX = (mouseState.screenX - 128) * _TURN_MAG;
-    float mouseMoveY = (mouseState.screenY - 128) * _TURN_MAG;
-
+    float mouseMoveX = (mouseState.screenX - (_MOUSE_POSITION_CENTER_X)) * _TURN_MAG;
+    float mouseMoveY = (mouseState.screenY - (_MOUSE_POSITION_CENTER_Y)) * _TURN_MAG;
+    //mouseMoveX = 0;
+    //mouseMoveY = 0;
+    
     //x is pitch
     //z is yaw
     //y is roll
@@ -679,14 +765,15 @@ void Update3D(float dt, MouseState mouseStateLastFrame, MouseState mouseState, A
 
 
     al_set_mouse_xy(display,128*_RENDERSIZE,128*_RENDERSIZE);
+    MouseState after = GetMouseClamped();
+    _MOUSE_POSITION_CENTER_X = after.screenX;
+    _MOUSE_POSITION_CENTER_Y = after.screenY;
 
     //rotation.y += mouseMoveY * dt;
 
     mousePrev = mouseThis;
 
     UpdatePlayer3D(dt,keyState);
-
-    printf("%f,%f,%f\n",playerPosition.x,playerPosition.y,playerPosition.z);
 }
 
 

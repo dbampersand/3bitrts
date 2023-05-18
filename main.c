@@ -870,7 +870,7 @@ int main(int argc, char* args[])
             _FRAMES++;
             totalRenderTime += time;
 
-            printf("Total time: %f\n",time);
+            //printf("Total time: %f\n",time);
             fflush(stdout);
             
             //sort activeobjects so we have less cache misses 
