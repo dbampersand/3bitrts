@@ -589,7 +589,7 @@ Quaternion EulerToQuart(Point3 angle)
     return q;
 }
 
-Voxel VoxelCastRay(float startX, float startY, float startZ, Point3 dir)
+Voxel VoxelCastRay(float startX, float startY, float startZ, Point3 dir, int* endX, int* endY, int* endZ)
 {
     if (!RangeCheck(startX,startY,startZ))
 		return (Voxel){0};
@@ -608,8 +608,13 @@ Voxel VoxelCastRay(float startX, float startY, float startZ, Point3 dir)
         Voxel v = world[(int)(x)][(int)(y)][(int)(z)];
 
         if (!IsAir(v))
-            return v;
+        {
+            *endX = x;
+            *endY = y;
+            *endZ = z;
 
+            return v;
+        }
         float deltaX = dir.x * v.distFunc;
         float deltaY = dir.y * v.distFunc;
         float deltaZ = dir.z * v.distFunc;
@@ -646,6 +651,9 @@ Voxel VoxelCastRay(float startX, float startY, float startZ, Point3 dir)
                 x = clamp(x,0,VOXEL_WORLD_SIZE-1);
                 y = clamp(y,0,VOXEL_WORLD_SIZE-1);
                 z = clamp(z,0,VOXEL_WORLD_SIZE-1);
+                *endX = x;
+                *endY = y;
+                *endZ = z;
 
                 return world[(int)x][(int)y][(int)z];
         }
@@ -800,8 +808,6 @@ void Update3D(float dt, MouseState mouseStateLastFrame, MouseState mouseState, A
 
     UpdatePlayer3D(dt,keyState);
 }
-
-
 static void* VoxelRenderLines(ALLEGRO_THREAD *thr, void* v)
 {
     VOXEL_ARGS* va = (VOXEL_ARGS*)v;
@@ -829,12 +835,25 @@ static void* VoxelRenderLines(ALLEGRO_THREAD *thr, void* v)
 			Point3 angle = (Point3){1,pX,pY};
 			angle = MultMatrix(mat, angle);
 			NormalizeP3(angle);
-            Voxel v = VoxelCastRay(playerPosition.x,playerPosition.y,playerPosition.z, angle);
+            int endX; int endY; int endZ;
+            Voxel v = VoxelCastRay(playerPosition.x,playerPosition.y,playerPosition.z, angle,&endX,&endY,&endZ);
+            float dist = dist3(playerPosition.x-endX,playerPosition.y-endY,playerPosition.z-endZ);
             
+            dist /= VOXEL_WORLD_SIZE;
+
             ALLEGRO_COLOR c = GetColor(v.c,0);
+
+            int r; int g; int b;
+            r = clamp((c.r - dist)*255,0,255);
+            g = clamp((c.g - dist)*255,0,255);
+            b = clamp((c.b - dist)*255,0,255);
+
+            c = al_map_rgb(r,g,b);
+
             if (v.c == 0)   
-                c = BG;
-                
+                c = BG;    
+
+
             _T_PIXELS[x][y] = c;
             //al_draw_filled_rectangle(x,y,x+PIXEL_SIZE,y+PIXEL_SIZE,c);
 
