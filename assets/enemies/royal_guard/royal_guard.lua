@@ -23,8 +23,10 @@ function setup()
 end
 
 function update(dt)
-    local randUnit = {target = GetRandomUnit(TYPE_ENEMY,Band(TYPE_ALL,Bnot(TYPE_TANK),256))[1]};
-    CastAbility(charge,2,{randUnit});
+    if (IsInCombat()) then
+        local randUnit = {target = GetRandomUnit(TYPE_ENEMY,Band(TYPE_ALL,Bnot(TYPE_TANK),256))[1]};
+        CastAbility(charge,2,{randUnit});
+    end
 end
 
 function kill()

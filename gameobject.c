@@ -2895,7 +2895,7 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
     int mapW = GetMapWidth();
     int mapH = GetMapHeight();
     int mapRange = mapW * mapH -1;
-
+    Rect objRect = GetObjRect(g);
 
     while (x < 0)
     {
@@ -2908,7 +2908,6 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
 
         for (int i = 0; i < 4; i++)
         {
-
             float moveX = (angles[i].x);//cosTable[angle];
             float moveY = (angles[i].y);//sinTable[angle];
 
@@ -2947,6 +2946,10 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
             {
                 mX += moveX;
                 mY += moveY;
+
+                if (PointInRect(mX,mY,objRect))
+                    continue;
+
 
                 int index = GetIndex(mapH, mX, mY);
 

@@ -3684,7 +3684,6 @@ int L_CastAbility(lua_State* l)
         
     if (index < 0 || index >= MAX_ABILITIES)
     {
-        printf("%s: L_CastAbility: index out of range: %i\n",(currGameObjRunning && currGameObjRunning->name) ? currGameObjRunning->name : "",index);
         lua_pushboolean(l,false);
         return 1;
     }
