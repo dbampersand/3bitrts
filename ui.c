@@ -47,6 +47,18 @@ float debounceTime = 0.15;
 bool _PANEL_CLICKED_THIS_FRAME = false;
 bool _TEXTINPUT_HIGHLIGHTED = false;
 
+bool ButtonIsMousedOver(UIElement* u)
+{
+    Button* b = (Button*)u->data;
+    if (b->mousedOver)  
+        return true;
+}
+bool ButtonIsHeld(UIElement* u)
+{
+    Button* b = (Button*)u->data;
+    return b->clicked;
+}
+
 void DisableButton(UIElement* u)
 {
     Button* b = (Button*)u->data;
@@ -689,19 +701,57 @@ void DrawReplayUI(Replay* r, MouseState* mouseState, MouseState* mouseStateLastF
 
 
 }
-
 void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseStateLastFrame)
 {
     UpdateUI(keyState,mouseState,keyStateLastFrame,mouseStateLastFrame,dt);
     if (ui.currentPanel == &ui.mainMenuPanel)
     {
+        bool buttonIsMousedOver = 
+            //ButtonIsMousedOver(GetUIElement(&ui.mainMenuPanel,"Load Replay"))
+            //||
+            ButtonIsMousedOver(GetUIElement(&ui.mainMenuPanel,"Return"))
+            ||
+            ButtonIsMousedOver(GetUIElement(&ui.mainMenuPanel,"Tutorial"))
+            ||
+            ButtonIsMousedOver(GetUIElement(&ui.mainMenuPanel,"Options"))
+            ||
+            ButtonIsMousedOver(GetUIElement(&ui.mainMenuPanel,"Exit"));
+
+        bool returnHeld = ButtonIsHeld(GetUIElement(&ui.mainMenuPanel,"Return"));
+        bool tutorialHeld = ButtonIsHeld(GetUIElement(&ui.mainMenuPanel,"Tutorial"));
+        bool optionsHeld = ButtonIsHeld(GetUIElement(&ui.mainMenuPanel,"Options"));
+        bool exitHeld = ButtonIsHeld(GetUIElement(&ui.mainMenuPanel,"Exit"));
+
+        bool returnClicked = GetButton(&ui.mainMenuPanel,"Return");
+        bool tutorialClicked = GetButton(&ui.mainMenuPanel,"Tutorial");
+        bool optionsClicked = GetButton(&ui.mainMenuPanel,"Options");
+        bool exitClicked = GetButton(&ui.mainMenuPanel,"Exit");
+
+        bool buttonIsHeld = 
+            returnHeld || tutorialHeld || optionsHeld || exitHeld;
+        bool buttonIsClicked = 
+            returnClicked || tutorialClicked || optionsClicked || exitClicked;
+
+            
+        if (buttonIsHeld || buttonIsClicked || GameStateIsTransition(&gameState))
+        {
+            SetWidgetSprite(GetWidgetByName(GAMESTATE_MAIN_MENU,"Hand"),"assets/ui/mainmenu/fist.png");
+        }
+        else if (buttonIsMousedOver)
+        {
+            SetWidgetSprite(GetWidgetByName(GAMESTATE_MAIN_MENU,"Hand"),"assets/ui/mainmenu/semiclosed_hand.png");
+        }
+        else
+        {
+            SetWidgetSprite(GetWidgetByName(GAMESTATE_MAIN_MENU,"Hand"),"assets/ui/mainmenu/hand.png");
+        }
         if (GetButton(&ui.mainMenuPanel,"Load Replay"))
         {
             ChangeUIPanel(&ui.loadReplayPanel);       
             ClearPanelElements(&ui.loadReplayPanel);
             GenerateFileListButtons("replays/",&ui.loadReplayPanel);
         }
-        if (GetButton(&ui.mainMenuPanel,"Return"))
+        if (returnClicked)
         {
             //ui.currentPanel = NULL;
             if (gameState == GAMESTATE_MAIN_MENU)
@@ -712,15 +762,15 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mou
                 combatStarted = false;
             }
         }
-        if (GetButton(&ui.mainMenuPanel,"Tutorial"))
+        if (tutorialClicked)
         {
             GoTutorial();
         }
-        if (GetButton(&ui.mainMenuPanel,"Options"))
+        if (optionsClicked)
         {
             ChangeUIPanel(&ui.videoOptionsPanel);
         }
-        if (GetButton(&ui.mainMenuPanel,"Exit"))
+        if (exitClicked)
         {
             Quit();
         }
@@ -1998,6 +2048,13 @@ void UpdateLanternWidget(Widget* self, float dt)
     self->timer += dt;
     self->rotation = sinf(self->timer) * 0.1f;
 }
+void UpdateHandWidget(Widget* self, float dt)
+{
+    self->timer += dt;
+    self->velocity = 0;
+    self->y += sinf(self->timer) * 0.1f;
+}
+
 UIElement* GetUIElement(Panel* p, char* name)
 {
     for (int i = 0; i < p->numElements; i++)
@@ -2400,6 +2457,20 @@ void InitControlsPanel()
 
 
 }
+void SetWidgetSprite(Widget* w, char* sprite)
+{
+    int sprIndex = LoadSprite(sprite,false);
+    w->spriteIndex = sprIndex;
+}
+Widget* GetWidgetByName(GameState gameState, char* name)
+{
+    for (int i = 0; i < numSprites_States[gameState]; i++)
+    {
+        Widget* w = &Widgets_States[gameState][i];
+        if (w->name && strcmp(name,w->name) == 0)
+            return w;
+    }
+}
 void InitUI()
 {
     ui.augmentIconIndex = LoadSprite("assets/ui/augment.png",false);
@@ -2467,27 +2538,31 @@ void InitUI()
     int gear64 = LoadSprite("assets/ui/gear64x64.png",false);
 
     int lantern = LoadSprite("assets/ui/mainmenu/lantern.png",false);
+    int hand = LoadSprite("assets/ui/mainmenu/hand.png",false);
     int name = LoadSprite("assets/ui/mainmenu/name.png",false);
     int block = LoadSprite("assets/ui/mainmenu/block.png",false);
     int edge = LoadSprite("assets/ui/mainmenu/mainmenuedges.png",false);
 
-    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[edge],0,0,0.5,0.5,DRAWORDER_BEFOREUI,0,NULL);
+    CreateWidget(GAMESTATE_MAIN_MENU,"Edge",&sprites[edge],0,0,0.5,0.5,DRAWORDER_BEFOREUI,0,NULL);
 
-    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[block],157,93,0.5,0.5,DRAWORDER_BEFOREUI,0,NULL);
-    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[lantern],155,100,0.46,0.033,DRAWORDER_BEFOREUI,0,UpdateLanternWidget);
+    //CreateWidget(GAMESTATE_MAIN_MENU,"Block",&sprites[block],157,93,0.5,0.5,DRAWORDER_BEFOREUI,0,NULL);
+    //CreateWidget(GAMESTATE_MAIN_MENU,"Lantern",&sprites[lantern],155,100,0.46,0.033,DRAWORDER_BEFOREUI,0,UpdateLanternWidget);
+    Widget* handWidget = CreateWidget(GAMESTATE_MAIN_MENU,"Hand",&sprites[hand],115,82,0.46,0.033,DRAWORDER_BEFOREUI,0,UpdateHandWidget);
+    handWidget->desiredY = 0;
+    CreateWidget(GAMESTATE_MAIN_MENU,"Name",&sprites[name],29,50,0.5,0.5,DRAWORDER_BEFOREUI,0,NULL);
 
-    CreateWidget(GAMESTATE_MAIN_MENU,&sprites[name],29,50,0.5,0.5,DRAWORDER_BEFOREUI,0,NULL);
+
 
     int x = -5;
 
     for (int i = 0; i < _SCREEN_SIZE/32; i++)
     {   
 
-        //CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x,0,DRAWORDER_AFTERUI,0);
-        //CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x+16,18,DRAWORDER_AFTERUI,0);
+        //CreateWidget(GAMESTATE_MAIN_MENU,"Gear",&sprites[gear32],x,0,DRAWORDER_AFTERUI,0);
+        //CreateWidget(GAMESTATE_MAIN_MENU,"Gear",&sprites[gear32],x+16,18,DRAWORDER_AFTERUI,0);
 
-        //CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x,_SCREEN_SIZE-32,DRAWORDER_AFTERUI,0);
-        //CreateWidget(GAMESTATE_MAIN_MENU,&sprites[gear32],x+16,_SCREEN_SIZE-50,DRAWORDER_AFTERUI,0);
+        //CreateWidget(GAMESTATE_MAIN_MENU,"Gear",&sprites[gear32],x,_SCREEN_SIZE-32,DRAWORDER_AFTERUI,0);
+        //CreateWidget(GAMESTATE_MAIN_MENU,"Gear",&sprites[gear32],x+16,_SCREEN_SIZE-50,DRAWORDER_AFTERUI,0);
 
         x+=31;
     }
@@ -2496,9 +2571,13 @@ void InitUI()
 }
 void UpdateWidget(Widget* w, float dt)
 {
+    float directionX = w->desiredX - w->x;
+    float directionY = w->desiredY - w->y;
+
+
     w->x = Towards(w->x,w->desiredX,w->velocity*dt);
     w->y = Towards(w->y,w->desiredY,w->velocity*dt);
-    w->rotation += w->rotationSpeed*dt; 
+    w->rotation += w->rotationSpeed*dt;     
 
     if (w->updateFunc)
     {
@@ -2523,7 +2602,7 @@ void UpdateWidgets(float dt)
         }
     }
 }
-Widget* CreateWidget(GameState gameStateToAttach, Sprite* spr, int x, int y, float originX, float originY, Widget_DrawOrder drawOrder, int id, void* func)
+Widget* CreateWidget(GameState gameStateToAttach, char* name, Sprite* spr, int x, int y, float originX, float originY, Widget_DrawOrder drawOrder, int id, void* func)
 {
     Widget s = {0};
     s.spriteIndex = spr - sprites;
@@ -2537,7 +2616,11 @@ Widget* CreateWidget(GameState gameStateToAttach, Sprite* spr, int x, int y, flo
     s.originY = originY;
     s.updateFunc = func;
     s.timer = 0;
-
+    if (name)
+    {
+        s.name = calloc(strlen(name)+1,sizeof(char));
+        strcpy(s.name,name);
+    }
     if ((numSprites_States[gameStateToAttach] + 1) % NUMSPRITESTATESTOALLOC == 0)
     {
         int reallocTo = ceilf((float)numSprites_States[gameStateToAttach] + NUMSPRITESTATESTOALLOC)/(float)NUMSPRITESTATESTOALLOC+1;
@@ -2767,9 +2850,17 @@ void UpdateButton(int rX, int rY, int w, int h, UIElement* u, MouseState mouseSt
         return;
     Button* b = (Button*)u->data;
     b->activated = false;
+    b->mousedOver = false;
+
+    Rect r = (Rect){rX,rY,w,h};
+
+    if (PointInRect(mouseState.screenX,mouseState.screenY,r))
+    {
+        b->mousedOver = true;
+    }
+
     if (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1))
     {
-        Rect r = (Rect){rX,rY,w,h};
         if (PointInRect(mouseState.screenX,mouseState.screenY,r))
         {
             if (!b->clicked)
@@ -2781,8 +2872,6 @@ void UpdateButton(int rX, int rY, int w, int h, UIElement* u, MouseState mouseSt
     }
     if (mouseStateLastFrame.mouse.buttons & 1 && !(mouseState.mouse.buttons & 1))
     {
-        Rect r = (Rect){rX,rY,w,h};
-
         if (b->clicked)
         {
             if (PointInRect(mouseState.screenX,mouseState.screenY,r))

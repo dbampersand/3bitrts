@@ -116,6 +116,7 @@ typedef struct Button
     bool activated;
     int spriteIndex;
     bool drawLine;
+    bool mousedOver;
 } Button;
 
 typedef struct UIElement
@@ -262,11 +263,13 @@ typedef struct Widget
     float rotation;
     float rotationSpeed;
     Widget_DrawOrder drawOrder;
-    int x; int y;
+    float x; float y;
     int desiredX; int desiredY;
     float originX; float originY;
     int id;
     float velocity;
+
+    char* name;
 
     float timer; 
     void (*updateFunc)(struct Widget* self, float dt);
@@ -303,7 +306,7 @@ bool DebounceActive();
 
 void DisableButton(UIElement* u);
 Panel CreatePanel(int x, int y, int w, int h, int padding, bool showBorder);
-Widget* CreateWidget(GameState gameStateToAttach, Sprite* spr, int x, int y, float originX, float originY, Widget_DrawOrder drawOrder, int id, void* func);
+Widget* CreateWidget(GameState gameStateToAttach, char* name, Sprite* spr, int x, int y, float originX, float originY, Widget_DrawOrder drawOrder, int id, void* func);
 void DrawMouse(MouseState* mouseState, GameObject* mousedOver);
 void DrawMouseSelectBox(MouseState mouseState);
 void GetAbilityClickedInsideUI(MouseState mouseState, MouseState mouseStateLastFrame);
@@ -377,3 +380,7 @@ UIElement* AddSlider(Panel* p, int x, int y, int w, int h, char* name, float fil
 void SetUIElementFont(UIElement* u, ALLEGRO_FONT* f);
 
 void DrawUIHighlight(UIElement* u, float x, float y);
+
+Widget* GetWidgetByName(GameState gameState, char* name);
+void SetWidgetSprite(Widget* w, char* sprite);
+
