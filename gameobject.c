@@ -63,6 +63,8 @@ void MoveObjStepped(GameObject* g, float dX, float dY, float w, float h, bool pu
 {
 
     int numMoves = ceilf(fabsf(dY));
+    SetMapCollisionRect(g->position.worldX, g->position.worldY, w, h, false);
+
     dY /= numMoves;
     for (int i = 0; i < numMoves; i++)
     {
@@ -1937,54 +1939,70 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
     int indexRight = GetIndex(currMap->collisionMapHeight, floorf((posX + w) / (float)_GRAIN), floorf((posY) / (float)_GRAIN));
     int indexBottom = GetIndex(currMap->collisionMapHeight, floorf((posX) / (float)_GRAIN), floorf((posY + h) / (float)_GRAIN));
     int indexLeft = GetIndex(currMap->collisionMapHeight, floorf((posX) / (float)_GRAIN), floorf((posY) / (float)_GRAIN));
-
+    
     if (x)
     {
-        if (dV < 0)
+        for (int y = 0; y < h / (float)_GRAIN; y++)
         {
-            if (currMap->collision[indexLeft] == false)
-            {
-                // printf("gg");
-                // g->position.worldX = IndexToPoint(GetMapHeight()/_GRAIN,indexLeft).x*_GRAIN + _GRAIN;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
-                UpdateObjPosition_X(g, IndexToPoint(currMap->collisionMapHeight, indexLeft).x * _GRAIN + _GRAIN);
+            indexLeft = GetIndex(currMap->collisionMapHeight, floorf((posX) / (float)_GRAIN), floorf((posY+y) / (float)_GRAIN));
+            indexRight = GetIndex(currMap->collisionMapHeight, floorf((posX + w) / (float)_GRAIN), floorf((posY+y) / (float)_GRAIN));
 
-                CheckCollisions(g, true, 1, true);
+            if (dV < 0)
+            {
+                if (currMap->collision[indexLeft] == false)
+                {
+                    // printf("gg");
+                    // g->position.worldX = IndexToPoint(GetMapHeight()/_GRAIN,indexLeft).x*_GRAIN + _GRAIN;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
+                    UpdateObjPosition_X(g, IndexToPoint(currMap->collisionMapHeight, indexLeft).x * _GRAIN + _GRAIN);
+
+                    CheckCollisions(g, true, 1, true);
+                    break;
+                }
             }
-        }
-        if (dV > 0)
-        {
-            if (currMap->collision[indexRight] == false)
+            if (dV > 0)
             {
-                // g->position.worldX = (indexRight/(GetMapHeight()/_GRAIN))*_GRAIN - w;
-                // g->position.worldX = IndexToPoint(GetMapHeight()/_GRAIN,indexRight).x*_GRAIN - w;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
-                UpdateObjPosition_X(g, IndexToPoint(currMap->collisionMapHeight, indexRight).x * _GRAIN - w);
+                if (currMap->collision[indexRight] == false)
+                {
+                    // g->position.worldX = (indexRight/(GetMapHeight()/_GRAIN))*_GRAIN - w;
+                    // g->position.worldX = IndexToPoint(GetMapHeight()/_GRAIN,indexRight).x*_GRAIN - w;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
+                    UpdateObjPosition_X(g, IndexToPoint(currMap->collisionMapHeight, indexRight).x * _GRAIN - w);
 
-                CheckCollisions(g, true, -dV, true);
+                    CheckCollisions(g, true, -dV, true);
+                    break;
+                }
             }
         }
     }
     else
     {
-        if (dV < 0)
+        for (int x = 0; x < w / (float)_GRAIN; x++)
         {
-            if (currMap->collision[indexTop] == false)
+            indexTop = GetIndex(currMap->collisionMapHeight, floorf((posX+x) / (float)_GRAIN), floorf(posY / (float)_GRAIN));
+            indexBottom = GetIndex(currMap->collisionMapHeight, floorf((posX+x) / (float)_GRAIN), floorf((posY + h) / (float)_GRAIN));
+
+            if (dV < 0)
             {
-                // int yCoord = (indexTop%(GetMapHeight()/_GRAIN)+1)*_GRAIN;
-                // g->position.worldY = IndexToPoint(GetMapHeight()/_GRAIN,indexTop).y*_GRAIN + _GRAIN;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
-                UpdateObjPosition_Y(g, IndexToPoint(currMap->collisionMapHeight, indexTop).y * _GRAIN + _GRAIN);
-                // g->position.worldY = yCoord;
-                CheckCollisions(g, false, -dV, true);
+                if (currMap->collision[indexTop] == false)
+                {
+                    // int yCoord = (indexTop%(GetMapHeight()/_GRAIN)+1)*_GRAIN;
+                    // g->position.worldY = IndexToPoint(GetMapHeight()/_GRAIN,indexTop).y*_GRAIN + _GRAIN;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
+                    UpdateObjPosition_Y(g, IndexToPoint(currMap->collisionMapHeight, indexTop).y * _GRAIN + _GRAIN);
+                    // g->position.worldY = yCoord;
+                    CheckCollisions(g, false, -dV, true);
+                    break;
+                }
             }
-        }
-        if (dV > 0)
-        {
-            if (currMap->collision[indexBottom] == false)
+            if (dV > 0)
             {
-                // int yCoord = (indexBottom%(GetMapHeight()/_GRAIN))*_GRAIN - h;
-                // g->position.worldY = yCoord;
-                // g->position.worldY = IndexToPoint(GetMapHeight()/_GRAIN,indexBottom).y*_GRAIN - h;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
-                UpdateObjPosition_Y(g, IndexToPoint(currMap->collisionMapHeight, indexBottom).y * _GRAIN - h);
-                CheckCollisions(g, false, -dV, true);
+                if (currMap->collision[indexBottom] == false)
+                {
+                    // int yCoord = (indexBottom%(GetMapHeight()/_GRAIN))*_GRAIN - h;
+                    // g->position.worldY = yCoord;
+                    // g->position.worldY = IndexToPoint(GetMapHeight()/_GRAIN,indexBottom).y*_GRAIN - h;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
+                    UpdateObjPosition_Y(g, IndexToPoint(currMap->collisionMapHeight, indexBottom).y * _GRAIN - h);
+                    CheckCollisions(g, false, -dV, true);
+                    break;
+                }
             }
         }
     }

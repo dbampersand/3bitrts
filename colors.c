@@ -135,7 +135,7 @@ void InitColors()
     SPEED = al_map_rgba(248,232,22,255);
     SHIELD = al_map_rgba(106,171,235,255); 
 
-    GROUND_DARK = al_map_rgba(42,22,97,255);
+    GROUND_DARK = al_map_rgba(42,20,97,255);
     EDGE_HIGHLIGHT = al_map_rgba(167,112,213,255);
     _TRANSPARENT = al_map_rgba(0,0,0,0);
     BG_DECOR = al_map_rgba((BG.r*255)+10,(BG.g*255)+15,(BG.b*255)+10,255);

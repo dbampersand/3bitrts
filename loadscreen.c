@@ -157,7 +157,7 @@ void DrawLoadScreenSprites(LoadScreenDrawOrder order)
         
         if (sp->draw == order)
         {
-            DrawSprite(&sprites[sp->spriteIndex],sp->position.x+loadScreen.x,sp->position.y+loadScreen.y,0,0,0,GROUND_DARK,false,false,false);
+            DrawSprite(&sprites[sp->spriteIndex],sp->position.x+loadScreen.x,sp->position.y+loadScreen.y,0,0,0,SHIELD,false,false,false);
         }
     }
 }
