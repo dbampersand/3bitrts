@@ -1942,7 +1942,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
     
     if (x)
     {
-        for (int y = 0; y < h / (float)_GRAIN; y++)
+        for (int y = 0; y < h; y++)
         {
             indexLeft = GetIndex(currMap->collisionMapHeight, floorf((posX) / (float)_GRAIN), floorf((posY+y) / (float)_GRAIN));
             indexRight = GetIndex(currMap->collisionMapHeight, floorf((posX + w) / (float)_GRAIN), floorf((posY+y) / (float)_GRAIN));
@@ -1975,7 +1975,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
     }
     else
     {
-        for (int x = 0; x < w / (float)_GRAIN; x++)
+        for (int x = 0; x < w; x++)
         {
             indexTop = GetIndex(currMap->collisionMapHeight, floorf((posX+x) / (float)_GRAIN), floorf(posY / (float)_GRAIN));
             indexBottom = GetIndex(currMap->collisionMapHeight, floorf((posX+x) / (float)_GRAIN), floorf((posY + h) / (float)_GRAIN));
