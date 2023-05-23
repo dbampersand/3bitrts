@@ -82,11 +82,11 @@ float Good_GetAugmentAbilityDamage(int damage, int augmentlevel)
 }
 float Good_GetAugmentMoveSpeed(float movespeed, int augmentlevel)
 {
-    return movespeed*(0.1f/(float)augmentlevel);
+    return movespeed*(0.1f*(float)augmentlevel);
 }
 float Bad_GetAugmentMoveSpeed(float movespeed, int augmentlevel)
 {
-    return movespeed*(0.1f/(float)augmentlevel);
+    return movespeed*(0.1f*(float)augmentlevel);
 }
 
 int GetNumBadAugments(int augmentLevel)

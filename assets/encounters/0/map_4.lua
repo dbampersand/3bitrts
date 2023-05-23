@@ -4,9 +4,9 @@ function setup()
 
     SetMapSprite("assets/encounters/0/map_4.png")
 
-    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",111.00,240.00,TYPE_ENEMY,0),1)
-    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",155.00,248.00,TYPE_ENEMY,0),1);
-    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",202.00,246.00,TYPE_ENEMY,0),1);
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",119.00,212.00,TYPE_ENEMY,0),1)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",158.00,219.00,TYPE_ENEMY,0),1);
+    SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",194.00,221.00,TYPE_ENEMY,0),1);
 
     SetAggroGroup(CreateObject("assets/enemies/nuul/nuul.lua",152.00,431.00,TYPE_ENEMY,0),2);
     SetAggroGroup(CreateObject("assets/enemies/kobold_crossbow/kobold_crossbow.lua",192.00,467.00,TYPE_ENEMY,0),2);
