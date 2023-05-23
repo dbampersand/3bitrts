@@ -377,7 +377,7 @@ float Towards(float f, float to, float maxDist)
     if (f < to)
         return _MIN(f+maxDist, to);
     else if (f > to)
-        return _MAX(f-maxDist, to);
+        return _MAX(f-maxDist, to); 
 
     return(to);
 }

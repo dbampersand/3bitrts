@@ -1305,12 +1305,12 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 
     int augmentX = 96;
     if (e->augment <= 0)
-        e->augment = 1; 
+        e->augment = 0; 
     e->difficultyUnlocked = _MIN(e->difficultyUnlocked,MAX_DIFFICULTY_LEVELS);
     for (int i = 0; i < e->difficultyUnlocked; i++)
     {
         Rect drawRect = (Rect){augmentX+offsetX,20,GetWidthSprite(&sprites[ui.augmentIconIndex]),GetHeightSprite(&sprites[ui.augmentIconIndex])};
-        DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0.5f,0.5f,0,i < e->augment ? FRIENDLY : GROUND,false,false,false);
+        DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0.5f,0.5f,0,i <= e->augment ? FRIENDLY : GROUND,false,false,false);
         augmentX += drawRect.w+3;
 
         if (mouseStateLastFrame->mouse.buttons & 1 && !(mouseState->mouse.buttons & 1))
@@ -1321,9 +1321,9 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
             selectRect.w += 5;
             selectRect.h += 5;
 
-            if (PointInRect(mouseState->screenX,mouseState->screenY,drawRect) && i+1 != e->augment)
+            if (PointInRect(mouseState->screenX,mouseState->screenY,drawRect) && i != e->augment)
             {
-                e->augment = i+1;
+                e->augment = i;
                 SetEncounterRandAugments(e);
             }
         }
@@ -3714,6 +3714,12 @@ void SetOptions()
         free(newText);
     }
 }
+
+#define AUGMENT_NUMBER_FMT "Augment %i"
+#define DAMAGE_NUMBER_FMT "+%i%% Damage"
+#define HP_NUMBER_FMT "+%i%% HP"
+
+
 void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
 {
     char* buffer = calloc(1,sizeof(char));
@@ -3730,10 +3736,26 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
     DrawSprite(sEnemy,17,91,0.5f,0.5f,0,ENEMY,false,false,false);
 
     //Write augment level and augment changes
-    al_draw_text(ui.font,ENEMY,90,89,0,"Augment 3");
-    al_draw_text(ui.font,ENEMY,90,111,0,"+20%% Damage");
-    al_draw_text(ui.font,ENEMY,185,111,0,"+15%% HP");
-    al_draw_text(ui.font,ENEMY,90,124,0,"Random damaging pools");
+    
+    char* augmentStr = calloc(snprintf(NULL, 0, AUGMENT_NUMBER_FMT, currEncounterRunning->augment)+1,sizeof(char));
+    char* percentDamageNumber = calloc(snprintf(NULL, 0, DAMAGE_NUMBER_FMT, (int)GetAugmentDamageBonus(100,currEncounterRunning->augment))+1,sizeof(char));
+    char* percentHPNumber = calloc(snprintf(NULL, 0, HP_NUMBER_FMT, (int)GetAugmentHealthBonus(100,currEncounterRunning->augment))+1,sizeof(char));
+
+    sprintf(augmentStr,AUGMENT_NUMBER_FMT,currEncounterRunning->augment);
+    sprintf(percentDamageNumber,DAMAGE_NUMBER_FMT,(int)GetAugmentDamageBonus(100,currEncounterRunning->augment));
+    sprintf(percentHPNumber,HP_NUMBER_FMT,(int)GetAugmentHealthBonus(100,currEncounterRunning->augment));
+
+    al_draw_text(ui.font,ENEMY,90,85,0,augmentStr);
+    al_draw_text(ui.font,ENEMY,90,106,0,percentDamageNumber);
+    al_draw_text(ui.font,ENEMY,185,106,0,percentHPNumber);
+    for (int i = 0; i < MAX_AUGMENTS; i++)
+        al_draw_text(ui.font,ENEMY,90,120+(10*i),0,GetAugmentDescription(currEncounterRunning->augments[i].augment));
+
+    free(augmentStr);
+    free(percentDamageNumber);
+    free(percentHPNumber);
+
+
 
     //Write time taken
     int hours = floorf(gameStats.timeTaken/(60.0f*60.0f));
@@ -3767,8 +3789,8 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
     #ifdef _REPLAY
         DrawUIElement(&ui.endScreen_SaveReplay,ui.endScreen_SaveReplay.x,ui.endScreen_SaveReplay.y,mouseState,ui.endScreen_SaveReplay.bgColor,COLOR_FRIENDLY,false);
     #endif
-    int x = 86;
-    int y = 139;
+    int x = 88;
+    int y = 162;
     if (encounterGoingTo)
     for (int i = 0; i < encounterGoingTo->numUnitsToSelect; i++)
     {

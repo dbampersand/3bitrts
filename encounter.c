@@ -128,7 +128,7 @@ void LoadEncounter(char* dirPath, lua_State* l)
     InitButton(&e->encounter_RerollAugments,"","",220,50,20,20,LoadSprite("assets/ui/augments/reroll.png",true));
     InitButton(&e->encounter_PurchaseAugment,"","",220,50,60,10,0);
 
-    e->augment = 1;
+    e->augment = 0;
     ClearAugments(e);
     encounters[numEncounters] = e;
     numEncounters++;
