@@ -2,8 +2,9 @@ local maxHP = 1300
 
 function setup()
     SetSprite("assets/friendly/rune_smith/rune_smith.png");
-    AddAbility(GetObjRef(),"assets/friendly/rune_smith/rune_of_lifesteal.lua",0)    
-    AddAbility(GetObjRef(),"assets/friendly/rune_smith/rune_of_pain.lua",1)    
+    
+    AddAbility(GetObjRef(),"assets/friendly/rune_smith/rune_of_pain.lua",0)    
+    AddAbility(GetObjRef(),"assets/friendly/rune_smith/rune_of_lifesteal.lua",1)    
     AddAbility(GetObjRef(),"assets/friendly/rune_smith/rune_of_protection.lua",2)    
     AddAbility(GetObjRef(),"assets/friendly/rune_smith/rune_of_shield.lua",3)    
     AddAbility(GetObjRef(),"assets/friendly/rune_smith/rune_of_menace.lua",4)    

@@ -1,4 +1,5 @@
 local lifestealAmt = 2.5
+local duration = 10
 
 function setup()
     AbilitySetCastType(ABILITY_INSTANT); 
@@ -6,7 +7,7 @@ function setup()
     
 
     SetAbilityRange(60)
-    SetCooldown(12);
+    SetCooldown(duration);
     SetDescription("Rune of Lifesteal\n\nGrants you lifestealing.")
 end
 
@@ -18,7 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["trigger"] = TRIGGER_CONST;
     f1["type"] = EFFECT_LIFESTEAL;
     f1["value"] = lifestealAmt;  
-    f1["duration"] = 10
+    f1["duration"] = duration
 
     ApplyEffect(GetObjRef(),{f1});
 

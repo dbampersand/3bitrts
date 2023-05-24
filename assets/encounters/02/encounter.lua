@@ -1,6 +1,7 @@
 function setup()
     SetEncounterSprite("assets/encounters/02/minotaur/minotaur.png");
     SetEncounterDescription("The minotaur.")
+    SetEncounterName("Minotaur");
 
     AddEncounterAbility("assets/enemies/minotaur/ability_smash.lua",0,0);
     AddEncounterAbility("assets/enemies/minotaur/ability_rampage.lua",1,0);

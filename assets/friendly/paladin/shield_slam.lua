@@ -6,7 +6,7 @@ function setup()
 
     SetAbilityRange(60)
     SetCooldown(10);
-    SetDescription("Shield Slam\n\nBashes the target with your shield, stunning and dealing damage. Generates mana.")
+    SetDescription("Shield Slam\n\nBashes the target with your shield, stunning and dealing damage. Generates mana and threatens enemies nearby.")
 end
 
 local aoe = -1;
@@ -32,6 +32,16 @@ function casted(x,y,obj,headingx,headingy)
 
     ApplyEffect(obj,{f1,f2});
     ApplyEffect(GetObjRef(),{f3});
+
+
+
+    f4 = {};
+    f4["trigger"] = TRIGGER_INSTANT;
+    f4["type"] = EFFECT_THREAT;
+    f4["value"] = 400; 
+
+    CreateAOE(GetX(obj),GetY(obj),"",70,0.1,0.1,false,ATTACK_HITS_ENEMIES,COLOR_FRIENDLY_DAMAGE,DITHER_NONE,false,-1,{f4});
+
 
     return true; 
 end

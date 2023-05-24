@@ -3,10 +3,10 @@ local maxHP = 750;
 
 function setup()
     SetSprite("assets/friendly/bard/bard.png");
-    AddAbility(GetObjRef(),"assets/friendly/bard/aoe_speed.lua",0)    
-    AddAbility(GetObjRef(),"assets/friendly/bard/aoe_damage.lua",1)    
-    AddAbility(GetObjRef(),"assets/friendly/bard/aoe_shield.lua",2)    
-    AddAbility(GetObjRef(),"assets/friendly/bard/aoe_heal.lua",3)    
+    AddAbility(GetObjRef(),"assets/friendly/bard/aoe_damage.lua",0)    
+    AddAbility(GetObjRef(),"assets/friendly/bard/aoe_heal.lua",1)    
+    AddAbility(GetObjRef(),"assets/friendly/bard/ostinato.lua",2)    
+    AddAbility(GetObjRef(),"assets/friendly/bard/furia.lua",3)    
 
     AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05);
     AddAttackSprite("assets/ui/slash_fx2.png",16,16,0.05);

@@ -1,6 +1,7 @@
 function setup()
     SetEncounterSprite("assets/enemies/cusith/cusith.png");
     SetEncounterDescription("Cu-Sith, the black dog.")
+    SetEncounterName("Cu-Sith");
 
     AddEncounterAbility("assets/enemies/cusith/ability_howl.lua",0,0);
     AddEncounterAbility("assets/enemies/cusith/ability_focus.lua",1,0);

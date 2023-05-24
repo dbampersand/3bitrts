@@ -2,15 +2,13 @@ local speed = 50;
 local duration = 2;
 local aoe = -1
 
-local radius = 30
-
 
 function setup()
     AbilitySetPortrait("assets/friendly/bard/icon_aoe_damage.png");
     AbilitySetCastType(ABILITY_TOGGLE);
     SetAbilityRange(duration * speed)
     SetCooldown(10)
-    SetDescription("Claidrich\n\nDoes damage in a radius.")
+    SetDescription("Song of Damage\n\nDoes damage in a radius.")
     
 end
 function casted()
@@ -18,14 +16,17 @@ function casted()
 
     UntoggleOthers();
     f1 = {};
-    f1["trigger"] = TRIGGER_INSTANT;
-    f1["type"] = EFFECT_HURT;
+    f1["trigger"] = TRIGGER_CONST;
+    f1["type"] = EFFECT_ATTACKDAMAGE;
+    --f1["numTriggers"] = 5
     f1["value"] = 10;
+    f1["duration"] = 1.5;
+    f1["triggersPerSecond"] = 1
     f1["overwrites"] = true
     f1["name"] = "Song of Damage"
 
 
-    aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 1, 1, false, ATTACK_HITS_ENEMIES,COLOR_FRIENDLY_DAMAGE,DITHER_DAMAGE_QUARTER, false,-1,{f1})
+    aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_DAMAGE,DITHER_HALF, false,-1,{f1})
     SetAttackCircle(aoe,true);
  
     return true;

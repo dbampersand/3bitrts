@@ -1370,7 +1370,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 
     al_draw_line(10+offsetX,73,246,73,e->unlocked ? FRIENDLY : disabled,1);
     
-    al_draw_text(ui.font,e->unlocked ? FRIENDLY : disabled,16+offsetX,81,0,"Wyrm");
+    al_draw_text(ui.font,e->unlocked ? FRIENDLY : disabled,16+offsetX,81,0,e->name ? e->name : "");
     DrawSprite(&sprites[e->spriteIndex],17+offsetX,102,0.5f,0.5f,0,e->unlocked ? ENEMY : disabled,false,false,false);
 
     Ability* mousedOver = NULL;

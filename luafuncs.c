@@ -3723,7 +3723,7 @@ int L_CastAbility(lua_State* l)
     {
         if (GetDist(currGameObjRunning,target) > ability->range)
         {
-            printf("L_CastAbility: out of range: %s",ability->path);
+            printf("L_CastAbility: out of range: %s\n",ability->path);
             lua_pushboolean(l,false);
             return 0;
         }

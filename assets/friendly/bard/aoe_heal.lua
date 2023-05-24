@@ -1,15 +1,16 @@
+local radius = 30
+local aoe = -1;
+
 function setup()
     AbilitySetCastType(ABILITY_TOGGLE);
 
     SetAbilityRange(20)
     SetCooldown(10);
     AbilitySetPortrait("assets/friendly/bard/icon_aoe_heal.png");
-    SetDescription("Song of Healing\n\nProvides healing in a radius.")
+    SetDescription("Fallain\n\nProvides healing in a radius.")
 
 end
 
-local aoe = -1;
-local g = 5;
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/bard/audio/song_of_healing.wav",1)
 
@@ -25,7 +26,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["name"] = "Song of Healing"
 
 
-    aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_HEAL,DITHER_ATTACK_DAMAGE_QUARTER,false,-1, {f1})
+    aoe = CreateAOE(GetX(obj),GetY(obj),"", radius, 1, 10, true, ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_HEAL,DITHER_ATTACK_DAMAGE_QUARTER,false,-1, {f1})
    -- SetAttackCircle(aoe,true);
     return true; 
 end
@@ -40,7 +41,7 @@ function onhit(x,y,objhit)
 
 end
 
-function abilitytick(x, y, durationLeft, obj, target)
-    MoveAttack(GetAttackRef(),GetX(obj),GetY(obj));
+function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
+    MoveAttack(attackRef,GetX(obj),GetY(obj));
 
 end

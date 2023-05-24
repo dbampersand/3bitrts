@@ -1,7 +1,9 @@
+local radius = 40
 
 function setup()
     AbilitySetPortrait("assets/friendly/ranger/icon_instinct.png");
     AbilitySetCastType(ABILITY_POINT);
+    SetAbilityHint(HINT_CIRCLE,radius);
     SetAbilityRange(50)
     SetDescription("Instinct\n\nIncreases autoattack damage for units around the target position.")
     SetCooldown(70)
@@ -20,7 +22,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["name"] = "Instinct"
 
 
-    aoe = CreateAOE(x,y,"", 40, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_DAMAGE,DITHER_ATTACK_DAMAGE_QUARTER, false,-1,{f1})
+    aoe = CreateAOE(x,y,"", radius, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_DAMAGE,DITHER_ATTACK_DAMAGE_QUARTER, false,-1,{f1})
     SetAttackCircle(aoe,true);
     return true;
 end

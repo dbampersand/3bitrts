@@ -826,7 +826,31 @@ void UpdateAttack(Attack* a, float dt)
         AddParticleWithRandomProperties(a->x,a->y,a->color,0.2f,4,1,1.5f,minAngle,maxAngle);
 
     }
+ if (a->cameFrom)
+    {
+        currAbilityRunning = a->cameFrom;
+        currGameObjRunning = a->ownedBy;
+        //currAttackRunning = a;
+        if (IsActive(currGameObjRunning))
+        {
+            if (currAbilityRunning)
+            {
+                lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_abilitytick);
 
+                lua_pushnumber(luaState,a->x + a->radius/2.0f);
+                lua_pushnumber(luaState,a->y + a->radius/2.0f);
+                lua_pushnumber(luaState,a->timer);    
+                lua_pushinteger(luaState,currGameObjRunning-objects);
+                lua_pushinteger(luaState,a->target - objects);
+                lua_pushnumber(luaState,dt);
+                lua_pushinteger(luaState,a-attacks);
+                lua_pushnumber(luaState,a->duration);
+
+
+                lua_pcall(luaState,8,0,0);
+            }
+        }       
+    }
 
     float amtToIncreaseBy = (a->timer*a->timer*a->timer*a->timer);
 
@@ -1058,31 +1082,7 @@ void UpdateAttack(Attack* a, float dt)
             }
         }
     }
-    if (a->cameFrom)
-    {
-        currAbilityRunning = a->cameFrom;
-        currGameObjRunning = a->ownedBy;
-        //currAttackRunning = a;
-        if (IsActive(currGameObjRunning))
-        {
-            if (currAbilityRunning)
-            {
-                lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_abilitytick);
-
-                lua_pushnumber(luaState,a->x + a->radius/2.0f);
-                lua_pushnumber(luaState,a->y + a->radius/2.0f);
-                lua_pushnumber(luaState,a->timer);    
-                lua_pushinteger(luaState,currGameObjRunning-objects);
-                lua_pushinteger(luaState,a->target - objects);
-                lua_pushnumber(luaState,dt);
-                lua_pushinteger(luaState,a-attacks);
-                lua_pushnumber(luaState,a->duration);
-
-
-                lua_pcall(luaState,8,0,0);
-            }
-}       
-    }
+   
     if (isSoak)
     {
         free(copied->effects);
