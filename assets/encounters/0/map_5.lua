@@ -30,6 +30,9 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/kobold_crossbow/kobold_crossbow.lua",336.00,216.00,TYPE_ENEMY,0.00),5)
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",360.00,267.00,TYPE_ENEMY,0.00),5)
     SetAggroGroup(CreateObject("assets/enemies/kobold_crusher/kobold_crusher.lua",102.00,200.00,TYPE_ENEMY,0.00),1)
+
+    PlayMusic("assets/audio/music/encounters/kobold/kobold_encounter_3.wav",0.5,0); 
+
 end
 
 function update(dt)

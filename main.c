@@ -114,8 +114,8 @@ void init()
     InitPathfinding();
     LoadShop();
 
-    Init3d();
-    gameState = GAMESTATE_IN_3D;
+    //Init3d();
+    //gameState = GAMESTATE_IN_3D;
     //PlayMusic("assets/audio/intro.wav",0.5f,0);
 }
 

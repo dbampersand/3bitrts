@@ -19,11 +19,15 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/kobold_crusher/kobold_crusher.lua",60.00,672.00,TYPE_ENEMY,0.00),6)
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",59.00,713.00,TYPE_ENEMY,0.00),6)
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",69.00,691.00,TYPE_ENEMY,0.00),6)
+
+    PlayMusic("assets/audio/music/encounters/kobold/kobold_encounter_3.wav",0.5,0); 
+
 end
 function update()
 
 end
 function mapend()
+    GoShop(true)
 
    ChangeMap("assets/encounters/0/map_final.lua")
 end

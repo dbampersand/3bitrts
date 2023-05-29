@@ -28,6 +28,8 @@ function setup()
     --end
     SetAutoWin(false);
     --CreateObject("assets/encounters/02/boss.lua",32,32,TYPE_ENEMY);
+    PlayMusic("assets/audio/music/encounters/minotaur/minotaur_encounter.wav",0.5,6.40); 
+
 end
 
 function update(dt)
@@ -36,6 +38,8 @@ function update(dt)
 
             local boss = CreateObject("assets/enemies/minotaur/minotaur.lua",120,22,TYPE_ENEMY,5,100);
             spawnedBoss = true;
+        PlayMusic("assets/audio/music/boss/minotaur/minotaur.wav",0.5,0); 
+
             do return end;
         end
     end

@@ -29,7 +29,7 @@ void InitSound();
 int LoadSound(const char* path);
 void PlaySoundAtPosition(Sound* s, float relativeVolume, int x, int y);
 void PlaySound(Sound* s, float relativeVolume, float pan);
-void PlayMusic(const char* path, float loopPoint, float musicGain);
+void PlayMusic(const char* path, float loopPoint, double musicGain);
 void UpdateMusic(float dt);
 void PlayEncounterMusic();
 void StopMusic();

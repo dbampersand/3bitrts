@@ -254,7 +254,7 @@ int L_PlayMusic(lua_State* l)
     const char* path = lua_tostring(l,1);
     const float gain = lua_tonumber(l,2);
 
-    const float loopPoint = lua_tonumber(l,3);
+    const double loopPoint = lua_tonumber(l,3);
     if (path)
     {
         PlayMusic(path,gain,loopPoint);

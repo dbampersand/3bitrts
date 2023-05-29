@@ -3,7 +3,7 @@ local direction = {};
 local speed = 60;
 local defaultSpeed = 30;
 function setup()
-    SetAbilityRange(32) 
+    SetAbilityRange(256) 
     SetCooldown(4.5);
     AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
     SetDescription("[b]Searing Blast\n\nShoots a ball that moves, dealing damage to all in its path.");
@@ -22,6 +22,12 @@ function casted(x,y,obj,headingx,headingy)
     direction.x = GetX(obj) - GetX(GetObjRef()) 
     direction.y = GetY(obj) - GetY(GetObjRef()) 
     direction = Normalize(direction.x,direction.y);
+
+    speed = defaultSpeed
+
+    SetAttackMoveAngle(aoe,direction.x,direction.y)
+    SetAttackVelocity(aoe,speed);
+
     return true; 
 end
 
@@ -32,10 +38,8 @@ function ontimeout(x,y,obj,dt,target)
 end
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     if (attackRef >= 0) then
-
-        x = x + (direction.x * speed) * dt;
-        y = y + (direction.y * speed) * dt;
-        SetAttackPosition(attackRef,x,y)
+        speed = speed + dt*2;
+        SetAttackVelocity(aoe,speed);
     end
 end
 function onchanneled() 

@@ -11,6 +11,7 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",252.00,188.00,TYPE_ENEMY,0.00),3)
     SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",300.00,208.00,TYPE_ENEMY,0.00),3)
     SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",307.00,174.00,TYPE_ENEMY,0.00),3)
+    PlayMusic("assets/audio/music/encounters/wyrm/wyrm_encounter_3.wav",0.5,5.14); 
 end
 function update()
 

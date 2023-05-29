@@ -16,6 +16,9 @@ function setup()
     CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",144.00,291.00,TYPE_ENEMY,0.00)
     CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",240.00,307.00,TYPE_ENEMY,0.00)
     CreateObject("assets/enemies/kobold_wizard/kobold_wizard.lua",192.00,459.00,TYPE_ENEMY,0.00)
+
+    PlayMusic("assets/audio/music/encounters/kobold/kobold_encounter_3.wav",0.5,0); 
+
 end
 function update()
 

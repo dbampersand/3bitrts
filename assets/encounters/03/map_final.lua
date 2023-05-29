@@ -12,6 +12,7 @@ function setup()
 
 
     SetSpawnPoint(152,221)
+    SetEncounterMusic("assets/audio/music/boss/cusith/cusith.wav");
 end
 
 function update(dt)

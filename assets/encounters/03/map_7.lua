@@ -16,6 +16,8 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/kobold_crusher/kobold_crusher.lua",416.00,146.00,TYPE_ENEMY,0.00),3)
     SetAggroGroup(CreateObject("assets/enemies/kobold_crusher/kobold_crusher.lua",506.00,286.00,TYPE_ENEMY,0.00),5)
     CreateObject("assets/enemies/ghost/ghost.lua",161.00,496.00,TYPE_ENEMY,0.00)
+    PlayMusic("assets/audio/music/encounters/cusith/cusith_encounter_3.wav",0.5,66); 
+
 end
 function update()
 

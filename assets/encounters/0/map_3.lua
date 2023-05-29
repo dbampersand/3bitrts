@@ -13,7 +13,8 @@ function setup()
 
     CreateObject("assets/enemies/kobold_crystal/kobold_crystal.lua",171.00,404.00,TYPE_ENEMY,0);
 
-
+    PlayMusic("assets/audio/music/encounters/kobold/kobold_encounter.wav",0.5,12); 
+    
     SetSpawnPoint(172,88)
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",222.00,257.00,TYPE_ENEMY,0.00),3)
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",183.00,263.00,TYPE_ENEMY,0.00),3)

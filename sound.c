@@ -346,7 +346,7 @@ void StopMusic()
     musicState = MUSICSTATE_FADINGOUT;
 
 }
-void PlayMusic(const char* path, float musicGain, float loopPoint)
+void PlayMusic(const char* path, float musicGain, double loopPoint)
 {
     if (musicFadingTo)
         return;
