@@ -5,8 +5,8 @@ function setup()
     SetSprite("assets/friendly/necromancer/necromancer.png");
     AddAbility(GetObjRef(),"assets/friendly/necromancer/harvest_blood.lua",0)    
     AddAbility(GetObjRef(),"assets/friendly/necromancer/blood_bolt.lua",1)    
-    --AddAbility(GetObjRef(),"assets/friendly/necromancer/ostinato.lua",2)    
-    --AddAbility(GetObjRef(),"assets/friendly/necromancer/furia.lua",3)    
+    AddAbility(GetObjRef(),"assets/friendly/necromancer/harvest.lua",2)    
+     AddAbility(GetObjRef(),"assets/friendly/necromancer/seance.lua",3)    
 
     AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05);
     AddAttackSprite("assets/ui/slash_fx2.png",16,16,0.05);
@@ -17,14 +17,14 @@ function setup()
     SetMaxHP(maxHP,true);   
 
 
-    SetObjType(Bor(TYPE_UTILITY));
+    SetObjType(TYPE_UTILITY);
 
     IsPlayerChoosable(true);
     SetCategory(TYPE_UTILITY);
     
-    SetObjPurchaseScreenSprite("assets/friendly/necromacner/necromancer_full.png")
+    SetObjPurchaseScreenSprite("assets/friendly/necromancer/necromancer_full.png")
     SetObjName("Necromancer");
-    SetObjDescription("--.")
+    SetObjDescription("A farmer slave, killed in a machine accident, thought his labour was finally over. His rest was disturbed by a passing wizard, promising a subservient zombie, more than one lifetime of labour for a small fee. But the foolhardy wizard, young and untrained, focused too much energy into the ressurection spell, and ended up creating a monster: a true necromancer. Fueled by cruel memories of his past life, he despises mankind, and works only to return nature to its intended path.")
     SetAttackSounds(
         {
         "assets/audio/attacks/ranged_bow/bow_1.wav",

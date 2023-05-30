@@ -81,6 +81,7 @@ typedef struct Effect
     Ability* abilityFrom;
 
 } Effect;
+void CallEffectTick(Effect* e, GameObject* g, GameObject* copy);
 void GetNumEffects(GameObject* g);
 void ApplyEffect(Effect* e, GameObject* from, GameObject* target, Ability* ability);
 void ProcessEffects(GameObject* g, float dt);

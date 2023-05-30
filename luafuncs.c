@@ -3081,6 +3081,18 @@ int L_GetObjsByName(lua_State* l)
     }
     return 1;
 }
+int L_Heal(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    double toHeal = lua_tonumber(l,2);
+    if (!GameObjectIndexInRange(index))
+    {
+        printf("L_Heal: index out of range: %i",index);
+        return 0;
+    }
+    Heal(&objects[index],toHeal);
+    return 0;
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -5373,5 +5385,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_DistXY);
     lua_setglobal(luaState, "DistXY");
+
+    lua_pushcfunction(luaState, L_Heal);
+    lua_setglobal(luaState, "Heal");
 
 }

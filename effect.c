@@ -15,8 +15,11 @@
 
 void CallEffectTick(Effect* e, GameObject* g, GameObject* copy)
 {
-    if (!e->abilityFrom)
+    if (!e->abilityFrom || !e->enabled)
         return;
+
+    GameObject* before = currGameObjRunning;
+    currGameObjRunning = e->from;
 
     lua_rawgeti(luaState, LUA_REGISTRYINDEX, e->abilityFrom->luafunc_effecttick);
 
@@ -25,10 +28,12 @@ void CallEffectTick(Effect* e, GameObject* g, GameObject* copy)
     lua_pushnumber(luaState,g-objects);
     lua_pushnumber(luaState,copy->position.worldX);
     lua_pushnumber(luaState,copy->position.worldY);
+    lua_pushstring(luaState,e->name ? e->name : "");
 
 
+    lua_pcall(luaState,6,0,0);
 
-    lua_pcall(luaState,5,0,0);
+    currGameObjRunning = before;
 
 }
 void UpdateEffectVisuals(GameObject* g, float dt)

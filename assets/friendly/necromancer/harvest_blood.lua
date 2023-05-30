@@ -8,7 +8,7 @@ function setup()
     AbilitySetPortrait("assets/friendly/bard/icon_aoe_shield.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
     SetAbilityRange(80)
-    SetCooldown(10)
+    SetCooldown(10) 
     SetDescription("Harvest Blood\n\nDeals damage to a friendly unit, and generates a stack of Blood Bolt.")
     
 end

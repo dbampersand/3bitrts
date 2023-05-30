@@ -1272,6 +1272,8 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
         return;
     if (!IsActive(g))
         return;
+    GameObject copy = *g;
+
 
     if (currMap->luafunc_objectdied)
     {
@@ -1282,7 +1284,6 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
     }
     if (spawnParticles)
         ScatterEffect(g);
-    CureAll(g);
 
     RemoveObjFromAllThreatlists(g);
     RemoveObjFromAllCommands(g);
@@ -1340,6 +1341,7 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
 
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
+        CallEffectTick(&g->effects[i],g,&copy);
         RemoveEffect(&g->effects[i], NULL, true);
     }
     for (int i = 0; i < INVENTORY_SLOTS; i++)
