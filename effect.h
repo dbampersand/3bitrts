@@ -82,7 +82,7 @@ typedef struct Effect
 
 } Effect;
 void GetNumEffects(GameObject* g);
-void ApplyEffect(Effect* e, GameObject* from, GameObject* target);
+void ApplyEffect(Effect* e, GameObject* from, GameObject* target, Ability* ability);
 void ProcessEffects(GameObject* g, float dt);
 bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove);
 int CureNamedEffect(GameObject* g, const char* name, int numStacksToRemove);

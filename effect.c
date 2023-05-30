@@ -12,6 +12,25 @@
 #include "allegro5/allegro_primitives.h"
 
 #include <math.h>
+
+void CallEffectTick(Effect* e, GameObject* g, GameObject* copy)
+{
+    if (!e->abilityFrom)
+        return;
+
+    lua_rawgeti(luaState, LUA_REGISTRYINDEX, e->abilityFrom->luafunc_effecttick);
+
+    lua_pushnumber(luaState,e->effectType);
+    lua_pushnumber(luaState,e->value);
+    lua_pushnumber(luaState,g-objects);
+    lua_pushnumber(luaState,copy->position.worldX);
+    lua_pushnumber(luaState,copy->position.worldY);
+
+
+
+    lua_pcall(luaState,5,0,0);
+
+}
 void UpdateEffectVisuals(GameObject* g, float dt)
 {
     for (int i = 0; i < MAX_EFFECTS; i++)
@@ -104,23 +123,31 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
 
     int sign = 1; 
     if (remove) sign = -1;
-    if (e->effectType == EFFECT_MAXHP)
-    {
-        ModifyMaxHP(target,value*sign);
-    }
     if (e->effectType == EFFECT_HURT)
     {
+        Effect copy = *e;
+        GameObject copyTarget = *target;
         bool objectDied = Damage(from,target,value*sign,propagateItemEffects,1,e);
         if (objectDied)
         {
             //PrintDiedFrom(target,from,e,value);
         }
+        CallEffectTick(&copy,target,&copyTarget);
         return objectDied;
     }
     if (e->effectType == EFFECT_HURT_PERCENT)
     {
-        return Damage(from,target,target->maxHP * (value*sign),propagateItemEffects,1,e);
+        Effect copy = *e;
+        GameObject copyTarget = *target;
+        bool died =  Damage(from,target,target->maxHP * (value*sign),propagateItemEffects,1,e);
+        CallEffectTick(&copy,target,&copyTarget);
+        return died;
     }
+    if (e->effectType == EFFECT_MAXHP)
+    {
+        ModifyMaxHP(target,value*sign);
+    }
+
     if (e->effectType == EFFECT_STUN)
     {
         Stun(from,target,value*sign);
@@ -194,6 +221,7 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
             CureEffect(target,e,e->value,false);
         }
     }
+    CallEffectTick(e,target,target);
 
     return false;
 
@@ -367,7 +395,7 @@ Effect CopyEffect(Effect* e)
 
 }
 
-void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
+void ApplyEffect(Effect* e, GameObject* from, GameObject* target, Ability* ability)
 {
     if (!e) return;
 
@@ -379,6 +407,8 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target)
     //not an elegant solution but it works
     Effect eNew = CopyEffect(e);
     e = &eNew;
+
+    e->abilityFrom = ability;
 
     e->playerOwnedBy = GetPlayerOwnedBy(from);
     

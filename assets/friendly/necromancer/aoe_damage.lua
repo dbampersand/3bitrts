@@ -13,11 +13,11 @@ function setup()
     SetDescription("Claidrich\n\nDoes damage in a radius.")
     
 end
-function casted(x,y,obj,headingx,headingy)
+function casted()
     PlaySound("assets/friendly/bard/audio/song_of_damage.wav",1)
 
     UntoggleOthers();
-    local f1 = {};
+    f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
     f1["value"] = 10;

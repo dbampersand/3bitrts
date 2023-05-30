@@ -41,6 +41,8 @@ typedef struct Ability
     int luafunc_ontimeout;
     int luafunc_onchanneled;
     int luafunc_parentdeath;
+    int luafunc_effecttick;
+
     int luafunc_timerbeforetick; //used for updating arguments of timers on the same frame as they tick - timers in this case meaning L_After
 
 

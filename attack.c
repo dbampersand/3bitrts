@@ -308,7 +308,7 @@ void ApplyAttack(Attack* a, GameObject* target)
     {
         for (int i = 0; i < a->numEffects; i++)
         {
-            ApplyEffect(&a->effects[i],a->ownedBy,target);
+            ApplyEffect(&a->effects[i],a->ownedBy,target,a->cameFrom);
         }
         if (a->shouldCallback && IsActive(a->ownedBy))
         {

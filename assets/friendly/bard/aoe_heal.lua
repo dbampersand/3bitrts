@@ -16,7 +16,7 @@ function casted(x,y,obj,headingx,headingy)
 
     UntoggleOthers();
 
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HEAL;
     --f1["numTriggers"] = 5

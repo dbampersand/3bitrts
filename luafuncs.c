@@ -3522,7 +3522,7 @@ int L_CleaveEffect(lua_State* l)
             {
                 eCopy.value *= cleavePercent;
             }
-            ApplyEffect(&eCopy,currGameObjRunning,targets[j]);
+            ApplyEffect(&eCopy,currGameObjRunning,targets[j],currAbilityRunning);
         }
         lua_pop(l,1);
     }       
@@ -3556,7 +3556,7 @@ int L_ApplyEffect(lua_State* l)
         e.from = currGameObjRunning;
         e.abilityFrom = currAbilityRunning;
         //lua_remove(l,-1);
-        ApplyEffect(&e,currGameObjRunning,&objects[objIndex]);
+        ApplyEffect(&e,currGameObjRunning,&objects[objIndex],currAbilityRunning);
         lua_pop(l,1);
     }       
     

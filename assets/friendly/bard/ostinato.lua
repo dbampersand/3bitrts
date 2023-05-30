@@ -13,10 +13,10 @@ function setup()
     SetDescription("Ostinato\n\nIncrease the attack speed of all nearby friendly units.")
     
 end
-function casted()
+function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/bard/audio/song_of_shield.wav",1)
-
-    f1 = {};
+    
+    local f1 = {};
     f1["trigger"] = TRIGGER_CONST;
     f1["type"] = EFFECT_ATTACKSPEED;
     f1["value"] = AS;

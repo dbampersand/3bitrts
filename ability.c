@@ -344,6 +344,14 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         }
         else
             a->luafunc_parentdeath = -1;
+        if (CheckFuncExists("effecttick",&a->luabuffer))
+        {
+            lua_getglobal(l, "effecttick");
+            funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+            a->luafunc_effecttick = funcIndex;
+        }
+        else
+            a->luafunc_effecttick = -1;
 
         if (CheckFuncExists("untoggle",&a->luabuffer))
         {
