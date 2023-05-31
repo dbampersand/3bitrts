@@ -17,11 +17,11 @@ end
 function update(dt)
 end
 
-function OnAttack(item,obj,target,dt,value)
+function onattack(item,obj,target,dt,value)
     if (chance >= RandRange(0,1)) then
         Stun(obj,time);
     end
 end
 
-function OnEffect(item,obj,target,trigger,effectType,stacks,value,duration,value)
+function oneffect(item,obj,target,trigger,effectType,stacks,value,duration,value)
 end

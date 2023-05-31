@@ -347,7 +347,7 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
                     {
                         ScatterEffect_Sprite(&sprites[g->inventory[i].spriteIndex_Icon],slotX,slotY, COLOR_DAMAGE);
 
-                        UnattachItem(&g->inventory[i]);
+                        UnattachItem(&g->inventory[i],g);
                         shop.removeClickedItem = NULL;
 
 

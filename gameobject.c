@@ -1148,9 +1148,9 @@ bool loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
         else
             g->luafunc_kill = -1;
 
-        if (CheckFuncExists("OnAttack", &g->lua_buffer))
+        if (CheckFuncExists("onattack", &g->lua_buffer))
         {
-            lua_getglobal(l, "OnAttack");
+            lua_getglobal(l, "onattack");
             funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
             g->luafunc_onattack = funcIndex;
         }
@@ -1346,7 +1346,7 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
     }
     for (int i = 0; i < INVENTORY_SLOTS; i++)
     {
-        RemoveItem(&g->inventory[i]);
+        RemoveItem(&g->inventory[i],g);
     }
 
     if (g->channelledAbility)

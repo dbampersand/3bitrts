@@ -4169,7 +4169,18 @@ int L_SetItemTier(lua_State* l)
 
     return 0;
 }
-
+int L_AttackIsActive(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index > MAX_ATTACKS)
+    {
+        printf("L_AttackIsActive: index out of range: %i\n",index);
+        lua_pushboolean(l,false);
+        return 1;
+    }
+    lua_pushboolean(l,AttackIsActive(&attacks[index]));
+    return 1;
+}
 int L_ModifyAbilityCooldownTimer(lua_State* l)
 {
     int objIndex = lua_tonumber(l,1);
@@ -5409,5 +5420,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_Stun);
     lua_setglobal(luaState, "Stun");
+
+    lua_pushcfunction(luaState, L_AttackIsActive);
+    lua_setglobal(luaState, "AttackIsActive");
 
 }

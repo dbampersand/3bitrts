@@ -71,6 +71,6 @@ end
 function kill()
 end
 
-function OnAttack(obj)
+function onattack(obj)
 
 end

@@ -15,11 +15,11 @@ end
 function update(dt)
 end
 
-function OnAttack(item,obj,target,dt,value)
+function onattack(item,obj,target,dt,value)
 
 end
 
-function OnEffect(item,obj,target,trigger,effectType,stacks,value,duration,value)
+function oneffect(item,obj,target,trigger,effectType,stacks,value,duration,value)
     v = value
     if (effectType == EFFECT_HEAL) then
         v = v * 1.25
@@ -27,5 +27,5 @@ function OnEffect(item,obj,target,trigger,effectType,stacks,value,duration,value
     return v
 end
 
-function OnDamaged(item,sourceObj,damagedObj,value)
+function ondamaged(item,sourceObj,damagedObj,value)
 end

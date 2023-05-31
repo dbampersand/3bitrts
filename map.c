@@ -429,6 +429,14 @@ void SetMap(Map* m)
     {
         GameObject* g = activeObjects[i];
         CallLuaFunc(g->luafunc_onmapchange);
+
+        for (int j = 0; j < INVENTORY_SLOTS; j++)
+        {
+            Item* it = &g->inventory[j];
+            lua_rawgeti(luaState, LUA_REGISTRYINDEX, it->luafunc_onmapchange);
+            lua_pushinteger(luaState,(int)(g - objects));    
+            lua_pcall(luaState,1,0,0);
+        }
         
     }
 

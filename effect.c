@@ -299,7 +299,7 @@ bool RemoveEffect(Effect* e, GameObject* from, bool removeAllStacks)
     if (!e->enabled)
         return false;
 
-    if (e->trigger == TRIGGER_CONST && from)
+    if ((e->trigger == TRIGGER_CONST || e->trigger == TRIGGER_PERMANENT) && from)
     {
         
         ProcessEffect(e,e->from,from,true);
@@ -326,7 +326,6 @@ bool RemoveEffect(Effect* e, GameObject* from, bool removeAllStacks)
 
     if (from)
     {
-
 
         for (int i = e - from->effects; i < MAX_EFFECTS-1; i++)
         {

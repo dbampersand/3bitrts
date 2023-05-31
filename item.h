@@ -28,8 +28,9 @@ typedef struct Item
     int luafunc_onattack;
     int luafunc_oneffect;
     int luafunc_attached;
+    int luafunc_unattach;
     int luafunc_ondamaged;
-
+    int luafunc_onmapchange;
 
 
     char* description;
@@ -77,10 +78,10 @@ void ProcessItemsOnEffect(GameObject* g, Effect* e, float* value);
 void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value);
 
 void AttachItem(GameObject* g, Item* i);
-void UnattachItem(Item* i);
+void UnattachItem(Item* i, GameObject* g);
 void InitItems();
 
-void RemoveItem(Item* i);
+void RemoveItem(Item* i, GameObject* g);
 
 Item* GetRandomItem(ItemLevel i);
 int NumAttachedItems(GameObject* g);

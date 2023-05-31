@@ -3,7 +3,7 @@ local time = 12
 local ticksPerSecond = 1;
 
 function setup()
-    SetAbilityRange(32)
+    SetAbilityRange(64)
     SetCooldown(24);
     AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
     SetDescription("[b]Burn\n\nDeals damage over time to the target.");

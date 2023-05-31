@@ -63,6 +63,15 @@ Item* LoadItemFuncs(Item* i, lua_State* l)
     }
     else
         i->luafunc_attached = -1;
+    if (CheckFuncExists("unattach",&i->luaBuffer))
+    {
+        lua_getglobal(l, "unattach");
+        funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+        i->luafunc_unattach = funcIndex;
+    }
+    else
+        i->luafunc_unattach = -1;
+
 
     if (CheckFuncExists("setup",&i->luaBuffer))
     {
@@ -77,32 +86,42 @@ Item* LoadItemFuncs(Item* i, lua_State* l)
         i->luafunc_setup = -1;
 
 
-    if (CheckFuncExists("OnEffect",&i->luaBuffer))
+    if (CheckFuncExists("oneffect",&i->luaBuffer))
     {
-        lua_getglobal(l, "OnEffect");
+        lua_getglobal(l, "oneffect");
         funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
         i->luafunc_oneffect = funcIndex;
     }
     else
         i->luafunc_oneffect = -1;
 
-    if (CheckFuncExists("OnAttack",&i->luaBuffer))
+    if (CheckFuncExists("onattack",&i->luaBuffer))
     {
-        lua_getglobal(l, "OnAttack");
+        lua_getglobal(l, "onattack");
         funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
         i->luafunc_onattack = funcIndex;
     }
     else
         i->luafunc_onattack = -1;
 
-    if (CheckFuncExists("OnDamaged",&i->luaBuffer))
+    if (CheckFuncExists("ondamaged",&i->luaBuffer))
     {
-        lua_getglobal(l, "OnDamaged");
+        lua_getglobal(l, "ondamaged");
         funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
         i->luafunc_ondamaged = funcIndex;
     }
     else
         i->luafunc_ondamaged = -1;
+
+    if (CheckFuncExists("onmapchange",&i->luaBuffer))
+    {
+        lua_getglobal(l, "onmapchange");
+        funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+        i->luafunc_onmapchange = funcIndex;
+    }
+    else
+        i->luafunc_onmapchange = -1;
+
 
     return i;
 }
@@ -312,9 +331,9 @@ void AttachItem(GameObject* g, Item* i)
         }
     }
 }
-void UnattachItem(Item* i)
+void UnattachItem(Item* i, GameObject* g)
 {
-    RemoveItem(i);
+    RemoveItem(i,g);
     memset(i,0,sizeof(Item));
 }
 void UpdateItem(Item* i, GameObject* g, float dt)
@@ -481,8 +500,14 @@ int NumAttachedItems(GameObject* g)
     }
     return numItems;
 }
-void RemoveItem(Item* i)
+void RemoveItem(Item* i, GameObject* g)
 {
+
+    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_unattach);
+    lua_pushinteger(luaState,(int)(g-objects));    
+    lua_pcall(luaState,1,0,0);
+
+
     if (i->description)
     {   
         free(i->description);
@@ -503,6 +528,8 @@ void RemoveItem(Item* i)
     luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_onattack);
     luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_oneffect);
     luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_attached);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_unattach);
     luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_ondamaged);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_onmapchange);
 
 }

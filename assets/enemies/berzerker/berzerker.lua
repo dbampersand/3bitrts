@@ -39,7 +39,7 @@ function kill()
 
 end
 
-function OnAttack(obj)
+function onattack(obj)
     if lastAttacked == obj then
         attackSpeed = attackSpeed - 0.1
         if (attackSpeed < attackSpeedMax) then

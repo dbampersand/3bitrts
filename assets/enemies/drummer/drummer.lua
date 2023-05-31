@@ -76,6 +76,6 @@ function kill()
     aoe = -1
 end
 
-function OnAttack(obj)
+function onattack(obj)
 
 end

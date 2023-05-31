@@ -20,14 +20,17 @@ function attached(obj)
 
     ApplyEffect(obj,{f1})
 end
+function unattach(obj)
+    CureNamedEffect(obj,"Berzerk Potion",1)
+end
 
 function update(dt)
 end
 
-function OnAttack(item,obj,target,dt,value)
+function onattack(item,obj,target,dt,value)
     local v = value + damageValue
     return v;
 end
 
-function OnEffect(item,obj,target,trigger,effectType,stacks,value,duration,value)
+function oneffect(item,obj,target,trigger,effectType,stacks,value,duration,value)
 end

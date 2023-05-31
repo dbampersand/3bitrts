@@ -31,12 +31,17 @@ function attached(obj)
 
 
 end
+function unattach(obj)
+    CureNamedEffect(obj,"Mana Stone",1)
+    CureNamedEffect(obj,"Mana Stone",1)
+end
+
 
 function update(dt)
 end
 
-function OnAttack(item,obj,target,dt,value)
+function onattack(item,obj,target,dt,value)
 end
 
-function OnEffect(item,obj,target,trigger,effectType,stacks,value,duration,value)
+function oneffect(item,obj,target,trigger,effectType,stacks,value,duration,value)
 end
