@@ -16,7 +16,7 @@ function update(dt)
 end
 
 function OnAttack(item,obj,target,dt,value)
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_TIMER;
     f1["type"] = EFFECT_HURT;
     f1["value"] = dps;  

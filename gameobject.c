@@ -3276,6 +3276,12 @@ void ModifyMaxMana(GameObject* g, float value)
         return;
     g->maxMana += value;
 }
+void ModifyManaRegen(GameObject* g, float value)
+{
+    if (!g) 
+        return;
+    g->manaRegen += value;
+}
 void SetObjectCanPush(GameObject* g, bool value)
 {
     if (value)

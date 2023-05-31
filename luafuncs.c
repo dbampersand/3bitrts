@@ -3189,6 +3189,9 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,EFFECT_MAXMANA);
     lua_setglobal(l,"EFFECT_MAXMANA");
 
+    lua_pushinteger(l,EFFECT_MANAREGEN);
+    lua_setglobal(l,"EFFECT_MANAREGEN");
+
 
 
 

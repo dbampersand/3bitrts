@@ -323,9 +323,10 @@ void UpdateItem(Item* i, GameObject* g, float dt)
     currItemRunning = i;
     currGameObjRunning = g;
     lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_update);
+    lua_pushnumber(luaState, dt);
     lua_pushinteger(luaState, i - g->inventory);
     lua_pushinteger(luaState, g - objects);
-    lua_pcall(luaState,2,0,0);
+    lua_pcall(luaState,3,0,0);
 
 }
 void ItemOnAttack(Item* i, GameObject* g, float dt, float* value)

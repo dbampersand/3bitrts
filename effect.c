@@ -156,6 +156,10 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         ModifyMaxMana(target,value*sign);
     }
+   if (e->effectType == EFFECT_MANAREGEN)
+    {
+        ModifyManaRegen(target,value*sign);
+    }
 
 
     if (e->effectType == EFFECT_STUN)

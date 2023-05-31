@@ -192,7 +192,8 @@ void InitColors()
     EffectColors = calloc(EFFECT_ALL,sizeof(Color));
     EffectColors[EFFECT_NONE] = COLOR_BG;
     EffectColors[EFFECT_MAXHP] = COLOR_HEAL;
-    EffectColors[EFFECT_MAXMANA] = COLOR_HEAL;
+    EffectColors[EFFECT_MAXMANA] = COLOR_SHIELD;
+    EffectColors[EFFECT_MANAREGEN] = COLOR_SHIELD;
     EffectColors[EFFECT_HURT] = COLOR_DAMAGE;
     EffectColors[EFFECT_HURT_PERCENT] = COLOR_DAMAGE;
     EffectColors[EFFECT_STUN] = COLOR_DAMAGE;

@@ -12,7 +12,7 @@ function setup(obj)
 end
 
 function attached(obj)
-    f1 = {};
+    local f1 = {};
     f1["trigger"] = TRIGGER_PERMANENT;
     f1["type"] = EFFECT_ARMOR
     f1["value"] = value
