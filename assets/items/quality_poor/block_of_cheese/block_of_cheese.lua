@@ -2,7 +2,7 @@
 function setup(obj)
     SetItemName(obj,"Block of Cheese")
     SetItemDescription(obj,"Regenerates health.")
-    SetItemGoldCost(obj,4)
+    SetItemGoldCost(obj,15)
     SetItemTier(obj,0)
     SetItemIcon(obj, "assets/items/quality_poor/block_of_cheese/block_of_cheese.png");
 
@@ -18,8 +18,8 @@ function update(dt,obj)
     f1["type"] = EFFECT_HEAL;
     f1["value"] = 5 * dt
 
-    ApplyEffect(obj,{f1});
-
+    --ApplyEffect(obj,{f1});
+    Heal(obj,5*dt);
 end
 
 function OnAttack(item,obj,target,dt,value)

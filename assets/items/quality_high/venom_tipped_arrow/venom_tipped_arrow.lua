@@ -1,9 +1,9 @@
 local maxStacks = 6
-local dps = 5
+local dps = 2.5
 function setup(obj)
     SetItemName(obj,"Venom-tipped Arrow")
     SetItemDescription(obj,"Applies a poison when attacking that stacks " .. maxStacks .. " times.")
-    SetItemGoldCost(obj,40)
+    SetItemGoldCost(obj,120)
     SetItemTier(obj,2)  
     SetItemIcon(obj, "assets/items/quality_high/venom_tipped_arrow/venom_tipped_arrow.png");
 end

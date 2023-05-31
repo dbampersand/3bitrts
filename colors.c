@@ -121,7 +121,7 @@ unsigned char HashColor(ALLEGRO_COLOR c)
 void InitColors()
 {
     BG = al_map_rgba(24,5,26,255);
-    GROUND = al_map_rgba(74,64,201,255);
+    GROUND = al_map_rgba(74,64,220,255);
 
     ENEMY = al_map_rgba(95,247,247,255);
     FRIENDLY = al_map_rgba(242,246,255,255);
@@ -192,6 +192,7 @@ void InitColors()
     EffectColors = calloc(EFFECT_ALL,sizeof(Color));
     EffectColors[EFFECT_NONE] = COLOR_BG;
     EffectColors[EFFECT_MAXHP] = COLOR_HEAL;
+    EffectColors[EFFECT_MAXMANA] = COLOR_HEAL;
     EffectColors[EFFECT_HURT] = COLOR_DAMAGE;
     EffectColors[EFFECT_HURT_PERCENT] = COLOR_DAMAGE;
     EffectColors[EFFECT_STUN] = COLOR_DAMAGE;

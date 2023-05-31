@@ -341,6 +341,7 @@ void AddSpeed(GameObject* g, float value);
 void AddMissChance(GameObject* g, float value);
 void AddDamage(GameObject* g, float value);
 void ModifyMaxHP(GameObject* g, float value);
+void ModifyMaxMana(GameObject* g, float value);
 void AddMana(GameObject* g, float mana);
 void SetManaRegen(GameObject* g, float regen);
 void SetHPRegen(GameObject* g, float regen);

@@ -24,7 +24,7 @@ Encounter* currEncounterRunning = NULL;
 
 int selectedEncounterIndex = 0;
 
-float goldLossRate = 10;
+float goldLossRate = 0.5f;
 
 void SetEncounterProfited(Encounter* e, int amountProfited)
 {
@@ -337,7 +337,7 @@ void UpdateEncounter(float dt)
 
         UpdateMap(currMap,dt);
         if (gameState == GAMESTATE_INGAME)
-            AddGold(-dt * (1/goldLossRate));
+            AddGold(-dt * goldLossRate);
     }
 }
 bool IsSeperator(char c)

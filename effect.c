@@ -152,6 +152,11 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         ModifyMaxHP(target,value*sign);
     }
+    if (e->effectType == EFFECT_MAXMANA)
+    {
+        ModifyMaxMana(target,value*sign);
+    }
+
 
     if (e->effectType == EFFECT_STUN)
     {

@@ -3186,6 +3186,9 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,EFFECT_COOLDOWN_RATE);
     lua_setglobal(l,"EFFECT_COOLDOWN_RATE");
 
+    lua_pushinteger(l,EFFECT_MAXMANA);
+    lua_setglobal(l,"EFFECT_MAXMANA");
+
 
 
 
@@ -4574,6 +4577,18 @@ int L_GetObjectsInCone(lua_State* l)
     free(selected);
     return 1;
 }
+int L_Stun(lua_State* l)
+{   
+    int target = lua_tonumber(l,1);
+
+    if (!GameObjectIndexInRange(target))
+    {
+        printf("L_Stun: index out of range: %i\n",target);
+    }
+    float time = lua_tonumber(l,2);
+    Stun(currGameObjRunning,&objects[target],time);
+    return 0;
+}
 void SetLuaKeyEnums(lua_State* l)
 {
     //TODO: Update these when a key is changed in settings
@@ -5388,5 +5403,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_Heal);
     lua_setglobal(luaState, "Heal");
+
+    lua_pushcfunction(luaState, L_Stun);
+    lua_setglobal(luaState, "Stun");
 
 }

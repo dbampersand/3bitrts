@@ -873,9 +873,6 @@ int main(int argc, char* args[])
             //printf("Total time: %f\n",time);
             fflush(stdout);
             
-            //sort activeobjects so we have less cache misses 
-            if (_FRAMES % 60 == 0)
-                qsort(activeObjects,numActiveObjects,sizeof(GameObject*),SortPointers);
         }
     }
     WriteSettingsFile("config.cfg");

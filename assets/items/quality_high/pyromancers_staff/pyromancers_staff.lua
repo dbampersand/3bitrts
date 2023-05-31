@@ -1,8 +1,8 @@
 
 function setup(obj)
-    SetItemName(obj,"Barbed Wire")
+    SetItemName(obj,"Pyromancer's Staff")
     SetItemDescription(obj,"Deals damage when hit.")
-    SetItemGoldCost(obj,100)
+    SetItemGoldCost(obj,160)
     SetItemTier(obj,2)  
     SetItemIcon(obj, "assets/items/quality_high/barbed_wire/barbed_wire.png");
 end

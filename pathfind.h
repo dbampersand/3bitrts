@@ -4,7 +4,7 @@
 #include "stdint.h"
 #include "stdlib.h"
 #include "stdbool.h"
-#define PATHFIND_DEPTH 1024
+#define PATHFIND_DEPTH 128
 #define TIEBREAK 1/(float)PATHFIND_DEPTH   
     
 #define PATHFIND_SEARCH_MAX PATHFIND_DEPTH

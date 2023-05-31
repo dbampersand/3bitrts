@@ -3270,6 +3270,12 @@ void ModifyMaxHP(GameObject* g, float value)
         return;
     g->maxHP += value;
 }
+void ModifyMaxMana(GameObject* g, float value)
+{
+    if (!g) 
+        return;
+    g->maxMana += value;
+}
 void SetObjectCanPush(GameObject* g, bool value)
 {
     if (value)

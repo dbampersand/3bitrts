@@ -3,7 +3,7 @@ local moveSpeed = 20
 function setup(obj)
     SetItemName(obj,"Hermes' Boots")
     SetItemDescription(obj,"+" .. moveSpeed .. " movement speed")
-    SetItemGoldCost(obj,10)
+    SetItemGoldCost(obj,50)
     SetItemTier(obj,1)
     SetItemIcon(obj, "assets/items/quality_mid/hermes_boots/hermes_boots.png");
 

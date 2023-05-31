@@ -979,7 +979,7 @@ bool GameIsIngame()
 void RessurectGameObject(GameObject* g)
 {
     int index = g - deadFriendlyObjects;
-    AddGameobject(g,0,0,SOURCE_SPAWNED_FROM_MAP,TYPE_FRIENDLY);
+    AddGameobject(g->prefab,0,0,SOURCE_SPAWNED_FROM_MAP,TYPE_FRIENDLY);
 
     deadFriendlyObjects[index].properties = 0;
 
