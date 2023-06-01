@@ -8,7 +8,7 @@ function setup()
 
     SetAbilityRange(60)
     SetCooldown(20);
-    SetDescription("Charge\n\nCharges the target, dealing " .. damage  .. "damage to targets around you. Increases armor for " .. armorDuration " seconds.")
+    SetDescription("Charge\n\nCharges the target, dealing " .. damage  .. "damage to targets around you. Increases armor for " .. armorDuration .. " seconds.")
 
 end
 

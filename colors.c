@@ -194,6 +194,7 @@ void InitColors()
     EffectColors[EFFECT_MAXHP] = COLOR_HEAL;
     EffectColors[EFFECT_MAXMANA] = COLOR_SHIELD;
     EffectColors[EFFECT_MANAREGEN] = COLOR_SHIELD;
+    EffectColors[EFFECT_ABILITY_POTENCY] = COLOR_SHIELD;
     EffectColors[EFFECT_HURT] = COLOR_DAMAGE;
     EffectColors[EFFECT_HURT_PERCENT] = COLOR_DAMAGE;
     EffectColors[EFFECT_STUN] = COLOR_DAMAGE;

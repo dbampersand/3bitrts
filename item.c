@@ -425,7 +425,6 @@ void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value)
     
     currGameObjRunning = before;
 }   
-
 void ItemOnEffect(Item* i, GameObject* g, Effect* e, float* value)
 {
     if (!i->enabled)
@@ -441,8 +440,8 @@ void ItemOnEffect(Item* i, GameObject* g, Effect* e, float* value)
     lua_pushinteger(luaState, e->trigger);
     lua_pushinteger(luaState, e->effectType);
     lua_pushinteger(luaState, e->stacks);
-    lua_pushinteger(luaState, e->value);
-    lua_pushinteger(luaState, e->duration);
+    lua_pushnumber(luaState, e->value);
+    lua_pushnumber(luaState, e->duration);
     
     lua_pushnumber(luaState, *value);
 

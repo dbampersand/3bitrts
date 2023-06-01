@@ -463,7 +463,10 @@ void DrawReroll(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
     bool moused = PointInRect(mouseState.screenX,mouseState.screenY,r);
     DrawSprite(s,x,y,0,0,0,players[0].gold >= rerollCost ? FRIENDLY : GROUND,moused,false,false);
     
+    char* str = calloc(NumDigits(rerollCost)+1,sizeof(char));
+    sprintf(str,"%i",rerollCost);
 
+    al_draw_text(ui.font,players[0].gold >= rerollCost ? FRIENDLY : GROUND,x+GetWidthSprite(s)/2.0f,y-10,ALLEGRO_ALIGN_CENTER,str);
 
     if (moused && players[0].gold >= rerollCost)
     {
@@ -473,6 +476,7 @@ void DrawReroll(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
             shop.shopState = SHOP_STATE_REROLLING;
         }
     }
+    free(str);
     
 }
 void DrawShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)

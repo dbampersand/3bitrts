@@ -10,7 +10,6 @@ function setup()
 
     
 
-    CreateObject("assets/enemies/nix/nix.lua",238.00,146.00,TYPE_ENEMY,0.00)
 end
 
 function update()

@@ -19,6 +19,7 @@ function setup(obj)
 end
 
 function onmapchange(obj)
+    aoe = -1
 end
 
 function attached(obj)

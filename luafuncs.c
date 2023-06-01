@@ -3192,6 +3192,8 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,EFFECT_MANAREGEN);
     lua_setglobal(l,"EFFECT_MANAREGEN");
 
+    lua_pushinteger(l,EFFECT_ABILITY_POTENCY);
+    lua_setglobal(l,"EFFECT_ABILITY_POTENCY");
 
 
 
@@ -3478,6 +3480,7 @@ int L_CleaveEffect(lua_State* l)
     int numCleaves = lua_tonumber(l,3);
     int range = lua_tonumber(l,4);
     float cleavePercent = lua_tonumber(l,5);
+    float percentToMainTarget = lua_tonumber(l,6);
 
     //lua_pop(l,-1);
     //lua_pop(l,-1);
@@ -3539,6 +3542,10 @@ int L_CleaveEffect(lua_State* l)
             if (j != 0)
             {
                 eCopy.value *= cleavePercent;
+            }
+            if (j == 0)
+            {
+                eCopy.value *= percentToMainTarget;
             }
             ApplyEffect(&eCopy,currGameObjRunning,targets[j],currAbilityRunning);
         }

@@ -13,7 +13,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT
     f1["value"] = 100;
-    CleaveEffect(obj,{f1},2,60,0.5);
+    CleaveEffect(obj,{f1},2,60,0.5,1);
 
     AddStack(GetObjRef(),2,1);
     AddStack(GetObjRef(),3,1);

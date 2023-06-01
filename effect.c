@@ -103,6 +103,8 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
         return false;
     
     float v = e->value;
+    if (from)
+        v += from->abilityPotency * v;
 
     if (from)
         ProcessItemsOnEffect(from,e,&v);
@@ -156,9 +158,13 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         ModifyMaxMana(target,value*sign);
     }
-   if (e->effectType == EFFECT_MANAREGEN)
+    if (e->effectType == EFFECT_MANAREGEN)
     {
         ModifyManaRegen(target,value*sign);
+    }
+    if (e->effectType == EFFECT_ABILITY_POTENCY)
+    {
+        ModifyAbilityPotency(target,value*sign);
     }
 
 
@@ -332,8 +338,6 @@ bool RemoveEffect(Effect* e, GameObject* from, bool removeAllStacks)
             from->effects[i] = from->effects[i+1];
         }
         memset(&from->effects[MAX_EFFECTS-1],0,sizeof(Effect));
-        e->from = NULL;
-
     }
     return true;
 

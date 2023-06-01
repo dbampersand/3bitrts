@@ -226,7 +226,7 @@ typedef struct GameObject
     float missChance;
 
     float cooldownRate;
-
+    float abilityPotency;
 } GameObject;
 
 #define MAX_LIGHT_SIZE 90 
@@ -343,6 +343,7 @@ void AddDamage(GameObject* g, float value);
 void ModifyMaxHP(GameObject* g, float value);
 void ModifyMaxMana(GameObject* g, float value);
 void ModifyManaRegen(GameObject* g, float value);
+void ModifyAbilityPotency(GameObject* g, float value);
 void AddMana(GameObject* g, float mana);
 void SetManaRegen(GameObject* g, float regen);
 void SetHPRegen(GameObject* g, float regen);

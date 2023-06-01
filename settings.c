@@ -156,7 +156,7 @@ void SetDefaultSettings(Settings* setting)
     setting->keymap.key_Tab = (Key){"Next unit in group",ALLEGRO_KEY_TAB};
     setting->keymap.key_Ctrl = (Key){"Add unit to group",ALLEGRO_KEY_LCTRL};
 
-    setting->keymap.key_ShowMap = (Key){"Show Map",ALLEGRO_KEY_BACKQUOTE};
+    setting->keymap.key_ShowMap = (Key){"Show Map",ALLEGRO_KEY_M};
 
     setting->keymap.key_Pause = (Key){"Pause",ALLEGRO_KEY_P};
     setting->keymap.key_Cancel = (Key){"Pause",ALLEGRO_KEY_ESCAPE};

@@ -3282,6 +3282,13 @@ void ModifyManaRegen(GameObject* g, float value)
         return;
     g->manaRegen += value;
 }
+void ModifyAbilityPotency(GameObject* g, float value)
+{
+    if (!g)
+        return;
+    g->abilityPotency += value;
+}
+
 void SetObjectCanPush(GameObject* g, bool value)
 {
     if (value)
@@ -3571,8 +3578,9 @@ void DrawChannelHint(GameObject* g, float dt, MouseState mouseState)
             Ability* a = g->channelledAbility;
 
             if (isHeldAbility)
+            {
                 a = players[0].abilityHeld;
-
+            }
             float hintTimer = 1 - g->channellingTime / g->channellingTotal;
             if (hintTimer > 1)
                 hintTimer = 1;
@@ -3602,20 +3610,20 @@ void DrawChannelHint(GameObject* g, float dt, MouseState mouseState)
                 x2 = mouseState.worldX;
                 y2 = mouseState.worldY;
             }
+            if (!isHeldAbility)
+                if (a->targetingHint == HINT_LINE)
+                {
+                    float x3 = x2 - x;
+                    float y3 = y2 - y;
 
-            if (a->targetingHint == HINT_LINE)
-            {
-                float x3 = x2 - x;
-                float y3 = y2 - y;
+                    float d = dist(x, y, x2, y2) * easedTimer;
+                    Normalize(&x3, &y3);
 
-                float d = dist(x, y, x2, y2) * easedTimer;
-                Normalize(&x3, &y3);
+                    x2 = x + x3 * d;
+                    y2 = y + y3 * d;
 
-                x2 = x + x3 * d;
-                y2 = y + y3 * d;
-
-                al_draw_line(ToScreenSpace_X(x), ToScreenSpace_Y(y), ToScreenSpace_X(x2), ToScreenSpace_Y(y2), col, 1);
-            }
+                    al_draw_line(ToScreenSpace_X(x), ToScreenSpace_Y(y), ToScreenSpace_X(x2), ToScreenSpace_Y(y2), col, 1);
+                }
             if (a->targetingHint == HINT_CIRCLE)
             {
 // draw line leading up to the circle
