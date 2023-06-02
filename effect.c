@@ -170,6 +170,10 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         ModifyCleave(target,value*sign);
     }
+    if (e->effectType == EFFECT_DODGE_CHANCE)
+    {
+        ModifyDodgeChance(target,value*sign);
+    }
 
 
 

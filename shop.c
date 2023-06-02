@@ -319,7 +319,7 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
     {
         GameObject* g = activeObjects[i];
 
-        if (!IsOwnedByPlayer(g) || !g->playerChoosable)
+        if (!IsOwnedByPlayer(g) || !g->playerChoosable || g->objectIsSummoned)
             continue;
 
         DrawSprite(&sprites[g->spriteIndex],x,y,0,0,0,FRIENDLY,false,false,false);

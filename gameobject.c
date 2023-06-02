@@ -1293,7 +1293,7 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
     CallLuaFunc(g->luafunc_kill);
     currGameObjRunning = before;
 
-    if (IsOwnedByPlayer(g) && g->playerChoosable)
+    if (IsOwnedByPlayer(g) && g->playerChoosable && !g->objectIsSummoned)
         AddDeadGameObject(g);
 
     if (trigger)
@@ -3065,7 +3065,7 @@ void AttackTarget(GameObject* g, float dt)
 
             AddAnimationEffect_Prefab(ae, g->properties & OBJ_OWNED_BY, midX, midY);
         }
-        if (miss < g->missChance)
+        if (miss < g->missChance + g->targObj->dodgeChance)
         {
             return;
         }
@@ -3314,7 +3314,12 @@ void ModifyCleave(GameObject* g, float value)
         return;
     g->cleave += value;
 }
-
+void ModifyDodgeChance(GameObject* g, float value)
+{
+    if (!g)
+        return;
+    g->dodgeChance += value;
+}
 void SetObjectCanPush(GameObject* g, bool value)
 {
     if (value)

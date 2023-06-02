@@ -300,7 +300,7 @@ void FinishTransition()
     {
         RemoveAllAttacks();
 
-        combatStarted = false;
+        combatStarted = false;      
 
         gameState = GAMESTATE_INGAME;
         transitioningTo = GAMESTATE_INGAME;
@@ -309,7 +309,7 @@ void FinishTransition()
         int goldBefore = players[0].gold;
         for (int i = 0; i < MAX_OBJS; i++)
         {
-            if (!IsOwnedByPlayer(&objects[i]))
+            if (!IsOwnedByPlayer(&objects[i]) || objects[i].objectIsSummoned)
             {
                 KillObj(&objects[i],false,false);
             }

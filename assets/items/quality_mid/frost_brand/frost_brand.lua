@@ -8,7 +8,7 @@ function setup(obj)
     SetItemDescription(obj,"Slows the attacked target and their attack speed for " .. time)
     SetItemGoldCost(obj,110)
     SetItemTier(obj,1)
-    SetItemIcon(obj, "assets/items/quality_mid/polished_mirror/polished_mirror.png");
+    SetItemIcon(obj, "assets/items/quality_mid/frost_brand/frost_brand.png");
 
 end
 

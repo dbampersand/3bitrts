@@ -230,6 +230,9 @@ typedef struct GameObject
     float cooldownRate;
     float abilityPotency;
     float cleave;
+    float dodgeChance;
+
+    bool objectIsSummoned;
 } GameObject;
 
 #define MAX_LIGHT_SIZE 90 
@@ -357,6 +360,8 @@ void AddArmor(GameObject* g, float armor);
 void AddLifesteal(GameObject* g, float value);
 void ModifyCleave(GameObject* g, float value);
 void AddCooldownRate(GameObject* g, float value);
+void ModifyDodgeChance(GameObject* g, float value);
+
 void SetObjIsBoss(GameObject* g, bool value);
 
 void Teleport(GameObject* g, float x, float y, bool updateold);

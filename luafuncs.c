@@ -3198,6 +3198,8 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,EFFECT_CLEAVE);
     lua_setglobal(l,"EFFECT_CLEAVE");
 
+    lua_pushinteger(l,EFFECT_DODGE_CHANCE);
+    lua_setglobal(l,"EFFECT_DODGE_CHANCE");
 
 
     lua_pushinteger(l,ABILITY_INSTANT);
@@ -3825,6 +3827,13 @@ int L_RandRange(lua_State* l)
     double min = lua_tonumber(l,1);
     double max = lua_tonumber(l,2);
     lua_pushnumber(l,RandRange(min,max));
+    return 1;
+}
+int L_RandRangeI(lua_State* l)
+{
+    double min = lua_tonumber(l,1);
+    double max = lua_tonumber(l,2);
+    lua_pushinteger(l,RandRangeI(min,max));
     return 1;
 }
 int L_SetAbilityHint(lua_State* l)
@@ -4613,6 +4622,17 @@ int L_Stun(lua_State* l)
     float time = lua_tonumber(l,2);
     Stun(currGameObjRunning,&objects[target],time);
     return 0;
+}
+int L_SetObjSummoned(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    bool b = lua_toboolean(l,2);
+    if (!GameObjectIndexInRange(index))
+    {
+        printf("L_SetObjSummoned: index out of range: %i\n",index);
+        return 0;
+    }
+    objects[index].objectIsSummoned = b;
 }
 void SetLuaKeyEnums(lua_State* l)
 {
@@ -5434,5 +5454,13 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_AttackIsActive);
     lua_setglobal(luaState, "AttackIsActive");
+
+    lua_pushcfunction(luaState, L_RandRangeI);
+    lua_setglobal(luaState, "RandRangeI");
+
+    lua_pushcfunction(luaState, L_SetObjSummoned);
+    lua_setglobal(luaState, "SetObjSummoned");
+
+
 
 }

@@ -33,7 +33,7 @@ function setup()
         "assets/audio/attacks/melee_sword/sword_6.wav",
         "assets/audio/attacks/melee_sword/sword_7.wav"
     });
-    --AddItem(GetObjRef(),"assets/items/quality_high/renewing_vessel/renewing_vessel.lua")
+    AddItem(GetObjRef(),"assets/items/quality_mid/summoning_stone/summoning_stone.lua")
 end 
 
 function update(dt)

@@ -214,6 +214,7 @@ void InitColors()
     EffectColors[EFFECT_LIFESTEAL] = COLOR_HEAL;
     EffectColors[EFFECT_COOLDOWN_RATE] = COLOR_SPEED;
     EffectColors[EFFECT_CLEAVE] = COLOR_DAMAGE;
+    EffectColors[EFFECT_DODGE_CHANCE] = COLOR_SPEED;
 
 
 

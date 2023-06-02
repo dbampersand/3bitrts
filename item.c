@@ -137,6 +137,7 @@ Item* LoadItemFuncs(Item* i, lua_State* l)
 
 void ItemOnMapChange(Item* i, GameObject* g)
 {
+    currGameObjRunning = g;
     lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_onmapchange);
     lua_pushinteger(luaState,(int)(g - objects));    
     lua_pcall(luaState,1,0,0);
