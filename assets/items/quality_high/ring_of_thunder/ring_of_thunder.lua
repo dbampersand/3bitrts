@@ -5,7 +5,7 @@ function setup(obj)
     SetItemDescription(obj,"Decreases ability cooldowns.")
     SetItemGoldCost(obj,135)
     SetItemTier(obj,2)  
-    SetItemIcon(obj, "assets/items/quality_high/venom_tipped_arrow/venom_tipped_arrow.png");
+    SetItemIcon(obj, "assets/items/quality_high/ring_of_thunder/ring_of_thunder.png");
 end
 
 function attached(obj)

@@ -4169,6 +4169,21 @@ int L_AddItem(lua_State* l)
     AttachItem(g,i);
     return 0;
 }
+int L_RemoveItem(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    int itemIndex = lua_tonumber(l,2);
+
+    if (!GameObjectIndexInRange(objIndex) || itemIndex < 0 || itemIndex >= INVENTORY_SLOTS)
+    {
+        printf("L_RemoveItem: index out of range: %i,%i\n",objIndex,itemIndex);
+        return 0;
+    }
+    RemoveItem(&objects[objIndex].inventory[itemIndex],&objects[objIndex]);
+    return 0;
+
+}
+
 int L_SetGoldCost(lua_State* l)
 {
     int itemIndex = lua_tonumber(l,1);
@@ -5461,6 +5476,8 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_SetObjSummoned);
     lua_setglobal(luaState, "SetObjSummoned");
 
+    lua_pushcfunction(luaState, L_RemoveItem);
+    lua_setglobal(luaState, "RemoveItem");
 
 
 }

@@ -411,7 +411,7 @@ void ItemOnDamaged(Item* i, GameObject* src, GameObject* target, float* value)
 
     lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_ondamaged);
 
-    lua_pushinteger(luaState, i - src->inventory);
+    lua_pushinteger(luaState, i - target->inventory);
     lua_pushinteger(luaState, src - objects);
     lua_pushinteger(luaState, target - objects);
     

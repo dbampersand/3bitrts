@@ -5,7 +5,7 @@ function setup(obj)
     SetItemDescription(obj,"Causes all direct cast abilities to cleave at " .. percentCleave*100 .. "% ")
     SetItemGoldCost(obj,125)
     SetItemTier(obj,2)  
-    SetItemIcon(obj, "assets/items/quality_high/barbed_wire/barbed_wire.png");
+    SetItemIcon(obj, "assets/items/quality_high/dark_lash/dark_lash.png");
 end
 
 function attached(obj)

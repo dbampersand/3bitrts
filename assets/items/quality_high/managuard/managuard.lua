@@ -8,7 +8,7 @@ function setup(obj)
     SetItemDescription(obj,"Blocks a single source of damage every " .. cooldown .. " seconds")
     SetItemGoldCost(obj,180)
     SetItemTier(obj,2)  
-    SetItemIcon(obj, "assets/items/quality_high/venom_tipped_arrow/venom_tipped_arrow.png");
+    SetItemIcon(obj, "assets/items/quality_high/managuard/managuard.png");
 end
 
 function attached(obj)

@@ -5,7 +5,7 @@ local duration = 20
 
 function setup(obj)
     SetItemName(obj,"Spellshard")
-    SetItemDescription(obj,"Increases ability potency by " .. abilityPotency*100 .. "% when attacking the same target, resetting when a different target is attacked. Stacks "..maxStacks.." times")
+    SetItemDescription(obj,"Increases ability potency by " .. abilityPotency*100 .. "% for each attack on the same target. Stacks "..maxStacks.." times")
     SetItemGoldCost(obj,180)
     SetItemTier(obj,2)  
     SetItemIcon(obj, "assets/items/quality_high/spellshard/spellshard.png");
