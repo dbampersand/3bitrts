@@ -33,7 +33,7 @@ function setup()
         "assets/audio/attacks/melee_sword/sword_6.wav",
         "assets/audio/attacks/melee_sword/sword_7.wav"
     });
-    --AddItem(GetObjRef(),"assets/items/quality_poor/wand_of_frost/wand_of_frost.lua")
+    AddItem(GetObjRef(),"assets/items/quality_poor/crystal_book/crystal_book.lua")
 end 
 
 function update(dt)

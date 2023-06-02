@@ -23,7 +23,7 @@ function casted()
     f2["triggersPerSecond"] = 1 
     f2["value"] = 10; 
 
-    CreateProjectile(GetMouseX(),GetMouseY(),"",ATTACK_PROJECTILE_ANGLE,speed,duration,true,ATTACK_HITS_ENEMIES,COLOR_DEFAULT,{f1,f2})
+    CreateProjectile(GetMouseX(),GetMouseY(),"",ATTACK_PROJECTILE_ANGLE,speed,duration,true,ATTACK_HITS_ENEMIES,COLOR_DEFAULT,1,{f1,f2})
     return true;
 end
 

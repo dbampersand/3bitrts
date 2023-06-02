@@ -17,7 +17,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 120;
 
-     CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj),"",ATTACK_PROJECTILE_ANGLE,25,10,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,{f1})
+     CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj),"",ATTACK_PROJECTILE_ANGLE,25,10,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,1,{f1})
 
     return true; 
 end

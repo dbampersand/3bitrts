@@ -310,7 +310,7 @@ void ApplyAttack(Attack* a, GameObject* target)
         {
             ApplyEffect(&a->effects[i],a->ownedBy,target,a->cameFrom);
         }
-        if (a->shouldCallback && IsActive(a->ownedBy))
+        if (a->shouldCallback && IsActive(a->ownedBy) && a->cameFrom)
         {
             currAbilityRunning = a->cameFrom; 
             currGameObjRunning = a->ownedBy;
@@ -781,9 +781,10 @@ void DrawAttack(Attack* a, float dt)
     }
     else
     {
-        al_draw_filled_circle((a->screenX),(a->screenY),a->radius,GetColor(a->color,a->playerOwnedBy));
         if (a->inactiveFor <= 0)
             al_draw_filled_circle((a->screenX+2),(a->screenY+2),a->radius,BG);
+
+        al_draw_filled_circle(floor(a->screenX),floor(a->screenY),a->radius,GetColor(a->color,a->playerOwnedBy));
 
     }
 }
@@ -822,8 +823,8 @@ void UpdateAttack(Attack* a, float dt)
 
         minAngle = movingAngle - DegToRad(90);
         maxAngle = movingAngle + DegToRad(90);
-        
-        AddParticleWithRandomProperties(a->x,a->y,a->color,0.2f,4,1,1.5f,minAngle,maxAngle);
+        if (abs(a->speed > 0))
+            AddParticleWithRandomProperties(a->x,a->y,a->color,0.2f,4,1,1.5f,minAngle,maxAngle);
 
     }
  if (a->cameFrom)
@@ -1017,7 +1018,7 @@ void UpdateAttack(Attack* a, float dt)
             //we don't want to immediately absorb them all so skip past
             if (a->attackType == ATTACK_PROJECTILE_POINT || a->attackType == ATTACK_PROJECTILE_ANGLE || a->attackType == ATTACK_PROJECTILE_TARGETED)
             {
-                if (a->ownedBy == activeObjects[i])
+                if (!a->canHitParent && a->ownedBy == activeObjects[i])
                     continue;
             }
             

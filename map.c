@@ -126,7 +126,7 @@ bool LineIsFree(int x, int y, bool caresAboutUnits, int h)
 }
 bool PointIsFree(int x, int y, bool caresAboutUnits)
 {
-    if (x < 0 | x >= GetMapWidth() | y < 0 | y >= GetMapHeight())
+    if (x < 0 | x >= GetMapWidth()/_GRAIN | y < 0 | y >= GetMapHeight()/_GRAIN)
         return false;
 
     int index = GetIndex(currMap->collisionMapHeight, x, y);

@@ -74,6 +74,8 @@ typedef struct Attack
 
     float inactiveFor;
 
+    bool canHitParent; 
+
 } Attack;
 
 #define MAX_ATTACKS 1024

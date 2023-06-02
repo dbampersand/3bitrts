@@ -36,7 +36,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = damage;
 
 
-    CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),point.x,point.y,"",ATTACK_PROJECTILE_ANGLE,speed,duration,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,{f1})
+    CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),point.x,point.y,"",ATTACK_PROJECTILE_ANGLE,speed,duration,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,1,{f1})
 
     PlaySound("assets/enemies/viper/audio/bite.wav",1);
     return true; 

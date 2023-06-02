@@ -526,6 +526,7 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
         a->toggled = !a->toggled;
     }
     AddMana(g,-GetManaCost(a));
+    TriggerItemOnAbilityCast(currGameObjRunning,target,a,x,y,headingx,headingy);
     return true;
 
 }

@@ -24,7 +24,7 @@ function casted(x,y,obj,headingx,headingy)
     f2["value"] = 140;
     
     
-    CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj),"",ATTACK_PROJECTILE_POINT,25,10,true,ATTACK_HITS_ENEMIES,COLOR_POISON,{f1,f2})
+    CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj),"",ATTACK_PROJECTILE_POINT,25,10,true,ATTACK_HITS_ENEMIES,COLOR_POISON,1,{f1,f2})
 
     PlaySound("assets/enemies/naja/audio/bind_cast.wav",1);
 

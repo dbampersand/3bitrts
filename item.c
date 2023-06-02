@@ -131,6 +131,15 @@ Item* LoadItemFuncs(Item* i, lua_State* l)
     else
         i->luafunc_onapplyeffect = -1;
 
+    if (CheckFuncExists("onabilitycast",&i->luaBuffer))
+    {
+        lua_getglobal(l, "onabilitycast");
+        funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+        i->luafunc_onabilitycast = funcIndex;
+    }
+    else
+        i->luafunc_onabilitycast = -1;
+
 
     return i;
 }
@@ -397,6 +406,29 @@ void ProcessItemsOnAttack(GameObject* g, float dt, float* value)
         ItemOnAttack(it,g,dt,value);
     }
     before = currGameObjRunning;
+}
+void ItemOnAbilityCast(Item* i, GameObject* src, GameObject* target, Ability* a, float x, float y, float headingx, float headingy)
+{
+    currGameObjRunning = src;
+    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_onabilitycast);
+    lua_pushinteger(luaState,i - (Item*)(&src->inventory));
+    lua_pushinteger(luaState,src-objects);
+    lua_pushinteger(luaState,target-objects);     
+
+    lua_pushinteger(luaState,(int)(target-objects));    
+    lua_pushnumber(luaState,headingx);
+    lua_pushnumber(luaState,headingy);
+
+    lua_pcall(luaState,6,0,0);    
+
+
+}
+void TriggerItemOnAbilityCast(GameObject* src, GameObject* target, Ability* a, float x, float y, float headingx, float headingy)
+{
+    for (int i = 0; i < INVENTORY_SLOTS; i++)
+    {
+        ItemOnAbilityCast(&src->inventory[i],src,target,a,x,y,headingx,headingy);
+    }   
 }
 void ItemOnDamaged(Item* i, GameObject* src, GameObject* target, float* value)
 {

@@ -28,6 +28,7 @@
 #include "timer.h"
 #include "easings.h"
 #include "particle.h"
+#include "pathfind.h"
 
 #include "allegro5/allegro_font.h"
 
@@ -1151,7 +1152,7 @@ int L_ShakeScreen(lua_State* l)
     AddScreenshake(intensity,time);
     return 0;
 }
-int CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const char* portrait, int attackType, int speed, int duration, bool shouldCallback, int properties, GameObject* targ, uint32_t color, Effect* effects, size_t len)
+int CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const char* portrait, int attackType, int speed, int duration, bool shouldCallback, int properties, GameObject* targ, uint32_t color,float radius, Effect* effects, size_t len)
 {
 
         
@@ -1160,7 +1161,7 @@ int CreateProjectile(lua_State* l, float cx, float cy, float x, float y, const c
     //a.y = currGameObjRunning->position.worldY + h/2;
     a.x = cx;
     a.y = cy;
-    a.radius = 1;
+    a.radius = radius;
     a.easing=0;
     a.targetRadius = a.radius;
     a.target = targ;
@@ -1223,6 +1224,7 @@ int L_CreateConeProjectiles(lua_State* l)
     const int numProjectiles = lua_tonumber(l,11);
     const int color = lua_tonumber(l,12);
     const float radius = DegToRad(lua_tonumber(l,13));
+    float projectileRadius = 1;
 
 
     size_t len =  lua_rawlen(l,14);
@@ -1250,7 +1252,7 @@ int L_CreateConeProjectiles(lua_State* l)
     for (int i = 0; i < numProjectiles; i++)
     {
         float angle = (i) *  (radius*2) / (float)numProjectiles;
-        CreateProjectile(l,x,y, x-cosf(angle+startAngle), y-sinf(angle+startAngle), portrait, attackType, speed, duration, shouldCallback, properties, NULL, color, effects, len);
+        CreateProjectile(l,x,y, x-cosf(angle+startAngle), y-sinf(angle+startAngle), portrait, attackType, speed, duration, shouldCallback, properties, NULL, color, projectileRadius,effects, len);
     }
     return 0;
 }
@@ -1269,6 +1271,7 @@ int L_CreateCircularProjectiles(lua_State* l)
     const int numProjectiles = lua_tonumber(l,9);
     const int color = lua_tonumber(l,10);
     const float angleOffset = DegToRad(lua_tonumber(l,11));
+    float radius = 1;
 
     size_t len =  lua_rawlen(l,12);
 
@@ -1304,7 +1307,7 @@ int L_CreateCircularProjectiles(lua_State* l)
     for (int i = 0; i < numProjectiles; i++)
     {
         float angle = M_PI / (float)numProjectiles*(i+1)*2; 
-        CreateProjectile(l,x,y, x+cosf(angle+angleOffset), y+sinf(angle+angleOffset), portrait, attackType, speed, duration, shouldCallback, properties, targ,color, effects, len);
+        CreateProjectile(l,x,y, x+cosf(angle+angleOffset), y+sinf(angle+angleOffset), portrait, attackType, speed, duration, shouldCallback, properties, targ,color,radius, effects, len);
 
     }
     for (int i = 0; i < len; i++)
@@ -1350,7 +1353,8 @@ int L_CreateProjectile(lua_State* l)
     const bool shouldCallback = lua_toboolean(l, 9);
     const int properties = lua_tonumber(l,10);
     const uint32_t color = lua_tonumber(l,11);
-    size_t len =  lua_rawlen(l,12);
+    float radius = lua_tonumber(l,12);
+    size_t len =  lua_rawlen(l,13);
 
     MouseState mouseState = GetMouseClamped();
     GameObject* targ = NULL;
@@ -1373,13 +1377,13 @@ int L_CreateProjectile(lua_State* l)
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 12, i);
+        e = GetEffectFromTable(l, 13, i);
         e.from = currGameObjRunning;
         e.abilityFrom = currAbilityRunning;
         lua_remove(l,-1);
         effects[i-1] = e;
     }       
-    int ref = CreateProjectile(l, fromX, fromY, targX, targY, portrait, attackType, speed, duration, shouldCallback, properties, targ, color, effects, len);
+    int ref = CreateProjectile(l, fromX, fromY, targX, targY, portrait, attackType, speed, duration, shouldCallback, properties, targ, color,radius, effects, len);
     
     for (int i = 0; i < len; i++)
     {
@@ -3093,6 +3097,19 @@ int L_Heal(lua_State* l)
     Heal(&objects[index],toHeal);
     return 0;
 }
+int L_SetCanHitParent(lua_State* l)
+{
+    int atkIndex = lua_tonumber(l,1);
+    bool canHit = lua_toboolean(l,2);
+
+    if (atkIndex < 0 || atkIndex >= MAX_ATTACKS)
+    {
+        printf("L_SetCanHitParent: index out of range: %i\n",atkIndex);
+        return 0;
+    }
+    attacks[atkIndex].canHitParent = canHit;
+    return 0;
+}
 void SetGlobals(lua_State* l)
 {
     //-- Enums -- 
@@ -4649,6 +4666,18 @@ int L_SetObjSummoned(lua_State* l)
     }
     objects[index].objectIsSummoned = b;
 }
+int L_IsWalkable(lua_State* l)
+{
+    float x = lua_tonumber(l,1);
+    float y = lua_tonumber(l,2);
+    bool caresAboutUnits = lua_toboolean(l,3);
+
+    x /= _GRAIN;
+    y /= _GRAIN;
+
+    lua_pushboolean(l,PointIsFree(x,y,caresAboutUnits));
+    return 1;
+}
 void SetLuaKeyEnums(lua_State* l)
 {
     //TODO: Update these when a key is changed in settings
@@ -5478,6 +5507,12 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_RemoveItem);
     lua_setglobal(luaState, "RemoveItem");
+
+    lua_pushcfunction(luaState, L_SetCanHitParent);
+    lua_setglobal(luaState, "SetCanHitParent");
+
+    lua_pushcfunction(luaState, L_IsWalkable);
+    lua_setglobal(luaState, "IsWalkable");
 
 
 }

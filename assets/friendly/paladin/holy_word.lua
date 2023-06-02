@@ -9,9 +9,6 @@ end
 function casted()
     PlaySound("assets/friendly/warrior/audio/shield.wav",0.5);
 
-    --SetObjPosition(GetObjRef(),xPos,yPos);
-    --SetObjTargetPosition(GetObjRef(),xPos,yPos);
-    --CreateProjectile(GetMouseX(),GetMouseY(),"",ATTACK_PROJECTILE_POINT,25,10,true,{})
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_SHIELD;
