@@ -166,6 +166,11 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         ModifyAbilityPotency(target,value*sign);
     }
+    if (e->effectType == EFFECT_CLEAVE)
+    {
+        ModifyCleave(target,value*sign);
+    }
+
 
 
     if (e->effectType == EFFECT_STUN)

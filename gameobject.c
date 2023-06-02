@@ -3085,6 +3085,26 @@ void AttackTarget(GameObject* g, float dt)
             // PrintDiedFrom(oldObj,g,NULL,damage);
             g->targObj = NULL;
         }
+        int numCleaves = 3;
+        if (g->cleave > 0)
+        {
+            for (int i = 0; i < numActiveObjects; i++)
+            {
+                GameObject* g2 = activeObjects[i];
+                if (g2 == g->targObj)
+                    continue;
+                if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(g2))
+                {
+                    if (GetDist(g->targObj,g2) <= CLEAVE_RADIUS)
+                    {
+                        Damage(g,g2,damage * g->cleave,true,1,NULL);
+                        numCleaves--;
+                        if (numCleaves <= 0)
+                            break;
+                        }
+                }
+            }
+        }
     }
 }
 Rect GetObjRect(GameObject* g)
@@ -3287,6 +3307,12 @@ void ModifyAbilityPotency(GameObject* g, float value)
     if (!g)
         return;
     g->abilityPotency += value;
+}
+void ModifyCleave(GameObject* g, float value)
+{
+    if (!g)
+        return;
+    g->cleave += value;
 }
 
 void SetObjectCanPush(GameObject* g, bool value)

@@ -172,6 +172,8 @@ void FinishTransition()
                     continue;
                 GameObject* g = toSpawn[i];
                 GameObject* gNew = AddGameobject(g,xPos,yPos,SOURCE_SPAWNED_FROM_MAP,TYPE_FRIENDLY);   
+                for (int j = 0; j < INVENTORY_SLOTS; j++)
+                    ItemOnMapChange(&gNew->inventory[j],gNew);
                 HoldCommand(gNew,false);
                 xPos += GetWidth(g)+4;
                 if (i == encounterGoingTo->numUnitsToSelect/2)
@@ -195,7 +197,7 @@ void FinishTransition()
 
         for (int i = 0; i < numActiveObjects; i++)
         {
-            CureAll(activeObjects[i]);
+            //CureAll(activeObjects[i]);
         }
 
 

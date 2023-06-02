@@ -24,6 +24,8 @@
 #define DEFAULT_BOUNTY 5
 #define DEFAULT_COMPLETION_PERCENT 5
 
+#define CLEAVE_RADIUS 30
+
 typedef enum GAMEOBJ_PROPERTIES
 {
     OBJ_SELECTED = 1,
@@ -227,6 +229,7 @@ typedef struct GameObject
 
     float cooldownRate;
     float abilityPotency;
+    float cleave;
 } GameObject;
 
 #define MAX_LIGHT_SIZE 90 
@@ -352,6 +355,7 @@ void AddAttackSpeed(GameObject* g, float speed);
 void AddAttackRange(GameObject* g, float range);
 void AddArmor(GameObject* g, float armor);
 void AddLifesteal(GameObject* g, float value);
+void ModifyCleave(GameObject* g, float value);
 void AddCooldownRate(GameObject* g, float value);
 void SetObjIsBoss(GameObject* g, bool value);
 

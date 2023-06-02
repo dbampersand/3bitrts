@@ -31,6 +31,7 @@ typedef struct Item
     int luafunc_unattach;
     int luafunc_ondamaged;
     int luafunc_onmapchange;
+    int luafunc_onapplyeffect;
 
 
     char* description;
@@ -76,6 +77,8 @@ void UpdateItems(float dt);
 void ProcessItemsOnAttack(GameObject* g, float dt, float* value);
 void ProcessItemsOnEffect(GameObject* g, Effect* e, float* value);
 void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value);
+void ProcessItemsOnApplyEffect(GameObject* source, GameObject* target, Effect* e);
+void ItemOnMapChange(Item* i, GameObject* g);
 
 void AttachItem(GameObject* g, Item* i);
 void UnattachItem(Item* i, GameObject* g);

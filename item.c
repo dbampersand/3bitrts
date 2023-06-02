@@ -122,9 +122,26 @@ Item* LoadItemFuncs(Item* i, lua_State* l)
     else
         i->luafunc_onmapchange = -1;
 
+    if (CheckFuncExists("onapplyeffect",&i->luaBuffer))
+    {
+        lua_getglobal(l, "onapplyeffect");
+        funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+        i->luafunc_onapplyeffect = funcIndex;
+    }
+    else
+        i->luafunc_onapplyeffect = -1;
+
 
     return i;
 }
+
+void ItemOnMapChange(Item* i, GameObject* g)
+{
+    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_onmapchange);
+    lua_pushinteger(luaState,(int)(g - objects));    
+    lua_pcall(luaState,1,0,0);
+}
+
 
 Item* LoadItem(const char* path, lua_State* l)
 {
@@ -411,6 +428,30 @@ void ItemOnDamaged(Item* i, GameObject* src, GameObject* target, float* value)
 
 
 }
+void ProcessItemOnApplyEffect(GameObject* source, GameObject* target, Item* i, Effect* e)
+{
+    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_onapplyeffect);
+    
+    lua_pushinteger(luaState, i - source->inventory);
+    lua_pushinteger(luaState, source - objects);
+    lua_pushinteger(luaState, target - objects);
+    
+    lua_pushinteger(luaState, e->trigger);
+    lua_pushinteger(luaState, e->effectType);
+    lua_pushinteger(luaState, e->stacks);
+    lua_pushnumber(luaState, e->value);
+    lua_pushnumber(luaState, e->duration);
+
+    lua_pcall(luaState,8,0,0);
+
+}
+void ProcessItemsOnApplyEffect(GameObject* source, GameObject* target, Effect* e)
+{
+    for (int i = 0; i < INVENTORY_SLOTS; i++)
+    {
+        ProcessItemOnApplyEffect(source,target,&source->inventory[i],e);
+    }
+}
 void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value)
 {
     GameObject* before = currGameObjRunning;
@@ -530,5 +571,6 @@ void RemoveItem(Item* i, GameObject* g)
     luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_unattach);
     luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_ondamaged);
     luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_onmapchange);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_onapplyeffect);
 
 }

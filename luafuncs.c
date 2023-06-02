@@ -3195,6 +3195,9 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,EFFECT_ABILITY_POTENCY);
     lua_setglobal(l,"EFFECT_ABILITY_POTENCY");
 
+    lua_pushinteger(l,EFFECT_CLEAVE);
+    lua_setglobal(l,"EFFECT_CLEAVE");
+
 
 
     lua_pushinteger(l,ABILITY_INSTANT);
@@ -3581,6 +3584,7 @@ int L_ApplyEffect(lua_State* l)
         e.from = currGameObjRunning;
         e.abilityFrom = currAbilityRunning;
         //lua_remove(l,-1);
+        ProcessItemsOnApplyEffect(currGameObjRunning,&objects[objIndex],&e);
         ApplyEffect(&e,currGameObjRunning,&objects[objIndex],currAbilityRunning);
         lua_pop(l,1);
     }       
@@ -4152,7 +4156,7 @@ int L_AddItem(lua_State* l)
         return 0;
     GameObject* g = &objects[objIndex];
 
-    Item* i = LoadItem(path,l);
+        Item* i = LoadItem(path,l);
     AttachItem(g,i);
     return 0;
 }
