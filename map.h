@@ -67,3 +67,4 @@ void AddCompletionPercent(float percent);
 void ChangeMap(const char* path);
 void AddDirtSprites(int numToAdd, ALLEGRO_BITMAP* sprite);
 bool LineIsFree(int x, int y, bool caresAboutUnits, int h);
+void RefreshMapCollisonRects();

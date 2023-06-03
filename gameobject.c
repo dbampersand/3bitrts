@@ -1429,6 +1429,9 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
     luaL_unref(luaState, LUA_REGISTRYINDEX, g->luafunc_onmapchange);
 
     memset(g, 0, sizeof(GameObject));
+
+    RefreshMapCollisonRects();
+
 }
 
 void LoadFolderPrefabs(const char* dirPath, char* name)

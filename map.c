@@ -183,6 +183,14 @@ void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
         }
     }
 }
+void RefreshMapCollisonRects()
+{
+    for (int i = 0; i < numActiveObjects; i++)
+    {
+        GameObject* g = activeObjects[i];
+        SetMapCollisionRect(g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g),true);
+    }
+}
 void PreprocessMap(Map* map, int randSpritesToAdd)
 {
     if (map->collision)

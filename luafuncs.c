@@ -2556,9 +2556,13 @@ int L_AbilitySetCastType(lua_State* l)
 }
 int L_SetSprite(lua_State* l)
 {
-    currGameObjRunning->spriteIndex = LoadSprite(lua_tostring(l,-1),true);
-    if (currGameObjRunning->channelingSpriteIndex == 0)
-        currGameObjRunning->channelingSpriteIndex = currGameObjRunning->spriteIndex;
+    if (currGameObjRunning)
+    {
+        currGameObjRunning->spriteIndex = LoadSprite(lua_tostring(l,-1),true);
+         
+        if (currGameObjRunning->channelingSpriteIndex == 0)
+            currGameObjRunning->channelingSpriteIndex = currGameObjRunning->spriteIndex;
+    }
     return 0;
 }
 int L_SetLightColour(lua_State* l)
