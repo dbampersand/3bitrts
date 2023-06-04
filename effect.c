@@ -103,8 +103,8 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
         return false;
     
     float v = e->value;
-    if (from)
-        v += from->abilityPotency * v;
+    //if (from)
+      //  v += from->abilityPotency * v;
 
     if (from)
         ProcessItemsOnEffect(from,e,&v);
@@ -186,6 +186,12 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     {
         Heal(target,value*sign);
     }
+    if (e->effectType == EFFECT_HEAL_PERCENT)
+    {
+        float v = (target->maxHP) * (value);
+        Heal(target,v*sign);
+    }
+
     if (e->effectType ==  EFFECT_THREAT)
     {
         if (from)
@@ -433,6 +439,8 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target, Ability* abili
     //not an elegant solution but it works
     Effect eNew = CopyEffect(e);
     e = &eNew;
+
+
 
     e->abilityFrom = ability;
 

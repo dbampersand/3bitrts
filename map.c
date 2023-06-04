@@ -185,6 +185,7 @@ void SetMapCollisionRect(int x, int y, int w, int h, bool objectIsHere)
 }
 void RefreshMapCollisonRects()
 {
+    
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g = activeObjects[i];

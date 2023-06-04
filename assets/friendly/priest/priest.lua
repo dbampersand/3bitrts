@@ -41,6 +41,7 @@ function setup()
     }
     );
 
+    AddItem(GetObjRef(),"assets/items/quality_mid/silver_boots/silver_boots.lua")
 
 end
 

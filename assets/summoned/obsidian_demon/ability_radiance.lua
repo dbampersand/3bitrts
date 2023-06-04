@@ -19,7 +19,12 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = dps * ticksPerSec;
 
-    aoe = CreateAOE(x,y,"", 50, ticksPerSec, 20, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
+    local f2 = {};
+    f2["trigger"] = TRIGGER_INSTANT;
+    f2["type"] = EFFECT_THREAT;
+    f2["value"] = 9999;  
+
+    aoe = CreateAOE(x,y,"", 50, ticksPerSec, 20, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1,f2})
     return true; 
 end
 

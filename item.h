@@ -33,6 +33,8 @@ typedef struct Item
     int luafunc_onmapchange;
     int luafunc_onapplyeffect;
     int luafunc_onabilitycast;
+    int luafunc_beforeabilitycast;
+
 
 
 
@@ -78,9 +80,11 @@ void UpdateItems(float dt);
 
 void ProcessItemsOnAttack(GameObject* g, float dt, float* value);
 void ProcessItemsOnEffect(GameObject* g, Effect* e, float* value);
-void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value);
+void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value,bool isFromEffect);
 void ProcessItemsOnApplyEffect(GameObject* source, GameObject* target, Effect* e);
 void TriggerItemOnAbilityCast(GameObject* src, GameObject* target, Ability* a, float x, float y, float headingx, float headingy);
+void TriggerItemBeforeAbilityCast(GameObject* src, GameObject* target, Ability* a, float x, float y, float headingx, float headingy);
+
 void ItemOnMapChange(Item* i, GameObject* g);
 
 void AttachItem(GameObject* g, Item* i);

@@ -17,7 +17,7 @@ end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/ranger/audio/cripple.wav",1.25)
     local f1 = {};
-    f1["trigger"] = TRIGGER_CONST
+    f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT
     f1["value"] = damage 
 

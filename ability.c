@@ -462,6 +462,7 @@ bool CastAbility(GameObject* g, Ability* a, float x, float y, float headingx, fl
     if (a->stacks == a->maxStacks)
         a->cdTimer = a->cooldown;
 
+    TriggerItemBeforeAbilityCast(currGameObjRunning,target,a,x,y,headingx,headingy);
     if ((a->castType != ABILITY_TOGGLE) || (a->castType == ABILITY_TOGGLE && !a->toggled) || AbilityCanBeCastOnGround(a))
     {
         a->timeSinceLastCast = 0;

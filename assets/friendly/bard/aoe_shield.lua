@@ -18,7 +18,6 @@ function casted()
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_SHIELD;
-    --f1["numTriggers"] = 5
     f1["value"] = 10;
     f1["duration"] = 1.5;
     f1["triggersPerSecond"] = 1

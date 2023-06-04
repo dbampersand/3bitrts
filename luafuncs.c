@@ -932,7 +932,7 @@ int L_GetAttackTarget(lua_State* l)
     lua_pushnumber(l, t->obj - objects);
     return 1;
 }
-Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
+Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index, GameObject* from)
 {
     lua_pushnumber(l,index);
     lua_gettable(l,tableStackPos);
@@ -989,6 +989,10 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index)
 
     e.tickTime = e.duration / e.numTriggers;
     e.value = GetTableField(l,-1,"value",&isField);
+
+    if (from)
+        e.value += e.value * from->abilityPotency;
+
 
     if (e.trigger == TRIGGER_PERMANENT)
         e.duration = 1;
@@ -1239,7 +1243,7 @@ int L_CreateConeProjectiles(lua_State* l)
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 14, i);
+        e = GetEffectFromTable(l, 14, i,currGameObjRunning);
         e.from = currGameObjRunning;
         e.abilityFrom = currAbilityRunning;
         lua_remove(l,-1);
@@ -1298,7 +1302,7 @@ int L_CreateCircularProjectiles(lua_State* l)
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 12, i);
+        e = GetEffectFromTable(l, 12, i,currGameObjRunning);
         e.from = currGameObjRunning;
         e.abilityFrom = currAbilityRunning;
         lua_remove(l,-1);
@@ -1377,7 +1381,7 @@ int L_CreateProjectile(lua_State* l)
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 13, i);
+        e = GetEffectFromTable(l, 13, i,currGameObjRunning);
         e.from = currGameObjRunning;
         e.abilityFrom = currAbilityRunning;
         lua_remove(l,-1);
@@ -1721,7 +1725,7 @@ int L_CreateCone(lua_State* l)
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 14, i);
+        e = GetEffectFromTable(l, 14, i,currGameObjRunning);
         e.from = currGameObjRunning;
         e.abilityFrom = currAbilityRunning;
         lua_remove(l,-1);
@@ -1922,7 +1926,7 @@ int L_CreateAttackArea(lua_State* l)
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 12, i);
+        e = GetEffectFromTable(l, 12, i, currGameObjRunning);
         e.from = currGameObjRunning;
         e.abilityFrom = currAbilityRunning;
         lua_remove(l,-1);
@@ -2009,7 +2013,7 @@ int L_CreateAOE(lua_State* l)
         for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 13, i);
+        e = GetEffectFromTable(l, 13, i, currGameObjRunning);
         e.from = currGameObjRunning;
         e.abilityFrom = currAbilityRunning;
         lua_remove(l,-1);
@@ -2779,7 +2783,7 @@ int L_SetHPRegen(lua_State* l)
 }
 int L_HurtObj(lua_State* l)
 {
-    int index = lua_tonumber(l,1);
+     int index = lua_tonumber(l,1);
     float damage = lua_tonumber(l,2);
 
     if (index < 0 || index >= MAX_OBJS)
@@ -3129,6 +3133,9 @@ void SetGlobals(lua_State* l)
     lua_pushinteger(l,_SCREEN_SIZE);
     lua_setglobal(l,"SCREEN_SIZE");
 
+    lua_pushinteger(l,MAX_OBJS);
+    lua_setglobal(l,"MAX_OBJS");
+
 
     lua_pushinteger(l,TRIGGER_TIMER);
     lua_setglobal(l,"TRIGGER_TIMER");
@@ -3221,6 +3228,9 @@ void SetGlobals(lua_State* l)
 
     lua_pushinteger(l,EFFECT_DODGE_CHANCE);
     lua_setglobal(l,"EFFECT_DODGE_CHANCE");
+
+    lua_pushinteger(l,EFFECT_HEAL_PERCENT);
+    lua_setglobal(l,"EFFECT_HEAL_PERCENT");
 
 
     lua_pushinteger(l,ABILITY_INSTANT);
@@ -3558,7 +3568,7 @@ int L_CleaveEffect(lua_State* l)
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 2, i);
+        e = GetEffectFromTable(l, 2, i,currGameObjRunning);
         e.from = currGameObjRunning;
         e.abilityFrom = currAbilityRunning;
         for (int j = 0; j  < numTargets; j++)
@@ -3603,7 +3613,7 @@ int L_ApplyEffect(lua_State* l)
     for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 2, i);
+        e = GetEffectFromTable(l, 2, i, currGameObjRunning);
         e.from = currGameObjRunning;
         e.abilityFrom = currAbilityRunning;
         //lua_remove(l,-1);
@@ -4682,6 +4692,64 @@ int L_IsWalkable(lua_State* l)
     lua_pushboolean(l,PointIsFree(x,y,caresAboutUnits));
     return 1;
 }
+int L_GetMana(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (!GameObjectIndexInRange(index)) 
+    {
+        printf("L_GetMana: index out of range: %i\n",index);
+        return 0;
+    }
+    lua_pushnumber(l,objects[index].mana);
+    return 1;
+}
+int L_GetMaxMana(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (!GameObjectIndexInRange(index)) 
+    {
+        printf("L_GetMaxMana: index out of range: %i\n",index);
+        return 0;
+    }
+    lua_pushnumber(l,objects[index].maxMana);
+    return 1;
+}
+int L_GetManaPercent(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (!GameObjectIndexInRange(index)) 
+    {
+        printf("L_GetManaPercent: index out of range: %i\n",index);
+        return 0;
+    }
+    lua_pushnumber(l,objects[index].mana/objects[index].maxMana * 100);
+    return 1;
+}
+int L_AddAbilityPotency(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+        if (!GameObjectIndexInRange(index)) 
+    {
+        printf("L_AddAbilityPotency: index out of range: %i\n",index);
+        return 0;
+    }
+    double amountToAdd = lua_tonumber(l,2);
+    objects[index].abilityPotency += amountToAdd;
+    return 0;
+}
+int L_GetSpeed(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+        if (!GameObjectIndexInRange(index)) 
+    {
+        printf("L_AddAbilityPotency: index out of range: %i\n",index);
+        return 0;
+    }
+    float speed = objects[index].speed;
+    lua_pushnumber(l,speed);
+    return 1;
+
+}
 void SetLuaKeyEnums(lua_State* l)
 {
     //TODO: Update these when a key is changed in settings
@@ -5518,5 +5586,20 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_IsWalkable);
     lua_setglobal(luaState, "IsWalkable");
 
+    lua_pushcfunction(luaState, L_GetMana);
+    lua_setglobal(luaState, "GetMana");
+
+    lua_pushcfunction(luaState, L_GetMaxMana);
+    lua_setglobal(luaState, "GetMaxMana");
+
+    lua_pushcfunction(luaState, L_GetManaPercent);
+    lua_setglobal(luaState, "GetManaPercent");
+
+    lua_pushcfunction(luaState, L_AddAbilityPotency);
+    lua_setglobal(luaState, "AddAbilityPotency");
+
+    lua_pushcfunction(luaState, L_GetSpeed);
+    lua_setglobal(luaState, "GetSpeed");
 
 }
+

@@ -1096,16 +1096,18 @@ void UpdateAttack(Attack* a, float dt)
             currAbilityRunning = a->cameFrom;
             currGameObjRunning = a->ownedBy;
             currAttackRunning = a;
+            if (currAbilityRunning)
+            {
+                lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_ontimeout);
 
-            lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_ontimeout);
-
-            lua_pushnumber(luaState,a->x);
-            lua_pushnumber(luaState,a->y);
-            lua_pushinteger(luaState,a->ownedBy-objects);
-            lua_pushnumber(luaState,dt);    
-            lua_pushinteger(luaState,a->target - objects);
-            lua_pushinteger(luaState,a-attacks);
-            lua_pcall(luaState,6,0,0);
+                lua_pushnumber(luaState,a->x);
+                lua_pushnumber(luaState,a->y);
+                lua_pushinteger(luaState,a->ownedBy-objects);
+                lua_pushnumber(luaState,dt);    
+                lua_pushinteger(luaState,a->target - objects);
+                lua_pushinteger(luaState,a-attacks);
+                lua_pcall(luaState,6,0,0);
+            }
 
         }
         RemoveAttack(a-attacks);

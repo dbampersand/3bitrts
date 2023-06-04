@@ -140,6 +140,15 @@ Item* LoadItemFuncs(Item* i, lua_State* l)
     else
         i->luafunc_onabilitycast = -1;
 
+    if (CheckFuncExists("beforeabilitycast",&i->luaBuffer))
+    {
+        lua_getglobal(l, "beforeabilitycast");
+        funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+        i->luafunc_beforeabilitycast = funcIndex;
+    }
+    else
+        i->luafunc_beforeabilitycast = -1;
+
 
     return i;
 }
@@ -430,7 +439,32 @@ void TriggerItemOnAbilityCast(GameObject* src, GameObject* target, Ability* a, f
         ItemOnAbilityCast(&src->inventory[i],src,target,a,x,y,headingx,headingy);
     }   
 }
-void ItemOnDamaged(Item* i, GameObject* src, GameObject* target, float* value)
+void ItemBeforeAbilityCast(Item* i, GameObject* src, GameObject* target, Ability* a, float x, float y, float headingx, float headingy)
+{
+    currGameObjRunning = src;
+    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_beforeabilitycast);
+    lua_pushinteger(luaState,i - (Item*)(&src->inventory));
+    lua_pushinteger(luaState,src-objects);
+    lua_pushinteger(luaState,target-objects);     
+
+    lua_pushinteger(luaState,(int)(target-objects));    
+    lua_pushnumber(luaState,headingx);
+    lua_pushnumber(luaState,headingy);
+
+    lua_pcall(luaState,6,0,0);    
+
+
+}
+
+void TriggerItemBeforeAbilityCast(GameObject* src, GameObject* target, Ability* a, float x, float y, float headingx, float headingy)
+{
+    for (int i = 0; i < INVENTORY_SLOTS; i++)
+    {
+        ItemBeforeAbilityCast(&src->inventory[i],src,target,a,x,y,headingx,headingy);
+    }   
+
+}
+void ItemOnDamaged(Item* i, GameObject* src, GameObject* target, float* value,bool isFromEffect)
 {
     if (!i->enabled)
         return;
@@ -439,7 +473,7 @@ void ItemOnDamaged(Item* i, GameObject* src, GameObject* target, float* value)
     GameObject* beforeObj = currGameObjRunning;
 
     currItemRunning = i;
-    currGameObjRunning = src;
+    currGameObjRunning = target;
 
     lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_ondamaged);
 
@@ -448,9 +482,10 @@ void ItemOnDamaged(Item* i, GameObject* src, GameObject* target, float* value)
     lua_pushinteger(luaState, target - objects);
     
     lua_pushnumber(luaState, *value);
+    lua_pushboolean(luaState,isFromEffect);
 
 
-    lua_pcall(luaState,4,1,0);
+    lua_pcall(luaState,5,1,0);
     //if script returns something
     if (lua_isnumber(luaState,-1))
     {
@@ -485,7 +520,7 @@ void ProcessItemsOnApplyEffect(GameObject* source, GameObject* target, Effect* e
         ProcessItemOnApplyEffect(source,target,&source->inventory[i],e);
     }
 }
-void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value)
+void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value, bool isFromEffect)
 {
     GameObject* before = currGameObjRunning;
 
@@ -493,7 +528,7 @@ void ProcessItemsOnDamaged(GameObject* source, GameObject* target, float* value)
     for (int i = 0; i < INVENTORY_SLOTS; i++)
     {
         Item* it = &target->inventory[i];
-        ItemOnDamaged(it,source,target,value);
+        ItemOnDamaged(it,source,target,value,isFromEffect);
     }
     propagateItemEffects = true;
     

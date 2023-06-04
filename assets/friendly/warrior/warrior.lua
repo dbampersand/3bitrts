@@ -33,7 +33,7 @@ function setup()
         "assets/audio/attacks/melee_sword/sword_6.wav",
         "assets/audio/attacks/melee_sword/sword_7.wav"
     });
-    AddItem(GetObjRef(),"assets/items/quality_high/ruby_flame/ruby_flame.lua")
+    AddItem(GetObjRef(),"assets/items/quality_poor/long_staff/long_staff.lua")
 end 
 
 function update(dt)

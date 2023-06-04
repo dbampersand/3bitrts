@@ -68,19 +68,26 @@ void MoveObjStepped(GameObject* g, float dX, float dY, float w, float h, bool pu
     dY /= numMoves;
     for (int i = 0; i < numMoves; i++)
     {
+        SetMapCollisionRect(g->position.worldX, g->position.worldY, w, h, false);
         g->position.worldY += dY;
+        SetMapCollisionRect(g->position.worldX, g->position.worldY, w, h, true);
 
         CheckCollisions(g, false, dY, push);
         CheckCollisionsWorld(g, false, dY);
+
+        
     }
     numMoves = ceilf(fabsf(dX));
     dX /= numMoves;
     for (int i = 0; i < numMoves; i++)
     {
+        SetMapCollisionRect(g->position.worldX, g->position.worldY, w, h, false);
         g->position.worldX += dX;
+        SetMapCollisionRect(g->position.worldX, g->position.worldY, w, h, true);
 
         CheckCollisions(g, true, dX, push);
         CheckCollisionsWorld(g, true, dX);
+
     }
     SetMapCollisionRect(g->position.worldX, g->position.worldY, w, h, true);
 
@@ -118,7 +125,8 @@ void UpdatePush(GameObject* g, float dt)
     {
         g->pushTimer = 0;
     }
-}
+
+}   
 
 bool ObjIsPushable(GameObject* g)
 {
@@ -138,6 +146,7 @@ void PushObj(GameObject* g, float velocity, float timeToPush, Point from)
     g->pushDir.x = (g->position.worldX - from.x);
     g->pushDir.y = (g->position.worldY - from.y);
     Normalize(&g->pushDir.x, &g->pushDir.y);
+
 }
 
 bool PlayerHasEnemyUnitSelected()
@@ -512,6 +521,8 @@ void UpdateObject(GameObject* g, float dt)
         Move(currGameObjRunning, dt);
     else if (g->pushTimer > 0)
         UpdatePush(g, dt);
+
+        
 }
 
 void InitObjects()
@@ -979,13 +990,13 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
     currGameObjRunning->ressurectionCost = 50;
 
     SetOwnedBy(currGameObjRunning, playerOwnedBy);
+    found->properties |= OBJ_ACTIVE;
 
     if (!loadLuaGameObj(luaState, found->path, found))
     {
         printf("GameObject: Could not load %s\n", found->path ? found->path : NULL);
         return NULL;
     }
-    found->properties |= OBJ_ACTIVE;
 
     // currGameObjRunning->position.worldX = _SCREEN_SIZE/2.0f;
     // currGameObjRunning->position.worldY = _SCREEN_SIZE/2.0f;
@@ -1510,12 +1521,19 @@ void UpdateObjPosition(GameObject* g, float x, float y)
 }
 void UpdateObjPosition_X(GameObject* g, float x)
 {
+    SetMapCollisionRect(g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g),false);
     g->position.worldX = x;
+    SetMapCollisionRect(g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g),true);
+
+
     // g->position.screenX = ToScreenSpace_X(x);
 }
 void UpdateObjPosition_Y(GameObject* g, float y)
 {
+    SetMapCollisionRect(g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g),false);
     g->position.worldY = y;
+    SetMapCollisionRect(g->position.worldX,g->position.worldY,GetWidth(g),GetHeight(g),true);
+
     // g->position.screenY = ToScreenSpace_X(y);
 }
 void UpdateScreenPositions(GameObject* g)
@@ -1891,8 +1909,8 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
 {
     if (ObjIsDecoration(g))
         return;
-    int w = al_get_bitmap_width(sprites[g->spriteIndex].sprite);
-    int h = al_get_bitmap_height(sprites[g->spriteIndex].sprite);
+    int w = GetWidth(g);
+    int h = GetHeight(g);
 
     if (ObjectIsInUI(g))
     {
@@ -2178,6 +2196,7 @@ void Move(GameObject* g, float delta)
         g->position.worldY = ytarg;
         CheckCollisions(g, false, dY, ObjectCanPush(g));
         CheckCollisionsWorld(g, false, dY);
+        
         SetMapCollisionRect(g->position.worldX, g->position.worldY, w, h, true);
 
         return;
@@ -3199,7 +3218,7 @@ bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems, f
         return false;
     }
     if (triggerItems)
-        ProcessItemsOnDamaged(source, g, &value);
+        ProcessItemsOnDamaged(source, g, &value, effect ? true : false);
     value -= g->armor;
     if (value < min)
         value = min;
