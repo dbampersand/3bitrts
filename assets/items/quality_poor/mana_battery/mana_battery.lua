@@ -17,9 +17,12 @@ function attached(obj)
 
 end
 
-function update(dt)
+function update(dt,item)
     if (GetHPPercent(GetObjRef()) < percent) then
+        SetItemHighlight(item,true)
         AddMana(GetObjRef(),mps*dt);
+    else
+        SetItemHighlight(item,false)
     end
 end
 

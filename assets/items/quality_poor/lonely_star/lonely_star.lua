@@ -1,5 +1,5 @@
 local increase = 0.65
-local radius = 35
+local radius = 25
 local applied = false
 function setup(obj)
     SetItemName(obj,"Lonely Star")
@@ -16,7 +16,21 @@ function attached(obj)
 
 end
 
-function update(dt)
+function update(dt,item)
+    local shouldHighlight = true
+    for i = 0, MAX_OBJS-1 do
+
+        if (i ~= GetObjRef() and IsAlive(i) and GetObjFriendliness(GetObjRef()) == GetObjFriendliness(i)) then
+            if (GetDist(GetObjRef(),i) < radius) then
+                shouldHighlight = false
+            end
+        end
+    end
+    if (shouldHighlight) then
+        SetItemHighlight(item,true)
+    else
+        SetItemHighlight(item,false)
+    end
 end
 
 function onattack(item,obj,target,dt,value)

@@ -42,7 +42,9 @@ function setup()
         "assets/audio/attacks/ranged_bow/bow_8.wav"
     }
     );
-    AddItem(GetObjRef(),"assets/items/quality_high/tome_of_arcane_magic/tome_of_arcane_magic.lua")
+    AddItem(GetObjRef(),"assets/items/quality_mid/silver_boots/silver_boots.lua")
+    AddItem(GetObjRef(),"assets/items/quality_poor/lonely_star/lonely_star.lua")
+    AddItem(GetObjRef(),"assets/items/quality_mid/reapers_breath/reapers_breath.lua")
 
 end
 

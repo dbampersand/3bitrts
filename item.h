@@ -52,6 +52,9 @@ typedef struct Item
     int itemTier;
 
     int spriteIndex_Icon;
+
+    bool highlighted;
+    char* stacksString;
 } Item;
 typedef struct ItemPool
 {

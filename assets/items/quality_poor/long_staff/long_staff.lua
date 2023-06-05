@@ -20,10 +20,13 @@ function attached(obj)
 
 end
 
-function update(dt)
+function update(dt,item)
     timer = timer + dt
-    if (timer > cooldown) then
+    if (timer >= cooldown) then
         timer = cooldown
+        SetItemHighlight(item,true)
+    else
+        SetItemHighlight(item,false)
     end
 end
 function ondamaged(item,sourceObj,damagedObj,value, isFromEffect)

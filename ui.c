@@ -29,6 +29,7 @@
 #include "replay.h"
 #include "particle.h"
 #include "easings.h"
+#include "shop.h"
 
 Widget* Widgets_States[NUMGAMESTATES] = {0};
 int numSprites_States[NUMGAMESTATES] = {0};
@@ -72,6 +73,46 @@ ALLEGRO_FONT* GetElementFont(UIElement* u)
     if (!f)
         f = ui.font;
     return f;
+}
+void DrawItems(GameObject* selected)
+{
+    int y = 28;
+    int cx = 233;
+    for (int i = 0; i < INVENTORY_SLOTS; i++)
+    {
+        if (selected->inventory[i].spriteIndex_Icon)
+        {
+            Sprite* s = &sprites[selected->inventory[i].spriteIndex_Icon];
+
+            ALLEGRO_COLOR c = FRIENDLY;
+            c.r *= 0.1f;
+            c.g *= 0.1f;
+            c.b *= 0.1f;
+            c.a = 0.1f;
+            if (selected->inventory[i].highlighted)
+            {
+
+
+                al_draw_circle(cx,y+GetHeightSprite(s)/2.0f,_SHOP_ITEM_RADIUS+sin(_FRAMES/16),FRIENDLY,1);
+                al_draw_filled_circle(cx,y+GetHeightSprite(s)/2.0f,_SHOP_ITEM_RADIUS+sin(_FRAMES/16),c);
+                DrawSprite(s,cx-GetWidthSprite(s)/2.0f,y,0,0,0,FRIENDLY,false,false,false);
+                if (selected->inventory[i].stacksString)
+                    al_draw_text(ui.tinyFont,FRIENDLY,cx,y+GetHeightSprite(s),ALLEGRO_ALIGN_CENTER,selected->inventory[i].stacksString);
+
+
+            }
+            else
+            {
+
+                al_draw_filled_circle(cx,y+GetHeightSprite(s)/2.0f,_SHOP_ITEM_RADIUS+sin(_FRAMES/16),c);
+                DrawSprite(s,cx-GetWidthSprite(s)/2.0f,y,0,0,0,FRIENDLY,false,false,false);
+                if (selected->inventory[i].stacksString)
+                    al_draw_text(ui.tinyFont,FRIENDLY,cx,y+GetHeightSprite(s),ALLEGRO_ALIGN_CENTER,selected->inventory[i].stacksString);
+
+            }
+            y += GetHeightSprite(s) + 8;
+        }
+    }
 }
 void DrawUIHighlight(UIElement* u, float x, float y)
 {
@@ -383,7 +424,7 @@ void DrawTimer(bool enabled)
         size_t buffsiz = snprintf(NULL, 0, "%i:%i",minutes,seconds);
         char* buff = calloc(buffsiz+1,sizeof(char));
         sprintf(buff,"%i:%i",minutes,seconds);
-        al_draw_text(ui.font,FRIENDLY,255-10,20,ALLEGRO_ALIGN_RIGHT,buff);
+        al_draw_text(ui.font,FRIENDLY,233,20,ALLEGRO_ALIGN_CENTER,buff);
     }
 
 }
@@ -1085,6 +1126,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         DrawManaUIElement(selected,baseColor);
         Ability* heldAbility = players[0].abilityHeld;
         
+        DrawItems(selected);
 
         if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0),IsBindDown(keyState,currSettings.keymap.key_Q),*mouseState,&baseColor,true,false))
         {

@@ -4750,6 +4750,33 @@ int L_GetSpeed(lua_State* l)
     return 1;
 
 }
+int L_SetItemHighlight(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS || !currGameObjRunning)
+    {
+        printf("L_SetItemHighlight: index out of range: %i\n",index);
+        return 0;
+    }
+    currGameObjRunning->inventory[index].highlighted = lua_toboolean(l,2);
+    return 0; 
+}
+int L_SetItemStackString(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS || !currGameObjRunning)
+    {
+        printf("L_SetItemStackString: index out of range: %i\n",index);
+        return 0;
+    }
+    const char* str = lua_tostring(l,2);
+    if (currGameObjRunning->inventory[index].stacksString)
+        free(currGameObjRunning->inventory[index].stacksString);
+    currGameObjRunning->inventory[index].stacksString = calloc(strlen(str)+1,sizeof(char));
+    strcpy(currGameObjRunning->inventory[index].stacksString,str);
+    return 0; 
+}
+
 void SetLuaKeyEnums(lua_State* l)
 {
     //TODO: Update these when a key is changed in settings
@@ -5600,6 +5627,12 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetSpeed);
     lua_setglobal(luaState, "GetSpeed");
+
+    lua_pushcfunction(luaState, L_SetItemHighlight);
+    lua_setglobal(luaState, "SetItemHighlight");
+
+    lua_pushcfunction(luaState, L_SetItemStackString);
+    lua_setglobal(luaState, "SetItemStackString");
 
 }
 

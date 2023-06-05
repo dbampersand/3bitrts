@@ -18,7 +18,12 @@ function unattach(obj)
 end
 
 function update(dt)
+    if (active == true) then
+        SetItemHighlight(item,true)
+    end
     if (active == false) then
+        SetItemHighlight(item,false)
+
         timer = timer + dt
         if (timer > cooldown) then
             timer = 0

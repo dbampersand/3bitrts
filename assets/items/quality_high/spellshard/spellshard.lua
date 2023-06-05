@@ -2,6 +2,7 @@ local abilityPotency = 0.08
 local maxStacks = 10
 local objAttacking = -1
 local duration = 20
+local numStacksAdded = 0
 
 function setup(obj)
     SetItemName(obj,"Spellshard")
@@ -24,6 +25,7 @@ function onattack(item,obj,target,dt,value)
     if (objAttacking ~= target or objAttacking == -1) then
         CureNamedEffect(obj,"Spellshard",maxStacks)
         objAttacking = target
+        numStacks = 0
     end
 
     local f1 = {};
@@ -36,6 +38,11 @@ function onattack(item,obj,target,dt,value)
     f1["duration"] = duration
 
     ApplyEffect(obj,{f1});
+
+    numStacks = numStacks + 1
+
+    SetItemStackString(item,string.format("%.0f", numStacks))
+
 
 
 end

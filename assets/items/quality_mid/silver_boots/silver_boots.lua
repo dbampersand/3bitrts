@@ -26,20 +26,27 @@ function onmapchange(obj)
 
 end
 
-function update(dt)
+function update(dt,item)
     local currX = GetX(GetObjRef())
     local currY = GetY(GetObjRef())
 
     local amt = DistXY(currX,currY,lastPosition.x,lastPosition.y) * moveMultiplier;
+
     if (amountAdded < maxStacks) then
+        SetItemHighlight(item,false)
         
         AddAbilityPotency(GetObjRef(),amt);
 
         amountAdded = amountAdded + amt
+    else
+        SetItemHighlight(item,true)
+
     end
 
     lastPosition.x = currX;
     lastPosition.y = currY;
+
+    SetItemStackString(item,string.format("%.1f", amountAdded))
     
 end
 

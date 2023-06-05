@@ -5,7 +5,7 @@ function setup(obj)
     SetItemDescription(obj,"Allows the unit to push others and deals damage when very close.")
     SetItemGoldCost(obj,70)
     SetItemTier(obj,1)
-    SetItemIcon(obj, "assets/items/quality_mid/unstoppable_force/lonely_star.unstoppable_force");
+    SetItemIcon(obj, "assets/items/quality_mid/unstoppable_force/unstoppable_force.png");
 end
 
 function onmapchange(obj)

@@ -353,10 +353,15 @@ void AttachItem(GameObject* g, Item* i)
     {
         if (g->inventory[i].enabled == false)
         {
+            new.highlighted = true;
+            if (g->inventory[i].stacksString)
+                free(g->inventory[i].stacksString);
+
             g->inventory[i] = new;
             g->inventory[i].enabled = true;
             
             new.attachedTo = g;
+
 
             lua_rawgeti(luaState, LUA_REGISTRYINDEX, new.luafunc_attached);
             lua_pushinteger(luaState,(int)(g-objects));    

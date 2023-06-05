@@ -19,8 +19,11 @@ end
 
 function update(dt)
     cooldown = cooldown - dt
-    if (cooldown < 0) then
+    SetItemHighlight(item,false)
+
+    if (cooldown <= 0) then
         cooldown = 0
+        SetItemHighlight(item,true)
     end
 end
 

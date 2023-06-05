@@ -27,6 +27,7 @@ function attached(obj)
 end
 
 function update(dt)
+    SetItemHighlight(item,false)
 end
 
 function onattack(item,obj,target,dt,value)
