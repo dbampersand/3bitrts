@@ -13,7 +13,7 @@ function setup()
 
 
     SetAbilityMaxStacks(3)
-    SetAbilityStacks(0)
+    SetAbilityStacks(3)
 
     AbilitySetPortrait("assets/friendly/bard/icon_aoe_heal.png");
     SetDescription("Weave\n\nCreates a creature, based on the number of stacks on Weave.")
@@ -22,10 +22,18 @@ end
 
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/bard/audio/song_of_healing.wav",1)
-
+    local obj = -1
     if (GetStacks(GetObjRef(),GetAbilityRef())==1) then
-        CreateObject("assets/summoned/woven_imp/woven_imp.lua",GetX(GetObjRef()),GetY(GetObjRef()),TYPE_FRIENDLY,0);
+        obj = CreateObject("assets/summoned/woven_imp/woven_imp.lua",GetX(GetObjRef()),GetY(GetObjRef()),TYPE_FRIENDLY,0);
     end
+    if (GetStacks(GetObjRef(),GetAbilityRef())==2) then
+        obj = CreateObject("assets/summoned/woven_dove/woven_dove.lua",GetX(GetObjRef()),GetY(GetObjRef()),TYPE_FRIENDLY,0);
+    end
+    if (GetStacks(GetObjRef(),GetAbilityRef())==3) then
+        obj = CreateObject("assets/summoned/woven_demon/woven_demon.lua",GetX(GetObjRef()),GetY(GetObjRef()),TYPE_FRIENDLY,0);
+    end
+
+    SetLifetime(obj,12)
     AddStack(GetObjRef(),2,-3)
     AddStack(GetObjRef(),3,-3)
 

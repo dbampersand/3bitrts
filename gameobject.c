@@ -2821,6 +2821,14 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     DrawEffectVisuals(g);
     if (g->stunTimer > 0)
         DrawStunEffect(g);
+
+    if (g->deathTimerActivated)
+    {
+        char* deathTimerText = calloc(NumDigits(g->deathTimer)+1,sizeof(char));
+        sprintf(deathTimerText,"%i",(int)g->deathTimer);
+        al_draw_text(ui.tinyFont,c,x+GetWidth(g)/2,y-12,ALLEGRO_ALIGN_CENTER,deathTimerText);
+        free(deathTimerText);
+    }
 }
 void SetLightSize(GameObject* g, int size)
 {

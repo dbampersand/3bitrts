@@ -4105,7 +4105,7 @@ int L_GetLifetime(lua_State* l)
     int index = lua_tonumber(l,1);
     if (!GameObjectIndexInRange(index))
     {
-        printf("L_GetLifetime: index out of range: %i\n");
+        printf("L_GetLifetime: index out of range: %i\n",index);
         return 0;
     }
     GameObject* g = &objects[index];
@@ -4117,7 +4117,7 @@ int L_DeathTimerIsSet(lua_State* l)
     int index = lua_tonumber(l,1);
     if (!GameObjectIndexInRange(index))
     {
-        printf("L_DeathTimerSet: index out of range: %i\n");
+        printf("L_DeathTimerSet: index out of range: %i\n",index);
         return 0;
     }
     GameObject* g = &objects[index];
