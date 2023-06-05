@@ -4100,6 +4100,31 @@ int L_SetLifetime(lua_State* l)
     }
     return 0;
 }
+int L_GetLifetime(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (!GameObjectIndexInRange(index))
+    {
+        printf("L_GetLifetime: index out of range: %i\n");
+        return 0;
+    }
+    GameObject* g = &objects[index];
+    lua_pushnumber(l,g->deathTimer) ;
+    return 1;
+}
+int L_DeathTimerIsSet(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (!GameObjectIndexInRange(index))
+    {
+        printf("L_DeathTimerSet: index out of range: %i\n");
+        return 0;
+    }
+    GameObject* g = &objects[index];
+    lua_pushboolean(l,g->deathTimerActivated) ;
+    return 1;
+}
+
 
 int L_CopyObject(lua_State* l)
 {
@@ -5634,5 +5659,10 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_SetItemStackString);
     lua_setglobal(luaState, "SetItemStackString");
 
-}
+    lua_pushcfunction(luaState, L_GetLifetime);
+    lua_setglobal(luaState, "GetLifetime");
 
+    lua_pushcfunction(luaState, L_DeathTimerIsSet);
+    lua_setglobal(luaState, "DeathTimerIsSet");
+
+}
