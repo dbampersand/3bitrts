@@ -11,7 +11,7 @@ local attackSpeed = -0.1
 
 function setup()
     AbilitySetPortrait("assets/friendly/bard/icon_aoe_damage.png");
-    AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetCastType(ABILITY_TARGET_ALL);
     SetAbilityRange(50)
     SetCooldown(8)
     SetDescription("Stitch\n\nAdds a stack of Weave and increases target units' attack speed")

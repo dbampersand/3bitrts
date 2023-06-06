@@ -69,7 +69,7 @@ typedef struct Encounter
 } Encounter;
 
 #define NUM_ENCOUNTER_FUNCTIONS 3
-#define MAX_DIFFICULTY_LEVELS 10
+#define MAX_DIFFICULTY_LEVELS 11
 
 
 
@@ -100,5 +100,3 @@ extern Encounter* currEncounterRunning;
 
 extern int selectedEncounterIndex;
 extern float goldLossRate;
-
-extern int maxAugments;

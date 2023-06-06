@@ -7,6 +7,7 @@
 #include "gameobject.h"
 #include "helperfuncs.h"
 #include "attack.h"
+#include "map.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,7 +62,7 @@ float GetAugmentHealthBonus(int health, int augmentLevel)
 }
 float GetAugmentAbilityDamage(int damage, int augmentLevel)
 {
-    return damage * (augmentLevel/35.0f);
+    return damage * (augmentLevel/8.0f);
 }
 
 float Neutral_GetAugmentAbilityDamage(int damage, int augmentlevel)
@@ -221,24 +222,23 @@ void Augment_ChangeEffectTime(Effect* e, int augmentLevel)
 }
 void Augment_RandomDmgPool(Augment* a, int augmentLevel)
 {
-    if (a->timer >  50 / ((float)augmentLevel+1))
+    if (a->timer >  50 / ((float)augmentLevel*2))
     {
         a->timer = 0;
 
 
         Effect e = {0}; 
-        e.trigger = TRIGGER_TIMER;
+        e.trigger = TRIGGER_INSTANT;
         e.effectType = EFFECT_HURT;
         e.from = NULL;
-        e.value = augmentLevel/2.0f;
+        e.value = augmentLevel*2;
         e.numTriggers = 1;
-        e.duration = 1;
         e.enabled = true;
         
 
         Attack at = {0};
-        at.x = rand() % 255;
-        at.y = rand() % 255;
+        at.x = rand() % GetMapWidth();
+        at.y = rand() % GetMapHeight();
         at.targx = at.x;
         at.targy = at.y;
         at.effects = calloc(1,sizeof(Effect));
@@ -253,8 +253,8 @@ void Augment_RandomDmgPool(Augment* a, int augmentLevel)
         at.timer = 0;
         at.range = augmentLevel * 4;
         at.cameFrom = NULL;
-        at.color = COLOR_ENEMY;
-        at.dither = DITHER_HALF;
+        at.color = COLOR_DAMAGE;
+        at.dither = DITHER_DAMAGE_HALF;
 
         AddAttack(&at);
     }
@@ -403,7 +403,7 @@ void Bad_EnemyExplodes(GameObject* g, int augmentLevel)
 {
     float x; float y; 
     GetCentre(g,&x,&y);
-    Effect e;
+    Effect e = {0};
     e.trigger = TRIGGER_TIMER;
     e.effectType = EFFECT_HURT;
     e.from = NULL;
@@ -415,6 +415,7 @@ void Bad_EnemyExplodes(GameObject* g, int augmentLevel)
     e.enabled = false;
     e.spriteIndex_Portrait = 0;
     e.name = NULL;
+    
 
     CreateAoE(x,y, NULL, 10, 3, 1,false, ATTACK_HITS_FRIENDLIES, ALColorToCol(ENEMY), DITHER_VERTICAL_EIGTH, 1, &e, NULL, NULL);
 }

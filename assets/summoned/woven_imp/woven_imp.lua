@@ -1,5 +1,5 @@
 local passion = -1
-local burn = -1
+local immolate = -1
 
 function setup()
     SetSprite("assets/summoned/woven_imp/woven_imp.png");
@@ -10,7 +10,7 @@ function setup()
     SetRange(64);
 
     passion = AddAbility(GetObjRef(),"assets/summoned/woven_imp/ability_passion.lua",0);
-    burn = AddAbility(GetObjRef(),"assets/summoned/woven_imp/ability_burn.lua",1);
+    immolate = AddAbility(GetObjRef(),"assets/summoned/woven_imp/ability_immolate.lua",1);
 
     SetAttackSounds({
         "assets/audio/attacks/melee_hammer/hammer_1.wav",

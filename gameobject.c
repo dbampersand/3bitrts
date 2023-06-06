@@ -1285,6 +1285,10 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
         return;
     GameObject copy = *g;
 
+    if (players[0].selection[players[0].indexSelectedUnit] == g)
+    {
+        players[0].abilityHeld = NULL;
+    }
 
     if (currMap->luafunc_objectdied)
     {
