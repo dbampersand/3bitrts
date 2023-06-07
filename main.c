@@ -440,14 +440,11 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     if (gameState == GAMESTATE_INGAME)
     {
-        if (IsBindDown(keyState,currSettings.keymap.key_ShowMap))
+        if (!console.active && IsBindDown(keyState,currSettings.keymap.key_ShowMap))
         {
             DrawMinimap(*mouseState);
         }
         DrawTimer(currSettings.displayTimer);
-
-
-
     }
 
     DrawBufferedStrings();

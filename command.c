@@ -84,6 +84,8 @@ void DrawCommandQueue(GameObject* g)
 
 void AddCommand(GameObject* g, Command c, bool shiftHeld)
 {
+    if (g->commandsBlocked) 
+        return;
     if (!shiftHeld)
         ClearCommandQueue(g);
     for (int i = 0; i < MAX_QUEUED_CMD; i++)

@@ -1702,6 +1702,31 @@ int L_SetAttackTarget(lua_State* l)
     }
     return 0;
 }
+int L_SetAttackTargetPosition(lua_State* l)
+{   
+    int atk = lua_tonumber(l,1);
+    if (atk < 0 && atk >= MAX_ATTACKS)
+    {
+        printf("L_SetAttackTargetPosition: index out of range: %i\n",atk);
+        return 0;
+    }
+
+    attacks[atk].targx = lua_tonumber(l,2);
+    attacks[atk].targy = lua_tonumber(l,3);
+
+    return 0;
+}
+int L_BlockCommands(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (!GameObjectIndexInRange(index))
+    {
+        printf("L_BlockCommands: index out of range: %i\n",index);
+        return 0;
+    }
+    GameObject* g = &objects[index];
+    g->commandsBlocked = lua_toboolean(l,2);
+}
 int L_CreateCone(lua_State* l)
 {
     const float x = lua_tonumber(l,1);
@@ -2207,6 +2232,27 @@ int L_SetObjTargetPosition(lua_State* l)
         obj->targObj = NULL;
     }
     return 0;
+}
+int L_GetObjTargetPosition(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (!GameObjectIndexInRange(index))
+    {
+        printf("L_GetObjTargetPosition: index out of range: %i\n",index);
+        return 0;
+    }
+    GameObject* g = &objects[index];
+
+    lua_newtable(l);
+
+    lua_pushstring(l,"x");
+    lua_pushnumber(l,g->targetPosition.x);
+    lua_settable(l,-3);
+
+    lua_pushstring(l,"y");
+    lua_pushnumber(l,g->targetPosition.y);
+    lua_settable(l,-3);
+    return 1;
 }
 
 int L_SetObjPosition(lua_State* l)
@@ -5076,6 +5122,10 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_SetAttackTarget);
     lua_setglobal(luaState, "SetAttackTarget");
 
+    lua_pushcfunction(luaState, L_SetAttackTargetPosition);
+    lua_setglobal(luaState, "SetAttackTargetPosition");
+
+
     lua_pushcfunction(luaState, L_SetThreatMultiplier);
     lua_setglobal(luaState, "SetThreatMultiplier");
 
@@ -5664,5 +5714,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_DeathTimerIsSet);
     lua_setglobal(luaState, "DeathTimerIsSet");
+
+    lua_pushcfunction(luaState, L_GetObjTargetPosition);
+    lua_setglobal(luaState, "GetObjTargetPosition");
+
+    lua_pushcfunction(luaState, L_BlockCommands);
+    lua_setglobal(luaState, "BlockCommands");
 
 }

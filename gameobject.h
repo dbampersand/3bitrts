@@ -144,7 +144,7 @@ typedef struct GameObject
 
     float baseDamage;
     float armor;
-     
+
 
 
     Threat threatList;
@@ -233,6 +233,8 @@ typedef struct GameObject
     float dodgeChance;
 
     bool objectIsSummoned;
+
+    bool commandsBlocked;
 } GameObject;
 
 #define MAX_LIGHT_SIZE 90 

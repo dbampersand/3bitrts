@@ -73,13 +73,18 @@ void UpdateBind(UIElement* u)
         //char ch = t->key;
         //currSettings.keymap.key_Q.keyMappedTo = ch;
         const char* str = al_keycode_to_name(*t->mappedTo);
-
+        if (!str)
+        {
+            str = "(None)";
+        }
         if (t->text)
         {
             t->text = realloc(t->text,(strlen(str)+1)*sizeof(char));
         }
         else
+        {
             t->text = calloc(strlen(str)+1,sizeof(char));
+        }
         strcpy(t->text,str);
     }
 }
@@ -114,6 +119,7 @@ bool IsBindDown(ALLEGRO_KEYBOARD_STATE* keyState, Key k)
 }
 void SetDefaultSettings(Settings* setting)
 {
+    *setting = (Settings){0};
     setting->renderScale = &_RENDERSIZE;
     setting->particlesEnabled = true;
     setting->lightEffectEnabled = true;
@@ -131,7 +137,7 @@ void SetDefaultSettings(Settings* setting)
 
 
     setting->displayTimer = false;
-    
+
     setting->keymap.key_ctrlgroups[0] = (Key){"Ctrl Group 1",ALLEGRO_KEY_1};
     setting->keymap.key_ctrlgroups[1] = (Key){"Ctrl Group 2",ALLEGRO_KEY_2};
     setting->keymap.key_ctrlgroups[2] = (Key){"Ctrl Group 3",ALLEGRO_KEY_3};
@@ -395,43 +401,33 @@ float FindToken(char* str, char* token)
 void SetAbilityKeys(char* str)
 {
     int key_Q  = (int)FindToken(str,"key_Q");
-    if (key_Q >= 0)
         currSettings.keymap.key_Q.keyMappedTo = key_Q;
 
     int key_Q_Alt  = (int)FindToken(str,"key_Q_Alt");
-    if (key_Q_Alt >= 0)
         currSettings.keymap.key_Q.secondKeyMappedTo = key_Q_Alt;
 
     int key_W = (int)FindToken(str,"key_W");
-    if (key_W >= 0)
-        currSettings.keymap.key_W.keyMappedTo = key_W;
+    currSettings.keymap.key_W.keyMappedTo = key_W;
 
     int key_W_Alt  = (int)FindToken(str,"key_W_Alt");
-    if (key_W_Alt >= 0)
         currSettings.keymap.key_W.secondKeyMappedTo = key_W_Alt;
 
     int key_E = (int)FindToken(str,"key_E");
-    if (key_E >= 0)
         currSettings.keymap.key_E.keyMappedTo = key_E;
 
     int key_E_Alt  = (int)FindToken(str,"key_E_Alt");
-    if (key_E_Alt >= 0)
         currSettings.keymap.key_E.secondKeyMappedTo = key_E_Alt;
 
     int key_R = (int)FindToken(str,"key_R");
-    if (key_R >= 0)
         currSettings.keymap.key_R.keyMappedTo = key_R;
 
     int key_R_Alt  = (int)FindToken(str,"key_R_Alt");
-    if (key_R_Alt >= 0)
         currSettings.keymap.key_R.secondKeyMappedTo = key_R_Alt;
 
     int key_F = (int)FindToken(str,"key_F");
-    if (key_F >= 0)
         currSettings.keymap.key_F.keyMappedTo = key_F;
 
     int key_F_Alt  = (int)FindToken(str,"key_F_Alt");
-    if (key_F_Alt >= 0)
         currSettings.keymap.key_F.secondKeyMappedTo = key_F_Alt;
 
 
@@ -439,94 +435,72 @@ void SetAbilityKeys(char* str)
 void SetControllingAbilities(char* str)
 {
     int key_AMove  = (int)FindToken(str,"key_AMove");
-    if (key_AMove >= 0)
         currSettings.keymap.key_AMove.keyMappedTo = key_AMove;
 
     int key_AMove_Alt  = (int)FindToken(str,"key_AMove_Alt");
-    if (key_AMove_Alt >= 0)
         currSettings.keymap.key_AMove.secondKeyMappedTo = key_AMove_Alt;
 
     int key_Shift  = (int)FindToken(str,"key_Shift");
-    if (key_Shift >= 0)
         currSettings.keymap.key_Shift.keyMappedTo = key_Shift;
 
     int key_Shift_Alt  = (int)FindToken(str,"key_Shift_Alt");
-    if (key_Shift_Alt >= 0)
         currSettings.keymap.key_Shift.secondKeyMappedTo = key_Shift_Alt;
 
     int key_Tab  = (int)FindToken(str,"key_Tab");
-    if (key_Tab >= 0)
         currSettings.keymap.key_Tab.keyMappedTo = key_Tab;
 
     int key_Tab_Alt  = (int)FindToken(str,"key_Tab_Alt");
-    if (key_Tab_Alt >= 0)
         currSettings.keymap.key_Tab.secondKeyMappedTo = key_Tab_Alt;
 
     int key_Ctrl  = (int)FindToken(str,"key_Ctrl");
-    if (key_Ctrl >= 0)
         currSettings.keymap.key_Ctrl.keyMappedTo = key_Ctrl;
 
     int key_Ctrl_Alt  = (int)FindToken(str,"key_Ctrl_Alt");
-    if (key_Ctrl_Alt >= 0)
         currSettings.keymap.key_Ctrl.secondKeyMappedTo = key_Ctrl_Alt;
 
     int key_ShowMap  = (int)FindToken(str,"key_ShowMap");
-    if (key_ShowMap >= 0)
         currSettings.keymap.key_ShowMap.keyMappedTo = key_ShowMap;
 
     int key_ShowMap_Alt  = (int)FindToken(str,"key_ShowMap_Alt");
-    if (key_ShowMap_Alt >= 0)
-        currSettings.keymap.key_ShowMap.secondKeyMappedTo = key_ShowMap_Alt;
+    currSettings.keymap.key_ShowMap.secondKeyMappedTo = key_ShowMap_Alt;
 
     int key_Pause  = (int)FindToken(str,"key_Pause");
-    if (key_Pause >= 0)
         currSettings.keymap.key_Pause.keyMappedTo = key_Pause;
 
     int key_Pause_Alt  = (int)FindToken(str,"key_Pause_Alt");
-    if (key_Pause_Alt >= 0)
         currSettings.keymap.key_Pause.secondKeyMappedTo = key_Pause_Alt;
 
     int key_Cancel  = (int)FindToken(str,"key_Cancel");
-    if (key_Cancel >= 0)
         currSettings.keymap.key_Cancel.keyMappedTo = key_Cancel;
 
     int key_Cancel_Alt  = (int)FindToken(str,"key_Cancel_Alt");
-    if (key_Cancel_Alt >= 0)
         currSettings.keymap.key_Cancel.secondKeyMappedTo = key_Cancel_Alt;
 
 }
 void SetMovementKeys(char* str)
 {
     int key_PanLeft  = (int)FindToken(str,"key_PanLeft");
-    if (key_PanLeft >= 0)
         currSettings.keymap.key_PanLeft.keyMappedTo = key_PanLeft;
 
     int key_PanLeft_Alt  = (int)FindToken(str,"key_PanLeft_Alt");
-    if (key_PanLeft_Alt >= 0)
         currSettings.keymap.key_PanLeft.secondKeyMappedTo = key_PanLeft_Alt;
 
     int key_PanRight  = (int)FindToken(str,"key_PanRight");
-    if (key_PanRight >= 0)
         currSettings.keymap.key_PanRight.keyMappedTo = key_PanRight;
 
     int key_PanRight_Alt  = (int)FindToken(str,"key_PanRight_Alt");
-    if (key_PanRight_Alt >= 0)
         currSettings.keymap.key_PanRight.secondKeyMappedTo = key_PanRight_Alt;
 
     int key_PanUp  = (int)FindToken(str,"key_PanUp");
-    if (key_PanUp >= 0)
         currSettings.keymap.key_PanUp.keyMappedTo = key_PanUp;
 
     int key_PanUp_Alt  = (int)FindToken(str,"key_PanUp_Alt");
-    if (key_PanUp_Alt >= 0)
         currSettings.keymap.key_PanUp.secondKeyMappedTo = key_PanUp_Alt;
 
     int key_PanDown  = (int)FindToken(str,"key_PanDown");
-    if (key_PanDown >= 0)
         currSettings.keymap.key_PanDown.keyMappedTo = key_PanDown;
 
     int key_PanDown_Alt  = (int)FindToken(str,"key_PanDown_Alt");
-    if (key_PanDown_Alt >= 0)
         currSettings.keymap.key_PanDown.secondKeyMappedTo = key_PanDown_Alt;
 
 
@@ -534,75 +508,55 @@ void SetMovementKeys(char* str)
 void SetBindControlGroups(char* str)
 {
     int key_ctrlgroup1  = (int)FindToken(str,"key_ctrlgroup1");
-    if (key_ctrlgroup1 >= 0)
         currSettings.keymap.key_ctrlgroups[1].keyMappedTo = key_ctrlgroup1;
     int key_ctrlgroup1_Alt  = (int)FindToken(str,"key_ctrlgroup1_Alt");
-    if (key_ctrlgroup1_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[1].secondKeyMappedTo = key_ctrlgroup1_Alt;
 
 
     int key_ctrlgroup2  = (int)FindToken(str,"key_ctrlgroup2");
-    if (key_ctrlgroup2 >= 0)
         currSettings.keymap.key_ctrlgroups[2].keyMappedTo = key_ctrlgroup2;
     int key_ctrlgroup2_Alt  = (int)FindToken(str,"key_ctrlgroup2_Alt");
-    if (key_ctrlgroup2_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[2].secondKeyMappedTo = key_ctrlgroup2_Alt;
 
     int key_ctrlgroup3  = (int)FindToken(str,"key_ctrlgroup3");
-    if (key_ctrlgroup3 >= 0)
         currSettings.keymap.key_ctrlgroups[3].keyMappedTo = key_ctrlgroup3;
     int key_ctrlgroup3_Alt  = (int)FindToken(str,"key_ctrlgroup3_Alt");
-    if (key_ctrlgroup3_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[3].secondKeyMappedTo = key_ctrlgroup3_Alt;
 
     int key_ctrlgroup4  = (int)FindToken(str,"key_ctrlgroup4");
-    if (key_ctrlgroup4 >= 0)
         currSettings.keymap.key_ctrlgroups[4].keyMappedTo = key_ctrlgroup4;
     int key_ctrlgroup4_Alt  = (int)FindToken(str,"key_ctrlgroup4_Alt");
-    if (key_ctrlgroup4_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[4].secondKeyMappedTo = key_ctrlgroup4_Alt;
 
     int key_ctrlgroup5  = (int)FindToken(str,"key_ctrlgroup5");
-    if (key_ctrlgroup5 >= 0)
         currSettings.keymap.key_ctrlgroups[5].keyMappedTo = key_ctrlgroup5;
     int key_ctrlgroup5_Alt  = (int)FindToken(str,"key_ctrlgroup5_Alt");
-    if (key_ctrlgroup5_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[5].secondKeyMappedTo = key_ctrlgroup5_Alt;
 
 
     int key_ctrlgroup6  = (int)FindToken(str,"key_ctrlgroup6");
-    if (key_ctrlgroup6 >= 0)
         currSettings.keymap.key_ctrlgroups[6].keyMappedTo = key_ctrlgroup6;
     int key_ctrlgroup6_Alt  = (int)FindToken(str,"key_ctrlgroup6_Alt");
-    if (key_ctrlgroup6_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[6].secondKeyMappedTo = key_ctrlgroup6_Alt;
 
     int key_ctrlgroup7  = (int)FindToken(str,"key_ctrlgroup7");
-    if (key_ctrlgroup7 >= 0)
         currSettings.keymap.key_ctrlgroups[7].keyMappedTo = key_ctrlgroup7;
     int key_ctrlgroup7_Alt  = (int)FindToken(str,"key_ctrlgroup7_Alt");
-    if (key_ctrlgroup7_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[7].secondKeyMappedTo = key_ctrlgroup7_Alt;
 
     int key_ctrlgroup8  = (int)FindToken(str,"key_ctrlgroup8");
-    if (key_ctrlgroup8 >= 0)
         currSettings.keymap.key_ctrlgroups[8].keyMappedTo = key_ctrlgroup8;
     int key_ctrlgroup8_Alt  = (int)FindToken(str,"key_ctrlgroup8_Alt");
-    if (key_ctrlgroup8_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[8].secondKeyMappedTo = key_ctrlgroup8_Alt;
 
     int key_ctrlgroup9  = (int)FindToken(str,"key_ctrlgroup9");
-    if (key_ctrlgroup9 >= 0)
         currSettings.keymap.key_ctrlgroups[9].keyMappedTo = key_ctrlgroup9;
     int key_ctrlgroup9_Alt  = (int)FindToken(str,"key_ctrlgroup9_Alt");
-    if (key_ctrlgroup9_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[9].secondKeyMappedTo = key_ctrlgroup9_Alt;
 
     int key_ctrlgroup0  = (int)FindToken(str,"key_ctrlgroup0");
-    if (key_ctrlgroup0 >= 0)
         currSettings.keymap.key_ctrlgroups[0].keyMappedTo = key_ctrlgroup0;
     int key_ctrlgroup0_Alt  = (int)FindToken(str,"key_ctrlgroup0_Alt");
-    if (key_ctrlgroup0_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[0].secondKeyMappedTo = key_ctrlgroup0_Alt;
 
 }
@@ -920,7 +874,7 @@ bool LoadSettingsFile(char* path)
             }
 
 
-
+        
             SetBinds(str);
 
 

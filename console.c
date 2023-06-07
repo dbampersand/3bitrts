@@ -35,7 +35,7 @@ bool DrawConsoleLine(int line_num, const ALLEGRO_USTR * line, void *extra)
 {
     float currentLine = 0;
     float x = 5;
-    float y = console.y+5;
+    float y = console.y+12;
 
     ALLEGRO_USTR* buffer = al_ustr_new("");
 

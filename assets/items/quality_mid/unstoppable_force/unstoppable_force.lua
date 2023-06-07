@@ -29,7 +29,7 @@ end
 function update(dt)
     MoveAttack(aoe,GetX(GetObjRef()),GetY(GetObjRef()))
     SetAttackLifetime(aoe,9999)
-
+    SetObjectPush(true)
 end
 
 
