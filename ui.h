@@ -7,6 +7,7 @@
 #include "sound.h"
 #include "settings.h"
 #include "colors.h"
+#include "animation.h"
 
 //error printf colour
 #define COL_ERR  "\x1B[31m"
@@ -253,6 +254,14 @@ typedef struct UI
     UIElement nextLevelButton;
 
     PurchasingUnitUI purchasingUnitUI;
+
+    Animation chestIdle;
+    Animation chestWiggle;
+    Animation chestOpen;
+
+
+    Animation currChestAnimation[MAX_CHESTS];
+    bool openedChests[MAX_CHESTS];
     
 
 } UI;   
@@ -357,7 +366,7 @@ void AddText(Panel* p, int x, int y, char* name, char* description);
 UIElement* AddTextInput(Panel* p, int x, int y, int w, int h,char* name, char* description, int maxChars, bool onlyAllowNumbers);
 UI_Text* GetUIText(Panel* p, char* name);
 void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame);
-void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame);
+void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, float dt);
 void DrawWidgets(GameState currentState, Widget_DrawOrder drawOrderToDraw);
 void UpdateWidgets(float dt);
 void UpdateWidget(Widget* w, float dt);

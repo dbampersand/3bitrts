@@ -20,9 +20,10 @@ typedef enum GameState {
     GAMESTATE_PURCHASING_UNITS = 13,
     GAMESTATE_IN_EDITOR = 14,
     GAMESTATE_IN_3D = 15,
+    GAMESTATE_SOFT_LOSS = 16,
 
 
-    NUMGAMESTATES = 16
+    NUMGAMESTATES = 17
 } GameState;
 
 typedef enum TRANSITION
@@ -66,8 +67,8 @@ extern float transitionTimer;
 extern bool transitionAudioPlayed;
 
 extern GameObject** toSpawn;
- extern GameObject* deadFriendlyObjects;
-
+extern GameObject* deadFriendlyObjects;
+int numDeadFriendlyObjects;
 
 extern Encounter* encounterGoingTo;
 extern char* pathToNextMap;
@@ -77,6 +78,9 @@ extern GameState gameState;
 extern  TRANSITION transitionDrawing;
 
 extern bool _COMING_FROM_EDITOR;
+
+#define MAX_CHESTS 5
+
 
 
 
@@ -94,6 +98,7 @@ void SetGameStateToWatchingReplay();
 void SetGameStateToInShop();
 void SetGameStateToPurchasingUnits();
 void SetGameStateToInEditor();
+void SetGameStateToSoftLoss();
 
 
 void Quit();

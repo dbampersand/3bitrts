@@ -955,6 +955,8 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
     currGameObjRunning->threatMultiplier = 1;
 
     currGameObjRunning->bounty = DEFAULT_BOUNTY;
+    if (source == SOURCE_SPAWNED_FROM_OBJ)
+        currGameObjRunning->bounty = 0;
 
     SetRange(currGameObjRunning, 1);
     currGameObjRunning->objType = TYPE_ALL;

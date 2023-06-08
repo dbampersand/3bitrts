@@ -2610,6 +2610,12 @@ void InitUI()
     }
     chatboxes = NULL;
     numChatboxes = 0;
+
+
+    ui.chestIdle = LoadAnimation("assets/ui/chest.png",42,43,0.25f,0,1);
+    ui.chestWiggle = LoadAnimation("assets/ui/chest_wiggle.png",42,43,0.25f,0,8);
+    ui.chestOpen = LoadAnimation("assets/ui/chest_open.png",42,43,0.25f,0,5);
+    ui.chestOpen.holdOnLastFrame = true;
 }
 void UpdateWidget(Widget* w, float dt)
 {
@@ -3762,7 +3768,7 @@ void SetOptions()
 #define HP_NUMBER_FMT "+%i%% HP"
 
 
-void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
+void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, float dt)
 {
     char* buffer = calloc(1,sizeof(char));
 
@@ -3770,7 +3776,36 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame)
 
     al_draw_text(ui.font,FRIENDLY,20,18,0,gameStats.gameWon == true ? "Victory" : "Defeat");
     al_draw_line(20,30,56,30,FRIENDLY,1);
-    al_draw_line(17,52,239,52,FRIENDLY,1);
+    al_draw_line(17,73,239,73,FRIENDLY,1);
+
+    for (int i = 0; i < MAX_CHESTS; i++)
+    {
+        Rect r = (Rect){18+(ui.chestIdle.frameW+5)*i,25,40,43};
+
+        if (ui.openedChests[i])
+        {
+            if (ui.currChestAnimation[i].spriteIndex_Animation != ui.chestOpen.spriteIndex_Animation)
+                ui.currChestAnimation[i] = ui.chestOpen;
+            
+        }
+        else if (PointInRect(mouseState->screenX,mouseState->screenY,r))
+        {
+            if (mouseState->mouse.buttons & 1)
+                ui.openedChests[i] = true;
+            if (ui.currChestAnimation[i].spriteIndex_Animation != ui.chestWiggle.spriteIndex_Animation)
+                ui.currChestAnimation[i] = ui.chestWiggle;
+        }
+        else 
+        {
+            ui.currChestAnimation[i] = ui.chestIdle;
+        }
+
+        ProcessAnimations(&ui.currChestAnimation[i], dt);
+
+        DrawAnimation(&ui.currChestAnimation[i],18+(ui.chestIdle.frameW+5)*i,25,COLOR_FRIENDLY,false);
+     
+
+    }
 
     //Write the boss name and sprite
     al_draw_text(ui.font,ENEMY,16,70,0,currEncounterRunning->name);

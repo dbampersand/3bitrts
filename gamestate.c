@@ -122,6 +122,33 @@ void SetGameStateToEnterShop()
     transitionDrawing = TRANSITION_STAIRS;
     
 }
+void SpawnAllFriendlies()
+{   
+    int xPos = currMap->spawnPoint.x;
+    int yPos = currMap->spawnPoint.y;
+    Point camPos = (Point){0,0};
+
+    if (toSpawn)
+        for (int i = 0; i < encounterGoingTo->numUnitsToSelect; i++)
+        {
+            if (toSpawn[i] == NULL)
+                continue;
+            GameObject* g = toSpawn[i];
+            GameObject* gNew = AddGameobject(g,xPos,yPos,SOURCE_SPAWNED_FROM_MAP,TYPE_FRIENDLY);   
+            for (int j = 0; j < INVENTORY_SLOTS; j++)
+                ItemOnMapChange(&gNew->inventory[j],gNew);
+            HoldCommand(gNew,false);
+            xPos += GetWidth(g)+4;
+            if (i == encounterGoingTo->numUnitsToSelect/2)
+            {
+                camPos.x = xPos;
+                camPos.y = yPos;
+            }
+        }
+    FocusCameraOnPos(camPos.x,camPos.y);
+
+
+}
 void FinishTransition()
 {
     ClearChatbox();
@@ -161,27 +188,7 @@ void FinishTransition()
         int xPos = currMap->spawnPoint.x;
         int yPos = currMap->spawnPoint.y;
 
-        Point camPos = (Point){0,0};
-
-
-         
-        if (toSpawn)
-            for (int i = 0; i < encounterGoingTo->numUnitsToSelect; i++)
-            {
-                if (toSpawn[i] == NULL)
-                    continue;
-                GameObject* g = toSpawn[i];
-                GameObject* gNew = AddGameobject(g,xPos,yPos,SOURCE_SPAWNED_FROM_MAP,TYPE_FRIENDLY);   
-                for (int j = 0; j < INVENTORY_SLOTS; j++)
-                    ItemOnMapChange(&gNew->inventory[j],gNew);
-                HoldCommand(gNew,false);
-                xPos += GetWidth(g)+4;
-                if (i == encounterGoingTo->numUnitsToSelect/2)
-                {
-                    camPos.x = xPos;
-                    camPos.y = yPos;
-                }
-            }
+        SpawnAllFriendlies();
 
         for (int i = 0; i < numActiveObjects; i++)
         {
@@ -205,8 +212,6 @@ void FinishTransition()
 
         gameState = GAMESTATE_INGAME;
         transitioningTo = GAMESTATE_INGAME;
-
-        FocusCameraOnPos(camPos.x,camPos.y);
 
         //free(toSpawn);
 
@@ -238,13 +243,38 @@ void FinishTransition()
         transitioningTo = GAMESTATE_WATCHING_REPLAY;
 
     }
+    if (transitioningTo == GAMESTATE_SOFT_LOSS)
+    {
+
+        float gold = players[0].gold;
+
+        RemoveAllAttacks();
+        RemoveAllGameObjects();
+        combatStarted = false;
+        SetMap(LoadMap(currMap->path));
+        SpawnAllFriendlies();
+        
+        gameState = GAMESTATE_INGAME;
+        transitioningTo = GAMESTATE_INGAME;
+
+        ClearGold();
+        AddGold(gold);
+
+        numDeadFriendlyObjects = 0;
+
+        return;
+    }
     if (transitioningTo == GAMESTATE_LOAD_ENCOUNTER)
     {
+
         RemoveAllAttacks();
         gameState = GAMESTATE_LOAD_ENCOUNTER;
         transitioningTo = GAMESTATE_LOAD_ENCOUNTER;
         combatStarted = false;
 
+        numDeadFriendlyObjects = 0;
+
+        
 
         //if (toSpawn)
          //   free(toSpawn);
@@ -269,7 +299,7 @@ void FinishTransition()
         ClearGold();
         AddGold(players[0].bankedGold);
 
-
+        numDeadFriendlyObjects = 0;
 
     }
     if (transitioningTo == GAMESTATE_END)
@@ -286,14 +316,24 @@ void FinishTransition()
             players[0].bankedGold += players[0].gold;
             Save("_save.save");
         }
+        numDeadFriendlyObjects = 0;
 
     }
     if (transitioningTo == GAMESTATE_IN_SHOP)
     {
         MoveCam(0,0);
         gameState = GAMESTATE_IN_SHOP;
-        RefreshShop();
 
+        if (!currEncounterRunning->hardLoss)
+        {
+            for (int i = 0; i < numDeadFriendlyObjects; i++)
+            {
+                RessurectGameObject(&deadFriendlyObjects[i]);
+            }
+        }
+        numDeadFriendlyObjects = 0;
+
+        RefreshShop();
 
     }
     if (transitioningTo == GAMESTATE_CHANGE_MAP)
@@ -322,7 +362,15 @@ void FinishTransition()
         int yPos = currMap->spawnPoint.y;
 
         Point camPos = (Point){0,0};
-
+        
+        if (!currEncounterRunning->hardLoss)
+        {
+            for (int i = 0; i < numDeadFriendlyObjects; i++)
+            {
+                RessurectGameObject(&deadFriendlyObjects[i]);
+            }
+        }
+        numDeadFriendlyObjects = 0;
         for (int i = 0; i < numActiveObjects; i++)
         {
             if (IsOwnedByPlayer(activeObjects[i]))
@@ -388,6 +436,12 @@ void SetGameStateToChangingMap()
     transitionDrawing = TRANSITION_CHAINS;
     TransitionTo(GAMESTATE_CHANGE_MAP);
     currEncounterRunning->goingToShop = false;
+}
+void SetGameStateToSoftLoss()
+{
+    transitionDrawing = TRANSITION_CHAINS;
+    TransitionTo(GAMESTATE_SOFT_LOSS);
+
 }
 void SpawnPartySelects()
 {
@@ -617,9 +671,17 @@ void CheckIfGameIsLost()
 {
     if (GameStateIsTransition(&gameState)) 
         return;
-    if (GetNumPlayerControlledObjs(&players[0]) == 0 && gameState == GAMESTATE_INGAME)
+    if (currEncounterRunning)
     {
-        LoseGame();
+        if (GetNumPlayerControlledObjs(&players[0]) == 0 && gameState == GAMESTATE_INGAME)
+        {
+            if (currEncounterRunning->hardLoss)
+                LoseGame();
+            else
+            {
+                SetGameStateToSoftLoss();
+            }
+        }
     }
 }
 
@@ -990,6 +1052,10 @@ void AddDeadGameObject(GameObject* g)
 {
     if (gameState == GAMESTATE_INGAME)
     {
+        deadFriendlyObjects[numDeadFriendlyObjects] = *g;
+        deadFriendlyObjects[numDeadFriendlyObjects].properties |= OBJ_ACTIVE;   
+        numDeadFriendlyObjects++;
+        /*
         for (int i = 0; i < currEncounterRunning->numUnitsToSelect; i++)
         {
             if (!(deadFriendlyObjects[i].properties & OBJ_ACTIVE))
@@ -998,7 +1064,7 @@ void AddDeadGameObject(GameObject* g)
                 deadFriendlyObjects[i].properties |= OBJ_ACTIVE;   
                 return;
             }
-        }
+        }*/
     }
 }
 void GoTutorial()

@@ -8,12 +8,7 @@ function setup()
     AddAbility(GetObjRef(),"assets/friendly/lancer/lance.lua",0)
     AddAbility(GetObjRef(),"assets/friendly/lancer/shield_breaker.lua",1)
     AddAbility(GetObjRef(),"assets/friendly/lancer/stampede.lua",2)
-
     AddAbility(GetObjRef(),"assets/friendly/lancer/charge.lua",3)
-    --AddAbility(GetObjRef(),"assets/friendly/monk/kick.lua",1)
-    --AddAbility(GetObjRef(),"assets/friendly/monk/fury.lua",2)
-    --AddAbility(GetObjRef(),"assets/friendly/monk/whirlwind.lua",3)
-    --AddAbility(GetObjRef(),"assets/friendly/monk/lotus.lua",4)
 
 
     AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05); 
@@ -32,9 +27,9 @@ function setup()
     
     SetObjectPush(false);
 
-    SetObjPurchaseScreenSprite("assets/friendly/monk/monk_full.png")
+    SetObjPurchaseScreenSprite("assets/friendly/lancer/lancer_full.png")
     SetObjName("Lancer");
-    SetObjDescription("His birthplace ravaged by civil war, the Monk was villainized by the conquering warlords, being scapegoated as the reason for the violence. Once a peaceful soul, he had to learn to fight to survive. As he left his home, he wandered the earth until meeting with a band of adventurers.")
+    SetObjDescription(".")
 
     SetAttackSounds(
         {

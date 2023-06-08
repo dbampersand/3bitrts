@@ -30,7 +30,7 @@ void LoadShop()
 
     int frameW = 87;
     int frameH = 101;
-    int lineW = GetWidthSprite(s)/frameW;
+    int lineW = GetWidthSprite(s) / frameW;
 
     int currIndice = -2;
     int currAnimation = 0;

@@ -21,6 +21,8 @@ typedef struct Animation
     bool hasLooped;
     int numFrames;
 
+    bool holdOnLastFrame;
+
 } Animation;
 
 Sprite* GetCurrentFrame(Animation* a);

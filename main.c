@@ -413,6 +413,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
         if (GetButtonIsClicked(&ui.choosingUnits_GO) && numUnitsSelected==encounters[selectedEncounterIndex]->numUnitsToSelect)
         {
+            numDeadFriendlyObjects = 0;
 
             //ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
 
@@ -577,7 +578,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     if (gameState == GAMESTATE_END)
     {
-        DrawEndScreen(mouseState,mouseStateLastFrame);
+        DrawEndScreen(mouseState,mouseStateLastFrame,dt);
     }
      if (gameState == GAMESTATE_PURCHASING_UNITS)
     {

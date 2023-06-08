@@ -1,6 +1,7 @@
 #include "animation.h"
 #include "sprite.h"
 #include "colors.h"
+#include <math.h>
 
 Sprite* GetAnimSprite(Animation* a)
 {
@@ -17,8 +18,15 @@ void ProcessAnimations(Animation* a, float dt)
         a->timer = 0;
         if (a->currentIndice >= a->startIndice + a->numFrames)
         {   
-            a->currentIndice = a->startIndice;
-            a->hasLooped = true;
+            if (!a->holdOnLastFrame)
+            {
+                a->currentIndice = a->startIndice;
+                a->hasLooped = true;
+            }
+            else
+            {
+                a->currentIndice = a->startIndice + a->numFrames - 1;
+            }
         }
     }
 }
@@ -26,9 +34,12 @@ void DrawAnimation(Animation* a, int x, int y, Color c, bool invert)
 {
     ALLEGRO_COLOR col = GetColor(c,0);
 
-    int numIndicesX = (GetWidthSprite(GetAnimSprite(a)) / a->frameW);
-    int numIndicesY = (GetHeightSprite(GetAnimSprite(a)) / a->frameH);
+    int j = GetWidthSprite(GetAnimSprite(a));
+    int numIndicesX = ceil(GetWidthSprite(GetAnimSprite(a)) / (float)a->frameW);
+    int numIndicesY = ceil(GetHeightSprite(GetAnimSprite(a)) / (float)a->frameH);
 
+    if (numIndicesX == 0 || numIndicesY == 0) 
+        return;
     int indiceX = a->currentIndice % numIndicesX;
     int indiceY = a->currentIndice / numIndicesX;
 

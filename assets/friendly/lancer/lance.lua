@@ -15,7 +15,7 @@ function setup()
 
     SetAbilityRange(coneSize)
     SetCooldown(10);
-    SetDescription("Lance\n\nLances in a cone and pushes targets away.")
+    SetDescription("Lance\n\nSmashess targets in a cone and pushes them away.")
 
 end
 
