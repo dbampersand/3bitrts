@@ -60,7 +60,8 @@ void DrawChestCompletionHint(int x, int y)
             break;
         }
     } 
-    Sprite* s = &sprites[LoadSprite("assets/ui/chest_tiny.png",false)];
+    int chestIndex = LoadSprite("assets/ui/chest_tiny.png",false);
+    Sprite* s = &sprites[chestIndex];
 
     for (int i = 0; i < end; i++)
     {
@@ -2645,7 +2646,7 @@ void InitUI()
 
 
     ui.chestIdle = LoadAnimation("assets/ui/chest.png",42,43,0.25f,0,1);
-    ui.chestWiggle = LoadAnimation("assets/ui/chest_wiggle.png",42,43,0.25f,0,8);
+    ui.chestWiggle = LoadAnimation("assets/ui/chest_wiggle.png",42,43,0.1f,0,19);
     ui.chestOpen = LoadAnimation("assets/ui/chest_open.png",42,43,0.25f,0,5);
     ui.chestOpen.holdOnLastFrame = true;
 }

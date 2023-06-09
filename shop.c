@@ -26,7 +26,8 @@ void LoadShop()
     
 
     char* path = "assets/ui/shop/shop.png";
-    Sprite* s = &sprites[LoadSprite(path,false)];
+    int index = LoadSprite(path,false);
+    Sprite* s = &sprites[index];
 
     int frameW = 87;
     int frameH = 101;
@@ -411,7 +412,8 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
         GameObject* g = &deadFriendlyObjects[i];
         if (IsActive(g))
         {
-            Sprite* ghost = &sprites[LoadSprite("assets/ui/shop/ghost.png",true)];
+            int ghostIndex = LoadSprite("assets/ui/shop/ghost.png",true);
+            Sprite* ghost = &sprites[ghostIndex];
 
             Rect r = (Rect){x-1,y-1,(x + (x-_SCREEN_SIZE)-5),_MAX(GetHeightSprite(ghost),GetHeight(g)+1)};
             
@@ -457,7 +459,8 @@ void DrawReroll(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 {
     int x = 122; int y = 124;
 
-    Sprite* s = &sprites[LoadSprite("assets/ui/augments/reroll.png",true)];
+    int rerollIndex = LoadSprite("assets/ui/augments/reroll.png",true);
+    Sprite* s = &sprites[rerollIndex];
     Rect r = (Rect){x,y,GetWidthSprite(s),GetHeightSprite(s)};
 
     bool moused = PointInRect(mouseState.screenX,mouseState.screenY,r);
