@@ -1046,7 +1046,7 @@ void RessurectGameObject(GameObject* g)
     AddGameobject(g->prefab,0,0,SOURCE_SPAWNED_FROM_MAP,TYPE_FRIENDLY);
 
     deadFriendlyObjects[index].properties = 0;
-
+    
 }
 void AddDeadGameObject(GameObject* g)
 {

@@ -68,6 +68,8 @@ typedef struct Encounter
     bool goingToShop;
 
     bool hardLoss;
+
+    float timeBreakpoints[MAX_CHESTS];
 } Encounter;
 
 #define NUM_ENCOUNTER_FUNCTIONS 3

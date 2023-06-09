@@ -313,6 +313,8 @@ void UpdateDebounce(float dt);
 bool DebounceActive();
 
 
+void DrawChestCompletionHint(int x, int y);
+
 void DisableButton(UIElement* u);
 Panel CreatePanel(int x, int y, int w, int h, int padding, bool showBorder);
 Widget* CreateWidget(GameState gameStateToAttach, char* name, Sprite* spr, int x, int y, float originX, float originY, Widget_DrawOrder drawOrder, int id, void* func);

@@ -48,6 +48,37 @@ float debounceTime = 0.15;
 bool _PANEL_CLICKED_THIS_FRAME = false;
 bool _TEXTINPUT_HIGHLIGHTED = false;
 
+void DrawChestCompletionHint(int x, int y)
+{
+    float minutes = gameStats.timeTaken/60.0f;
+    int end = -1;
+    for (int i = MAX_CHESTS-1; i >= 0; i--)
+    {
+        if (minutes < currEncounterRunning->timeBreakpoints[i])
+        {
+            end = i;
+            break;
+        }
+    } 
+    Sprite* s = &sprites[LoadSprite("assets/ui/chest_tiny.png",false)];
+
+    for (int i = 0; i < end; i++)
+    {
+        DrawSprite(s,x+(GetWidthSprite(s)+2)*i,y,0.5f,0.5f,0,FRIENDLY,false,false,false);
+    }
+    if (end >= 0)
+    {
+        float range = 0;
+        if (end != MAX_CHESTS-1)
+            range += currEncounterRunning->timeBreakpoints[end+1];
+
+        float percent = 1-((minutes-range) / (currEncounterRunning->timeBreakpoints[end]-range));
+
+        DrawSpriteRegion(s,0,0,GetWidthSprite(s)*percent,GetHeightSprite(s),x+(GetWidthSprite(s)+2)*end,y,FRIENDLY,false);
+    }
+
+}
+
 bool ButtonIsMousedOver(UIElement* u)
 {
     Button* b = (Button*)u->data;
@@ -425,6 +456,7 @@ void DrawTimer(bool enabled)
         char* buff = calloc(buffsiz+1,sizeof(char));
         sprintf(buff,"%i:%i",minutes,seconds);
         al_draw_text(ui.font,FRIENDLY,233,20,ALLEGRO_ALIGN_CENTER,buff);
+        free(buff);
     }
 
 }

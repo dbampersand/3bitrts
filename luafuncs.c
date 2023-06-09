@@ -4847,7 +4847,26 @@ int L_SetItemStackString(lua_State* l)
     strcpy(currGameObjRunning->inventory[index].stacksString,str);
     return 0; 
 }
-
+int L_SetEncounterHardLoss(lua_State* l)
+{
+    bool b = lua_toboolean(l,1);
+    if (currEncounterRunning)
+    {   
+        currEncounterRunning->hardLoss = b;
+    }
+    return 0;
+}
+int L_SetEncounterBreakPoints(lua_State* l)
+{
+    if (currEncounterRunning)
+    {
+        for (int i = 0; i < MAX_CHESTS; i++)
+        {   
+            float time = lua_tonumber(l,i+1);
+            currEncounterRunning->timeBreakpoints[i] = time;
+        }
+    }   
+}
 void SetLuaKeyEnums(lua_State* l)
 {
     //TODO: Update these when a key is changed in settings
@@ -5720,5 +5739,11 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_BlockCommands);
     lua_setglobal(luaState, "BlockCommands");
+
+    lua_pushcfunction(luaState, L_SetEncounterHardLoss);
+    lua_setglobal(luaState, "SetEncounterHardLoss");
+
+    lua_pushcfunction(luaState, L_SetEncounterBreakPoints);
+    lua_setglobal(luaState, "SetEncounterBreakPoints");
 
 }

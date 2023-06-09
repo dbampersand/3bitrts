@@ -50,6 +50,12 @@ void LoadEncounter(char* dirPath, lua_State* l)
     e->numUnitsToSelect = 4;
     e->unlockBasePrice = 50;
     e->encounterShouldBeSkipped = false;
+    e->timeBreakpoints[0] = 35;
+    e->timeBreakpoints[1] = 30;
+    e->timeBreakpoints[2] = 25;
+    e->timeBreakpoints[3] = 20;
+    e->timeBreakpoints[4] = 15;
+
 
     if (d) {
         while ((dir = readdir(d)) != NULL) {

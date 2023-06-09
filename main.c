@@ -413,6 +413,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
         if (GetButtonIsClicked(&ui.choosingUnits_GO) && numUnitsSelected==encounters[selectedEncounterIndex]->numUnitsToSelect)
         {
+
             numDeadFriendlyObjects = 0;
 
             //ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
@@ -530,6 +531,8 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                     WinGame();
                 }
             }
+
+            DrawChestCompletionHint(ui.nextLevelButton.x,ui.nextLevelButton.y+ui.nextLevelButton.h+2);
 
         }
 
