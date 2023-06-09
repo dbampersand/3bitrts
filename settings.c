@@ -610,7 +610,7 @@ void Save(char* path)
                 al_fwrite(file,e->path,strlen(e->path));
                 al_fwrite(file,"\"",1);
                
-                al_fprintf(file," %i, %i, %i",e->difficultyUnlocked,e->bestProfited,e->totalProfit);
+                al_fprintf(file," %i, %i, %i, %i",e->difficultyUnlocked,e->bestChest,e->bestProfited,e->totalProfit);
  
                 al_fwrite(file,";",1);
                 al_fwrite(file,"\n",1);
@@ -739,17 +739,19 @@ bool LoadSaveFile(char* path)
                             if (strlen(levelStats) > 1)
                             {
                                 int unlockLevel = 0;
+                                int bestChest = 0;
                                 int bestProfit = 0;
                                 int totalProfit = 0;
                                 char comma = ',';
                                 char* save;
                                 unlockLevel = atoi(strtok_r(levelStats,&comma,&save));
+                                bestChest = atoi(strtok_r(NULL,&comma,&save));
                                 bestProfit = atoi(strtok_r(NULL,&comma,&save));
                                 totalProfit = atoi(strtok_r(NULL,&comma,&save));
 
 
                                 token[positionEnd] = '\0';
-                                UnlockEncounter(token,unlockLevel,bestProfit,totalProfit,true);
+                                UnlockEncounter(token,unlockLevel,bestChest,bestProfit,totalProfit,true);
                             }
 
                             token = strtok(NULL,";");

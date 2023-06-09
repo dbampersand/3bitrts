@@ -213,6 +213,8 @@ void FinishTransition()
         gameState = GAMESTATE_INGAME;
         transitioningTo = GAMESTATE_INGAME;
 
+
+        memset(&ui.openedChests,0,sizeof(bool) * MAX_CHESTS);
         //free(toSpawn);
 
     }
@@ -317,6 +319,10 @@ void FinishTransition()
             Save("_save.save");
         }
         numDeadFriendlyObjects = 0;
+
+        
+        AddGold(players[0].bankedGold);
+
 
     }
     if (transitioningTo == GAMESTATE_IN_SHOP)
@@ -643,6 +649,8 @@ void Quit()
 void WinGame()
 {
     gameStats.gameWon = true;
+    console.active = false;
+    
     if (players[0].gold > 0)
     {
         SetEncounterProfited(currEncounterRunning,players[0].gold);
@@ -652,6 +660,7 @@ void WinGame()
 void LoseGame()
 {
     gameStats.gameWon = false;
+    console.active = false;
     SetGameStateToEndscreen();
     StopMusic();
 }

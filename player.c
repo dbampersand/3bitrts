@@ -252,7 +252,7 @@ void AddGold(float count)
 {
     int before = floorf(players[0].gold);
     players[0].gold += count;
-
+    players[0].gold = _MAX(0,players[0].gold);
     //if there's been a change of at least 1 gold
     if (before != (int)floorf(players[0].gold))
     {
@@ -287,12 +287,8 @@ void UpdateGoldAnimationTimer(float dt)
     UpdateGoldTextString(goldDisplaying);
 
 }
-void DrawGoldCount(ALLEGRO_COLOR colorPositive, ALLEGRO_COLOR colorNegative)
+void DrawGoldCount(ALLEGRO_COLOR colorPositive, ALLEGRO_COLOR colorNegative, int x, int y)
 {
-    int x = 9; int y = 9;
-    if (gameState == GAMESTATE_PURCHASING_UNITS)
-        x = 24;
-
     DrawSprite(&sprites[ui.gold_element_sprite_index],x,y,0,0,0,colorPositive,false,false,false);
 
     ALLEGRO_COLOR c = floorf(players[0].gold) >= 0 ? colorPositive : colorNegative;

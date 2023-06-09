@@ -70,20 +70,22 @@ typedef struct Encounter
     bool hardLoss;
 
     float timeBreakpoints[MAX_CHESTS];
+
+    float baseReward;
+    int bestChest;
 } Encounter;
 
 #define NUM_ENCOUNTER_FUNCTIONS 3
 #define MAX_DIFFICULTY_LEVELS 11
-
-
-
+bool HasChest(Encounter* e, int chestIndex, float time);
+float GetReward(Encounter* e, int augmentLevel, int chestIndex);
 void LoadEncounter(char* dirPath,lua_State* l);
 void LoadEncounters(char* dirPath,lua_State* l);
 void NextEncounter();
 void PreviousEncounter();
 Encounter* GetEncounterByName(char* name);
 void UpdateEncounter(float dt);
-void UnlockEncounter(const char* path, int difficultyUnlocked, int bestProfit, int totalProfit, bool overwrite);
+void UnlockEncounter(const char* path, int difficultyUnlocked, int bestChest, int bestProfit, int totalProfit, bool overwrite);
 void ResetEncounterPosition();
 bool PathCmp(char* path1, char* path2);
 

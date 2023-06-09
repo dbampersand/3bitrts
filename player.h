@@ -70,7 +70,7 @@ void ClearSelection();
 bool BuyItem(Item* i);
 int GetGold();
 void AddGold(float count);
-void DrawGoldCount(ALLEGRO_COLOR colorPositive, ALLEGRO_COLOR colorNegative);
+void DrawGoldCount(ALLEGRO_COLOR colorPositive, ALLEGRO_COLOR colorNegative, int x, int y);
 void ClearGold();
 void UpdateGoldAnimationTimer(float dt);
 

@@ -449,7 +449,7 @@ void DrawTimer(bool enabled)
     if (enabled)
     {
         int hours = floorf(gameStats.timeTaken/(60.0f*60.0f));
-        int minutes = floorf(gameStats.timeTaken/(60.0f) - hours*60);    
+        int minutes = floorf(gameStats.timeTaken/(60.0f));  
         int seconds = floorf(gameStats.timeTaken - minutes*60); 
 
         size_t buffsiz = snprintf(NULL, 0, "%i:%i",minutes,seconds);
@@ -1405,7 +1405,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     e->encounter_PurchaseAugment.x = augmentX + 3 + offsetX;
     e->encounter_PurchaseAugment.y = 22 - (e->encounter_PurchaseAugment.h/2);
     int purchaseCost = GetAugmentCost(e, e->difficultyUnlocked);
-    if (e->bestProfited > 0 && e->difficultyUnlocked < MAX_DIFFICULTY_LEVELS)
+    if (e->bestChest > 0 && e->difficultyUnlocked < MAX_DIFFICULTY_LEVELS)
     {
         e->encounter_PurchaseAugment.isHighlighted = true;
         char* buttonText = calloc(NumDigits(purchaseCost)+1,sizeof(char));
@@ -1417,7 +1417,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     {
         ChangeButtonText((Button*)(e->encounter_PurchaseAugment.data), e->difficultyUnlocked == MAX_DIFFICULTY_LEVELS ? "Max" : "Locked" );
     }
-    if (purchaseCost > players[0].bankedGold || e->bestProfited <= 0 || e->difficultyUnlocked == MAX_DIFFICULTY_LEVELS)
+    if (purchaseCost > players[0].bankedGold || e->bestChest <= 0 || e->difficultyUnlocked == MAX_DIFFICULTY_LEVELS)
     {
         e->encounter_PurchaseAugment.isHighlighted = false;
         e->encounter_PurchaseAugment.enabled = false;
@@ -1558,7 +1558,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 
 
 
-    DrawGoldCount(FRIENDLY,ENEMY);
+    DrawGoldCount(FRIENDLY,ENEMY,9,9);
 
 }
 UIElement* AddElement(Panel* p, UIElement* u)
@@ -3799,7 +3799,22 @@ void SetOptions()
 #define DAMAGE_NUMBER_FMT "+%i%% Damage"
 #define HP_NUMBER_FMT "+%i%% HP"
 
-
+void OpenChest(int index)
+{
+    if (ui.openedChests[index])
+        return;
+    if (!currEncounterRunning)
+        return;
+    if (!HasChest(currEncounterRunning,index, gameStats.timeTaken))
+        return;
+    if (!gameStats.gameWon)
+        return;
+    
+    currEncounterRunning->bestChest = _MAX(currEncounterRunning->bestChest,index+1);
+    ui.openedChests[index] = true;
+    float goldToAdd = GetReward(currEncounterRunning, currEncounterRunning->augment, index);
+    AddGold(goldToAdd);
+}
 void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, float dt)
 {
     char* buffer = calloc(1,sizeof(char));
@@ -3814,16 +3829,20 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, floa
     {
         Rect r = (Rect){18+(ui.chestIdle.frameW+5)*i,25,40,43};
 
+        bool hasChest = HasChest(currEncounterRunning,i, gameStats.timeTaken);
+        if (!gameStats.gameWon)
+            hasChest = false;
+
         if (ui.openedChests[i])
         {
             if (ui.currChestAnimation[i].spriteIndex_Animation != ui.chestOpen.spriteIndex_Animation)
                 ui.currChestAnimation[i] = ui.chestOpen;
             
         }
-        else if (PointInRect(mouseState->screenX,mouseState->screenY,r))
+        else if (PointInRect(mouseState->screenX,mouseState->screenY,r) && hasChest)
         {
             if (mouseState->mouse.buttons & 1)
-                ui.openedChests[i] = true;
+                OpenChest(i);
             if (ui.currChestAnimation[i].spriteIndex_Animation != ui.chestWiggle.spriteIndex_Animation)
                 ui.currChestAnimation[i] = ui.chestWiggle;
         }
@@ -3833,11 +3852,11 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, floa
         }
 
         ProcessAnimations(&ui.currChestAnimation[i], dt);
-
-        DrawAnimation(&ui.currChestAnimation[i],18+(ui.chestIdle.frameW+5)*i,25,COLOR_FRIENDLY,false);
+        
+        DrawAnimation(&ui.currChestAnimation[i],18+(ui.chestIdle.frameW+5)*i,25,hasChest ? COLOR_FRIENDLY : COLOR_GROUND,false);
      
-
-    }
+    }   
+    DrawGoldCount(FRIENDLY,ENEMY,18+(ui.chestIdle.frameW+5)*(MAX_CHESTS-1),18);
 
     //Write the boss name and sprite
     al_draw_text(ui.font,ENEMY,16,70,0,currEncounterRunning->name);
@@ -3883,7 +3902,7 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, floa
     al_draw_text(ui.font,FRIENDLY,17,196,0,buffer);
 
     buffer = realloc(buffer,(strlen("Gold gained: ")+log10(pow(2,sizeof(players[0].gold)*8))+3) * sizeof(char));
-    sprintf(buffer,"Gold gained: %i",(int)players[0].gold);
+    sprintf(buffer,"Gold gained: %i",(int)players[0].gold - players[0].bankedGold);
     al_draw_text(ui.font,FRIENDLY,17,208,0,buffer);
 
 
@@ -3915,24 +3934,39 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, floa
     }
     if (GetButtonIsClicked(&ui.endScreen_Back))
     {
+        if (gameStats.gameWon && !GameStateIsTransition(&gameState))
+        {
+            for (int i = 0; i < MAX_CHESTS; i++)
+            {
+                OpenChest(i);
+            }
+            //players[0].bankedGold += players[0].gold;
+        }
+
         SetGameStateToChoosingEncounter();
         //transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
         RemoveReplay(&replay);
-        if (gameStats.gameWon && !GameStateIsTransition(&gameState))
-        {
-            players[0].bankedGold += players[0].gold;
-        }
+        if (players[0].gold >= 0)
+            players[0].bankedGold += players[0].gold - players[0].bankedGold;
+
+        
         
     }
     if (GetButtonIsClicked(&ui.endScreen_Retry))
     {
+        if (gameStats.gameWon && !GameStateIsTransition(&gameState))
+        {
+            for (int i = 0; i < MAX_CHESTS; i++)
+            {
+                OpenChest(i);
+            }
+        }
+
         transitioningTo = GAMESTATE_INGAME;
         RemoveReplay(&replay);
         
-        if (gameStats.gameWon && !GameStateIsTransition(&gameState))
-        {
-            players[0].bankedGold += players[0].gold;
-        }
+        if (players[0].gold >= 0)
+            players[0].bankedGold += players[0].gold- players[0].bankedGold;
 
     }
     #ifdef _REPLAY

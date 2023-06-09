@@ -4476,7 +4476,7 @@ int L_StartsUnlocked(lua_State* l)
 int L_UnlockEncounter(lua_State* l)
 {
     const char* path = (const char*)lua_tostring(l,1);
-    UnlockEncounter(path,0,0,0,false);
+    UnlockEncounter(path,0,0,0,0,false);
 
     return 0;
 }
@@ -4866,6 +4866,15 @@ int L_SetEncounterBreakPoints(lua_State* l)
             currEncounterRunning->timeBreakpoints[i] = time;
         }
     }   
+}
+int L_SetTime(lua_State* l)
+{
+    float hours = lua_tonumber(l,1)*60*60;
+    float minutes = lua_tonumber(l,2)*60;
+    float seconds = lua_tonumber(l,3);
+
+    gameStats.timeTaken = hours+minutes+seconds;
+    return 0;
 }
 void SetLuaKeyEnums(lua_State* l)
 {
@@ -5745,5 +5754,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetEncounterBreakPoints);
     lua_setglobal(luaState, "SetEncounterBreakPoints");
+
+    lua_pushcfunction(luaState, L_SetTime);
+    lua_setglobal(luaState, "SetTime");
 
 }

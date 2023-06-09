@@ -38,6 +38,22 @@ void SetEncounterProfited(Encounter* e, int amountProfited)
     e->totalProfit += amountProfited;
 
 }
+bool HasChest(Encounter* e, int chestIndex, float time)
+{
+    if (chestIndex >= MAX_CHESTS || chestIndex < 0)
+        return false;
+    float minutes = time/60.0f;
+
+    return minutes <= e->timeBreakpoints[chestIndex];
+}
+float GetReward(Encounter* e, int augmentLevel, int chestIndex)
+{
+    float range = RandRange(-0.1,0.1);
+    float reward = e->baseReward * (chestIndex+1) * (e->augment+1);
+    reward += reward * range;
+
+    return reward;
+}
 void LoadEncounter(char* dirPath, lua_State* l)
 {
     DIR *d;
@@ -55,6 +71,8 @@ void LoadEncounter(char* dirPath, lua_State* l)
     e->timeBreakpoints[2] = 25;
     e->timeBreakpoints[3] = 20;
     e->timeBreakpoints[4] = 15;
+
+    e->baseReward = 50;
 
 
     if (d) {
@@ -382,7 +400,7 @@ bool PathCmp(char* path1, char* path2)
     }
     return true;
 }
-void UnlockEncounter(const char* path, int difficultyUnlocked, int bestProfit, int totalProfit, bool overwrite)
+void UnlockEncounter(const char* path, int difficultyUnlocked, int bestChest, int bestProfit, int totalProfit, bool overwrite)
 {
     for (int i = 0; i < numEncounters; i++)
     {
@@ -391,8 +409,10 @@ void UnlockEncounter(const char* path, int difficultyUnlocked, int bestProfit, i
             if (!encounters[i]->unlocked || overwrite)
             {
                 encounters[i]->difficultyUnlocked = difficultyUnlocked;
+                encounters[i]->bestChest = bestChest;
                 encounters[i]->bestProfited = bestProfit;
                 encounters[i]->totalProfit = totalProfit;
+                
             }
             encounters[i]->unlocked = true;
         }

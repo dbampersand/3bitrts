@@ -533,7 +533,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
             }
 
             DrawChestCompletionHint(ui.nextLevelButton.x,ui.nextLevelButton.y+ui.nextLevelButton.h+2);
-
         }
 
         if (GetButtonIsClicked(&ui.menuButton))
@@ -548,7 +547,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                 ChangeUIPanel(&ui.pauseMenuPanel);
             }
         }
-            DrawGoldCount(FRIENDLY,ENEMY);
+            DrawGoldCount(FRIENDLY,ENEMY,9,9);
 
 
     }
@@ -586,7 +585,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
      if (gameState == GAMESTATE_PURCHASING_UNITS)
     {
         DrawPurchasingUnitsUI(dt, *mouseState, *mouseStateLastFrame, keyState,keyStateLastFrame);
-        DrawGoldCount(FRIENDLY,ENEMY);
+        DrawGoldCount(FRIENDLY,ENEMY,24,9);
     }
 
 

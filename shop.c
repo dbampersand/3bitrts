@@ -497,7 +497,7 @@ void DrawShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 
     DrawReroll(dt,mouseState,mouseStateLastFrame);
 
-    DrawGoldCount(BG,ENEMY);
+    DrawGoldCount(BG,ENEMY,9,9);
 
     DrawParticles();
 
