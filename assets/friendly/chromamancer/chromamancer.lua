@@ -31,6 +31,7 @@ function setup()
     SetObjName("Chromamancer");
     SetObjDescription("At a young age, the Chromamancer found they could bend light at will. Where they went, fire followed: uncontrolled, the bending of light tended to focus like a spyglass in the sun, leading the Chromamancer to exile. With a dazzling array of illusory tricks at their command, the Chromamancer swore an oath to use their powers to shield their allies from harm.")
 
+    SetObjCost(1300);
 
     SetAttackSounds(
         {

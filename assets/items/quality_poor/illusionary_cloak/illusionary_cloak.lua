@@ -1,4 +1,4 @@
-local dodgeChance = 80
+local dodgeChance = 8
 
 function setup(obj)
     SetItemName(obj,"Illusionary Cloak")

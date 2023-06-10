@@ -580,7 +580,9 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     if (gameState == GAMESTATE_END)
     {
+        MoveCam(0,0);
         DrawEndScreen(mouseState,mouseStateLastFrame,dt);
+        DrawParticles();
     }
      if (gameState == GAMESTATE_PURCHASING_UNITS)
     {
@@ -815,7 +817,7 @@ int main(int argc, char* args[])
             }
 
             dt = 1 / (double)_TARGET_FPS * (double)(1-(double)currSettings.slowdownPercent);
-
+            _DT = dt;
             clock_t begin = clock();
 
             ResetSoundsThisFrame();

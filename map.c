@@ -385,6 +385,7 @@ Map* LoadMap(char* path)
     m.automaticWinCheck = true;
     m.spawnPoint.x = 80;
     m.spawnPoint.y = 180;
+    m.goldMultiplier = 1;
     loadLuaGameMap(luaState,path,&m);
     m.path = calloc(strlen(path)+1,sizeof(char));
     strcpy(m.path,path);

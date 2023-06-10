@@ -25,6 +25,9 @@ function setup()
     SetObjPurchaseScreenSprite("assets/friendly/spell_weaver/spell_weaver_full.png")
     SetObjName("Spell Weaver");
     SetObjDescription("A farmer slave, killed in a machine accident, thought his labour was finally over. His rest was disturbed by a passing wizard, promising a subservient zombie, more than one lifetime of labour for a small fee. But the foolhardy wizard, young and untrained, focused too much energy into the ressurection spell, and ended up creating a monster: a true necromancer. Fueled by cruel memories of his past life, he despises mankind, and works only to return nature to its intended path.")
+  
+    SetObjCost(1800);
+  
     SetAttackSounds(
         {
         "assets/audio/attacks/ranged_bow/bow_1.wav",

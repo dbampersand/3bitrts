@@ -156,8 +156,8 @@ void DrawUIHighlight(UIElement* u, float x, float y)
     float lifetimeMin = 0.1f;
     float lifetimeMax = 2.0f;
 
-    float speedMin = 0.1f;
-    float speedMax = 0.9f;
+    float speedMin = 6;
+    float speedMax = 54;
 
     //we are on the top of the rectangle
     if (amtThrough >= 0 && amtThrough < u->w)
@@ -2646,8 +2646,8 @@ void InitUI()
 
 
     ui.chestIdle = LoadAnimation("assets/ui/chest.png",42,43,0.25f,0,1);
-    ui.chestWiggle = LoadAnimation("assets/ui/chest_wiggle.png",42,43,0.1f,0,19);
-    ui.chestOpen = LoadAnimation("assets/ui/chest_open.png",42,43,0.25f,0,5);
+    ui.chestWiggle = LoadAnimation("assets/ui/chest_wiggle.png",42,43,0.08f,0,20);
+    ui.chestOpen = LoadAnimation("assets/ui/chest_open.png",42,43,0.1f,0,5);
     ui.chestOpen.holdOnLastFrame = true;
 }
 void UpdateWidget(Widget* w, float dt)
@@ -3800,6 +3800,12 @@ void SetOptions()
 #define DAMAGE_NUMBER_FMT "+%i%% Damage"
 #define HP_NUMBER_FMT "+%i%% HP"
 
+Rect GetChestRect(int index)
+{
+    Rect r = (Rect){18+(ui.chestIdle.frameW+5)*index,25,40,43};
+    return r;
+}
+
 void OpenChest(int index)
 {
     if (ui.openedChests[index])
@@ -3815,6 +3821,29 @@ void OpenChest(int index)
     ui.openedChests[index] = true;
     float goldToAdd = GetReward(currEncounterRunning, currEncounterRunning->augment, index);
     AddGold(goldToAdd);
+    currEncounterRunning->bestProfited = _MAX(currEncounterRunning->bestProfited,players[0].gold-players[0].bankedGold);
+
+    for (int i = 0; i < goldToAdd; i++)
+    {
+        Rect r = GetChestRect(index);
+
+        int textX; int textY; int textW; int textH;
+        al_get_text_dimensions(ui.tinyFont,players[0].goldText ? players[0].goldText : "",&textX,&textY,&textW,&textH);
+
+        float x = r.x + RandRange(0,ui.chestIdle.frameW) + GetWidthSprite(&sprites[ui.gold_element_sprite_index])+2 + (textW/2.0f);
+        float y = r.y + 16 + RandRange(0,10) + textH/2.0f;
+        
+        float goldPosX = GetChestRect(MAX_CHESTS-1).x;
+        float goldPosY = 18;
+
+        float d = dist(x,y,goldPosX,goldPosY);
+        float speed = RandRange(60,120);
+
+        float lifetime = d / speed;
+        float angle = PointsToAngleRad(x,y,goldPosX,goldPosY);
+        AddParticle(x,y,lifetime,speed,angle,COLOR_FRIENDLY);
+    }
+
 }
 void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, float dt)
 {
@@ -3828,7 +3857,7 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, floa
 
     for (int i = 0; i < MAX_CHESTS; i++)
     {
-        Rect r = (Rect){18+(ui.chestIdle.frameW+5)*i,25,40,43};
+        Rect r = GetChestRect(i);
 
         bool hasChest = HasChest(currEncounterRunning,i, gameStats.timeTaken);
         if (!gameStats.gameWon)
@@ -3857,7 +3886,8 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, floa
         DrawAnimation(&ui.currChestAnimation[i],18+(ui.chestIdle.frameW+5)*i,25,hasChest ? COLOR_FRIENDLY : COLOR_GROUND,false);
      
     }   
-    DrawGoldCount(FRIENDLY,ENEMY,18+(ui.chestIdle.frameW+5)*(MAX_CHESTS-1),18);
+    Rect goldPos = GetChestRect(MAX_CHESTS-1);
+    DrawGoldCount(FRIENDLY,ENEMY,goldPos.x,18);
 
     //Write the boss name and sprite
     al_draw_text(ui.font,ENEMY,16,70,0,currEncounterRunning->name);

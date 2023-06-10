@@ -17,6 +17,7 @@ function setup()
     CreateObject("assets/enemies/kobold_saboteur/kobold_saboteur.lua",208.00,327.00,TYPE_ENEMY,0.00)
 
     PlayMusic("assets/audio/music/encounters/kobold/kobold_encounter_3.wav",0.5,0); 
+    SetMapGoldMultiplier(1.3)
 
 end
 

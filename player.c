@@ -287,6 +287,7 @@ void UpdateGoldAnimationTimer(float dt)
     UpdateGoldTextString(goldDisplaying);
 
 }
+
 void DrawGoldCount(ALLEGRO_COLOR colorPositive, ALLEGRO_COLOR colorNegative, int x, int y)
 {
     DrawSprite(&sprites[ui.gold_element_sprite_index],x,y,0,0,0,colorPositive,false,false,false);

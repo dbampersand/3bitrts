@@ -18,6 +18,8 @@ function setup()
     SetSpawnPoint(172,88)
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",222.00,257.00,TYPE_ENEMY,0.00),3)
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",183.00,263.00,TYPE_ENEMY,0.00),3)
+    SetMapGoldMultiplier(1.2)
+
 end
 
 function update(dt)

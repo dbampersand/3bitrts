@@ -152,7 +152,7 @@ void SpawnAllFriendlies()
 void FinishTransition()
 {
     ClearChatbox();
-    RemoveAllAttacks();
+    RemoveAllAttacks(1);
     ChangeUIPanel(NULL);
     if (transitioningTo == GAMESTATE_PURCHASING_UNITS)
     {
@@ -224,7 +224,7 @@ void FinishTransition()
         transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
 
         ui.currentPanel = NULL;
-        RemoveAllAttacks();
+        RemoveAllAttacks(1);
 
         ClearSelection();
         RemoveAllGameObjects();
@@ -269,7 +269,7 @@ void FinishTransition()
     if (transitioningTo == GAMESTATE_LOAD_ENCOUNTER)
     {
 
-        RemoveAllAttacks();
+        RemoveAllAttacks(1);
         gameState = GAMESTATE_LOAD_ENCOUNTER;
         transitioningTo = GAMESTATE_LOAD_ENCOUNTER;
         combatStarted = false;
@@ -289,7 +289,7 @@ void FinishTransition()
         gameState = GAMESTATE_CHOOSING_UNITS;
         transitioningTo = GAMESTATE_CHOOSING_UNITS;
         RemoveAllGameObjects();
-        RemoveAllAttacks();
+        RemoveAllAttacks(1);
         SetMap(LoadMap("assets/ui/map_unitselect.lua"));
 
         //SetMap(&maps[0]);
@@ -320,7 +320,7 @@ void FinishTransition()
         }
         numDeadFriendlyObjects = 0;
 
-        
+
         AddGold(players[0].bankedGold);
 
 
@@ -344,7 +344,7 @@ void FinishTransition()
     }
     if (transitioningTo == GAMESTATE_CHANGE_MAP)
     {
-        RemoveAllAttacks();
+        RemoveAllAttacks(1);
 
         combatStarted = false;      
 
@@ -755,7 +755,7 @@ void UpdateTransition(float dt)
                     int randX = (_SCREEN_SIZE/2) + RandRange(-3,3);
                     int randY = RandRange(0,_SCREEN_SIZE);
 
-                    AddParticleWithRandomProperties(randX,randY,COLOR_FRIENDLY,0.6f,1.4f,0.2f,0.6f,-2*M_PI,2*M_PI);
+                    AddParticleWithRandomProperties(randX,randY,COLOR_FRIENDLY,0.6f,1.4f,12,36,-2*M_PI,2*M_PI);
                 }
             }
         }

@@ -27,6 +27,8 @@ Point DEBUG_P4 = {0};
 float DEBUG_EXTRA = 0;
 int _TARGET_FPS = 60;
 
+float _DT = 1;
+
 ALLEGRO_BITMAP* backbuffer = NULL;
 ALLEGRO_BITMAP* SCREEN = NULL; 
 ALLEGRO_BITMAP* background_screen = NULL;

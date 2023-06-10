@@ -362,6 +362,8 @@ void AttachItem(GameObject* g, Item* i)
             
             new.attachedTo = g;
 
+            currGameObjRunning = g;
+
 
             lua_rawgeti(luaState, LUA_REGISTRYINDEX, new.luafunc_attached);
             lua_pushinteger(luaState,(int)(g-objects));    

@@ -30,6 +30,8 @@ function setup()
     SetObjName("Ranger");
     SetObjDescription("Hailing from a treetop city, the mountains are not a natural place to find the Ranger, but her desire for excitement in the idyllic forest was too much. The sharpshooter, leaving her home, quickly realised how big the world is. Destitute after being taken by a scam, she stumbled upon work with a party of adventurers.")
 
+    SetObjCost(0);
+
     SetAttackSounds(
         {
         "assets/audio/attacks/ranged_bow/bow_1.wav",

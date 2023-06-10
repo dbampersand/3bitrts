@@ -115,7 +115,7 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
         {
             float x; float y;
             GetCentre(target,&x,&y);
-            AddParticleWithRandomProperties(x,y,EffectColors[e->effectType],0.1f,2.5f,1,1.5f,-M_PI,M_PI);
+            AddParticleWithRandomProperties(x,y,EffectColors[e->effectType],0.1f,2.5f,60,90,-M_PI,M_PI);
         }
 
         

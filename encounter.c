@@ -24,7 +24,7 @@ Encounter* currEncounterRunning = NULL;
 
 int selectedEncounterIndex = 0;
 
-float goldLossRate = 0.2f;
+float goldLossRate = 0.12f;
 
 void SetEncounterProfited(Encounter* e, int amountProfited)
 {

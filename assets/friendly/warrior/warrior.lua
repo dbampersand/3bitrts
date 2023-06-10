@@ -24,6 +24,8 @@ function setup()
     SetObjName("Warrior");
     SetObjDescription("A hired bodyguard, the Warrior personifies a strong and no-frills style. With sword and shield, he defends his allies with a mighty presence, having trained under the royal guard. Well known for his cautious and well-planned approach, he embodies the qualities of a leader.")
 
+    SetObjCost(0);
+    
     SetAttackSounds(
         {"assets/audio/attacks/melee_sword/sword_1.wav",
         "assets/audio/attacks/melee_sword/sword_2.wav",

@@ -2275,10 +2275,10 @@ int L_Teleport(lua_State* l)
         GameObject* obj = &objects[index];
         ScatterEffect(obj);
         for (int i = 0; i < RandRange(3,30); i++)
-            AddParticleWithRandomProperties(obj->position.worldX+RandRange(0,GetWidth(obj)),obj->position.worldY+RandRange(0,GetHeight(obj)),GameObjToColor(obj),1,3,0.1,3,2*-M_PI,2*M_PI);
+            AddParticleWithRandomProperties(obj->position.worldX+RandRange(0,GetWidth(obj)),obj->position.worldY+RandRange(0,GetHeight(obj)),GameObjToColor(obj),1,3,6,180,2*-M_PI,2*M_PI);
         Teleport(obj,lua_tonumber(l,2),lua_tonumber(l,3),true);
         for (int i = 0; i < RandRange(3,30); i++)
-            AddParticleWithRandomProperties(obj->position.worldX+RandRange(0,GetWidth(obj)),obj->position.worldY+RandRange(0,GetHeight(obj)),GameObjToColor(obj),1,3,0.1,3,2*-M_PI,2*M_PI);
+            AddParticleWithRandomProperties(obj->position.worldX+RandRange(0,GetWidth(obj)),obj->position.worldY+RandRange(0,GetHeight(obj)),GameObjToColor(obj),1,3,6,180,2*-M_PI,2*M_PI);
 
     }
     return 0;
@@ -4876,6 +4876,16 @@ int L_SetTime(lua_State* l)
     gameStats.timeTaken = hours+minutes+seconds;
     return 0;
 }
+int L_SetMapGoldMultiplier(lua_State* l)
+{
+    if (!currMap)
+    {
+        printf("L_SetMapGoldMultiplier: no map currently set.");
+        return 0;
+    }
+    currMap->goldMultiplier = lua_tonumber(l,1);
+    return 0;
+}
 void SetLuaKeyEnums(lua_State* l)
 {
     //TODO: Update these when a key is changed in settings
@@ -5757,5 +5767,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetTime);
     lua_setglobal(luaState, "SetTime");
+
+    lua_pushcfunction(luaState, L_SetMapGoldMultiplier);
+    lua_setglobal(luaState, "SetMapGoldMultiplier");
 
 }

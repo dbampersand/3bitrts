@@ -98,6 +98,8 @@ extern Point DEBUG_P3;
 extern Point DEBUG_P4;
 extern float DEBUG_EXTRA;
 
+extern float _DT;
+
 typedef struct GameObject GameObject;
 
 typedef struct ScreenShake

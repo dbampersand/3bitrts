@@ -167,12 +167,12 @@ void RemoveAttack(int attackindex)
     if (AttackIsAOE(a))
     {
         for (int i = 0; i < RandRangeI(a->radius,a->radius*a->radius); i++)
-            RandParticleAroundEdgeOfCircle(a->x,a->y,a->radius,1.45f,RandRange(0.8f,1.5f),a->color);
+            RandParticleAroundEdgeOfCircle(a->x,a->y,a->radius,1.45f,RandRange(48,90),a->color);
     }
     if (!AttackIsAOE(a))
     {
         for (int i = 0; i < RandRangeI(4,20); i++)
-            AddParticleWithRandomProperties(a->x+a->radius/2.0f,a->y+a->radius/2.0f,a->color,0.25,4,0.85,2,-M_PI*2,M_PI*2);
+            AddParticleWithRandomProperties(a->x+a->radius/2.0f,a->y+a->radius/2.0f,a->color,0.25,4,50,120,-M_PI*2,M_PI*2);
     }
 
     a->properties = '\0';
@@ -824,7 +824,7 @@ void UpdateAttack(Attack* a, float dt)
         minAngle = movingAngle - DegToRad(90);
         maxAngle = movingAngle + DegToRad(90);
         if (abs(a->speed > 0))
-            AddParticleWithRandomProperties(a->x,a->y,a->color,0.2f,4,1,1.5f,minAngle,maxAngle);
+            AddParticleWithRandomProperties(a->x,a->y,a->color,0.2f,4,60,90,minAngle,maxAngle);
 
     }
  if (a->cameFrom)

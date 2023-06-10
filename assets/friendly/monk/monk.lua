@@ -32,6 +32,9 @@ function setup()
     SetObjName("Monk");
     SetObjDescription("His birthplace ravaged by civil war, the Monk was villainized by the conquering warlords, being scapegoated as the reason for the violence. Once a peaceful soul, he had to learn to fight to survive. As he left his home, he wandered the earth until meeting with a band of adventurers.")
 
+    SetObjCost(100);
+    
+
     SetAttackSounds(
         {
         "assets/audio/attacks/melee_hammer/hammer_1.wav",

@@ -31,6 +31,9 @@ function setup()
     SetObjName("Lancer");
     SetObjDescription(".")
 
+    SetObjCost(500);
+
+
     SetAttackSounds(
         {
         "assets/audio/attacks/melee_hammer/hammer_1.wav",

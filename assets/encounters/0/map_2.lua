@@ -16,6 +16,8 @@ function setup()
     PlayMusic("assets/audio/music/encounters/kobold/kobold_encounter.wav",0.5,12); 
     
     SetAutoWin(false);
+
+    SetMapGoldMultiplier(1.1)
 end
 
 function update(dt)

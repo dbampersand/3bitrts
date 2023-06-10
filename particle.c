@@ -39,7 +39,7 @@ void UpdateParticles(float dt)
 void AddMouseRandomParticles(MouseState mouseState, int numParticles)
 {
     for (int i = 0; i < numParticles; i++)
-        AddParticle(mouseState.worldX,mouseState.worldY,2,2,RandRange(-M_PI,M_PI),true);
+        AddParticle(mouseState.worldX,mouseState.worldY,120,120,RandRange(-M_PI,M_PI),true);
 }
 void AddParticleWithRandomProperties(float x, float y, Color color, float lifetimeMin, float lifetimeMax, float speedMin, float speedMax, float minAngle, float maxAngle)
 {
@@ -55,7 +55,7 @@ void AddParticle(float x, float y, float lifetime, float speed, float angle, Col
     particle_colors[PARTICLES_TOP] = colour;
     particle_properties[PARTICLES_TOP] |= PARTICLE_ENABLED;
     particle_dir[PARTICLES_TOP] = RadToDeg(angle);
-    particle_speed[PARTICLES_TOP] = speed;
+    particle_speed[PARTICLES_TOP] = speed * _DT;
     PARTICLES_TOP++;
     if (PARTICLES_TOP >= MAX_PARTICLES)
     {

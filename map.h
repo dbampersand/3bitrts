@@ -41,6 +41,7 @@ typedef struct Map
     bool automaticWinCheck;
     bool forceNextLevelButtonEnabled;
 
+    float goldMultiplier;
 } Map;
 
 #define NUM_MAP_FUNCTIONS 3

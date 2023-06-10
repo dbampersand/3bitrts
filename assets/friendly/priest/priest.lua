@@ -30,6 +30,8 @@ function setup()
     SetObjName("Priest");
     SetObjDescription("To a member of the ancient and exclusive Triadi church, three represent the holiness above God. This priestess belongs to a small sect of the church believing that God can be found inside of a mountain. That prospect alone made her join a party of adventurers tackling the mountain as a healer.")
    
+    SetObjCost(0);
+
     SetAttackSounds(
         {
         "assets/audio/attacks/ranged_magic/magic_1.wav",

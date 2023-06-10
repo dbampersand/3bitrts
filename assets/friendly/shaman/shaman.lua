@@ -29,6 +29,8 @@ function setup()
     SetObjName("Shaman");
     SetObjDescription("Worshipping a long-buried and forgotten god, the Shaman still believes he hasn't been forsaken. Searching for a way to ressurect his fallen god, he travels the world extracting what knowledge locals know of magicks powerful enough to raise a god.")
 
+    SetObjCost(1000);
+
     SetAttackSounds(
         {
         "assets/audio/attacks/ranged_magic/magic_1.wav",

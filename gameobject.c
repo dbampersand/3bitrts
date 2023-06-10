@@ -1242,7 +1242,7 @@ void ScatterEffect_Sprite(Sprite* s, int xPos, int yPos, Color c)
             ALLEGRO_COLOR pixel = al_get_pixel(sprite, x, y);
             if (pixel.a)
             {
-                AddParticleWithRandomProperties(xPos + x, yPos + y, c, 0.15, 2, 0, 0.025, -M_PI, M_PI);
+                AddParticleWithRandomProperties(xPos + x, yPos + y, c, 0.15, 2, 0, 90, -M_PI, M_PI);
             }
         }
     }
@@ -1370,7 +1370,7 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
     {
     }
     if (!IsOwnedByPlayer(g) && gameState == GAMESTATE_INGAME)
-        AddGold(g->bounty);
+        AddGold(g->bounty * currMap->goldMultiplier);
 
     if (!ObjIsDecoration(g) && GetPlayerOwnedBy(g) > 0)
         AddCompletionPercent(g->completionPercent);
@@ -2247,7 +2247,7 @@ void Move(GameObject* g, float delta)
     UpdateObjPosition(g, g->position.worldX, g->position.worldY);
     SetMapCollisionRect(g->position.worldX, g->position.worldY, w, h, true);
 
-    AddParticleWithRandomProperties(g->position.worldX + GetWidth(g) / 2.0f, g->position.worldY + GetHeight(g) / 2.0f, GameObjToColor(g), 1.25, 1.5, 0.05f, 0.2f, -M_PI, M_PI);
+    AddParticleWithRandomProperties(g->position.worldX + GetWidth(g) / 2.0f, g->position.worldY + GetHeight(g) / 2.0f, GameObjToColor(g), 1.25, 1.5, 3, 12, -M_PI, M_PI);
 }
 bool ObjectCanPush(GameObject* g)
 {
@@ -2579,7 +2579,7 @@ bool IsSelectable(GameObject* g)
 }
 void DrawEnrageEffect(GameObject* g)
 {
-    AddParticleWithRandomProperties(RandRange(g->position.worldX, g->position.worldX + GetWidth(g)), RandRange(g->position.worldY, g->position.worldY + GetHeight(g)), GameObjToColor(g), 1, 4, 0.25f, 1.5f, -M_PI, M_PI);
+    AddParticleWithRandomProperties(RandRange(g->position.worldX, g->position.worldX + GetWidth(g)), RandRange(g->position.worldY, g->position.worldY + GetHeight(g)), GameObjToColor(g), 1, 4, 15, 90, -M_PI, M_PI);
 }
 void DrawChannellingEffect(GameObject* g)
 {
@@ -3113,7 +3113,7 @@ void AttackTarget(GameObject* g, float dt)
             float cy;
             GetCentre(g->targObj, &cx, &cy);
             for (int i = 0; i < RandRangeI(damage, damage * 2); i++)
-                AddParticleWithRandomProperties(cx, cy, COLOR_DAMAGE, 1, 1.3f, 0.1f, 0.8f, -2 * M_PI, 2 * M_PI);
+                AddParticleWithRandomProperties(cx, cy, COLOR_DAMAGE, 1, 1.3f, 6, 48, -2 * M_PI, 2 * M_PI);
         }
 
         if (Damage(g, g->targObj, damage, true, 1, NULL))
