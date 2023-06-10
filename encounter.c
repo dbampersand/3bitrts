@@ -10,6 +10,7 @@
 #include "gameobject.h"
 #include "map.h"
 #include "player.h"
+#include "console.h"
 
 
 Encounter** encounters = NULL;
@@ -103,7 +104,7 @@ void LoadEncounter(char* dirPath, lua_State* l)
                     {
                         if (luaL_loadbuffer(l, e->lua_buffer.buffer,strlen(e->lua_buffer.buffer),NULL) || lua_pcall(l, 0, 0, 0))
                         {
-                            printf("Can't load lua file %s",lua_tostring(l,-1));
+                            ConsolePrintf("Can't load lua file %s",lua_tostring(l,-1));
                             fflush(stdout);
                         }
                         else

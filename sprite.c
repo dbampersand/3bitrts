@@ -8,6 +8,7 @@
 
 #include "gameobject.h"
 #include "colors.h"
+#include "console.h"
 
 unsigned int _RENDERSIZE = 0;
 int numSprites = 0; 
@@ -188,7 +189,7 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
     }
     else
     {
-        printf("Sprite: could not load path: %s\n",path ? path : NULL);
+        ConsolePrintf("Sprite: could not load path: %s\n",path ? path : NULL);
     }
 
     return 0;

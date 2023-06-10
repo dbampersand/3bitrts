@@ -18,6 +18,7 @@
 #include "colors.h"
 #include "sound.h"
 #include "settings.h"
+#include "console.h"
 
 
 
@@ -258,7 +259,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         char* file = readFile(path);
         if (!file)
         {
-            printf("Ability: could not load path: %s\n",path ? path : "null");
+            ConsolePrintf("Ability: could not load path: %s\n",path ? path : "null");
             return;
         }
 
@@ -269,7 +270,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
     }
     if (luaL_loadbuffer(l, a->luabuffer.buffer,strlen(a->luabuffer.buffer),NULL) || lua_pcall(l, 0, 0, 0))
     {
-        printf("Can't load lua file %s",lua_tostring(l,-1));
+        ConsolePrintf("Can't load lua file %s",lua_tostring(l,-1));
     }
     else
     {

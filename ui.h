@@ -300,7 +300,6 @@ extern bool _TEXTINPUT_HIGHLIGHTED;
 typedef struct MouseState MouseState;
 typedef struct Ability Ability;
 typedef struct Replay Replay;
-typedef struct MouseState MouseState;
 
 void Chatbox_NextLine();
 void EndChatbox();

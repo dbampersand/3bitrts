@@ -13,8 +13,11 @@
 #include "map.h"
 #include "player.h"
 #include "dirent.h"
+#include "console.h"
+
 #include <string.h>
 #include <math.h>
+
 
 ALLEGRO_AUDIO_STREAM* music = NULL;
 ALLEGRO_AUDIO_STREAM* musicFadingTo = NULL;
@@ -273,7 +276,7 @@ int LoadSound(const char* path)
     }
     else
     {
-        printf("Sound: could not load path: %s\n",path ? path : "NULL");
+        ConsolePrintf("Sound: could not load path: %s\n",path ? path : "NULL");
         return 0;
     }
 
@@ -309,8 +312,8 @@ void PlaySound(Sound* s, float relativeVolume, float pan)
             int i = LoadSound(s->path);
             s->sample = sounds[i].sample;
             s->path = sounds[i].path;
-            printf("LOAD\n");
-            printf("path: %s",s->path);
+            ConsolePrintf("LOAD\n");
+            ConsolePrintf("path: %s",s->path);
         }   
     }
     if (gameState == GAMESTATE_INGAME && soundPlayedThisFramePosition <= NUM_SOUNDS_TO_SAVE && replay.numFrames > 0)
@@ -360,13 +363,13 @@ void PlayMusic(const char* path, float musicGain, double loopPoint)
     strcpy(musicPath,path);
     musicFadingTo = al_load_audio_stream(path, 4, 2048);
     if (!musicFadingTo) {
-        printf("Audio stream could not be created: %s\n",path);
+        ConsolePrintf("Audio stream could not be created: %s\n",path);
         fflush(stdout);
     }
     if (musicFadingTo)
         if (!al_attach_audio_stream_to_mixer(musicFadingTo, musicMixer2))
         {
-            printf("al_attach_audio_stream_to_mixer failed.\n");
+            ConsolePrintf("al_attach_audio_stream_to_mixer failed.\n");
         }
     musicVolMixer2 = 0;
 

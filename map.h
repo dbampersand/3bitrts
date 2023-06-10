@@ -15,6 +15,13 @@ typedef enum CollisionMapValue {
     COLLISION_WORLD_AND_OBJECT = 2,
 }CollisionMapValue;
 
+typedef enum PERCENT_CALCULATOR
+{
+    PERCENT_CALCULATOR_DEFAULT = 0,
+    PERCENT_CALCULATOR_AUTOMATIC = 1,
+    PERCENT_CALCULATOR_MANUAL = 2
+}PERCENT_CALCULATOR;
+
 typedef struct Map 
 {   
     CollisionMapValue* collision;//[_MAPSIZE*_MAPSIZE/_GRAIN];
@@ -41,7 +48,10 @@ typedef struct Map
     bool automaticWinCheck;
     bool forceNextLevelButtonEnabled;
 
+    PERCENT_CALCULATOR percentCalculation;
+
     float goldMultiplier;
+    int numEnemyObjectsSpawned;
 } Map;
 
 #define NUM_MAP_FUNCTIONS 3
@@ -69,3 +79,4 @@ void ChangeMap(const char* path);
 void AddDirtSprites(int numToAdd, ALLEGRO_BITMAP* sprite);
 bool LineIsFree(int x, int y, bool caresAboutUnits, int h);
 void RefreshMapCollisonRects();
+void AutoCompletionPercent();

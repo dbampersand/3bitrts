@@ -31,6 +31,7 @@
 #include "replay.h"
 #include "editor.h"
 #include "easings.h"
+#include "console.h"
 
 GameObject* objects = NULL;
 int objectsAllocated = 0;
@@ -196,15 +197,15 @@ void DrawChannellingInfo(GameObject* obj)
 void PrintDiedFrom(GameObject* obj, GameObject* damageSource, Effect* effectSource, int damage)
 {
     if (obj)
-        printf("GameObject '%s' died taking '%i' ", obj->name ? obj->name : "[No Name]", damage);
+        ConsolePrintf("GameObject '%s' died taking '%i' ", obj->name ? obj->name : "[No Name]", damage);
     if (damageSource)
-        printf("from object '%s' ", damageSource->name ? damageSource->name : "[No Name]");
+        ConsolePrintf("from object '%s' ", damageSource->name ? damageSource->name : "[No Name]");
     if (effectSource)
-        printf("from effect '%s'", effectSource->name ? effectSource->name : "[No Name]");
+        ConsolePrintf("from effect '%s'", effectSource->name ? effectSource->name : "[No Name]");
     if (effectSource && effectSource->abilityFrom)
-        printf(" from ability '%s'", effectSource->abilityFrom->path ? effectSource->abilityFrom->path : "[No Path]");
+        ConsolePrintf(" from ability '%s'", effectSource->abilityFrom->path ? effectSource->abilityFrom->path : "[No Path]");
 
-    printf("\n");
+    ConsolePrintf("\n");
 }
 GameObject* GetMousedOver(MouseState* mouseState)
 {
@@ -440,7 +441,7 @@ void UpdateObject(GameObject* g, float dt)
         lua_pushnumber(luaState, dt);
         if (lua_pcall(luaState, 1, 0, 0) != LUA_OK)
         {
-            printf("Error from %s: %s\n,", currGameObjRunning->name ? currGameObjRunning->name : "", lua_tostring(luaState, -1));
+            ConsolePrintf("Error from %s: %s\n,", currGameObjRunning->name ? currGameObjRunning->name : "", lua_tostring(luaState, -1));
         }
     }
 
@@ -996,7 +997,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
 
     if (!loadLuaGameObj(luaState, found->path, found))
     {
-        printf("GameObject: Could not load %s\n", found->path ? found->path : NULL);
+        ConsolePrintf("GameObject: Could not load %s\n", found->path ? found->path : NULL);
         return NULL;
     }
 
@@ -1014,7 +1015,17 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
     activeObjects[numActiveObjects] = currGameObjRunning;
     numActiveObjects++;
 
+    
+    if (!ObjIsDecoration(currGameObjRunning) && GetPlayerOwnedBy(currGameObjRunning) > 0)
+    {
+        if (currMap)
+            currMap->numEnemyObjectsSpawned++;
+    }
+    if (currMap->percentCalculation == PERCENT_CALCULATOR_AUTOMATIC)
+        AutoCompletionPercent();
+
     currGameObjRunning = before;
+
 
     return found;
 }
@@ -1108,7 +1119,7 @@ bool loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
             LoadLuaFile(filename, g);
             if (!g->lua_buffer.buffer)
             {
-                printf("GameObject: Could not load path %s\n", filename ? filename : "NULL");
+                ConsolePrintf("GameObject: Could not load path %s\n", filename ? filename : "NULL");
                 free(cpy);
                 return false;
             }
@@ -1120,7 +1131,7 @@ bool loadLuaGameObj(lua_State* l, const char* filename, GameObject* g)
 
     if (luaL_loadbuffer(l, g->lua_buffer.buffer, strlen(g->lua_buffer.buffer), NULL) || lua_pcall(l, 0, 0, 0))
     {
-        printf("%s\n\n---\nCan't load lua file:\n %s Filename: %s\n---\n\n\n", COL_ERR, lua_tostring(l, -1), filename);
+        ConsolePrintf("%s\n\n---\nCan't load lua file:\n %s Filename: %s\n---\n\n\n", COL_ERR, lua_tostring(l, -1), filename);
         fflush(stdout);
     }
     else
@@ -1373,8 +1384,14 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
         AddGold(g->bounty * currMap->goldMultiplier);
 
     if (!ObjIsDecoration(g) && GetPlayerOwnedBy(g) > 0)
-        AddCompletionPercent(g->completionPercent);
-
+    {
+        if (currMap && currMap->percentCalculation == PERCENT_CALCULATOR_AUTOMATIC)
+        {
+            AutoCompletionPercent();
+        }
+        else
+            AddCompletionPercent( g->completionPercent);
+    }
     if (g->description)
         free(g->description);
     if (g->path)
@@ -1499,7 +1516,7 @@ GameObject* LoadPrefab(const char* path)
 
     if (!loadLuaGameObj(luaState, path, g))
     {
-        printf("Prefab: could not load: %s\n", path ? path : "NULL");
+        ConsolePrintf("Prefab: could not load: %s\n", path ? path : "NULL");
         return NULL;
     }
     if (numPrefabs >= numPrefabsAllocated)
@@ -1980,7 +1997,7 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             {
                 if (currMap->collision[indexLeft] == false)
                 {
-                    // printf("gg");
+                    // ConsolePrintf("gg");
                     // g->position.worldX = IndexToPoint(GetMapHeight()/_GRAIN,indexLeft).x*_GRAIN + _GRAIN;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
                     UpdateObjPosition_X(g, IndexToPoint(currMap->collisionMapHeight, indexLeft).x * _GRAIN + _GRAIN);
 
@@ -2443,7 +2460,7 @@ void DrawMapHighlights()
     clock_t end = clock();
     double time = (double)(end - begin) / CLOCKS_PER_SEC;
     
-   // printf("DrawMapHighlights time: %f\n",time);
+   // ConsolePrintf("DrawMapHighlights time: %f\n",time);
 
 
     //al_unlock_bitmap(sprites[currMap->spriteIndex].sprite);

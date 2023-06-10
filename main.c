@@ -656,7 +656,7 @@ int main(int argc, char* args[])
 {
     init();
     GenerateAngleDeg();
-    printf("%lu\n",sizeof(ReplayFrame));
+    ConsolePrintf("%lu\n",sizeof(ReplayFrame));
 
     float totalRenderTime = 0.00001f;
 
@@ -689,7 +689,7 @@ int main(int argc, char* args[])
 
     //EditorSetMap("assets/encounters/0/map_1.lua");
 
-    //printf("%lu\n",sizeof(Attack));
+    //ConsolePrintf("%lu\n",sizeof(Attack));
 
     while (gameState != GAMESTATE_EXIT) {
 
@@ -774,7 +774,7 @@ int main(int argc, char* args[])
                 break;
 
                 default:
-                    printf("gg\n");
+                    ConsolePrintf("gg\n");
                     AddCharacter(event.keyboard.keycode, event.keyboard.unichar);
                 break;
               }
@@ -857,7 +857,7 @@ int main(int argc, char* args[])
 
             if (gameState == GAMESTATE_INGAME)
                 RecordReplay(SCREEN);
-            DrawConsole();
+            DrawConsole(&mouseState,&mouseStateLastFrame,&keyState, &keyStateLastFrame);
             
             UpdateScreenshake(dt);
 
@@ -872,7 +872,7 @@ int main(int argc, char* args[])
             _FRAMES++;
             totalRenderTime += time;
 
-            //printf("Total time: %f\n",time);
+            //ConsolePrintf("Total time: %f\n",time);
             fflush(stdout);
             
         }

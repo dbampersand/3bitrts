@@ -13,6 +13,7 @@
 #include "gameobject.h"
 #include "effect.h"
 #include "helperfuncs.h"
+#include "console.h"
 
 Item* items = NULL;
 int numItems = 0;
@@ -36,7 +37,7 @@ Item* LoadItemFuncs(Item* i, lua_State* l)
     i->path = NULL;
     if (luaL_loadbuffer(l, i->luaBuffer.buffer,strlen(i->luaBuffer.buffer),NULL) || lua_pcall(l, 0, 0, 0))
     {
-        printf("%s\n\n---\nCan't load lua file:\n %s\n---\n\n\n",COL_ERR,lua_tostring(l,-1));
+        ConsolePrintf("%s\n\n---\nCan't load lua file:\n %s\n---\n\n\n",COL_ERR,lua_tostring(l,-1));
         fflush(stdout);
         return NULL;
     }
@@ -193,7 +194,7 @@ Item* LoadItem(const char* path, lua_State* l)
 
     if (luaL_loadbuffer(l, i->luaBuffer.buffer,strlen(i->luaBuffer.buffer),NULL) || lua_pcall(l, 0, 0, 0))
      {
-         printf("%s\n\n---\nCan't load lua file:\n %s path: %s\n---\n\n\n",COL_ERR,lua_tostring(l,-1),path);
+         ConsolePrintf("%s\n\n---\nCan't load lua file:\n %s path: %s\n---\n\n\n",COL_ERR,lua_tostring(l,-1),path);
          fflush(stdout);
      }
      else

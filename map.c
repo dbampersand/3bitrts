@@ -16,6 +16,7 @@
 #include "player.h"
 #include "replay.h"
 #include "encounter.h"
+#include "console.h"
 
  Map* currMap = NULL;
  Map* maps = NULL;
@@ -266,7 +267,7 @@ void loadLuaGameMap(lua_State* l, const char* filename, Map* m)
 
      if (luaL_loadfile(l, filename) || lua_pcall(l, 0, 0, 0))
      {
-         printf("Map: Can't load lua file %s",lua_tostring(l,-1));
+         ConsolePrintf("Map: Can't load lua file %s",lua_tostring(l,-1));
          return;
      }
      else
@@ -564,4 +565,25 @@ void ChangeMap(const char* path)
         free(pathToNextMap);
     pathToNextMap = calloc(strlen(path)+1,sizeof(char));
     strcpy(pathToNextMap,path);
+}
+void AutoCompletionPercent()
+{
+    float numObjects = 0;
+    for (int i = 0; i < numActiveObjects; i++)
+    {
+        GameObject* g2 = activeObjects[i];
+        if (!ObjIsDecoration(g2) && GetPlayerOwnedBy(g2) > 0)
+        {
+            numObjects++;
+        }
+    }
+    if (numObjects <= 0)
+        numObjects = 1;
+    if (currMap->numEnemyObjectsSpawned <= 0)
+        currMap->numEnemyObjectsSpawned = 1;
+    float p = 1 - (numObjects / currMap->numEnemyObjectsSpawned);
+    float percent = 100 * (p);
+    float difference = percent - currMap->percentComplete;
+    AddCompletionPercent(difference);
+
 }

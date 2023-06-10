@@ -11,6 +11,7 @@
 #include <dirent.h>
 #include "encounter.h"
 #include "allegro5/allegro_primitives.h"
+#include "console.h"
 
 Editor editor = {0};
 bool FileExists(char* path)
@@ -587,7 +588,7 @@ void UpdateArgumentStr(char** full, char* position, char* str, bool addQuotes)
     InsertStr(full,&position,copy);
      
     free(copy);
-    printf("STR: %s\n",*full);
+    ConsolePrintf("STR: %s\n",*full);
 
 
 
@@ -668,7 +669,7 @@ void UpdatePosition(GameObject* g, float x, float y)
                 char* yStr = GetPositionOfArgument(editor.setupLines[i].line,"CreateObject",3);
                 UpdateArgumentFloat(&editor.setupLines[i].line,yStr,y+GetHeight(g)/2.0f,true);
 
-                printf("%s\n",editor.setupLines[i].line);
+                ConsolePrintf("%s\n",editor.setupLines[i].line);
             }
         }
     }
@@ -1105,7 +1106,7 @@ void SaveMap()
     ALLEGRO_FILE* file = al_fopen(currMap->path, "wb");
     if (file == NULL)
     {
-        printf("Couldn't save file\n");   
+        ConsolePrintf("Couldn't save file\n");   
         return;
     }
 
@@ -1401,7 +1402,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
 
                 if (FileExists(fullStr))
                 {
-                    printf("Could not save %s: file already exists",fullStr);
+                    ConsolePrintf("Could not save %s: file already exists",fullStr);
                     free(fullStr);
                     return;
                 }
@@ -1410,7 +1411,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                 ALLEGRO_FILE* file = al_fopen(fullStr, "wb");
                 if (file == NULL)
                 {
-                    printf("Couldn't save file\n");   
+                    ConsolePrintf("Couldn't save file\n");   
                     free(fullStr);
                     return;
                 }
@@ -1428,7 +1429,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                 if (FileExists(fullStr))
                 {
                     free(fullStr);
-                    printf("Could not save %s: file already exists",fullStr);
+                    ConsolePrintf("Could not save %s: file already exists",fullStr);
                     return;
                 }
 
@@ -1645,7 +1646,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                             UpdateArgumentStr(&editor.setupLines[i].line,arg,"false",false);
 
 
-                        printf("%s\n",editor.setupLines[i].line);
+                        ConsolePrintf("%s\n",editor.setupLines[i].line);
                     }
                     else
                     {
@@ -1656,7 +1657,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                         char* args = ",true)";
                         InsertStr(&editor.setupLines[i].line,&posEnd,args);
 
-                        printf("%s\n",editor.setupLines[i].line);
+                        ConsolePrintf("%s\n",editor.setupLines[i].line);
 
                     }
                     break;
@@ -1693,7 +1694,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
                             char* arg = GetPositionOfArgument(editor.setupLines[i].line,"SetAggroGroup",2);
                             UpdateArgumentFloat(&editor.setupLines[i].line,arg,aggroGroupAfter,false);
 
-                            printf("%s\n",editor.setupLines[i].line);
+                            ConsolePrintf("%s\n",editor.setupLines[i].line);
                         }
                         else
                         {
@@ -1709,7 +1710,7 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
 
                             free(args);
 
-                            printf("%s\n",editor.setupLines[i].line);
+                            ConsolePrintf("%s\n",editor.setupLines[i].line);
 
                         }
                         break;

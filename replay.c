@@ -10,6 +10,7 @@
 #include "allegro5/allegro_primitives.h"
 #include "colors.h"
 #include "map.h"
+#include "console.h"
 
 const char* REPLAY_HEADER = "REP";
 
@@ -325,7 +326,7 @@ void SerializeSection(Replay* r, bool finished)
 
     clock_t end = clock();
     double time = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("SerializeSection time: %f\n",time);
+    ConsolePrintf("SerializeSection time: %f\n",time);
 
    
 }

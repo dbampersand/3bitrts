@@ -29,6 +29,7 @@
 #include "easings.h"
 #include "particle.h"
 #include "pathfind.h"
+#include "console.h"
 
 #include "allegro5/allegro_font.h"
 
@@ -45,22 +46,22 @@ void dumpstack (lua_State* l)
 {
   int top=lua_gettop(l);
   for (int i=1; i <= top; i++) {
-    printf("%d\t%s\t", i, luaL_typename(l,i));
+    ConsolePrintf("%d\t%s\t", i, luaL_typename(l,i));
     switch (lua_type(l, i)) {
       case LUA_TNUMBER:
-        printf("%g\n",lua_tonumber(l,i));
+        ConsolePrintf("%g\n",lua_tonumber(l,i));
         break;
       case LUA_TSTRING:
-        printf("%s\n",lua_tostring(l,i));
+        ConsolePrintf("%s\n",lua_tostring(l,i));
         break;
       case LUA_TBOOLEAN:
-        printf("%s\n", (lua_toboolean(l, i) ? "true" : "false"));
+        ConsolePrintf("%s\n", (lua_toboolean(l, i) ? "true" : "false"));
         break;
       case LUA_TNIL:
-        printf("%s\n", "nil");
+        ConsolePrintf("%s\n", "nil");
         break;
       default:
-        printf("%p\n",lua_topointer(l,i));
+        ConsolePrintf("%p\n",lua_topointer(l,i));
         break;
     }
   }
@@ -68,21 +69,21 @@ void dumpstack (lua_State* l)
 }
 void PrintVal(lua_State* l, int i)
 {
-    printf("%s: ",luaL_typename(l,i));
+    ConsolePrintf("%s: ",luaL_typename(l,i));
     int typeVal = lua_type(l,i);
     if (typeVal == LUA_TNUMBER)
     {
-        printf("%f\n",lua_tonumber(l,i));
+        ConsolePrintf("%f\n",lua_tonumber(l,i));
     }
     if (typeVal == LUA_TBOOLEAN)
     {
-        printf("%s\n",lua_toboolean(l,i) == true ? "True" : "False");
+        ConsolePrintf("%s\n",lua_toboolean(l,i) == true ? "True" : "False");
     }
     if (typeVal == LUA_TSTRING)
     {
-        printf("%s\n",lua_tostring(l,i));
+        ConsolePrintf("%s\n",lua_tostring(l,i));
     }
-    printf("\n");
+    ConsolePrintf("\n");
 
 
 
@@ -223,7 +224,7 @@ int L_SetAttackSounds(lua_State* l)
 {
     if (!lua_istable(l,1))
     {
-        printf("Could not load attack sound, argument needs to be inside a table, for instance: {\"assets/audio...\",\"assets/audio/...\"}\n");
+        ConsolePrintf("Could not load attack sound, argument needs to be inside a table, for instance: {\"assets/audio...\",\"assets/audio/...\"}\n");
         return 0;
     }
     int len = lua_rawlen(l,1);
@@ -368,7 +369,7 @@ int L_TimeSinceLastCast(lua_State* l)
     int index = lua_tonumber(l,1);
     if (index < 0 || index >= MAX_ABILITIES)
     {
-        printf("L_TimeSinceLastCast: index invalid: %i\n",index);
+        ConsolePrintf("L_TimeSinceLastCast: index invalid: %i\n",index);
         return 0;
     }
     Ability* a = &currGameObjRunning->abilities[index];
@@ -599,16 +600,16 @@ int L_Print(lua_State* l)
     {
         if (currGameObjRunning->name)
         {
-             printf("%s: %s\n",currGameObjRunning->name,lua_tostring(l,-1));
+             ConsolePrintf("%s: %s\n",currGameObjRunning->name,lua_tostring(l,-1));
         }
         else
         {
-             printf("%s\n",lua_tostring(l,-1));
+             ConsolePrintf("%s\n",lua_tostring(l,-1));
         }
     }
     else
     {
-            printf("%s\n",lua_tostring(l,-1));
+            ConsolePrintf("%s\n",lua_tostring(l,-1));
     }
     fflush(stdout);
     return 0;
@@ -635,7 +636,7 @@ int L_GetX(lua_State* l)
         }
         else
         {
-            printf("GetX: Index out of range: %i\n",index);
+            ConsolePrintf("GetX: Index out of range: %i\n",index);
             GetCentre(currGameObjRunning,&x,&y);
             lua_pushnumber(l,x);
         }
@@ -667,7 +668,7 @@ int L_GetY(lua_State* l)
         }
         else
         {
-            printf("GetY: Index out of range: %i\n",index);
+            ConsolePrintf("GetY: Index out of range: %i\n",index);
             GetCentre(currGameObjRunning,&x,&y);
             lua_pushnumber(l,y);
         }
@@ -910,7 +911,7 @@ int L_GetThreatRank(lua_State* l)
     {
         lua_pushnumber(l,i+1);
         lua_pushnumber(l,threats[i].obj-objects);
-        //printf("%s\n",threats[i].obj->name ? );
+        //ConsolePrintf("%s\n",threats[i].obj->name ? );
 
 
         lua_settable(l,-3);
@@ -923,7 +924,7 @@ int L_GetAttackTarget(lua_State* l)
     int index = lua_tonumber(l,1);
     if (index < 0 || index >= MAX_OBJS)
     {
-        printf("L_GetAttackTarget: invalid index: %i",index);
+        ConsolePrintf("L_GetAttackTarget: invalid index: %i",index);
         lua_pushnumber(l,-1);
         return 1;
     }
@@ -1419,7 +1420,7 @@ int L_SetAbilityCooldown(lua_State* l)
 {
     if (!lua_isnumber(l,1) || !lua_isnumber(l,2) || !lua_isnumber(l,3))
     {
-        printf("L_SetAbilityCooldown: Invalid number or types of arguments. Possibly you are meaning to use SetCooldown when inside an ability.\n");
+        ConsolePrintf("L_SetAbilityCooldown: Invalid number or types of arguments. Possibly you are meaning to use SetCooldown when inside an ability.\n");
         return 0;
     }
     int gameObjIndex = lua_tonumber(l,1);
@@ -1707,7 +1708,7 @@ int L_SetAttackTargetPosition(lua_State* l)
     int atk = lua_tonumber(l,1);
     if (atk < 0 && atk >= MAX_ATTACKS)
     {
-        printf("L_SetAttackTargetPosition: index out of range: %i\n",atk);
+        ConsolePrintf("L_SetAttackTargetPosition: index out of range: %i\n",atk);
         return 0;
     }
 
@@ -1721,7 +1722,7 @@ int L_BlockCommands(lua_State* l)
     int index = lua_tonumber(l,1);
     if (!GameObjectIndexInRange(index))
     {
-        printf("L_BlockCommands: index out of range: %i\n",index);
+        ConsolePrintf("L_BlockCommands: index out of range: %i\n",index);
         return 0;
     }
     GameObject* g = &objects[index];
@@ -1807,7 +1808,7 @@ int L_SetAggroGroup(lua_State* l)
 
     if (objIndex < 0 || objIndex >= MAX_OBJS)
     {
-        printf("L_SetAggroGroup: ObjIndex not valid: %i\n", objIndex);
+        ConsolePrintf("L_SetAggroGroup: ObjIndex not valid: %i\n", objIndex);
         return 0;
     }
     GameObject* g = &objects[objIndex];
@@ -1830,7 +1831,7 @@ int L_GetAggroGroup(lua_State* l)
     int objIndex = lua_tonumber(l,1);
     if (objIndex < 0 || objIndex >= MAX_OBJS)
     {
-        printf("L_RemoveAggroGroup: ObjIndex not valid: %i\n", objIndex);
+        ConsolePrintf("L_RemoveAggroGroup: ObjIndex not valid: %i\n", objIndex);
         return 0;
     }
     GameObject* g = &objects[objIndex];
@@ -1849,7 +1850,7 @@ int L_RemoveAggroGroup(lua_State* l)
     int objIndex = lua_tonumber(l,1);
     if (objIndex < 0 || objIndex >= MAX_OBJS)
     {
-        printf("L_RemoveAggroGroup: ObjIndex not valid: %i\n", objIndex);
+        ConsolePrintf("L_RemoveAggroGroup: ObjIndex not valid: %i\n", objIndex);
         return 0;
     }
     GameObject* g = &objects[objIndex];
@@ -1863,7 +1864,7 @@ int L_SetObjectPushable(lua_State* l)
     bool b = lua_toboolean(l,2);
         if (obj < 0 || obj >= MAX_OBJS)
     {
-        printf("L_SetObjectPushable: Index invalid: %i\n",obj);
+        ConsolePrintf("L_SetObjectPushable: Index invalid: %i\n",obj);
         return 0;
     }
     objects[obj].objIsPushable = b;
@@ -1882,7 +1883,7 @@ int L_PushObj(lua_State* l)
 
     if (objPushing < 0 || objPushing >= MAX_OBJS)
     {
-        printf("L_PushObj: Index invalid: %i\n",objPushing);
+        ConsolePrintf("L_PushObj: Index invalid: %i\n",objPushing);
         return 0;
     }
     GameObject* obj = &objects[objPushing];
@@ -1896,7 +1897,7 @@ int L_RotateAttackArea(lua_State* l)
     float angle = DegToRad(lua_tonumber(l,2));
     if (atk < 0 || atk >= MAX_ATTACKS)
     {
-        printf("L_RotateAttackArea: invalid index: %i\n",atk);
+        ConsolePrintf("L_RotateAttackArea: invalid index: %i\n",atk);
         return 0;
     }
 
@@ -2238,7 +2239,7 @@ int L_GetObjTargetPosition(lua_State* l)
     int index = lua_tonumber(l,1);
     if (!GameObjectIndexInRange(index))
     {
-        printf("L_GetObjTargetPosition: index out of range: %i\n",index);
+        ConsolePrintf("L_GetObjTargetPosition: index out of range: %i\n",index);
         return 0;
     }
     GameObject* g = &objects[index];
@@ -2321,7 +2322,7 @@ int L_IsDecoration(lua_State* l)
     int index = lua_tonumber(l,1);
     if (index < 0 || index >= MAX_OBJS)
     {
-        printf("L_IsDecoration: invalid index: %i.\n",index);
+        ConsolePrintf("L_IsDecoration: invalid index: %i.\n",index);
         return 0;
     }
     lua_pushboolean(l,ObjIsDecoration(&objects[index]));
@@ -2333,7 +2334,7 @@ int L_CreateObject(lua_State* l)
     const char* l_path = lua_tostring(l,1);
     if (!l_path)
     {
-        printf("CreateObject: Path null\n");
+        ConsolePrintf("CreateObject: Path null\n");
         return 0;    
     }
     const int x = lua_tonumber(l,2);
@@ -2729,7 +2730,7 @@ int L_GetOppositeFriendliness(lua_State* l)
     int index = lua_tonumber(l,1);
     if (index < 0 || index >= MAX_OBJS)
     {
-        printf("GetOppositeFriendliness: invalid index: %i\n",index);
+        ConsolePrintf("GetOppositeFriendliness: invalid index: %i\n",index);
         return 0;
     }
     GameObject* g = &objects[index];
@@ -2748,7 +2749,7 @@ int L_GetOppositeFriendliness(lua_State* l)
     }
     else
     {
-        printf("GetOppositeFriendliness: PANIC UNKNOWN FRIENDLINESS\n");
+        ConsolePrintf("GetOppositeFriendliness: PANIC UNKNOWN FRIENDLINESS\n");
     }
     return 1;
 
@@ -2847,7 +2848,7 @@ int L_ShowString(lua_State* l)
     const char* str = lua_tostring(l,1);
     if (numStringsToDraw >= NUM_TEXT_DISPLAYS)
     {
-        printf("Too many strings (%i) to draw '%s'\n",numStringsToDraw,str);
+        ConsolePrintf("Too many strings (%i) to draw '%s'\n",numStringsToDraw,str);
         return 0;
     }
     strncpy(textDisplays[numStringsToDraw].str,str,TEXT_DISPLAY_MAX_SIZE);
@@ -2961,7 +2962,8 @@ int L_SetBounty(lua_State* l)
     if (objIndex < 0 || objIndex >= MAX_OBJS)
         return 0;
     g->bounty = bounty;
-    return 0;
+    lua_pushnumber(l,objIndex);
+    return 1;
 }
 int L_CreateTicker(lua_State* l)
 {
@@ -3045,7 +3047,7 @@ int L_MObj(lua_State* l)
     const char* l_path = lua_tostring(l,1);
     if (!l_path)
     {
-        printf("CreateObject: Path null\n");
+        ConsolePrintf("CreateObject: Path null\n");
         return 0;    
     }
     MouseState m = GetMouseClamped();
@@ -3108,7 +3110,7 @@ int L_IsInAttackRange(lua_State* l)
     }   
     else
     {
-        printf("L_IsInAttackRange: index out of range: %i, %i\n",g1,g2);
+        ConsolePrintf("L_IsInAttackRange: index out of range: %i, %i\n",g1,g2);
         lua_pushboolean(l,false);
         return 1;
     }
@@ -3119,7 +3121,7 @@ int L_GetObjsByName(lua_State* l)
     const char* name = lua_tostring(l,1);
     if (!name)
     {
-        printf("L_GetObjsByName: no string parameter supplied.\n");
+        ConsolePrintf("L_GetObjsByName: no string parameter supplied.\n");
         return 0;
     }
     lua_newtable(l);
@@ -3145,7 +3147,7 @@ int L_Heal(lua_State* l)
     double toHeal = lua_tonumber(l,2);
     if (!GameObjectIndexInRange(index))
     {
-        printf("L_Heal: index out of range: %i",index);
+        ConsolePrintf("L_Heal: index out of range: %i",index);
         return 0;
     }
     Heal(&objects[index],toHeal);
@@ -3158,7 +3160,7 @@ int L_SetCanHitParent(lua_State* l)
 
     if (atkIndex < 0 || atkIndex >= MAX_ATTACKS)
     {
-        printf("L_SetCanHitParent: index out of range: %i\n",atkIndex);
+        ConsolePrintf("L_SetCanHitParent: index out of range: %i\n",atkIndex);
         return 0;
     }
     attacks[atkIndex].canHitParent = canHit;
@@ -3644,12 +3646,12 @@ int L_ApplyEffect(lua_State* l)
     int objIndex = lua_tonumber(l,1);
     if (objIndex < 0) 
     {
-        printf("Could not apply effect from %s: 'obj' index out of range. Obj index is %i.",currAbilityRunning->path ? currAbilityRunning->path : "[No path]",objIndex);
+        ConsolePrintf("Could not apply effect from %s: 'obj' index out of range. Obj index is %i.",currAbilityRunning->path ? currAbilityRunning->path : "[No path]",objIndex);
         return 0; 
     }
     if (objIndex >= MAX_OBJS) 
     {
-        printf("Could not apply effect from %s: 'obj' index out of range. Obj index is %i.",currAbilityRunning->path ? currAbilityRunning->path : "[No path]",objIndex);
+        ConsolePrintf("Could not apply effect from %s: 'obj' index out of range. Obj index is %i.",currAbilityRunning->path ? currAbilityRunning->path : "[No path]",objIndex);
         return 0;
     }
     GameObject* g = &objects[objIndex];
@@ -3757,7 +3759,7 @@ int L_SetAttackInactive(lua_State* l)
 
     if (atk < 0 || atk >= MAX_ATTACKS)
     {
-        printf("L_SetAttackInactive: invalid index: %i\n",atk);
+        ConsolePrintf("L_SetAttackInactive: invalid index: %i\n",atk);
         return 0;
     }
     attacks[atk].inactiveFor = length;
@@ -3771,7 +3773,7 @@ int L_GetAttackInactive(lua_State* l)
 
     if (atk < 0 || atk >= MAX_ATTACKS)
     {
-        printf("L_GetAttackInactive: invalid index: %i\n",atk);
+        ConsolePrintf("L_GetAttackInactive: invalid index: %i\n",atk);
         return 0;
     }
     lua_pushnumber(l,attacks[atk].inactiveFor);
@@ -3831,7 +3833,7 @@ int L_CastAbility(lua_State* l)
     {
         if (GetDist(currGameObjRunning,target) > ability->range)
         {
-            printf("L_CastAbility: out of range: %s\n",ability->path);
+            ConsolePrintf("L_CastAbility: out of range: %s\n",ability->path);
             lua_pushboolean(l,false);
             return 0;
         }
@@ -3917,7 +3919,7 @@ int L_SetAbilityHint(lua_State* l)
 {
     if (!currAbilityRunning)
     {
-        printf("SetAbilityHint needs to be called from an ability.\n");
+        ConsolePrintf("SetAbilityHint needs to be called from an ability.\n");
         return 0;
     }
     currAbilityRunning->targetingHint = lua_tonumber(l,1);
@@ -4151,7 +4153,7 @@ int L_GetLifetime(lua_State* l)
     int index = lua_tonumber(l,1);
     if (!GameObjectIndexInRange(index))
     {
-        printf("L_GetLifetime: index out of range: %i\n",index);
+        ConsolePrintf("L_GetLifetime: index out of range: %i\n",index);
         return 0;
     }
     GameObject* g = &objects[index];
@@ -4163,7 +4165,7 @@ int L_DeathTimerIsSet(lua_State* l)
     int index = lua_tonumber(l,1);
     if (!GameObjectIndexInRange(index))
     {
-        printf("L_DeathTimerSet: index out of range: %i\n",index);
+        ConsolePrintf("L_DeathTimerSet: index out of range: %i\n",index);
         return 0;
     }
     GameObject* g = &objects[index];
@@ -4278,7 +4280,7 @@ int L_RemoveItem(lua_State* l)
 
     if (!GameObjectIndexInRange(objIndex) || itemIndex < 0 || itemIndex >= INVENTORY_SLOTS)
     {
-        printf("L_RemoveItem: index out of range: %i,%i\n",objIndex,itemIndex);
+        ConsolePrintf("L_RemoveItem: index out of range: %i,%i\n",objIndex,itemIndex);
         return 0;
     }
     RemoveItem(&objects[objIndex].inventory[itemIndex],&objects[objIndex]);
@@ -4311,7 +4313,7 @@ int L_AttackIsActive(lua_State* l)
     int index = lua_tonumber(l,1);
     if (index < 0 || index > MAX_ATTACKS)
     {
-        printf("L_AttackIsActive: index out of range: %i\n",index);
+        ConsolePrintf("L_AttackIsActive: index out of range: %i\n",index);
         lua_pushboolean(l,false);
         return 1;
     }
@@ -4357,7 +4359,7 @@ int L_GetDist(lua_State* l)
 
     if (objOne < 0 || objOne >= MAX_OBJS || objTwo < 0 || objTwo >= MAX_OBJS)
     {
-        printf("L_GetDist: index out of range: %i, %i\n",objOne,objTwo);
+        ConsolePrintf("L_GetDist: index out of range: %i, %i\n",objOne,objTwo);
         lua_pushnumber(l,-1);
         return 1;
     }
@@ -4531,7 +4533,7 @@ int L_RemoveFromCount(lua_State* l)
 
     if (index < 0 || index >= MAX_OBJS)
     {
-        printf("L_RemoveFromCount: invalid index: %i\n",index);
+        ConsolePrintf("L_RemoveFromCount: invalid index: %i\n",index);
         return 0;
     }
     objects[index].isRemovedFromCount = b;
@@ -4544,7 +4546,7 @@ int L_GetTargetingHint(lua_State* l)
 
     if (!GameObjectIndexInRange(objIndex) || !AbilityIndexInRange(abilityIndex))
     {
-        printf("L_GetTargetingHint: index not in range: %i, %i\n",objIndex,abilityIndex);
+        ConsolePrintf("L_GetTargetingHint: index not in range: %i, %i\n",objIndex,abilityIndex);
         lua_pushnumber(l,HINT_NONE);
         return 1;
     }
@@ -4559,7 +4561,7 @@ int L_GetHintRadius(lua_State* l)
     int abilityIndex = lua_tonumber(l,2);   
     if (!GameObjectIndexInRange(objIndex) || !AbilityIndexInRange(abilityIndex))
     {
-        printf("L_GetHintRadius: index not in range: %i, %i\n",objIndex,abilityIndex);
+        ConsolePrintf("L_GetHintRadius: index not in range: %i, %i\n",objIndex,abilityIndex);
         lua_pushnumber(l,0);
         return 1;
     }
@@ -4575,7 +4577,7 @@ int L_GetHintSoak(lua_State* l)
 
     if (!GameObjectIndexInRange(objIndex) || !AbilityIndexInRange(abilityIndex))
     {
-        printf("L_GetHintSoak: index not in range: %i, %i\n",objIndex,abilityIndex);
+        ConsolePrintf("L_GetHintSoak: index not in range: %i, %i\n",objIndex,abilityIndex);
         lua_pushboolean(l,false);
         return 1;
     }
@@ -4591,7 +4593,7 @@ int L_HintLength(lua_State* l)
 
     if (GameObjectIndexInRange(objIndex) && AbilityIndexInRange(abilityIndex))
     {
-        printf("L_HintLength: index not in range: %i, %i\n",objIndex,abilityIndex);
+        ConsolePrintf("L_HintLength: index not in range: %i, %i\n",objIndex,abilityIndex);
         lua_pushnumber(l,0);
         return 1;
     }
@@ -4627,7 +4629,7 @@ int L_GetSampleIndices(lua_State* l)
 
     if ((max - min)+1 < numIndices)
     {
-        printf("L_GetSampleIndices: range too small. NumIndices: %i, min: %i, max: %i\n",numIndices,min,max);
+        ConsolePrintf("L_GetSampleIndices: range too small. NumIndices: %i, min: %i, max: %i\n",numIndices,min,max);
         return 0;
     }
     
@@ -4666,7 +4668,7 @@ int L_AddMana(lua_State* l)
     int objIndex = lua_tonumber(l,1);
     if (!GameObjectIndexInRange(objIndex))
     {
-        printf("L_AddMana: index out of range: %i\n",objIndex);
+        ConsolePrintf("L_AddMana: index out of range: %i\n",objIndex);
         return 0;
     }
     float manaToAdd = lua_tonumber(l,2);
@@ -4734,7 +4736,7 @@ int L_Stun(lua_State* l)
 
     if (!GameObjectIndexInRange(target))
     {
-        printf("L_Stun: index out of range: %i\n",target);
+        ConsolePrintf("L_Stun: index out of range: %i\n",target);
     }
     float time = lua_tonumber(l,2);
     Stun(currGameObjRunning,&objects[target],time);
@@ -4746,7 +4748,7 @@ int L_SetObjSummoned(lua_State* l)
     bool b = lua_toboolean(l,2);
     if (!GameObjectIndexInRange(index))
     {
-        printf("L_SetObjSummoned: index out of range: %i\n",index);
+        ConsolePrintf("L_SetObjSummoned: index out of range: %i\n",index);
         return 0;
     }
     objects[index].objectIsSummoned = b;
@@ -4768,7 +4770,7 @@ int L_GetMana(lua_State* l)
     int index = lua_tonumber(l,1);
     if (!GameObjectIndexInRange(index)) 
     {
-        printf("L_GetMana: index out of range: %i\n",index);
+        ConsolePrintf("L_GetMana: index out of range: %i\n",index);
         return 0;
     }
     lua_pushnumber(l,objects[index].mana);
@@ -4779,7 +4781,7 @@ int L_GetMaxMana(lua_State* l)
     int index = lua_tonumber(l,1);
     if (!GameObjectIndexInRange(index)) 
     {
-        printf("L_GetMaxMana: index out of range: %i\n",index);
+        ConsolePrintf("L_GetMaxMana: index out of range: %i\n",index);
         return 0;
     }
     lua_pushnumber(l,objects[index].maxMana);
@@ -4790,7 +4792,7 @@ int L_GetManaPercent(lua_State* l)
     int index = lua_tonumber(l,1);
     if (!GameObjectIndexInRange(index)) 
     {
-        printf("L_GetManaPercent: index out of range: %i\n",index);
+        ConsolePrintf("L_GetManaPercent: index out of range: %i\n",index);
         return 0;
     }
     lua_pushnumber(l,objects[index].mana/objects[index].maxMana * 100);
@@ -4801,7 +4803,7 @@ int L_AddAbilityPotency(lua_State* l)
     int index = lua_tonumber(l,1);
         if (!GameObjectIndexInRange(index)) 
     {
-        printf("L_AddAbilityPotency: index out of range: %i\n",index);
+        ConsolePrintf("L_AddAbilityPotency: index out of range: %i\n",index);
         return 0;
     }
     double amountToAdd = lua_tonumber(l,2);
@@ -4813,7 +4815,7 @@ int L_GetSpeed(lua_State* l)
     int index = lua_tonumber(l,1);
         if (!GameObjectIndexInRange(index)) 
     {
-        printf("L_AddAbilityPotency: index out of range: %i\n",index);
+        ConsolePrintf("L_AddAbilityPotency: index out of range: %i\n",index);
         return 0;
     }
     float speed = objects[index].speed;
@@ -4826,7 +4828,7 @@ int L_SetItemHighlight(lua_State* l)
     int index = lua_tonumber(l,1);
     if (index < 0 || index >= MAX_OBJS || !currGameObjRunning)
     {
-        printf("L_SetItemHighlight: index out of range: %i\n",index);
+        ConsolePrintf("L_SetItemHighlight: index out of range: %i\n",index);
         return 0;
     }
     currGameObjRunning->inventory[index].highlighted = lua_toboolean(l,2);
@@ -4837,7 +4839,7 @@ int L_SetItemStackString(lua_State* l)
     int index = lua_tonumber(l,1);
     if (index < 0 || index >= MAX_OBJS || !currGameObjRunning)
     {
-        printf("L_SetItemStackString: index out of range: %i\n",index);
+        ConsolePrintf("L_SetItemStackString: index out of range: %i\n",index);
         return 0;
     }
     const char* str = lua_tostring(l,2);
@@ -4880,7 +4882,7 @@ int L_SetMapGoldMultiplier(lua_State* l)
 {
     if (!currMap)
     {
-        printf("L_SetMapGoldMultiplier: no map currently set.");
+        ConsolePrintf("L_SetMapGoldMultiplier: no map currently set.");
         return 0;
     }
     currMap->goldMultiplier = lua_tonumber(l,1);
