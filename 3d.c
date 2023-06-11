@@ -306,6 +306,7 @@ static void* GenerateChunkDistanceCache(ALLEGRO_THREAD* t, void* args)
         }
     }
     threadsFinished[da->threadIndex] = true;
+    return NULL;
 }
 void DoPlayerCollisions(Cube* player, float x, float y, float z, bool* onGround)
 {
@@ -860,6 +861,7 @@ static void* VoxelRenderLines(ALLEGRO_THREAD *thr, void* v)
         }
     }
     threadsFinished[va->threadIndex] = true;
+    return NULL;
 }
 void VoxelRender()
 {   

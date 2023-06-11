@@ -538,59 +538,99 @@ void InitObjects()
     numPrefabs = 0;
     numPrefabsAllocated = 1;
 }
+int CountCtrlGroup(int index)
+{
+    int count = 0;
+    for (int i = 0; i < MAXUNITSSELECTED; i++)
+    {
+        if (players[0].controlGroups[index][i] != NULL)
+            count++;
+    }
+    return count;
+}
 void GetControlGroup(ALLEGRO_KEYBOARD_STATE* keyState)
 {
     if (!IsBindDown(keyState, currSettings.keymap.key_Ctrl))
     {
         if (IsBindDown(keyState, currSettings.keymap.key_ctrlgroups[0]))
         {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(1);
+            if (CountCtrlGroup(1) > 0)
+            {
+                UnsetAll();
+                players[0].numUnitsSelected = GetCtrlGroup(1);
+            }
         }
         if (IsBindDown(keyState, currSettings.keymap.key_ctrlgroups[1]))
         {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(2);
+            if (CountCtrlGroup(2) > 0)
+            {
+                UnsetAll();
+                players[0].numUnitsSelected = GetCtrlGroup(2);
+            }
         }
         if (IsBindDown(keyState, currSettings.keymap.key_ctrlgroups[2]))
         {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(3);
+            if (CountCtrlGroup(3) > 0) 
+            {
+                UnsetAll();
+                players[0].numUnitsSelected = GetCtrlGroup(3);
+            }
         }
         if (IsBindDown(keyState, currSettings.keymap.key_ctrlgroups[3]))
         {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(4);
+            if (CountCtrlGroup(4) > 0)
+            {
+                UnsetAll();
+                players[0].numUnitsSelected = GetCtrlGroup(4);
+            }
         }
         if (IsBindDown(keyState, currSettings.keymap.key_ctrlgroups[4]))
         {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(5);
+            if (CountCtrlGroup(5) > 0)
+            {
+                UnsetAll();
+                players[0].numUnitsSelected = GetCtrlGroup(5);
+            }
         }
         if (IsBindDown(keyState, currSettings.keymap.key_ctrlgroups[5]))
         {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(6);
+            if (CountCtrlGroup(6) > 0) 
+            {
+                UnsetAll();
+                players[0].numUnitsSelected = GetCtrlGroup(6);
+            }
         }
         if (IsBindDown(keyState, currSettings.keymap.key_ctrlgroups[6]))
         {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(7);
+            if (CountCtrlGroup(7) > 0)
+            {
+                UnsetAll();
+                players[0].numUnitsSelected = GetCtrlGroup(7);
+            }
         }
         if (IsBindDown(keyState, currSettings.keymap.key_ctrlgroups[7]))
         {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(8);
+            if (CountCtrlGroup(8) > 0)
+            {
+                UnsetAll();
+                players[0].numUnitsSelected = GetCtrlGroup(8);
+            }
         }
         if (IsBindDown(keyState, currSettings.keymap.key_ctrlgroups[8]))
         {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(9);
+            if (CountCtrlGroup(9) > 0)
+            {
+                UnsetAll();
+                players[0].numUnitsSelected = GetCtrlGroup(9);
+            }
         }
         if (IsBindDown(keyState, currSettings.keymap.key_ctrlgroups[9]))
         {
-            UnsetAll();
-            players[0].numUnitsSelected = GetCtrlGroup(0);
+            if (CountCtrlGroup(0) > 0)
+            {
+                UnsetAll();
+                players[0].numUnitsSelected = GetCtrlGroup(0);
+            }
         }
     }
 }
@@ -646,11 +686,20 @@ int GetCtrlGroup(int index)
     int count = 0;
     for (int i = 0; i < MAXUNITSSELECTED; i++)
     {
-        players[0].selection[i] = players[0].controlGroups[index][i];
-        if (players[0].selection[i] != NULL)
+        if (players[0].controlGroups[index][i] != NULL)
         {
             count++;
-            players[0].selection[i]->properties |= OBJ_SELECTED;
+        }
+    }
+    if (count > 0)
+    {
+        for (int i = 0; i < MAXUNITSSELECTED; i++)
+        {
+            players[0].selection[i] = players[0].controlGroups[index][i];
+            if (players[0].selection[i] != NULL)
+            {
+                players[0].selection[i]->properties |= OBJ_SELECTED;
+            }
         }
     }
     return count;
@@ -3129,7 +3178,7 @@ void AttackTarget(GameObject* g, float dt)
             float cx;
             float cy;
             GetCentre(g->targObj, &cx, &cy);
-            for (int i = 0; i < RandRangeI(damage, damage * 2); i++)
+            for (int i = 0; i < RandRangeI(damage, damage * 25); i++)
                 AddParticleWithRandomProperties(cx, cy, COLOR_DAMAGE, 1, 1.3f, 6, 48, -2 * M_PI, 2 * M_PI);
         }
 

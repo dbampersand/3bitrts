@@ -107,15 +107,20 @@ bool IsModifierDown(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
 }
 bool IsBindReleasedThisFrame(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame,Key k)
 {
-    return ((!al_key_down(keyStateThisFrame, k.keyMappedTo) && al_key_down(keyStateLastFrame, k.keyMappedTo)) || (!al_key_down(keyStateThisFrame, k.secondKeyMappedTo) && al_key_down(keyStateLastFrame, k.secondKeyMappedTo)));
+    bool b = ((k.keyMappedTo >= 0 && !al_key_down(keyStateThisFrame, k.keyMappedTo) && al_key_down(keyStateLastFrame, k.keyMappedTo)) || (k.secondKeyMappedTo >= 0 && !al_key_down(keyStateThisFrame, k.secondKeyMappedTo) && al_key_down(keyStateLastFrame, k.secondKeyMappedTo)));
+    return b;
 }
 bool IsBindDownThisFrame(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame,Key k)
 {
-    return ((al_key_down(keyStateThisFrame, k.keyMappedTo) && !al_key_down(keyStateLastFrame, k.keyMappedTo)) || (al_key_down(keyStateThisFrame, k.secondKeyMappedTo) && !al_key_down(keyStateLastFrame, k.secondKeyMappedTo)));
+    if (k.keyMappedTo == -1 && k.secondKeyMappedTo == -1)
+        return false;
+    bool b = ((k.keyMappedTo >= 0 && al_key_down(keyStateThisFrame, k.keyMappedTo) && !al_key_down(keyStateLastFrame, k.keyMappedTo)) || (k.secondKeyMappedTo >= 0 && al_key_down(keyStateThisFrame, k.secondKeyMappedTo) && !al_key_down(keyStateLastFrame, k.secondKeyMappedTo)));
+    return b;
 }
 bool IsBindDown(ALLEGRO_KEYBOARD_STATE* keyState, Key k)
 {
-    return (al_key_down(keyState, k.keyMappedTo) || al_key_down(keyState, k.secondKeyMappedTo));
+    bool b = ((k.keyMappedTo >= 0 && al_key_down(keyState, k.keyMappedTo)) || (k.secondKeyMappedTo >= 0 && al_key_down(keyState, k.secondKeyMappedTo)));
+    return b;
 }
 void SetDefaultSettings(Settings* setting)
 {

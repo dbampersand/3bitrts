@@ -944,8 +944,9 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index, GameObject
     e.trigger = GetTableField(l,-1,"trigger", &isField);
     e.effectType = GetTableField(l,-1,"type",&isField);
     float triggersPerSecond = GetTableField(l,-1,"triggersPerSecond",&isField);
+    //max is 30 - one eery frame at 30 fps
     if (isField)
-        e.triggersPerSecond = triggersPerSecond;
+        e.triggersPerSecond = _MIN(triggersPerSecond,30);
     else
         e.triggersPerSecond = 1;
     e.duration = GetTableField(l,-1,"duration",&isField);
@@ -990,6 +991,7 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index, GameObject
 
     e.tickTime = e.duration / e.numTriggers;
     e.value = GetTableField(l,-1,"value",&isField);
+
 
     if (from)
         e.value += e.value * from->abilityPotency;
@@ -1727,6 +1729,7 @@ int L_BlockCommands(lua_State* l)
     }
     GameObject* g = &objects[index];
     g->commandsBlocked = lua_toboolean(l,2);
+    return 0;
 }
 int L_CreateCone(lua_State* l)
 {
@@ -2024,14 +2027,19 @@ int L_CreateAOE(lua_State* l)
     const float y = lua_tonumber(l,2);
     const char* effectPortrait = lua_tostring(l,3);
     const float radius = lua_tonumber(l,4);
-    const float tickrate = lua_tonumber(l,5);
-    const float duration = lua_tonumber(l, 6);
+    float tickrate = lua_tonumber(l,5);
+    float duration = lua_tonumber(l, 6);
     const bool shouldCallback = lua_toboolean(l, 7);
     const int properties = lua_tonumber(l,8);
     const int color = lua_tonumber(l,9);
     const int dither = lua_tonumber(l,10);
     const bool isSoak = lua_toboolean(l,11);
     const int target = lua_tonumber(l,12);
+
+    //30fps is minimum
+    tickrate = _MAX(1/30.0f,tickrate);
+    duration = _MAX(1/30.0f,duration);
+
 
     size_t len =  lua_rawlen(l,13);
     Effect effects[len];    
@@ -4001,7 +4009,7 @@ int L_AddAbility(lua_State* l)
         Ability* prefab = AddAbility(path); 
         if (!g->abilities[index].path)
         {
-            g->numAbilities++;
+            g->numAbilities = _MAX(g->numAbilities,index+1);
         }
         //g->abilities[index] = CloneAbilityPrefab(prefab,l);
         CloneAbilityPrefab(prefab,l,&g->abilities[index],g);
@@ -4752,6 +4760,7 @@ int L_SetObjSummoned(lua_State* l)
         return 0;
     }
     objects[index].objectIsSummoned = b;
+    return 0;
 }
 int L_IsWalkable(lua_State* l)
 {
@@ -4868,6 +4877,7 @@ int L_SetEncounterBreakPoints(lua_State* l)
             currEncounterRunning->timeBreakpoints[i] = time;
         }
     }   
+    return 0;
 }
 int L_SetTime(lua_State* l)
 {

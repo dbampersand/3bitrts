@@ -9,10 +9,12 @@ function setup()
 
     AbilitySetCastType(ABILITY_TOGGLE);
 
+
 end
 
 function casted(x,y,obj,headingx,headingy)
     
+    SetSprite("assets/enemies/nuul/nuul_quartz.png");
 
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT; 

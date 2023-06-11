@@ -60,7 +60,7 @@ void DrawChestCompletionHint(int x, int y)
             break;
         }
     } 
-    int chestIndex = LoadSprite("assets/ui/chest_tiny.png",false);
+    int chestIndex = LoadSprite("assets/ui/endscreen/chest_tiny.png",false);
     Sprite* s = &sprites[chestIndex];
 
     for (int i = 0; i < end; i++)
@@ -83,8 +83,7 @@ void DrawChestCompletionHint(int x, int y)
 bool ButtonIsMousedOver(UIElement* u)
 {
     Button* b = (Button*)u->data;
-    if (b->mousedOver)  
-        return true;
+    return b->mousedOver;
 }
 bool ButtonIsHeld(UIElement* u)
 {
@@ -948,34 +947,60 @@ void DrawManaUIElement(GameObject* selected, ALLEGRO_COLOR color)
 
 
 }
-Rect GetAbilityPortraitRect(int index)
+Rect GetAbilityPortraitRect(int index, int numAbilities)
 {
     Rect r;
     r.w = 30; r.h = 30;
-    if (index == 0)
+    if (numAbilities == 1)
     {
-        r.x = 33;
-        r.y = UI_ABILITY_START_Y;
+        if (index == 0)
+        {
+            r.x = 64;
+            r.y = UI_ABILITY_START_Y;
+        }   
     }
-    if (index == 1)
+
+    if (numAbilities == 2)
     {
-        r.x = 65;
-        r.y = UI_ABILITY_START_Y;
+        if (index == 0)
+        {
+            r.x = 40;
+            r.y = UI_ABILITY_START_Y;
+        }   
+        if (index == 1)
+        {
+            r.x = 89;
+            r.y = UI_ABILITY_START_Y;
+        }   
+
     }
-    if (index == 2)
+    if (numAbilities > 2)
     {
-        r.x = 97;
-        r.y = UI_ABILITY_START_Y;
-    }
-    if (index == 3)
-    {
-        r.x = 129;
-        r.y = UI_ABILITY_START_Y;
-    }
-    if (index == 4)
-    {
-        r.x = 161;
-        r.y = UI_ABILITY_START_Y;
+        if (index == 0)
+        {
+            r.x = 33;
+            r.y = UI_ABILITY_START_Y;
+        }
+        if (index == 1)
+        {
+            r.x = 65;
+            r.y = UI_ABILITY_START_Y;
+        }
+        if (index == 2)
+        {
+            r.x = 97;
+            r.y = UI_ABILITY_START_Y;
+        }
+        if (index == 3)
+        {
+            r.x = 129;
+            r.y = UI_ABILITY_START_Y;
+        }
+        if (index == 4)
+        {
+            r.x = 161;
+            r.y = UI_ABILITY_START_Y;
+        }
     }
 
     return r;
@@ -1144,9 +1169,21 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         health = selected->usesMana ? &sprites[ui.health_and_mana_element_sprite_index] : &sprites[ui.health_element_sprite_index];
     if (selected)
     {
-        if (selected->numAbilities <= 4)
+        if (selected->numAbilities == 0)
+            s = &sprites[ui.panel_0_abilities_sprite_index];
+
+        if (selected->numAbilities == 1)
+            s = &sprites[ui.panel_1_abilities_sprite_index];
+
+        if (selected->numAbilities == 2)
+            s = &sprites[ui.panel_2_abilities_sprite_index];
+
+        if (selected->numAbilities == 3)
+            s = &sprites[ui.panel_3_abilities_sprite_index];
+
+        else if (selected->numAbilities == 4)
             s = &sprites[ui.panel_sprite_index];
-        else if (selected->numAbilities >= 5)
+        else if (selected->numAbilities == 5)
             s = &sprites[ui.panel_5_abilities_sprite_index];
     }
     if (!s) return;
@@ -1161,96 +1198,161 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         
         DrawItems(selected);
 
-        if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0),IsBindDown(keyState,currSettings.keymap.key_Q),*mouseState,&baseColor,true,false))
+        if (selected->numAbilities == 1)
         {
-            if (selected->abilities[0].description)
+            if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_Q),*mouseState,&baseColor,true,false))
             {
-                int h = GetDescriptionBoxH(selected->abilities[0].description,100,ui.font,UI_PADDING);
-                int x = 33 + ceilf(UI_PADDING/2.0f);
-                int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[0].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
-            }
-
-        }
-        if (DrawAbilityPortraits(selected,heldAbility,1,GetAbilityPortraitRect(1),IsBindDown(keyState,currSettings.keymap.key_W),*mouseState,&baseColor,true,false))
-        {
-            if (selected->abilities[1].description)
-            {
-                int h = GetDescriptionBoxH(selected->abilities[1].description,100,ui.font,UI_PADDING);
-                int x = 65 + ceilf(UI_PADDING/2.0f);
-                int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[1].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
-            }
-
-        }
-        if (DrawAbilityPortraits(selected,heldAbility,2,GetAbilityPortraitRect(2),IsBindDown(keyState,currSettings.keymap.key_E),*mouseState,&baseColor,true,false))
-        {
-            if (selected->abilities[2].description)
-            {
-                int h = GetDescriptionBoxH(selected->abilities[2].description,100,ui.font,UI_PADDING);
-                int x = 97 + ceilf(UI_PADDING/2.0f);
-                int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[2].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
-
-            }
-
-        }
-        if (DrawAbilityPortraits(selected,heldAbility,3,GetAbilityPortraitRect(3),IsBindDown(keyState,currSettings.keymap.key_R),*mouseState,&baseColor,true,false))
-        {
-            if (selected->abilities[3].description)
-            {
-                int h = GetDescriptionBoxH(selected->abilities[3].description,100,ui.font,UI_PADDING);
-                int x = 129 + ceilf(UI_PADDING/2.0f);
-                int y = 221 - h - 3;
-                DrawDescriptionBox(selected->abilities[3].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
-            }
-        }
-        if (selected->numAbilities >= 5)
-        {
-            if (DrawAbilityPortraits(selected,heldAbility,4,GetAbilityPortraitRect(4),IsBindDown(keyState,currSettings.keymap.key_F),*mouseState,&baseColor,true,false))
-            {
-                if (selected->abilities[4].description)
+                if (selected->abilities[0].description)
                 {
-                    int h = GetDescriptionBoxH(selected->abilities[4].description,100,ui.font,UI_PADDING);
-                    int x = 140 + ceilf(UI_PADDING/2.0f);
+                    int h = GetDescriptionBoxH(selected->abilities[0].description,100,ui.font,UI_PADDING);
+                    int x = 33 + ceilf(UI_PADDING/2.0f);
                     int y = 221 - h - 3;
-                    DrawDescriptionBox(selected->abilities[4].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
+                    DrawDescriptionBox(selected->abilities[0].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
+                }
+
+            }
+        }
+        if (selected->numAbilities == 2)
+        {
+            if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_Q),*mouseState,&baseColor,true,false))
+            {
+                if (selected->abilities[0].description)
+                {
+                    int h = GetDescriptionBoxH(selected->abilities[0].description,100,ui.font,UI_PADDING);
+                    int x = 33 + ceilf(UI_PADDING/2.0f);
+                    int y = 221 - h - 3;
+                    DrawDescriptionBox(selected->abilities[0].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
+                }
+
+            }
+            if (DrawAbilityPortraits(selected,heldAbility,1,GetAbilityPortraitRect(1,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_W),*mouseState,&baseColor,true,false))
+            {
+                if (selected->abilities[1].description)
+                {
+                    int h = GetDescriptionBoxH(selected->abilities[1].description,100,ui.font,UI_PADDING);
+                    int x = 65 + ceilf(UI_PADDING/2.0f);
+                    int y = 221 - h - 3;
+                    DrawDescriptionBox(selected->abilities[1].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
                 }
             }
+        }
 
+        if (selected->numAbilities > 2)
+        {
+            if (selected->numAbilities >= 1)
+                if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_Q),*mouseState,&baseColor,true,false))
+                {
+                    if (selected->abilities[0].description)
+                    {
+                        int h = GetDescriptionBoxH(selected->abilities[0].description,100,ui.font,UI_PADDING);
+                        int x = 33 + ceilf(UI_PADDING/2.0f);
+                        int y = 221 - h - 3;
+                        DrawDescriptionBox(selected->abilities[0].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
+                    }
+
+                }
+            if (selected->numAbilities >= 2)
+                if (DrawAbilityPortraits(selected,heldAbility,1,GetAbilityPortraitRect(1,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_W),*mouseState,&baseColor,true,false))
+                {
+                    if (selected->abilities[1].description)
+                    {
+                        int h = GetDescriptionBoxH(selected->abilities[1].description,100,ui.font,UI_PADDING);
+                        int x = 65 + ceilf(UI_PADDING/2.0f);
+                        int y = 221 - h - 3;
+                        DrawDescriptionBox(selected->abilities[1].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
+                    }
+                }
+            if (selected->numAbilities >= 3)
+                if (DrawAbilityPortraits(selected,heldAbility,2,GetAbilityPortraitRect(2,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_E),*mouseState,&baseColor,true,false))
+                {
+                    if (selected->abilities[2].description)
+                    {
+                        int h = GetDescriptionBoxH(selected->abilities[2].description,100,ui.font,UI_PADDING);
+                        int x = 97 + ceilf(UI_PADDING/2.0f);
+                        int y = 221 - h - 3;
+                        DrawDescriptionBox(selected->abilities[2].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
+
+                    }
+                }
+            if (selected->numAbilities >= 4)
+                if (DrawAbilityPortraits(selected,heldAbility,3,GetAbilityPortraitRect(3,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_R),*mouseState,&baseColor,true,false))
+                {
+                    if (selected->abilities[3].description)
+                    {
+                        int h = GetDescriptionBoxH(selected->abilities[3].description,100,ui.font,UI_PADDING);
+                        int x = 129 + ceilf(UI_PADDING/2.0f);
+                        int y = 221 - h - 3;
+                        DrawDescriptionBox(selected->abilities[3].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
+                    }
+                }
+            if (selected->numAbilities >= 5)
+            {
+                if (DrawAbilityPortraits(selected,heldAbility,4,GetAbilityPortraitRect(4,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_F),*mouseState,&baseColor,true,false))
+                {
+                    if (selected->abilities[4].description)
+                    {
+                        int h = GetDescriptionBoxH(selected->abilities[4].description,100,ui.font,UI_PADDING);
+                        int x = 140 + ceilf(UI_PADDING/2.0f);
+                        int y = 221 - h - 3;
+                        DrawDescriptionBox(selected->abilities[4].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
+                    }
+                }
+            }
         }
 
         Effect* mousedOver = NULL; 
+
         //4-ability UI
-        if (selected->numAbilities <= 4)
+        if (selected->numAbilities == 4)
         {
 
-            mousedOver = DrawEffectPortrait(162,UI_ABILITY_START_Y,&selected->effects[0],FRIENDLY,mouseState) == true ? &selected->effects[0] : mousedOver;
-            mousedOver = DrawEffectPortrait(178,UI_ABILITY_START_Y,&selected->effects[1],FRIENDLY,mouseState)== true ? &selected->effects[1] : mousedOver;
-            mousedOver = DrawEffectPortrait(194,UI_ABILITY_START_Y,&selected->effects[2],FRIENDLY,mouseState)== true ? &selected->effects[2] : mousedOver;
-            mousedOver = DrawEffectPortrait(209,UI_ABILITY_START_Y,&selected->effects[3],FRIENDLY,mouseState)== true ? &selected->effects[3] : mousedOver;
-            mousedOver = DrawEffectPortrait(225,UI_ABILITY_START_Y,&selected->effects[4],FRIENDLY,mouseState)== true ? &selected->effects[4] : mousedOver;
-            mousedOver = DrawEffectPortrait(241,UI_ABILITY_START_Y,&selected->effects[5],FRIENDLY,mouseState)== true ? &selected->effects[5] : mousedOver;
+            mousedOver = DrawEffectPortrait(161,UI_ABILITY_START_Y,&selected->effects[0],FRIENDLY,mouseState) == true ? &selected->effects[0] : mousedOver;
+            mousedOver = DrawEffectPortrait(177,UI_ABILITY_START_Y,&selected->effects[1],FRIENDLY,mouseState)== true ? &selected->effects[1] : mousedOver;
+            mousedOver = DrawEffectPortrait(193,UI_ABILITY_START_Y,&selected->effects[2],FRIENDLY,mouseState)== true ? &selected->effects[2] : mousedOver;
+            mousedOver = DrawEffectPortrait(208,UI_ABILITY_START_Y,&selected->effects[3],FRIENDLY,mouseState)== true ? &selected->effects[3] : mousedOver;
+            mousedOver = DrawEffectPortrait(224,UI_ABILITY_START_Y,&selected->effects[4],FRIENDLY,mouseState)== true ? &selected->effects[4] : mousedOver;
+            mousedOver = DrawEffectPortrait(240,UI_ABILITY_START_Y,&selected->effects[5],FRIENDLY,mouseState)== true ? &selected->effects[5] : mousedOver;
 
-            mousedOver = DrawEffectPortrait(162,UI_ABILITY_START_Y+18,&selected->effects[6],FRIENDLY,mouseState)== true ? &selected->effects[6] : mousedOver;
-            mousedOver = DrawEffectPortrait(178,UI_ABILITY_START_Y+18,&selected->effects[7],FRIENDLY,mouseState)== true ? &selected->effects[7] : mousedOver;
-            mousedOver = DrawEffectPortrait(194,UI_ABILITY_START_Y+18,&selected->effects[8],FRIENDLY,mouseState)== true ? &selected->effects[8] : mousedOver;
-            mousedOver = DrawEffectPortrait(209,UI_ABILITY_START_Y+18,&selected->effects[9],FRIENDLY,mouseState)== true ? &selected->effects[9] : mousedOver;
-            mousedOver = DrawEffectPortrait(225,UI_ABILITY_START_Y+18,&selected->effects[10],FRIENDLY,mouseState)== true ? &selected->effects[10] : mousedOver;
-            mousedOver = DrawEffectPortrait(241,UI_ABILITY_START_Y+18,&selected->effects[11],FRIENDLY,mouseState)== true ? &selected->effects[11] : mousedOver;
+            mousedOver = DrawEffectPortrait(161,UI_ABILITY_START_Y+18,&selected->effects[6],FRIENDLY,mouseState)== true ? &selected->effects[6] : mousedOver;
+            mousedOver = DrawEffectPortrait(177,UI_ABILITY_START_Y+18,&selected->effects[7],FRIENDLY,mouseState)== true ? &selected->effects[7] : mousedOver;
+            mousedOver = DrawEffectPortrait(193,UI_ABILITY_START_Y+18,&selected->effects[8],FRIENDLY,mouseState)== true ? &selected->effects[8] : mousedOver;
+            mousedOver = DrawEffectPortrait(208,UI_ABILITY_START_Y+18,&selected->effects[9],FRIENDLY,mouseState)== true ? &selected->effects[9] : mousedOver;
+            mousedOver = DrawEffectPortrait(224,UI_ABILITY_START_Y+18,&selected->effects[10],FRIENDLY,mouseState)== true ? &selected->effects[10] : mousedOver;
+            mousedOver = DrawEffectPortrait(240,UI_ABILITY_START_Y+18,&selected->effects[11],FRIENDLY,mouseState)== true ? &selected->effects[11] : mousedOver;
+        }
+        else if (selected->numAbilities <= 3)
+        {
+            mousedOver = DrawEffectPortrait(129,UI_ABILITY_START_Y,&selected->effects[0],FRIENDLY,mouseState) == true ? &selected->effects[0] : mousedOver;
+            mousedOver = DrawEffectPortrait(145,UI_ABILITY_START_Y,&selected->effects[1],FRIENDLY,mouseState)== true ? &selected->effects[1] : mousedOver;
+            mousedOver = DrawEffectPortrait(161,UI_ABILITY_START_Y,&selected->effects[2],FRIENDLY,mouseState)== true ? &selected->effects[2] : mousedOver;
+            mousedOver = DrawEffectPortrait(177,UI_ABILITY_START_Y,&selected->effects[3],FRIENDLY,mouseState)== true ? &selected->effects[3] : mousedOver;
+            mousedOver = DrawEffectPortrait(193,UI_ABILITY_START_Y,&selected->effects[4],FRIENDLY,mouseState)== true ? &selected->effects[4] : mousedOver;
+            mousedOver = DrawEffectPortrait(209,UI_ABILITY_START_Y,&selected->effects[5],FRIENDLY,mouseState)== true ? &selected->effects[5] : mousedOver;
+            mousedOver = DrawEffectPortrait(225,UI_ABILITY_START_Y,&selected->effects[5],FRIENDLY,mouseState)== true ? &selected->effects[6] : mousedOver;
+            mousedOver = DrawEffectPortrait(241,UI_ABILITY_START_Y,&selected->effects[5],FRIENDLY,mouseState)== true ? &selected->effects[7] : mousedOver;
+
+            mousedOver = DrawEffectPortrait(129,UI_ABILITY_START_Y+18,&selected->effects[6],FRIENDLY,mouseState)== true ? &selected->effects[8] : mousedOver;
+            mousedOver = DrawEffectPortrait(145,UI_ABILITY_START_Y+18,&selected->effects[7],FRIENDLY,mouseState)== true ? &selected->effects[9] : mousedOver;
+            mousedOver = DrawEffectPortrait(161,UI_ABILITY_START_Y+18,&selected->effects[8],FRIENDLY,mouseState)== true ? &selected->effects[10] : mousedOver;
+            mousedOver = DrawEffectPortrait(177,UI_ABILITY_START_Y+18,&selected->effects[9],FRIENDLY,mouseState)== true ? &selected->effects[11] : mousedOver;
+            mousedOver = DrawEffectPortrait(193,UI_ABILITY_START_Y+18,&selected->effects[10],FRIENDLY,mouseState)== true ? &selected->effects[12] : mousedOver;
+            mousedOver = DrawEffectPortrait(209,UI_ABILITY_START_Y+18,&selected->effects[11],FRIENDLY,mouseState)== true ? &selected->effects[13] : mousedOver;
+            mousedOver = DrawEffectPortrait(225,UI_ABILITY_START_Y+18,&selected->effects[11],FRIENDLY,mouseState)== true ? &selected->effects[14] : mousedOver;
+            mousedOver = DrawEffectPortrait(241,UI_ABILITY_START_Y+18,&selected->effects[11],FRIENDLY,mouseState)== true ? &selected->effects[15] : mousedOver;
+
         }
         else //5-ability UI
         {
-            mousedOver = DrawEffectPortrait(195,UI_ABILITY_START_Y,&selected->effects[0],FRIENDLY,mouseState) == true ? &selected->effects[0] : mousedOver;
-            mousedOver = DrawEffectPortrait(211,UI_ABILITY_START_Y,&selected->effects[1],FRIENDLY,mouseState)== true ? &selected->effects[1] : mousedOver;
-            mousedOver = DrawEffectPortrait(226,UI_ABILITY_START_Y,&selected->effects[2],FRIENDLY,mouseState)== true ? &selected->effects[2] : mousedOver;
-            mousedOver = DrawEffectPortrait(240,UI_ABILITY_START_Y,&selected->effects[3],FRIENDLY,mouseState)== true ? &selected->effects[3] : mousedOver;
+            mousedOver = DrawEffectPortrait(193,UI_ABILITY_START_Y,&selected->effects[0],FRIENDLY,mouseState) == true ? &selected->effects[0] : mousedOver;
+            mousedOver = DrawEffectPortrait(209,UI_ABILITY_START_Y,&selected->effects[1],FRIENDLY,mouseState)== true ? &selected->effects[1] : mousedOver;
+            mousedOver = DrawEffectPortrait(24,UI_ABILITY_START_Y,&selected->effects[2],FRIENDLY,mouseState)== true ? &selected->effects[2] : mousedOver;
+            mousedOver = DrawEffectPortrait(238,UI_ABILITY_START_Y,&selected->effects[3],FRIENDLY,mouseState)== true ? &selected->effects[3] : mousedOver;
             
             
-            mousedOver = DrawEffectPortrait(195,UI_ABILITY_START_Y+18,&selected->effects[4],FRIENDLY,mouseState)== true ? &selected->effects[4] : mousedOver;
-            mousedOver = DrawEffectPortrait(211,UI_ABILITY_START_Y+18,&selected->effects[5],FRIENDLY,mouseState)== true ? &selected->effects[5] : mousedOver;
-            mousedOver = DrawEffectPortrait(226,UI_ABILITY_START_Y+18,&selected->effects[6],FRIENDLY,mouseState)== true ? &selected->effects[6] : mousedOver;
-            mousedOver = DrawEffectPortrait(240,UI_ABILITY_START_Y+18,&selected->effects[7],FRIENDLY,mouseState)== true ? &selected->effects[7] : mousedOver;
+            mousedOver = DrawEffectPortrait(193,UI_ABILITY_START_Y+18,&selected->effects[4],FRIENDLY,mouseState)== true ? &selected->effects[4] : mousedOver;
+            mousedOver = DrawEffectPortrait(209,UI_ABILITY_START_Y+18,&selected->effects[5],FRIENDLY,mouseState)== true ? &selected->effects[5] : mousedOver;
+            mousedOver = DrawEffectPortrait(224,UI_ABILITY_START_Y+18,&selected->effects[6],FRIENDLY,mouseState)== true ? &selected->effects[6] : mousedOver;
+            mousedOver = DrawEffectPortrait(238,UI_ABILITY_START_Y+18,&selected->effects[7],FRIENDLY,mouseState)== true ? &selected->effects[7] : mousedOver;
         }
 
         if (mousedOver && EffectIsEnabled(mousedOver))
@@ -2545,6 +2647,7 @@ Widget* GetWidgetByName(GameState gameState, char* name)
         if (w->name && strcmp(name,w->name) == 0)
             return w;
     }
+    return NULL;
 }
 void InitUI()
 {
@@ -2583,10 +2686,14 @@ void InitUI()
     //currSettings.particlesEnabled = &particles->activated;
 
 
-    ui.panel_sprite_index = LoadSprite("assets/ui/ui.png",false);
-    ui.panel_5_abilities_sprite_index = LoadSprite("assets/ui/ui_5abilities.png",false);
-    ui.health_element_sprite_index = LoadSprite("assets/ui/health.png",false);
-    ui.health_and_mana_element_sprite_index = LoadSprite("assets/ui/health_and_mana.png",false);
+    ui.panel_sprite_index = LoadSprite("assets/ui/ingame/ui.png",false);
+    ui.panel_0_abilities_sprite_index = LoadSprite("assets/ui/ingame/ui_0abilities.png",false);
+    ui.panel_1_abilities_sprite_index = LoadSprite("assets/ui/ingame/ui_1abilities.png",false);
+    ui.panel_2_abilities_sprite_index = LoadSprite("assets/ui/ingame/ui_2abilities.png",false);
+    ui.panel_3_abilities_sprite_index = LoadSprite("assets/ui/ingame/ui_3abilities.png",false);
+    ui.panel_5_abilities_sprite_index = LoadSprite("assets/ui/ingame/ui_5abilities.png",false);
+    ui.health_element_sprite_index = LoadSprite("assets/ui/ingame/health.png",false);
+    ui.health_and_mana_element_sprite_index = LoadSprite("assets/ui/ingame/health_and_mana.png",false);
 
 
     ui.panelShownPercent = 1.0f;
@@ -2645,9 +2752,9 @@ void InitUI()
     numChatboxes = 0;
 
 
-    ui.chestIdle = LoadAnimation("assets/ui/chest.png",42,43,0.25f,0,1);
-    ui.chestWiggle = LoadAnimation("assets/ui/chest_wiggle.png",42,43,0.08f,0,20);
-    ui.chestOpen = LoadAnimation("assets/ui/chest_open.png",42,43,0.1f,0,5);
+    ui.chestIdle = LoadAnimation("assets/ui/endscreen/chest.png",42,43,0.25f,0,1);
+    ui.chestWiggle = LoadAnimation("assets/ui/endscreen/chest_wiggle.png",42,43,0.08f,0,20);
+    ui.chestOpen = LoadAnimation("assets/ui/endscreen/chest_open.png",42,43,0.1f,0,5);
     ui.chestOpen.holdOnLastFrame = true;
 }
 void UpdateWidget(Widget* w, float dt)
@@ -3755,17 +3862,20 @@ bool IsInsideUI(int x, int y)
 }
 int GetAbilityClicked(MouseState* mouseState,MouseState* mouseStateLastFrame)
 {
-    if (PointInRect(mouseState->screenX,mouseState->screenY,GetAbilityPortraitRect(0)))
-        return 0;
-    if (PointInRect(mouseState->screenX,mouseState->screenY,GetAbilityPortraitRect(1)))
-        return 1;
-    if (PointInRect(mouseState->screenX,mouseState->screenY,GetAbilityPortraitRect(2)))
-        return 2;
-    if (PointInRect(mouseState->screenX,mouseState->screenY,GetAbilityPortraitRect(3)))
-        return 3;
-    if (PointInRect(mouseState->screenX,mouseState->screenY,GetAbilityPortraitRect(4)))
-        return 4;
-
+    GameObject* selected = players[0].selection[players[0].indexSelectedUnit];
+    if (selected)
+    {
+        if (PointInRect(mouseState->screenX,mouseState->screenY,GetAbilityPortraitRect(0,selected->numAbilities)))
+            return 0;
+        if (PointInRect(mouseState->screenX,mouseState->screenY,GetAbilityPortraitRect(1,selected->numAbilities)))
+            return 1;
+        if (PointInRect(mouseState->screenX,mouseState->screenY,GetAbilityPortraitRect(2,selected->numAbilities)))
+            return 2;
+        if (PointInRect(mouseState->screenX,mouseState->screenY,GetAbilityPortraitRect(3,selected->numAbilities)))
+            return 3;
+        if (PointInRect(mouseState->screenX,mouseState->screenY,GetAbilityPortraitRect(4,selected->numAbilities)))
+            return 4;
+    }
 
     return -1;
 

@@ -42,6 +42,8 @@ function update(dt)
         if (hpPercent <= intermissionEnd and isInIntermission == true) then
             isInIntermission = false
             CastAbility(quartz,{});
+            SetSprite("assets/enemies/nuul/nuul.png");
+
         end
         if (timer > 4) then
             CastAbility(void,{});

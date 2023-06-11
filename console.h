@@ -11,6 +11,8 @@
 
 #define CONSOLE_H 80
 
+#define MAX_CONSOLE_LINE_CHARACTERS 35
+
 typedef struct ConsoleLine
 {
     char* buffer;

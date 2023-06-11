@@ -192,6 +192,10 @@ typedef struct PurchasingUnitUI {
 typedef struct UI
 {
     int panel_sprite_index;
+    int panel_0_abilities_sprite_index;
+    int panel_1_abilities_sprite_index;
+    int panel_2_abilities_sprite_index;
+    int panel_3_abilities_sprite_index;
     int panel_5_abilities_sprite_index;
     int health_element_sprite_index;
     int health_and_mana_element_sprite_index;
@@ -331,7 +335,7 @@ int GetDescriptionBoxH(char* description, int wTextbox, ALLEGRO_FONT* f, int pad
 bool IsInsideUI(int x, int y);
 bool MouseInsideUI(MouseState* mouse);
 int GetAbilityClicked(MouseState* mouseState,MouseState* mouseStateLastFrame);
-Rect GetAbilityPortraitRect(int index);
+Rect GetAbilityPortraitRect(int index, int numAbilities);
 void InitUI();  
 void InitFonts();
 void DrawMenus(MouseState* mouseState);

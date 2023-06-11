@@ -32,9 +32,23 @@ void AddConsoleLine(char* str)
         console.lines[i] = console.lines[i-1];
     }
 
+    
     ConsoleLine* l = &console.lines[0];
-    l->buffer = calloc(strlen(str)+1,sizeof(char));
-    strcpy(l->buffer,str);
+    l->buffer = calloc(lenLine > MAX_CONSOLE_LINE_CHARACTERS ? MAX_CONSOLE_LINE_CHARACTERS+1 : lenLine + 1,sizeof(char));
+    if (lenLine > MAX_CONSOLE_LINE_CHARACTERS)
+        strncpy(l->buffer,str,MAX_CONSOLE_LINE_CHARACTERS);
+    else
+        strcpy(l->buffer,str);
+
+    if (lenLine > MAX_CONSOLE_LINE_CHARACTERS)
+    {
+        str += MAX_CONSOLE_LINE_CHARACTERS;
+        AddConsoleLine(str);
+    }
+    else if (strcmp(str,"") != 0)
+    {
+        AddConsoleLine("");
+    }
 
     console.scroll = 0;
 }
@@ -152,11 +166,13 @@ void RunLine()
     if (console.active)
     {
         char* cstr =  al_cstr_dup(console.currentLine);
+
+        AddConsoleLine(cstr);
+
         currGameObjRunning = players[0].selection[players[0].indexSelectedUnit];
         luaL_loadbuffer(luaState,cstr,strlen(cstr),NULL);
         lua_pcall(luaState,0,0,0);
 
-        AddConsoleLine(cstr);
         al_free(cstr);
 
         al_ustr_truncate(console.currentLine,0);
