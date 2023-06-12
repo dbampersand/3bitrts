@@ -74,6 +74,8 @@ typedef struct Effect
     float triggersPerSecond;
     float numTriggers;
     float timer;
+
+    float totalTimer;
     
     float duration; 
     float tickTime;

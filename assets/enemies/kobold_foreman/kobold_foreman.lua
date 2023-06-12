@@ -2,6 +2,7 @@ local throwDarts = 0
 
 function setup()
     SetSprite("assets/enemies/kobold_foreman/kobold_foreman.png");
+    SetChannelingSprite("assets/enemies/kobold_foreman/kobold_foreman_channelling.png")
 
     SetDamage(35);
     SetMaxHP(750,true)

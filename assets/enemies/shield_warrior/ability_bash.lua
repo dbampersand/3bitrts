@@ -5,7 +5,7 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetCooldown(12); 
     AbilitySetPortrait("assets/enemies/shield_warrior/ability_shieldstance.png");
-    SetDescription("[b]Shield Stance\n\nProvides a large shield.")
+    SetDescription("[b]Bash\n\nSmashes a target with their shield.")
 
 end
 function casted(x,y,obj,headingx,headingy)

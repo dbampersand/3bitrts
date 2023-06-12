@@ -2,6 +2,7 @@ local crash = 0
 
 function setup()
     SetSprite("assets/enemies/kobold_crystal/kobold_crystal.png");
+    SetChannelingSprite("assets/enemies/kobold_crystal/kobold_crystal_channelling.png");
 
     SetDamage(0);
     SetMaxHP(750,true)

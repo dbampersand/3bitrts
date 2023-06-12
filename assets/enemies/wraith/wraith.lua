@@ -32,7 +32,7 @@ function update(dt)
         desolateTimer = desolateTimer - dt;
         if (desolateTimer <= 0) then
             local targ = GetFurthestObjectInRange(GetX(GetObjRef()),GetY(GetObjRef()),256,TYPE_ENEMY);
-            CastAbility(desolate,0.5,{{target = targ}});
+            CastAbility(desolate,1,{{target = targ}});
         end
 
         negativeTimer = negativeTimer - dt;

@@ -2,6 +2,7 @@ local spit = 0
 
 function setup()
     SetSprite("assets/enemies/scorpion/scorpion.png");
+    SetChannelingSprite("assets/enemies/scorpion/scorpion_channeling.png")
 
     SetDamage(20);
     SetMaxHP(750,true)
@@ -9,7 +10,6 @@ function setup()
     SetRange(50);
 
     spit = AddAbility(GetObjRef(),"assets/enemies/scorpion/ability_spit.lua",0);
-    SetChannelingSprite("assets/enemies/scorpion/scorpion_channeling.png")
    
     SetAttackSounds({
         "assets/audio/attacks/attack_spit/spit_1.wav",

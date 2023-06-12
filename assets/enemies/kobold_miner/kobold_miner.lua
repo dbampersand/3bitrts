@@ -2,6 +2,7 @@ local bomb = 0
 
 function setup()
     SetSprite("assets/enemies/kobold_miner/kobold_miner.png");
+    SetChannelingSprite("assets/enemies/kobold_miner/kobold_miner_channelling.png")
 
     SetDamage(7);
     SetMaxHP(750,true)

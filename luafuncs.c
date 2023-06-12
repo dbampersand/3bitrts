@@ -1682,6 +1682,17 @@ int L_StopCommand(lua_State* l)
     StopCommand(&objects[index],false);
     return 0;
 }
+int L_HoldCommand(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    GameObject* obj = &objects[index];
+
+    HoldCommand(&objects[index],false);
+    return 0;
+}
+
 int L_EnableAI(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -4387,6 +4398,28 @@ int L_DistXY(lua_State* l)
     lua_pushnumber(l,dist(x1,y1,x2,y2));
     return 1;
 }
+int L_HasEffect(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    const char* effectName = lua_tostring(l,2);
+    if (!GameObjectIndexInRange(objIndex))
+    {
+        ConsolePrintf("L_HasEffect: index out of range: %i\n",objIndex);
+        return 0;
+    }
+    GameObject* g = &objects[objIndex];
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        if (g->effects[i].name && strcmp(effectName,g->effects[i].name) == 0)
+        {
+            printf("gg\n");
+            lua_pushboolean(l,true);
+            return 1;
+        }
+    }
+    lua_pushboolean(l,false);
+    return 1;
+}
 int L_GetEffects(lua_State* l)
 {
     int objIndex = lua_tonumber(l,1);
@@ -4879,6 +4912,22 @@ int L_SetEncounterBreakPoints(lua_State* l)
         }
     }   
     return 0;
+}
+int L_IsNear(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    float x = lua_tonumber(l,2);
+    float y = lua_tonumber(l,3);
+
+    if (!GameObjectIndexInRange(index))
+    {
+        printf("L_IsNear: index out of range: %i\n",index);
+        return 0;
+    }
+    GameObject* g = &objects[index];
+    bool b = IsNear(g->position.worldX,x,1) && IsNear(g->position.worldY,y,1);
+    lua_pushboolean(l,b);
+    return 1;
 }
 int L_SetTime(lua_State* l)
 {
@@ -5783,5 +5832,14 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetMapGoldMultiplier);
     lua_setglobal(luaState, "SetMapGoldMultiplier");
+
+    lua_pushcfunction(luaState, L_HasEffect);
+    lua_setglobal(luaState, "HasEffect");
+
+    lua_pushcfunction(luaState, L_IsNear);
+    lua_setglobal(luaState, "IsNear");
+
+    lua_pushcfunction(luaState, L_HoldCommand);
+    lua_setglobal(luaState, "HoldCommand");
 
 }

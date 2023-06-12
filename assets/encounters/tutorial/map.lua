@@ -51,8 +51,8 @@ local controlGroupMessage2 = "Holding control, press a number key to assign a gr
 local controlGroupMessage3 = "Select a different group of units and assign a second group, holding control and pressing a number key."
 local controlGroupMessage4 = "Recall the group you set by pressing the number key without holding control."
 
-local attackString = "The circle represents an area of affect attack on your unit."
-local attackString2 = "Move out of it before it damages you too much!"
+local attackString2 = "The circle represents an area of affect attack on your unit."
+local attackString3 = "Move out of it before it damages you too much!"
 
 
 local dotTimer = 0
@@ -71,6 +71,8 @@ function setup()
     textbox.w = DIALOGUE_W;
     textbox.y = DIALOGUE_Y;
     textbox.h = DIALOGUE_H;
+
+    SetAutoWin(false);
 
 end
 
@@ -101,10 +103,12 @@ function update(dt)
         end
     end
     if (moved == false and GetCurrentMessage() == moveString) then
-        if (GetUnitCurrentCommand(warrior) == COMMAND_MOVE) then
+        local targ = GetObjTargetPosition(warrior)
+        if (IsNear(warrior,targ.x,targ.y) and  GetUnitCurrentCommand(warrior) == COMMAND_MOVE) then
            ClearMessages(); 
            moved = true
            ClearCommandQueue(warrior);
+           HoldCommand(warrior)
            PushMessage(attackString,textbox.x,textbox.y,textbox.w,textbox.h,true);
            trainingdummy = CreateObject("assets/enemies/trainingdummy/trainingdummy.lua",128,128,TYPE_ENEMY);
         
@@ -213,13 +217,13 @@ function update(dt)
             f1["triggersPerSecond"] = 1
         
             CreateAOE(GetX(warrior),GetY(warrior),"", 30, 1, 999999, false, ATTACK_HITS_FRIENDLIES, COLOR_DAMAGE, DITHER_HALF,false,-1, {f1})
-            PushMessage(attackString,textbox.x,textbox.y,textbox.w,textbox.h,false);
-            PushMessage(attackString2,textbox.x,textbox.y,textbox.w,textbox.h,true);
+            PushMessage(attackString2,textbox.x,textbox.y,textbox.w,textbox.h,false);
+            PushMessage(attackString3,textbox.x,textbox.y,textbox.w,textbox.h,true);
             
         end
 
     end
-    if (GetCurrentMessage() == attackString2) then
+    if (GetCurrentMessage() == attackString3) then
         dotTimer = dotTimer + dt;
         if (GetNumEffects(warrior) == 0 and dotTimer > 2) then
             Win();

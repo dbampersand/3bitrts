@@ -19,7 +19,7 @@ typedef struct MouseState
     int screenX; int screenY;
 } MouseState;
 
-extern unsigned long long _FRAMES;
+extern double _FRAMES;
 
 
 //refers to an index in Target FPS pulldown in videoOptionsPanel

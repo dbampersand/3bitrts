@@ -8,6 +8,7 @@ local timeBetweenCasts = 0.5
 
 function setup()
     SetSprite("assets/enemies/kobold_saboteur/kobold_saboteur.png");
+    SetChannelingSprite("assets/enemies/kobold_saboteur/kobold_saboteur_channelling.png");
 
     SetDamage(15);
     SetMaxHP(750,true)
@@ -47,7 +48,7 @@ function update(dt)
         end
         if (castTimer <= 0 and moveTimer >= 0) then
             castTimer = timeBetweenCasts
-            CastAbility(dropBomb,0,{x = GetX(GetObjRef()),y = GetY(GetObjRef())})
+            CastAbility(dropBomb,0.1,{x = GetX(GetObjRef()),y = GetY(GetObjRef())})
         end
     end
 end

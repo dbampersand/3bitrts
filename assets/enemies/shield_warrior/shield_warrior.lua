@@ -22,6 +22,11 @@ function update(dt)
         if (timer < 0) then
             CastAbility(bash,0.5,{{target=GetRandomUnit(TYPE_ENEMY,TYPE_TANK,GetAbilityRange(GetObjRef(),bash),1)[1]}})
         end
+        if (GetShield(GetObjRef()) > 0) then
+            SetSprite("assets/enemies/shield_warrior/shield_warrior_has_shieldstance.png");
+        else
+            SetSprite("assets/enemies/shield_warrior/shield_warrior.png");
+        end
     end
 end
 

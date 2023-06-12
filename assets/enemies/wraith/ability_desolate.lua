@@ -54,4 +54,5 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     
 end
 function onchanneled() 
+    SetChannelingSprite("assets/enemies/wraith/wraith_casting_desolate.png");
 end

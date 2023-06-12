@@ -3,6 +3,8 @@ local fireball = -1
 
 function setup()
     SetSprite("assets/enemies/kobold_wizard/kobold_wizard.png");
+    SetChannelingSprite("assets/enemies/kobold_wizard/kobold_wizard_channelling.png");
+
 
     SetDamage(35);
     SetMaxHP(750,true)

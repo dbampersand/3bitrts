@@ -10,6 +10,7 @@ function setup()
 
     
 
+    CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",210.00,142.00,TYPE_ENEMY,0.00)
 end
 
 function update()

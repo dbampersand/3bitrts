@@ -6,9 +6,10 @@ local snare = -1
 local spines = -1
 function setup()
     SetSprite("assets/enemies/prowler/prowler.png");
+    SetChannelingSprite("assets/enemies/prowler/prowler_channelling.png");
 
     SetDamage(0);
-    SetMaxHP(4500,true)
+    SetMaxHP(4000,true)
     SetSpeed(0)
     SetRange(0);
 

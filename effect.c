@@ -55,7 +55,7 @@ void UpdateEffectVisuals(GameObject* g, float dt)
         {
             e->visual.position.worldY -= dt*2;
             //add slight sway  
-            e->visual.position.worldX += (_FRAMES % _TARGET_FPS*2) > _TARGET_FPS / 2 ? dt * 2.0f : dt * -2.0f;
+            e->visual.position.worldX += ((int)(_FRAMES) % _TARGET_FPS*2) > _TARGET_FPS / 2 ? dt * 2.0f : dt * -2.0f;
             e->visual.timer -= dt;
             if (e->visual.timer <= 0)
             {
@@ -366,7 +366,10 @@ void ProcessEffects(GameObject* g, float dt)
         if (e->enabled == true)
         {   
             if (e->trigger != TRIGGER_PERMANENT)
+            {
                 e->timer += dt;
+                e->totalTimer += dt;
+            }
             if (e->trigger == TRIGGER_INSTANT)
             {
                 ProcessEffect(&g->effects[i],g->effects[i].from,g, false);

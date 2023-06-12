@@ -30,4 +30,6 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     
 end
 function onchanneled() 
+    SetChannelingSprite("assets/enemies/cannon/cannon_cast_shoot.png")
+
 end

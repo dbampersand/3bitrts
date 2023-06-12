@@ -397,7 +397,7 @@ void UpdateObject(GameObject* g, float dt)
         GetCentre(g, &cx, &cy);
         float r = _MAX(GetWidth(g), GetHeight(g)) * fxtimer;
         ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
-        if ((_FRAMES + (g - objects)) % 2 == 0)
+        if ((int)((_FRAMES) + (g - objects)) % 2 == 0)
             RandParticleAroundEdgeOfCircle(cx, cy, r, g->summonMax + 1, 0.4, ALColorToCol(c));
 
         UpdatePush(g, dt);
@@ -2132,12 +2132,12 @@ void DoCurrentPathingNode(GameObject* g)
         PointI targetIndex = (PointI){((g->targetPosition.x) / (float)_GRAIN), ((g->targetPosition.y) / (float)_GRAIN)};
         PointI currentIndex = (PointI){((g->position.worldX) / (float)_GRAIN), ((g->position.worldY) / (float)_GRAIN)};
 
-        if (g->pathfindNeedsRefresh && ((_FRAMES + (g - objects)) % MAX_OBJS) == 0)
+        if (g->pathfindNeedsRefresh && (((int)(_FRAMES) + (g - objects)) % MAX_OBJS) == 0)
             AStar(currentIndex, targetIndex, &success, GetWidth(g), GetHeight(g), g);
         else
         {
             g->currentPathingNode++;
-            if (g->currentPathingNode >= g->numPathnodes || ((_FRAMES + (g - objects)) % MAX_OBJS) == 0)
+            if (g->currentPathingNode >= g->numPathnodes || (((int)(_FRAMES) + (g - objects)) % MAX_OBJS) == 0)
             {
                 AStar(currentIndex, targetIndex, &success, GetWidth(g), GetHeight(g), g);
                 //g->currentPathingNode = 0;
@@ -2662,7 +2662,7 @@ void DrawChannellingEffect(GameObject* g)
 
     Sprite* s = ObjIsChannelling(g) ? &sprites[g->channelingSpriteIndex] : &sprites[g->spriteIndex];
 
-    int effectAmount = (_FRAMES % 20) / 4;
+    int effectAmount = ((int)(_FRAMES) % 20) / 4;
 
     Rect selectRect;
     selectRect.w = al_get_bitmap_width(s->sprite) + effectAmount * 2;
@@ -3525,7 +3525,7 @@ void DoAI(GameObject* g)
         // g->targObj = t->obj;
     }
     // do one of these per frame, just to save some cycles
-    if (_FRAMES % MAX_OBJS == g - objects)
+    if ((int)(_FRAMES) % MAX_OBJS == g - objects)
     {
         for (int i = 0; i < numActiveObjects; i++)
         {

@@ -675,7 +675,7 @@ void draw_circle_dithered(float cX, float cY, float radius, ALLEGRO_COLOR color,
 }
 void DrawHintSoak(float cx, float cy, float radius, ALLEGRO_COLOR col)
 {
-    float move = ((_FRAMES)%10)/8.0f;
+    float move = ((int)(_FRAMES)%10)/8.0f;
     float x = cx;
     float y = cy - radius - 10 - move;
 
@@ -705,7 +705,7 @@ void DrawAttack(Attack* a, float dt)
         {
             int coef = (_TARGET_FPS*2) - (1/timeleft * (_TARGET_FPS/1.5f));
             coef = coef > (_TARGET_FPS/14) ? coef : _TARGET_FPS/14;
-            if (a->inactiveFor > 0 && _FRAMES % (coef) >= 0 && _FRAMES % (coef) < _TARGET_FPS/10)
+            if (a->inactiveFor > 0 && (int)(_FRAMES) % (coef) >= 0 && (int)(_FRAMES) % (coef) < _TARGET_FPS/10)
             {
                 c = COLOR_GROUND_DARK;
             }
@@ -715,7 +715,7 @@ void DrawAttack(Attack* a, float dt)
             float amtToMove = DegToRad(45);
             for (float i = 0; i < M_PI*2; i += amtToMove)
             {
-                float start = i + _FRAMES/(float)_TARGET_FPS;
+                float start = i + (_FRAMES)/(float)_TARGET_FPS;
                 float delta = amtToMove/2.0f;
                 al_draw_arc(a->screenX,a->screenY,a->radius,start,delta,col,1);
                 
@@ -805,7 +805,7 @@ void UpdateAttack(Attack* a, float dt)
         a->inactiveFor = 0;
     if (AttackIsAOE(a))
     {
-        if (_FRAMES%(int)(_TARGET_FPS/AOE_PARTICLES_PER_SECOND) == 0)
+        if ((int)(_FRAMES)%(int)(_TARGET_FPS/AOE_PARTICLES_PER_SECOND) == 0)
         {
             RandParticleAroundEdgeOfCircle(a->x,a->y,a->radius,3,1,a->color);
         }

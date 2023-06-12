@@ -869,7 +869,7 @@ int main(int argc, char* args[])
 
             mouseStateLastFrame = mouseState;
             keyStateLastFrame = keyState;
-            _FRAMES++;
+             _FRAMES += 60 / (float)_TARGET_FPS;
             totalRenderTime += time;
 
             //ConsolePrintf("Total time: %f\n",time);

@@ -60,3 +60,6 @@ end
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     SetAttackVelocity(attackRef,GetAttackVelocity(attackRef)+dt*32);
 end
+function onchanneled() 
+    SetChannelingSprite("assets/enemies/naja/naja_cast_fangs.png")
+end

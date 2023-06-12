@@ -28,3 +28,6 @@ end
 
 function abilitytick(x, y, durationLeft)
 end
+function onchanneled() 
+    SetChannelingSprite("assets/enemies/wadjet/wadjet_cast_sun_disc.png")
+end

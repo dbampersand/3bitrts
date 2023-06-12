@@ -62,3 +62,6 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
         end
     end
 end
+function onchanneled() 
+    SetChannelingSprite("assets/enemies/naja/naja_cast_sinkholes.png")
+end

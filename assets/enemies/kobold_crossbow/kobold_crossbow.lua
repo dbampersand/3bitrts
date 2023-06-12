@@ -6,7 +6,8 @@ local moveTimer = 0
 
 function setup()
     SetSprite("assets/enemies/kobold_crossbow/kobold_crossbow.png");
-
+    SetChannelingSprite("assets/enemies/kobold_crossbow/kobold_crossbow_cast_shoot.png")
+    
     SetDamage(15);
     SetMaxHP(750,true)
     SetSpeed(120)

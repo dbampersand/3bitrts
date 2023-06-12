@@ -141,8 +141,6 @@ void InitColors()
     BG_DECOR = al_map_rgba((BG.r*255)+10,(BG.g*255)+15,(BG.b*255)+10,255);
     TEXTURED_GROUND = al_map_rgba((GROUND.r*255)-5,(GROUND.g*255) - 5,(GROUND.b*255)-5,255);
 
-
-    
     FRIENDLY_HEAL = al_map_rgba(clamp((HEAL.r*255)+FRIENDLY_COLOR_ADD,0,255),clamp((HEAL.g*255)+FRIENDLY_COLOR_ADD,0,255),clamp((HEAL.b*255)+FRIENDLY_COLOR_ADD,0,255),255);
     FRIENDLY_POISON = al_map_rgba(clamp((POISON.r*255)+FRIENDLY_COLOR_ADD,0,255),clamp((POISON.g*255)+FRIENDLY_COLOR_ADD,0,255),clamp((POISON.b*255)+FRIENDLY_COLOR_ADD,0,255),255);
     FRIENDLY_DAMAGE = al_map_rgba(clamp((DAMAGE.r*255) + FRIENDLY_COLOR_ADD,0,255),clamp((DAMAGE.g*255)+FRIENDLY_COLOR_ADD,0,255),clamp((DAMAGE.b*255)+FRIENDLY_COLOR_ADD,0,255),255);
@@ -194,6 +192,7 @@ void InitColors()
     EffectColors[EFFECT_MAXHP] = COLOR_HEAL;
     EffectColors[EFFECT_MAXMANA] = COLOR_SHIELD;
     EffectColors[EFFECT_MANAREGEN] = COLOR_SHIELD;
+    EffectColors[EFFECT_ADD_MANA] = COLOR_SHIELD;
     EffectColors[EFFECT_ABILITY_POTENCY] = COLOR_SHIELD;
     EffectColors[EFFECT_HURT] = COLOR_DAMAGE;
     EffectColors[EFFECT_HURT_PERCENT] = COLOR_DAMAGE;
@@ -210,7 +209,6 @@ void InitColors()
     EffectColors[EFFECT_ATTACKRANGE] = COLOR_DAMAGE;
     EffectColors[EFFECT_INVULN] = COLOR_HEAL;
     EffectColors[EFFECT_CURE] = COLOR_HEAL;
-    EffectColors[EFFECT_ADD_MANA] = COLOR_HEAL;
     EffectColors[EFFECT_ARMOR] = COLOR_SHIELD;
     EffectColors[EFFECT_LIFESTEAL] = COLOR_HEAL;
     EffectColors[EFFECT_COOLDOWN_RATE] = COLOR_SPEED;
@@ -221,6 +219,7 @@ void InitColors()
 
 
 }
+
 
 Color GetEffectColor(Effect* e)
 {

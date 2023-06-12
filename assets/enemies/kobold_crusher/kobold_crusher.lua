@@ -2,6 +2,7 @@ local charge = -1
 
 function setup()
     SetSprite("assets/enemies/kobold_crusher/kobold_crusher.png");
+    SetChannelingSprite("assets/enemies/kobold_crusher/kobold_crusher_channelling.png");
 
     SetDamage(35);
     SetMaxHP(750,true)
@@ -24,7 +25,7 @@ end
 function update(dt)
     if (IsInCombat()) then
         local randUnit =  GetRandomUnit(TYPE_ENEMY,TYPE_ALL,256)[1];
-        CastAbility(charge,1,{{x = GetX(randUnit),y = GetY(randUnit)}})
+        CastAbility(charge,1.25,{{x = GetX(randUnit),y = GetY(randUnit)}})
     end
 end
 

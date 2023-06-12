@@ -34,7 +34,7 @@ ALLEGRO_BITMAP* SCREEN = NULL;
 ALLEGRO_BITMAP* background_screen = NULL;
 ALLEGRO_DISPLAY* display = NULL;
 
-unsigned long long _FRAMES = 1;
+double _FRAMES = 1;
 
  TextDisplay textDisplays[NUM_TEXT_DISPLAYS] = {0};
  int numStringsToDraw = 0;

@@ -6,7 +6,7 @@ local tickrate = 0.5
 local angle = 70
 local numAoEs = 9
 
-local radius = 60
+local radius = 40
 local duration = 12
 
 
@@ -47,4 +47,6 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     
 end
 function onchanneled() 
+    SetChannelingSprite("assets/enemies/wraith/wraith_casting_negative.png");
+
 end

@@ -56,3 +56,6 @@ end
 
 function abilitytick(x, y, durationLeft)
 end
+function onchanneled() 
+    SetChannelingSprite("assets/enemies/caduceus/caduceus_cast_wave.png")
+end

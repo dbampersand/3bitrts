@@ -5,6 +5,7 @@ local maxDecisionTime = 6;
 local minDecisionTime = 3
 function setup()
     SetSprite("assets/enemies/firebreather/firebreather.png");
+    SetChannelingSprite("assets/enemies/firebreather/firebreather_channelling.png");
 
     SetDamage(15);
     SetMaxHP(600,true)

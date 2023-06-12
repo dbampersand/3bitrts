@@ -40,3 +40,6 @@ function ontimeout(x,y,obj,dt,target)
     atk = -1
     PlaySound("assets/enemies/rock_tosser/audio/toss_large.wav",1);
 end
+function onchanneled() 
+    SetChannelingSprite("assets/enemies/rock_tosser/rock_tosser_cast_throw_large_rock.png")
+end
