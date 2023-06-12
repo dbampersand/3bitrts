@@ -1,5 +1,7 @@
     function setup()
     SetSprite("assets/enemies/cobra/cobra.png");
+    SetChannelingSprite("assets/enemies/cobra/cobra_channelling.png");
+
 
     SetDamage(20);
     SetMaxHP(650,true)

@@ -3,6 +3,7 @@ local rain = -1
 
 function setup()
     SetSprite("assets/enemies/skeleton_minion_ranged/skeleton_minion_ranged.png");
+    SetChannelingSprite("assets/enemies/skeleton_minion_ranged/skeleton_minion_ranged_channelling.png");
 
     SetDamage(35);
     SetMaxHP(350,true)

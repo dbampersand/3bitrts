@@ -362,9 +362,10 @@ void PlayMusic(const char* path, float musicGain, double loopPoint)
     musicPath = calloc(strlen(path)+1,sizeof(char));
     strcpy(musicPath,path);
     musicFadingTo = al_load_audio_stream(path, 4, 2048);
-    if (!musicFadingTo) {
+        if (!musicFadingTo) {
         ConsolePrintf("Audio stream could not be created: %s\n",path);
         fflush(stdout);
+        return;
     }
     if (musicFadingTo)
         if (!al_attach_audio_stream_to_mixer(musicFadingTo, musicMixer2))

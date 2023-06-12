@@ -15,7 +15,7 @@ function setup()
     SetCooldown(2); 
     SetAbilityMaxStacks(11,11)
     AbilitySetPortrait("assets/enemies/ghost/ability_terror.png");
-    SetDescription("[b]Rain\n\nShoots a volley of arrows, slowing and damaging enemies in an area.")
+    SetDescription("[b]Terror\n\nCreates a moving damaging area.")
 end
 function casted(x,y,obj,headingx,headingy)
 

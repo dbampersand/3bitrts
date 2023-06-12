@@ -29,12 +29,26 @@ void InitItems()
 {
     propagateItemEffects = true;
 }
-Item* LoadItemFuncs(Item* i, lua_State* l)
+Item* LoadItemFuncs(Item* i, lua_State* l, bool isAttached)
 {
     int funcIndex;
-    i->description = NULL;
-    i->name = NULL;
-    i->path = NULL;
+    if (isAttached)
+    {
+        char* name = NULL;
+        char* description = NULL;
+        if (i->name)
+        {
+            name = calloc(strlen(i->name)+1,sizeof(char));
+            strcpy(name,i->name);
+        }
+        if (i->description)
+        {
+            description = calloc(strlen(i->description)+1,sizeof(char));
+            strcpy(description,i->description);
+        }
+        i->name = name;
+        i->description = description;
+    }
     if (luaL_loadbuffer(l, i->luaBuffer.buffer,strlen(i->luaBuffer.buffer),NULL) || lua_pcall(l, 0, 0, 0))
     {
         ConsolePrintf("%s\n\n---\nCan't load lua file:\n %s\n---\n\n\n",COL_ERR,lua_tostring(l,-1));
@@ -74,7 +88,7 @@ Item* LoadItemFuncs(Item* i, lua_State* l)
         i->luafunc_unattach = -1;
 
 
-    if (CheckFuncExists("setup",&i->luaBuffer))
+    if (CheckFuncExists("setup",&i->luaBuffer) && !isAttached)
     {
         lua_getglobal(l, "setup");
         funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
@@ -200,7 +214,7 @@ Item* LoadItem(const char* path, lua_State* l)
      else
      {
 
-        LoadItemFuncs(i,l);
+        LoadItemFuncs(i,l,false);
 
 
         char* strSplit;
@@ -344,7 +358,7 @@ void LoadItemFolder(char* path)
 Item CopyItem(Item* i, lua_State* l)
 {
     Item new = *i;
-    LoadItemFuncs(&new,l);
+    LoadItemFuncs(&new,l,true);
     return new;
 }
 void AttachItem(GameObject* g, Item* i)

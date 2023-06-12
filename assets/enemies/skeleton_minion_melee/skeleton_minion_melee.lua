@@ -5,6 +5,7 @@ local toll = -1
 
 function setup()
     SetSprite("assets/enemies/skeleton_minion_melee/skeleton_minion_melee.png");
+    SetChannelingSprite("assets/enemies/skeleton_minion_melee/skeleton_minion_melee_channelling.png");
 
     SetDamage(15);
     SetMaxHP(500,true)
@@ -35,7 +36,7 @@ function update(dt)
         local attacking = GetAttackTarget(GetObjRef());
         if (IsInAttackRange(GetObjRef(),attacking)) then
             CastAbility(toll,0,{{}});
-            CastAbility(grasp,0,{{target = GetAttackTarget(GetObjRef()) }} )
+            CastAbility(grasp,0.5,{{target = GetAttackTarget(GetObjRef()) }} )
         end
 
     end

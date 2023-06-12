@@ -5,6 +5,7 @@ local novaTimer = 6
 local acidPoolTimer = RandRange(1,2)
 function setup()
     SetSprite("assets/enemies/poison_elemental/poison_elemental.png");
+    SetChannelingSprite("assets/enemies/poison_elemental/poison_elemental_channelling.png");
 
     SetDamage(30);
     SetMaxHP(1500,true)

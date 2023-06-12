@@ -15,6 +15,8 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+
+
     
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
@@ -44,4 +46,6 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     end
 end
 function onchanneled() 
+    SetChannelingSprite("assets/enemies/nix/nix_casting_lightning_orb.png")
+
 end

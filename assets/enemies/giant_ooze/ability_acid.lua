@@ -10,7 +10,7 @@ function setup()
     SetDescription("[b]Acid\n\nQuickly deals damage.")
 end
 function onchanneled()
-    SetChannelingSprite("assets/enemies/giant_ooze/giant_ooze_channelling.png");
+    SetChannelingSprite("assets/enemies/giant_ooze/giant_ooze_casting_acid.png");
 end
 
 function casted(x,y,obj,headingx,headingy)

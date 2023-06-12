@@ -4009,8 +4009,9 @@ int L_AddAbility(lua_State* l)
         Ability* prefab = AddAbility(path); 
         if (!g->abilities[index].path)
         {
-            g->numAbilities = _MAX(g->numAbilities,index+1);
         }
+        g->numAbilities = _MAX(g->numAbilities,index+1);
+
         //g->abilities[index] = CloneAbilityPrefab(prefab,l);
         CloneAbilityPrefab(prefab,l,&g->abilities[index],g);
         

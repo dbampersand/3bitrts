@@ -37,7 +37,7 @@ function casted(x,y,obj,headingx,headingy)
     dir.x = GetX(obj) - GetX(GetObjRef());
     dir.y = GetY(obj) - GetY(GetObjRef());
     SetAttackMoveAngle(aoe,dir.x,dir.y);
-
+    
     PlaySound("assets/enemies/viper/audio/bite.wav",1);
     return true; 
 end

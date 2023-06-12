@@ -1,7 +1,7 @@
 local time = 8
 
 function setup()
-    SetAbilityRange(32)
+    SetAbilityRange(64)
     SetCooldown(24);
     AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
     SetDescription("[b]Melt\n\nDestroys target's armour, causing them to take more damage.");
@@ -31,4 +31,6 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     
 end
 function onchanneled() 
+    SetChannelingSprite("assets/enemies/nix/nix_casting_melt.png")
+
 end

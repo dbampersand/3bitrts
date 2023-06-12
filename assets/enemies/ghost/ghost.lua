@@ -7,6 +7,7 @@ local timer = timeBetweenCasts
 
 function setup()
     SetSprite("assets/enemies/ghost/ghost.png");
+    SetChannelingSprite("assets/enemies/ghost/ghost_channelling.png");
 
     SetDamage(60);
     SetMaxHP(1200,true)
@@ -42,7 +43,7 @@ function update(dt)
         if (casting) then
             timer = timer - dt
             if (timer < 0) then
-                CastAbility(terror,0,{})
+                CastAbility(terror,0.2,{})
                 timer = timeBetweenCasts
             end
         end

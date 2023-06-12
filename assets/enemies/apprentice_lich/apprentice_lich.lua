@@ -4,7 +4,8 @@ local frostBlast = -1
 
 function setup()
     SetSprite("assets/enemies/apprentice_lich/apprentice_lich.png");
-
+    SetChannelingSprite("assets/enemies/apprentice_lich/apprentice_lich_casting_frost_blast.png");
+    
     SetDamage(20);
     SetMaxHP(900,true)
     SetSpeed(80)
@@ -12,6 +13,7 @@ function setup()
 
     raise = AddAbility(GetObjRef(),"assets/enemies/apprentice_lich/ability_raise.lua",0);
     frostBlast = AddAbility(GetObjRef(),"assets/enemies/apprentice_lich/ability_frost_blast.lua",1);
+    
 
 
     SetAttackSounds({

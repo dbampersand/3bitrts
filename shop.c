@@ -225,6 +225,8 @@ bool ItemIsPurchasable(Item* i)
 }
 void DrawShopItems(float dt, MouseState mouseState)
 {
+
+    ShopItem* mousedOver = NULL;
     for (int i = 0; i < NUM_ITEM_POOLS; i++)
     {
         ShopItem* si = &shop.items[i];
@@ -262,7 +264,7 @@ void DrawShopItems(float dt, MouseState mouseState)
         }
         else
         {
-            al_draw_circle(cx,cy, r,col,1);
+            al_draw_circle(cx,cy, r,col,0);
             DrawSpriteRegion(&sprites[si->item->spriteIndex_Icon], sx,sy, wSprite, hSprite, dx,dy, col, false);
             //DrawSprite(&sprites[si->item->spriteIndex_Icon],si->position.x,si->position.y,0,0,0,col,false,false,false);
         }
@@ -280,9 +282,13 @@ void DrawShopItems(float dt, MouseState mouseState)
         al_reset_clipping_rectangle();
         
         free(price);
-
-
         if (dist(mouseState.screenX,mouseState.screenY,cx,cy) <= r || shop.heldItem)
+        {
+            mousedOver = si;
+        }
+
+
+        /*if (dist(mouseState.screenX,mouseState.screenY,cx,cy) <= r || shop.heldItem)
         {
             ShopItem* draw = si;
             if (shop.heldItem)
@@ -302,11 +308,38 @@ void DrawShopItems(float dt, MouseState mouseState)
                 al_reset_clipping_rectangle();
 
             }
-        }
+        }*/
 
     }
 
-    
+    for (int i = 0; i < numActiveObjects; i++)
+    {
+        for (int i = 0; i < INVENTORY_SLOTS; i++)
+        {
+
+        }   
+    }
+    if (mousedOver && !shop.removeClickedItem)
+    {
+        ShopItem* draw = mousedOver;
+        if (shop.heldItem)
+            draw = shop.heldItem;
+
+        al_set_clipping_rectangle(16,161,136,81);
+        al_draw_multiline_text(ui.boldFont, FRIENDLY, 18, 168, 126, 10, ALLEGRO_ALIGN_LEFT, draw->item->name);
+        al_draw_multiline_text(ui.font, FRIENDLY, 18, 184, 126, 10, ALLEGRO_ALIGN_LEFT, draw->item->description);
+        al_reset_clipping_rectangle();
+
+    }
+    else if (shop.removeClickedItem)
+    {
+        if (shop.removeClickedItem)
+        {
+            al_set_clipping_rectangle(16,161,136,81);
+            al_draw_multiline_text(ui.boldFont, FRIENDLY, 18, 168, 126, 10, ALLEGRO_ALIGN_LEFT, "Drop this item into the void?");
+            al_reset_clipping_rectangle();
+        }
+    }
 }
 void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
 {
@@ -315,6 +348,8 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
 
     bool clickedThisFrame = (mouseState.mouse.buttons & 1) && !(mouseStateLastFrame.mouse.buttons & 1);
     bool clickedOnAnInventorySlot = false;
+
+    Item* mousedOver = NULL;
 
     for (int i = 0; i < numActiveObjects; i++)
     {
@@ -358,9 +393,10 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
                 }
             }
 
-            if ( PointInRect(mouseState.screenX,mouseState.screenY,r) && g->inventory[i].enabled)
+            if (PointInRect(mouseState.screenX,mouseState.screenY,r) && g->inventory[i].enabled && !shop.heldItem && !shop.removeClickedItem) 
             {
                 invert = !invert;
+                    mousedOver = &g->inventory[i];
             }
 
             if (shop.removeClickedItem == &g->inventory[i])
@@ -376,9 +412,17 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
                 background = temp;
             }
             al_draw_filled_circle(slotX+_SHOP_ITEM_RADIUS,slotY+_SHOP_ITEM_RADIUS,_SHOP_ITEM_RADIUS,background);
-            al_draw_circle(slotX+_SHOP_ITEM_RADIUS,slotY+_SHOP_ITEM_RADIUS,_SHOP_ITEM_RADIUS,foreground,1);
+            al_draw_circle(slotX+_SHOP_ITEM_RADIUS,slotY+_SHOP_ITEM_RADIUS,_SHOP_ITEM_RADIUS,foreground,0);
             DrawSprite(&sprites[g->inventory[i].spriteIndex_Icon],slotX,slotY,0,0,0,foreground,false,false,false);
+
+            if (dist(mouseState.screenX,mouseState.screenY,slotX+_SHOP_ITEM_RADIUS,slotY+_SHOP_ITEM_RADIUS) <= _SHOP_ITEM_RADIUS && !shop.heldItem)
+            {
+                //mousedOver = &g->inventory[i];
+            }
+
             slotX += 25;
+
+
         }
         if (shop.heldItem)
         {
@@ -453,6 +497,14 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
         shop.removeClickedItem = NULL;
     }
 
+    if (mousedOver)
+    {
+        al_set_clipping_rectangle(16,161,136,81);
+        al_draw_multiline_text(ui.boldFont, FRIENDLY, 18, 168, 126, 10, ALLEGRO_ALIGN_LEFT, mousedOver->name);
+        al_draw_multiline_text(ui.font, FRIENDLY, 18, 184, 126, 10, ALLEGRO_ALIGN_LEFT, mousedOver->description);
+        al_reset_clipping_rectangle();
+
+    }
 
 }
 void DrawReroll(float dt, MouseState mouseState, MouseState mouseStateLastFrame)

@@ -31,7 +31,7 @@ function update(dt)
     if (IsInCombat()) then
         local randUnit = {target = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,256)[1]};
         CastAbility(melt,1,{{target=GetAttackTarget(GetObjRef())}});
-        CastAbility(lavaField,2,{});
+        CastAbility(lavaField,2,{});    
         if (TimeSinceLastCast(lavaField) < 2) then
             CastAbility(searingBlast,0.25,{{target=GetAttackTarget(GetObjRef())}});
         end

@@ -54,6 +54,7 @@ function casted(x,y,obj,headingx,headingy)
 end
 
 function onhit(x,y,objhit)
+    SetChannelingSprite("assets/enemies/giant_worm/giant_worm_casting_wave.png");
 end
 
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)

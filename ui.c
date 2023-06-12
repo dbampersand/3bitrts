@@ -1345,7 +1345,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         {
             mousedOver = DrawEffectPortrait(193,UI_ABILITY_START_Y,&selected->effects[0],FRIENDLY,mouseState) == true ? &selected->effects[0] : mousedOver;
             mousedOver = DrawEffectPortrait(209,UI_ABILITY_START_Y,&selected->effects[1],FRIENDLY,mouseState)== true ? &selected->effects[1] : mousedOver;
-            mousedOver = DrawEffectPortrait(24,UI_ABILITY_START_Y,&selected->effects[2],FRIENDLY,mouseState)== true ? &selected->effects[2] : mousedOver;
+            mousedOver = DrawEffectPortrait(226,UI_ABILITY_START_Y,&selected->effects[2],FRIENDLY,mouseState)== true ? &selected->effects[2] : mousedOver;
             mousedOver = DrawEffectPortrait(238,UI_ABILITY_START_Y,&selected->effects[3],FRIENDLY,mouseState)== true ? &selected->effects[3] : mousedOver;
             
             

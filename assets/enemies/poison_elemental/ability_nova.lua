@@ -49,4 +49,6 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     
 end
 function onchanneled() 
+    SetChannelingSprite("assets/enemies/poison_elemental/poison_elemental_casting_nova.png");
+
 end

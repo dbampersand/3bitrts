@@ -2,6 +2,7 @@ local charge = 0
 
 function setup()
     SetSprite("assets/enemies/royal_guard/royal_guard.png");
+    SetChannelingSprite("assets/enemies/royal_guard/royal_guard_channelling.png");
 
     SetDamage(7);
     SetMaxHP(750,true)

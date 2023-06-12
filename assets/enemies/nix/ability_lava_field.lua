@@ -23,6 +23,7 @@ local function makeAOE(x,y)
 end
 
 function casted(x,y,obj,headingx,headingy)
+
     local enemies = GetAllObjsByFriendliness(GetOppositeFriendliness(GetObjRef()));
     local numToSpawnOnEnemies = math.min(#enemies,numAoEsSpawned)
     local numToSpread = numAoEsSpawned - numToSpawnOnEnemies;
@@ -45,4 +46,6 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     
 end
 function onchanneled() 
+    SetChannelingSprite("assets/enemies/nix/nix_casting_lava_field.png")
+
 end

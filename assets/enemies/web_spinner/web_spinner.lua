@@ -16,6 +16,7 @@ local atk = -1
 
 function setup()
     SetSprite("assets/enemies/web_spinner/web_spinner.png");
+    SetChannelingSprite("assets/enemies/web_spinner/web_spinner_channelling.png");
 
     SetDamage(20);
     SetMaxHP(1200,true)

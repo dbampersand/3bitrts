@@ -6,6 +6,8 @@ local indicator = -1
 
 function setup()
     SetSprite("assets/enemies/exploding_zombie/exploding_zombie.png");
+    SetChannelingSprite("assets/enemies/exploding_zombie/exploding_zombie_explode.png");
+
 
     SetDamage(1);
     SetMaxHP(400,true)
@@ -48,7 +50,7 @@ function update(dt)
     end
     if (IsInCombat() and targ >= 0) then
         if (IsInAttackRange(GetObjRef(),targ)) then
-            CastAbility(explode,0,{})
+            CastAbility(explode,0.1,{})
         end
     end
 

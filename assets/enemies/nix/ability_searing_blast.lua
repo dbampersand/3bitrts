@@ -43,4 +43,5 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     end
 end
 function onchanneled() 
+    SetChannelingSprite("assets/enemies/nix/nix_casting_searing_blast.png")
 end

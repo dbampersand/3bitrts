@@ -5,6 +5,7 @@ local bash = -1
 
 function setup()
     SetSprite("assets/enemies/skeleton_basher/skeleton_basher.png");
+    SetChannelingSprite("assets/enemies/skeleton_basher/skeleton_basher_channelling.png");
 
     SetDamage(20);
     SetMaxHP(900,true)
@@ -31,7 +32,7 @@ end
 
 function update(dt)
     if (IsInCombat()) then
-        CastAbility(bash,0,{{target = GetAttackTarget(GetObjRef()) }});
+        CastAbility(bash,0.2,{{target = GetAttackTarget(GetObjRef()) }});
     end
 end
 

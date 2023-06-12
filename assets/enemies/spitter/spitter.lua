@@ -45,7 +45,7 @@ function update(dt)
             timer = timer - dt
             if (timer <= 0) then
                 timer = timeBetweenShots
-                CastAbility(spit,0,{{target = targ}});
+                CastAbility(spit,0.3,{{target = targ}});
             end
         end
     end
