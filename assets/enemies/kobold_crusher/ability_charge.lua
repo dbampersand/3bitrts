@@ -6,7 +6,7 @@ local triggerTime = 0.05
 function setup()
     SetAbilityRange(128)
     SetCooldown(4);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/enemies/kobold_crusher/ability_charge.png");
     SetDescription("[b]Charge\n\nCharges a unit, dealing damage around them.");
     SetAbilityName("Charge"); 
 

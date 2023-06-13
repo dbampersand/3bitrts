@@ -5,7 +5,7 @@ local tickrate = 0.25
 function setup()
     SetAbilityRange(30)
     SetCooldown(20); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/caduceus/ability_wave.png");
     SetDescription("[b]Wave\n\nSummons areas of damage at the ends of the map.")
     AbilitySetCastType(ABILITY_INSTANT);
 end

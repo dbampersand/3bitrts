@@ -8,7 +8,7 @@ local casts = 0
 function setup()
     SetAbilityRange(256)
     SetCooldown(10);
-    AbilitySetPortrait("assets/enemies/wraith/ability_throw_darts.png");
+    AbilitySetPortrait("assets/enemies/poison_elemental/ability_nova.png");
     SetDescription("[b]Nova\n\nCauses a devastating projectile attack.")
     SetAbilityName("Nova"); 
     SetAbilityHint(HINT_CIRCLE,20);

@@ -1,7 +1,7 @@
 function setup()
     SetAbilityRange(30)
     SetCooldown(20); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/caduceus/ability_summon.png");
     SetDescription("[b]Summon\n\nSummons three vipers.")
     AbilitySetCastType(ABILITY_INSTANT);
 

@@ -4,7 +4,7 @@ local time = 12
 function setup()
     SetAbilityRange(999)
     SetCooldown(15);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/enemies/kobold_crystal/ability_crash.png");
     SetDescription("[b]Crash\n\nDeals damage to *all* units and stuns them.");
     SetAbilityName("Crash"); 
     SetAbilityHint(HINT_CIRCLE,30);

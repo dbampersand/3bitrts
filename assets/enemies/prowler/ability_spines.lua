@@ -22,11 +22,11 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_CIRCLE,30);
     SetCooldown(3); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/prowler/ability_spines.png");
     SetDescription("[b]Spines\n\nCreates a line of spikes, hitting anything along its axis.")
 end
 function onchanneled()
-    SetChannelingSprite("assets/enemies/giant_ooze/giant_ooze_channelling.png");
+    SetChannelingSprite("assets/enemies/prowler/prowler_channelling.png");
 end
 
 function casted(x,y,obj,headingx,headingy)

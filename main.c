@@ -705,7 +705,7 @@ int main(int argc, char* args[])
         {
             ALLEGRO_EVENT keyEvent;
             al_get_next_event(queue_KeyEvents, &keyEvent);
-
+            
             if (gameState == GAMESTATE_LOAD_SCREEN || gameState == GAMESTATE_LOAD_ENCOUNTER)
             {
                 if (keyEvent.type == ALLEGRO_EVENT_KEY_DOWN)
@@ -717,7 +717,6 @@ int main(int argc, char* args[])
 
             if (keyEvent.keyboard.type != ALLEGRO_EVENT_KEY_CHAR)
                 continue;
-
             switch (keyEvent.keyboard.keycode) {
                 case ALLEGRO_KEY_ENTER:
                     RunLine();

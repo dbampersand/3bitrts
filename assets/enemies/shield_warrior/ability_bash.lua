@@ -4,7 +4,7 @@ function setup()
     SetAbilityRange(40)
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetCooldown(12); 
-    AbilitySetPortrait("assets/enemies/shield_warrior/ability_shieldstance.png");
+    AbilitySetPortrait("assets/enemies/shield_warrior/ability_bash.png");
     SetDescription("[b]Bash\n\nSmashes a target with their shield.")
 
 end

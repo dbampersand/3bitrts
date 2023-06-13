@@ -9,7 +9,7 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_CONE,rad);
     SetCooldown(12); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/firebreather/ability_breathe.png");
     SetDescription("[b]Breathe\n\nDeals damage in an cone.")
 end
 function casted(x,y,obj,headingx,headingy)

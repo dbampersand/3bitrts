@@ -7,7 +7,7 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_CIRCLE);
     SetCooldown(7); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/rock_tosser/ability_throw_small_rock.png");
     SetDescription("[b]Throw Small Rock\n\nDeals damage in an area.")
 end
 function casted(x,y,obj,headingx,headingy)

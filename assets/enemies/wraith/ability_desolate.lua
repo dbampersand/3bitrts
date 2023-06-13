@@ -13,7 +13,7 @@ local duration = 12
 function setup()
     SetAbilityRange(256)
     SetCooldown(3.5);
-    AbilitySetPortrait("assets/enemies/wraith/ability_throw_darts.png");
+    AbilitySetPortrait("assets/enemies/wraith/ability_desolate.png");
     SetDescription("[b]Desolate\n\nThrows an arc of desolation around the target.")
     SetAbilityName("Desolate"); 
     SetAbilityHint(HINT_CIRCLE,20);

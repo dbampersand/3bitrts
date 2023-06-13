@@ -1,7 +1,7 @@
 local armor = -3;
 
 function setup()
-    AbilitySetPortrait("assets/friendly/monk/icon_whirlwind.png");
+    AbilitySetPortrait("assets/friendly/lancer/icon_shield_breaker.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(50)
     SetDescription("Shield Breaker\n\nLowers an enemies' armour.")

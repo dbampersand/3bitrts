@@ -2,7 +2,7 @@ function setup()
     SetAbilityRange(256)
     SetCooldown(3.5);
     SetAbilityMaxStacks(5)
-    AbilitySetPortrait("assets/enemies/kobold_foreman/ability_throw_darts.png");
+    AbilitySetPortrait("assets/enemies/kobold_saboteur/ability_drop_bomb.png");
     SetDescription("[b]Drop Bomb\n\nDrops a bomb.")
     SetAbilityName("Drop Bomb"); 
     SetAbilityHint(HINT_CIRCLE,20);

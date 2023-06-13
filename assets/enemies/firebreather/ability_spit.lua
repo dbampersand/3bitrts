@@ -15,7 +15,7 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_CIRCLE,30,false);
     SetCooldown(16); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/firebreather/ability_spit.png");
     SetDescription("[b]Spit Fire\n\nSpits an arc of fire.")
 end
 function casted(x,y,obj,headingx,headingy)

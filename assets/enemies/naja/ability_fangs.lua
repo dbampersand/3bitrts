@@ -10,7 +10,7 @@ function setup()
     --AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_LINE);
     SetCooldown(8); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/naja/ability_fangs.png");
     SetDescription("[b]Fangs\n\nCreates a pair of damaging areas which fly at the target.")
 end
 function casted(x,y,obj,headingx,headingy)

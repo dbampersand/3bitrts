@@ -12,7 +12,7 @@ function setup()
     --AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_CIRCLE,radius);
     SetCooldown(9); 
-    AbilitySetPortrait("assets/enemies/web_spinner/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/web_spinner/ability_spin_web.png");
     SetDescription("[b]Spin Web\n\nSpins a web and sends it towards a target, dealing damage and slowing.")
 end
 
@@ -37,7 +37,7 @@ function casted(x,y,obj,headingx,headingy)
     dir.x = GetX(obj) - GetX(GetObjRef());
     dir.y = GetY(obj) - GetY(GetObjRef());
     SetAttackMoveAngle(aoe,dir.x,dir.y);
-    
+
     PlaySound("assets/enemies/viper/audio/bite.wav",1);
     return true; 
 end

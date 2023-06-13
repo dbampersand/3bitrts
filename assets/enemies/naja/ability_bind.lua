@@ -7,7 +7,7 @@ function setup()
     --AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_LINE);
     SetCooldown(16); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/naja/ability_bind.png");
     SetDescription("[b]Bind\n\nShoves and stuns the target.")
 end
 function casted(x,y,obj,headingx,headingy)

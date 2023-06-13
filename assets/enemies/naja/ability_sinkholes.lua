@@ -17,7 +17,7 @@ function setup()
     --AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_LINE);
     SetCooldown(30); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/naja/ability_sinkholes.png");
     SetDescription("[b]Sinkholes\n\nRandomly creates dozens of damaging and slowing areas.")
 end
 function casted(x,y,obj,headingx,headingy)

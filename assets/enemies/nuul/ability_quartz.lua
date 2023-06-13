@@ -3,7 +3,7 @@ local area = -1
 function setup()
     SetAbilityRange(32)
     SetCooldown(0);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/enemies/nuul/ability_quartz.png");
     SetDescription("[b]Quartz\n\nCreates an area of damaging fire.");
     SetAbilityName("Quartz"); 
 

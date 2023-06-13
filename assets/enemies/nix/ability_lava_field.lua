@@ -5,7 +5,7 @@ local numAoEsSpawned = 5
 function setup()
     SetAbilityRange(256)
     SetCooldown(12);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/enemies/nix/ability_lava_field.png");
     SetDescription("[b]Lava Field\n\nThrows out "..numAoEsSpawned.." lava fields on top of enemy units. If there isn't enough units in range, they are targetted randomly.");
     SetAbilityName("Lava Field"); 
     SetAbilityHint(HINT_LINE);

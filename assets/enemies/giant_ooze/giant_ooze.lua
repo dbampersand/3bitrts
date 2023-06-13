@@ -13,6 +13,7 @@ function setup()
     squeeze = AddAbility(GetObjRef(),"assets/enemies/giant_ooze/ability_squeeze.lua",0);
     acid = AddAbility(GetObjRef(),"assets/enemies/giant_ooze/ability_acid.lua",1);
     raise = AddAbility(GetObjRef(),"assets/enemies/giant_ooze/ability_raise.lua",2);
+
     SetAttackSounds({
         "assets/audio/attacks/attack_spit/spit_1.wav",
         "assets/audio/attacks/attack_spit/spit_2.wav",
@@ -23,14 +24,16 @@ function setup()
 
 end
 function update(dt)
-    timer = timer + dt;
-    if (timer > 5) then
-        CastAbility(squeeze,5,{});
-        CastAbility(raise,0,{});
+    if (IsInCombat()) then
+        timer = timer + dt;
+        if (timer > 5) then
+            CastAbility(squeeze,5,{});
+            CastAbility(raise,0,{});
+        end
+        local acidTarget = {};
+        acidTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999)[1];
+        CastAbility(acid,3,{acidTarget})
     end
-    local acidTarget = {};
-    acidTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999)[1];
-    CastAbility(acid,3,{acidTarget})
 end
 
 function kill()

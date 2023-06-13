@@ -34,5 +34,11 @@ end
 function kill()
     SetStunTimer(GetObjRef(),0);
     SetAbilityCooldownTimer(cureaoe,0)
-    CastAbility(cureaoe,0,{{x=cx,y=cy}});
+
+    local f1 = {}
+    f1["trigger"] = TRIGGER_INSTANT;
+    f1["type"] = EFFECT_CURE;
+    f1["value"] = 3;
+
+    local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",120,1,999,false,ATTACK_HITS_ENEMIES,COLOR_HEAL,DITHER_HEAL_EIGTH,false,-1,{f1});
 end

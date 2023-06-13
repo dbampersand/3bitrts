@@ -12,7 +12,7 @@ local angle = {}
 
 function setup()
     AbilitySetCastType(Bor(ABILITY_POINT,ABILITY_TARGET_ENEMY)); 
-    AbilitySetPortrait("assets/friendly/warrior/icon_charge.png");
+    AbilitySetPortrait("assets/friendly/lancer/icon_charge.png");
     SetAbilityHint(HINT_CONE,radius,false,coneSize)
 
     SetAbilityRange(coneSize)

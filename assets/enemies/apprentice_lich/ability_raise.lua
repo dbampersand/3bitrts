@@ -6,7 +6,7 @@ function setup()
     --AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(16); 
-    AbilitySetPortrait("assets/enemies/skeleton_basher/ability_bash.png");
+    AbilitySetPortrait("assets/enemies/apprentice_lich/ability_raise.png");
     SetDescription("[b]Raise\n\nRessurects a ranged or melee minion.")
 end
 function casted(x,y,obj,headingx,headingy)

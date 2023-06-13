@@ -176,6 +176,8 @@ void FinishTransition()
         gameStats.timeTaken = 0;
         NewReplay();    
         RemoveAllGameObjects();
+        RemoveAllAttacks();
+
 
         ClearSpriteDecorations();
         //AddClouds(12);
@@ -224,10 +226,11 @@ void FinishTransition()
         transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
 
         ui.currentPanel = NULL;
-        RemoveAllAttacks(1);
+        RemoveAllAttacks();
 
         ClearSelection();
         RemoveAllGameObjects();
+        RemoveAllAttacks();
         //ChangeButtonText(GetButtonB(&ui.mainMenuPanel,"Return"),"Return");
         combatStarted = false;
 

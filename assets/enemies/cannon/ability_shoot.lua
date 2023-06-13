@@ -2,7 +2,7 @@
 function setup()
     SetAbilityRange(120)
     SetCooldown(12);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/enemies/cannon/ability_shoot.png");
     SetDescription("[b]Shoot\n\nDeals damage in an area.");
     SetAbilityName("Crash"); 
     SetAbilityHint(HINT_CIRCLE,25);

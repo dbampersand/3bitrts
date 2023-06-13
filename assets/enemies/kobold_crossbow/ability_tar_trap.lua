@@ -2,7 +2,7 @@
 function setup()
     SetAbilityRange(32)
     SetCooldown(24);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/enemies/kobold_crossbow/ability_tar_trap.png");
     SetDescription("[b]Tar Trap\n\nSlows enemies in a radius.");
     SetAbilityName("Tar Trap"); 
 

@@ -5,7 +5,7 @@ function setup()
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(6); 
     SetAbilityMaxStacks(3);
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/wadjet/ability_sun_disc.png");
     SetDescription("[b]Sun Disc\n\nPlaces an area of effect, dealing damage over time.")
 end
 function casted(x,y,obj,headingx,headingy)

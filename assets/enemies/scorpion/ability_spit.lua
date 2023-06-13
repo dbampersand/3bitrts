@@ -9,7 +9,7 @@ function setup()
     --AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_CIRCLE,radius);
     SetCooldown(16); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/scorpion/ability_spit.png");
     SetDescription("[b]Spit\n\nSpits down an area of damaging acid.")
 end
 function casted(x,y,obj,headingx,headingy)

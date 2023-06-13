@@ -8,7 +8,7 @@ local dps = 25
 function setup()
     SetAbilityRange(32) 
     SetCooldown(4);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/enemies/nix/ability_lightning_orb.png");
     SetDescription("[b]Lightning Orb\n\nShoots a ball that moves, dealing damage to all in its path.");
     SetAbilityName("Lightning Orb"); 
 

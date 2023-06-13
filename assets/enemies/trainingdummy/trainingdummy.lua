@@ -13,8 +13,6 @@ function setup()
     --SetObjIsBoss(GetObjRef(),true)
     --SetObjectPushable(GetObjRef(),false);
 
-    testAbility = AddAbility(GetObjRef(),"assets/enemies/scorpion/ability_spit.lua",0)   
-
 end 
 
 local timer = 0

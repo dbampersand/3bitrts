@@ -1,4 +1,5 @@
-    function setup()
+local spit = -1
+function setup()
     SetSprite("assets/enemies/cobra/cobra.png");
     SetChannelingSprite("assets/enemies/cobra/cobra_channelling.png");
 
@@ -7,7 +8,7 @@
     SetMaxHP(650,true)
     SetSpeed(80)
 
-    AddAbility(GetObjRef(),"assets/enemies/cobra/ability_spit.lua",0);
+    spit = AddAbility(GetObjRef(),"assets/enemies/cobra/ability_spit.lua",0);
     SetAttackSounds({
         "assets/audio/attacks/attack_spit/spit_1.wav",
         "assets/audio/attacks/attack_spit/spit_2.wav",
@@ -35,7 +36,7 @@ function update(dt)
     local target = {};
     target["target"] = threatlist[1];
     if (target["target"] ~= nil) then
-        CastAbility(0,4,{target});
+        CastAbility(spit,4,{target});
     end
 end
 

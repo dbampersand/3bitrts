@@ -3,7 +3,7 @@ local time = 12
 function setup()
     SetAbilityRange(512) 
     SetCooldown(20);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/enemies/kobold_crossbow/ability_shoot.png");
     SetDescription("[b]Shoot\n\nFires a bolt from their crossbow.");
     SetAbilityName("Shoot"); 
     SetAbilityHint(HINT_LINE);

@@ -9,7 +9,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_CIRCLE,30);
     SetCooldown(16); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/nuul/ability_void.png");
     SetDescription("[b]Void\n\nCreates a line of void magic, hitting anything along its axis.")
 end
 function onchanneled()

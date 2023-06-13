@@ -4,7 +4,7 @@ function setup()
     --AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(20); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/wadjet/ability_fire.png");
     SetDescription("[b]Sun Disc\n\nPlaces an area of effect, dealing damage over time.")
 end
 function casted(x,y,obj,headingx,headingy)

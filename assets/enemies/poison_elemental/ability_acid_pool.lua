@@ -13,7 +13,7 @@ local duration = 12
 function setup()
     SetAbilityRange(256)
     SetCooldown(6);
-    AbilitySetPortrait("assets/enemies/wraith/ability_throw_darts.png");
+    AbilitySetPortrait("assets/enemies/poison_elemental/ability_acid_pool.png");
     SetDescription("[b]Acid Pool\n\nCreates an pool of acid.")
     SetAbilityName("Acid Pool"); 
     SetAbilityHint(HINT_CIRCLE,20);

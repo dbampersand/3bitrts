@@ -5,7 +5,7 @@ local defaultSpeed = 30;
 function setup()
     SetAbilityRange(256) 
     SetCooldown(4.5);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/enemies/nix/ability_searing_blast.png");
     SetDescription("[b]Searing Blast\n\nShoots a ball that moves, dealing damage to all in its path.");
     SetAbilityName("Searing Blast"); 
 

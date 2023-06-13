@@ -4,6 +4,8 @@ local small = 0
 local timer = 0;
 local maxDecisionTime = 2;
 local minDecisionTime = 0.2
+
+
 function setup()
     SetSprite("assets/enemies/rock_tosser/rock_tosser.png");
 
@@ -12,8 +14,8 @@ function setup()
     SetSpeed(80)
     SetRange(60);
 
-    large = AddAbility(GetObjRef(),"assets/enemies/rock_tosser/ability_throw_large_rock.lua",0);
-    small = AddAbility(GetObjRef(),"assets/enemies/rock_tosser/ability_throw_small_rock.lua",1);
+    small = AddAbility(GetObjRef(),"assets/enemies/rock_tosser/ability_throw_small_rock.lua",0);
+    large = AddAbility(GetObjRef(),"assets/enemies/rock_tosser/ability_throw_large_rock.lua",1);
 
     SetAttackSounds({
         "assets/audio/attacks/melee_hammer/hammer_1.wav",

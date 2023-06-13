@@ -5,7 +5,7 @@ local ticksPerSecond = 1;
 function setup()
     SetAbilityRange(64)
     SetCooldown(24);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/enemies/kobold_wizard/ability_burn.png");
     SetDescription("[b]Burn\n\nDeals damage over time to the target.");
     SetAbilityName("Burn"); 
 

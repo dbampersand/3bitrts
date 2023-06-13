@@ -4,7 +4,7 @@ local projectile = -1;
 function setup()
     SetAbilityRange(256)
     SetCooldown(20);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/enemies/kobold_wizard/ability_fireball.png");
     SetDescription("[b]Fireball\n\nThrows a fireball towards the target, exploding after " .. time .. " seconds");
     SetAbilityName("Fireball"); 
     SetAbilityHint(HINT_CIRCLE);

@@ -16,7 +16,7 @@ function setup()
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(0.5); 
     SetAbilityMaxStacks(30,30)
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/spitter/ability_spit.png");
     SetDescription("[b]Spit\n\nSpits a large number of projectiles towards the target.")
 end
 function casted(x,y,obj,headingx,headingy)

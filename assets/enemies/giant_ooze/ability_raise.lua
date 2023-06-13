@@ -5,7 +5,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_CIRCLE,80);
     SetCooldown(15); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/giant_ooze/ability_raise.png");
     SetDescription("[b]Raise\n\nRaises "..numZombies .. " zombies.")
 end
 function onchanneled()

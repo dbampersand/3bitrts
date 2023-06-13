@@ -3,7 +3,7 @@ local time = 8
 function setup()
     SetAbilityRange(64)
     SetCooldown(24);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/enemies/nix/ability_melt.png");
     SetDescription("[b]Melt\n\nDestroys target's armour, causing them to take more damage.");
     SetAbilityName("Melt"); 
 

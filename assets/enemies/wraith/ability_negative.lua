@@ -13,7 +13,7 @@ local duration = 12
 function setup()
     SetAbilityRange(256)
     SetCooldown(12);
-    AbilitySetPortrait("assets/enemies/wraith/ability_throw_darts.png");
+    AbilitySetPortrait("assets/enemies/wraith/ability_negative.png");
     SetDescription("[b]Negative\n\nCreates an area of negative energy around the caster.")
     SetAbilityName("Desolate"); 
     SetAbilityHint(HINT_CIRCLE,20);

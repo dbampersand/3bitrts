@@ -2,7 +2,7 @@
 function setup()
     SetAbilityRange(120)
     SetCooldown(1.5);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/enemies/repeater/ability_shoot.png");
     SetDescription("[b]Shoot\n\nFires a projectile.");
     SetAbilityName("Shoot"); 
 

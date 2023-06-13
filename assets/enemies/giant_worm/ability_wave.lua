@@ -19,7 +19,7 @@ function setup()
     --AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_CIRCLE,radius);
     SetCooldown(15); 
-    AbilitySetPortrait("assets/enemies/web_spinner/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/giant_worm/ability_wave.png");
     SetDescription("[b]Wave\n\nCalls a curing wave affecting all targets.")
 end
 

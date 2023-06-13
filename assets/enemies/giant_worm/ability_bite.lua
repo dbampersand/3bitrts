@@ -8,7 +8,7 @@ function setup()
     --AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_CIRCLE,radius);
     SetCooldown(14); 
-    AbilitySetPortrait("assets/enemies/web_spinner/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/giant_worm/ability_bite.png");
     SetDescription("[b]Bite\n\nBites the target, injecting a toxin.")
 end
 

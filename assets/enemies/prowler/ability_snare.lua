@@ -22,11 +22,10 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_CIRCLE,30);
     SetCooldown(14); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
-    SetDescription("[b]Snare\\n\nEntraps the target.")
+    AbilitySetPortrait("assets/enemies/prowler/ability_snare.png");
+    SetDescription("[b]Snare\n\nEntraps the target.")
 end
 function onchanneled()
-    SetChannelingSprite("assets/enemies/giant_ooze/giant_ooze_channelling.png");
 end
 
 function casted(x,y,obj,headingx,headingy)

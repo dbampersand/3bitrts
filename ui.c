@@ -1142,7 +1142,7 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
         key = al_keycode_to_name(currSettings.keymap.key_F.keyMappedTo);
 
 
-    if (key && drawKey)
+    if (key && drawKey && IsOwnedByPlayer(selected))
     {
         int keyW = al_get_text_width(ui.tinyFont,key)+4;
         int keyH = al_get_font_line_height(ui.tinyFont)+4;

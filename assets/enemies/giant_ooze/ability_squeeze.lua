@@ -6,7 +6,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_CIRCLE,80);
     SetCooldown(15); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/giant_ooze/ability_squeeze.png");
     SetDescription("[b]Squeeze\n\nDeals a third of the health of units in an area.")
 end
 function onchanneled()
