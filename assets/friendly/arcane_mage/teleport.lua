@@ -9,7 +9,7 @@ function setup()
 
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/rogue/audio/backstab.wav",1.25)
+    PlaySound("assets/friendly/arcane_mage/audio/teleport.wav",1)
     
     f1 = {};
     f1["trigger"] = TRIGGER_CONST

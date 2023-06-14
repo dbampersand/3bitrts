@@ -4096,11 +4096,22 @@ int L_Bnot(lua_State* l)
 
 int L_AbilitySetPortrait(lua_State* l)
 {
+    if (!currAbilityRunning)
+    {   
+        ConsolePrintf("L_AbilitySetPortrait: not being called from an ability.");
+        return 0;
+    }
     currAbilityRunning->spriteIndex_Portrait = LoadSprite(lua_tostring(l,-1),true);
     return 1;   
 }
 int L_RemoveFromEncountersList(lua_State* l)
 {
+    if (!currEncounterRunning)
+    {   
+        ConsolePrintf("L_AbilitySetPortrait: not being called from an ability.");
+        return 0;
+    }
+
     currEncounterRunning->encounterShouldBeSkipped = true;
     return 0;
 }

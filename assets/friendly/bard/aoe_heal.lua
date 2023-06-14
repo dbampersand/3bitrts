@@ -12,7 +12,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/bard/audio/song_of_healing.wav",1)
+    PlaySound("assets/friendly/bard/audio/aoe_heal.wav",1)
 
     UntoggleOthers();
 

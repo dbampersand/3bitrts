@@ -14,7 +14,7 @@ function setup()
     
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/bard/audio/song_of_damage.wav",1)
+    PlaySound("assets/friendly/bard/audio/aoe_damage.wav",1)
 
     UntoggleOthers();
     local f1 = {};

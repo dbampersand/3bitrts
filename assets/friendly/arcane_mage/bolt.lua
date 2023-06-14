@@ -8,7 +8,7 @@ function setup()
     SetManaCost(15);
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/rogue/audio/cloak.wav",1.25)
+    PlaySound("assets/friendly/arcane_mage/audio/bolt.wav",1)
 
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT

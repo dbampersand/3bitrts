@@ -19,7 +19,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/chromamancer/audio/illusion.wav",1)
+    PlaySound("assets/friendly/chromamancer/audio/ultraviolet.wav",1)
    
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT

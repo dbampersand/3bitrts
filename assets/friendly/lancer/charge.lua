@@ -23,7 +23,7 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
-    PlaySound("assets/friendly/warrior/audio/charge.wav",0.5);
+    PlaySound("assets/friendly/lancer/audio/charge.wav",0.5);
     
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;

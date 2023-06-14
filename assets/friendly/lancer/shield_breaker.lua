@@ -9,7 +9,7 @@ function setup()
     SetCooldown(15);
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/rogue/audio/shiv.wav",1.25)
+    PlaySound("assets/friendly/lancer/audio/shield_breaker.wav",0.5)
     
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;

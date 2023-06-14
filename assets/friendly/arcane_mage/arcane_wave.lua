@@ -15,7 +15,7 @@ function setup()
     SetManaCost(20)
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/ranger/audio/cripple.wav",1.25)
+    PlaySound("assets/friendly/arcane_mage/audio/arcane_wave.wav",1)
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT

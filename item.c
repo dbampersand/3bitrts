@@ -170,10 +170,13 @@ Item* LoadItemFuncs(Item* i, lua_State* l, bool isAttached)
 
 void ItemOnMapChange(Item* i, GameObject* g)
 {
-    currGameObjRunning = g;
-    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_onmapchange);
-    lua_pushinteger(luaState,(int)(g - objects));    
-    lua_pcall(luaState,1,0,0);
+    if (i->enabled)
+    {
+        currGameObjRunning = g;
+        lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_onmapchange);
+        lua_pushinteger(luaState,(int)(g - objects));    
+        lua_pcall(luaState,1,0,0);
+    }
 }
 
 
@@ -396,16 +399,18 @@ void UnattachItem(Item* i, GameObject* g)
 }
 void UpdateItem(Item* i, GameObject* g, float dt)
 {
-
-    currItemRunning = i;
-    currGameObjRunning = g;
-    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_update);
-    lua_pushnumber(luaState, dt);
-    lua_pushinteger(luaState, i - g->inventory);
-    lua_pushinteger(luaState, g - objects);
-    lua_pcall(luaState,3,0,0);
-
+    if (i->enabled)
+    {
+        currItemRunning = i;
+        currGameObjRunning = g;
+        lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_update);
+        lua_pushnumber(luaState, dt);
+        lua_pushinteger(luaState, i - g->inventory);
+        lua_pushinteger(luaState, g - objects);
+        lua_pcall(luaState,3,0,0);
+    }
 }
+
 void ItemOnAttack(Item* i, GameObject* g, float dt, float* value)
 {
     if (!i->enabled)
@@ -440,19 +445,21 @@ void ProcessItemsOnAttack(GameObject* g, float dt, float* value)
 }
 void ItemOnAbilityCast(Item* i, GameObject* src, GameObject* target, Ability* a, float x, float y, float headingx, float headingy)
 {
-    currGameObjRunning = src;
-    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_onabilitycast);
-    lua_pushinteger(luaState,i - (Item*)(&src->inventory));
-    lua_pushinteger(luaState,src-objects);
-    lua_pushinteger(luaState,target-objects);     
+    if (i->enabled)
+    {
+        currGameObjRunning = src;
+        lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_onabilitycast);
+        lua_pushinteger(luaState,i - (Item*)(&src->inventory));
+        lua_pushinteger(luaState,src-objects);
+        lua_pushinteger(luaState,target-objects);     
 
-    lua_pushinteger(luaState,(int)(target-objects));    
-    lua_pushnumber(luaState,headingx);
-    lua_pushnumber(luaState,headingy);
+        lua_pushinteger(luaState,(int)(target-objects));    
+        lua_pushnumber(luaState,headingx);
+        lua_pushnumber(luaState,headingy);
 
-    lua_pcall(luaState,6,0,0);    
+        lua_pcall(luaState,6,0,0);    
 
-
+    }
 }
 void TriggerItemOnAbilityCast(GameObject* src, GameObject* target, Ability* a, float x, float y, float headingx, float headingy)
 {
@@ -463,18 +470,20 @@ void TriggerItemOnAbilityCast(GameObject* src, GameObject* target, Ability* a, f
 }
 void ItemBeforeAbilityCast(Item* i, GameObject* src, GameObject* target, Ability* a, float x, float y, float headingx, float headingy)
 {
-    currGameObjRunning = src;
-    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_beforeabilitycast);
-    lua_pushinteger(luaState,i - (Item*)(&src->inventory));
-    lua_pushinteger(luaState,src-objects);
-    lua_pushinteger(luaState,target-objects);     
+    if (i->enabled)
+    {
+        currGameObjRunning = src;
+        lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_beforeabilitycast);
+        lua_pushinteger(luaState,i - (Item*)(&src->inventory));
+        lua_pushinteger(luaState,src-objects);
+        lua_pushinteger(luaState,target-objects);     
 
-    lua_pushinteger(luaState,(int)(target-objects));    
-    lua_pushnumber(luaState,headingx);
-    lua_pushnumber(luaState,headingy);
+        lua_pushinteger(luaState,(int)(target-objects));    
+        lua_pushnumber(luaState,headingx);
+        lua_pushnumber(luaState,headingy);
 
-    lua_pcall(luaState,6,0,0);    
-
+        lua_pcall(luaState,6,0,0);    
+    }
 
 }
 
@@ -520,20 +529,22 @@ void ItemOnDamaged(Item* i, GameObject* src, GameObject* target, float* value,bo
 }
 void ProcessItemOnApplyEffect(GameObject* source, GameObject* target, Item* i, Effect* e)
 {
-    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_onapplyeffect);
-    
-    lua_pushinteger(luaState, i - source->inventory);
-    lua_pushinteger(luaState, source - objects);
-    lua_pushinteger(luaState, target - objects);
-    
-    lua_pushinteger(luaState, e->trigger);
-    lua_pushinteger(luaState, e->effectType);
-    lua_pushinteger(luaState, e->stacks);
-    lua_pushnumber(luaState, e->value);
-    lua_pushnumber(luaState, e->duration);
+    if (i->enabled)
+    {
+        lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_onapplyeffect);
+        
+        lua_pushinteger(luaState, i - source->inventory);
+        lua_pushinteger(luaState, source - objects);
+        lua_pushinteger(luaState, target - objects);
+        
+        lua_pushinteger(luaState, e->trigger);
+        lua_pushinteger(luaState, e->effectType);
+        lua_pushinteger(luaState, e->stacks);
+        lua_pushnumber(luaState, e->value);
+        lua_pushnumber(luaState, e->duration);
 
-    lua_pcall(luaState,8,0,0);
-
+        lua_pcall(luaState,8,0,0);
+    }
 }
 void ProcessItemsOnApplyEffect(GameObject* source, GameObject* target, Effect* e)
 {
@@ -632,11 +643,12 @@ int NumAttachedItems(GameObject* g)
 }
 void RemoveItem(Item* i, GameObject* g)
 {
-
-    lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_unattach);
-    lua_pushinteger(luaState,(int)(g-objects));    
-    lua_pcall(luaState,1,0,0);
-
+    if (i->enabled)
+    {
+        lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_unattach);
+        lua_pushinteger(luaState,(int)(g-objects));    
+        lua_pcall(luaState,1,0,0);
+    }
 
     if (i->description)
     {   
@@ -663,4 +675,5 @@ void RemoveItem(Item* i, GameObject* g)
     luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_onmapchange);
     luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_onapplyeffect);
 
+    i->enabled = false;
 }
