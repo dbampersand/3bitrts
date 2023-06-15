@@ -13,7 +13,7 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
-    PlaySound("assets/friendly/warrior/audio/charge.wav",0.5);
+    PlaySound("assets/friendly/rune_smith/audio/rune_of_lifesteal.wav",1);
     
     f1 = {};
     f1["trigger"] = TRIGGER_CONST;

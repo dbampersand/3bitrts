@@ -12,7 +12,7 @@ function setup()
     SetDescription("Bolt\n\nFires a damaging projectile.")
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/bard/audio/song_of_shield.wav",1)
+    PlaySound("assets/friendly/necromancer/add/audio/bolt.wav",1)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
@@ -28,6 +28,7 @@ end
 
 
 function onhit(x,y,objhit)
+    PlaySound("assets/friendly/necromancer/add/audio/bolt_hit.wav",0.5)
 end
 
 function abilitytick(x, y, durationLeft)
@@ -35,3 +36,4 @@ end
 
 function effecttick(effectType,value,obj)
 end 
+

@@ -20,7 +20,7 @@ function casted(x,y,obj,headingx,headingy)
 
 
     ApplyEffect(obj,{f1});
-    PlaySound("assets/friendly/warrior/audio/taunt.wav",0.5);
+    PlaySound("assets/friendly/rune_smith/audio/rune_of_shield.wav",1);
 
     return true;
 end

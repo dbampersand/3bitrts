@@ -304,7 +304,7 @@ void ApplyAttack(Attack* a, GameObject* target)
             apply = false;
         }
     }
-    if (apply)
+    if (apply)  
     {
         for (int i = 0; i < a->numEffects; i++)
         {
@@ -925,6 +925,15 @@ void UpdateAttack(Attack* a, float dt)
 
         if (a->timer < a->tickrate)
             return;
+            
+        if (a->cameFrom)
+        {
+            if (a->cameFrom->luafunc_applyattack > 0)
+            {
+                lua_rawgeti(luaState, LUA_REGISTRYINDEX, a->cameFrom->luafunc_applyattack);
+                lua_pcall(luaState,0,0,0);
+            }
+        }
 
 
         if (AttackIsSoak(a))

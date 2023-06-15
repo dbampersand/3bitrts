@@ -21,7 +21,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/bard/audio/song_of_healing.wav",1)
+    PlaySound("assets/friendly/spell_weaver/audio/weave.wav",1)
     local obj = -1
     if (GetStacks(GetObjRef(),GetAbilityRef())==1) then
         obj = CreateObject("assets/summoned/woven_imp/woven_imp.lua",GetX(GetObjRef()),GetY(GetObjRef()),TYPE_FRIENDLY,0);

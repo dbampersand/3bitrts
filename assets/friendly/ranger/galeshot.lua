@@ -11,7 +11,7 @@ function setup()
 
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/ranger/audio/galeshot.wav",1.25)
+    PlaySound("assets/friendly/ranger/audio/galeshot.wav",1)
 
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
@@ -28,4 +28,7 @@ end
 
 function abilitytick(x, y, durationLeft)
     
+end
+function applyattack()
+    PlaySound("assets/friendly/ranger/audio/galeshot.wav",0.5);
 end

@@ -13,7 +13,7 @@ function setup()
     
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/bard/audio/song_of_shield.wav",1)
+    PlaySound("assets/friendly/necromancer/audio/harvest_blood.wav",1)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;

@@ -10,7 +10,7 @@ function setup()
     SetManaCost(60)
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/priest/audio/smite.wav",1)
+    PlaySound("assets/friendly/shaman/audio/healing_rain.wav",1);
 
     local f1 = {};
     f1["trigger"] = TRIGGER_CONST
@@ -35,4 +35,8 @@ end
 
 function abilitytick(x, y, durationLeft)
     
+end
+
+function applyattack()
+    PlaySound("assets/friendly/shaman/audio/healing_rain.wav",1);
 end

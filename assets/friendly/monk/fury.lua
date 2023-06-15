@@ -11,7 +11,7 @@ function setup()
     SetAbilityRange(50)
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/rogue/audio/toxic.wav",1.25)
+    PlaySound("assets/friendly/monk/audio/fury.wav",1)
     
     f1 = {}
     f1["trigger"] = TRIGGER_INSTANT

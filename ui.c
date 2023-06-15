@@ -1220,7 +1220,7 @@ void DrawEffectPortraits(GameObject* selected, Effect** mousedOver,MouseState* m
 void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseState)
 {
     GameObject* selected = players[0].selection[players[0].indexSelectedUnit];
-    Sprite* s =  &sprites[ui.panel_sprite_index];
+    Sprite* s =  &sprites[ui.panel_0_abilities_sprite_index];
 
     ALLEGRO_COLOR baseColor = (IsOwnedByPlayer(selected) || !selected) ? FRIENDLY : ENEMY;
 

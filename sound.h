@@ -40,7 +40,7 @@ void PlaySelectionSound(GameObject* g);
 
 
 
-#define RESERVED_SAMPLES 16
+#define RESERVED_SAMPLES 32
 #define NUMSOUNDSTOPREALLOC 32
 
 extern ALLEGRO_AUDIO_STREAM* music;

@@ -4,7 +4,7 @@ local radius = 30
 
 local hps = 60
 local duration = 10
-local tickRate = 0.5
+local tickRate = 0.75
 
 function setup()
     AbilitySetCastType(ABILITY_POINT); 
@@ -35,4 +35,7 @@ function onhit(x,y,objhit)
 end
 
 function abilitytick(x, y, durationLeft, obj, target)
+end
+function applyattack()
+    PlaySound("assets/friendly/chromamancer/audio/infrared_tick.wav",0.5);
 end

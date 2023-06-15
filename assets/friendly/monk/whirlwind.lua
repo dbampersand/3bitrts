@@ -13,7 +13,7 @@ function setup()
 
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/rogue/audio/shiv.wav",1.25)
+    PlaySound("assets/friendly/monk/audio/whirlwind.wav",1)
     
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;

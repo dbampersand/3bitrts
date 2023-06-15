@@ -10,7 +10,7 @@ function setup()
     SetManaCost(45)
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/priest/audio/shield.wav",1)
+    PlaySound("assets/friendly/shaman/audio/healing_stream.wav",1);
 
     local newObj = obj
     local newX = 0; local newY = 0

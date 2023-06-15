@@ -1,6 +1,6 @@
 local missChance = 40
 local dps = 40
-local tickrate = 0.5
+local tickrate = 1
 local time = 6
 function setup()
     AbilitySetPortrait("assets/friendly/rogue/icon_shiv.png");
@@ -10,7 +10,7 @@ function setup()
     SetCooldown(14)
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/rogue/audio/shiv.wav",1.25)
+    PlaySound("assets/friendly/rogue/audio/bomb.wav",1)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_CONST
@@ -33,4 +33,7 @@ end
 
 function abilitytick(x, y, durationLeft)
     
+end
+function applyattack()
+    PlaySound("assets/friendly/rogue/audio/bomb_tick.wav",0.2);
 end

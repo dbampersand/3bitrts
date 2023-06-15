@@ -6,7 +6,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/warrior/audio/shield.wav",0.5);
+    PlaySound("assets/friendly/rune_smith/audio/rune_of_pain.wav",1);
 
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;

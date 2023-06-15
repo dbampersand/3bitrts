@@ -37,6 +37,7 @@ typedef struct Ability
     int luafunc_setup;
     int luafunc_onhit;
     int luafunc_abilitytick;
+    int luafunc_applyattack;
     int luafunc_untoggle;
     int luafunc_ontimeout;
     int luafunc_onchanneled;

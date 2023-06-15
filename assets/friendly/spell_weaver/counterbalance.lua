@@ -17,7 +17,7 @@ function setup()
     
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/bard/audio/song_of_shield.wav",1)
+    PlaySound("assets/friendly/spell_weaver/audio/counterbalance.wav",1)
 
     if (obj ~= target) then
         target = obj

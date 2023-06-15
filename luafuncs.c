@@ -938,7 +938,7 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index, GameObject
     lua_pushnumber(l,index);
     lua_gettable(l,tableStackPos);
 
-    Effect e;
+    Effect e = {0};
     e.maxStacks = 9999;
     bool isField = false;
     e.trigger = GetTableField(l,-1,"trigger", &isField);
@@ -991,7 +991,8 @@ Effect GetEffectFromTable(lua_State* l, int tableStackPos, int index, GameObject
 
     e.tickTime = e.duration / e.numTriggers;
     e.value = GetTableField(l,-1,"value",&isField);
-
+    if (!isField)
+        e.value = 0;
 
     if (from)
         e.value += e.value * from->abilityPotency;

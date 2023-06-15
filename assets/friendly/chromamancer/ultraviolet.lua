@@ -4,7 +4,7 @@ local radius = 30
 
 local dps = 25
 local duration = 3
-local tickRate = 0.5
+local tickRate = 0.75
 
 local cdReduce = 3
 
@@ -38,4 +38,7 @@ function onhit(x,y,objhit)
 end
 
 function abilitytick(x, y, durationLeft, obj, target)
+end
+function applyattack()
+    PlaySound("assets/friendly/chromamancer/audio/ultraviolet_tick.wav",0.5);
 end

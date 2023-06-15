@@ -1,5 +1,6 @@
 local duration = 12;
 local aoe = -1
+local armor = 5
 
 local damage = 10000
 
@@ -18,7 +19,7 @@ function setup()
     
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/bard/audio/song_of_shield.wav",1)
+    PlaySound("assets/friendly/spell_weaver/audio/cocoon.wav",1)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_CONST;

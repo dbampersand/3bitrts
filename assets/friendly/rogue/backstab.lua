@@ -7,7 +7,7 @@ function setup()
     SetCooldown(15);
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/rogue/audio/backstab.wav",1.25)
+    PlaySound("assets/friendly/rogue/audio/backstab.wav",1)
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT

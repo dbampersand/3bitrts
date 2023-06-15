@@ -41,6 +41,9 @@ function casted(x,y,obj,headingx,headingy)
     f2["overwrites"] = true
 
     ApplyEffect(obj, {f1,f2})
+
+    PlaySound("assets/friendly/shaman/audio/embody.wav",1);
+
     return true; 
 end
 

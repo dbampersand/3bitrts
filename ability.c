@@ -300,6 +300,16 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
         }
         else
             a->luafunc_setup = -1;
+        if (CheckFuncExists("applyattack",&a->luabuffer))
+        {
+            lua_getglobal(l, "applyattack");
+            funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+            a->luafunc_applyattack = funcIndex;
+        }
+        else
+            a->luafunc_applyattack = -1;
+
+            
 
         if (CheckFuncExists("casted",&a->luabuffer))
         {
@@ -674,6 +684,7 @@ void RemoveAbility(Ability* a, GameObject* from)
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_setup);
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_onhit);
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_abilitytick);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_applyattack);
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_untoggle);
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_ontimeout);
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_onchanneled);

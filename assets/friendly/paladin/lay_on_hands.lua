@@ -27,7 +27,7 @@ function casted(x,y,obj,headingx,headingy)
 
 
     ApplyEffect(obj,{f1});
-    PlaySound("assets/friendly/warrior/audio/taunt.wav",0.5);
+    PlaySound("assets/friendly/paladin/audio/lay_on_hands.wav",1);
 
     return true;
 end

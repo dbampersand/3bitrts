@@ -17,7 +17,8 @@ function setup()
     SetManaCost(60)
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/priest/audio/smite.wav",1)
+    PlaySound("assets/friendly/shaman/audio/healing_claws.wav",1)
+    After(PlaySound,timeBetweenSwipes,"assets/friendly/shaman/audio/healing_claws.wav",1)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
@@ -35,12 +36,15 @@ function casted(x,y,obj,headingx,headingy)
 
     return true;
 end
-function timerbeforetick(timer) 
-    UpdateTimerArgument(timer,1,GetX(GetObjRef()))
-    UpdateTimerArgument(timer,2,GetY(GetObjRef()))
-
+function timerbeforetick(timer,func) 
+    if (func == CreateConeProjectiles) then
+        UpdateTimerArgument(timer,1,GetX(GetObjRef()))
+        UpdateTimerArgument(timer,2,GetY(GetObjRef()))
+    end
 end
 function onhit(x,y,objhit)
+    PlaySound("assets/friendly/shaman/audio/healing_claws_hit.wav",0.25)
+
 end
 
 function abilitytick(x, y, durationLeft)

@@ -1395,6 +1395,15 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
     g->spriteIndex = 0;
     g->channelingSpriteIndex = 0;
 
+    for (int i = 0; i < MAXUNITSSELECTED; i++)
+    {
+        if (players[0].selection[i] == g)
+        {
+            RemoveGameObjectFromSelection(&players[0],g);
+            break;
+        }
+    }
+
     DeleteThreatList(g);
     if (g->shields)
     {

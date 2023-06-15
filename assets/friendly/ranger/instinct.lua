@@ -9,7 +9,7 @@ function setup()
     SetCooldown(70)
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/ranger/audio/instinct.wav",1.25)
+    PlaySound("assets/friendly/ranger/audio/instinct.wav",1)
 
     f1 = {};
     f1["trigger"] = TRIGGER_CONST;
@@ -31,4 +31,7 @@ end
 
 function abilitytick(x, y, durationLeft)
     
+end
+function applyattack()
+    PlaySound("assets/friendly/ranger/audio/instinct_tick.wav",0.5);
 end

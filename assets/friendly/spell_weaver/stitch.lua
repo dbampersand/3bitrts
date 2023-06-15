@@ -18,7 +18,7 @@ function setup()
     
 end
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/friendly/bard/audio/song_of_damage.wav",1)
+    PlaySound("assets/friendly/spell_weaver/audio/stitch.wav",1)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_CONST;

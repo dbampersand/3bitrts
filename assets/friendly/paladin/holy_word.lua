@@ -7,7 +7,7 @@ function setup()
 end
 
 function casted()
-    PlaySound("assets/friendly/warrior/audio/shield.wav",0.5);
+    PlaySound("assets/friendly/paladin/audio/holy_word.wav",1);
 
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;

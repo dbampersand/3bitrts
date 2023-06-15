@@ -17,13 +17,16 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
+    PlaySound("assets/friendly/shaman/audio/spirit.wav",1);
+
+
     local f1 = {}
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;   
     f1["value"] = damage;
 
     
-    local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",radius,0,0,false,Bor(ATTACK_HITS_FRIENDLIES, ATTACK_HITS_ENEMIES),COLOR_DAMAGE,DITHER_HEAL_HALF,false,-1,{f1});
+    local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",radius,0,0,true,Bor(ATTACK_HITS_FRIENDLIES, ATTACK_HITS_ENEMIES),COLOR_DAMAGE,DITHER_HEAL_HALF,false,-1,{f1});
     SetAttackInactive(aoe,seconds)
 
     local dist = DistXY(GetX(GetObjRef()),GetY(GetObjRef()),x,y)
@@ -35,7 +38,9 @@ function casted(x,y,obj,headingx,headingy)
 
     return true; 
 end
-
+function ontimeout()
+    PlaySound("assets/friendly/shaman/audio/spirit_timeout.wav",1);
+end
 function untoggle()
 end
 

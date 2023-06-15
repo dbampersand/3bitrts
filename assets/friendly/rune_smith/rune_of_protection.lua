@@ -29,7 +29,7 @@ function casted(x,y,obj,headingx,headingy)
     ApplyEffect(GetObjRef(),{f1,f2});
 
 
-    PlaySound("assets/friendly/warrior/audio/strike.wav",0.5);
+    PlaySound("assets/friendly/rune_smith/audio/rune_of_protection.wav",1);
     
     return true;
 end
