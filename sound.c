@@ -43,10 +43,11 @@ int* ambientSounds = NULL;
 int numAmbientSounds = 0;
 int numAmbientSoundsAlloced = 0;
   
-float timeToNextAmbience = 8;
+float timeToNextAmbience = 0;
 
 int** selectionSounds = NULL;
 int* numSelectionSounds = NULL;
+
 int popcnt(int n)
 {
     int bits = 0;
@@ -93,8 +94,12 @@ void UpdateAmbience(float dt)
 
     if (timeToNextAmbience <= 0)
     {
-        PlaySound(GetRandomAmbient(),RandRange(0.05,0.2),RandRange(-0.25,0.25));
-        timeToNextAmbience = RandRange(3.5,12);
+        Sound* s = GetRandomAmbient();
+        PlaySound(s,RandRange(0.05,0.2),RandRange(-0.25,0.25));
+        int len = al_get_sample_length(s->sample);
+        int freq = al_get_sample_frequency(s->sample);
+        timeToNextAmbience = freq / (float)len * 1000;
+        timeToNextAmbience -= RandRange(1,5);
     }
 }
 void AddAmbientSound(int index)
@@ -329,7 +334,6 @@ void PlaySound(Sound* s, float relativeVolume, float pan)
     relativeVolume += volumeJitter;
 
     al_play_sample(s->sample, currSettings.masterVolume * relativeVolume * currSettings.sfxVolume, pan, 1.0f + pitchJitter, ALLEGRO_PLAYMODE_ONCE, NULL);
-
 }
 void StopMusic()
 {

@@ -703,6 +703,12 @@ void UpdateTransition(float dt)
     {   
         if (transitionDrawing == TRANSITION_CHAINS)
         {
+            if (transitionTimer == 0)
+            {
+                int sound = LoadSound("assets/audio/chain.wav");
+                Sound* s = &sounds[sound];
+                PlaySound(s,1,0);
+            }
             if (transitionTimer < 0.4f)
             {
                 transitionTimer += dt * 3;
@@ -713,12 +719,27 @@ void UpdateTransition(float dt)
             }
             if (transitionAudioPlayed == false && transitionTimer >= 0.725f)
             {
+                int sound = LoadSound("assets/audio/slam.wav");
+                Sound* s = &sounds[sound];
+                PlaySound(s,1,0);
+
+                sound = LoadSound("assets/audio/chain_pull_up.wav");
+                s = &sounds[sound];
+                PlaySound(s,1,0);
+
+
                 transitionAudioPlayed = true;
                 AddScreenshake(6,0.1f);
             }
         }
         else if (transitionDrawing == TRANSITION_TRIANGLES)
         {
+            if (transitionTimer == 0)
+            {
+                int sound = LoadSound("assets/audio/transition_triangles.wav");
+                Sound* s = &sounds[sound];
+                PlaySound(s,1,0);
+            }
             if (transitionTimer < 0.3f)
             {
                 transitionTimer += dt * 3;
@@ -728,27 +749,32 @@ void UpdateTransition(float dt)
         }
         else if (transitionDrawing == TRANSITION_CIRCLE)
         {
+            if (transitionTimer == 0)
+            {
+                int sound = LoadSound("assets/audio/transition_circle.wav");
+                Sound* s = &sounds[sound];
+                PlaySound(s,1,0);
+            }
             transitionTimer += dt * 1.6f;
         }
         else if (transitionDrawing == TRANSITION_MOUNTAINS)
         {
             transitionTimer += dt;
         }
-        else
+         else if (transitionDrawing == TRANSITION_DOOR)
         {
-            if (transitionTimer < 0.4f)
+            if (transitionTimer == 0)
             {
-                transitionTimer += dt * 2;
+                int sound = LoadSound("assets/audio/door_slide.wav");
+                Sound* s = &sounds[sound];
+                PlaySound(s,1,0);
             }
-            else
+            if (transitionAudioPlayed == false && transitionTimer >= 0.85f)
             {
-                transitionTimer += dt * 1.8f;
-            }
-        }
-        if (transitionDrawing == TRANSITION_DOOR)
-        {
-            if (transitionAudioPlayed == false && transitionTimer >= 0.925f)
-            {
+                int sound = LoadSound("assets/audio/slam_deep.wav");
+                Sound* s = &sounds[sound];
+                PlaySound(s,1,0);
+
                 transitionAudioPlayed = true;
                 AddScreenshake(3.5f,0.1f);
 
@@ -760,6 +786,27 @@ void UpdateTransition(float dt)
 
                     AddParticleWithRandomProperties(randX,randY,COLOR_FRIENDLY,0.6f,1.4f,12,36,-2*M_PI,2*M_PI);
                 }
+            }
+            if (transitionTimer < 0.4f)
+            {
+                transitionTimer += dt * 2;
+            }
+            else
+            {
+                transitionTimer += dt * 1.8f;
+            }
+
+        }
+
+        else
+        {
+            if (transitionTimer < 0.4f)
+            {
+                transitionTimer += dt * 2;
+            }
+            else
+            {
+                transitionTimer += dt * 1.8f;
             }
         }
         if (transitionTimer >= 1.0f)

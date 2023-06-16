@@ -378,6 +378,10 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
 
     if ((GetButtonIsClicked(&purchaseUI->back) || IsBindDownThisFrame(keyStateThisFrame,keyStateLastFrame,currSettings.keymap.key_PanLeft)) && purchaseUI->currentIndex != 0)
     {
+        int sound = LoadSound("assets/audio/ui_slide.wav");
+        Sound* s = &sounds[sound];
+        PlaySound(s,1,0);
+
         purchaseUI->indexTransitioningTo--;
         purchaseUI->indexTransitioningTo = clamp(purchaseUI->indexTransitioningTo,0,purchaseUI->numPrefabs-1);
 
@@ -390,6 +394,10 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
 
     if ((GetButtonIsClicked(&purchaseUI->next) || IsBindDownThisFrame(keyStateThisFrame,keyStateLastFrame,currSettings.keymap.key_PanRight)) && purchaseUI->currentIndex != purchaseUI->numPrefabs-1)
     {
+        int sound = LoadSound("assets/audio/ui_slide.wav");
+        Sound* s = &sounds[sound];
+        PlaySound(s,1,0);
+
         purchaseUI->indexTransitioningTo++;
         purchaseUI->indexTransitioningTo = clamp(purchaseUI->indexTransitioningTo,0,purchaseUI->numPrefabs-1);
        // purchaseUI->transitionTimer = 0;
@@ -951,56 +959,30 @@ Rect GetAbilityPortraitRect(int index, int numAbilities)
 {
     Rect r;
     r.w = 30; r.h = 30;
-    if (numAbilities == 1)
+    if (index == 0)
     {
-        if (index == 0)
-        {
-            r.x = 64;
-            r.y = UI_ABILITY_START_Y;
-        }   
+        r.x = 33;
+        r.y = UI_ABILITY_START_Y;
     }
-
-    if (numAbilities == 2)
+    if (index == 1)
     {
-        if (index == 0)
-        {
-            r.x = 40;
-            r.y = UI_ABILITY_START_Y;
-        }   
-        if (index == 1)
-        {
-            r.x = 89;
-            r.y = UI_ABILITY_START_Y;
-        }   
-
+        r.x = 65;
+        r.y = UI_ABILITY_START_Y;
     }
-    if (numAbilities > 2)
+    if (index == 2)
     {
-        if (index == 0)
-        {
-            r.x = 33;
-            r.y = UI_ABILITY_START_Y;
-        }
-        if (index == 1)
-        {
-            r.x = 65;
-            r.y = UI_ABILITY_START_Y;
-        }
-        if (index == 2)
-        {
-            r.x = 97;
-            r.y = UI_ABILITY_START_Y;
-        }
-        if (index == 3)
-        {
-            r.x = 129;
-            r.y = UI_ABILITY_START_Y;
-        }
-        if (index == 4)
-        {
-            r.x = 161;
-            r.y = UI_ABILITY_START_Y;
-        }
+        r.x = 97;
+        r.y = UI_ABILITY_START_Y;
+    }
+    if (index == 3)
+    {
+        r.x = 129;
+        r.y = UI_ABILITY_START_Y;
+    }
+    if (index == 4)
+    {
+        r.x = 161;
+        r.y = UI_ABILITY_START_Y;
     }
 
     return r;
@@ -1234,8 +1216,11 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
     Sprite* health = &sprites[ui.health_element_sprite_index];
     if (selected)
         health = selected->usesMana ? &sprites[ui.health_and_mana_element_sprite_index] : &sprites[ui.health_element_sprite_index];
+    if (!selected)
+        s = &sprites[ui.panel_unselected_abilities_sprite_index];
     if (selected)
     {
+
         if (selected->numAbilities == 0)
             s = &sprites[ui.panel_0_abilities_sprite_index];
 
@@ -1252,10 +1237,14 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
             s = &sprites[ui.panel_sprite_index];
         else if (selected->numAbilities == 5)
             s = &sprites[ui.panel_5_abilities_sprite_index];
+
+
     }
-    if (!s) return;
     DrawSprite(s,1,UI_START_Y+1,0.5f,0.5f,0,baseColor,false,false,false);
-    DrawSprite(health,1,UI_START_Y+1,0.5f,0.5f,0,baseColor,false,false,false);
+    if (selected)
+        DrawSprite(health,1,UI_START_Y+1,0.5f,0.5f,0,baseColor,false,false,false);
+
+    if (!s) return;
 
     if (selected)
     {
@@ -1265,8 +1254,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
         
         DrawItems(selected);
 
-        if (selected->numAbilities == 1)
-        {
+        if (selected->numAbilities >= 1)
             if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_Q),*mouseState,&baseColor,true,false))
             {
                 if (selected->abilities[0].description)
@@ -1278,20 +1266,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                 }
 
             }
-        }
-        if (selected->numAbilities == 2)
-        {
-            if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_Q),*mouseState,&baseColor,true,false))
-            {
-                if (selected->abilities[0].description)
-                {
-                    int h = GetDescriptionBoxH(selected->abilities[0].description,100,ui.font,UI_PADDING);
-                    int x = 33 + ceilf(UI_PADDING/2.0f);
-                    int y = 221 - h - 3;
-                    DrawDescriptionBox(selected->abilities[0].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
-                }
-
-            }
+        if (selected->numAbilities >= 2)
             if (DrawAbilityPortraits(selected,heldAbility,1,GetAbilityPortraitRect(1,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_W),*mouseState,&baseColor,true,false))
             {
                 if (selected->abilities[1].description)
@@ -1302,67 +1277,39 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
                     DrawDescriptionBox(selected->abilities[1].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
                 }
             }
-        }
-
-        if (selected->numAbilities > 2)
-        {
-            if (selected->numAbilities >= 1)
-                if (DrawAbilityPortraits(selected,heldAbility,0,GetAbilityPortraitRect(0,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_Q),*mouseState,&baseColor,true,false))
-                {
-                    if (selected->abilities[0].description)
-                    {
-                        int h = GetDescriptionBoxH(selected->abilities[0].description,100,ui.font,UI_PADDING);
-                        int x = 33 + ceilf(UI_PADDING/2.0f);
-                        int y = 221 - h - 3;
-                        DrawDescriptionBox(selected->abilities[0].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
-                    }
-
-                }
-            if (selected->numAbilities >= 2)
-                if (DrawAbilityPortraits(selected,heldAbility,1,GetAbilityPortraitRect(1,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_W),*mouseState,&baseColor,true,false))
-                {
-                    if (selected->abilities[1].description)
-                    {
-                        int h = GetDescriptionBoxH(selected->abilities[1].description,100,ui.font,UI_PADDING);
-                        int x = 65 + ceilf(UI_PADDING/2.0f);
-                        int y = 221 - h - 3;
-                        DrawDescriptionBox(selected->abilities[1].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
-                    }
-                }
-            if (selected->numAbilities >= 3)
-                if (DrawAbilityPortraits(selected,heldAbility,2,GetAbilityPortraitRect(2,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_E),*mouseState,&baseColor,true,false))
-                {
-                    if (selected->abilities[2].description)
-                    {
-                        int h = GetDescriptionBoxH(selected->abilities[2].description,100,ui.font,UI_PADDING);
-                        int x = 97 + ceilf(UI_PADDING/2.0f);
-                        int y = 221 - h - 3;
-                        DrawDescriptionBox(selected->abilities[2].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
-
-                    }
-                }
-            if (selected->numAbilities >= 4)
-                if (DrawAbilityPortraits(selected,heldAbility,3,GetAbilityPortraitRect(3,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_R),*mouseState,&baseColor,true,false))
-                {
-                    if (selected->abilities[3].description)
-                    {
-                        int h = GetDescriptionBoxH(selected->abilities[3].description,100,ui.font,UI_PADDING);
-                        int x = 129 + ceilf(UI_PADDING/2.0f);
-                        int y = 221 - h - 3;
-                        DrawDescriptionBox(selected->abilities[3].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
-                    }
-                }
-            if (selected->numAbilities >= 5)
+        if (selected->numAbilities >= 3)
+            if (DrawAbilityPortraits(selected,heldAbility,2,GetAbilityPortraitRect(2,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_E),*mouseState,&baseColor,true,false))
             {
-                if (DrawAbilityPortraits(selected,heldAbility,4,GetAbilityPortraitRect(4,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_F),*mouseState,&baseColor,true,false))
+                if (selected->abilities[2].description)
                 {
-                    if (selected->abilities[4].description)
-                    {
-                        int h = GetDescriptionBoxH(selected->abilities[4].description,100,ui.font,UI_PADDING);
-                        int x = 140 + ceilf(UI_PADDING/2.0f);
-                        int y = 221 - h - 3;
-                        DrawDescriptionBox(selected->abilities[4].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
-                    }
+                    int h = GetDescriptionBoxH(selected->abilities[2].description,100,ui.font,UI_PADDING);
+                    int x = 97 + ceilf(UI_PADDING/2.0f);
+                    int y = 221 - h - 3;
+                    DrawDescriptionBox(selected->abilities[2].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
+
+                }
+            }
+        if (selected->numAbilities >= 4)
+            if (DrawAbilityPortraits(selected,heldAbility,3,GetAbilityPortraitRect(3,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_R),*mouseState,&baseColor,true,false))
+            {
+                if (selected->abilities[3].description)
+                {
+                    int h = GetDescriptionBoxH(selected->abilities[3].description,100,ui.font,UI_PADDING);
+                    int x = 129 + ceilf(UI_PADDING/2.0f);
+                    int y = 221 - h - 3;
+                    DrawDescriptionBox(selected->abilities[3].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
+                }
+            }
+        if (selected->numAbilities >= 5)
+        {
+            if (DrawAbilityPortraits(selected,heldAbility,4,GetAbilityPortraitRect(4,selected->numAbilities),IsBindDown(keyState,currSettings.keymap.key_F),*mouseState,&baseColor,true,false))
+            {
+                if (selected->abilities[4].description)
+                {
+                    int h = GetDescriptionBoxH(selected->abilities[4].description,100,ui.font,UI_PADDING);
+                    int x = 140 + ceilf(UI_PADDING/2.0f);
+                    int y = 221 - h - 3;
+                    DrawDescriptionBox(selected->abilities[4].description, 5, ui.font,ui.boldFont, x,y,100,0,FRIENDLY,true);
                 }
             }
         }
@@ -1401,6 +1348,10 @@ void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame
 
     if (e->encounter_ButtonLeft.enabled && IsBindDownThisFrame(keyStateThisFrame,keyStateLastFrame,currSettings.keymap.key_PanLeft))
     {
+        int sound = LoadSound("assets/audio/ui_slide.wav");
+        Sound* s = &sounds[sound];
+        PlaySound(s,1,0);
+
         PreviousEncounter();
         //selectedEncounterIndex--;
         if (selectedEncounterIndex < 0)
@@ -1409,6 +1360,9 @@ void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame
     if (e->encounter_ButtonRight.enabled && IsBindDownThisFrame(keyStateThisFrame,keyStateLastFrame,currSettings.keymap.key_PanRight))
     {
         //selectedEncounterIndex++;
+        int sound = LoadSound("assets/audio/ui_slide.wav");
+        Sound* s = &sounds[sound];
+        PlaySound(s,1,0);
 
         NextEncounter();
         if (selectedEncounterIndex >= numEncounters)
@@ -2700,6 +2654,7 @@ void InitUI()
 
 
     ui.panel_sprite_index = LoadSprite("assets/ui/ingame/ui.png",false);
+    ui.panel_unselected_abilities_sprite_index = LoadSprite("assets/ui/ingame/ui_unselected.png",false);
     ui.panel_0_abilities_sprite_index = LoadSprite("assets/ui/ingame/ui_0abilities.png",false);
     ui.panel_1_abilities_sprite_index = LoadSprite("assets/ui/ingame/ui_1abilities.png",false);
     ui.panel_2_abilities_sprite_index = LoadSprite("assets/ui/ingame/ui_2abilities.png",false);

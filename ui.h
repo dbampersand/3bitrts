@@ -192,6 +192,7 @@ typedef struct PurchasingUnitUI {
 typedef struct UI
 {
     int panel_sprite_index;
+    int panel_unselected_abilities_sprite_index;
     int panel_0_abilities_sprite_index;
     int panel_1_abilities_sprite_index;
     int panel_2_abilities_sprite_index;
