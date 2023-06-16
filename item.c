@@ -660,11 +660,6 @@ void RemoveItem(Item* i, GameObject* g)
         free(i->name);
         i->name = NULL;
     }
-    if (i->path)
-    {
-        free(i->path);
-        i->path = NULL;
-    }
     luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_setup);
     luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_update);
     luaL_unref(luaState,LUA_REGISTRYINDEX,i->luafunc_onattack);

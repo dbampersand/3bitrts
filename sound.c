@@ -48,6 +48,13 @@ float timeToNextAmbience = 0;
 int** selectionSounds = NULL;
 int* numSelectionSounds = NULL;
 
+void PlaySoundStr(char* str, float volume, float pan)
+{
+    int index = LoadSound(str);
+    Sound* s = &sounds[index];
+    PlaySound(s,volume,pan);
+}
+
 int popcnt(int n)
 {
     int bits = 0;

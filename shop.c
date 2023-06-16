@@ -14,6 +14,7 @@
 #include "encounter.h"
 #include "particle.h"
 #include "easings.h"
+#include "sound.h"
 Shop shop = {0};
 int rerollCost = 5;
 
@@ -209,6 +210,10 @@ void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
         float cy = si->position.y + h/2.0f;
         if (shop.shopState != SHOP_STATE_REROLLING && ItemIsPurchasable(si->item)  && mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1) && dist(mouseState.screenX,mouseState.screenY,cx,cy) <= r)
         {
+            if (!shop.heldItem)
+            {
+                PlaySoundStr("assets/audio/item_pickup.wav",1,0);
+            }
             shop.heldItem = &shop.items[i];
             shop.heldOffset.x = mouseState.screenX - si->position.x;
             shop.heldOffset.y = mouseState.screenY - si->position.y;
@@ -383,6 +388,8 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
                     {
                         ScatterEffect_Sprite(&sprites[g->inventory[i].spriteIndex_Icon],slotX,slotY, COLOR_DAMAGE);
 
+                        PlaySoundStr("assets/audio/item_trash.wav",1,0);
+
                         UnattachItem(&g->inventory[i],g);
                         shop.removeClickedItem = NULL;
 
@@ -438,6 +445,8 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
             
             if (!(mouseState.mouse.buttons & 1) && PointInRect(mouseState.screenX,mouseState.screenY,r))
             {
+                PlaySoundStr("assets/audio/item_buy.wav",1,0);
+
                 BuyItem(shop.heldItem->item);
                 AttachItem(g,shop.heldItem->item);
 
@@ -490,8 +499,13 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
     }
 
     if (!(mouseState.mouse.buttons & 1))
+    {
+        if (shop.heldItem)
+        {
+            PlaySoundStr("assets/audio/item_drop.wav",1,0);
+        }
         shop.heldItem = NULL;
-
+    }
     if (clickedThisFrame && !clickedOnAnInventorySlot)
     {
         shop.removeClickedItem = NULL;
@@ -527,6 +541,7 @@ void DrawReroll(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
     {
         if ((mouseStateLastFrame.mouse.buttons & 1)  && !(mouseState.mouse.buttons & 1))
         {
+            PlaySoundStr("assets/audio/reroll.wav",1,0);
             AddGold(-rerollCost);
             shop.shopState = SHOP_STATE_REROLLING;
         }

@@ -27,6 +27,7 @@ extern int numAmbientSoundsAlloced;
 
 void InitSound();
 int LoadSound(const char* path);
+void PlaySoundStr(char* str, float volume, float pan);
 void PlaySoundAtPosition(Sound* s, float relativeVolume, int x, int y);
 void PlaySound(Sound* s, float relativeVolume, float pan);
 void PlayMusic(const char* path, float loopPoint, double musicGain);

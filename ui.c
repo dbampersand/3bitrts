@@ -3224,8 +3224,8 @@ void DrawButtonText(UIElement* u,int x, int y, ALLEGRO_COLOR col)
     float textX; float textY;
     if (align == ALLEGRO_ALIGN_CENTRE)
     {
-        textX = x + u->w/2.0f;
-        textY = y + u->h/2.0f - al_get_font_line_height(ui.font)/2.0;
+        textX = x + u->w/2;
+        textY = y + u->h/2 - al_get_font_line_height(ui.font)/2.0;
     }
     if (align == ALLEGRO_ALIGN_LEFT)
     {
