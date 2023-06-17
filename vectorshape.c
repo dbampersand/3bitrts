@@ -145,9 +145,8 @@ bool ObjectInVectorShape(GameObject* g, VectorShape* v)
     } 
     return false;
 }
-void MoveVectorShape(int x, int y, VectorShape v)
+void MoveVectorShape(int x, int y, VectorShape* v)
 {
-
 }
 bool CastRay(float x, float y, Line l)
 {

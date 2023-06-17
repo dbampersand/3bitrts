@@ -1439,6 +1439,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     }
     if (isRerolling)
     {
+        PlaySoundStr("assets/audio/reroll.wav",1,0);
         SetEncounterRandAugments(e);
     }
 
@@ -1454,8 +1455,17 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     for (int i = 0; i < e->difficultyUnlocked; i++)
     {
         Rect drawRect = (Rect){augmentX+offsetX,20,GetWidthSprite(&sprites[ui.augmentIconIndex]),GetHeightSprite(&sprites[ui.augmentIconIndex])};
-        DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0.5f,0.5f,0,i <= e->augment ? FRIENDLY : GROUND,false,false,false);
+        ALLEGRO_COLOR c = i <= e->augment ? FRIENDLY : GROUND;
+        if (PointInRect(mouseState->screenX,mouseState->screenY,drawRect) && !PointInRect(mouseStateLastFrame->screenX,mouseStateLastFrame->screenY,drawRect))
+        {
+            PlaySoundStr("assets/audio/hover.wav",0.25f,0);
+        }
+        if (PointInRect(mouseState->screenX,mouseState->screenY,drawRect))
+            c = ENEMY;
+        
+        DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0.5f,0.5f,0,c,false,false,false);
         augmentX += drawRect.w+3;
+
 
         if (mouseStateLastFrame->mouse.buttons & 1 && !(mouseState->mouse.buttons & 1))
         {
@@ -1465,8 +1475,10 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
             selectRect.w += 5;
             selectRect.h += 5;
 
+
             if (PointInRect(mouseState->screenX,mouseState->screenY,drawRect) && i != e->augment)
             {
+                PlaySoundStr("assets/audio/gem_click.wav",1,0);
                 e->augment = i;
                 SetEncounterRandAugments(e);
             }

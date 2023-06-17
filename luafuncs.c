@@ -4054,8 +4054,8 @@ int L_MoveAttack(lua_State* l)
             a->shape.y = y;
             for (int i = 0; i < a->shape.numCutOutAreas; i++)
             {
-                a->shape.x = x;
-                a->shape.y = y;
+                a->shape.cutoutAreas[i].x = x;
+                a->shape.cutoutAreas[i].y = y;
             }
 
         }

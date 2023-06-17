@@ -45,7 +45,7 @@ typedef struct Line
 
 
 
-void MoveVectorShape(int x, int y, VectorShape v);
+void MoveVectorShape(int x, int y, VectorShape* v);
 VectorShape CreateVectorShape(Point* points, int numPoints, int x, int y);
 void DrawVectorShape(VectorShape* v, Color color);
 bool ObjectInVectorShape(GameObject* g, VectorShape* v);
