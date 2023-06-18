@@ -989,7 +989,7 @@ Rect GetAbilityPortraitRect(int index, int numAbilities)
 
 
 }
-bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, MouseState* mouse)
+bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, MouseState* mouse, MouseState* mouseStateLastFrame)
 {
     Sprite* s = &sprites[ability->spriteIndex_Portrait];
     int w = al_get_bitmap_width(s->sprite);
@@ -1003,6 +1003,13 @@ bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, MouseState
     if (mouse && PointInRect(mouse->screenX,mouse->screenY,r))
     {
         shouldInvert = true;
+    }
+    if (mouse && mouseStateLastFrame)
+    {
+        if (PointInRect(mouse->screenX,mouse->screenY,r) && !PointInRect(mouseStateLastFrame->screenX,mouseStateLastFrame->screenY,r))
+        {
+            PlaySoundStr("assets/audio/hover2.wav",1,0);
+        }
     }
 
     DrawSprite(s,x,y,0.5f,0.5f,0,color,shouldInvert,false,false);
@@ -1422,6 +1429,12 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 
         if (DrawAugmentPortrait(a,column+offsetX,row, mouseState, col))
             augmentDescriptionToDraw = description;
+        Rect r = (Rect){column+offsetX,row,20,20};
+        if (PointInRect(mouseState->screenX,mouseState->screenY,r) && !PointInRect(mouseStateLastFrame->screenX,mouseStateLastFrame->screenY,r))
+        {
+            PlaySoundStr("assets/audio/hover2.wav",1,0);
+        }
+
 
         if (isRerolling)
         {
@@ -1532,25 +1545,25 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     Ability* mousedOver = NULL;
     if (e->unlocked)
     {
-        mousedOver = DrawAbility(&e->abilities[0], 96+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[0] : mousedOver;
-        mousedOver = DrawAbility(&e->abilities[1], 136+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[1] : mousedOver;
-        mousedOver = DrawAbility(&e->abilities[2], 175+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[2] : mousedOver;
-        mousedOver = DrawAbility(&e->abilities[3], 214+offsetX, 80, ENEMY, mouseState) == true ? &e->abilities[3] : mousedOver;
-        mousedOver = DrawAbility(&e->abilities[4], 96+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[4] : mousedOver;
-        mousedOver = DrawAbility(&e->abilities[5], 136+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[5] : mousedOver;
-        mousedOver = DrawAbility(&e->abilities[6], 175+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[6] : mousedOver;
-        mousedOver = DrawAbility(&e->abilities[7], 214+offsetX, 120, ENEMY, mouseState) == true ? &e->abilities[7] : mousedOver;
+        mousedOver = DrawAbility(&e->abilities[0], 96+offsetX, 80, ENEMY, mouseState,mouseStateLastFrame) == true ? &e->abilities[0] : mousedOver;
+        mousedOver = DrawAbility(&e->abilities[1], 136+offsetX, 80, ENEMY, mouseState,mouseStateLastFrame) == true ? &e->abilities[1] : mousedOver;
+        mousedOver = DrawAbility(&e->abilities[2], 175+offsetX, 80, ENEMY, mouseState,mouseStateLastFrame) == true ? &e->abilities[2] : mousedOver;
+        mousedOver = DrawAbility(&e->abilities[3], 214+offsetX, 80, ENEMY, mouseState,mouseStateLastFrame) == true ? &e->abilities[3] : mousedOver;
+        mousedOver = DrawAbility(&e->abilities[4], 96+offsetX, 120, ENEMY, mouseState,mouseStateLastFrame) == true ? &e->abilities[4] : mousedOver;
+        mousedOver = DrawAbility(&e->abilities[5], 136+offsetX, 120, ENEMY, mouseState,mouseStateLastFrame) == true ? &e->abilities[5] : mousedOver;
+        mousedOver = DrawAbility(&e->abilities[6], 175+offsetX, 120, ENEMY, mouseState,mouseStateLastFrame) == true ? &e->abilities[6] : mousedOver;
+        mousedOver = DrawAbility(&e->abilities[7], 214+offsetX, 120, ENEMY, mouseState,mouseStateLastFrame) == true ? &e->abilities[7] : mousedOver;
     }
     else if (!e->unlocked)
     {
-        DrawAbility(&e->abilities[0], 96+offsetX, 80, disabled, NULL);
-        DrawAbility(&e->abilities[1], 136+offsetX, 80, disabled, NULL);
-        DrawAbility(&e->abilities[2], 175+offsetX, 80, disabled, NULL);
-        DrawAbility(&e->abilities[3], 214+offsetX, 80, disabled, NULL);
-        DrawAbility(&e->abilities[4], 96+offsetX, 120, disabled, NULL);
-        DrawAbility(&e->abilities[5], 136+offsetX, 120, disabled, NULL);
-        DrawAbility(&e->abilities[6], 175+offsetX, 120, disabled, NULL);
-        DrawAbility(&e->abilities[7], 214+offsetX, 120, disabled, NULL);
+        DrawAbility(&e->abilities[0], 96+offsetX, 80, disabled, NULL,NULL);
+        DrawAbility(&e->abilities[1], 136+offsetX, 80, disabled, NULL,NULL);
+        DrawAbility(&e->abilities[2], 175+offsetX, 80, disabled, NULL,NULL);
+        DrawAbility(&e->abilities[3], 214+offsetX, 80, disabled, NULL,NULL);
+        DrawAbility(&e->abilities[4], 96+offsetX, 120, disabled, NULL,NULL);
+        DrawAbility(&e->abilities[5], 136+offsetX, 120, disabled, NULL,NULL);
+        DrawAbility(&e->abilities[6], 175+offsetX, 120, disabled, NULL,NULL);
+        DrawAbility(&e->abilities[7], 214+offsetX, 120, disabled, NULL,NULL);
     }
 
     char* descriptionToDraw;
@@ -3026,6 +3039,11 @@ void UpdateButton(int rX, int rY, int w, int h, UIElement* u, MouseState mouseSt
     {
         b->mousedOver = true;
     }
+    if (u->enabled && PointInRect(mouseState.screenX,mouseState.screenY,r) && !PointInRect(mouseStateLastFrame.screenX,mouseStateLastFrame.screenY,r))
+    {
+        PlaySoundStr("assets/audio/button_hover.wav",1,0);
+    }
+
 
     if (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1))
     {

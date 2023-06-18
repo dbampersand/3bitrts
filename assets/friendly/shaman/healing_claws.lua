@@ -18,7 +18,7 @@ function setup()
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/shaman/audio/healing_claws.wav",1)
-    After(PlaySound,timeBetweenSwipes,"assets/friendly/shaman/audio/healing_claws.wav",1)
+    After(PlaySound,timeBetweenSwipes,false,"assets/friendly/shaman/audio/healing_claws.wav",1)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
@@ -31,8 +31,8 @@ function casted(x,y,obj,headingx,headingy)
 
     local x2 = GetX(GetObjRef())+(heading.headingx*1000)
     local y2 = GetY(GetObjRef())+(heading.headingy*1000)
-    After(CreateConeProjectiles,0,GetX(GetObjRef()),GetY(GetObjRef()),x2,y2,"",ATTACK_PROJECTILE_ANGLE,speed*0.95,15,true,ATTACK_HITS_FRIENDLIES,10,COLOR_HEAL,-radius,{f1});
-    After(CreateConeProjectiles,timeBetweenSwipes,GetX(GetObjRef()),GetY(GetObjRef()),x2,y2,"",ATTACK_PROJECTILE_ANGLE,speed,15,true,ATTACK_HITS_FRIENDLIES,10,COLOR_HEAL,radius,{f2});
+    After(CreateConeProjectiles,0,false,GetX(GetObjRef()),GetY(GetObjRef()),x2,y2,"",ATTACK_PROJECTILE_ANGLE,speed*0.95,15,true,ATTACK_HITS_FRIENDLIES,10,COLOR_HEAL,-radius,{f1});
+    After(CreateConeProjectiles,timeBetweenSwipes,false,GetX(GetObjRef()),GetY(GetObjRef()),x2,y2,"",ATTACK_PROJECTILE_ANGLE,speed,15,true,ATTACK_HITS_FRIENDLIES,10,COLOR_HEAL,radius,{f2});
 
     return true;
 end

@@ -10,6 +10,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/enemies/kobold_saboteur/audio/drop_bomb.wav",0.5)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
@@ -32,4 +33,8 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     
 end
 function onchanneled() 
+end
+
+function applyattack()
+    PlaySound("assets/enemies/kobold_saboteur/audio/drop_bomb_apply.wav",0.5)
 end

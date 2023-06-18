@@ -11,6 +11,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/summoned/fairy/audio/blossom.wav",1);
     
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
@@ -22,9 +23,9 @@ function casted(x,y,obj,headingx,headingy)
 end
 
 function onhit(x,y,objhit)
+    PlaySound("assets/summoned/fairy/audio/blossom_hit.wav",1);
 end
 function ontimeout(x,y,obj,dt,target)
-    aoe = -1;
 end
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
 end

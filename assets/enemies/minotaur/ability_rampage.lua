@@ -16,6 +16,9 @@ local atk = -1
 local attackActive = false;
 
 function casted(x,y,obj,headingx,headingy)
+
+    PlaySound("assets/enemies/minotaur/audio/rampage.wav",1)
+
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;

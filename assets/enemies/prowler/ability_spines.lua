@@ -14,7 +14,7 @@ local radius = 15
 local startX = 0;
 local startY = 0;
 
-local timeBeforeDamage = 0.35;
+local timeBeforeDamage = 0.2;
 
 function setup()
 
@@ -43,6 +43,8 @@ function casted(x,y,obj,headingx,headingy)
 end
 
 function onhit(x,y,objhit)
+    PlaySound("assets/enemies/prowler/audio/spines_hit.wav",0.5);
+
 end
 
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
@@ -58,7 +60,7 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
             f1["type"] = EFFECT_HURT;
             f1["value"] = 75;
         
-            local aoe = CreateAOE(startX + xMove,startY + yMove,"",radius,timeBeforeDamage,timeBeforeDamage,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,{f1});
+            local aoe = CreateAOE(startX + xMove,startY + yMove,"",radius,timeBeforeDamage,timeBeforeDamage,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,{f1});
         
             segmentsMade = segmentsMade + 1;
             PlaySound("assets/enemies/prowler/audio/spines.wav",1);

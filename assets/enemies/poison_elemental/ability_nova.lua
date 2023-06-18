@@ -17,6 +17,9 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
+    PlaySound("assets/enemies/poison_elemental/audio/nova.wav",0.75)
+
+
     local f1 = {};
     f1["trigger"] = TRIGGER_TIMER;
     f1["type"] = EFFECT_HURT;
@@ -40,7 +43,7 @@ function casted(x,y,obj,headingx,headingy)
 end
 
 function onhit(x,y,objhit)
-
+    PlaySound("assets/enemies/poison_elemental/audio/nova_hit.wav",0.25)
 end
 function ontimeout(x,y,obj,dt,target)
 

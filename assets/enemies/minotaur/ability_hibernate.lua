@@ -15,6 +15,9 @@ local cone = -1
 local objTargetting = -1
 function casted(x,y,obj,headingx,headingy)
 
+    PlaySound("assets/enemies/minotaur/audio/hibernate.wav",1)
+
+
     SetObjChannelling(GetObjRef(),time);
     SetChannelingSprite("assets/enemies/minotaur/minotaur_channel_hibernate.png")
     local f1 = {}; 

@@ -92,15 +92,16 @@ int L_After(lua_State* l)
 {
     lua_CFunction func = lua_tocfunction(l,1);
     float time = lua_tonumber(l,2);
+    bool persistsAfterDeath = lua_toboolean(l,3);
     int top = lua_gettop(l);
     Timer t = {0};
 
     lua_newtable(l);
     lua_rotate(l,1,1);
 
-    for (int i = 4; i <= top+1; i++)
+    for (int i = 5; i <= top+1; i++)
     {
-        lua_pushnumber(l,i-3);
+        lua_pushnumber(l,i-4);
         lua_pushvalue(l,i);
        // PrintVal(l,lua_gettop(l));
 
@@ -116,6 +117,8 @@ int L_After(lua_State* l)
     t.obj = currGameObjRunning;
     t.ability = currAbilityRunning;
     t.attack = currAttackRunning;
+    t.persistsAfterDeath = persistsAfterDeath;
+
 
     Timer* ref = AddTimer(t);
     lua_pushnumber(l,(size_t)ref);

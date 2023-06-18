@@ -22,6 +22,8 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
+    PlaySound("assets/enemies/poison_elemental/audio/acid_pool.wav",0.75)
+
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
@@ -29,15 +31,10 @@ function casted(x,y,obj,headingx,headingy)
 
     targets = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999,2)
 
-    
-    Print("gg");
     local numPools = Clamp(#targets,0,2)
     for i = 1, numPools do
         CreateAOE(GetX(targets[i]),GetY(targets[i]),"", radius, tickrate, duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_QUARTER, false, obj, {f1})
     end
-    
-
-    PlaySound("assets/enemies/rock_tosser/audio/chuck.wav",1);
 
 
 
@@ -56,4 +53,7 @@ end
 function onchanneled() 
     SetChannelingSprite("assets/enemies/poison_elemental/poison_elemental_casting_nova.png");
 
+end
+function applyattack()
+    PlaySound("assets/enemies/poison_elemental/audio/acid_pool_tick.wav",0.25)
 end

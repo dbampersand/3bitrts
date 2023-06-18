@@ -21,7 +21,6 @@ function casted(x,y,obj,headingx,headingy)
     SetObjChannelling(GetObjRef(),1.25);
 
     CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",1.25,1.25,20,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,{f1});
-    PlaySound("assets/enemies/royal_guard/audio/charge.wav",1);
     return true; 
 end
 
@@ -29,4 +28,8 @@ function onhit(x,y,objhit)
 end
 
 function abilitytick(x, y, durationLeft)
+end
+
+function onchanneled()
+    PlaySound("assets/enemies/royal_guard/audio/charge.wav",0.5);
 end

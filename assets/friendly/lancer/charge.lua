@@ -45,9 +45,9 @@ function casted(x,y,obj,headingx,headingy)
     SetObjectPush(GetObjRef(),true)
     BlockCommands(GetObjRef(),true)
 
-    After(SetObjectPush,duration,false)
-    After(BlockCommands,duration,GetObjRef(),false)
-    After(StopCommand,duration,GetObjRef())
+    After(SetObjectPush,duration,false,false)
+    After(BlockCommands,duration,false,GetObjRef(),false)
+    After(StopCommand,duration,false,GetObjRef())
 
 
 

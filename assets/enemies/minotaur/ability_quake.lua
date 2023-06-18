@@ -10,6 +10,8 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/enemies/minotaur/audio/quake.wav",1)
+
     SetObjChannelling(GetObjRef(),10);
     ticker = CreateAOE(1,1,"", 0, 10, 10,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_HALF,false, -1, {})
     return true; 
@@ -31,12 +33,14 @@ function abilitytick(x, y, timeUntilAttackTick, parent, target, dt, attackRef, t
         SetMovePoint(GetObjRef(),128,128,false,false);
         if (math.fmod((totalAttackDurationLeft),0.2) <= 0.1) then
             if (shouldAddAOE == true) then
+                PlaySound("assets/enemies/minotaur/audio/quake_tick.wav",1)
+                
                 local f1 = {};
                 f1["trigger"] = TRIGGER_INSTANT;
                 f1["type"] = EFFECT_HURT;
                 f1["value"] = 40;  
                 CreateAOE(RandRange(0,255),RandRange(0,255),"", 10, 6, 6, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, GetObjRef(), {f1})
-            
+                
             end
             shouldAddAOE = false
         else

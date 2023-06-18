@@ -7,7 +7,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/enemies/wyrm_boss/audio/rage.wav",1)
+    PlaySound("assets/enemies/cusith/audio/howl.wav",1)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_TIMER;

@@ -35,7 +35,7 @@ function casted(x,y,obj,headingx,headingy)
 
     end
 
-    PlaySound("assets/enemies/rock_tosser/audio/chuck.wav",1);
+    PlaySound("assets/enemies/firebreather/audio/spit.wav",0.5);
 
 
     return true; 

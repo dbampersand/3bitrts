@@ -19,7 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 120;  
 
-    PlaySound("assets/enemies/rock_tosser/audio/chuck.wav",.75);
+    PlaySound("assets/enemies/firebreather/audio/breathe.wav",0.5);
     
     cone = CreateCone(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj),"", rad, 0, 0, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER,range, {f1})
 

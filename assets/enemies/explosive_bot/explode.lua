@@ -19,7 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",999,1,1,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_EIGTH,false,-1,{f1});
     KillObj(GetObjRef());
 
-    PlaySound("assets/enemies/explosive_bot/audio/explode.wav",1);
+    After(PlaySound,1,true,"assets/enemies/explosive_bot/audio/explode.wav",3,GetX(GetObjRef()),GetY(GetObjRef()));
     return true; 
 end
 

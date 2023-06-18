@@ -10,6 +10,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/enemies/minotaur/audio/charge.wav",1)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;

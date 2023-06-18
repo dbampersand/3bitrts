@@ -13,6 +13,9 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
+    PlaySound("assets/enemies/kobold_foreman/audio/throw_darts.wav",0.5)
+    
+
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
@@ -25,6 +28,7 @@ function casted(x,y,obj,headingx,headingy)
 end
 
 function onhit(x,y,objhit)
+    PlaySound("assets/enemies/kobold_foreman/audio/throw_darts_on_hit.wav",0.25)
 
 end
 function ontimeout(x,y,obj,dt,target)

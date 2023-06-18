@@ -19,7 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     if (obj == GetThisObj()) then
         return false;
     end
-    PlaySound("assets/enemies/wyrm_boss/audio/firebreath.wav",1)
+    PlaySound("assets/enemies/cusith/audio/bite.wav",1)
 
 
     f1 = {};

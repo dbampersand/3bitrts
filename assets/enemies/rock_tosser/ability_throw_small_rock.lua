@@ -18,7 +18,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 120;  
 
     atk = CreateAOE(GetX(obj),GetY(obj),"", 30, duration, duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj, {f1})
-    PlaySound("assets/enemies/rock_tosser/audio/chuck.wav",.75);
+    PlaySound("assets/enemies/rock_tosser/audio/toss_onchannel.wav",0.5);
 
 
     return true; 
@@ -37,10 +37,10 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
 end
 
 function ontimeout(x,y,obj,dt,target)
-    atk = -1
-    PlaySound("assets/enemies/rock_tosser/audio/toss_small.wav",1);
+    atk = -1 
+    PlaySound("assets/enemies/rock_tosser/audio/toss_small.wav",0.6);
 end
 
 function onchanneled() 
     SetChannelingSprite("assets/enemies/rock_tosser/rock_tosser_cast_throw_small_rock.png")
-end
+en

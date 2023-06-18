@@ -35,7 +35,7 @@ function casted(x,y,obj,headingx,headingy)
 
     ShakeScreen(3,0.2)
 
-    PlaySound("assets/enemies/viper/audio/bite.wav",1);
+    PlaySound("assets/enemies/apprentice_lich/audio/frost_blast.wav",0.5);
     return true; 
 end
 

@@ -35,6 +35,8 @@ function setup()
 end
 function casted(x,y,obj,headingx,headingy)
 
+    PlaySound("assets/enemies/cusith/audio/fangs.wav",1)
+
     heading = {headingx = headingx, headingy = headingy};
     ticker = CreateTicker(time);
     

@@ -1,16 +1,16 @@
 function setup()
     SetMapSprite("assets/ui/map_unitselect.png")
-    SetAggroGroup(CreateObject("assets/enemies/trainingdummy/trainingdummy.lua",68.00,39.00,TYPE_ENEMY,0),0);
+    SetAggroGroup(CreateObject("assets/enemies/trainingdummy/trainingdummy.lua",68.00,36.00,TYPE_ENEMY,0),0);
 
     CreateObject("assets/enemies/healingdummy/healingdummy.lua",196.00,47.00,TYPE_FRIENDLY,0)
 
-    PlayMusic("assets/audio/unitselect.wav",0.5,8);
+    PlayMusic("assets/audio/music/ui/unitselect.wav",0.5,8);
 
     SetSpawnPoint(77,145)
 
     
 
-    CreateObject("assets/enemies/nuul/nuul.lua",172.00,117.00,TYPE_ENEMY,0.00)
+    CreateObject("assets/enemies/scorpion/scorpion.lua",230.00,142.00,TYPE_ENEMY,0.00)
 end
 
 function update()

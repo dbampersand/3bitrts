@@ -29,7 +29,7 @@ function onchanneled()
 end
 
 function casted(x,y,obj,headingx,headingy)
-
+    PlaySound("assets/enemies/prowler/audio/snare.wav",0.5)
     local f1 = {};
     f1["trigger"] = TRIGGER_CONST; 
     f1["type"] = EFFECT_SPEED;

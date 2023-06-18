@@ -12,7 +12,7 @@ end
 function casted(x,y,obj,headingx,headingy)
 
 
-    PlaySound("assets/enemies/minotaur/audio/nuke.wav",1)
+    PlaySound("assets/enemies/kobold_king/audio/throw_concoction.wav",1)
 
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
@@ -35,3 +35,7 @@ end
 function onchanneled() 
     SetChannelingSprite("assets/enemies/kobold_king/kobold_king_chanelling_throw_concotion.png");
 end
+
+function applyattack()
+    PlaySound("assets/enemies/kobold_king/audio/throw_concoction_tick.wav",1)
+end 

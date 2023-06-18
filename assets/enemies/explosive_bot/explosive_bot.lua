@@ -23,6 +23,11 @@ function update(dt)
     ShowString(timer,GetX(GetObjRef()),GetY(GetObjRef()) - GetHeight(GetObjRef())*1.5,ALIGN_CENTER)
 
 
+    if (math.ceil(timerLast) ~= math.ceil(lifetime)) then
+        PlaySound("assets/enemies/explosive_bomb/audio/tick.wav",1)
+    end
+    timerLast = lifetime
+
 end
 
 function kill()

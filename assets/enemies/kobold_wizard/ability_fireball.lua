@@ -13,6 +13,7 @@ end
 
 function casted(x,y,obj,headingx,headingy)
     
+    PlaySound("assets/enemies/kobold_wizard/audio/fireball.wav",0.5)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
@@ -26,6 +27,8 @@ function casted(x,y,obj,headingx,headingy)
 end
 
 local function makeAOE(x,y)
+    PlaySound("assets/enemies/kobold_wizard/audio/fireball_hit.wav",0.5)
+
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
@@ -34,6 +37,7 @@ local function makeAOE(x,y)
     CreateAOE(x,y,"", 50, 1, 6, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
 end
 function onhit(x,y,objhit)
+    
     makeAOE(x,y)
 end
 function ontimeout(x,y,obj,dt,target,atk)
@@ -43,4 +47,7 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     
 end
 function onchanneled() 
+end
+function applyattack()
+    PlaySound("assets/enemies/kobold_wizard/audio/fireball_tick.wav",0.5)
 end

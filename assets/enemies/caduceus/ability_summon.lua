@@ -1,3 +1,5 @@
+local angle = 30
+
 function setup()
     SetAbilityRange(30)
     SetCooldown(20); 
@@ -14,9 +16,9 @@ function casted(x,y,obj,headingx,headingy)
     local parentAggroGroup = GetAggroGroup(GetObjRef());
     for i=1,2 do
         SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",point.x,point.y,TYPE_FRIENDLY,2),parentAggroGroup);
-        point = RotatePoint(point.x,point.y,cx,cy,xPos*i);
+        point = RotatePoint(point.x,point.y,cx,cy,angle*i);
     end
-    PlaySound("assets/enemies/caduceus/audio/summon_adds.wav",0.7);
+    PlaySound("assets/enemies/caduceus/audio/summon.wav",0.5);
 
     return true; 
 end

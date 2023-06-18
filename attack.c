@@ -831,7 +831,7 @@ void UpdateAttack(Attack* a, float dt)
     {
         currAbilityRunning = a->cameFrom;
         currGameObjRunning = a->ownedBy;
-        //currAttackRunning = a;
+        currAttackRunning = a;
         if (IsActive(currGameObjRunning))
         {
             if (currAbilityRunning)

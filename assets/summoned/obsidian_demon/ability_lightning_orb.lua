@@ -3,7 +3,7 @@ local direction = {};
 local speed = 60;
 local defaultSpeed = 30;
 
-local triggersPerSec = 6
+local triggersPerSec = 3
 local dps = 25
 function setup()
     SetAbilityRange(64) 
@@ -17,6 +17,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/summoned/obsidian_demon/audio/lightning_orb.wav",1);
     
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
@@ -38,6 +39,8 @@ function onhit(x,y,objhit)
 end
 function ontimeout(x,y,obj,dt,target)
     aoe = -1;
+    PlaySound("assets/summoned/obsidian_demon/audio/lightning_orb_timeout.wav",1);
+    
 end
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     if (attackRef >= 0) then
@@ -46,4 +49,7 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     end
 end
 function onchanneled() 
+end
+function applyattack()
+    PlaySound("assets/summoned/obsidian_demon/audio/lightning_orb_tick.wav",0.25);
 end

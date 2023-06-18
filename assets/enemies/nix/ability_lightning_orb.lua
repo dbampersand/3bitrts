@@ -31,6 +31,8 @@ function casted(x,y,obj,headingx,headingy)
 
     SetAttackMoveAngle(aoe,direction.x,direction.y)
     SetAttackVelocity(aoe,speed);
+    PlaySound("assets/enemies/nix/audio/lightning_orb.wav",0.5)
+
     return true; 
 end
 
@@ -48,4 +50,7 @@ end
 function onchanneled() 
     SetChannelingSprite("assets/enemies/nix/nix_casting_lightning_orb.png")
 
+end
+function applyattack()
+    PlaySound("assets/enemies/nix/audio/lightning_orb_tick.wav",0.1)
 end

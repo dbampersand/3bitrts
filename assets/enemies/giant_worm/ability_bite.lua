@@ -26,7 +26,7 @@ function casted(x,y,obj,headingx,headingy)
 
 
 
-    PlaySound("assets/enemies/viper/audio/bite.wav",1);
+    PlaySound("assets/enemies/giant_worm/audio/bite.wav",0.75);
     return true; 
 end
 

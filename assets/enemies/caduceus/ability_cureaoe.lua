@@ -6,6 +6,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
 end
 function casted(x,y,obj,headingx,headingy)
+    local f1 = {}
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_CURE;
     f1["value"] = 3;
@@ -13,7 +14,7 @@ function casted(x,y,obj,headingx,headingy)
     local aoe = CreateAOE(x,y,"",120,0.25,1,false,ATTACK_HITS_ENEMIES,COLOR_HEAL,DITHER_HEAL_EIGTH,false,-1,{f1});
     SetAttackCircle(aoe,true);
 
-    PlaySound("assets/enemies/caduceus/audio/cure_aoe.wav",0.7);
+    PlaySound("assets/enemies/caduceus/audio/cure_aoe.wav",0.5);
 
     return true; 
 end

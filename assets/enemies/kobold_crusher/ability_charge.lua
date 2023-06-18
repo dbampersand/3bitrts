@@ -13,11 +13,12 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/enemies/kobold_crusher/audio/charge.wav",0.5)
     
     SetObjectPush(true);
-    After(SetObjectPush,chargeTime,false);
+    After(SetObjectPush,chargeTime,false,false);
     EnableAI(GetObjRef(),false)
-    After(EnableAI,chargeTime,GetObjRef(),true)
+    After(EnableAI,chargeTime,false,GetObjRef(),true)
 
     
     local f1 = {};  
@@ -39,9 +40,8 @@ function casted(x,y,obj,headingx,headingy)
     local heading = GetHeadingVector(GetX(GetObjRef()),GetY(GetObjRef()),x,y);
     local newX = heading.headingx * 9999;
     local newY = heading.headingy * 9999;
-    Print("x ".. x .. " y " .. y)
     SetMovePoint(GetObjRef(),newX,newY,false,false);
-
+    
     return true; 
 end
 

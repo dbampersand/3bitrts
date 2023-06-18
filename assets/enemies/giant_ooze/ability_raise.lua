@@ -13,7 +13,8 @@ function onchanneled()
 end
 
 function casted(x,y,obj,headingx,headingy)
-
+    PlaySound("assets/enemies/giant_ooze/audio/raise.wav",0.75);
+    
     for i = 1, 3 do
         local spawnX = RandRange(0,GetMapWidth())
         local spawnY = RandRange(0,GetMapHeight())

@@ -53,7 +53,7 @@ function casted(x,y,obj,headingx,headingy)
     ApplyEffect(GetObjRef(),{speed,armor});
 
     SetMovePoint(GetObjRef(),x, y, true, false)
-    After(CreateCircularProjectiles,0.08,x,y,"",ATTACK_PROJECTILE_ANGLE,sp,duration,true,ATTACK_HITS_ENEMIES,12,COLOR_FRIENDLY_DAMAGE,0,{f1,f2});
+    After(CreateCircularProjectiles,0.08,false,x,y,"",ATTACK_PROJECTILE_ANGLE,sp,duration,true,ATTACK_HITS_ENEMIES,12,COLOR_FRIENDLY_DAMAGE,0,{f1,f2});
     return true; 
 end
 

@@ -21,6 +21,7 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
+    PlaySound("assets/enemies/cusith/audio/focus.wav",1)
 
     local f1 = {}
     f1["trigger"] = TRIGGER_CONST

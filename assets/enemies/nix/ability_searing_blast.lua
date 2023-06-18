@@ -2,6 +2,7 @@ local aoe = -1
 local direction = {};
 local speed = 60;
 local defaultSpeed = 30;
+local tickrate = 3
 function setup()
     SetAbilityRange(256) 
     SetCooldown(4.5);
@@ -12,13 +13,15 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+
+    PlaySound("assets/enemies/nix/audio/searing_blast.wav",0.5)
     
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
-    f1["type"] = EFFECT_HURT;
-    f1["value"] = 50;
+    f1["type"] = EFFECT_HURT;/   
+    f1["value"] = 80 / tickrate;
 
-    aoe = CreateAOE(x,y,"", 25, 1, 5, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
+    aoe = CreateAOE(x,y,"", 25, 1, tickrate, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
     direction.x = GetX(obj) - GetX(GetObjRef()) 
     direction.y = GetY(obj) - GetY(GetObjRef()) 
     direction = Normalize(direction.x,direction.y);
@@ -44,4 +47,7 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
 end
 function onchanneled() 
     SetChannelingSprite("assets/enemies/nix/nix_casting_searing_blast.png")
+end
+function applyattack()
+    PlaySound("assets/enemies/nix/audio/searing_blast_tick.wav",0.1)
 end

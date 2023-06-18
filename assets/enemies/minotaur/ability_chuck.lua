@@ -8,6 +8,8 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
+    PlaySound("assets/enemies/minotaur/audio/chuck.wav",1)
+
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_STUN;

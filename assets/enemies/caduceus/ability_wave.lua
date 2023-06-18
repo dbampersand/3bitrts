@@ -46,7 +46,7 @@ function casted(x,y,obj,headingx,headingy)
 
     SetAttackCircle(aoe,true);
 
-    PlaySound("assets/enemies/caduceus/audio/cure_aoe.wav",0.7);
+    PlaySound("assets/enemies/caduceus/audio/wave.wav",0.5);
 
     return true; 
 end

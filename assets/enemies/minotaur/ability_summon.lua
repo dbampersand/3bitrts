@@ -15,6 +15,9 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+
+    PlaySound("assets/enemies/minotaur/audio/summon.wav",1)
+
     local toSpawn = Round(RandRange(1,#adds));
     CreateObject(adds[toSpawn],x,y,TYPE_FRIENDLY,1);
     SetObjChannelling(GetObjRef(),1);

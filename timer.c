@@ -45,9 +45,9 @@ bool UpdateTimer(int index, float dt)
 {
     Timer* t = timers[index];
     t->timer -= dt;
-    if (!IsActive(t->obj))
+    if (!IsActive(t->obj) && !t->persistsAfterDeath)
     {
-        DeleteTimer(index);
+        DeleteTimer(index); 
         return true;
     }
     if (t->timer <= 0)

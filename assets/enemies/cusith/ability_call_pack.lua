@@ -8,6 +8,8 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
+    PlaySound("assets/enemies/cusith/audio/call_pack.wav",1)
+
     CreateObject("assets/enemies/wolf/wolf.lua",128,128,TYPE_FRIENDLY,2);
     CreateObject("assets/enemies/wolf/wolf.lua",128,128,TYPE_FRIENDLY,2);
     CreateObject("assets/enemies/wolf/wolf.lua",128,128,TYPE_FRIENDLY,2);

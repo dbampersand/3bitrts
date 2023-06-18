@@ -14,6 +14,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/summoned/woven_imp/audio/passion.wav",0.5)
     
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;

@@ -102,7 +102,7 @@ void UpdateAmbience(float dt)
     if (timeToNextAmbience <= 0)
     {
         Sound* s = GetRandomAmbient();
-        PlaySound(s,RandRange(0.05,0.2),RandRange(-0.25,0.25));
+        PlaySound(s,1,RandRange(-0.25,0.25));
         int len = al_get_sample_length(s->sample);
         int freq = al_get_sample_frequency(s->sample);
         timeToNextAmbience = freq / (float)len * 1000;

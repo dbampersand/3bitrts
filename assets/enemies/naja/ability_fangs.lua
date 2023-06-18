@@ -49,7 +49,8 @@ function casted(x,y,obj,headingx,headingy)
     SetAttackVelocity(aoe2,40)
 
 
-    PlaySound("assets/enemies/naja/audio/bind_cast.wav",1);
+    PlaySound("assets/enemies/naja/audio/fangs.wav",0.75);
+    After(PlaySound,0.1,true,"assets/enemies/naja/audio/fangs.wav",0.75);
 
     return true; 
 end

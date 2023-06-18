@@ -21,9 +21,9 @@ function casted(x,y,obj,headingx,headingy)
     SetDecoration(GetObjRef(),true);
     SetLifetime(GetObjRef(),duration)
 
-    After(ShakeScreen,duration,3,0.2)
+    After(ShakeScreen,duration,false,3,0.2)
 
-    PlaySound("assets/enemies/viper/audio/bite.wav",1);
+    PlaySound("assets/enemies/exploding_zombie/audio/explode.wav",1);
     return true; 
 end
 

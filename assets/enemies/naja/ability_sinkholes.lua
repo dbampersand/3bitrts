@@ -27,7 +27,6 @@ function casted(x,y,obj,headingx,headingy)
     timer = makeAttackAfter;
     
     
-    PlaySound("assets/enemies/naja/audio/bind_cast.wav",1);
 
     return true; 
 end
@@ -39,6 +38,8 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     if (attackRef == ticker) then
         timer = timer - dt
         if (timer < 0) then
+            PlaySound("assets/enemies/naja/audio/sinkholes.wav",0.15);
+
             timer = makeAttackAfter;
 
             local f1 = {};

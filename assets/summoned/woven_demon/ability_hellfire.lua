@@ -21,6 +21,9 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+
+    PlaySound("assets/summoned/woven_demon/audio/hellfire.wav",0.5)
+
     local delta = 0
 
 
@@ -63,4 +66,7 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
 
 end
 function onchanneled() 
+end
+function applyattack()
+    PlaySound("assets/summoned/woven_demon/audio/hellfire_tick.wav",0.15);
 end

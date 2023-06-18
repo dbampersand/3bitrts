@@ -16,6 +16,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/enemies/kobold_king/audio/fan_of_knives.wav",1)
 
 
     local f1 = {};
@@ -29,6 +30,7 @@ function casted(x,y,obj,headingx,headingy)
 end
 
 function onhit(x,y,objhit)
+    PlaySound("assets/enemies/kobold_king/audio/fan_of_knives_hit.wav",1)
 
 end
 function ontimeout(x,y,obj,dt,target, attack)

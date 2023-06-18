@@ -14,6 +14,7 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
+    PlaySound("assets/enemies/kobold_king/audio/throw_bot.wav",1)
     CreateObject("assets/enemies/explosive_bot/explosive_bot.lua",RandRange(0,255),RandRange(0,255),TYPE_FRIENDLY,2);
 
     return true; 

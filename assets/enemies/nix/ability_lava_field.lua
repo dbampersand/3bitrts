@@ -19,7 +19,9 @@ local function makeAOE(x,y)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 60;
 
-     CreateAOE(x,y,"", 25, 1, 5, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
+    local time = RandRange(0,0.35)
+    After(CreateAOE,time,true,x,y,"", 25, 1, 5, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
+    After(PlaySound,time,true,"assets/enemies/nix/audio/lava_field.wav",0.25)
 end
 
 function casted(x,y,obj,headingx,headingy)
@@ -48,4 +50,7 @@ end
 function onchanneled() 
     SetChannelingSprite("assets/enemies/nix/nix_casting_lava_field.png")
 
+end
+function applyattack() 
+    PlaySound("assets/enemies/nix/audio/lava_field_tick.wav",0.1)
 end

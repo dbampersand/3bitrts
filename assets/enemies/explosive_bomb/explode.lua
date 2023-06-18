@@ -1,4 +1,4 @@
-local range = 30
+    local range = 30
 
 function setup()
 
@@ -11,6 +11,8 @@ function setup()
 end
 function casted(x,y,obj,headingx,headingy)
 
+    After(PlaySound,1,true,"assets/enemies/explosive_bomb/audio/explode.wav",3,GetX(GetObjRef()),GetY(GetObjRef()));
+
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
@@ -18,6 +20,8 @@ function casted(x,y,obj,headingx,headingy)
 
     CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",999,1,1,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_EIGTH,false,-1,{f1});
     KillObj(GetObjRef());
+
+
     return true; 
 end
 

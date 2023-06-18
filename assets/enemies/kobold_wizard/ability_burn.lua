@@ -12,7 +12,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
-    
+    PlaySound("assets/enemies/kobold_wizard/audio/burn.wav",0.5)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_TIMER; 

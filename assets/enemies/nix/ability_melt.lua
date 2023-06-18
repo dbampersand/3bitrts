@@ -11,6 +11,7 @@ end
 
 function casted(x,y,obj,headingx,headingy)
     
+    PlaySound("assets/enemies/nix/audio/melt.wav",0.5)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_CONST; 

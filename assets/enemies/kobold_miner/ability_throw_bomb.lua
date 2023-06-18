@@ -11,7 +11,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
-
+    PlaySound("assets/enemies/kobold_miner/audio/throw_bomb.wav",0.5)
     CreateObject("assets/enemies/explosive_bomb/explosive_bomb.lua",GetX(GetObjRef()),GetY(GetObjRef()),TYPE_FRIENDLY,2);
 
     return true; 

@@ -18,11 +18,14 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 120;
 
      CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj),"",ATTACK_PROJECTILE_ANGLE,25,10,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,1,{f1})
+     PlaySound("assets/enemies/kobold_crossbow/audio/shoot.wav",0.5)
 
     return true; 
 end
 
 function onhit(x,y,objhit)
+    PlaySound("assets/enemies/kobold_crossbow/audio/shoot_hit.wav",0.5)
+
 end
 function ontimeout(x,y,obj,dt,target,atk)
 end

@@ -16,6 +16,7 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
+    PlaySound("assets/enemies/kobold_king/audio/slash.wav",1)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;

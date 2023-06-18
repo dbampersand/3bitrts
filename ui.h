@@ -355,7 +355,7 @@ void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent);
 void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, int index, int offsetX, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
 void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
 void ChangeUIPanel(Panel* to);
-bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, MouseState* mouse);
+bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, MouseState* mouse,MouseState* mouseStateLastFrame);
 UIElement* InitButton(UIElement* u, char* name, char* description, int x, int y, int w, int h, int sprite);
 UIElement* AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h, bool shouldDrawLine);
 UIElement* AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int startIndex, int numElements, ...);

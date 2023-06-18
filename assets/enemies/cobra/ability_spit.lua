@@ -27,7 +27,7 @@ function casted(x,y,obj,headingx,headingy)
     cone = CreateCone(center.x,center.y,centertarget.x,centertarget.y,"", 80, 0, 0, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER,coneSize, {f1})
     SetAttackTarget(cone,objTargetting);
 
-    PlaySound("assets/enemies/cobra/audio/spit.wav",0.75)
+    PlaySound("assets/enemies/cobra/audio/spit.wav",0.5)
     return true; 
 end
 

@@ -1,4 +1,6 @@
 local area = -1
+local dps = 2
+local tickrate = 1/3
 
 function setup()
     SetAbilityRange(32)
@@ -15,11 +17,13 @@ end
 function casted(x,y,obj,headingx,headingy)
     
     SetSprite("assets/enemies/nuul/nuul_quartz.png");
+    
+    PlaySound("assets/enemies/nuul/audio/quartz.wav",1)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT; 
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 1;
+    f1["value"] = dps * tickrate;
 
     --CreateAttackArea({{0,0},{20,0},{20,20},{0,20}},5,10,"",0.5,12,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
     --CreateAttackArea({{100,100},{200,100},{200,200},{100,200}},1,10,"",0.5,12,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
@@ -32,7 +36,7 @@ function casted(x,y,obj,headingx,headingy)
         {GetMapWidth(),GetMapHeight()},
         {-GetMapWidth(),GetMapHeight()}
     },
-        GetX(GetObjRef()),GetY(GetObjRef()),"",0.5,60,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
+        GetX(GetObjRef()),GetY(GetObjRef()),"",tickrate,100 ,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,0,false, {f1});
     local angle = 30
     local move = 360 / 5
 
@@ -76,4 +80,7 @@ end
 function untoggle()
     RemoveAttack(area);
     area = -1
+end
+function applyattack()
+    PlaySound("assets/enemies/nuul/audio/quartz_tick.wav",0.25)
 end

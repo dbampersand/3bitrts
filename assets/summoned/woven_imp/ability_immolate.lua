@@ -15,6 +15,9 @@ end
 
 function casted(x,y,obj,headingx,headingy)
 
+    PlaySound("assets/summoned/woven_imp/audio/immolate.wav",0.5)
+
+
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_SHIELD

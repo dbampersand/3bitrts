@@ -13,6 +13,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/summoned/ruby_star/audio/photon.wav",1);
     
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT
@@ -20,13 +21,14 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = damage;
 
 
-    projectile = CreateProjectile(GetX(obj),GetY(obj),x,y,"",ATTACK_PROJECTILE_ANGLE,speed,999,false,ATTACK_HITS_ENEMIES,COLOR_FRIENDLY_DAMAGE,1,{f1})
+    projectile = CreateProjectile(GetX(obj),GetY(obj),x,y,"",ATTACK_PROJECTILE_ANGLE,speed,999,true,ATTACK_HITS_ENEMIES,COLOR_FRIENDLY_DAMAGE,1,{f1})
 
 
     return true; 
 end
 
 function onhit(x,y,objhit)
+    PlaySound("assets/summoned/ruby_star/audio/photon_hit.wav",0.5);
 end
 function ontimeout(x,y,obj,dt,target)
 end

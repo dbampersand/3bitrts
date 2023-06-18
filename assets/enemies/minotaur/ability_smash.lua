@@ -11,7 +11,7 @@ end
 function casted(x,y,obj,headingx,headingy)
 
 
-    PlaySound("assets/enemies/minotaur/audio/nuke.wav",1)
+    PlaySound("assets/enemies/minotaur/audio/smash.wav",1)
 
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;

@@ -49,7 +49,7 @@ function casted(x,y,obj,headingx,headingy)
     casts = casts + 1
     changedDirection = false
 
-    PlaySound("assets/enemies/viper/audio/bite.wav",1);
+    PlaySound("assets/enemies/giant_worm/audio/wave.wav",0.75);
     return true; 
 end
 

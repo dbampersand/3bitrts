@@ -16,6 +16,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/summoned/ruby_star/audio/sear.wav",1);
     
     f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
@@ -33,4 +34,7 @@ end
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
 end
 function onchanneled() 
+end
+function applyattack()
+    PlaySound("assets/summoned/ruby_star/audio/sear_tick.wav",0.1);
 end

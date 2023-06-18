@@ -31,7 +31,7 @@ function casted(x,y,obj,headingx,headingy)
     SetAttackVelocity(atk,30)
     SetAttackInactive(atk,0.25)
 
-    PlaySound("assets/enemies/viper/audio/bite.wav",1);
+    PlaySound("assets/enemies/ghost/audio/terror.wav",0.5);
 
     angle = angle + angleMove
 

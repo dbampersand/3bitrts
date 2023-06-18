@@ -16,6 +16,7 @@ function onchanneled()
 end
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/enemies/nuul/audio/void.wav",1)
 
 
     local randTargets = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,9999,3)
@@ -43,4 +44,7 @@ function onhit(x,y,objhit)
 end
 
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
+end
+function applyattack()
+    PlaySound("assets/enemies/nuul/audio/void_tick.wav",0.25)
 end

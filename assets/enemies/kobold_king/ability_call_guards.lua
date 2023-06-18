@@ -7,7 +7,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
-
+    PlaySound("assets/enemies/kobold_king/audio/call_guards.wav",1)
 
 
     CreateObject("assets/enemies/royal_guard/royal_guard.lua",x,y,TYPE_FRIENDLY,3);

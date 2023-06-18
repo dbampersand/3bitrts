@@ -13,6 +13,9 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+
+    PlaySound("assets/summoned/obsidian_demon/audio/radiance.wav",1);
+
     
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
@@ -36,6 +39,13 @@ end
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     SetAttackPosition(aoe,GetX(GetObjRef()),GetY(GetObjRef()))
     HurtObj(GetObjRef(),dps * dt)
+
+end
+function parentdeath()
+    RemoveAttack(aoe)
 end
 function onchanneled() 
+end
+function applyattack()
+    PlaySound("assets/summoned/obsidian_demon/audio/radiance_tick.wav",0.25);
 end

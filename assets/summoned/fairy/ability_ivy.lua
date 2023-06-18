@@ -17,6 +17,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
+    PlaySound("assets/summoned/fairy/audio/ivy.wav",1);
     
     f1 = {};
     f1["trigger"] = TRIGGER_TIMER;

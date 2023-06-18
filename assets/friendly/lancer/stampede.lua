@@ -31,7 +31,7 @@ function casted(x,y,obj,headingx,headingy)
 
     ApplyEffect(obj,{f2});
 
-    After(SetObjectPush,duration+0.1,false)
+    After(SetObjectPush,duration+0.1,false,false)
    return true;
 end
 function onhit(x,y,objhit)

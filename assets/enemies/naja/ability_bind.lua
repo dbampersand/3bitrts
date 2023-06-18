@@ -26,13 +26,13 @@ function casted(x,y,obj,headingx,headingy)
     
     CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj),"",ATTACK_PROJECTILE_POINT,25,10,true,ATTACK_HITS_ENEMIES,COLOR_POISON,1,{f1,f2})
 
-    PlaySound("assets/enemies/naja/audio/bind_cast.wav",1);
+    PlaySound("assets/enemies/naja/audio/bind.wav",0.75);
 
     return true; 
 end
 
 function onhit(x,y,objhit)
-    PlaySound("assets/enemies/naja/audio/bind.wav",1);
+    PlaySound("assets/enemies/naja/audio/bind_hit.wav",0.75);
     PushObj(GetX(GetObjRef()),GetY(GetObjRef()),objhit,340,0.1);
     ShakeScreen(2,0.4);
 end
@@ -41,5 +41,5 @@ function abilitytick(x, y, durationLeft)
 end
 
 function onchanneled() 
-    SetChannelingSprite("assets/enemies/naja/naja_cast_bind.png")
+    SetChannelingSprite("assets/enemies/naja/naja_cast_bind.png",0.75)
 end
