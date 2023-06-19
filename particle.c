@@ -31,7 +31,7 @@ void UpdateParticles(float dt)
             particle_y[i] += sinTable[particle_dir[i]%360] * particle_speed[i];
 
             particle_lifetime[i] -= dt;
-            if (particle_lifetime[i] < 0)
+            if (particle_lifetime[i] <= 0)
                 particle_properties[i] &= ~PARTICLE_ENABLED;
         }
     }

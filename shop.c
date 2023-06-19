@@ -212,7 +212,7 @@ void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
         {
             if (!shop.heldItem)
             {
-                PlaySoundStr("assets/audio/item_pickup.wav",1,0);
+                PlaySoundStr("assets/audio/item_pickup.wav",1,0,false);
             }
             shop.heldItem = &shop.items[i];
             shop.heldOffset.x = mouseState.screenX - si->position.x;
@@ -388,7 +388,7 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
                     {
                         ScatterEffect_Sprite(&sprites[g->inventory[i].spriteIndex_Icon],slotX,slotY, COLOR_DAMAGE);
 
-                        PlaySoundStr("assets/audio/item_trash.wav",1,0);
+                        PlaySoundStr("assets/audio/item_trash.wav",1,0,false);
 
                         UnattachItem(&g->inventory[i],g);
                         shop.removeClickedItem = NULL;
@@ -445,7 +445,7 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
             
             if (!(mouseState.mouse.buttons & 1) && PointInRect(mouseState.screenX,mouseState.screenY,r))
             {
-                PlaySoundStr("assets/audio/item_buy.wav",1,0);
+                PlaySoundStr("assets/audio/item_buy.wav",1,0,false);
 
                 BuyItem(shop.heldItem->item);
                 AttachItem(g,shop.heldItem->item);
@@ -502,7 +502,7 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
     {
         if (shop.heldItem)
         {
-            PlaySoundStr("assets/audio/item_drop.wav",1,0);
+            PlaySoundStr("assets/audio/item_drop.wav",1,0,false);
         }
         shop.heldItem = NULL;
     }
@@ -541,7 +541,7 @@ void DrawReroll(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
     {
         if ((mouseStateLastFrame.mouse.buttons & 1)  && !(mouseState.mouse.buttons & 1))
         {
-            PlaySoundStr("assets/audio/reroll.wav",1,0);
+            PlaySoundStr("assets/audio/reroll.wav",1,0,false);
             AddGold(-rerollCost);
             shop.shopState = SHOP_STATE_REROLLING;
         }

@@ -11,6 +11,25 @@ function setup()
     SetRange(5);
 
     timer = RandRange(3,7);
+
+    SetAttackSounds({
+        "assets/audio/attacks/melee_sword/sword_1.wav",
+        "assets/audio/attacks/melee_sword/sword_2.wav",
+        "assets/audio/attacks/melee_sword/sword_3.wav",
+        "assets/audio/attacks/melee_sword/sword_4.wav",
+        "assets/audio/attacks/melee_sword/sword_5.wav",
+        "assets/audio/attacks/melee_sword/sword_6.wav",
+        "assets/audio/attacks/melee_sword/sword_7.wav",
+
+        "assets/audio/attacks/melee_hammer/hammer_1.wav",
+        "assets/audio/attacks/melee_hammer/hammer_2.wav",
+        "assets/audio/attacks/melee_hammer/hammer_3.wav",
+        "assets/audio/attacks/melee_hammer/hammer_4.wav",
+        "assets/audio/attacks/melee_hammer/hammer_5.wav",
+        "assets/audio/attacks/melee_hammer/hammer_6.wav"
+
+    });
+
 end
 local timer = 0
 function update(dt)

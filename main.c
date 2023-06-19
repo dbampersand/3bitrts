@@ -841,6 +841,7 @@ int main(int argc, char* args[])
 
             
             UpdateMusic(dt);
+            UpdateReverbs(dt);
 
             UpdateTransition(dt);
 

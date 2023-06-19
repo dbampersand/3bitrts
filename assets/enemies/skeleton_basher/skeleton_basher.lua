@@ -15,18 +15,14 @@ function setup()
     bash = AddAbility(GetObjRef(),"assets/enemies/skeleton_basher/ability_bash.lua",0);
 
     SetAttackSounds({
-        "assets/audio/attacks/attack_spit/spit_1.wav",
-        "assets/audio/attacks/attack_spit/spit_2.wav",
-        "assets/audio/attacks/attack_spit/spit_3.wav",
-        "assets/audio/attacks/attack_spit/spit_4.wav",
-        "assets/audio/attacks/attack_spit/spit_5.wav",
-
-        "assets/audio/attacks/melee_bite/bite_1.wav",
-        "assets/audio/attacks/melee_bite/bite_2.wav",
-        "assets/audio/attacks/melee_bite/bite_3.wav",
-        "assets/audio/attacks/melee_bite/bite_4.wav",
-        "assets/audio/attacks/melee_bite/bite_5.wav"
+        "assets/audio/attacks/melee_hammer/hammer_1.wav",
+        "assets/audio/attacks/melee_hammer/hammer_2.wav",
+        "assets/audio/attacks/melee_hammer/hammer_3.wav",
+        "assets/audio/attacks/melee_hammer/hammer_4.wav",
+        "assets/audio/attacks/melee_hammer/hammer_5.wav",
+        "assets/audio/attacks/melee_hammer/hammer_6.wav"
     });
+
 
 end
 

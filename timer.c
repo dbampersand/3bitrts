@@ -61,7 +61,7 @@ bool UpdateTimer(int index, float dt)
             lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_timerbeforetick);
             lua_pushnumber(luaState,(size_t)t);
             lua_pushnumber(luaState,(size_t)t->func);
-            lua_pcall(luaState,1,0,0);
+            lua_pcall(luaState,2,0,0);
         }
 
         void (*func)(lua_State*) = (void*)(t->func);

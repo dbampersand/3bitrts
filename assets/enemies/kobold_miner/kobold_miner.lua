@@ -11,14 +11,16 @@ function setup()
 
     bomb = AddAbility(GetObjRef(),"assets/enemies/kobold_miner/ability_throw_bomb.lua",0);
    
-    SetAttackSounds({
-        "assets/audio/attacks/melee_hammer/hammer_1.wav",
-        "assets/audio/attacks/melee_hammer/hammer_2.wav",
-        "assets/audio/attacks/melee_hammer/hammer_3.wav",
-        "assets/audio/attacks/melee_hammer/hammer_4.wav",
-        "assets/audio/attacks/melee_hammer/hammer_5.wav",
-        "assets/audio/attacks/melee_hammer/hammer_6.wav"
-    });
+    SetAttackSounds(
+        {
+        "assets/audio/attacks/melee_dagger/dagger_1.wav",
+        "assets/audio/attacks/melee_dagger/dagger_2.wav",
+        "assets/audio/attacks/melee_dagger/dagger_3.wav",
+        "assets/audio/attacks/melee_dagger/dagger_4.wav",
+        "assets/audio/attacks/melee_dagger/dagger_5.wav"
+        }
+    );
+
 
 end
 

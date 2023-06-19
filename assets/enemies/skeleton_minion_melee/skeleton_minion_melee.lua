@@ -15,19 +15,15 @@ function setup()
     toll = AddAbility(GetObjRef(),"assets/enemies/skeleton_minion_melee/ability_toll.lua",0);
     grasp = AddAbility(GetObjRef(),"assets/enemies/skeleton_minion_melee/ability_grasp.lua",1);
 
-    SetAttackSounds({
-        "assets/audio/attacks/attack_spit/spit_1.wav",
-        "assets/audio/attacks/attack_spit/spit_2.wav",
-        "assets/audio/attacks/attack_spit/spit_3.wav",
-        "assets/audio/attacks/attack_spit/spit_4.wav",
-        "assets/audio/attacks/attack_spit/spit_5.wav",
-
-        "assets/audio/attacks/melee_bite/bite_1.wav",
-        "assets/audio/attacks/melee_bite/bite_2.wav",
-        "assets/audio/attacks/melee_bite/bite_3.wav",
-        "assets/audio/attacks/melee_bite/bite_4.wav",
-        "assets/audio/attacks/melee_bite/bite_5.wav"
-    });
+    SetAttackSounds(
+    {
+        "assets/audio/attacks/melee_dagger/dagger_1.wav",
+        "assets/audio/attacks/melee_dagger/dagger_2.wav",
+        "assets/audio/attacks/melee_dagger/dagger_3.wav",
+        "assets/audio/attacks/melee_dagger/dagger_4.wav",
+        "assets/audio/attacks/melee_dagger/dagger_5.wav"
+    }
+    );
 
 end
 

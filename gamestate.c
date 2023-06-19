@@ -707,7 +707,7 @@ void UpdateTransition(float dt)
             {
                 int sound = LoadSound("assets/audio/chain.wav");
                 Sound* s = &sounds[sound];
-                PlaySound(s,1,0);
+                PlaySound(s,1,0,true);
             }
             if (transitionTimer < 0.4f)
             {
@@ -721,11 +721,11 @@ void UpdateTransition(float dt)
             {
                 int sound = LoadSound("assets/audio/slam.wav");
                 Sound* s = &sounds[sound];
-                PlaySound(s,1,0);
+                PlaySound(s,1,0,true);
 
                 sound = LoadSound("assets/audio/chain_pull_up.wav");
                 s = &sounds[sound];
-                PlaySound(s,1,0);
+                PlaySound(s,1,0,true);
 
 
                 transitionAudioPlayed = true;
@@ -738,7 +738,7 @@ void UpdateTransition(float dt)
             {
                 int sound = LoadSound("assets/audio/transition_triangles.wav");
                 Sound* s = &sounds[sound];
-                PlaySound(s,1,0);
+                PlaySound(s,1,0,true);
             }
             if (transitionTimer < 0.3f)
             {
@@ -753,7 +753,7 @@ void UpdateTransition(float dt)
             {
                 int sound = LoadSound("assets/audio/transition_circle.wav");
                 Sound* s = &sounds[sound];
-                PlaySound(s,1,0);
+                PlaySound(s,1,0,true);
             }
             transitionTimer += dt * 1.6f;
         }
@@ -767,13 +767,13 @@ void UpdateTransition(float dt)
             {
                 int sound = LoadSound("assets/audio/door_slide.wav");
                 Sound* s = &sounds[sound];
-                PlaySound(s,1,0);
+                PlaySound(s,1,0,true);
             }
             if (transitionAudioPlayed == false && transitionTimer >= 0.85f)
             {
                 int sound = LoadSound("assets/audio/slam_deep.wav");
                 Sound* s = &sounds[sound];
-                PlaySound(s,1,0);
+                PlaySound(s,1,0,true);
 
                 transitionAudioPlayed = true;
                 AddScreenshake(3.5f,0.1f);

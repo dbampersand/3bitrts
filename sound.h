@@ -1,12 +1,30 @@
 #pragma once
 
 #include <allegro5/allegro_audio.h>
-typedef int SoundIndex; 
+typedef int SoundIndex;
+
+#define RESERVED_SAMPLES 256
+#define NUMSOUNDSTOPREALLOC 32
+
 typedef struct Sound
 {
     ALLEGRO_SAMPLE* sample;
     char* path;
 } Sound;
+typedef struct Reverb
+{
+    bool active;
+    SoundIndex soundIndex;
+    float time;
+    float volume;
+    float pan;
+} Reverb;
+
+#define MAX_REVERBS (RESERVED_SAMPLES / 2)
+Reverb reverbs[MAX_REVERBS];
+int _REVERB_TOP; 
+
+float _REVERB_DISTANCE;
 
 typedef enum MusicState {
     MUSICSTATE_PLAYING,
@@ -27,9 +45,10 @@ extern int numAmbientSoundsAlloced;
 
 void InitSound();
 int LoadSound(const char* path);
-void PlaySoundStr(char* str, float volume, float pan);
-void PlaySoundAtPosition(Sound* s, float relativeVolume, int x, int y);
-void PlaySound(Sound* s, float relativeVolume, float pan);
+void PlaySoundStr(char* str, float volume, float pan,bool shouldReverb);
+void PlaySoundAtPosition(Sound* s, float relativeVolume, int x, int y, bool shouldReverb);
+void PlaySound(Sound* s, float relativeVolume, float pan,bool shouldReverb);
+void UpdateReverbs(float dt);
 void PlayMusic(const char* path, float loopPoint, double musicGain);
 void UpdateMusic(float dt);
 void PlayEncounterMusic();
@@ -41,8 +60,6 @@ void PlaySelectionSound(GameObject* g);
 
 
 
-#define RESERVED_SAMPLES 32
-#define NUMSOUNDSTOPREALLOC 32
 
 extern ALLEGRO_AUDIO_STREAM* music;
 extern ALLEGRO_AUDIO_STREAM* musicFadingTo;

@@ -928,15 +928,18 @@ void UpdateAttack(Attack* a, float dt)
             
         if (a->cameFrom)
         {
-            if (a->cameFrom->luafunc_applyattack > 0)
+            if (a->attackType != ATTACK_PROJECTILE_ANGLE && a->attackType != ATTACK_PROJECTILE_POINT && a->attackType != ATTACK_PROJECTILE_TARGETED)
             {
-                lua_rawgeti(luaState, LUA_REGISTRYINDEX, a->cameFrom->luafunc_applyattack);
-                lua_pushnumber(luaState,a-attacks);
-                
-                lua_pushnumber(luaState,a->x);
-                lua_pushnumber(luaState,a->y);
+                if (a->cameFrom->luafunc_applyattack > 0)
+                {
+                    lua_rawgeti(luaState, LUA_REGISTRYINDEX, a->cameFrom->luafunc_applyattack);
+                    lua_pushnumber(luaState,a-attacks);
+                    
+                    lua_pushnumber(luaState,a->x);
+                    lua_pushnumber(luaState,a->y);
 
-                lua_pcall(luaState,3,0,0);
+                    lua_pcall(luaState,3,0,0);
+                }
             }
         }
 

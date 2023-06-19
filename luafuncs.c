@@ -2912,7 +2912,7 @@ int L_PlaySound(lua_State* l)
         }
     }
 
-    PlaySoundAtPosition(s,lua_tonumber(l,2), x,y);
+    PlaySoundAtPosition(s,lua_tonumber(l,2), x,y,true);
     return 0;
 }
 int L_AddStack(lua_State* l)

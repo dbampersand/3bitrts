@@ -48,11 +48,11 @@ float timeToNextAmbience = 0;
 int** selectionSounds = NULL;
 int* numSelectionSounds = NULL;
 
-void PlaySoundStr(char* str, float volume, float pan)
+void PlaySoundStr(char* str, float volume, float pan, bool shouldReverb)
 {
     int index = LoadSound(str);
     Sound* s = &sounds[index];
-    PlaySound(s,volume,pan);
+    PlaySound(s,volume,pan,shouldReverb);
 }
 
 int popcnt(int n)
@@ -81,7 +81,7 @@ void PlaySelectionSound(GameObject* g)
         {
             int ind = selectionSounds[g->category][RandRangeI(0,numSelectionSounds[g->category])];
             Sound* s = &sounds[ind];
-            PlaySoundAtPosition(s,0.1,g->position.worldX,g->position.worldY);
+            PlaySoundAtPosition(s,0.1,g->position.worldX,g->position.worldY,false);
         }
     }
 }
@@ -102,7 +102,7 @@ void UpdateAmbience(float dt)
     if (timeToNextAmbience <= 0)
     {
         Sound* s = GetRandomAmbient();
-        PlaySound(s,1,RandRange(-0.25,0.25));
+        PlaySound(s,1,RandRange(-0.25,0.25),false);
         int len = al_get_sample_length(s->sample);
         int freq = al_get_sample_frequency(s->sample);
         timeToNextAmbience = freq / (float)len * 1000;
@@ -205,6 +205,9 @@ void LoadSelectionSounds(char* path, GAMEOBJ_TYPE_HINT typeHint)
 
 void InitSound()
 {
+    _REVERB_TOP = 0;
+    _REVERB_DISTANCE = 0.1f;
+    memset(reverbs,0,sizeof(Reverb) * MAX_REVERBS);
     if (al_install_audio())
     {
         al_init_acodec_addon();
@@ -239,6 +242,7 @@ void InitSound()
         LoadSelectionSounds("assets/audio/selection_sounds/utility/",TYPE_UTILITY);
         LoadSelectionSounds("assets/audio/selection_sounds/tank/",TYPE_TANK);
         LoadSelectionSounds("assets/audio/selection_sounds/healer/",TYPE_HEALER);
+
 
 
     }
@@ -294,7 +298,7 @@ int LoadSound(const char* path)
 
     return numSounds-1;
 }
-void PlaySoundAtPosition(Sound* s, float relativeVolume, int x, int y)
+void PlaySoundAtPosition(Sound* s, float relativeVolume, int x, int y, bool shouldReverb)
 {
     float camX = GetCameraMiddleX();
     float camY = GetCameraMiddleY();
@@ -311,11 +315,28 @@ void PlaySoundAtPosition(Sound* s, float relativeVolume, int x, int y)
 
 
 
-    PlaySound(s,relativeVolume*volumeGain,xPercent);
+    PlaySound(s,relativeVolume*volumeGain,xPercent,shouldReverb);
 
 } 
+void AddReverb(Sound* s, float relativeVolume, float pan)
+{
+    if (_REVERB_DISTANCE == 0)
+        return;
+    Reverb* r = &reverbs[_REVERB_TOP];
+    r->soundIndex = s - sounds;
+    r->volume = relativeVolume / 3.35f;
+    r->time = _REVERB_DISTANCE;
+    r->pan = Towards(pan,0,0.15);
 
-void PlaySound(Sound* s, float relativeVolume, float pan)
+    if (r->volume <= 0.01f)
+        return;
+    r->active = true;
+
+    _REVERB_TOP++;
+    if (_REVERB_TOP >= MAX_REVERBS)
+        _REVERB_TOP = 0;
+}
+void PlaySound(Sound* s, float relativeVolume, float pan, bool shouldReverb)
 {
     if (!s->sample)
     {
@@ -331,16 +352,37 @@ void PlaySound(Sound* s, float relativeVolume, float pan)
     if (gameState == GAMESTATE_INGAME && soundPlayedThisFramePosition <= NUM_SOUNDS_TO_SAVE && replay.numFrames > 0)
     {
         {
-
             replay.frames[replay.numFrames].soundsPlayedThisFrame[soundPlayedThisFramePosition] = *s;
             soundPlayedThisFramePosition++;
-        }
+        }   
     }
     float volumeJitter = RandRange(-0.05,0.05);
     float pitchJitter = RandRange(-0.025,0.025);
     relativeVolume += volumeJitter;
-
+    AddReverb(s,relativeVolume,pan);
     al_play_sample(s->sample, currSettings.masterVolume * relativeVolume * currSettings.sfxVolume, pan, 1.0f + pitchJitter, ALLEGRO_PLAYMODE_ONCE, NULL);
+
+    lua_settop(luaState,0);
+}
+void PlayReverb(Reverb* r)
+{
+    Sound* s = &sounds[r->soundIndex];
+    r->active = false;
+    PlaySound(s,r->volume,r->pan,true);
+}
+void UpdateReverbs(float dt)
+{
+    for (int i = 0; i < MAX_REVERBS; i++)
+    {
+        if (reverbs[i].active)
+        {
+            reverbs[i].time -= dt;
+            if (reverbs[i].time <= 0)
+            {
+                PlayReverb(&reverbs[i]);
+            }
+        }
+    }
 }
 void StopMusic()
 {

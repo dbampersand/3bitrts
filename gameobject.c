@@ -418,6 +418,7 @@ void UpdateObject(GameObject* g, float dt)
     if (ObjIsDecoration(g))
         return;
 
+
     if (currGameObjRunning->properties & OBJ_ACTIVE && !IsOwnedByPlayer(currGameObjRunning))
     {
         DoAI(currGameObjRunning);
@@ -1336,6 +1337,11 @@ void RemoveObjFromAllCommands(GameObject* g)
                 }
             }
         }
+        if (activeObjects[i]->channelled_target == g && ObjIsChannelling(activeObjects[i]))
+        {
+            activeObjects[i]->properties &= ~OBJ_IS_CHANNELLING;
+            activeObjects[i]->channelledAbility = NULL;
+        }
         
     }
 }
@@ -2177,7 +2183,7 @@ void PlayFootstepSound(GameObject* g)
     float x;
     float y;
     GetCentre(g, &x, &y);
-    PlaySoundAtPosition(&sounds[footstepSFXIndices[randInd]], 0.25f, x, y);
+    PlaySoundAtPosition(&sounds[footstepSFXIndices[randInd]], 0.25f, x, y,true);
     lastFootstepPlayed = randInd;
 }
 void Move(GameObject* g, float delta)
@@ -3125,7 +3131,7 @@ void PlayAttackSound(GameObject* g)
         float x;
         float y;
         GetCentre(g, &x, &y);
-        PlaySoundAtPosition(sound, .4f, x, y);
+        PlaySoundAtPosition(sound, .4f, x, y,true);
     }
 }
 void AttackTarget(GameObject* g, float dt)
@@ -3330,7 +3336,7 @@ bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems, f
     {
         float volume = value / 50.0f;
         volume = clamp(volume,0,1);
-        PlaySoundStr("assets/audio/damage_hit_sound.wav",volume,0);
+        PlaySoundStr("assets/audio/damage_hit_sound.wav",volume,0,false);
     }
 
     AddThreat(source, g, value);
@@ -3683,28 +3689,36 @@ void SetObjChannelling(GameObject* g, Ability* a, float time, float x, float y, 
     g->channelled_target = target;
     g->target_heading_x = heading_x;
     g->target_heading_y = heading_y;
+
+    currGameObjRunning = g;
+    currAbilityRunning = g->channelledAbility;
+    if (currAbilityRunning)
+    {
+        lua_rawgeti(luaState, LUA_REGISTRYINDEX, g->channelledAbility->luafunc_onchanneled);
+        lua_pushnumber(luaState, g - objects);
+        lua_pushnumber(luaState, g->channellingTime);
+        lua_pushnumber(luaState, g->channellingTotal);
+        lua_pushnumber(luaState, g->channelled_target - objects);
+        lua_pushnumber(luaState, g->channelled_x);
+        lua_pushnumber(luaState, g->channelled_y);
+        lua_pushnumber(luaState, g->target_heading_x);
+        lua_pushnumber(luaState, g->target_heading_y);
+
+        lua_pcall(luaState, 8, 0, 0);
+    }
+
 }
 void UpdateChannellingdObj(GameObject* g, float dt)
 {
     if (ObjIsChannelling(g))
     {
-
+        if (g->channelled_target && !IsActive(g->channelled_target))
+        {
+            g->properties &= ~OBJ_IS_CHANNELLING;
+            g->channelledAbility = NULL;
+        }
         currGameObjRunning = g;
         currAbilityRunning = g->channelledAbility;
-        if (currAbilityRunning)
-        {
-            lua_rawgeti(luaState, LUA_REGISTRYINDEX, g->channelledAbility->luafunc_onchanneled);
-            lua_pushnumber(luaState, g - objects);
-            lua_pushnumber(luaState, g->channellingTime);
-            lua_pushnumber(luaState, g->channellingTotal);
-            lua_pushnumber(luaState, g->channelled_target - objects);
-            lua_pushnumber(luaState, g->channelled_x);
-            lua_pushnumber(luaState, g->channelled_y);
-            lua_pushnumber(luaState, g->target_heading_x);
-            lua_pushnumber(luaState, g->target_heading_y);
-
-            lua_pcall(luaState, 8, 0, 0);
-        }
 
         g->channellingTime -= dt;
         if (g->channellingTime < 0)

@@ -17,15 +17,18 @@ function setup()
 
     shoot = AddAbility(GetObjRef(),"assets/enemies/repeater/ability_shoot.lua",0);
 
-
-    SetAttackSounds({
-        "assets/audio/attacks/melee_hammer/hammer_1.wav",
-        "assets/audio/attacks/melee_hammer/hammer_2.wav",
-        "assets/audio/attacks/melee_hammer/hammer_3.wav",
-        "assets/audio/attacks/melee_hammer/hammer_4.wav",
-        "assets/audio/attacks/melee_hammer/hammer_5.wav",
-        "assets/audio/attacks/melee_hammer/hammer_6.wav"
-    });
+    SetAttackSounds(
+        {
+        "assets/audio/attacks/ranged_bow/bow_1.wav",
+        "assets/audio/attacks/ranged_bow/bow_2.wav",
+        "assets/audio/attacks/ranged_bow/bow_3.wav",
+        "assets/audio/attacks/ranged_bow/bow_4.wav",
+        "assets/audio/attacks/ranged_bow/bow_5.wav",
+        "assets/audio/attacks/ranged_bow/bow_6.wav",
+        "assets/audio/attacks/ranged_bow/bow_7.wav",
+        "assets/audio/attacks/ranged_bow/bow_8.wav"
+    }
+    );
 
 end
 local function rotate()

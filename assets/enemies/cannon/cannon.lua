@@ -14,7 +14,6 @@ function setup()
 
     shoot = AddAbility(GetObjRef(),"assets/enemies/cannon/ability_shoot.lua",0);
 
-
     SetAttackSounds({
         "assets/audio/attacks/melee_hammer/hammer_1.wav",
         "assets/audio/attacks/melee_hammer/hammer_2.wav",

@@ -380,7 +380,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     {
         int sound = LoadSound("assets/audio/ui_slide.wav");
         Sound* s = &sounds[sound];
-        PlaySound(s,1,0);
+        PlaySound(s,1,0,false);
 
         purchaseUI->indexTransitioningTo--;
         purchaseUI->indexTransitioningTo = clamp(purchaseUI->indexTransitioningTo,0,purchaseUI->numPrefabs-1);
@@ -396,7 +396,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     {
         int sound = LoadSound("assets/audio/ui_slide.wav");
         Sound* s = &sounds[sound];
-        PlaySound(s,1,0);
+        PlaySound(s,1,0,false);
 
         purchaseUI->indexTransitioningTo++;
         purchaseUI->indexTransitioningTo = clamp(purchaseUI->indexTransitioningTo,0,purchaseUI->numPrefabs-1);
@@ -1008,7 +1008,7 @@ bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, MouseState
     {
         if (PointInRect(mouse->screenX,mouse->screenY,r) && !PointInRect(mouseStateLastFrame->screenX,mouseStateLastFrame->screenY,r))
         {
-            PlaySoundStr("assets/audio/hover2.wav",1,0);
+            PlaySoundStr("assets/audio/hover2.wav",1,0,false);
         }
     }
 
@@ -1357,7 +1357,7 @@ void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame
     {
         int sound = LoadSound("assets/audio/ui_slide.wav");
         Sound* s = &sounds[sound];
-        PlaySound(s,1,0);
+        PlaySound(s,1,0,false);
 
         PreviousEncounter();
         //selectedEncounterIndex--;
@@ -1369,7 +1369,7 @@ void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame
         //selectedEncounterIndex++;
         int sound = LoadSound("assets/audio/ui_slide.wav");
         Sound* s = &sounds[sound];
-        PlaySound(s,1,0);
+        PlaySound(s,1,0,false);
 
         NextEncounter();
         if (selectedEncounterIndex >= numEncounters)
@@ -1432,7 +1432,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
         Rect r = (Rect){column+offsetX,row,20,20};
         if (PointInRect(mouseState->screenX,mouseState->screenY,r) && !PointInRect(mouseStateLastFrame->screenX,mouseStateLastFrame->screenY,r))
         {
-            PlaySoundStr("assets/audio/hover2.wav",1,0);
+            PlaySoundStr("assets/audio/hover2.wav",1,0,false);
         }
 
 
@@ -1452,7 +1452,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     }
     if (isRerolling)
     {
-        PlaySoundStr("assets/audio/reroll.wav",1,0);
+        PlaySoundStr("assets/audio/reroll.wav",1,0,false);
         SetEncounterRandAugments(e);
     }
 
@@ -1471,7 +1471,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
         ALLEGRO_COLOR c = i <= e->augment ? FRIENDLY : GROUND;
         if (PointInRect(mouseState->screenX,mouseState->screenY,drawRect) && !PointInRect(mouseStateLastFrame->screenX,mouseStateLastFrame->screenY,drawRect))
         {
-            PlaySoundStr("assets/audio/hover.wav",0.25f,0);
+            PlaySoundStr("assets/audio/hover.wav",0.25f,0,false);
         }
         if (PointInRect(mouseState->screenX,mouseState->screenY,drawRect))
             c = ENEMY;
@@ -1491,7 +1491,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 
             if (PointInRect(mouseState->screenX,mouseState->screenY,drawRect) && i != e->augment)
             {
-                PlaySoundStr("assets/audio/gem_click.wav",1,0);
+                PlaySoundStr("assets/audio/gem_click.wav",1,0,false);
                 e->augment = i;
                 SetEncounterRandAugments(e);
             }
@@ -2749,6 +2749,7 @@ void InitUI()
     ui.chestWiggle = LoadAnimation("assets/ui/endscreen/chest_wiggle.png",42,43,0.08f,0,20);
     ui.chestOpen = LoadAnimation("assets/ui/endscreen/chest_open.png",42,43,0.1f,0,5);
     ui.chestOpen.holdOnLastFrame = true;
+    ui.chestWiggle.holdOnLastFrame = true;
 }
 void UpdateWidget(Widget* w, float dt)
 {
@@ -2847,7 +2848,7 @@ bool GetButton(Panel* p, char* name)
                /* Button* b = (Button*)u->data;
                 if (b->activated)
                 {
-                    PlaySound(&sounds[u->sound_clickDown_Index],0.5f,0);
+                    PlaySound(&sounds[u->sound_clickDown_Index],0.5f,0,false);
                 }
                 return (b->activated);*/
             }
@@ -2913,7 +2914,7 @@ void UpdateKeyInput(int rX, int rY, int w, int h, UIElement* u, MouseState mouse
         {
             if (!t->clicked)
             {
-                PlaySound(&sounds[u->sound_clickUp_Index],0.5f,0);
+                PlaySound(&sounds[u->sound_clickUp_Index],0.5f,0,false);
             }
             t->clicked = true;
         }
@@ -3041,7 +3042,7 @@ void UpdateButton(int rX, int rY, int w, int h, UIElement* u, MouseState mouseSt
     }
     if (u->enabled && PointInRect(mouseState.screenX,mouseState.screenY,r) && !PointInRect(mouseStateLastFrame.screenX,mouseStateLastFrame.screenY,r))
     {
-        PlaySoundStr("assets/audio/button_hover.wav",1,0);
+        PlaySoundStr("assets/audio/button_hover.wav",1,0,false);
     }
 
 
@@ -3051,7 +3052,7 @@ void UpdateButton(int rX, int rY, int w, int h, UIElement* u, MouseState mouseSt
         {
             if (!b->clicked)
             {
-                PlaySound(&sounds[u->sound_clickUp_Index],0.5f,0);
+                PlaySound(&sounds[u->sound_clickUp_Index],0.5f,0,false);
             }
             b->clicked = true;
         }
@@ -3735,7 +3736,7 @@ bool GetButtonIsClicked(UIElement* u)
             {
                 if (u->sound_clickDown_Index)
                 {
-                    PlaySound(&sounds[u->sound_clickDown_Index],0.5f,0);
+                    PlaySound(&sounds[u->sound_clickDown_Index],0.5f,0,false);
                 }
             }
             bool isActive = b->activated;
@@ -3974,15 +3975,20 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, floa
         if (ui.openedChests[i])
         {
             if (ui.currChestAnimation[i].spriteIndex_Animation != ui.chestOpen.spriteIndex_Animation)
+            {
+                PlaySoundStr("assets/audio/chest_open.wav",1,0,false);
                 ui.currChestAnimation[i] = ui.chestOpen;
-            
+            }
         }
         else if (PointInRect(mouseState->screenX,mouseState->screenY,r) && hasChest)
         {
             if (mouseState->mouse.buttons & 1)
                 OpenChest(i);
-            if (ui.currChestAnimation[i].spriteIndex_Animation != ui.chestWiggle.spriteIndex_Animation)
+            if (PointInRect(mouseState->screenX,mouseState->screenY,r) && !PointInRect(mouseStateLastFrame->screenX,mouseStateLastFrame->screenY,r) && ui.currChestAnimation[i].spriteIndex_Animation != ui.chestWiggle.spriteIndex_Animation)
+            {
                 ui.currChestAnimation[i] = ui.chestWiggle;
+                PlaySoundStr("assets/audio/chest_wiggle.wav",1,0,false);
+            }
         }
         else 
         {

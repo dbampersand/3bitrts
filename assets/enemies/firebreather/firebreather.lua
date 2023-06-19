@@ -16,12 +16,11 @@ function setup()
     breathe = AddAbility(GetObjRef(),"assets/enemies/firebreather/ability_breathe.lua",1);
 
     SetAttackSounds({
-        "assets/audio/attacks/melee_hammer/hammer_1.wav",
-        "assets/audio/attacks/melee_hammer/hammer_2.wav",
-        "assets/audio/attacks/melee_hammer/hammer_3.wav",
-        "assets/audio/attacks/melee_hammer/hammer_4.wav",
-        "assets/audio/attacks/melee_hammer/hammer_5.wav",
-        "assets/audio/attacks/melee_hammer/hammer_6.wav"
+        "assets/audio/attacks/attack_spit/spit_1.wav",
+        "assets/audio/attacks/attack_spit/spit_2.wav",
+        "assets/audio/attacks/attack_spit/spit_3.wav",
+        "assets/audio/attacks/attack_spit/spit_4.wav",
+        "assets/audio/attacks/attack_spit/spit_5.wav",
     });
     timer = RandRange(minDecisionTime,maxDecisionTime)
 end

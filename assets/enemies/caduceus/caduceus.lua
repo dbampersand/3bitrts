@@ -13,6 +13,16 @@ function setup()
     summon = AddAbility(GetObjRef(),"assets/enemies/caduceus/ability_summon.lua",0);
     cureaoe = AddAbility(GetObjRef(),"assets/enemies/caduceus/ability_cureaoe.lua",1);
     wave = AddAbility(GetObjRef(),"assets/enemies/caduceus/ability_wave.lua",2);
+
+    SetAttackSounds({
+        "assets/audio/attacks/ranged_magic/magic_1.wav",
+        "assets/audio/attacks/ranged_magic/magic_2.wav",
+        "assets/audio/attacks/ranged_magic/magic_3.wav",
+        "assets/audio/attacks/ranged_magic/magic_4.wav",
+        "assets/audio/attacks/ranged_magic/magic_5.wav",
+        "assets/audio/attacks/ranged_magic/magic_6.wav"
+    });
+
 end
 
 function update(dt)

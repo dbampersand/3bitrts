@@ -15,12 +15,12 @@ function setup()
 
 
     SetAttackSounds({
-        "assets/audio/attacks/melee_hammer/hammer_1.wav",
-        "assets/audio/attacks/melee_hammer/hammer_2.wav",
-        "assets/audio/attacks/melee_hammer/hammer_3.wav",
-        "assets/audio/attacks/melee_hammer/hammer_4.wav",
-        "assets/audio/attacks/melee_hammer/hammer_5.wav",
-        "assets/audio/attacks/melee_hammer/hammer_6.wav"
+        "assets/audio/attacks/ranged_magic/magic_1.wav",
+        "assets/audio/attacks/ranged_magic/magic_2.wav",
+        "assets/audio/attacks/ranged_magic/magic_3.wav",
+        "assets/audio/attacks/ranged_magic/magic_4.wav",
+        "assets/audio/attacks/ranged_magic/magic_5.wav",
+        "assets/audio/attacks/ranged_magic/magic_6.wav"
     });
 
 end

@@ -62,6 +62,7 @@ void ToggleConsole()
     else
     {
         al_ustr_truncate(console.currentLine,0);
+        ui.currentPanel = NULL;
     }
 }
 
@@ -155,16 +156,13 @@ void RemoveCharacter()
     if (console.active)
     {
         al_ustr_truncate(console.currentLine,al_ustr_length(console.currentLine)-1);
-       // int len = strlen(console.currentLine);
-        //if (len == 0)
-          //  return;
-        //console.currentLine[len-1] = '\0';
     }
 }
 void RunLine()
 {
     if (console.active)
     {
+        currGameObjRunning = players[0].selection[0];
         char* cstr =  al_cstr_dup(console.currentLine);
 
         AddConsoleLine(cstr);
