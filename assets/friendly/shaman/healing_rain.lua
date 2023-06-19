@@ -37,6 +37,6 @@ function abilitytick(x, y, durationLeft)
     
 end
 
-function applyattack()
-    PlaySound("assets/friendly/shaman/audio/healing_rain.wav",1);
+function applyattack(a,x,y)
+    PlaySound("assets/friendly/shaman/audio/healing_rain.wav",1,x,y);
 end

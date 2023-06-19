@@ -18,7 +18,7 @@ function casted(x,y,obj,headingx,headingy)
     
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
-    f1["type"] = EFFECT_HURT;/   
+    f1["type"] = EFFECT_HURT;
     f1["value"] = 80 / tickrate;
 
     aoe = CreateAOE(x,y,"", 25, 1, tickrate, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
@@ -48,6 +48,6 @@ end
 function onchanneled() 
     SetChannelingSprite("assets/enemies/nix/nix_casting_searing_blast.png")
 end
-function applyattack()
-    PlaySound("assets/enemies/nix/audio/searing_blast_tick.wav",0.1)
+function applyattack(a,x,y)
+    PlaySound("assets/enemies/nix/audio/searing_blast_tick.wav",0.1,x,y)
 end

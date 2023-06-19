@@ -51,6 +51,6 @@ function onchanneled()
     SetChannelingSprite("assets/enemies/nix/nix_casting_lightning_orb.png")
 
 end
-function applyattack()
-    PlaySound("assets/enemies/nix/audio/lightning_orb_tick.wav",0.1)
+function applyattack(a,x,y)
+    PlaySound("assets/enemies/nix/audio/lightning_orb_tick.wav",0.1,x,y)
 end

@@ -33,6 +33,6 @@ end
 function abilitytick(x, y, durationLeft)
     
 end
-function applyattack()
-    PlaySound("assets/friendly/paladin/audio/circle_of_protection_apply.wav",0.5);
+function applyattack(a,x,y)
+    PlaySound("assets/friendly/paladin/audio/circle_of_protection_apply.wav",0.5,x,y);
 end

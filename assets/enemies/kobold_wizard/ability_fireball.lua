@@ -48,6 +48,6 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
 end
 function onchanneled() 
 end
-function applyattack()
-    PlaySound("assets/enemies/kobold_wizard/audio/fireball_tick.wav",0.5)
+function applyattack(a,x,y)
+    PlaySound("assets/enemies/kobold_wizard/audio/fireball_tick.wav",0.5,x,y)
 end

@@ -33,8 +33,9 @@ function casted(x,y,obj,headingx,headingy)
     local dir = GetHeadingVector(GetX(GetObjRef()), GetY(GetObjRef()),GetX(obj),GetY(obj))
     SetAttackMoveAngle(atk,dir.headingx,dir.headingy)
     SetAttackVelocity(atk,30)
-
-    PlaySound("assets/enemies/viper/audio/bite.wav",1);
+    for i = 1, 4 do
+        After(PlaySound,RandRange(0,0.15),true,"assets/enemies/skeleton_minion_ranged/audio/rain.wav",RandRange(0.1,0.35),GetX(obj),GetY(obj));
+    end
     return true; 
 end
 
@@ -42,4 +43,7 @@ function onhit(x,y,objhit)
 end
 
 function abilitytick(x, y, durationLeft)
+end
+function applyattack(a,x,y) 
+    PlaySound("assets/enemies/skeleton_minion_ranged/audio/rain.wav",0.1,x,y)
 end

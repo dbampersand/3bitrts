@@ -3326,6 +3326,12 @@ bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems, f
     }
     if (source && GetWidth(g) > 0 && GetHeight(g) > 0)
         AddDamageNumber((int)value, g->position.worldX + (rand() % (int)GetWidth(g) * 1.1f), g->position.worldY + (rand() % (int)GetHeight(g) * 1.1f), source);
+    if (GetPlayerOwnedBy(g) == 0 && effect)
+    {
+        float volume = value / 50.0f;
+        volume = clamp(volume,0,1);
+        PlaySoundStr("assets/audio/damage_hit_sound.wav",volume,0);
+    }
 
     AddThreat(source, g, value);
 

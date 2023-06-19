@@ -19,7 +19,7 @@ function casted(x,y,obj,headingx,headingy)
 
     ApplyEffect(obj,{f1})
 
-    PlaySound("assets/enemies/viper/audio/bite.wav",1);
+    PlaySound("assets/enemies/skeleton_minion_melee/audio/grasp.wav",0.5);
     return true; 
 end
 

@@ -46,6 +46,6 @@ function parentdeath()
 end
 function onchanneled() 
 end
-function applyattack()
-    PlaySound("assets/summoned/obsidian_demon/audio/radiance_tick.wav",0.25);
+function applyattack(a,x,y)
+    PlaySound("assets/summoned/obsidian_demon/audio/radiance_tick.wav",0.25,x,y);
 end

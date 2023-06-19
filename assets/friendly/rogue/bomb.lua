@@ -34,6 +34,6 @@ end
 function abilitytick(x, y, durationLeft)
     
 end
-function applyattack()
-    PlaySound("assets/friendly/rogue/audio/bomb_tick.wav",0.2);
+function applyattack(a,x,y)
+    PlaySound("assets/friendly/rogue/audio/bomb_tick.wav",0.2,x,y);
 end

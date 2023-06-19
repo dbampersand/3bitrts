@@ -43,5 +43,5 @@ end
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
     MoveAttack(aoe,GetX(parent),GetY(parent));
 end
-function applyattack()
+function applyattack(a,x,y)
 end

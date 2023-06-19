@@ -931,7 +931,12 @@ void UpdateAttack(Attack* a, float dt)
             if (a->cameFrom->luafunc_applyattack > 0)
             {
                 lua_rawgeti(luaState, LUA_REGISTRYINDEX, a->cameFrom->luafunc_applyattack);
-                lua_pcall(luaState,0,0,0);
+                lua_pushnumber(luaState,a-attacks);
+                
+                lua_pushnumber(luaState,a->x);
+                lua_pushnumber(luaState,a->y);
+
+                lua_pcall(luaState,3,0,0);
             }
         }
 

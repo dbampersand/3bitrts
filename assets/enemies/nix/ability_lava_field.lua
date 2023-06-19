@@ -51,6 +51,6 @@ function onchanneled()
     SetChannelingSprite("assets/enemies/nix/nix_casting_lava_field.png")
 
 end
-function applyattack() 
-    PlaySound("assets/enemies/nix/audio/lava_field_tick.wav",0.1)
+function applyattack(a,x,y) 
+    PlaySound("assets/enemies/nix/audio/lava_field_tick.wav",0.1,x,y)
 end

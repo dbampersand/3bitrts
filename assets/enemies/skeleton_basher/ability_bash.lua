@@ -24,7 +24,7 @@ function casted(x,y,obj,headingx,headingy)
     ApplyEffect(obj,{f1});
     ShakeScreen(3,0.2)
 
-    PlaySound("assets/enemies/viper/audio/bite.wav",1);
+    PlaySound("assets/enemies/skeleton_basher/audio/bash.wav",1);
     return true; 
 end
 

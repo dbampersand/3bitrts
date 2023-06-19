@@ -35,6 +35,6 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
 end
 function onchanneled() 
 end
-function applyattack()
-    PlaySound("assets/summoned/ruby_star/audio/sear_tick.wav",0.1);
+function applyattack(a,x,y)
+    PlaySound("assets/summoned/ruby_star/audio/sear_tick.wav",0.1,x,y);
 end

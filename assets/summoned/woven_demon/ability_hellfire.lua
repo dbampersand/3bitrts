@@ -67,6 +67,6 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
 end
 function onchanneled() 
 end
-function applyattack()
-    PlaySound("assets/summoned/woven_demon/audio/hellfire_tick.wav",0.15);
+function applyattack(a,x,y)
+    PlaySound("assets/summoned/woven_demon/audio/hellfire_tick.wav",0.15,x,y);
 end

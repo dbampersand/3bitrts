@@ -43,4 +43,4 @@ end
 
 function onchanneled() 
     SetChannelingSprite("assets/enemies/rock_tosser/rock_tosser_cast_throw_small_rock.png")
-en
+end

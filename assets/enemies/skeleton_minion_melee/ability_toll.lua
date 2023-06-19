@@ -22,7 +22,7 @@ function casted(x,y,obj,headingx,headingy)
 
     CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",40,tickRate,duration,false,ATTACK_HITS_ENEMIES,COLOR_SPEED,DITHER_SPEED_QUARTER,false,-1,{f1});
 
-    PlaySound("assets/enemies/viper/audio/bite.wav",1);
+    PlaySound("assets/enemies/skeleton_minion_melee/audio/toll.wav",0.5);
     return true; 
 end
 

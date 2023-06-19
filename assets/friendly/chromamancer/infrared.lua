@@ -36,6 +36,6 @@ end
 
 function abilitytick(x, y, durationLeft, obj, target)
 end
-function applyattack()
-    PlaySound("assets/friendly/chromamancer/audio/infrared_tick.wav",0.5);
+function applyattack(a,x,y)
+    PlaySound("assets/friendly/chromamancer/audio/infrared_tick.wav",0.5,x,y);
 end

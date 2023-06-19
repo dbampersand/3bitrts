@@ -45,6 +45,6 @@ end
 
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
 end
-function applyattack()
-    PlaySound("assets/enemies/nuul/audio/void_tick.wav",0.25)
+function applyattack(a,x,y)
+    PlaySound("assets/enemies/nuul/audio/void_tick.wav",0.25,x,y)
 end

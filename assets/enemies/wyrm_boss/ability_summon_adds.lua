@@ -7,13 +7,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
-
-    f1 = {};
-    f1["trigger"] = TRIGGER_INSTANT;
-    f1["type"] = EFFECT_HURT;
-    --f1["triggersPerSecond"] = 1 
-    f1["value"] = 20;  
-    --f1["duration"] = 4;
+    PlaySound("assets/enemies/wyrm_boss/audio/summon_add.wav",1)
 
     CreateObject("assets/enemies/wyrm_boss/wyrm_add/wyrm_add.lua",128,128,TYPE_FRIENDLY,2);
     return true; 

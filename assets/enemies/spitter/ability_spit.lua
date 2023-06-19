@@ -14,8 +14,8 @@ function setup()
     SetAbilityRange(200)
     --AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_LINE,80);
-    SetCooldown(0.5); 
-    SetAbilityMaxStacks(30,30)
+    SetCooldown(0.8); 
+    SetAbilityMaxStacks(15,15)
     AbilitySetPortrait("assets/enemies/spitter/ability_spit.png");
     SetDescription("[b]Spit\n\nSpits a large number of projectiles towards the target.")
 end
@@ -38,7 +38,7 @@ function casted(x,y,obj,headingx,headingy)
 
     CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),point.x,point.y,"",ATTACK_PROJECTILE_ANGLE,speed,duration,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,1,{f1})
 
-    PlaySound("assets/enemies/viper/audio/bite.wav",1);
+    PlaySound("assets/enemies/spitter/audio/spit.wav",0.25);
     return true; 
 end
 
@@ -54,6 +54,9 @@ function onhit(x,y,objhit)
 
     aoe = CreateAOE(x,y,"", 15, .75, 10,false,ATTACK_HITS_ENEMIES,COLOR_POISON,DITHER_DAMAGE_QUARTER,false, -1, {f1})
     PushObj(x,y,objhit,100,0.1)
+
+   -- PlaySound("assets/enemies/spitter/audio/spit_hit.wav",0.25);
+
 end
 function abilitytick(x, y, durationLeft)
 end

@@ -30,7 +30,7 @@ function casted(x,y,obj,headingx,headingy)
      CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius,  tickrate,duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_QUARTER, false, obj, {f1})
 
 
-    PlaySound("assets/enemies/rock_tosser/audio/chuck.wav",1);
+    PlaySound("assets/enemies/wraith/audio/negative.wav",0.75);
 
 
 

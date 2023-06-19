@@ -26,5 +26,6 @@ function onhit(x,y,objhit)
 end
 
 function abilitytick(x, y, durationLeft)
+    PlaySound("assets/enemies/wyrm_boss/audio/fire_tick.wav",1,x,y)
 
 end

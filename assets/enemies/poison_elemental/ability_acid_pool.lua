@@ -54,6 +54,6 @@ function onchanneled()
     SetChannelingSprite("assets/enemies/poison_elemental/poison_elemental_casting_nova.png");
 
 end
-function applyattack()
-    PlaySound("assets/enemies/poison_elemental/audio/acid_pool_tick.wav",0.25)
+function applyattack(a,x,y)
+    PlaySound("assets/enemies/poison_elemental/audio/acid_pool_tick.wav",0.25,x,y)
 end

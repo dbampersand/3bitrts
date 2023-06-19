@@ -10,7 +10,7 @@ function setup()
 
     
 
-    CreateObject("assets/enemies/scorpion/scorpion.lua",230.00,142.00,TYPE_ENEMY,0.00)
+    CreateObject("assets/enemies/spitter/spitter.lua",229.00,141.00,TYPE_ENEMY,0.00)
 end
 
 function update()

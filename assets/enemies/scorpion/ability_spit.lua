@@ -1,7 +1,7 @@
 local radius = 25
 local dps = 10
 local duration = 10
-local tickrate = 10
+local tickrate = 3
 
 function setup()
 
@@ -32,5 +32,6 @@ end
 function abilitytick(x, y, durationLeft)
 end
 
-function applyattack()
-    PlaySound("assets/enemies/scorpion/audio/spit_tick.wav",0.25);
+function applyattack(a,x,y)
+    After(PlaySound,RandRange(0,0.1),true,"assets/enemies/scorpion/audio/spit_tick.wav",0.1,x,y);
+end

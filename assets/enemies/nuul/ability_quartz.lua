@@ -17,7 +17,7 @@ end
 function casted(x,y,obj,headingx,headingy)
     
     SetSprite("assets/enemies/nuul/nuul_quartz.png");
-    
+
     PlaySound("assets/enemies/nuul/audio/quartz.wav",1)
 
     local f1 = {};
@@ -81,6 +81,6 @@ function untoggle()
     RemoveAttack(area);
     area = -1
 end
-function applyattack()
-    PlaySound("assets/enemies/nuul/audio/quartz_tick.wav",0.25)
+function applyattack(a,x,y)
+    PlaySound("assets/enemies/nuul/audio/quartz_tick.wav",0.25,x,y)
 end

@@ -15,7 +15,6 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 5;  
     f1["portrait"] = "assets/enemies/wyrm_boss/ability_fire_effect_portrait"
-    PlaySound("assets/enemies/wyrm_boss/audio/fire.wav",1)
 
     local atk = CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 60, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HALF,false,-1, {f1})
     SetAttackInactive(atk,6)

@@ -36,6 +36,6 @@ function onchanneled()
     SetChannelingSprite("assets/enemies/kobold_king/kobold_king_chanelling_throw_concotion.png");
 end
 
-function applyattack()
-    PlaySound("assets/enemies/kobold_king/audio/throw_concoction_tick.wav",1)
+function applyattack(a, x, y)
+    PlaySound("assets/enemies/kobold_king/audio/throw_concoction_tick.wav",1,x,y)
 end 

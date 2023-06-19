@@ -31,4 +31,8 @@ end
 function abilitytick(x, y, durationLeft, obj, target)
     MoveAttack(GetAttackRef(),GetX(target),GetY(target));
     
+    
+end
+function applyattack(a,x,y)
+    PlaySound("assets/enemies/wyrm_boss/audio/nuke_tick.wav",1,x,y)
 end
