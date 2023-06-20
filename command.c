@@ -301,7 +301,7 @@ void DoCommands(GameObject* g)
                 
             }
 
-            if (AbilityCanBeCast(c->ability,g,c->target,c->x,c->y))
+            if (AbilityCanBeCast(c->ability,g,c->target,c->x+MOUSECURSORSIZE,c->y+MOUSECURSORSIZE))
             {
                 Command before = *c;
                 CastAbility(g,c->ability,c->x+MOUSECURSORSIZE,c->y+MOUSECURSORSIZE,c->x-g->position.worldX+MOUSECURSORSIZE,c->y-g->position.worldY+MOUSECURSORSIZE,c->target);

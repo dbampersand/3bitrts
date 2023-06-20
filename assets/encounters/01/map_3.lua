@@ -24,7 +24,7 @@ function setup()
     SetSpawnPoint(25,406)
     
     SetAggroGroup(CreateObject("assets/enemies/kobold_crusher/kobold_crusher.lua",237.00,203.00,TYPE_ENEMY,0.00),3)
-    PlayMusic("assets/audio/music/encounters/wyrm/wyrm_encounter_1.wav",0.5,16.36); 
+    --PlayMusic("assets/audio/music/encounters/wyrm/wyrm_encounter_1.wav",0.5,16.36); 
 
 end
 

@@ -588,6 +588,8 @@ void GetAbilityClickedInsideUI(MouseState mouseState, MouseState mouseStateLastF
 }
 void DrawMouse(MouseState* mouseState, GameObject* mousedOver)
 {
+    if (!_IS_FOCUSED_WINDOW)
+        return;
     MouseState mouse = *mouseState;
     //ToScreenSpaceI(&mouse.x,&mouse.y);
     if (!GameIsIngame())
@@ -2644,7 +2646,7 @@ Widget* GetWidgetByName(GameState gameState, char* name)
 void InitUI()
 {
     ui.augmentIconIndex = LoadSprite("assets/ui/augment.png",false);
-
+    _UI_IGNORE_INPUT = false;
     //ui.mainMenuPanel = CreatePanel(29,97,144,15,UI_PADDING,false);
     InitFonts();
 
@@ -3026,6 +3028,9 @@ void UpdateTextInput(int rX, int rY, int w, int h, UIElement* u, MouseState mous
 }
 void UpdateButton(int rX, int rY, int w, int h, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame)
 {
+    if (_UI_IGNORE_INPUT)
+        return;
+
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     //ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
     if (_PANEL_CLICKED_THIS_FRAME)
@@ -3076,6 +3081,8 @@ void UpdateButton(int rX, int rY, int w, int h, UIElement* u, MouseState mouseSt
 bool UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
     if (!u->enabled)
+        return false;
+    if (_UI_IGNORE_INPUT)
         return false;
     int x; int y; 
     int w; int h;

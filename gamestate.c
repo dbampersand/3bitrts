@@ -217,6 +217,8 @@ void FinishTransition()
 
 
         memset(&ui.openedChests,0,sizeof(bool) * MAX_CHESTS);
+        for (int i = 0; i < MAX_CHESTS; i++)
+            ui.currChestAnimation[i] = ui.chestIdle;
         //free(toSpawn);
 
     }

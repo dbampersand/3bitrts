@@ -28,7 +28,7 @@ function setup()
     --end
     SetAutoWin(false);
     --CreateObject("assets/encounters/02/boss.lua",32,32,TYPE_ENEMY);
-    PlayMusic("assets/audio/music/encounters/minotaur/minotaur_encounter.wav",0.5,6.40); 
+    --PlayMusic("assets/audio/music/encounters/minotaur/minotaur_encounter.wav",0.5,6.40); 
 
 end
 

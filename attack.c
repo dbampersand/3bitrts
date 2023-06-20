@@ -807,7 +807,7 @@ void UpdateAttack(Attack* a, float dt)
     {
         if ((int)(_FRAMES)%(int)(_TARGET_FPS/AOE_PARTICLES_PER_SECOND) == 0)
         {
-            RandParticleAroundEdgeOfCircle(a->x,a->y,a->radius,3,1,a->color);
+            RandParticleAroundEdgeOfCircle(a->x,a->y,a->radius,3,RandRange(40,80),a->color);
         }
     }
     else

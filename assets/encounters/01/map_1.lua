@@ -24,7 +24,7 @@ function setup()
     
     CreateObject("assets/enemies/viper/viper.lua",164.00,260.00,TYPE_ENEMY,0.00)
 
-    PlayMusic("assets/audio/music/encounters/wyrm/wyrm_encounter_1.wav",0.5,16.36); 
+    --PlayMusic("assets/audio/music/encounters/wyrm/wyrm_encounter_1.wav",0.5,16.36); 
 
 end
 

@@ -44,10 +44,15 @@
 
 ALLEGRO_BITMAP* testBitmap;
 
+#ifdef __WIN32__
+#include <windows.h>
+#endif
 
 void init()
 {
     srand(time(NULL));
+
+    _IS_FOCUSED_WINDOW = true;
 
     al_init();
     al_init_font_addon();
@@ -205,8 +210,16 @@ float aefesfsd = 0;
 
 void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
-    al_hide_mouse_cursor(display);
-    al_grab_mouse(display);
+    if (_IS_FOCUSED_WINDOW)
+    {
+        al_hide_mouse_cursor(display);
+        al_grab_mouse(display);
+    }
+    else
+    {
+        al_show_mouse_cursor(display);
+        al_ungrab_mouse();
+    }
     al_set_target_bitmap(SCREEN);
 
 
@@ -779,6 +792,28 @@ int main(int argc, char* args[])
               }
               */
         }
+        if (event.type == ALLEGRO_EVENT_DISPLAY_SWITCH_OUT)
+        {
+            if (gameState == GAMESTATE_INGAME)
+                ChangeUIPanel(&ui.pauseMenuPanel);
+            _IS_FOCUSED_WINDOW = false;
+            _UI_IGNORE_INPUT = true;
+            
+        }
+        if (event.type == ALLEGRO_EVENT_DISPLAY_SWITCH_IN)
+        {
+            _IS_FOCUSED_WINDOW = true;
+
+            al_set_mouse_xy(display,0,0);
+
+
+        }
+        #ifdef __WIN32__
+            if (IsDebuggerPresent()) 
+            {
+                _IS_FOCUSED_WINDOW = true;
+            }
+        #endif
         if (event.type == ALLEGRO_EVENT_TIMER) {
             
             UpdateDebounce(dt);
@@ -874,7 +909,10 @@ int main(int argc, char* args[])
 
             //ConsolePrintf("Total time: %f\n",time);
             fflush(stdout);
-            
+            if (_IS_FOCUSED_WINDOW)
+            {
+                _UI_IGNORE_INPUT = false;
+            }
         }
     }
     WriteSettingsFile("config.cfg");

@@ -20,9 +20,9 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",59.00,713.00,TYPE_ENEMY,0.00),6)
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",69.00,691.00,TYPE_ENEMY,0.00),6)
 
-    PlayMusic("assets/audio/music/encounters/kobold/kobold_encounter_3.wav",0.5,0); 
+    --PlayMusic("assets/audio/music/encounters/kobold/kobold_encounter_3.wav",0.5,0); 
 
-    SetMapGoldMultiplier(1.7)
+    SetMapGoldMultiplier(1.6)
 
 end
 function update()

@@ -359,7 +359,8 @@ void PlaySound(Sound* s, float relativeVolume, float pan, bool shouldReverb)
     float volumeJitter = RandRange(-0.05,0.05);
     float pitchJitter = RandRange(-0.025,0.025);
     relativeVolume += volumeJitter;
-    AddReverb(s,relativeVolume,pan);
+    if (shouldReverb)
+        AddReverb(s,relativeVolume,pan);
     al_play_sample(s->sample, currSettings.masterVolume * relativeVolume * currSettings.sfxVolume, pan, 1.0f + pitchJitter, ALLEGRO_PLAYMODE_ONCE, NULL);
 
     lua_settop(luaState,0);

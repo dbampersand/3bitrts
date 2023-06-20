@@ -14,7 +14,7 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/skeleton_basher/skeleton_basher.lua",132.00,104.00,TYPE_ENEMY,0.00),4)
     SetAggroGroup(CreateObject("assets/enemies/exploding_zombie/exploding_zombie.lua",164.00,70.00,TYPE_ENEMY,0.00),4)
     SetAggroGroup(CreateObject("assets/enemies/kobold_crusher/kobold_crusher.lua",124.00,258.00,TYPE_ENEMY,0.00),3)
-    PlayMusic("assets/audio/music/encounters/cusith/cusith_encounter.wav",0.5,0); 
+    --PlayMusic("assets/audio/music/encounters/cusith/cusith_encounter.wav",0.5,0); 
 
 end
 

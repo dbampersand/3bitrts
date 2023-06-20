@@ -1668,6 +1668,8 @@ bool IsSelected(GameObject* g)
 }
 void SetSelected(GameObject* g, bool select)
 {
+    if (select && players[0].numUnitsSelected >= MAXUNITSSELECTED)
+        return;
     if (select && IsSelectable(g))
     {
         g->properties |= OBJ_SELECTED;

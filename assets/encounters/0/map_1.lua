@@ -25,7 +25,7 @@ function setup()
 
     SetSpawnPoint(295,542)
 
-    PlayMusic("assets/audio/music/encounters/kobold/kobold_encounter.wav",0.5,12); 
+    --PlayMusic("assets/audio/music/encounters/kobold/kobold_encounter.wav",0.5,12); 
 
     SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",219.00,191.00,TYPE_ENEMY,0.00),3)
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",116.00,171.00,TYPE_ENEMY,0.00),4)
@@ -50,7 +50,7 @@ end
 
 
 function mapend()
-    GoShop(true);
+    --GoShop(true);
 
     ChangeMap("assets/encounters/0/map_2.lua")
     return false;

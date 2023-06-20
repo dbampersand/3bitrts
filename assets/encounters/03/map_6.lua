@@ -20,7 +20,7 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/exploding_zombie/exploding_zombie.lua",485.00,182.00,TYPE_ENEMY,0.00),5)
     SetAggroGroup(CreateObject("assets/enemies/exploding_zombie/exploding_zombie.lua",438.00,142.00,TYPE_ENEMY,0.00),5)
     CreateObject("assets/enemies/web_spinner/web_spinner.lua",482.00,249.00,TYPE_ENEMY,0.00)
-    PlayMusic("assets/audio/music/encounters/cusith/cusith_encounter_2.wav",0.5,0); 
+    --PlayMusic("assets/audio/music/encounters/cusith/cusith_encounter_2.wav",0.5,0); 
 
 end
 function update()

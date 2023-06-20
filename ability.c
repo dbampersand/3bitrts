@@ -606,7 +606,7 @@ bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, fl
         GetCentre(g,&cx,&cy);
         float f = dist(cx,cy,x,y);
         float f2 = RectDist_R(GetObjRect(g),(Rect){x,y,0,0});
-        if (f2 <= a->range)
+        if (f <= a->range)
             return true;
         else
             return false;

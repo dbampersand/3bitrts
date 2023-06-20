@@ -15,9 +15,9 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/kobold_miner/kobold_miner.lua",132.00,302.00,TYPE_ENEMY,0.00),4)
     SetAggroGroup(CreateObject("assets/enemies/kobold_saboteur/kobold_saboteur.lua",172.00,286.00,TYPE_ENEMY,0.00),4)
     
-    PlayMusic("assets/audio/music/encounters/kobold/kobold_encounter_3.wav",0.5,0); 
+    --PlayMusic("assets/audio/music/encounters/kobold/kobold_encounter_3.wav",0.5,0); 
 
-    SetMapGoldMultiplier(1.5)
+    SetMapGoldMultiplier(1.6)
 
 end
 function update()

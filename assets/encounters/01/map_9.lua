@@ -12,7 +12,7 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",195.00,274.00,TYPE_ENEMY,0.00),3)
     SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",222.00,85.00,TYPE_ENEMY,0.00),4)
     SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",202.00,62.00,TYPE_ENEMY,0.00),4)
-    PlayMusic("assets/audio/music/encounters/wyrm/wyrm_encounter_3.wav",0.5,5.14); 
+    --PlayMusic("assets/audio/music/encounters/wyrm/wyrm_encounter_3.wav",0.5,5.14); 
 
 end
 function update()

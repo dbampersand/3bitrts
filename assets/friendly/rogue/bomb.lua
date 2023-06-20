@@ -1,5 +1,5 @@
 local missChance = 40
-local dps = 40
+local dps = 30
 local tickrate = 1
 local time = 6
 function setup()

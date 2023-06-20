@@ -13,7 +13,7 @@ function setup()
     SetInvincible(miniboss,true);
 
     SetSpawnPoint(47,232)
-    PlayMusic("assets/audio/music/encounters/kobold/kobold_encounter.wav",0.5,12); 
+    --PlayMusic("assets/audio/music/encounters/kobold/kobold_encounter.wav",0.5,12); 
     
     SetAutoWin(false);
 

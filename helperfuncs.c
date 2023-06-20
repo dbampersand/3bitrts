@@ -12,6 +12,7 @@
 #include "gamestate.h"
 #include "colors.h"
 #include "player.h"
+#include "ui.h"
 
 #ifndef F_PI
     #define F_PI 3.14159265358979323846f
@@ -87,6 +88,12 @@ bool MoveTo(float* x, float* y, float toX, float toY, float speed, float delta)
 }
 MouseState GetMouseClamped()
 {
+    if (!_IS_FOCUSED_WINDOW || _UI_IGNORE_INPUT)
+    {
+        MouseState m = {0};
+        return m;
+    }
+
     ALLEGRO_MOUSE_STATE mouse;
     al_get_mouse_state(&mouse);
     int beforeX = mouse.x;
