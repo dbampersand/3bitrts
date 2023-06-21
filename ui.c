@@ -2441,6 +2441,10 @@ void InitAudioOptionsPanel()
     AddText(&ui.audioOptionsPanel,33,131,"Tag_MusicVolume","Music Volume");
     AddSlider(&ui.audioOptionsPanel,34,141,110,10,"MusicVolume",currSettings.musicVolume,&currSettings.musicVolume);
 
+    AddText(&ui.audioOptionsPanel,33,172,"Tag_AmbientVolume","Ambience Volume");
+    AddSlider(&ui.audioOptionsPanel,34,182,110,10,"AmbienceVolume",currSettings.ambienceVolume,&currSettings.ambienceVolume);
+
+
     InitButton(&ui.audioOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
     InitButton(&ui.audioOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/audio_tab_icon.png",true));
     ui.audioOptionsPanel.back = &ui.mainMenuPanel;

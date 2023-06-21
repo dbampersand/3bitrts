@@ -38,16 +38,18 @@ typedef struct GameObject GameObject;
 extern int** selectionSounds;
 extern int* numSelectionSounds;
 
-extern int* ambientSounds; 
 extern int numAmbientSounds;
 extern int numAmbientSoundsAlloced;
+
+ALLEGRO_AUDIO_STREAM* ambienceStream;
+char* ambientPath;
 
 
 void InitSound();
 int LoadSound(const char* path);
 void PlaySoundStr(char* str, float volume, float pan,bool shouldReverb);
 void PlaySoundAtPosition(Sound* s, float relativeVolume, int x, int y, bool shouldReverb);
-void PlaySound(Sound* s, float relativeVolume, float pan,bool shouldReverb);
+ALLEGRO_SAMPLE_ID PlaySound(Sound* s, float relativeVolume, float pan,bool shouldReverb);
 void UpdateReverbs(float dt);
 void PlayMusic(const char* path, float loopPoint, double musicGain);
 void UpdateMusic(float dt);
@@ -75,6 +77,10 @@ extern ALLEGRO_VOICE* musicVoice2;
 
 extern ALLEGRO_MIXER* musicMixer1;
 extern ALLEGRO_MIXER* musicMixer2;
+
+extern ALLEGRO_VOICE* ambientVoice;
+extern ALLEGRO_MIXER* ambientMixer;
+
 
 extern char* musicPath;
 

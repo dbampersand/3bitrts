@@ -133,6 +133,8 @@ void SetDefaultSettings(Settings* setting)
     setting->masterVolume = 1.0f;
     setting->musicVolume = 1.0f;
     setting->sfxVolume = 1.0f;
+    setting->ambienceVolume = 1.0f;
+
 
     setting->slowdownPercent = 0.0f;
     setting->targetFPS = OPTION_60FPS;
@@ -206,6 +208,7 @@ void WriteSettingsFile(char* path)
         "volume %f;\n"
         "sfxVolume: %f;\n"
         "musicVolume: %f;\n"
+        "ambienceVolume: %f;\n"
         "slowdownPercent: %f;\n"
         "display_timer %i;\n"
         "screen_shake_factor: %f\n"
@@ -275,6 +278,7 @@ void WriteSettingsFile(char* path)
         (double)currSettings.masterVolume,
         (double)currSettings.sfxVolume,
         (double)currSettings.musicVolume,
+        (double)currSettings.ambienceVolume,
 
         (double)currSettings.slowdownPercent,
 
@@ -834,6 +838,12 @@ bool LoadSettingsFile(char* path)
             {
                 currSettings.musicVolume =  musicVolume;
             }
+            float ambienceVolume  = FindToken(str,"ambienceVolume");
+            if (ambienceVolume >= 0)
+            {
+                currSettings.ambienceVolume =  ambienceVolume;
+            }
+
             float slowdownPercent  = FindToken(str,"slowdownPercent");
             if (slowdownPercent >= 0)
             {

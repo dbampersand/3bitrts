@@ -31,6 +31,10 @@ ALLEGRO_VOICE* musicVoice2 = NULL;
 ALLEGRO_MIXER* musicMixer1 = NULL;
 ALLEGRO_MIXER* musicMixer2 = NULL;
 
+ALLEGRO_VOICE* ambientVoice = NULL;
+ALLEGRO_MIXER* ambientMixer = NULL;
+
+
 char* musicPath = NULL;
 
 Sound* sounds = NULL;
@@ -39,10 +43,6 @@ int numSounds = 0;
 
  MusicState musicState = {0};
 
-int* ambientSounds = NULL; 
-int numAmbientSounds = 0;
-int numAmbientSoundsAlloced = 0;
-  
 float timeToNextAmbience = 0;
 
 int** selectionSounds = NULL;
@@ -88,39 +88,88 @@ void PlaySelectionSound(GameObject* g)
 
 bool ExtensionIsValidAudio(char* ext)
 {
-    return  (strcasecmp(ext,"wav") == 0 || strcasecmp(ext,"flac") == 0 || strcasecmp(ext,"ogg")  == 0|| strcasecmp(ext,"it")  == 0 || strcasecmp(ext,"s3m") == 0|| strcasecmp(ext,"xm") == 0);
+    return (strcasecmp(ext,"wav") == 0 || strcasecmp(ext,"flac") == 0 || strcasecmp(ext,"ogg")  == 0|| strcasecmp(ext,"it")  == 0 || strcasecmp(ext,"s3m") == 0|| strcasecmp(ext,"xm") == 0);
 }
-Sound* GetRandomAmbient()
+char* GetRandomAmbient(char* path)
 {
-    int randSound = ambientSounds[RandRangeI(0,numAmbientSounds)];
-    return &sounds[randSound];
+    DIR* d;
+    struct dirent* dir;
+    d = opendir(path);
+
+    int numFiles = 0;
+    if (d)
+    {
+        while ((dir = readdir(d)) != NULL) {
+            char* ext = dir->d_name;
+            if (dir->d_type != DT_REG)
+                continue;
+
+            for (int i = 0; i < strlen(ext); i++)
+            {
+                if (ext[i] == '.')
+                    ext = &ext[i+1];
+            }
+
+            if (ExtensionIsValidAudio(ext))
+            {
+                numFiles++;
+            }
+        }
+    }
+    int indexToPick = RandRangeI(0,numFiles-1);
+    rewinddir(d);
+
+    int index = 0;
+    if (numFiles > 0)
+    {
+    if (d) {
+            while ((dir = readdir(d)) != NULL) {
+            char* ext = dir->d_name;
+            if (dir->d_type != DT_REG)
+                continue;
+            for (int i = 0; i < strlen(ext); i++)
+            {
+                if (ext[i] == '.')
+                    ext = &ext[i+1];
+            }
+
+            if (ExtensionIsValidAudio(ext))
+                index++;
+                if (index == indexToPick)
+                {
+                    char* fullPath = calloc(strlen(path) + strlen(dir->d_name)+1,sizeof(char));
+                    strcpy(fullPath,path);
+                    strcat(fullPath,dir->d_name);
+                    return fullPath;
+                }
+
+
+            }
+        }
+    }
+    return NULL;
 }
 void UpdateAmbience(float dt)
 {
+    al_set_mixer_gain(ambientMixer,currSettings.ambienceVolume * currSettings.masterVolume);
+    
     timeToNextAmbience -= dt;
-
     if (timeToNextAmbience <= 0)
     {
-        Sound* s = GetRandomAmbient();
-        PlaySound(s,1,RandRange(-0.25,0.25),false);
-        int len = al_get_sample_length(s->sample);
-        int freq = al_get_sample_frequency(s->sample);
-        timeToNextAmbience = freq / (float)len * 1000;
-        timeToNextAmbience -= RandRange(1,5);
-    }
-}
-void AddAmbientSound(int index)
-{
-    if (!ambientSounds)
-        ambientSounds = calloc(NUMSOUNDSTOPREALLOC,sizeof(ambientSounds[0]));
-    if (numAmbientSounds >= numAmbientSoundsAlloced)
-    {
-        numAmbientSoundsAlloced += NUMSOUNDSTOPREALLOC;
-        ambientSounds = realloc(ambientSounds,numAmbientSoundsAlloced * sizeof(ambientSounds[0]));
-    }
+        if (ambienceStream)
+        {
+            al_destroy_audio_stream(ambienceStream);
+        }
+        if (ambientPath)
+        {
+            free(ambientPath);
+        }
+        ambientPath = GetRandomAmbient("assets/audio/ambient/");
+        ambienceStream = al_load_audio_stream(ambientPath, 4, 2048);
+        al_attach_audio_stream_to_mixer(ambienceStream, ambientMixer);
 
-    ambientSounds[numAmbientSounds] = index;
-    numAmbientSounds++;
+        timeToNextAmbience = al_get_audio_stream_length_secs(ambienceStream); //freq / (float)len * 1000;
+    }
 }
 void LoadAmbientSounds()
 {
@@ -142,8 +191,8 @@ void LoadAmbientSounds()
                 char* fullPath = calloc(strlen(path) + strlen(dir->d_name)+1,sizeof(char));
                 strcpy(fullPath,path);
                 strcat(fullPath,dir->d_name);
-                int index = LoadSound(fullPath);
-                AddAmbientSound(index);
+                //int index = LoadSound(fullPath);
+                //AddAmbientSound(fullPath);
                 free(fullPath);
             }
 
@@ -205,6 +254,7 @@ void LoadSelectionSounds(char* path, GAMEOBJ_TYPE_HINT typeHint)
 
 void InitSound()
 {
+    ambientPath = NULL;
     _REVERB_TOP = 0;
     _REVERB_DISTANCE = 0.1f;
     memset(reverbs,0,sizeof(Reverb) * MAX_REVERBS);
@@ -236,7 +286,10 @@ void InitSound()
         al_attach_mixer_to_voice(musicMixer1, musicVoice1);
         al_attach_mixer_to_voice(musicMixer2, musicVoice2);
 
-        LoadAmbientSounds();
+        ambientMixer = al_create_mixer(44100, ALLEGRO_AUDIO_DEPTH_FLOAT32, ALLEGRO_CHANNEL_CONF_2);
+        ambientVoice = al_create_voice(44100, ALLEGRO_AUDIO_DEPTH_INT16, ALLEGRO_CHANNEL_CONF_2);
+        al_attach_mixer_to_voice(ambientMixer, ambientVoice);
+        
         LoadSelectionSounds("assets/audio/selection_sounds/ranged_dps/",TYPE_RANGEDDPS);
         LoadSelectionSounds("assets/audio/selection_sounds/melee_dps/",TYPE_MELEEDPS);
         LoadSelectionSounds("assets/audio/selection_sounds/utility/",TYPE_UTILITY);
@@ -336,7 +389,7 @@ void AddReverb(Sound* s, float relativeVolume, float pan)
     if (_REVERB_TOP >= MAX_REVERBS)
         _REVERB_TOP = 0;
 }
-void PlaySound(Sound* s, float relativeVolume, float pan, bool shouldReverb)
+ALLEGRO_SAMPLE_ID PlaySound(Sound* s, float relativeVolume, float pan, bool shouldReverb)
 {
     if (!s->sample)
     {
@@ -361,9 +414,11 @@ void PlaySound(Sound* s, float relativeVolume, float pan, bool shouldReverb)
     relativeVolume += volumeJitter;
     if (shouldReverb)
         AddReverb(s,relativeVolume,pan);
-    al_play_sample(s->sample, currSettings.masterVolume * relativeVolume * currSettings.sfxVolume, pan, 1.0f + pitchJitter, ALLEGRO_PLAYMODE_ONCE, NULL);
+    ALLEGRO_SAMPLE_ID ret;
+    al_play_sample(s->sample, currSettings.masterVolume * relativeVolume * currSettings.sfxVolume, pan, 1.0f + pitchJitter, ALLEGRO_PLAYMODE_ONCE, &ret);
 
     lua_settop(luaState,0);
+    return ret;
 }
 void PlayReverb(Reverb* r)
 {

@@ -57,7 +57,8 @@ typedef struct Settings
     float masterVolume;
     float sfxVolume;
     float musicVolume;
-
+    float ambienceVolume;
+    
     float slowdownPercent;
     int targetFPS;
     float screenShakeFactor;
