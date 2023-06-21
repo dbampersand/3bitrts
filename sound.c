@@ -134,7 +134,6 @@ char* GetRandomAmbient(char* path)
             }
 
             if (ExtensionIsValidAudio(ext))
-                index++;
                 if (index == indexToPick)
                 {
                     char* fullPath = calloc(strlen(path) + strlen(dir->d_name)+1,sizeof(char));
@@ -142,6 +141,7 @@ char* GetRandomAmbient(char* path)
                     strcat(fullPath,dir->d_name);
                     return fullPath;
                 }
+                index++;
 
 
             }
@@ -165,10 +165,15 @@ void UpdateAmbience(float dt)
             free(ambientPath);
         }
         ambientPath = GetRandomAmbient("assets/audio/ambient/");
-        ambienceStream = al_load_audio_stream(ambientPath, 4, 2048);
-        al_attach_audio_stream_to_mixer(ambienceStream, ambientMixer);
-
-        timeToNextAmbience = al_get_audio_stream_length_secs(ambienceStream); //freq / (float)len * 1000;
+        if (ambientPath)
+        {
+            ambienceStream = al_load_audio_stream(ambientPath, 4, 2048);
+            if (ambienceStream)
+            {
+                al_attach_audio_stream_to_mixer(ambienceStream, ambientMixer);
+                timeToNextAmbience = al_get_audio_stream_length_secs(ambienceStream); //freq / (float)len * 1000;
+            }
+        }
     }
 }
 void LoadAmbientSounds()

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
- HASH_TABLE_KEY_TYPE Hash(void* data, size_t dataSize)
+HASH_TABLE_KEY_TYPE Hash(void* data, size_t dataSize)
 {
     HASH_TABLE_KEY_TYPE hash = 0;
     char* d = (char*)data;
