@@ -257,6 +257,7 @@ void InitSound()
     ambientPath = NULL;
     _REVERB_TOP = 0;
     _REVERB_DISTANCE = 0.1f;
+    memset(&soundIndexHashes,0,sizeof(HashTable));
     memset(reverbs,0,sizeof(Reverb) * MAX_REVERBS);
     if (al_install_audio())
     {
@@ -306,6 +307,14 @@ void ResetSoundsThisFrame()
     //memset(soundsPlayedThisFrame,0,NUM_SOUNDS_TO_SAVE*sizeof(Sound));
     soundPlayedThisFramePosition = 0;
 }
+Sound* GetSoundFromHashTable(HashTable* ht, const char* path)
+{
+    HashData* hd = GetFromHashTable(ht,path);
+    if (!hd)
+        return NULL;
+    int ind = (int)(*(int*)hd->data);
+    return &sounds[ind];
+}
 int LoadSound(const char* path)
 {
     if (!sounds)
@@ -317,7 +326,12 @@ int LoadSound(const char* path)
     if (strlen(path) <= 0)
         return 0;
 
-
+    Sound* s = GetSoundFromHashTable(&soundIndexHashes,path);
+    if (s)
+    {
+        return s - sounds;
+    }
+    /*
     for (int i = 0; i < numSounds; i++)
     {
         if (sounds[i].path)
@@ -328,7 +342,7 @@ int LoadSound(const char* path)
             }
         }
         
-    }
+    }*/
 
     if (numSounds >= numSoundsAllocated)
     {
@@ -348,7 +362,8 @@ int LoadSound(const char* path)
         ConsolePrintf("Sound: could not load path: %s\n",path ? path : "NULL");
         return 0;
     }
-
+    int hashData = numSounds-1;
+    AddToHashTable(&soundIndexHashes,path,&hashData,sizeof(hashData));
     return numSounds-1;
 }
 void PlaySoundAtPosition(Sound* s, float relativeVolume, int x, int y, bool shouldReverb)

@@ -136,6 +136,16 @@ Sprite* NewSprite(int w, int h)
     numSprites++;
     return s;
 }
+Sprite* GetSpriteFromHashtable(HashTable* ht, const char* path)
+{
+    HashData* hd = GetFromHashTable(ht,path);
+    if (!hd)
+        return NULL;
+    int ind = (int)(*(int*)hd->data);
+    return &sprites[ind];
+
+}
+
 unsigned int LoadSprite(const char* path, bool needsInverted)
 {
     if (!sprites)
@@ -145,12 +155,17 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
         numSprites=1;
         maxSprites=2;
 
-            //dodge a lot of crashes by setting the 0th sprite to a zeroed bitmap
+        //dodge a lot of crashes by setting the 0th sprite to a zeroed bitmap
         sprites[0].sprite = al_create_bitmap(0,0);
         sprites[0].inverseSprite = al_create_bitmap(0,0);
 
     }
-    for (int i = 0; i < numSprites; i++)
+    Sprite* s = GetSpriteFromHashtable(&spritesHashTable,path);
+    if (s)
+    {
+        return s - sprites;
+    }
+    /*for (int i = 0; i < numSprites; i++)
     {
         if (sprites)
         {
@@ -159,7 +174,7 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
                 return i;
             }
         }
-    }
+    }*/
 
      ALLEGRO_BITMAP* sprite = al_load_bitmap(path);
 
@@ -183,6 +198,7 @@ unsigned int LoadSprite(const char* path, bool needsInverted)
         else
             sprites[numSprites].inverseSprite = 0x0;
        
+        AddToHashTable(&spritesHashTable,path,&numSprites,sizeof(numSprites));
         numSprites++;    
         return numSprites-1;
 
@@ -256,6 +272,7 @@ void DrawSpriteRegion(Sprite* sprite, float sx, float sy, float sw, float sh, fl
 }
 void InitSprites()
 {
+    memset(&spritesHashTable,0,sizeof(HashTable));
     numSprites=1;
     maxSprites = 0;
 }

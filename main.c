@@ -41,6 +41,7 @@
 
 #include "editor.h"
 #include "timer.h"
+#include "hashtable.h"
 
 ALLEGRO_BITMAP* testBitmap;
 
@@ -122,6 +123,8 @@ void init()
     //Init3d();
     //gameState = GAMESTATE_IN_3D;
     //PlayMusic("assets/audio/intro.wav",0.5f,0);
+
+    //TestHashTable();
 }
 
 void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState* mouseStateLastFrame)

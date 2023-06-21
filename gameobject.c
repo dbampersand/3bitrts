@@ -529,6 +529,8 @@ void UpdateObject(GameObject* g, float dt)
 
 void InitObjects()
 {
+    memset(&prefabsIndicesHashTable,0,sizeof(HashTable));
+
     objects = calloc(MAX_OBJS, sizeof(GameObject));
     objectsAllocated = MAX_OBJS;
 
@@ -1566,15 +1568,22 @@ void LoadFolderPrefabs(const char* dirPath, char* name)
     }
     free(file);
 }
+GameObject* GetPrefabFromHashtable(HashTable* ht, const char* path)
+{
+    HashData* hd = GetFromHashTable(ht,path);
+    if (!hd)
+        return NULL;
+    int ind = (int)(*(int*)hd->data);
+    return prefabs[ind];
+
+}
 GameObject* LoadPrefab(const char* path)
 {
     _LOADING_PREFAB = true;
-    for (int i = 0; i < numPrefabs; i++)
+    GameObject* pref = GetPrefabFromHashtable(&prefabsIndicesHashTable,path);
+    if (pref)
     {
-        if (prefabs[i]->path && strcasecmp(prefabs[i]->path, path) == 0)
-        {
-            return prefabs[i];
-        }
+        return pref;
     }
     GameObject* g = calloc(1, sizeof(GameObject));
 
@@ -1591,6 +1600,9 @@ GameObject* LoadPrefab(const char* path)
     prefabs[numPrefabs] = g;
     numPrefabs++;
     _LOADING_PREFAB = false;
+
+    int prefabData = numPrefabs -1;
+    AddToHashTable(&prefabsIndicesHashTable,path,&prefabData,sizeof(prefabData));
 
     return prefabs[numPrefabs - 1];
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <allegro5/allegro_audio.h>
+#include "hashtable.h"
 typedef int SoundIndex;
 
 #define RESERVED_SAMPLES 256
@@ -43,6 +44,8 @@ extern int numAmbientSoundsAlloced;
 
 ALLEGRO_AUDIO_STREAM* ambienceStream;
 char* ambientPath;
+
+HashTable soundIndexHashes;
 
 
 void InitSound();

@@ -290,6 +290,8 @@ int* footstepSFXIndices;
 int numFootsteps;
 int lastFootstepPlayed;
 
+HashTable prefabsIndicesHashTable;
+
 
 
 //add 8 more free objects when we need to realloc objects array

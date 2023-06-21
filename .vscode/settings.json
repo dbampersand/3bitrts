@@ -37,6 +37,7 @@
         "CAVE.C": "cpp",
         "sound.h": "c",
         "lualib.h": "c",
-        "encounter.h": "c"
+        "encounter.h": "c",
+        "damagenumber.h": "c"
     }
 }
