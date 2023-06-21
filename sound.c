@@ -157,7 +157,7 @@ void UpdateAmbience(float dt)
     if (timeToNextAmbience <= 0)
     {
         if (ambienceStream)
-        {
+        {   
             al_destroy_audio_stream(ambienceStream);
         }
         if (ambientPath)

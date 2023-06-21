@@ -4427,7 +4427,6 @@ int L_HasEffect(lua_State* l)
     {
         if (g->effects[i].name && strcmp(effectName,g->effects[i].name) == 0)
         {
-            printf("gg\n");
             lua_pushboolean(l,true);
             return 1;
         }

@@ -2075,7 +2075,6 @@ void CheckCollisionsWorld(GameObject* g, bool x, float dV)
             {
                 if (currMap->collision[indexLeft] == false)
                 {
-                    // ConsolePrintf("gg");
                     // g->position.worldX = IndexToPoint(GetMapHeight()/_GRAIN,indexLeft).x*_GRAIN + _GRAIN;//indexLeft / _GRAIN;//((indexLeft/(GetMapHeight()/_GRAIN))*_GRAIN)+_GRAIN;
                     UpdateObjPosition_X(g, IndexToPoint(currMap->collisionMapHeight, indexLeft).x * _GRAIN + _GRAIN);
 

@@ -676,7 +676,7 @@ int main(int argc, char* args[])
 
     float totalRenderTime = 0.00001f;
 
-    double dt = 1 / (double)_TARGET_FPS * (double)(1-(double)currSettings.slowdownPercent);
+    float dt = 1 / ((double)_TARGET_FPS);
     
     ALLEGRO_TIMER* _FPS_TIMER = al_create_timer(dt);
 
@@ -789,7 +789,6 @@ int main(int argc, char* args[])
                 break;
 
                 default:
-                    ConsolePrintf("gg\n");
                     AddCharacter(event.keyboard.keycode, event.keyboard.unichar);
                 break;
               }
@@ -853,7 +852,10 @@ int main(int argc, char* args[])
 
             }
 
-            dt = 1 / (double)_TARGET_FPS * (double)(1-(double)currSettings.slowdownPercent);
+            float slowdown = _TARGET_FPS * (currSettings.slowdownPercent);
+            dt = 1 / ((double)_TARGET_FPS);
+            if (!GameIsPaused() && !GameStateIsTransition(&gameState))
+                dt *= (1-currSettings.slowdownPercent);
             _DT = dt;
             clock_t begin = clock();
 
@@ -907,7 +909,7 @@ int main(int argc, char* args[])
 
             mouseStateLastFrame = mouseState;
             keyStateLastFrame = keyState;
-             _FRAMES += 60 / (float)_TARGET_FPS;
+             _FRAMES += (60 / (float)_TARGET_FPS) * (1-currSettings.slowdownPercent);
             totalRenderTime += time;
 
             //ConsolePrintf("Total time: %f\n",time);
