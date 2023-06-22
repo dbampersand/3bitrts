@@ -38,6 +38,7 @@
         "sound.h": "c",
         "lualib.h": "c",
         "encounter.h": "c",
-        "damagenumber.h": "c"
+        "damagenumber.h": "c",
+        "shop.h": "c"
     }
 }
