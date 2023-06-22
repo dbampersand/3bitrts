@@ -4368,6 +4368,18 @@ int L_ModifyAbilityCooldownTimer(lua_State* l)
     return 1;
 
 }
+int L_SetCooldownRate(lua_State* l)
+{
+    int objIndex = lua_tonumber(l,1);
+    if (!GameObjectIndexInRange(objIndex))
+    {
+        ConsolePrintf("L_SetCooldownRate: index out of range: %i\n",objIndex);
+        return 0;
+    }
+    objects[objIndex].cooldownRate = lua_tonumber(l,2);
+    return 0;
+
+}
 int L_GetAttackPosition(lua_State* l)
 {
     int atk = lua_tonumber(l,1);
@@ -5856,4 +5868,6 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_HoldCommand);
     lua_setglobal(luaState, "HoldCommand");
 
+    lua_pushcfunction(luaState, L_SetCooldownRate);
+    lua_setglobal(luaState, "SetCooldownRate");
 }

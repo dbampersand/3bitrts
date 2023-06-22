@@ -3,6 +3,7 @@ function setup()
     SetCooldown(10)
     SetAbilityHint(HINT_CIRCLE,30);
     AbilitySetCastType(ABILITY_POINT);
+    SetAbilityName("Smash")
     AbilitySetPortrait("assets/enemies/minotaur/ability_smash.png");
     SetDescription("[b]Smash\n\nDeals massive damage and stuns.")
 

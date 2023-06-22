@@ -37,5 +37,5 @@ end
 function abilitytick(x, y, durationLeft)
 end
 function onchanneled() 
-    SetChannelingSprite("assets/enemies/wadjet/naja_cast_fire.png")
+    SetChannelingSprite("assets/enemies/wadjet/wadjet_cast_fire.png")
 end

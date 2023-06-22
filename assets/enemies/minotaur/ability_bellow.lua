@@ -1,6 +1,7 @@
 function setup()
     SetAbilityRange(20)
     SetCooldown(30);
+    SetAbilityName("Bellow")
     AbilitySetPortrait("assets/enemies/minotaur/ability_bellow.png");
     SetDescription("[b]Bellow\n\nDeals damage to all enemies")
     

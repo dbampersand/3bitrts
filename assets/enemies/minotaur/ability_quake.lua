@@ -4,6 +4,7 @@ local shouldAddAOE = 0
 function setup()
     SetAbilityRange(20)
     SetCooldown(60);
+    SetAbilityName("Quake")
     AbilitySetPortrait("assets/enemies/minotaur/ability_quake.png");
     SetDescription("[b]Quake\n\nSmash the ground, causing stalactites to fall.")
     

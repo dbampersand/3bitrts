@@ -832,8 +832,10 @@ void UpdateTransition(float dt)
 
 void DrawTransition_Chains(float dt)
 {
+
     float h = (_SCREEN_SIZE+10) * (easeInOutBack(transitionTimer)) - 1;
     al_draw_filled_rectangle(0,0,_SCREEN_SIZE,h,BG);
+
     al_draw_line(0,h,_SCREEN_SIZE,h,FRIENDLY,1);
     
     al_draw_line(22,0,22,h,FRIENDLY,1);

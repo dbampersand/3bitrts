@@ -3,6 +3,7 @@ local atk = -1;
 function setup()
     SetAbilityRange(999)
     SetCooldown(15)
+    SetAbilityName("Charge")
     AbilitySetPortrait("assets/enemies/minotaur/ability_charge.png");
     SetDescription("[b]Charge\n\nRushes the target, dealing damage around it.")
     SetAbilityHint(HINT_LINE);

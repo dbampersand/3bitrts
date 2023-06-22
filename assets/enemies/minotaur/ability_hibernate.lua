@@ -7,6 +7,7 @@ function setup()
     SetAbilityRange(2)
     --AbilitySetCastType(ABILITY_CONE);
     SetCooldown(120); 
+    SetAbilityName("Hibernate")
     AbilitySetPortrait("assets/enemies/minotaur/ability_hibernate.png");
     SetDescription("[b]Hibernate\n\nFalls asleep, healing over " .. time .. " seconds.")
 

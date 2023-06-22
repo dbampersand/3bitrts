@@ -4,16 +4,18 @@ local radius = 60
 local length = 10
 local timer = 0
 local shouldChange = true
+local atk = -1
+local attackActive = false;
+
 function setup()
     SetAbilityRange(256)
     SetCooldown(60);
     AbilitySetPortrait("assets/enemies/minotaur/ability_rampage.png");
+    SetAbilityName("Rampage")
     SetDescription("[b]Rampage\n\nMoves wildly, causing damage around it.")
 
 end
 
-local atk = -1
-local attackActive = false;
 
 function casted(x,y,obj,headingx,headingy)
 

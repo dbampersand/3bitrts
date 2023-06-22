@@ -1,6 +1,7 @@
     function setup()
     SetAbilityRange(999)
     SetCooldown(12)
+    SetAbilityName("Chuck")
     AbilitySetPortrait("assets/enemies/minotaur/ability_chuck.png");
     SetDescription("[b]Chuck\n\nThrows a club at the target, stunning them.")
     SetAbilityHint(HINT_LINE);

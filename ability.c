@@ -687,9 +687,12 @@ void RemoveAbility(Ability* a, GameObject* from)
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_applyattack);
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_untoggle);
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_ontimeout);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_parentdeath);
+    luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_effecttick);
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_onchanneled);
     luaL_unref(luaState,LUA_REGISTRYINDEX,a->luafunc_timerbeforetick);
 
+    memset(a,0,sizeof(Ability));
 }
 
 void LowerAbilityCooldown(Ability* a, float amt)

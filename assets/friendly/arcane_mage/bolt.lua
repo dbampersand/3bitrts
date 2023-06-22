@@ -19,6 +19,8 @@ function casted(x,y,obj,headingx,headingy)
 
     ModifyAbilityCooldownTimer(GetObjRef(),3,-2);
 
+
+
     return true;
 end
 function onhit(x,y,objhit)

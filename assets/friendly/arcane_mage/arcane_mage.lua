@@ -3,7 +3,7 @@ local heal = -1
 
 function setup()
     SetSprite("assets/friendly/arcane_mage/arcane_mage.png");
-
+    
     AddAbility(GetObjRef(),"assets/friendly/arcane_mage/bolt.lua",0)
     AddAbility(GetObjRef(),"assets/friendly/arcane_mage/teleport.lua",1)
     AddAbility(GetObjRef(),"assets/friendly/arcane_mage/arcane_wave.lua",2)
