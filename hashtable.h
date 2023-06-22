@@ -1,6 +1,7 @@
 #pragma once
 
 #include "stdint.h"
+#include "stddef.h"
 
 #define HASH_TABLE_SIZE 2048    
 

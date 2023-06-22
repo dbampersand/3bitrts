@@ -51,6 +51,9 @@ int numDirtSprites;
 
 void DrawLight(int lightSize, float r, float g, float b, float intensity, float worldX, float worldY)
 {
+    if (lightSize >= MAX_LIGHT_SIZE)
+        lightSize = MAX_LIGHT_SIZE - 1;
+        
     float re = r; float gr = g; float bl = b;
     re *= intensity;
     gr *= intensity;

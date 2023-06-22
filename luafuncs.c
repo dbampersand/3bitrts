@@ -2401,6 +2401,8 @@ int L_CreateObject(lua_State* l)
     GAMEOBJ_SOURCE source = SOURCE_SPAWNED_FROM_OBJ;
     if (!currGameObjRunning)
         source = SOURCE_SPAWNED_FROM_MAP;
+    
+        
 
 
     bool prefabFound = false;
@@ -2425,6 +2427,10 @@ int L_CreateObject(lua_State* l)
     {
         g = AddGameobject(g,x,y,source,ownedBy);
         SetOwnedBy(g, ownedBy);
+    }
+    if (source == SOURCE_SPAWNED_FROM_OBJ)  
+    {
+        g->objectIsSummoned = true;
     }
     if (PLAYER == TYPE_DECORATION)
     {
