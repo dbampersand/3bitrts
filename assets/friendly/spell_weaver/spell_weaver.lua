@@ -6,7 +6,7 @@ function setup()
     AddAbility(GetObjRef(),"assets/friendly/spell_weaver/stitch.lua",0)    
     AddAbility(GetObjRef(),"assets/friendly/spell_weaver/counterbalance.lua",1)    
     AddAbility(GetObjRef(),"assets/friendly/spell_weaver/cocoon.lua",2)    
-     AddAbility(GetObjRef(),"assets/friendly/spell_weaver/weave.lua",3)    
+    AddAbility(GetObjRef(),"assets/friendly/spell_weaver/weave.lua",3)    
 
     AddAttackSprite("assets/ui/slash_fx3.png",16,16,0.05);
     AddAttackSprite("assets/ui/slash_fx2.png",16,16,0.05);

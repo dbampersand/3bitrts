@@ -7,7 +7,7 @@ local duration = 20
 
 function setup(obj)
     SetItemName(obj,"Necklace of Swarms")
-    SetItemDescription(obj,"Increases attack speed by " .. attackSpeed*100 .. "% when attacking the same target, resetting when a different target is attacked. Stacks "..maxStacks.." times")
+    SetItemDescription(obj,"Increases attack speed by " .. attackSpeed*100 .. "% when attacking the same target. Stacks "..maxStacks.." times")
     SetItemGoldCost(obj,140)
     SetItemTier(obj,2)  
     SetItemIcon(obj, "assets/items/quality_high/necklace_of_swarms/necklace_of_swarms.png");
