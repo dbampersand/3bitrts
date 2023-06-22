@@ -212,7 +212,14 @@ void CloneAbilityPrefab(Ability* prefab, lua_State* l, Ability* cloneTo, GameObj
         LoadAbility(a->path, l, a);
     }
 }
-
+Ability* GetAbilityPrefabFromHashTable(HashTable* ht, const char* path)
+{
+    HashData* hd = GetFromHashTable(ht,path);
+    if (!hd)
+        return NULL;
+    int ind = (int)(*(int*)hd->data);
+    return &abilities[ind];
+}
 Ability* AddAbility(const char* path)
 {
     if (!abilities)
@@ -220,9 +227,11 @@ Ability* AddAbility(const char* path)
         abilities = calloc(32,sizeof(Ability));
         numAbilities = 0;
         numAbilitiesAllocated = 32;
-    }
-
-    for (int i = 0; i < numAbilities; i++)
+    }   
+    Ability* a =  GetAbilityPrefabFromHashTable(&abilityPrefabIndexesHashTable, path);
+    if (a)
+        return a;
+    /*for (int i = 0; i < numAbilities; i++)
     {
         if (abilities[i].path)
         {
@@ -233,7 +242,7 @@ Ability* AddAbility(const char* path)
                 return &abilities[i];
             }
         }
-    }
+    }*/
     if (numAbilities + 1 >= numAbilitiesAllocated)
     {
         numAbilitiesAllocated += BUFFER_PREALLOC_AMT;
@@ -244,6 +253,7 @@ Ability* AddAbility(const char* path)
     abilities[numAbilities].hintRadius = 1;
 
     LoadAbility(path,luaState,&abilities[numAbilities]);
+    AddToHashTable(&abilityPrefabIndexesHashTable,path,&numAbilities,sizeof(numAbilities));
     numAbilities++;
 
     return &abilities[numAbilities-1];

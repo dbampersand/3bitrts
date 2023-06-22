@@ -3,6 +3,7 @@
 #include "stdbool.h"
 #include "sound.h"
 #include "luafuncs.h"
+#include "hashtable.h"
 
 typedef struct GameObject GameObject;
 
@@ -86,6 +87,7 @@ extern int numAbilitiesAllocated;
 extern SoundIndex ability_UI_click_sound;
 extern SoundIndex ability_UI_click_up_sound;   
 
+HashTable abilityPrefabIndexesHashTable;
 
 
 typedef struct lua_State lua_State;
