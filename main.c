@@ -658,6 +658,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         al_put_blended_pixel(DEBUG_P3.x,DEBUG_P3.y,al_map_rgb(255,0,255));
         al_put_blended_pixel(DEBUG_P4.x,DEBUG_P4.y,al_map_rgb(255,255,255));
     #endif
+    //RefreshMapCollisonRects();
 }
 int SortPointers(const void* a, const void* b)
 {

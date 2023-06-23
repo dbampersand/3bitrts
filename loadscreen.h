@@ -58,7 +58,7 @@ typedef struct MouseState MouseState;
 
 extern LoadScreen loadScreen;
 
-#define GAME_NAME "MON IOCHDAR"
+#define GAME_NAME "MON SAOTHAIR"
 
 void InitLoadscreen(char* initialPath, char* mask);
 float Transition_EaseInOutQuad(float timer);

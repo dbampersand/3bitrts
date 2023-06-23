@@ -3475,6 +3475,10 @@ void Teleport(GameObject* g, float x, float y, bool updateOld)
     if (!g)
         return;
 
+    float beforeX = g->position.worldX;
+    float beforeY = g->position.worldY;
+
+
     x -= GetWidth(g) / 2.0f;
     y -= GetHeight(g) / 2.0f;
 
@@ -3493,6 +3497,13 @@ void Teleport(GameObject* g, float x, float y, bool updateOld)
         SetMapCollisionRect(g->position.worldX, g->position.worldY, GetWidth(g), GetHeight(g), false);
 
     UpdateObjPosition(g, move.x * _GRAIN, move.y * _GRAIN);
+
+    CheckCollisions(g, false, beforeY-g->position.worldY,false);
+    CheckCollisionsWorld(g, false, beforeY-g->position.worldY);
+
+    CheckCollisions(g, true, g->position.worldX-beforeX,false);
+    CheckCollisionsWorld(g, true, g->position.worldX-beforeX);
+
 
     SetTargetPosition(g, g->position.worldX, g->position.worldY);
     SetMapCollisionRect(g->position.worldX, g->position.worldY, GetWidth(g)+1, GetHeight(g)+1, true);
