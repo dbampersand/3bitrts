@@ -46,8 +46,9 @@ typedef struct Encounter
 
     int augment;
 
+    #ifdef _AUGMENTS_ENABLED
     Augment augments[MAX_AUGMENTS];
-
+    #endif
     bool encounterShouldBeSkipped;
 
 

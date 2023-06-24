@@ -51,6 +51,13 @@ typedef struct GameObject GameObject;
 typedef struct ALLEGRO_COLOR ALLEGRO_COLOR;
 typedef struct MouseState MouseState;
 
+float GetAugmentDamageBonus(int damage,int augmentLevel);
+float GetAugmentHealthBonus(int health, int augmentLevel);
+float GetAugmentAbilityDamage(int damage, int augmentLevel);
+float GetAugmentMultiplier(int augmentLevel);
+
+
+#ifdef _AUGMENTS_ENABLED
 extern Augment AllAugments[AUGMENT_ALL];
 
 int GetNumBadAugments(int augmentLevel);
@@ -79,12 +86,9 @@ void Bad_AugmentDeathAddDamage(GameObject* g, int augmentLevel);
 void Bad_EnemyExplodes(GameObject* g, int augmentLevel);
 
 
-float GetAugmentDamageBonus(int damage,int augmentLevel);
-float GetAugmentHealthBonus(int health, int augmentLevel);
-float GetAugmentAbilityDamage(int damage, int augmentLevel);
-float GetAugmentMultiplier(int augmentLevel);
 
 
 ALLEGRO_COLOR* GetAugmentDescriptionColor(Augment* a);
 void InitAugments();
 bool DrawAugmentPortrait(Augment* a, int x, int y, MouseState* mouseState, ALLEGRO_COLOR col);
+#endif

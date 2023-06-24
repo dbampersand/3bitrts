@@ -1387,6 +1387,7 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
         {
             if (!ObjIsDecoration(g))
             {
+                #ifdef _AUGMENTS_ENABLED
                 if (GetPlayerOwnedBy(g) == 1 && HasAugment(currEncounterRunning, AUGMENT_BAD_DEATHINCDMG))
                 {
                     Bad_AugmentDeathAddDamage(g, currEncounterRunning->augment);
@@ -1395,6 +1396,7 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
                 {
                     Bad_EnemyExplodes(g, currEncounterRunning->augment);
                 }
+                #endif
             }
         }
     }
@@ -3248,6 +3250,8 @@ Rect GetObjRect(GameObject* g)
 }
 void SetMoveSpeed(GameObject* g, float value)
 {
+    #ifdef _AUGMENTS_ENABLED
+
     if (IsOwnedByPlayer(g))
     {
         if (HasAugment(currEncounterRunning, AUGMENT_GOOD_MOVESPEED))
@@ -3262,6 +3266,7 @@ void SetMoveSpeed(GameObject* g, float value)
             value += Bad_GetAugmentMoveSpeed(value, currEncounterRunning->augment);
         }
     }
+    #endif
     g->speed = value;
 }
 float GetAttackRange(GameObject* g)
@@ -3330,16 +3335,21 @@ bool Damage(GameObject* source, GameObject* g, float value, bool triggerItems, f
     value -= g->armor;
     if (value < min)
         value = min;
+    #ifdef _AUGMENTS_ENABLED
+
     if (HasAugment(currEncounterRunning, AUGMENT_NEUTRAL_TOTALDAMAGE))
     {
         value += Neutral_GetAugmentAbilityDamage(value, currEncounterRunning->augment);
     }
+    #endif
     if (IsOwnedByPlayer(source))
     {
+        #ifdef _AUGMENTS_ENABLED
         if (HasAugment(currEncounterRunning, AUGMENT_GOOD_DAMAGE))
         {
             value += Neutral_GetAugmentAbilityDamage(value, currEncounterRunning->augment);
         }
+        #endif
 
         gameStats.damageDone += value;
     }
@@ -3390,17 +3400,22 @@ void Heal(GameObject* g, float value)
 {
     if (!g)
         return;
+    #ifdef _AUGMENTS_ENABLED
     if (HasAugment(currEncounterRunning, AUGMENT_NEUTRAL_TOTALHEAL))
     {
         value += Neutral_GetAugmentAbilityHeal(value, currEncounterRunning->augment);
     }
+    #endif
+
 
     if (IsOwnedByPlayer(g))
     {
+        #ifdef _AUGMENTS_ENABLED
         if (HasAugment(currEncounterRunning, AUGMENT_GOOD_HEALS))
         {
             value += Good_GetAugmentAbilityHeal(value, currEncounterRunning->augment);
         }
+        #endif
         gameStats.healingDone += value;
     }
 

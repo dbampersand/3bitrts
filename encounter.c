@@ -154,7 +154,9 @@ void LoadEncounter(char* dirPath, lua_State* l)
     InitButton(&e->encounter_PurchaseAugment,"","",220,50,60,10,0);
 
     e->augment = 0;
+    #ifdef _AUGMENTS_ENABLED
     ClearAugments(e);
+    #endif
     encounters[numEncounters] = e;
     numEncounters++;
 

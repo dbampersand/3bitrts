@@ -66,7 +66,9 @@ void init()
     InitPath();
     
     InitSettings("config.cfg");
+    #ifdef _AUGMENTS_ENABLED
     InitAugments();
+    #endif
     InitGameState();
     InitSound();
     InitColors();
@@ -111,11 +113,12 @@ void init()
 
     atexit(EndSettings);
 
-
+    #ifdef _AUGMENTS_ENABLED
     for (int i = 0; i < numEncounters; i++)
     {
         SetEncounterRandAugments(encounters[i]);
     }
+    #endif
     InitReplay();
     InitPathfinding();
     LoadShop();
@@ -156,8 +159,10 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
         lua_settop(luaState,0);
         UpdateEncounter(dt);
         CheckSelected(mouseState,mouseStateLastFrame, keyState, keyStateLastFrame);
+        #ifdef _AUGMENTS_ENABLED
         if (currEncounterRunning)
             ProcessAugments(currEncounterRunning->augments,dt);
+        #endif
         SetControlGroups(keyState); 
         GetControlGroup(keyState);
         UpdateDamageNumbers(dt);

@@ -448,11 +448,12 @@ void ApplyEffect(Effect* e, GameObject* from, GameObject* target, Ability* abili
     e->abilityFrom = ability;
 
     e->playerOwnedBy = GetPlayerOwnedBy(from);
-    
+    #ifdef _AUGMENTS_ENABLED
     if (HasAugment(currEncounterRunning,AUGMENT_BAD_EFFECT_TIME))
     {
         Augment_ChangeEffectTime(e,currEncounterRunning->augment);
     }
+    #endif
 
     if (e->trigger == TRIGGER_INSTANT)
     {

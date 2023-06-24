@@ -1410,7 +1410,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     sprintf(abilityDmg,"+%i%% Ability Damage",amtAbilityPercent);
     al_draw_text(ui.tinyFont,e->unlocked ? FRIENDLY : disabled,138+offsetX,40,0,abilityDmg);
     
-
+    #ifdef _AUGMENTS_ENABLED
     int row = 50;
     int column = 16;
 
@@ -1457,6 +1457,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
         PlaySoundStr("assets/audio/reroll.wav",1,0,false);
         SetEncounterRandAugments(e);
     }
+    #endif
 
 
     free(dmgString);
@@ -1481,7 +1482,6 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
         DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0.5f,0.5f,0,c,false,false,false);
         augmentX += drawRect.w+3;
 
-
         if (mouseStateLastFrame->mouse.buttons & 1 && !(mouseState->mouse.buttons & 1))
         {
             Rect selectRect = drawRect;
@@ -1490,19 +1490,21 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
             selectRect.w += 5;
             selectRect.h += 5;
 
-
+        
             if (PointInRect(mouseState->screenX,mouseState->screenY,drawRect) && i != e->augment)
             {
                 PlaySoundStr("assets/audio/gem_click.wav",1,0,false);
                 e->augment = i;
+                #ifdef _AUGMENTS_ENABLED
                 SetEncounterRandAugments(e);
+                #endif
             }
         }
     }
     e->encounter_PurchaseAugment.x = augmentX + 3 + offsetX;
     e->encounter_PurchaseAugment.y = 22 - (e->encounter_PurchaseAugment.h/2);
     int purchaseCost = GetAugmentCost(e, e->difficultyUnlocked);
-    if (e->bestChest > 0 && e->difficultyUnlocked < MAX_DIFFICULTY_LEVELS)
+    if (e->bestChest >= e->difficultyUnlocked && e->difficultyUnlocked < MAX_DIFFICULTY_LEVELS)
     {
         e->encounter_PurchaseAugment.isHighlighted = true;
         char* buttonText = calloc(NumDigits(purchaseCost)+1,sizeof(char));
@@ -1514,7 +1516,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     {
         ChangeButtonText((Button*)(e->encounter_PurchaseAugment.data), e->difficultyUnlocked == MAX_DIFFICULTY_LEVELS ? "Max" : "Locked" );
     }
-    if (purchaseCost > players[0].bankedGold || e->bestChest <= 0 || e->difficultyUnlocked == MAX_DIFFICULTY_LEVELS)
+    if (purchaseCost > players[0].bankedGold || e->bestChest <= 0 || e->difficultyUnlocked > e->bestChest || e->difficultyUnlocked == MAX_DIFFICULTY_LEVELS)
     {
         e->encounter_PurchaseAugment.isHighlighted = false;
         e->encounter_PurchaseAugment.enabled = false;
@@ -1538,9 +1540,11 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 
 
     free(augmentStr);
-
+    #ifdef _AUGMENTS_ENABLED
     al_draw_line(10+offsetX,73,246,73,e->unlocked ? FRIENDLY : disabled,1);
-    
+    #else
+    al_draw_line(10+offsetX,64,246,64,e->unlocked ? FRIENDLY : disabled,1);
+    #endif
     al_draw_text(ui.font,e->unlocked ? FRIENDLY : disabled,16+offsetX,81,0,e->name ? e->name : "");
     DrawSprite(&sprites[e->spriteIndex],17+offsetX,102,0.5f,0.5f,0,e->unlocked ? ENEMY : disabled,false,false,false);
 
@@ -1577,8 +1581,10 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     {
         descriptionToDraw = e->description;
     }
+    #ifdef _AUGMENTS_ENABLED
     if (augmentDescriptionToDraw)
         descriptionToDraw = augmentDescriptionToDraw;
+    #endif
     if (descriptionToDraw)
     {
         DrawDescriptionBox(descriptionToDraw,2,ui.font,ui.boldFont,16+offsetX,170,224,41,e->unlocked ? ENEMY : disabled,true);
@@ -3937,7 +3943,7 @@ void OpenChest(int index)
     if (!gameStats.gameWon)
         return;
     
-    currEncounterRunning->bestChest = _MAX(currEncounterRunning->bestChest,index+1);
+    currEncounterRunning->bestChest = _MAX(currEncounterRunning->bestChest,currEncounterRunning->augment+index+1);
     ui.openedChests[index] = true;
     float goldToAdd = GetReward(currEncounterRunning, currEncounterRunning->augment, index);
     AddGold(goldToAdd);
@@ -4015,7 +4021,7 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, floa
     DrawGoldCount(FRIENDLY,ENEMY,goldPos.x,18);
 
     //Write the boss name and sprite
-    al_draw_text(ui.font,ENEMY,16,70,0,currEncounterRunning->name);
+    al_draw_text(ui.font,ENEMY,17,76,0,currEncounterRunning->name);
     Sprite* sEnemy = &sprites[currEncounterRunning->spriteIndex];
     DrawSprite(sEnemy,17,91,0.5f,0.5f,0,ENEMY,false,false,false);
 
@@ -4032,9 +4038,11 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, floa
     al_draw_text(ui.font,ENEMY,90,85,0,augmentStr);
     al_draw_text(ui.font,ENEMY,90,106,0,percentDamageNumber);
     al_draw_text(ui.font,ENEMY,185,106,0,percentHPNumber);
+
+    #ifdef _AUGMENTS_ENABLED
     for (int i = 0; i < MAX_AUGMENTS; i++)
         al_draw_text(ui.font,ENEMY,90,120+(10*i),0,GetAugmentDescription(currEncounterRunning->augments[i].augment));
-
+    #endif
     free(augmentStr);
     free(percentDamageNumber);
     free(percentHPNumber);
@@ -4061,6 +4069,9 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, floa
     sprintf(buffer,"Gold gained: %i",(int)players[0].gold - players[0].bankedGold);
     al_draw_text(ui.font,FRIENDLY,17,208,0,buffer);
 
+    buffer = realloc(buffer,(strlen("Best chest: ")+NumDigits(currEncounterRunning->bestChest+3) * sizeof(char)));
+    sprintf(buffer,"Best chest: %i",currEncounterRunning->bestChest);
+    al_draw_text(ui.font,FRIENDLY,140,208,0,buffer);
 
 
     UpdateButton(ui.endScreen_Back.x,ui.endScreen_Back.y,ui.endScreen_Back.w,ui.endScreen_Back.h,&ui.endScreen_Back,*mouseState,*mouseStateLastFrame);

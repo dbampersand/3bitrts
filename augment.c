@@ -15,6 +15,22 @@
 #include "allegro5/allegro.h"
 #include "rect.h"
 
+float GetAugmentDamageBonus(int damage, int augmentLevel)
+{
+    return damage*(augmentLevel/4.0f);
+}
+float GetAugmentHealthBonus(int health, int augmentLevel)
+{
+    return health*(augmentLevel/20.0f);
+}
+float GetAugmentAbilityDamage(int damage, int augmentLevel)
+{
+    return damage * (augmentLevel/8.0f);
+}
+
+
+#ifdef _AUGMENTS_ENABLED
+
 Augment AllAugments[AUGMENT_ALL] = {0};
 
 void InitAugments()
@@ -51,18 +67,6 @@ void InitAugments()
     AllAugments[AUGMENT_GOOD_MOVESPEED].portrait_sprite_index = LoadSprite("assets/ui/augments/good/AUGMENT_GOOD_MOVESPEED.png",true);
     AllAugments[AUGMENT_GOOD_SHIELD].portrait_sprite_index = LoadSprite("assets/ui/augments/good/AUGMENT_GOOD_SHIELD.png",true);
 
-}
-float GetAugmentDamageBonus(int damage, int augmentLevel)
-{
-    return damage*(augmentLevel/4.0f);
-}
-float GetAugmentHealthBonus(int health, int augmentLevel)
-{
-    return health*(augmentLevel/20.0f);
-}
-float GetAugmentAbilityDamage(int damage, int augmentLevel)
-{
-    return damage * (augmentLevel/8.0f);
 }
 
 float Neutral_GetAugmentAbilityDamage(int damage, int augmentlevel)
@@ -446,3 +450,4 @@ bool DrawAugmentPortrait(Augment* a, int x, int y, MouseState* mouseState, ALLEG
 
     
 }
+#endif
