@@ -1,5 +1,6 @@
 local aoe = -1
 local attackSpeed = -0.15
+local tickRate = 1
 
 function setup(obj)
     SetItemName(obj,"Belt of Haste")
@@ -12,11 +13,13 @@ end
 
 function onmapchange(obj)
     local f1 = {}
-    f1["trigger"] = TRIGGER_INSTANT;
+    f1["trigger"] = TRIGGER_CONST;
     f1["type"] = EFFECT_ATTACKSPEED;
     f1["value"] = attackSpeed 
+    f1["duration"] = tickRate
+    f1["overwrites"] = true
 
-    aoe = CreateAOE(GetX(obj),GetY(obj),"", 45, tickRate, 999, false, ATTACK_HITS_ENEMIES, COLOR_SPEED, DITHER_SPEED_QUARTER, false, obj, {f1})
+    aoe = CreateAOE(GetX(obj),GetY(obj),"", 45, tickRate, 999, false, ATTACK_HITS_FRIENDLIES, COLOR_SPEED, DITHER_SPEED_EIGTH, false, obj, {f1})
 end
 
 function attached(obj)

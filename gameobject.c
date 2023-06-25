@@ -3513,11 +3513,15 @@ void Teleport(GameObject* g, float x, float y, bool updateOld)
 
     UpdateObjPosition(g, move.x * _GRAIN, move.y * _GRAIN);
 
-    CheckCollisions(g, false, beforeY-g->position.worldY,false);
-    CheckCollisionsWorld(g, false, beforeY-g->position.worldY);
+    CheckCollisions(g, false, -1,false);
+    CheckCollisionsWorld(g, false, -1);
+    CheckCollisions(g, false, 1,false);
+    CheckCollisionsWorld(g, false, 1);
 
-    CheckCollisions(g, true, g->position.worldX-beforeX,false);
-    CheckCollisionsWorld(g, true, g->position.worldX-beforeX);
+    CheckCollisions(g, true, -1,false);
+    CheckCollisionsWorld(g, true, -1);
+    CheckCollisions(g, true, 1,false);
+    CheckCollisionsWorld(g, true, 1);
 
 
     SetTargetPosition(g, g->position.worldX, g->position.worldY);

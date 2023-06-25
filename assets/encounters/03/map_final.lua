@@ -13,6 +13,8 @@ function setup()
 
     SetSpawnPoint(152,221)
     SetEncounterMusic("assets/audio/music/boss/cusith/cusith.wav");
+    SetMapGoldMultiplier(20)
+
 end
 
 function update(dt)

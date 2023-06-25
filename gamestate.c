@@ -135,8 +135,8 @@ void SpawnAllFriendlies()
                 continue;
             GameObject* g = toSpawn[i];
             GameObject* gNew = AddGameobject(g,xPos,yPos,SOURCE_SPAWNED_FROM_MAP,TYPE_FRIENDLY);   
-            for (int j = 0; j < INVENTORY_SLOTS; j++)
-                ItemOnMapChange(&gNew->inventory[j],gNew);
+            //for (int j = 0; j < INVENTORY_SLOTS; j++)
+              //  ItemOnMapChange(&gNew->inventory[j],gNew);
             HoldCommand(gNew,false);
             xPos += GetWidth(g)+4;
             if (i == encounterGoingTo->numUnitsToSelect/2)
@@ -178,6 +178,8 @@ void FinishTransition()
         RemoveAllGameObjects();
         RemoveAllAttacks();
 
+        combatStarted = false;
+
 
         ClearSpriteDecorations();
         //AddClouds(12);
@@ -198,6 +200,12 @@ void FinishTransition()
             {
                 HoldCommand(activeObjects[i],false);
             }
+            for (int j = 0; j < INVENTORY_SLOTS; j++)
+            {
+                Item* it = &activeObjects[i]->inventory[j];
+                ItemOnMapChange(it,activeObjects[i]);
+            }   
+
         }
         memset(&gameStats,0,sizeof(GameState));
 
@@ -303,6 +311,15 @@ void FinishTransition()
         combatStarted = false;
         SpawnPartySelects();
 
+        for (int i = 0; i < numActiveObjects; i++)
+        {
+            for (int j = 0; j < INVENTORY_SLOTS; j++)
+            {
+                Item* it = &activeObjects[i]->inventory[j];
+                ItemOnMapChange(it,activeObjects[i]);
+            }   
+        }
+
         ClearGold();
         AddGold(players[0].bankedGold);
 
@@ -365,6 +382,8 @@ void FinishTransition()
                 KillObj(&objects[i],false,false);
             }
         }
+        RemoveAllAttacks(1);
+
         AddGold(goldBefore - players[0].gold);
 
         SetMap(LoadMap(pathToNextMap));
@@ -382,6 +401,7 @@ void FinishTransition()
             }
         }
         numDeadFriendlyObjects = 0;
+        int index = 0;
         for (int i = 0; i < numActiveObjects; i++)
         {
             if (IsOwnedByPlayer(activeObjects[i]))
@@ -396,12 +416,19 @@ void FinishTransition()
                 Teleport(activeObjects[i],xPos,yPos,true);
 
                 xPos += GetWidth(activeObjects[i]);
-                if (i == encounterGoingTo->numUnitsToSelect/2)
+                if (index == encounterGoingTo->numUnitsToSelect/2)
                 {
                     camPos.x = xPos;
                     camPos.y = yPos;    
                 }
+                index++;
             }
+            for (int j = 0; j < INVENTORY_SLOTS; j++)
+            {
+                Item* it = &activeObjects[i]->inventory[j];
+                ItemOnMapChange(it,activeObjects[i]);
+            }   
+
         }
         FocusCameraOnPos(camPos.x,camPos.y);
 

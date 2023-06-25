@@ -31,7 +31,7 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",116.00,171.00,TYPE_ENEMY,0.00),4)
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",148.00,87.00,TYPE_ENEMY,0.00),4)
     SetAggroGroup(CreateObject("assets/enemies/kobold_saboteur/kobold_saboteur.lua",100.00,107.00,TYPE_ENEMY,0.00),4)
-end
+end 
 
 
 

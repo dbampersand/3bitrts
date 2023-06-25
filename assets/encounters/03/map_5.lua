@@ -12,6 +12,7 @@ function setup()
     CreateObject("assets/decor/pillar24x24.lua",98.00,227.00,TYPE_DECORATION,0);
     CreateObject("assets/decor/pillar24x24.lua",185.00,305.00,TYPE_DECORATION,0);
     --PlayMusic("assets/audio/music/encounters/cusith/cusith_encounter_2.wav",0.5,0); 
+    SetMapGoldMultiplier(1.3)
 
 end
 

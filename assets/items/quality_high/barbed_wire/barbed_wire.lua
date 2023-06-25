@@ -24,7 +24,7 @@ function ondamaged(item,sourceObj,damagedObj,value)
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = 10;  
+    f1["value"] = 5;  
 
     ApplyEffect(sourceObj,{f1});
 end

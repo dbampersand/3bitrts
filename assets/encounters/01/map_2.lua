@@ -3,8 +3,8 @@ local timer = 0
 function setup()
     SetMapSprite("assets/encounters/01/map_2.png")
 
-    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",212.00,100.00,TYPE_ENEMY,0),1);
-    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",200.00,124.00, TYPE_ENEMY,0),1);
+    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",198.00,114.00,TYPE_ENEMY,0),1);
+    SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",197.00,142.00, TYPE_ENEMY,0),1);
 
     SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",347.00,188.00,TYPE_ENEMY,0),2) ;
     SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",383.00,166.00,TYPE_ENEMY,0),2);
@@ -28,6 +28,7 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",252.00,329.00,TYPE_ENEMY,0.00),4)
     
     --PlayMusic("assets/audio/music/encounters/wyrm/wyrm_encounter_1.wav",0.5,16.36); 
+    SetMapGoldMultiplier(1.1)
 
 end
 

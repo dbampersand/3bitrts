@@ -443,8 +443,8 @@ void SetMap(Map* m)
 
         for (int j = 0; j < INVENTORY_SLOTS; j++)
         {
-            Item* it = &g->inventory[j];
-            ItemOnMapChange(it,g);
+            //Item* it = &g->inventory[j];
+            //ItemOnMapChange(it,g);
         }
         
     }

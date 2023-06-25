@@ -151,8 +151,17 @@ char* GetRandomAmbient(char* path)
 }
 void UpdateAmbience(float dt)
 {
-    al_set_mixer_gain(ambientMixer,currSettings.ambienceVolume * currSettings.masterVolume);
+    float volume = currSettings.ambienceVolume * currSettings.masterVolume;
     
+    if (music || musicFadingTo)
+    {
+        float amount = 1-((_MAX(musicVolMixer1,musicVolMixer2)) * currSettings.musicVolume);
+        volume = (volume * amount) * 8;
+        volume = clamp(volume,0,currSettings.ambienceVolume * currSettings.masterVolume);
+        
+    }
+    al_set_mixer_gain(ambientMixer,volume);
+
     timeToNextAmbience -= dt;
     if (timeToNextAmbience <= 0)
     {

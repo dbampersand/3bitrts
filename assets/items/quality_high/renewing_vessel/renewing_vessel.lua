@@ -1,4 +1,4 @@
-local hps = 15
+local hps = 50
 local tickRate = 2
 local aoe = -1
 function setup(obj)
@@ -15,7 +15,7 @@ function onmapchange(obj)
     f1["type"] = EFFECT_HEAL;
     f1["value"] = hps * tickRate;  
 
-    aoe = CreateAOE(GetX(obj),GetY(obj),"", 45, tickRate, 999, false, ATTACK_HITS_FRIENDLIES, COLOR_HEAL, DITHER_HEAL_HALF, false, obj, {f1})
+    aoe = CreateAOE(GetX(obj),GetY(obj),"", 50, tickRate, 999, false, ATTACK_HITS_FRIENDLIES, COLOR_HEAL, DITHER_HEAL_EIGTH, false, obj, {f1})
 end
 
 function attached(obj)

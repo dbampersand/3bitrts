@@ -20,6 +20,7 @@ function setup()
 
     SetSpawnPoint(23,81)
     --PlayMusic("assets/audio/music/encounters/wyrm/wyrm_encounter_2.wav",0.5,0); 
+    SetMapGoldMultiplier(1.4)
     
 end
 

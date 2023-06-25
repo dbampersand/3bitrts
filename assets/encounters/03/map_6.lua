@@ -21,6 +21,7 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/exploding_zombie/exploding_zombie.lua",438.00,142.00,TYPE_ENEMY,0.00),5)
     CreateObject("assets/enemies/web_spinner/web_spinner.lua",482.00,249.00,TYPE_ENEMY,0.00)
     --PlayMusic("assets/audio/music/encounters/cusith/cusith_encounter_2.wav",0.5,0); 
+    SetMapGoldMultiplier(1.4)
 
 end
 function update()
