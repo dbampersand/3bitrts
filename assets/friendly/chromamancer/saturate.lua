@@ -36,6 +36,7 @@ function casted(x,y,obj,headingx,headingy)
     ApplyEffect(obj,{f1});
     ApplyEffect(GetObjRef(),{f1});
 
+    ShakeScreen(3,0.1)
     return true;
 end
 function onhit(x,y,objhit)

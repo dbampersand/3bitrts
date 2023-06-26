@@ -8,7 +8,7 @@ local tickRate = 0.75
 
 function setup()
     AbilitySetCastType(ABILITY_POINT); 
-    AbilitySetPortrait("assets/friendly/chromamancer/icon_illusion.png");
+    AbilitySetPortrait("assets/friendly/chromamancer/icon_infrared.png");
     SetDescription("Infrared\n\nProjects a cone of healing infrared light.")
     SetAbilityRange(length)
     SetAbilityHint(HINT_CONE,radius,false,length)

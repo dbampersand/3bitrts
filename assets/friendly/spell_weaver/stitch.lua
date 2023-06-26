@@ -10,7 +10,7 @@ local ticksPerSec = 2
 local attackSpeed = -0.1
 
 function setup()
-    AbilitySetPortrait("assets/friendly/bard/icon_aoe_damage.png");
+    AbilitySetPortrait("assets/friendly/spell_weaver/icon_stitch.png");
     AbilitySetCastType(ABILITY_TARGET_ALL);
     SetAbilityRange(50)
     SetCooldown(8)
@@ -32,7 +32,7 @@ function casted(x,y,obj,headingx,headingy)
 
     AddStack(GetObjRef(),2,1)
     AddStack(GetObjRef(),3,1)
-
+    ShakeScreen(1,0.1)
     return true;
 end
 function untoggle()

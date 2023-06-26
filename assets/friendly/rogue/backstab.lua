@@ -19,6 +19,9 @@ function casted(x,y,obj,headingx,headingy)
     f2["value"] = -25;
     f2["duration"] = 10;
 
+    ShakeScreen(2,0.2)    
+
+
     ApplyEffect(obj,{f1,f2})
     return true;
 end

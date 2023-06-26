@@ -20,6 +20,7 @@ function casted(x,y,obj,headingx,headingy)
     f2["type"] = EFFECT_STUN
     f2["value"] = 1
 
+    ShakeScreen(1.5,0.1)    
 
     Teleport(GetObjRef(),x,y);
     CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",radius,0.1,0.1,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_VERTICAL_HALF,false,-1,{f1,f2});

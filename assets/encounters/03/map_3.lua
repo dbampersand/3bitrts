@@ -35,7 +35,6 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/kobold_foreman/kobold_foreman.lua",308.00,649.00,TYPE_ENEMY,0.00),12)
     SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",344.00,669.00,TYPE_ENEMY,0.00),12)
     SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",316.00,685.00,TYPE_ENEMY,0.00),12)
-    --PlayMusic("assets/audio/music/encounters/cusith/cusith_encounter.wav",0.5,0); 
     SetMapGoldMultiplier(1.1)
 end
 

@@ -37,6 +37,7 @@ function casted(x,y,obj,headingx,headingy)
     for i = 1, #objsHit do
         PushObj(GetX(GetObjRef()),GetY(GetObjRef()),objsHit[i],100,0.1)
     end
+    ShakeScreen(#objsHit,0.2)
     return true; 
 end
 

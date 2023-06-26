@@ -15,6 +15,10 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 350;  
 
     ApplyEffect(obj,{f1})
+
+    ShakeScreen(1,0.1)
+
+
     return true;
 end
 function onhit(x,y,objhit)

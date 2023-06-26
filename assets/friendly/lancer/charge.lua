@@ -49,6 +49,8 @@ function casted(x,y,obj,headingx,headingy)
     After(BlockCommands,duration,false,GetObjRef(),false)
     After(StopCommand,duration,false,GetObjRef())
 
+    ShakeScreen(1,duration)
+
 
 
     local cone = CreateCone(GetX(GetObjRef()),GetY(GetObjRef()),x,y,"", radius, tickRate, duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, coneSize, {f1})

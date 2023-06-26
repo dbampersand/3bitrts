@@ -10,7 +10,7 @@ function setup()
     SetAbilityRange(20)
     SetCooldown(30)
     
-    AbilitySetPortrait("assets/friendly/bard/icon_aoe_heal.png");
+    AbilitySetPortrait("assets/friendly/necromancer/icon_harvest.png");
     SetDescription("Harvest\n\nSwings a sickle around, damaging and returning a percentage as healing to you.")
 
 end
@@ -25,6 +25,7 @@ function casted(x,y,obj,headingx,headingy)
 
 
     CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 0.2, 0.2, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_HALF, false, 0, {f1})
+    After(ShakeScreen,0.2,true,2,0.1)    
     
     return true; 
 end

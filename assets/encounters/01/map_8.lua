@@ -9,7 +9,6 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",272.00,347.00,TYPE_ENEMY,0.00),2)
     SetAggroGroup(CreateObject("assets/enemies/cobra/cobra.lua",224.00,355.00,TYPE_ENEMY,0.00),2)
     SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",302.00,389.00,TYPE_ENEMY,0.00),2)
-    --PlayMusic("assets/audio/music/encounters/wyrm/wyrm_encounter_3.wav",0.5,5.14); 
     SetMapGoldMultiplier(1.6)
 
 end

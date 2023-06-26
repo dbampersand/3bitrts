@@ -16,7 +16,6 @@ function setup()
     CreateObject("assets/enemies/ghost/ghost.lua",149.00,141.00,TYPE_ENEMY,0.00)
     CreateObject("assets/enemies/scorpion/scorpion.lua",170.00,181.00,TYPE_ENEMY,0.00)
     CreateObject("assets/enemies/shield_warrior/shield_warrior.lua",193.00,146.00,TYPE_ENEMY,0.00)
-    PlayMusic("assets/audio/music/encounters/cusith/cusith_encounter_3.wav",0.5,66); 
     SetMapGoldMultiplier(1.6)
 
 end

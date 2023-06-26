@@ -5,7 +5,7 @@ local damage = 500
 
 
 function setup()
-    AbilitySetPortrait("assets/friendly/bard/icon_aoe_shield.png");
+    AbilitySetPortrait("assets/friendly/necromancer/icon_blood_bolt.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(80)
 
@@ -26,6 +26,8 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = damage;
     ApplyEffect(obj,{f1});
 
+    ShakeScreen(1,0.1)
+    
     return true;
 end
 function untoggle()
@@ -41,5 +43,6 @@ end
 function effecttick(effectType,value,obj,x,y)
     if (IsAlive(obj) == false) then
         CreateObject("assets/friendly/necromancer/add/skeleton_melee.lua",x,y,TYPE_FRIENDLY,0.5)
+        ShakeScreen(4,0.25)
     end
 end 

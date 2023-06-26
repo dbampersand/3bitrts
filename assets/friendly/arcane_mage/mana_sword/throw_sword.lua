@@ -20,6 +20,7 @@ function casted(x,y,obj,headingx,headingy)
     AddAbility(GetObjRef(),"assets/friendly/arcane_mage/teleport.lua",1)
     AddAbility(GetObjRef(),"assets/friendly/arcane_mage/arcane_wave.lua",2)
     AddAbility(GetObjRef(),"assets/friendly/arcane_mage/mana_sword.lua",3);
+    ShakeScreen(3,0.2)    
 
     ApplyEffect(obj,{f1});
     return true;

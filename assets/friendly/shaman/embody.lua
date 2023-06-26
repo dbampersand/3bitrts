@@ -5,7 +5,7 @@ local cooldownReduction = 0.2
 local dps = 25
 
 function setup()
-    AbilitySetPortrait("assets/friendly/shaman/icon_stoneskin_totem.png");
+    AbilitySetPortrait("assets/friendly/shaman/icon_embody.png");
     SetDescription("Embody\n\nPoisons the target and increases their attack speed and reduces their cooldowns.")
 
     AbilitySetCastType(ABILITY_TARGET_ALL);

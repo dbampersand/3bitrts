@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("assets/friendly/rogue/icon_shiv.png");
+    AbilitySetPortrait("assets/friendly/rogue/icon_stab.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(50)
     SetDescription("Stab\n\nStabs the target and reduces the cooldown of Sneak Attack by 2 seconds.")

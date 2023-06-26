@@ -8,7 +8,7 @@ local duration = 10
 local ticksPerSec = 2
 
 function setup()
-    AbilitySetPortrait("assets/friendly/bard/icon_aoe_damage.png");
+    AbilitySetPortrait("assets/friendly/necromancer/icon_seance.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(50)
     SetCooldown(12)

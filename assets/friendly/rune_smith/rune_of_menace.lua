@@ -20,6 +20,7 @@ function casted(x,y,obj,headingx,headingy)
     CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",90,0.1,0.1,false,ATTACK_HITS_ENEMIES,COLOR_FRIENDLY_DAMAGE,DITHER_NONE,false,-1,{f1});
     
     PlaySound("assets/friendly/rune_smith/audio/rune_of_menace.wav",1);
+    After(ShakeScreen,0.1,true,4,0.1)    
 
     return true;
 end

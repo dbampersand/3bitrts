@@ -15,7 +15,7 @@ function setup()
     SetAbilityMaxStacks(3)
     SetAbilityStacks(3)
 
-    AbilitySetPortrait("assets/friendly/bard/icon_aoe_heal.png");
+    AbilitySetPortrait("assets/friendly/spell_weaver/icon_weave.png");
     SetDescription("Weave\n\nCreates a creature, based on the number of stacks on Weave.")
 
 end
@@ -36,7 +36,7 @@ function casted(x,y,obj,headingx,headingy)
     SetLifetime(obj,12)
     AddStack(GetObjRef(),2,-3)
     AddStack(GetObjRef(),3,-3)
-
+    ShakeScreen(2,0.1)
     return true; 
 end
 

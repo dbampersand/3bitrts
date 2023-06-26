@@ -55,8 +55,8 @@ bool UpdateTimer(int index, float dt)
         currGameObjRunning = t->obj;
         currAbilityRunning = t->ability;
         currAttackRunning = t->attack;
- 
-        if (currAbilityRunning->luafunc_timerbeforetick)
+
+        if (currAbilityRunning && currAbilityRunning->luafunc_timerbeforetick)
         {
             lua_rawgeti(luaState,LUA_REGISTRYINDEX,currAbilityRunning->luafunc_timerbeforetick);
             lua_pushnumber(luaState,(size_t)t);

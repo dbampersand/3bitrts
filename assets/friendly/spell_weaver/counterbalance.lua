@@ -9,7 +9,7 @@ local target = -1
 local maxStacks = 5
 
 function setup()
-    AbilitySetPortrait("assets/friendly/bard/icon_aoe_shield.png");
+    AbilitySetPortrait("assets/friendly/spell_weaver/icon_counterbalance.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(80)
     SetCooldown(10) 
@@ -34,6 +34,9 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = damage * numCastsOnTarget;
 
     ApplyEffect(obj,{f1});
+
+    ShakeScreen(numCastsOnTarget,0.05*numCastsOnTarget)
+
 
     return true;
 end

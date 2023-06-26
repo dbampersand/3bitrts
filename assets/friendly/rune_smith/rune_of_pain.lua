@@ -21,6 +21,9 @@ function casted(x,y,obj,headingx,headingy)
     ApplyEffect(GetObjRef(),{f1});
     ApplyEffect(obj,{f1,f2});
 
+    ShakeScreen(4,0.2);
+
+
     return true;
 end
 

@@ -6,7 +6,7 @@ local AS = -0.2
 local radius = 100
 
 function setup()
-    AbilitySetPortrait("assets/friendly/bard/icon_aoe_shield.png");
+    AbilitySetPortrait("assets/friendly/bard/icon_ostinato.png");
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityRange(100)
     SetCooldown(30)

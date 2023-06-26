@@ -4,7 +4,7 @@ local damage = 120
 
 local radius = 25
 function setup()
-    AbilitySetPortrait("assets/friendly/shaman/icon_stoneskin_totem.png");
+    AbilitySetPortrait("assets/friendly/shaman/icon_spirits.png");
     SetDescription("Spirits\n\nSummons a deadly spirit, exploding after " ..seconds.." damage to **all** units.")
 
     AbilitySetCastType(ABILITY_POINT);
@@ -40,6 +40,7 @@ function casted(x,y,obj,headingx,headingy)
 end
 function ontimeout()
     PlaySound("assets/friendly/shaman/audio/spirit_timeout.wav",1);
+    ShakeScreen(5,0.1)
 end
 function untoggle()
 end

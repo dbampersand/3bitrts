@@ -12,17 +12,21 @@ function setup()
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/monk/audio/fury.wav",1)
+
+    local numStacks = GetAbilityStacks(GetObjRef(),GetAbilityRef())
     
     f1 = {}
     f1["trigger"] = TRIGGER_INSTANT
     f1["type"] = EFFECT_HURT
-    f1["value"] = 200 * GetAbilityStacks(GetObjRef(),GetAbilityRef());
+    f1["value"] = 200 * numStacks;
 
     ApplyEffect(obj,{f1});
 
     AddStack(GetObjRef(),2,-999);
     AddStack(GetObjRef(),3,-999);
     AddStack(GetObjRef(),4,-999);
+
+    ShakeScreen(numStacks,0.2)
 
    return true;
 end

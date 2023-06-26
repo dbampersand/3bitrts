@@ -5,7 +5,7 @@ local damage = 100
 
 
 function setup()
-    AbilitySetPortrait("assets/friendly/bard/icon_aoe_shield.png");
+    AbilitySetPortrait("assets/friendly/necromancer/icon_harvest_blood.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
     SetAbilityRange(80)
     SetCooldown(10) 

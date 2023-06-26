@@ -42,6 +42,7 @@ function casted(x,y,obj,headingx,headingy)
 
     CreateAOE(GetX(obj),GetY(obj),"",70,0.1,0.1,false,ATTACK_HITS_ENEMIES,COLOR_FRIENDLY_DAMAGE,DITHER_NONE,false,-1,{f4});
 
+    ShakeScreen(4,0.1)
 
     return true; 
 end

@@ -3,7 +3,7 @@ local dps = 30
 local tickrate = 1
 local time = 6
 function setup()
-    AbilitySetPortrait("assets/friendly/rogue/icon_shiv.png");
+    AbilitySetPortrait("assets/friendly/rogue/icon_bomb.png");
     AbilitySetCastType(ABILITY_POINT);
     SetAbilityRange(60)
     SetDescription("Flash Bomb\n\nDeals damage and blinds enemy targets in the area, causing them to miss "..missChance .. "% of their attacks.")
@@ -11,6 +11,7 @@ function setup()
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/rogue/audio/bomb.wav",1)
+
 
     local f1 = {};
     f1["trigger"] = TRIGGER_CONST

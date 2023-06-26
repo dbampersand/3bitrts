@@ -1,6 +1,6 @@
 
 function setup()
-    AbilitySetPortrait("assets/friendly/rogue/icon_shiv.png");
+    AbilitySetPortrait("assets/friendly/rogue/icon_deceptive_strike.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(50)
     SetDescription("Deceptive Strike\n\nDeals damage and reduces the cooldown of Backstab by 2 seconds.")
@@ -8,6 +8,7 @@ function setup()
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/rogue/audio/deceptive_strike.wav",1)
+
 
     local f1 = {};
     f1["trigger"] = TRIGGER_INSTANT

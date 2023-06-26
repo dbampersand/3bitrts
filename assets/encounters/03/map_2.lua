@@ -15,7 +15,6 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/skeleton_minion_ranged/skeleton_minion_ranged.lua",126.00,429.00,TYPE_ENEMY,0.00),2)
     SetAggroGroup(CreateObject("assets/enemies/skeleton_minion_ranged/skeleton_minion_ranged.lua",90.00,449.00,TYPE_ENEMY,0.00),2)
     SetAggroGroup(CreateObject("assets/enemies/exploding_zombie/exploding_zombie.lua",184.00,447.00,TYPE_ENEMY,0.00),2)
-    --PlayMusic("assets/audio/music/encounters/cusith/cusith_encounter.wav",0.5,0); 
     SetMapGoldMultiplier(1.1)
 end
 

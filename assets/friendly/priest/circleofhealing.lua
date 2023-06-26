@@ -24,6 +24,7 @@ function casted(x,y,obj,headingx,headingy)
     SetAttackCircle(aoe,true);
 
     PlaySound("assets/friendly/priest/audio/circle_of_healing.wav",1)
+    After(ShakeScreen,0.25,true,2,0.1)    
     
 
     return true; 

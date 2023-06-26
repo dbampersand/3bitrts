@@ -21,6 +21,7 @@ function casted(x,y,obj,headingx,headingy)
     f2["value"] = 20;
 
 
+    ShakeScreen(2,0.2)    
 
 
     ApplyEffect(obj,{f1})

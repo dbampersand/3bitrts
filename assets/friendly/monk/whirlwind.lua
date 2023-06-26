@@ -25,6 +25,10 @@ function casted(x,y,obj,headingx,headingy)
     AddStack(GetObjRef(),2,-1);
     AddStack(GetObjRef(),4,-1);
 
+    ShakeScreen(1,0.1)
+
+
+
     return true;
 end
 function onhit(x,y,objhit)

@@ -10,7 +10,7 @@ local cdReduce = 3
 
 function setup()
     AbilitySetCastType(ABILITY_POINT); 
-    AbilitySetPortrait("assets/friendly/chromamancer/icon_illusion.png");
+    AbilitySetPortrait("assets/friendly/chromamancer/icon_ultraviolet.png");
     SetDescription("Ultraviolet\n\nProjects a cone of damaging ultraviolet light. Damage ticks reduce the cooldown of Infrared.")
     SetAbilityRange(length)
     SetAbilityHint(HINT_CONE,radius,false,length)

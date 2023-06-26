@@ -20,10 +20,10 @@ function casted(x,y,obj,headingx,headingy)
 
     local objs = GetObjectsInCone(TYPE_ENEMY,GetX(GetObjRef()),GetY(GetObjRef()),x,y,radius,length)
     for i = 1, #objs do
-        Print("aaaa");
         local pushAmt = (1 - (GetDist(GetObjRef(),objs[i]) / length)) * push
         PushObj(GetX(GetObjRef()),GetY(GetObjRef()),objs[i],pushAmt,0.1)
     end
+    ShakeScreen(#objs*2,0.2);
 
     local cone = CreateCone(GetX(GetObjRef()),GetY(GetObjRef()),x,y,"", radius, 0, 0, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER,length, {f1})
     return true;

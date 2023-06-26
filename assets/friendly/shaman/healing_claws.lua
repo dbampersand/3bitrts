@@ -9,7 +9,7 @@ local speed = 20
 
 
 function setup()
-    AbilitySetPortrait("assets/friendly/shaman/icon_healing_rain.png");
+    AbilitySetPortrait("assets/friendly/shaman/icon_healing_claws.png");
     AbilitySetCastType(ABILITY_POINT);
     SetAbilityRange(60)
     SetDescription("Healing Claws\n\nDashes to an area and claws the air, creating several slow-moving projectiles of healing energy.")

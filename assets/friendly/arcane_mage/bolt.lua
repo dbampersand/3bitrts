@@ -19,6 +19,7 @@ function casted(x,y,obj,headingx,headingy)
 
     ModifyAbilityCooldownTimer(GetObjRef(),3,-2);
 
+    ShakeScreen(2,0.2)    
 
 
     return true;

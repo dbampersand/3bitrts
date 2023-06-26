@@ -4,7 +4,6 @@ function setup()
 
     CreateObject("assets/enemies/healingdummy/healingdummy.lua",196.00,47.00,TYPE_FRIENDLY,0)
 
-    --PlayMusic("assets/audio/music/ui/unitselect.wav",0.5,8);
 
     SetSpawnPoint(77,145)
 

@@ -30,6 +30,8 @@ function casted(x,y,obj,headingx,headingy)
 
     ApplyEffect(obj,{f1})
     ApplyEffect(GetObjRef(),{f2})
+    ShakeScreen(1,0.1)
+
 
     return true;
 end

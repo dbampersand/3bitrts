@@ -27,7 +27,6 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/kobold_crossbow/kobold_crossbow.lua",223.00,303.00,TYPE_ENEMY,0.00),4)
     SetAggroGroup(CreateObject("assets/enemies/scorpion/scorpion.lua",252.00,329.00,TYPE_ENEMY,0.00),4)
     
-    --PlayMusic("assets/audio/music/encounters/wyrm/wyrm_encounter_1.wav",0.5,16.36); 
     SetMapGoldMultiplier(1.1)
 
 end
