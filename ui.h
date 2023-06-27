@@ -78,7 +78,8 @@ typedef enum UIElement_Type
     ELEMENT_TEXT=4,
     ELEMENT_KEYINPUT=5,
     ELEMENT_PULLDOWN=6,
-    ELEMENT_TEXTINPUT=7
+    ELEMENT_TEXTINPUT=7,
+    ELEMENT_COLOR_PICKER = 8
 
     //ELEMENT_CHATBOX
 
@@ -105,6 +106,10 @@ typedef struct Slider
     bool clicked; 
     float* value;
 }Slider;
+typedef struct ColorPicker
+{
+    Slider* sliders[3];
+}ColorPicker;
 typedef struct Checkbox
 {
     bool clicked; 
@@ -400,3 +405,5 @@ void DrawUIHighlight(UIElement* u, float x, float y);
 Widget* GetWidgetByName(GameState gameState, char* name);
 void SetWidgetSprite(Widget* w, char* sprite);
 
+UIElement* AddColorPicker(Panel* p, char* name, int x, int y, int w, int h, ALLEGRO_COLOR* colour);
+void UpdateColorPicker(ColorPicker* c, int x, int y, int w, int h, MouseState mouseState, MouseState mouseStateLastFrame);

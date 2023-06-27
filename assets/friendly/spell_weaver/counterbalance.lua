@@ -14,7 +14,6 @@ function setup()
     SetAbilityRange(80)
     SetCooldown(10) 
     SetDescription("Counterbalance\n\nDeals damage proportional to the number of consecutive casts on the same target.")
-    
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/spell_weaver/audio/counterbalance.wav",1)

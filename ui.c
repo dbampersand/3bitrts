@@ -48,6 +48,7 @@ float debounceTime = 0.15;
 bool _PANEL_CLICKED_THIS_FRAME = false;
 bool _TEXTINPUT_HIGHLIGHTED = false;
 
+
 void DrawChestCompletionHint(int x, int y)
 {
     float minutes = gameStats.timeTaken/60.0f;
@@ -1773,22 +1774,23 @@ void UpdateSlider(Slider* s, int x, int y, int w, int h, MouseState mouseState, 
 {
    // ToScreenSpaceI(&mouseState.x,&mouseState.y);
     //ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
-
     Rect r = (Rect){x,y,w,h};
     if (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1))
     {
         if (PointInRect(mouseState.screenX,mouseState.screenY,r))
         {
-            s->clicked = true;
+            bool* b = &s->clicked;
+            s->clicked = true;  
         }
     }
-    if (!(mouseState.mouse.buttons & 1))
+    if (!(mouseState.mouse.buttons & 1) && (mouseStateLastFrame.mouse.buttons & 1) && s->clicked)
     {
         s->clicked = false;
     }
 
     if (s->clicked)
     {
+
         float v = 1-((x+w) - mouseState.screenX) / (float)w;
         if (v>1)
             v = 1;
@@ -1931,6 +1933,7 @@ void DrawSlider(UIElement* u, int x, int y, MouseState* mouseState, bool isActiv
     al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
     float w = u->w * *s->value;
     al_draw_filled_rectangle(x,y,x+w,y+u->h,FRIENDLY);
+
 }
 void UpdateCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive, MouseState mouseState, MouseState mouseStateLastFrame)
 {
@@ -2014,17 +2017,23 @@ UIElement* AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool* a
 
     return ref;
 }
-UIElement* AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled, float* v)
+Slider* InitSlider(int x, int y, int w, int h, float filled, float* v)
 {
     Slider* s = calloc(1,sizeof(Slider));
+    s->value = v;
+    *v = filled;
+    return s;
+}
+
+UIElement* AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled, float* v)
+{
+    Slider* s = InitSlider(x,y,w,h,filled,v);
     UIElement u = {0};
     u.x = x;
     u.y = y;
     u.w = w;
     u.h = h;
     u.enabled = true;
-    s->value = v;
-    *v = filled;
     u.name = calloc(strlen(name)+1,sizeof(char));
     strcpy(u.name,name);
     u.data = (void*)s;
@@ -2185,7 +2194,7 @@ void UpdateScrollbar(Panel* p, MouseState* mouseState,MouseState* mouseStateLast
     }
     if (!(mouseState->mouse.buttons & 1))
     {
-        p->scrollbarClicked = false;
+            p->scrollbarClicked = false;
     }
     if (p->scrollbarClicked)
     {
@@ -2470,6 +2479,22 @@ void InitAccessibilityOptionsPanel()
     InitButton(&ui.accessibilityOptionsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/accessiblity_tab_icon.png",true));
     ui.accessibilityOptionsPanel.back = &ui.mainMenuPanel;
 
+    int colorPickerH = 20;
+    int colorPickerY = 100;
+    int colorPickerPadding = 20;
+
+    //AddPulldownMenu(&ui.accessibilityOptionsPanel,34,colorPickerY-25,48,10,"Colour Preset",0,2,"Default","Custom");
+    AddButton(&ui.accessibilityOptionsPanel,"Reset","Reset",34,colorPickerY-25,30,10,true);
+
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Background","Background");
+    AddColorPicker(&ui.accessibilityOptionsPanel,"BG",34,colorPickerY,40,20, &BG);
+    colorPickerY+=colorPickerH+colorPickerPadding;
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Friendly","Friendly");
+    AddColorPicker(&ui.accessibilityOptionsPanel,"FRIENDLY",34,colorPickerY,40,20, &FRIENDLY);
+    colorPickerY+=colorPickerH+colorPickerPadding;
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Enemy","Enemy");
+    AddColorPicker(&ui.accessibilityOptionsPanel,"ENEMY",34,colorPickerY,40,20, &ENEMY);
+    colorPickerY+=colorPickerH+colorPickerPadding;
 
 }
 void InitChoosingUnitButtons()
@@ -3126,6 +3151,10 @@ bool UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* m
     {
         return UpdatePulldownMenu((Pulldown*)u->data, x,  y, w,h,*mouseState, *mouseStateLastFrame);
     }
+    if (u->elementType == ELEMENT_COLOR_PICKER)
+    {
+         UpdateColorPicker((ColorPicker*)u->data, x,  y, w,h,*mouseState, *mouseStateLastFrame);
+    }
 
     return false;
 }
@@ -3146,8 +3175,10 @@ void UpdatePanel(Panel* p, MouseState* mouseState, MouseState* mouseStateLastFra
         }
         Rect r = (Rect){p->x,p->y,p->w,p->h};
 
-        if (MouseClickedThisFrame(mouseState,mouseStateLastFrame) && PointInRect(mouseState->screenX,mouseState->screenY,r))
+        if ((mouseState->mouse.buttons & 1) && !(mouseStateLastFrame->mouse.buttons & 1) && PointInRect(mouseState->screenX,mouseState->screenY,r))
             _PANEL_CLICKED_THIS_FRAME = true;
+        else
+            _PANEL_CLICKED_THIS_FRAME = false;
 
     }
     UpdateScrollbar(p,mouseState,mouseStateLastFrame);
@@ -3284,6 +3315,73 @@ void DrawButtonText(UIElement* u,int x, int y, ALLEGRO_COLOR col)
     
     al_draw_text(font,col,textX,floor(textY),align,b->description);
 }   
+void DrawColorPicker(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor, ALLEGRO_COLOR foregroundColor, bool fromPanel)
+{
+    int panelX; int panelY; int panelW; int panelH;
+    al_get_clipping_rectangle(&panelX,&panelY,&panelW,&panelH);
+    Rect panel = (Rect){panelX,panelY,panelW,panelH};
+    ColorPicker* c = (ColorPicker*)u->data;
+    Rect slider = (Rect){x,y,(int)u->w*3+padding*3,(int)u->h};
+
+    Rect clip = (Rect){x,y,slider.w,slider.h};
+
+    ALLEGRO_FONT* font = GetElementFont(u);
+
+    if (fromPanel)
+    {
+
+        clip.x = clamp(clip.x,panel.x,panel.x+panel.w) - 1;
+        clip.y = clamp(clip.y,panel.y,panel.y+panel.h) - 1;
+        clip.w = _MAX(0,slider.w) + 1;
+        clip.h = _MAX(0,(panel.y+panel.h) - clip.y);
+
+        al_set_clipping_rectangle(clip.x,clip.y,clip.w,clip.h);
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        UIElement u2 = {0};
+        u2.x = x + (u->w*i)+(padding*i);
+        u2.y = y;
+        ColorPicker* c = (ColorPicker*)u->data;
+        Slider* s = c->sliders[i];
+        u2.data = s;
+        u2.w = u->w;
+        u2.h = u->h;
+        
+
+        DrawSlider(&u2,u2.x,u2.y,&mouseState,true,GetColor(u->bgColor,0));
+    }
+}
+void UpdateColorPicker(ColorPicker* c, int x, int y, int w, int h, MouseState mouseState, MouseState mouseStateLastFrame)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        int x2 = x + (w*i)+(padding*i);
+        UpdateSlider(c->sliders[i],x2,y,w,h,mouseState,mouseStateLastFrame);
+    }
+}
+
+UIElement* AddColorPicker(Panel* p, char* name, int x, int y, int w, int h, ALLEGRO_COLOR* colour)
+{
+    ColorPicker* c = calloc(1,sizeof(ColorPicker));
+    c->sliders[0] = InitSlider(x+w*0+padding*0,y,w,h,colour->r,&colour->r);
+    c->sliders[1] = InitSlider(x+w*1+padding*1,y,w,h,colour->g,&colour->g);
+    c->sliders[2] = InitSlider(x+w*2+padding*2,y,w,h,colour->b,&colour->b);
+
+    UIElement u = {0};
+    u.data = (void*)c;
+    u.w = w;
+    u.h = h;
+    u.x = x;
+    u.y = y;
+    u.name = calloc(strlen(name)+1,sizeof(char));
+    strcpy(u.name,name);
+    u.elementType = ELEMENT_COLOR_PICKER;
+    u.enabled = true;
+    u.bgColor = COLOR_BG;
+    UIElement* ref = AddElement(p,&u);
+    return ref;
+}
 void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive, ALLEGRO_COLOR bgColor, bool drawRectWhenUnselected, ALLEGRO_COLOR foregroundColor, bool fromPanel)
 {
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
@@ -3299,24 +3397,11 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
 
     if (fromPanel)
     {
-        if (button.x + button.w > panelX + panelW)
-        {
-            //clip.w -= (button.x+button.w) - panelX + panelW;
-        }
-        if (button.y + button.h > panelY + panelH)
-        {
-           // clip.h -= (button.y+button.h) - panelY + panelH;
-        }
-        //button.w = _MAX(button.w,0);
-        //button.h = _MAX(button.h,0);
-        //clip.w = _MAX(clip.w,0);
-        //clip.h = _MAX(clip.h,0);
 
         clip.x = clamp(clip.x,panel.x,panel.x+panel.w) - 1;
         clip.y = clamp(clip.y,panel.y,panel.y+panel.h) - 1;
         clip.w = _MAX(0,button.w) + 1;
         clip.h = _MAX(0,(panel.y+panel.h) - clip.y);
-
 
         al_set_clipping_rectangle(clip.x,clip.y,clip.w,clip.h);
     }
@@ -3490,6 +3575,10 @@ void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, Color bgC
         DrawTextInput(u,x,y,*mouseState,u->enabled,col);
     }
 
+    if (u->elementType == ELEMENT_COLOR_PICKER)
+    {
+        DrawColorPicker(u,x,y,*mouseState,u->enabled,col,WHITE,true);
+    }
 
 
 }

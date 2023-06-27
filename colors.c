@@ -120,7 +120,7 @@ unsigned char HashColor(ALLEGRO_COLOR c)
 }
 void InitColors()
 {
-    BG = al_map_rgba(24,5,26,255);
+    BG = al_map_rgba(24,5,44,255);
     GROUND = al_map_rgba(74,64,220,255);
 
     ENEMY = al_map_rgba(95,247,247,255);
