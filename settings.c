@@ -63,6 +63,7 @@ void InitSettings(char* path)
 {
 
     SetDefaultSettings(&defaultSettings);
+    currSettings = defaultSettings;
     LoadSettingsFile(path);
 }   
 void UpdateBind(UIElement* u)
@@ -144,6 +145,8 @@ void SetDefaultSettings(Settings* setting)
 
 
     setting->displayTimer = false;
+
+    memset(&setting->keymap,-1,sizeof(Settings));
 
     setting->keymap.key_ctrlgroups[0] = (Key){"Ctrl Group 1",ALLEGRO_KEY_1};
     setting->keymap.key_ctrlgroups[1] = (Key){"Ctrl Group 2",ALLEGRO_KEY_2};
@@ -448,10 +451,12 @@ float FindToken(char* str, char* token)
     bool spaceFound;
     for (int i = indexOf+1; i < foundIndex; i++)
     {
-        if (str[i-1] == ' '  && isdigit(str[i]))
+        if ((str[i-1] == ' ' || str[i-1] == '-')  && isdigit(str[i]))
         {
             char* value = calloc(len,sizeof(char));
             int index = 0;
+            if (str[i-1] == '-')
+                str--;
             //found value
             for (int j = i; i < foundIndex; j++)
             {
@@ -474,33 +479,43 @@ float FindToken(char* str, char* token)
 void SetAbilityKeys(char* str)
 {
     int key_Q  = (int)FindToken(str,"key_Q");
+    if (key_Q >= 0)
         currSettings.keymap.key_Q.keyMappedTo = key_Q;
 
     int key_Q_Alt  = (int)FindToken(str,"key_Q_Alt");
+    if (key_Q_Alt >= 0)
         currSettings.keymap.key_Q.secondKeyMappedTo = key_Q_Alt;
 
     int key_W = (int)FindToken(str,"key_W");
-    currSettings.keymap.key_W.keyMappedTo = key_W;
+    if (key_W >= 0)
+        currSettings.keymap.key_W.keyMappedTo = key_W;
 
     int key_W_Alt  = (int)FindToken(str,"key_W_Alt");
+    if (key_W_Alt >= 0)
         currSettings.keymap.key_W.secondKeyMappedTo = key_W_Alt;
 
     int key_E = (int)FindToken(str,"key_E");
+    if (key_E >= 0)
         currSettings.keymap.key_E.keyMappedTo = key_E;
 
     int key_E_Alt  = (int)FindToken(str,"key_E_Alt");
+    if (key_E_Alt >= 0)
         currSettings.keymap.key_E.secondKeyMappedTo = key_E_Alt;
 
     int key_R = (int)FindToken(str,"key_R");
+    if (key_R >= 0)
         currSettings.keymap.key_R.keyMappedTo = key_R;
 
     int key_R_Alt  = (int)FindToken(str,"key_R_Alt");
+    if (key_R_Alt >= 0)
         currSettings.keymap.key_R.secondKeyMappedTo = key_R_Alt;
 
     int key_F = (int)FindToken(str,"key_F");
+    if (key_F >= 0)
         currSettings.keymap.key_F.keyMappedTo = key_F;
 
     int key_F_Alt  = (int)FindToken(str,"key_F_Alt");
+    if (key_F_Alt >= 0)
         currSettings.keymap.key_F.secondKeyMappedTo = key_F_Alt;
 
 
@@ -508,171 +523,196 @@ void SetAbilityKeys(char* str)
 void SetControllingAbilities(char* str)
 {
     int key_AMove  = (int)FindToken(str,"key_AMove");
+    if (key_AMove >= 0)
         currSettings.keymap.key_AMove.keyMappedTo = key_AMove;
 
     int key_AMove_Alt  = (int)FindToken(str,"key_AMove_Alt");
+    if (key_AMove_Alt >= 0)
         currSettings.keymap.key_AMove.secondKeyMappedTo = key_AMove_Alt;
 
     int key_Shift  = (int)FindToken(str,"key_Shift");
+    if (key_Shift >= 0)
         currSettings.keymap.key_Shift.keyMappedTo = key_Shift;
 
     int key_Shift_Alt  = (int)FindToken(str,"key_Shift_Alt");
+    if (key_Shift_Alt >= 0)
         currSettings.keymap.key_Shift.secondKeyMappedTo = key_Shift_Alt;
 
     int key_Tab  = (int)FindToken(str,"key_Tab");
+    if (key_Tab >= 0)
         currSettings.keymap.key_Tab.keyMappedTo = key_Tab;
 
     int key_Tab_Alt  = (int)FindToken(str,"key_Tab_Alt");
+    if (key_Tab_Alt >= 0)
         currSettings.keymap.key_Tab.secondKeyMappedTo = key_Tab_Alt;
 
     int key_Ctrl  = (int)FindToken(str,"key_Ctrl");
+    if (key_Ctrl >= 0)
         currSettings.keymap.key_Ctrl.keyMappedTo = key_Ctrl;
 
     int key_Ctrl_Alt  = (int)FindToken(str,"key_Ctrl_Alt");
+    if (key_Ctrl_Alt >= 0)
         currSettings.keymap.key_Ctrl.secondKeyMappedTo = key_Ctrl_Alt;
 
     int key_ShowMap  = (int)FindToken(str,"key_ShowMap");
+    if (key_ShowMap >= 0)
         currSettings.keymap.key_ShowMap.keyMappedTo = key_ShowMap;
 
     int key_ShowMap_Alt  = (int)FindToken(str,"key_ShowMap_Alt");
+    if (key_ShowMap_Alt >= 0)
     currSettings.keymap.key_ShowMap.secondKeyMappedTo = key_ShowMap_Alt;
 
     int key_Pause  = (int)FindToken(str,"key_Pause");
+    if (key_Pause >= 0)
         currSettings.keymap.key_Pause.keyMappedTo = key_Pause;
 
     int key_Pause_Alt  = (int)FindToken(str,"key_Pause_Alt");
+    if (key_Pause_Alt >= 0)
         currSettings.keymap.key_Pause.secondKeyMappedTo = key_Pause_Alt;
 
     int key_Cancel  = (int)FindToken(str,"key_Cancel");
+    if (key_Cancel >= 0)
         currSettings.keymap.key_Cancel.keyMappedTo = key_Cancel;
 
     int key_Cancel_Alt  = (int)FindToken(str,"key_Cancel_Alt");
+    if (key_Cancel_Alt >= 0)
         currSettings.keymap.key_Cancel.secondKeyMappedTo = key_Cancel_Alt;
 
 }
 void SetColoursSetting(char* str)
 {
-    ALLEGRO_COLOR bg = FindColorToken(str,"BG");
+    //avoid mangling string with strtok calls
+    char* copy = calloc(strlen(str)+1,sizeof(char));
+    strcpy(copy,str);
+    ALLEGRO_COLOR bg = FindColorToken(copy,"BG");
     if (bg.a > 0)
     {
         BG = bg;
     }
-    ALLEGRO_COLOR friendly = FindColorToken(str,"FRIENDLY");
+    ALLEGRO_COLOR friendly = FindColorToken(copy,"FRIENDLY");
     if (friendly.a > 0)
     {
         FRIENDLY = friendly;
     }
-    ALLEGRO_COLOR enemy = FindColorToken(str,"ENEMY");
+    ALLEGRO_COLOR enemy = FindColorToken(copy,"ENEMY");
     if (enemy.a > 0)
     {
         ENEMY = enemy;
     }
-    ALLEGRO_COLOR ground = FindColorToken(str,"GROUND");
+    ALLEGRO_COLOR ground = FindColorToken(copy,"GROUND");
     if (ground.a > 0)
     {
         GROUND = ground;
     }
-    ALLEGRO_COLOR ground_dark = FindColorToken(str,"GROUND_DARK");
+    ALLEGRO_COLOR ground_dark = FindColorToken(copy,"GROUND_DARK");
     if (ground_dark.a > 0)
     {
         GROUND_DARK = ground_dark;
     }
-    ALLEGRO_COLOR edge_highlight = FindColorToken(str,"EDGE_HIGHLIGHT");
+    ALLEGRO_COLOR edge_highlight = FindColorToken(copy,"EDGE_HIGHLIGHT");
     if (edge_highlight.a > 0)
     {
         EDGE_HIGHLIGHT = edge_highlight;
     }
-    ALLEGRO_COLOR bg_decor = FindColorToken(str,"BG_DECOR");
+    ALLEGRO_COLOR bg_decor = FindColorToken(copy,"BG_DECOR");
     if (bg_decor.a > 0)
     {
         BG_DECOR = bg_decor;
     }
-    ALLEGRO_COLOR textured_ground = FindColorToken(str,"TEXTURED_GROUND");
+    ALLEGRO_COLOR textured_ground = FindColorToken(copy,"TEXTURED_GROUND");
     if (textured_ground.a > 0)
     {
         TEXTURED_GROUND = textured_ground;
     }
-    ALLEGRO_COLOR white = FindColorToken(str,"WHITE");
+    ALLEGRO_COLOR white = FindColorToken(copy,"WHITE");
     if (white.a > 0)
     {
         WHITE = white;
     }
-    ALLEGRO_COLOR poison = FindColorToken(str,"POISON");
+    ALLEGRO_COLOR poison = FindColorToken(copy,"POISON");
     if (poison.a > 0)
     {
         POISON = poison;
     }
-    ALLEGRO_COLOR heal = FindColorToken(str,"HEAL");
+    ALLEGRO_COLOR heal = FindColorToken(copy,"HEAL");
     if (heal.a > 0)
     {
         HEAL = heal;
     }
-    ALLEGRO_COLOR damage = FindColorToken(str,"DAMAGE");
+    ALLEGRO_COLOR damage = FindColorToken(copy,"DAMAGE");
     if (damage.a > 0)
     {
         DAMAGE = damage;
     }
-    ALLEGRO_COLOR speed = FindColorToken(str,"SPEED");
+    ALLEGRO_COLOR speed = FindColorToken(copy,"SPEED");
     if (speed.a > 0)
     {
         SPEED = speed;
     }
-    ALLEGRO_COLOR shield = FindColorToken(str,"SHIELD");
+    ALLEGRO_COLOR shield = FindColorToken(copy,"SHIELD");
     if (shield.a > 0)
     {
         SHIELD = shield;
     }
-    ALLEGRO_COLOR friendly_poison = FindColorToken(str,"FRIENDLY_POISON");
+    ALLEGRO_COLOR friendly_poison = FindColorToken(copy,"FRIENDLY_POISON");
     if (friendly_poison.a > 0)
     {
         FRIENDLY_POISON = friendly_poison;
     }
-    ALLEGRO_COLOR friendly_heal = FindColorToken(str,"FRIENDLY_HEAL");
+    ALLEGRO_COLOR friendly_heal = FindColorToken(copy,"FRIENDLY_HEAL");
     if (friendly_heal.a > 0)
     {
         FRIENDLY_HEAL = friendly_heal;
     }
-    ALLEGRO_COLOR friendly_damage = FindColorToken(str,"FRIENDLY_DAMAGE");
+    ALLEGRO_COLOR friendly_damage = FindColorToken(copy,"FRIENDLY_DAMAGE");
     if (friendly_damage.a > 0)
     {
         FRIENDLY_DAMAGE = friendly_damage;
     }
-    ALLEGRO_COLOR friendly_speed = FindColorToken(str,"FRIENDLY_SPEED");
+    ALLEGRO_COLOR friendly_speed = FindColorToken(copy,"FRIENDLY_SPEED");
     if (friendly_speed.a > 0)
     {
         FRIENDLY_SPEED = friendly_speed;
     }
-    ALLEGRO_COLOR friendly_shield = FindColorToken(str,"FRIENDLY_SHIELD");
+    ALLEGRO_COLOR friendly_shield = FindColorToken(copy,"FRIENDLY_SHIELD");
     if (friendly_shield.a > 0)
     {
         FRIENDLY_SHIELD = friendly_shield;
     }
-
+    free(copy);
 }
 void SetMovementKeys(char* str)
 {
     int key_PanLeft  = (int)FindToken(str,"key_PanLeft");
+    if (key_PanLeft >= 0)
         currSettings.keymap.key_PanLeft.keyMappedTo = key_PanLeft;
 
     int key_PanLeft_Alt  = (int)FindToken(str,"key_PanLeft_Alt");
+    if (key_PanLeft_Alt >= 0)
         currSettings.keymap.key_PanLeft.secondKeyMappedTo = key_PanLeft_Alt;
 
     int key_PanRight  = (int)FindToken(str,"key_PanRight");
+    if (key_PanRight >= 0)
         currSettings.keymap.key_PanRight.keyMappedTo = key_PanRight;
 
     int key_PanRight_Alt  = (int)FindToken(str,"key_PanRight_Alt");
+    if (key_PanRight_Alt >= 0)
         currSettings.keymap.key_PanRight.secondKeyMappedTo = key_PanRight_Alt;
 
     int key_PanUp  = (int)FindToken(str,"key_PanUp");
+    if (key_PanUp >= 0)
         currSettings.keymap.key_PanUp.keyMappedTo = key_PanUp;
 
     int key_PanUp_Alt  = (int)FindToken(str,"key_PanUp_Alt");
+    if (key_PanUp_Alt >= 0)
         currSettings.keymap.key_PanUp.secondKeyMappedTo = key_PanUp_Alt;
 
     int key_PanDown  = (int)FindToken(str,"key_PanDown");
+    if (key_PanDown >= 0)
         currSettings.keymap.key_PanDown.keyMappedTo = key_PanDown;
 
     int key_PanDown_Alt  = (int)FindToken(str,"key_PanDown_Alt");
+    if (key_PanDown_Alt >= 0)
         currSettings.keymap.key_PanDown.secondKeyMappedTo = key_PanDown_Alt;
 
 
@@ -680,55 +720,75 @@ void SetMovementKeys(char* str)
 void SetBindControlGroups(char* str)
 {
     int key_ctrlgroup1  = (int)FindToken(str,"key_ctrlgroup1");
+    if (key_ctrlgroup1 >= 0)
         currSettings.keymap.key_ctrlgroups[1].keyMappedTo = key_ctrlgroup1;
     int key_ctrlgroup1_Alt  = (int)FindToken(str,"key_ctrlgroup1_Alt");
+    if (key_ctrlgroup1_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[1].secondKeyMappedTo = key_ctrlgroup1_Alt;
 
 
     int key_ctrlgroup2  = (int)FindToken(str,"key_ctrlgroup2");
+    if (key_ctrlgroup2 >= 0)
         currSettings.keymap.key_ctrlgroups[2].keyMappedTo = key_ctrlgroup2;
     int key_ctrlgroup2_Alt  = (int)FindToken(str,"key_ctrlgroup2_Alt");
+    if (key_ctrlgroup2_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[2].secondKeyMappedTo = key_ctrlgroup2_Alt;
 
     int key_ctrlgroup3  = (int)FindToken(str,"key_ctrlgroup3");
+    if (key_ctrlgroup3 >= 0)
         currSettings.keymap.key_ctrlgroups[3].keyMappedTo = key_ctrlgroup3;
     int key_ctrlgroup3_Alt  = (int)FindToken(str,"key_ctrlgroup3_Alt");
+    if (key_ctrlgroup3_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[3].secondKeyMappedTo = key_ctrlgroup3_Alt;
 
     int key_ctrlgroup4  = (int)FindToken(str,"key_ctrlgroup4");
+    if (key_ctrlgroup4 >= 0)
         currSettings.keymap.key_ctrlgroups[4].keyMappedTo = key_ctrlgroup4;
     int key_ctrlgroup4_Alt  = (int)FindToken(str,"key_ctrlgroup4_Alt");
+    if (key_ctrlgroup4_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[4].secondKeyMappedTo = key_ctrlgroup4_Alt;
 
     int key_ctrlgroup5  = (int)FindToken(str,"key_ctrlgroup5");
+    if (key_ctrlgroup5 >= 0)
         currSettings.keymap.key_ctrlgroups[5].keyMappedTo = key_ctrlgroup5;
     int key_ctrlgroup5_Alt  = (int)FindToken(str,"key_ctrlgroup5_Alt");
+    if (key_ctrlgroup5_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[5].secondKeyMappedTo = key_ctrlgroup5_Alt;
 
 
     int key_ctrlgroup6  = (int)FindToken(str,"key_ctrlgroup6");
+    if (key_ctrlgroup6 >= 0)
         currSettings.keymap.key_ctrlgroups[6].keyMappedTo = key_ctrlgroup6;
     int key_ctrlgroup6_Alt  = (int)FindToken(str,"key_ctrlgroup6_Alt");
+    if (key_ctrlgroup6_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[6].secondKeyMappedTo = key_ctrlgroup6_Alt;
 
     int key_ctrlgroup7  = (int)FindToken(str,"key_ctrlgroup7");
+    if (key_ctrlgroup7 >= 0)
         currSettings.keymap.key_ctrlgroups[7].keyMappedTo = key_ctrlgroup7;
     int key_ctrlgroup7_Alt  = (int)FindToken(str,"key_ctrlgroup7_Alt");
+    if (key_ctrlgroup7_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[7].secondKeyMappedTo = key_ctrlgroup7_Alt;
 
     int key_ctrlgroup8  = (int)FindToken(str,"key_ctrlgroup8");
+    if (key_ctrlgroup8 >= 0)
         currSettings.keymap.key_ctrlgroups[8].keyMappedTo = key_ctrlgroup8;
     int key_ctrlgroup8_Alt  = (int)FindToken(str,"key_ctrlgroup8_Alt");
+    if (key_ctrlgroup8_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[8].secondKeyMappedTo = key_ctrlgroup8_Alt;
 
     int key_ctrlgroup9  = (int)FindToken(str,"key_ctrlgroup9");
+    if (key_ctrlgroup9 >= 0)
         currSettings.keymap.key_ctrlgroups[9].keyMappedTo = key_ctrlgroup9;
     int key_ctrlgroup9_Alt  = (int)FindToken(str,"key_ctrlgroup9_Alt");
+    if (key_ctrlgroup9_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[9].secondKeyMappedTo = key_ctrlgroup9_Alt;
 
     int key_ctrlgroup0  = (int)FindToken(str,"key_ctrlgroup0");
+    if (key_ctrlgroup0 >= 0)
         currSettings.keymap.key_ctrlgroups[0].keyMappedTo = key_ctrlgroup0;
     int key_ctrlgroup0_Alt  = (int)FindToken(str,"key_ctrlgroup0_Alt");
+    if (key_ctrlgroup0_Alt >= 0)
         currSettings.keymap.key_ctrlgroups[0].secondKeyMappedTo = key_ctrlgroup0_Alt;
 
 }

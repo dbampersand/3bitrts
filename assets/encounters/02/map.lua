@@ -12,7 +12,7 @@ local fifthWave= false
 local sixthWave = false
 local seventhWave = false
 
-local debug = false;
+local debug = true;
 
 function setup()
     SetMapSprite("assets/encounters/02/map.png")
@@ -38,8 +38,7 @@ function update(dt)
 
             local boss = CreateObject("assets/enemies/minotaur/minotaur.lua",120,22,TYPE_ENEMY,5,100);
             spawnedBoss = true;
-            --PlayMusic("assets/audio/music/boss/minotaur/minotaur.wav",1,0); 
-            After(PlayMusic,5,true,"assets/audio/music/boss/minotaur/minotaur.wav",1,0); 
+            After(PlayMusic,5,true,"assets/audio/music/boss/minotaur/minotaur.wav",1,40); 
 
             do return end;
         end
@@ -52,7 +51,7 @@ function update(dt)
     if (spawnedBoss == false and seventhWave == true and #numEnemies == 0) then
         local boss = CreateObject("assets/enemies/minotaur/minotaur.lua",120,22,TYPE_ENEMY,5,100);
         spawnedBoss = true
-        After(PlayMusic,5,true,"assets/audio/music/boss/minotaur/minotaur.wav",1,0); 
+        After(PlayMusic,5,true,"assets/audio/music/boss/minotaur/minotaur.wav",1,40); 
     end
 
     if (spawnedBoss == false) then
