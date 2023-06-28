@@ -93,6 +93,7 @@ typedef enum UIElement_Align
 typedef struct UI_Text
 {
     char* str;
+    ALLEGRO_COLOR* colour;
 }UI_Text;
 typedef struct Pulldown
 {
@@ -105,6 +106,10 @@ typedef struct Slider
 {
     bool clicked; 
     float* value;
+    float* r;
+    float* g;
+    float* b;
+
 }Slider;
 typedef struct ColorPicker
 {
@@ -311,6 +316,7 @@ bool _UI_IGNORE_INPUT;
 typedef struct MouseState MouseState;
 typedef struct Ability Ability;
 typedef struct Replay Replay;
+typedef struct ALLEGRO_COLOR ALLEGRO_COLOR;
 
 void Chatbox_NextLine();
 void EndChatbox();
@@ -374,7 +380,7 @@ void ChangeButtonText(Button* b, char* newstr);
 bool cb(int line_num, const char *line, int size, void *extra);
 void SetOptions();
 void SetUITextStr(UI_Text* t, char* str);
-void AddText(Panel* p, int x, int y, char* name, char* description);
+void AddText(Panel* p, int x, int y, char* name, char* description, ALLEGRO_COLOR* colour);
 UIElement* AddTextInput(Panel* p, int x, int y, int w, int h,char* name, char* description, int maxChars, bool onlyAllowNumbers);
 UI_Text* GetUIText(Panel* p, char* name);
 void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame);

@@ -31,6 +31,7 @@ ALLEGRO_COLOR FRIENDLY_SPEED;
 ALLEGRO_COLOR FRIENDLY_SHIELD;
 
 
+ALLEGRO_COLOR ColorPresets[PRESET_ALL][COLOR_ALL];
 
 
 ALLEGRO_COLOR* ALColorLookup[COLOR_ALL] = {0};
@@ -118,6 +119,28 @@ unsigned char HashColor(ALLEGRO_COLOR c)
     return (unsigned char)((int)(c.r*255) ^ (int)(c.g*255) ^ (int)(c.b*255) ^ (int)(c.a*255));
 
 }
+void SetColors(ColorPreset preset)
+{
+    BG = ColorPresets[preset][COLOR_BG];
+    FRIENDLY = ColorPresets[preset][COLOR_FRIENDLY];
+    ENEMY = ColorPresets[preset][COLOR_ENEMY];
+    GROUND = ColorPresets[preset][COLOR_GROUND];
+    GROUND_DARK = ColorPresets[preset][COLOR_GROUND_DARK];
+    EDGE_HIGHLIGHT = ColorPresets[preset][COLOR_EDGE_HIGHLIGHT];
+    BG_DECOR = ColorPresets[preset][COLOR_BG_DECOR];
+    TEXTURED_GROUND = ColorPresets[preset][COLOR_TEXTURED_GROUND];
+    WHITE = ColorPresets[preset][COLOR_WHITE];
+    POISON = ColorPresets[preset][COLOR_POISON];
+    HEAL = ColorPresets[preset][COLOR_HEAL];
+    DAMAGE = ColorPresets[preset][COLOR_DAMAGE];
+    SPEED = ColorPresets[preset][COLOR_SPEED];
+    SHIELD = ColorPresets[preset][COLOR_SHIELD];
+    FRIENDLY_POISON = ColorPresets[preset][COLOR_FRIENDLY_POISON];
+    FRIENDLY_HEAL = ColorPresets[preset][COLOR_FRIENDLY_HEAL];
+    FRIENDLY_DAMAGE = ColorPresets[preset][COLOR_FRIENDLY_DAMAGE];
+    FRIENDLY_SPEED = ColorPresets[preset][COLOR_FRIENDLY_SPEED];
+    FRIENDLY_SHIELD = ColorPresets[preset][COLOR_FRIENDLY_SHIELD];
+}
 void InitColors()
 {
     BG = al_map_rgba(24,5,44,255);
@@ -146,6 +169,33 @@ void InitColors()
     FRIENDLY_DAMAGE = al_map_rgba(clamp((DAMAGE.r*255) + FRIENDLY_COLOR_ADD,0,255),clamp((DAMAGE.g*255)+FRIENDLY_COLOR_ADD,0,255),clamp((DAMAGE.b*255)+FRIENDLY_COLOR_ADD,0,255),255);
     FRIENDLY_SPEED = al_map_rgba(clamp((SPEED.r*255) + FRIENDLY_COLOR_ADD,0,255),clamp((SPEED.g*255)+FRIENDLY_COLOR_ADD,0,255),clamp((SPEED.b*255)+FRIENDLY_COLOR_ADD,0,255),255);
     FRIENDLY_SHIELD = al_map_rgba(clamp((SHIELD.r*255) + FRIENDLY_COLOR_ADD,0,255),clamp((SHIELD.g*255)+FRIENDLY_COLOR_ADD,0,255),clamp((SHIELD.b*255)+FRIENDLY_COLOR_ADD,0,255),255);
+
+    ColorPresets[PRESET_DEFAULT][COLOR_DEFAULT] = BG;
+    ColorPresets[PRESET_DEFAULT][COLOR_BG] = BG;
+    ColorPresets[PRESET_DEFAULT][COLOR_GROUND] = GROUND;
+    ColorPresets[PRESET_DEFAULT][COLOR_GROUND_DARK] = GROUND_DARK;
+    ColorPresets[PRESET_DEFAULT][COLOR_ENEMY] = ENEMY;
+    ColorPresets[PRESET_DEFAULT][COLOR_FRIENDLY] = FRIENDLY;
+    ColorPresets[PRESET_DEFAULT][COLOR_WHITE] = WHITE;
+
+    ColorPresets[PRESET_DEFAULT][COLOR_HEAL] = HEAL;
+    ColorPresets[PRESET_DEFAULT][COLOR_POISON] = POISON;
+    ColorPresets[PRESET_DEFAULT][COLOR_DAMAGE] = DAMAGE;
+    ColorPresets[PRESET_DEFAULT][COLOR_SPEED] = SPEED;
+    ColorPresets[PRESET_DEFAULT][COLOR_SHIELD] = SHIELD;
+
+    ColorPresets[PRESET_DEFAULT][COLOR_FRIENDLY_HEAL] = FRIENDLY_HEAL;
+    ColorPresets[PRESET_DEFAULT][COLOR_FRIENDLY_POISON] = FRIENDLY_POISON;
+    ColorPresets[PRESET_DEFAULT][COLOR_FRIENDLY_DAMAGE] = FRIENDLY_DAMAGE;
+    ColorPresets[PRESET_DEFAULT][COLOR_FRIENDLY_SPEED] = FRIENDLY_SPEED;
+    ColorPresets[PRESET_DEFAULT][COLOR_FRIENDLY_SHIELD] = FRIENDLY_SHIELD;
+
+    ColorPresets[PRESET_DEFAULT][COLOR_EDGE_HIGHLIGHT] = EDGE_HIGHLIGHT;
+    ColorPresets[PRESET_DEFAULT][COLOR__TRANSPARENT] = _TRANSPARENT;
+    ColorPresets[PRESET_DEFAULT][COLOR_BG_DECOR] = BG_DECOR;
+    ColorPresets[PRESET_DEFAULT][COLOR_TEXTURED_GROUND] = TEXTURED_GROUND;
+
+
 
     ALColorLookup[COLOR_DEFAULT] = &BG;
     ALColorLookup[COLOR_BG] = &BG;

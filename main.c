@@ -64,6 +64,7 @@ void init()
     al_install_keyboard();
 
     InitPath();
+    InitColors();
     
     InitSettings("config.cfg");
     #ifdef _AUGMENTS_ENABLED
@@ -71,7 +72,6 @@ void init()
     #endif
     InitGameState();
     InitSound();
-    InitColors();
     InitVideo();
     init_lua();
 

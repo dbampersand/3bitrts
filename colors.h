@@ -80,6 +80,11 @@ typedef enum Color
     COLOR_ALL //used to get the number of elements in enum
 } Color;
 
+typedef enum ColorPreset {
+    PRESET_DEFAULT = 0,
+    PRESET_ALL 
+} ColorPreset;
+
 extern ALLEGRO_COLOR BG;
 extern ALLEGRO_COLOR FRIENDLY;
 extern ALLEGRO_COLOR ENEMY;
@@ -109,7 +114,7 @@ extern ALLEGRO_COLOR FRIENDLY_SPEED;
 extern ALLEGRO_COLOR FRIENDLY_SHIELD;
 
 
-
+extern ALLEGRO_COLOR ColorPresets[PRESET_ALL][COLOR_ALL];
 
 extern ALLEGRO_COLOR* ALColorLookup[COLOR_ALL];
 extern Color* EffectColors;
@@ -125,3 +130,6 @@ bool AlColIsEq(ALLEGRO_COLOR c, ALLEGRO_COLOR c2);
 unsigned char HashColor(ALLEGRO_COLOR c);
 Color GetEffectColor(Effect* e);
 Color GameObjToColor(GameObject* g);
+void SetColorDefaults();    
+
+void SetColors(ColorPreset preset);

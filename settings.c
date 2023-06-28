@@ -264,7 +264,25 @@ void WriteSettingsFile(char* path)
         "key_ctrlgroup9_Alt %i;\n"
         "key_ctrlgroup0 %i;\n"
         "key_ctrlgroup0_Alt %i;\n"
-
+        "BG, %i, %i, %i;\n"
+        "FRIENDLY, %i, %i, %i;\n"
+        "ENEMY, %i, %i, %i;\n"
+        "GROUND, %i, %i, %i;\n"
+        "GROUND_DARK, %i, %i, %i;\n"
+        "EDGE_HIGHLIGHT, %i, %i, %i;\n"
+        "BG_DECOR, %i, %i, %i;\n"
+        "TEXTURED_GROUND, %i, %i, %i;\n"
+        "WHITE, %i, %i, %i;\n"
+        "POISON, %i, %i, %i;\n"
+        "HEAL, %i, %i, %i;\n"
+        "DAMAGE, %i, %i, %i;\n"
+        "SPEED, %i, %i, %i;\n"
+        "SHIELD, %i, %i, %i;\n"
+        "FRIENDLY_POISON, %i, %i, %i;\n"
+        "FRIENDLY_HEAL, %i, %i, %i;\n"
+        "FRIENDLY_DAMAGE, %i, %i, %i;\n"
+        "FRIENDLY_SPEED, %i, %i, %i;\n"
+        "FRIENDLY_SHIELD, %i, %i, %i;\n"
 
         ,
         *   currSettings.renderScale,
@@ -349,7 +367,28 @@ void WriteSettingsFile(char* path)
         currSettings.keymap.key_ctrlgroups[9].keyMappedTo,
         currSettings.keymap.key_ctrlgroups[9].secondKeyMappedTo,
         currSettings.keymap.key_ctrlgroups[0].keyMappedTo,
-        currSettings.keymap.key_ctrlgroups[0].secondKeyMappedTo
+        currSettings.keymap.key_ctrlgroups[0].secondKeyMappedTo,
+
+        (int)(BG.r * 255), (int)(BG.g * 255), (int)(BG.b * 255),
+        (int)(FRIENDLY.r * 255), (int)(FRIENDLY.g * 255), (int)(FRIENDLY.b * 255),
+        (int)(ENEMY.r * 255), (int)(ENEMY.g * 255), (int)(ENEMY.b * 255),
+        (int)(GROUND.r * 255), (int)(GROUND.g * 255), (int)(GROUND.b * 255),
+        (int)(GROUND_DARK.r * 255), (int)(GROUND_DARK.g * 255), (int)(GROUND_DARK.b * 255),
+        (int)(EDGE_HIGHLIGHT.r * 255), (int)(EDGE_HIGHLIGHT.g * 255), (int)(EDGE_HIGHLIGHT.b * 255),
+        (int)(BG_DECOR.r * 255), (int)(BG_DECOR.g * 255), (int)(BG_DECOR.b * 255),
+        (int)(TEXTURED_GROUND.r * 255), (int)(TEXTURED_GROUND.g * 255), (int)(TEXTURED_GROUND.b * 255),
+        (int)(WHITE.r * 255), (int)(WHITE.g * 255), (int)(WHITE.b * 255),
+        (int)(POISON.r * 255), (int)(POISON.g * 255), (int)(POISON.b * 255),
+        (int)(HEAL.r * 255), (int)(HEAL.g * 255), (int)(HEAL.b * 255),
+        (int)(DAMAGE.r * 255), (int)(DAMAGE.g * 255), (int)(DAMAGE.b * 255),
+        (int)(SPEED.r * 255), (int)(SPEED.g * 255), (int)(SPEED.b * 255),
+        (int)(SHIELD.r * 255), (int)(SHIELD.g * 255), (int)(SHIELD.b * 255),
+        (int)(FRIENDLY_POISON.r * 255), (int)(FRIENDLY_POISON.g * 255), (int)(FRIENDLY_POISON.b * 255),
+        (int)(FRIENDLY_HEAL.r * 255), (int)(FRIENDLY_HEAL.g * 255), (int)(FRIENDLY_HEAL.b * 255),
+        (int)(FRIENDLY_DAMAGE.r * 255), (int)(FRIENDLY_DAMAGE.g * 255), (int)(FRIENDLY_DAMAGE.b * 255),
+        (int)(FRIENDLY_SPEED.r * 255), (int)(FRIENDLY_SPEED.g * 255), (int)(FRIENDLY_SPEED.b * 255),
+        (int)(FRIENDLY_SHIELD.r * 255), (int)(FRIENDLY_SHIELD.g * 255), (int)(FRIENDLY_SHIELD.b * 255)
+
 
         );
 
@@ -360,6 +399,31 @@ void WriteSettingsFile(char* path)
         free(str);
     }
 }
+ALLEGRO_COLOR FindColorToken(char* str, char* token)
+{
+    if (!str || !token) return (ALLEGRO_COLOR){0};
+        int len = strlen(str);
+    int indexOf = strstr(str,token)-str;
+    if (indexOf < 0)
+    {
+        return (ALLEGRO_COLOR){0};
+    }
+    char comma = ',';
+    char* save = NULL;
+    //value is between indexOf - foundIndex
+    bool spaceFound;
+    strtok_r(str,&comma,&save);
+    int r = atoi(strtok_r(NULL,&comma,&save));
+    int g = atoi(strtok_r(NULL,&comma,&save));
+    int b = atoi(strtok_r(NULL,&comma,&save));
+
+    return al_map_rgb(r,g,b);
+
+        
+    return (ALLEGRO_COLOR){0};
+
+
+}   
 float FindToken(char* str, char* token)
 {
     if (!str || !token) return -1;
@@ -484,6 +548,105 @@ void SetControllingAbilities(char* str)
 
     int key_Cancel_Alt  = (int)FindToken(str,"key_Cancel_Alt");
         currSettings.keymap.key_Cancel.secondKeyMappedTo = key_Cancel_Alt;
+
+}
+void SetColoursSetting(char* str)
+{
+    ALLEGRO_COLOR bg = FindColorToken(str,"BG");
+    if (bg.a > 0)
+    {
+        BG = bg;
+    }
+    ALLEGRO_COLOR friendly = FindColorToken(str,"FRIENDLY");
+    if (friendly.a > 0)
+    {
+        FRIENDLY = friendly;
+    }
+    ALLEGRO_COLOR enemy = FindColorToken(str,"ENEMY");
+    if (enemy.a > 0)
+    {
+        ENEMY = enemy;
+    }
+    ALLEGRO_COLOR ground = FindColorToken(str,"GROUND");
+    if (ground.a > 0)
+    {
+        GROUND = ground;
+    }
+    ALLEGRO_COLOR ground_dark = FindColorToken(str,"GROUND_DARK");
+    if (ground_dark.a > 0)
+    {
+        GROUND_DARK = ground_dark;
+    }
+    ALLEGRO_COLOR edge_highlight = FindColorToken(str,"EDGE_HIGHLIGHT");
+    if (edge_highlight.a > 0)
+    {
+        EDGE_HIGHLIGHT = edge_highlight;
+    }
+    ALLEGRO_COLOR bg_decor = FindColorToken(str,"BG_DECOR");
+    if (bg_decor.a > 0)
+    {
+        BG_DECOR = bg_decor;
+    }
+    ALLEGRO_COLOR textured_ground = FindColorToken(str,"TEXTURED_GROUND");
+    if (textured_ground.a > 0)
+    {
+        TEXTURED_GROUND = textured_ground;
+    }
+    ALLEGRO_COLOR white = FindColorToken(str,"WHITE");
+    if (white.a > 0)
+    {
+        WHITE = white;
+    }
+    ALLEGRO_COLOR poison = FindColorToken(str,"POISON");
+    if (poison.a > 0)
+    {
+        POISON = poison;
+    }
+    ALLEGRO_COLOR heal = FindColorToken(str,"HEAL");
+    if (heal.a > 0)
+    {
+        HEAL = heal;
+    }
+    ALLEGRO_COLOR damage = FindColorToken(str,"DAMAGE");
+    if (damage.a > 0)
+    {
+        DAMAGE = damage;
+    }
+    ALLEGRO_COLOR speed = FindColorToken(str,"SPEED");
+    if (speed.a > 0)
+    {
+        SPEED = speed;
+    }
+    ALLEGRO_COLOR shield = FindColorToken(str,"SHIELD");
+    if (shield.a > 0)
+    {
+        SHIELD = shield;
+    }
+    ALLEGRO_COLOR friendly_poison = FindColorToken(str,"FRIENDLY_POISON");
+    if (friendly_poison.a > 0)
+    {
+        FRIENDLY_POISON = friendly_poison;
+    }
+    ALLEGRO_COLOR friendly_heal = FindColorToken(str,"FRIENDLY_HEAL");
+    if (friendly_heal.a > 0)
+    {
+        FRIENDLY_HEAL = friendly_heal;
+    }
+    ALLEGRO_COLOR friendly_damage = FindColorToken(str,"FRIENDLY_DAMAGE");
+    if (friendly_damage.a > 0)
+    {
+        FRIENDLY_DAMAGE = friendly_damage;
+    }
+    ALLEGRO_COLOR friendly_speed = FindColorToken(str,"FRIENDLY_SPEED");
+    if (friendly_speed.a > 0)
+    {
+        FRIENDLY_SPEED = friendly_speed;
+    }
+    ALLEGRO_COLOR friendly_shield = FindColorToken(str,"FRIENDLY_SHIELD");
+    if (friendly_shield.a > 0)
+    {
+        FRIENDLY_SHIELD = friendly_shield;
+    }
 
 }
 void SetMovementKeys(char* str)
@@ -889,7 +1052,7 @@ bool LoadSettingsFile(char* path)
             {
                 currSettings.screenShakeFactor = screenShakeFactor;
             }
-
+            SetColoursSetting(str);
 
         
             SetBinds(str);
