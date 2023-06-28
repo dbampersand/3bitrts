@@ -440,9 +440,17 @@ bool MouseReleasedThisFrame(MouseState* thisFrame, MouseState* previousFrame)
 {
     return ((previousFrame->mouse.buttons & 1) && !(thisFrame->mouse.buttons & 1));
 }
-bool KeyPressedThisFrame(int key, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
+bool KeyDown(ALLEGRO_KEYBOARD_STATE* keyState, int key)
 {
-    return (al_key_down(keyState,key) && !al_key_down(keyStateLastFrame,key));
+    if (key > 0)
+        return al_key_down  (keyState,key);
+    return false;
+}
+bool KeyPressedThisFrame(int key, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
+{   
+    if (key > 0)
+        return (KeyDown(keyState,key) && !KeyDown(keyStateLastFrame,key));
+    return false;
 }
 
 void GenerateAngleDeg()

@@ -198,7 +198,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
     UpdateChatbox(dt);
 
 
-    if (al_key_down(keyState,ALLEGRO_KEY_LCTRL) && KeyPressedThisFrame(ALLEGRO_KEY_M,keyState,keyStateLastFrame))
+    if (KeyDown(keyState,ALLEGRO_KEY_LCTRL) && KeyPressedThisFrame(ALLEGRO_KEY_M,keyState,keyStateLastFrame))
     {
         if (gameState != GAMESTATE_IN_EDITOR)
             SetGameStateToInEditor(); 
@@ -632,9 +632,9 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
     DrawTransition(dt);
 
-    if (al_key_down(keyState,ALLEGRO_KEY_MINUS))
+    if (KeyDown(keyState,ALLEGRO_KEY_MINUS))
         DisplayCollision();
-    if (al_key_down(keyState,ALLEGRO_KEY_O) && !al_key_down(keyStateLastFrame,ALLEGRO_KEY_O))
+    if (KeyDown(keyState,ALLEGRO_KEY_O) && !KeyDown(keyStateLastFrame,ALLEGRO_KEY_O))
     {
         //GameObject* g = AddGameobject(LoadPrefab("assets/enemies/prowler/prowler.lua"),mouseState->worldX,mouseState->worldY,SOURCE_SPAWNED_FROM_MAP);
         //SetOwnedBy(g, 1);
@@ -644,16 +644,16 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         //AddCompletionPercent(10);
     }
     //GameObjDebugDraw();
-    if (al_key_down(keyState,ALLEGRO_KEY_V))
+    if (KeyDown(keyState,ALLEGRO_KEY_V))
     {
         DebugDrawPathfinding(); 
         
     }
-    if (al_key_down(keyState,ALLEGRO_KEY_F7))
+    if (KeyDown(keyState,ALLEGRO_KEY_F7))
     {
         AddGold(1000);
     }
-    if (al_key_down(keyState,ALLEGRO_KEY_F8))
+    if (KeyDown(keyState,ALLEGRO_KEY_F8))
     {
         AddCompletionPercent(100);
     }

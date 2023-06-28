@@ -687,7 +687,7 @@ void UpdatePlayer3D(float dt, ALLEGRO_KEYBOARD_STATE* keyState)
     playerVelocity.z += _GRAVITY * dt;
     playerVelocity.z = clamp(playerVelocity.z,-_GRAVITY,_GRAVITY);
 
-    if (al_key_down(keyState,ALLEGRO_KEY_Z))
+    if (KeyDown(keyState,ALLEGRO_KEY_Z))
     {
         playerPosition.x = RandRange(0,VOXEL_WORLD_SIZE);
         playerPosition.y = RandRange(0,VOXEL_WORLD_SIZE);
@@ -705,7 +705,7 @@ void UpdatePlayer3D(float dt, ALLEGRO_KEYBOARD_STATE* keyState)
     playerVelocity.x = 0;
     playerVelocity.y = 0;
 
-    if (al_key_down(keyState,ALLEGRO_KEY_W))
+    if (KeyDown(keyState,ALLEGRO_KEY_W))
     {
         Point3 fwd = GetForwardVector(rot);
 
@@ -717,7 +717,7 @@ void UpdatePlayer3D(float dt, ALLEGRO_KEYBOARD_STATE* keyState)
 
         moveKeyDown = true;
     }
-     if (al_key_down(keyState,ALLEGRO_KEY_S))
+     if (KeyDown(keyState,ALLEGRO_KEY_S))
     {
         Point3 fwd = GetForwardVector(rot);
 
@@ -730,7 +730,7 @@ void UpdatePlayer3D(float dt, ALLEGRO_KEYBOARD_STATE* keyState)
         moveKeyDown = true;
 
     }
-    if (al_key_down(keyState,ALLEGRO_KEY_A))
+    if (KeyDown(keyState,ALLEGRO_KEY_A))
     {
         Point3 l = GetLeftVector(rot);
 
@@ -745,7 +745,7 @@ void UpdatePlayer3D(float dt, ALLEGRO_KEYBOARD_STATE* keyState)
     }
 
 
-    if (al_key_down(keyState,ALLEGRO_KEY_D))
+    if (KeyDown(keyState,ALLEGRO_KEY_D))
     {
         Point3 l = GetLeftVector(rot);
 
@@ -792,7 +792,7 @@ void Update3D(float dt, MouseState mouseStateLastFrame, MouseState mouseState, A
     //z is yaw
     //y is roll
 
-    if (al_key_down(keyState,ALLEGRO_KEY_E))
+    if (KeyDown(keyState,ALLEGRO_KEY_E))
     {
     rotation.z -= mouseMoveX * dt;
     rotation.x -= mouseMoveY * dt;

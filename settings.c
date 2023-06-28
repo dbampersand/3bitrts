@@ -92,35 +92,35 @@ void UpdateBind(UIElement* u)
 bool IsModifierDown(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame)
 {
     return (
-        al_key_down(keyStateThisFrame,ALLEGRO_KEY_TAB)      || 
-        al_key_down(keyStateThisFrame,ALLEGRO_KEY_CAPSLOCK) || 
-        al_key_down(keyStateThisFrame,ALLEGRO_KEY_LSHIFT)   ||
-        al_key_down(keyStateThisFrame,ALLEGRO_KEY_RSHIFT)   || 
-        al_key_down(keyStateThisFrame,ALLEGRO_KEY_TAB)      ||
-        al_key_down(keyStateThisFrame,ALLEGRO_KEY_LWIN)     ||
-        al_key_down(keyStateThisFrame,ALLEGRO_KEY_RWIN)     ||  
-        al_key_down(keyStateThisFrame,ALLEGRO_KEY_LCTRL)    ||
-        al_key_down(keyStateThisFrame,ALLEGRO_KEY_RCTRL)    ||
-        al_key_down(keyStateThisFrame,ALLEGRO_KEY_COMMAND) 
+        KeyDown(keyStateThisFrame,ALLEGRO_KEY_TAB)      || 
+        KeyDown(keyStateThisFrame,ALLEGRO_KEY_CAPSLOCK) || 
+        KeyDown(keyStateThisFrame,ALLEGRO_KEY_LSHIFT)   ||
+        KeyDown(keyStateThisFrame,ALLEGRO_KEY_RSHIFT)   || 
+        KeyDown(keyStateThisFrame,ALLEGRO_KEY_TAB)      ||
+        KeyDown(keyStateThisFrame,ALLEGRO_KEY_LWIN)     ||
+        KeyDown(keyStateThisFrame,ALLEGRO_KEY_RWIN)     ||  
+        KeyDown(keyStateThisFrame,ALLEGRO_KEY_LCTRL)    ||
+        KeyDown(keyStateThisFrame,ALLEGRO_KEY_RCTRL)    ||
+        KeyDown(keyStateThisFrame,ALLEGRO_KEY_COMMAND) 
 
     );
 
 }
 bool IsBindReleasedThisFrame(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame,Key k)
 {
-    bool b = ((k.keyMappedTo >= 0 && !al_key_down(keyStateThisFrame, k.keyMappedTo) && al_key_down(keyStateLastFrame, k.keyMappedTo)) || (k.secondKeyMappedTo >= 0 && !al_key_down(keyStateThisFrame, k.secondKeyMappedTo) && al_key_down(keyStateLastFrame, k.secondKeyMappedTo)));
+    bool b = ((k.keyMappedTo >= 0 && !KeyDown(keyStateThisFrame, k.keyMappedTo) && KeyDown(keyStateLastFrame, k.keyMappedTo)) || (k.secondKeyMappedTo >= 0 && !KeyDown(keyStateThisFrame, k.secondKeyMappedTo) && KeyDown(keyStateLastFrame, k.secondKeyMappedTo)));
     return b;
 }
 bool IsBindDownThisFrame(ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame,Key k)
 {
     if (k.keyMappedTo == -1 && k.secondKeyMappedTo == -1)
         return false;
-    bool b = ((k.keyMappedTo >= 0 && al_key_down(keyStateThisFrame, k.keyMappedTo) && !al_key_down(keyStateLastFrame, k.keyMappedTo)) || (k.secondKeyMappedTo >= 0 && al_key_down(keyStateThisFrame, k.secondKeyMappedTo) && !al_key_down(keyStateLastFrame, k.secondKeyMappedTo)));
+    bool b = ((KeyDown(keyStateThisFrame, k.keyMappedTo) && !KeyDown(keyStateLastFrame, k.keyMappedTo)) || (k.secondKeyMappedTo >= 0 && KeyDown(keyStateThisFrame, k.secondKeyMappedTo) && !KeyDown(keyStateLastFrame, k.secondKeyMappedTo)));
     return b;
 }
 bool IsBindDown(ALLEGRO_KEYBOARD_STATE* keyState, Key k)
 {
-    bool b = ((k.keyMappedTo >= 0 && al_key_down(keyState, k.keyMappedTo)) || (k.secondKeyMappedTo >= 0 && al_key_down(keyState, k.secondKeyMappedTo)));
+    bool b = ((k.keyMappedTo >= 0 && KeyDown(keyState, k.keyMappedTo)) || (k.secondKeyMappedTo >= 0 && KeyDown(keyState, k.secondKeyMappedTo)));
     return b;
 }
 void SetDefaultSettings(Settings* setting)
@@ -247,6 +247,8 @@ void WriteSettingsFile(char* path)
         "key_PanUp_Alt %i;\n"
         "key_PanDown %i;\n"
         "key_PanDown_Alt %i;\n"
+        "key_Console %i;\n"
+        "key_Console_Alt %i;\n"
         "key_ctrlgroup1 %i;\n"
         "key_ctrlgroup1_Alt %i;\n"
         "key_ctrlgroup2 %i;\n"
@@ -350,6 +352,9 @@ void WriteSettingsFile(char* path)
 
         currSettings.keymap.key_PanDown.keyMappedTo,
         currSettings.keymap.key_PanDown.secondKeyMappedTo,
+
+        currSettings.keymap.key_Console.keyMappedTo,
+        currSettings.keymap.key_Console.secondKeyMappedTo,
 
         currSettings.keymap.key_ctrlgroups[1].keyMappedTo,
         currSettings.keymap.key_ctrlgroups[1].secondKeyMappedTo,
@@ -798,6 +803,14 @@ void SetBinds(char* str)
     SetControllingAbilities(str);
     SetMovementKeys(str);
     SetBindControlGroups(str);
+
+    int console  = (int)FindToken(str,"key_Console");
+    if (console >= 0)
+        currSettings.keymap.key_Console.keyMappedTo = console;
+    int console_Alt  = (int)FindToken(str,"key_Console_Alt");
+    if (console_Alt >= 0)
+        currSettings.keymap.key_Console.secondKeyMappedTo = console_Alt;
+
 }
 void Save(char* path)
 {

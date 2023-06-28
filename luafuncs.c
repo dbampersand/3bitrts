@@ -4167,7 +4167,7 @@ int L_GetKey(lua_State* l)
 {
     int index = lua_tonumber(l,1);
     
-    if (al_key_down(keyStateLua,index))
+    if (KeyDown(keyStateLua,index))
     {
         lua_pushboolean(l,true);
     }

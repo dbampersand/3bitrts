@@ -21,6 +21,7 @@ int rerollCost = 5;
 
 void LoadShop()
 {
+    shop = (Shop){0};
     int numIdleSprites = 4;
     shop.idleSprites = calloc(numIdleSprites,sizeof(Animation));
     shop.numIdleSprites = numIdleSprites;
@@ -70,6 +71,11 @@ void RefreshShop()
     Item* i1 = GetRandomItem(LEVEL_POOR);
     Item* i2 = GetRandomItem(LEVEL_MID);
     Item* i3 = GetRandomItem(LEVEL_HIGH);
+
+    shop.items[0] = (ShopItem){0};
+    shop.items[1] = (ShopItem){0};
+    shop.items[2] = (ShopItem){0};
+
 
     shop.items[0].item = i1;
     shop.items[1].item = i2;

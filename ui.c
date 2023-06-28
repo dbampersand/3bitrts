@@ -3041,7 +3041,7 @@ void UpdateKeyInput(int rX, int rY, int w, int h, UIElement* u, MouseState mouse
 
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
         {
-            if (al_key_down(keyStateThisFrame,i))
+            if (KeyDown(keyStateThisFrame,i))
             {
                 if (t->mappedTo)
                     *t->mappedTo = i;
@@ -3071,7 +3071,7 @@ void UpdateTextInput(int rX, int rY, int w, int h, UIElement* u, MouseState mous
             _TEXTINPUT_HIGHLIGHTED = false;
         }
     }
-    if (al_key_down(keyStateThisFrame,ALLEGRO_KEY_ENTER))
+    if (KeyDown(keyStateThisFrame,ALLEGRO_KEY_ENTER))
     {
         t->clicked = false;
         _TEXTINPUT_HIGHLIGHTED = false;
@@ -3080,11 +3080,11 @@ void UpdateTextInput(int rX, int rY, int w, int h, UIElement* u, MouseState mous
     {
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
         {
-            if (al_key_down(keyStateThisFrame,i) && !al_key_down(keyStateLastFrame,i))
+            if (KeyDown(keyStateThisFrame,i) && !KeyDown(keyStateLastFrame,i))
             {
                 const char* keyName = al_keycode_to_name(i);
                 char key = 0;
-                bool shift = al_key_down(keyStateThisFrame,ALLEGRO_KEY_LSHIFT);
+                bool shift = KeyDown(keyStateThisFrame,ALLEGRO_KEY_LSHIFT);
 
                 if (strlen(keyName) == 1)
                     key = keyName[0];
@@ -3425,6 +3425,8 @@ void DrawColorPicker(UIElement* u, int x, int y, MouseState mouseState, bool isA
 
         DrawSlider(&u2,u2.x,u2.y,&mouseState,true,GetColor(u->bgColor,0));
     }
+    al_reset_clipping_rectangle();
+
 }
 void UpdateColorPicker(ColorPicker* c, int x, int y, int w, int h, MouseState mouseState, MouseState mouseStateLastFrame)
 {
