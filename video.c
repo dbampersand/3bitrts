@@ -129,6 +129,10 @@ void InitSpriteDecorations()
 }
 void SetDisplayWindowed(int windowMode)
 {
+    #ifdef __APPLE__
+        if (windowMode == ALLEGRO_FULLSCREEN)
+            windowMode = ALLEGRO_FULLSCREEN_WINDOW;
+    #endif
     currSettings.displayWindowStyle = windowMode;
     al_unregister_event_source(queue,al_get_display_event_source(display));
     ALLEGRO_MONITOR_INFO monitor;

@@ -146,7 +146,7 @@ void SetDefaultSettings(Settings* setting)
 
     setting->displayTimer = false;
 
-    memset(&setting->keymap,-1,sizeof(Settings));
+    memset(&setting->keymap,-1,sizeof(Keymap));
 
     setting->keymap.key_ctrlgroups[0] = (Key){"Ctrl Group 1",ALLEGRO_KEY_1};
     setting->keymap.key_ctrlgroups[1] = (Key){"Ctrl Group 2",ALLEGRO_KEY_2};
