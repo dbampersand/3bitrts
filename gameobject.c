@@ -2556,6 +2556,11 @@ void DrawMapHighlights()
     {
         scratchMap = al_create_bitmap(_SCREEN_SIZE, _SCREEN_SIZE);
     }
+    if (!al_is_compatible_bitmap(scratchMap))
+    {
+        al_destroy_bitmap(scratchMap);
+        scratchMap = al_create_bitmap(_SCREEN_SIZE,_SCREEN_SIZE);
+    }
     al_set_target_bitmap(scratchMap);
 
     al_clear_to_color(_TRANSPARENT);

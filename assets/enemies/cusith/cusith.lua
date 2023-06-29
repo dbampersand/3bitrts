@@ -17,7 +17,7 @@ function setup()
     SetDamage(30);
     SetMaxHP(maxHP,true)
     SetSpeed(80)
-    SetRange(80);
+    SetRange(45);
     SetAttackSpeed(GetObjRef(),1)
     SetObjIsBoss(GetObjRef(),true);
 

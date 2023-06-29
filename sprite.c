@@ -145,7 +145,30 @@ Sprite* GetSpriteFromHashtable(HashTable* ht, const char* path)
     return &sprites[ind];
 
 }
-
+void RegenerateSprite(Sprite* s)
+{
+    if (s->sprite)
+        al_destroy_bitmap(s->sprite);
+        bool generateInverse = false;
+    if (s->inverseSprite)
+    {
+        al_destroy_bitmap(s->inverseSprite);
+        generateInverse = true;
+    }
+    s->sprite = NULL;
+    s->inverseSprite = NULL;
+    if (s->path)
+    {
+        ALLEGRO_BITMAP* new = al_load_bitmap(s->path);
+        if (new)
+        {
+            SetSpriteToWhite(new);
+            s->sprite = new;
+            if (generateInverse)
+                GenerateInvertedSprite(s);
+        }
+    }
+}
 unsigned int LoadSprite(const char* path, bool needsInverted)
 {
     if (!sprites)
@@ -219,7 +242,6 @@ Sprite* LoadSprite_Pointer(const char* path, bool needsInverted)
 
 void DrawSprite(Sprite* sprite, int x, int y, float originX, float originY, float angle, ALLEGRO_COLOR tint, bool invert, bool flipX, bool flipY)
 {
-
     //if the index is 0, never draw 
     if (sprite == sprites || !sprite)
         return;

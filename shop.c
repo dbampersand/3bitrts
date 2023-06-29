@@ -23,7 +23,7 @@ void LoadShop()
 {
     shop = (Shop){0};
     int numIdleSprites = 4;
-    shop.idleSprites = calloc(numIdleSprites,sizeof(Animation));
+     shop.idleSprites = calloc(numIdleSprites,sizeof(Animation));
     shop.numIdleSprites = numIdleSprites;
     
 

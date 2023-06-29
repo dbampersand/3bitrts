@@ -2058,7 +2058,7 @@ UIElement* AddSlider(Panel* p, int x, int y, int w, int h, char* name, float fil
     UIElement* ref = AddElement(p,&u);
     return ref;
 }
-UIElement* AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int startIndex, int numElements, ...)
+UIElement* AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int startIndex, void* callback, int numElements, ...)
 {
     va_list argp;
     va_start(argp, numElements);
@@ -2081,6 +2081,7 @@ UIElement* AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name,
 
     
     Pulldown* p = calloc(1,sizeof(Pulldown));
+    p->callback = callback;
     p->clicked = false;
     p->elements = list;
     p->selectedIndex = startIndex;
@@ -2111,6 +2112,8 @@ bool UpdatePulldownMenu(Pulldown* p, int x, int y, int w, int h, MouseState mous
                 if (PointInRect(mouseState.screenX,mouseState.screenY,r))
                 {
                     p->clicked = false;
+                    if (i != p->selectedIndex && p->callback) 
+                        p->callback(p,i);
                     p->selectedIndex = i;
                     return true;
                 }
@@ -2417,6 +2420,23 @@ void InitPausePanel()
     AddButton(&ui.pauseMenuPanel,"Options","Options",33,49,96,16,true);
     AddButton(&ui.pauseMenuPanel,"Exit","Exit Game",33,81,96,16,true);
 }
+void WindowTypeCallback(Pulldown* pulldown, int selectedIndex)
+{
+    if (selectedIndex == 0)
+    {
+        SetDisplayWindowed(ALLEGRO_WINDOWED);
+    }
+    if (selectedIndex == 1)
+    {
+        SetDisplayWindowed(ALLEGRO_FULLSCREEN);
+    }    
+    if (selectedIndex == 2)
+    {
+        SetDisplayWindowed(ALLEGRO_FULLSCREEN_WINDOW);
+    }
+
+
+}
 void InitVideoOptionsPanel()
 {
     ui.videoOptionsPanel = CreatePanel(48,48,180,160,15,true);
@@ -2433,7 +2453,7 @@ void InitVideoOptionsPanel()
     AddText(&ui.videoOptionsPanel,33,73,"Tag_Particles","Particles", NULL);
     AddCheckbox(&ui.videoOptionsPanel,131,72,13,13,"EnableParticles",&currSettings.particlesEnabled);
     AddText(&ui.videoOptionsPanel,33,105,"Display\nHealth Bar","Display\nHealth Bar", NULL);
-    AddPulldownMenu(&ui.videoOptionsPanel,97,108,48,13,"HealthBarDisplay",0,3,"Always","Selected","Never");
+    AddPulldownMenu(&ui.videoOptionsPanel,97,108,48,13,"HealthBarDisplay",0,NULL,3,"Always","Selected","Never");
     
     AddText(&ui.videoOptionsPanel,33,132,"Display\nLight Effect","Display\nLight Effect", NULL);
     AddCheckbox(&ui.videoOptionsPanel,132,132,13,13,"EnableLightEffect",&currSettings.lightEffectEnabled);
@@ -2442,10 +2462,21 @@ void InitVideoOptionsPanel()
     AddCheckbox(&ui.videoOptionsPanel,132,156,11,11,"DisplayTimerButton",&currSettings.displayTimer);
 
     AddText(&ui.videoOptionsPanel,33,180,"Label_TargetFPS","Target FPS", NULL);
-    AddPulldownMenu(&ui.videoOptionsPanel,97,180,48,13,"Target FPS",currSettings.targetFPS,5,"30","60","90","144","240");
+    AddPulldownMenu(&ui.videoOptionsPanel,97,180,48,13,"Target FPS",currSettings.targetFPS,NULL,5,"30","60","90","144","240");
 
     AddText(&ui.videoOptionsPanel,33,204,"Label_ScreenShakeFactor","Screen Shake", NULL);
     AddSlider(&ui.videoOptionsPanel,120,204,45,10,"ScreenShake",currSettings.screenShakeFactor,&currSettings.screenShakeFactor);
+    
+    int windowTypeSelectedIndex = 0;
+    if (currSettings.displayWindowStyle == ALLEGRO_WINDOWED)
+        windowTypeSelectedIndex = 0;
+    if (currSettings.displayWindowStyle == ALLEGRO_FULLSCREEN)
+        windowTypeSelectedIndex = 1;
+    if (currSettings.displayWindowStyle == ALLEGRO_FULLSCREEN_WINDOW)
+        windowTypeSelectedIndex = 2;
+
+    AddText(&ui.videoOptionsPanel,33,228,"Label_WindowType","Window Type", NULL);
+    AddPulldownMenu(&ui.videoOptionsPanel,33,240,120,10,"WindowType",windowTypeSelectedIndex,WindowTypeCallback,3,"Windowed","Fullscreen", "Windowed Fullscreen");
 
 
     InitButton(&ui.videoOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));

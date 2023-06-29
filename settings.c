@@ -188,7 +188,7 @@ void SetDefaultSettings(Settings* setting)
 
     setting->keymap.key_Console = (Key){"Activate Console",ALLEGRO_KEY_OPENBRACE};
 
-
+    setting->displayWindowStyle = ALLEGRO_FULLSCREEN_WINDOW;
 }
 
 void EndSettings()
@@ -288,6 +288,7 @@ void WriteSettingsFile(char* path)
         "FRIENDLY_DAMAGE, %i, %i, %i;\n"
         "FRIENDLY_SPEED, %i, %i, %i;\n"
         "FRIENDLY_SHIELD, %i, %i, %i;\n"
+        "displayWindowStyle: %i;\n"
 
         ,
         *   currSettings.renderScale,
@@ -395,8 +396,8 @@ void WriteSettingsFile(char* path)
         (int)(FRIENDLY_HEAL.r * 255), (int)(FRIENDLY_HEAL.g * 255), (int)(FRIENDLY_HEAL.b * 255),
         (int)(FRIENDLY_DAMAGE.r * 255), (int)(FRIENDLY_DAMAGE.g * 255), (int)(FRIENDLY_DAMAGE.b * 255),
         (int)(FRIENDLY_SPEED.r * 255), (int)(FRIENDLY_SPEED.g * 255), (int)(FRIENDLY_SPEED.b * 255),
-        (int)(FRIENDLY_SHIELD.r * 255), (int)(FRIENDLY_SHIELD.g * 255), (int)(FRIENDLY_SHIELD.b * 255)
-
+        (int)(FRIENDLY_SHIELD.r * 255), (int)(FRIENDLY_SHIELD.g * 255), (int)(FRIENDLY_SHIELD.b * 255),
+        currSettings.displayWindowStyle
 
         );
 
@@ -1125,6 +1126,12 @@ bool LoadSettingsFile(char* path)
             {
                 currSettings.screenShakeFactor = screenShakeFactor;
             }
+            float windowStyle  = FindToken(str,"displayWindowStyle");
+            if (windowStyle >= 0)
+            {
+                currSettings.displayWindowStyle = (int)windowStyle;
+            }
+
             SetColoursSetting(str);
 
         

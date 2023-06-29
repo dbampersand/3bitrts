@@ -101,6 +101,7 @@ typedef struct Pulldown
     int numElements;
     int selectedIndex;
     bool clicked; 
+    void (*callback)(struct Pulldown* self, int index);
 } Pulldown;
 typedef struct Slider
 {
@@ -370,7 +371,7 @@ void ChangeUIPanel(Panel* to);
 bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, MouseState* mouse,MouseState* mouseStateLastFrame);
 UIElement* InitButton(UIElement* u, char* name, char* description, int x, int y, int w, int h, int sprite);
 UIElement* AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h, bool shouldDrawLine);
-UIElement* AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int startIndex, int numElements, ...);
+UIElement* AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int startIndex, void* callback, int numElements, ...);
 UIElement* AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool* activated);
 void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, int h, int maxchars, KEY* mapTo);
 bool GetButtonIsClicked(UIElement* u);

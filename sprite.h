@@ -33,3 +33,4 @@ int GetHeightSprite(Sprite* s);
 int GetWidthSprite(Sprite* s);
 Sprite* NewSprite(int w, int h);
 Sprite* LoadSprite_Pointer(const char* path, bool needsInverted);
+void RegenerateSprite(Sprite* s);

@@ -17,6 +17,8 @@
 #include "helperfuncs.h"
 #include "player.h"
 #include "easings.h"
+#include "loadscreen.h"
+#include "attack.h"
 
 #include "allegro5/allegro_font.h"
 
@@ -125,6 +127,58 @@ void InitSpriteDecorations()
     numFreeDecorations = MAX_SPRITE_DECORATIONS;
     
 }
+void SetDisplayWindowed(int windowMode)
+{
+    currSettings.displayWindowStyle = windowMode;
+    al_unregister_event_source(queue,al_get_display_event_source(display));
+    ALLEGRO_MONITOR_INFO monitor;
+    al_get_monitor_info(0, &monitor);
+
+    al_set_new_display_flags(windowMode);
+    if (display)
+        al_destroy_display(display);
+    display = al_create_display(monitor.x2,monitor.y2);
+
+
+    backbuffer = al_get_backbuffer(display);
+    if (SCREEN)
+        al_destroy_bitmap(SCREEN);
+    SCREEN = al_create_bitmap(_SCREEN_SIZE,_SCREEN_SIZE); 
+    al_register_event_source(queue, al_get_display_event_source(display));
+    al_flush_event_queue(queue);
+
+    al_destroy_bitmap(background_screen);
+    background_screen = al_create_bitmap(monitor.x2,monitor.y2);
+
+    for (int i = 1; i < numSprites; i++)
+    {
+        RegenerateSprite(&sprites[i]);
+    }
+    for (int i = 0; i < MAX_LIGHT_SIZE; i++)
+    {
+        if (lights[i])
+            al_destroy_bitmap(lights[i]);
+        lights[i] = NULL;
+    }
+    for (int i = 0; i < MAX_AOE_CIRCUMFERENCE_SIZE+1; i++)
+    {
+        for (int j = 0; j < DITHER_ALL; j++)
+        {
+            if (cachedAttackSprites[i][j])
+                al_destroy_bitmap(cachedAttackSprites[i][j]);
+            cachedAttackSprites[i][j] = NULL;
+        }
+    }
+    al_set_timer_speed(_FPS_TIMER,1/(double)_TARGET_FPS);
+    al_set_target_bitmap(backbuffer);
+
+    al_destroy_font(ui.font);
+    al_destroy_font(ui.boldFont);
+    al_destroy_font(ui.tinyFont);
+
+    InitFonts();
+
+}
 void InitVideo()
 {
     ALLEGRO_MONITOR_INFO monitor;
@@ -132,8 +186,16 @@ void InitVideo()
 
     _RENDERSIZE = _MIN(monitor.x2,monitor.y2)/_SCREEN_SIZE - 1;
     background_screen = al_create_bitmap(monitor.x2,monitor.y2);
-    al_set_new_display_flags(ALLEGRO_WINDOWED);
+    if (currSettings.displayWindowStyle == ALLEGRO_WINDOWED || currSettings.displayWindowStyle == ALLEGRO_FULLSCREEN || currSettings.displayWindowStyle == ALLEGRO_FULLSCREEN_WINDOW)
+    {}
+    else
+        currSettings.displayWindowStyle = ALLEGRO_FULLSCREEN_WINDOW;
+        al_set_new_display_flags(currSettings.displayWindowStyle);
     display = al_create_display(monitor.x2,monitor.y2);
+    al_set_window_title(display,GAME_NAME);
+    GAME_DISPLAY_ICON = al_load_bitmap("assets/ui/display_icon.png");
+    if (GAME_DISPLAY_ICON)
+        al_set_display_icon(display,GAME_DISPLAY_ICON);
 
     InitSpriteDecorations();
 

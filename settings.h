@@ -52,6 +52,7 @@ typedef struct Settings
     bool lightEffectEnabled;
     Option_HealthBar displayHealthBar;
     bool displayTimer;
+    int displayWindowStyle;
     
     //AUDIO OPTIONS
     float masterVolume;

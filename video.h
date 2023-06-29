@@ -6,7 +6,6 @@
 #include "colors.h"
 #include "pointspace.h"
 
-
 #ifndef M_PI
     #define M_PI 3.14159265358979323846f
 #endif
@@ -38,6 +37,8 @@ extern ALLEGRO_BITMAP* backbuffer;
 extern ALLEGRO_BITMAP* SCREEN;
 extern ALLEGRO_BITMAP* background_screen;
 extern ALLEGRO_DISPLAY* display;
+
+ALLEGRO_TIMER* _FPS_TIMER;
 
 
 #define NUM_TEXT_DISPLAYS 30
@@ -102,6 +103,9 @@ extern float _DT;
 
 typedef struct GameObject GameObject;
 
+
+ALLEGRO_BITMAP* GAME_DISPLAY_ICON;
+
 typedef struct ScreenShake
 {
     float screenShakeAmount; 
@@ -148,3 +152,4 @@ void AddScreenshake(float amt, float time);
 float GetScreenshake();
 void UpdateScreenshake(float dt);
 void DrawFilledRectWorld(Rect r, ALLEGRO_COLOR col);
+void SetDisplayWindowed(int windowMode);

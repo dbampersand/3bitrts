@@ -14,7 +14,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["duration"] = 0.2
     f1["triggersPerSecond"] = 1
     f1["type"] = EFFECT_HURT_PERCENT;
-    f1["value"] = 0.34;  
+    f1["value"] = 0.15;  
     f1["name"] = "Howl"
     f1["overwrites"] = true
 

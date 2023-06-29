@@ -43,8 +43,6 @@
 #include "timer.h"
 #include "hashtable.h"
 
-ALLEGRO_BITMAP* testBitmap;
-
 #ifdef __WIN32__
 #include <windows.h>
 #endif
@@ -684,7 +682,7 @@ int main(int argc, char* args[])
 
     float dt = 1 / ((double)_TARGET_FPS);
     
-    ALLEGRO_TIMER* _FPS_TIMER = al_create_timer(dt);
+    _FPS_TIMER = al_create_timer(dt);
 
     al_start_timer(_FPS_TIMER);
     queue = al_create_event_queue();
@@ -860,8 +858,8 @@ int main(int argc, char* args[])
 
             float slowdown = _TARGET_FPS * (currSettings.slowdownPercent);
             dt = 1 / ((double)_TARGET_FPS);
-            if (!GameIsPaused() && !GameStateIsTransition(&gameState))
-                dt *= (1-currSettings.slowdownPercent);
+            //if (!GameIsPaused() && !GameStateIsTransition(&gameState))
+             //   dt *= (1-currSettings.slowdownPercent);
             _DT = dt;
             clock_t begin = clock();
 
