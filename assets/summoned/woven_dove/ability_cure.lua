@@ -9,7 +9,7 @@ function setup()
     SetCooldown(2);
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
 
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/summoned/woven_dove/ability_cure.png");
     SetDescription("[b]Cure\n\nHeals the target over time, stacking "..maxStacks .. " times.");
     SetAbilityName("Cure"); 
 

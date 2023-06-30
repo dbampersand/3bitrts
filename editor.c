@@ -1957,7 +1957,7 @@ void InitFileSelector(Panel* p, Panel* fileNamingUI)
     UIElement back = *AddButton(p,"Back","Back",0,0,35,10,true);
     AddButton(p,"New","New",back.x,back.y+back.h+2,35,10,true);
 
-    AddText(p,40,0,"Path","Path", NULL);
+    AddText(p,40,0,"Path","Path", NULL, NULL);
 
     int fileNamingH = 80;
 

@@ -35,6 +35,8 @@ typedef struct Encounter
     int luafunc_setup;
     int luafunc_update;
     int luafunc_updateloadscreen;
+    int luafunc_win;
+
 
 
     char* mapPath;

@@ -1,6 +1,7 @@
 function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_summon_adds.png");
+    SetAbilityName("Summon");
     SetDescription("[b]Summon\nSummons adds");
     SetCooldown(30)
 

@@ -15,6 +15,7 @@ function setup()
     SetAbilityRange(20)
     SetCooldown(15);
     AbilitySetPortrait("assets/enemies/cusith/ability_focus.png");
+    SetAbilityName("Focus")
     SetDescription("[b]Focus\n\nLowers movement speed and deals damage in an area.")
     
 end

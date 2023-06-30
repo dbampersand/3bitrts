@@ -6,7 +6,7 @@ function setup()
     SetAbilityRange(256) 
     SetCooldown(20);
     AbilitySetCastType(ABILITY_INSTANT);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/summoned/obsidian_demon/ability_radiance.png");
     SetDescription("[b]Radiance\n\nUses the demon's own life to do area damage and threaten all enemies.");
     SetAbilityName("Radiance"); 
 

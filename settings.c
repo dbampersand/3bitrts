@@ -68,6 +68,8 @@ void InitSettings(char* path)
 }   
 void UpdateBind(UIElement* u)
 {
+    if (u->elementType != ELEMENT_KEYINPUT)
+        return;
     KeyInput* t = (KeyInput*)u->data;
     if (t->mappedTo)
     {

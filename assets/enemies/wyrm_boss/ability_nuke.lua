@@ -1,9 +1,10 @@
 function setup()
-    SetAbilityRange(2)
+    SetAbilityRange(256)
     SetCooldown(10)
     SetAbilityHint(HINT_CIRCLE,30);
     AbilitySetCastType(ABILITY_POINT);
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_nuke.png");
+    SetAbilityName("Nuke");
     SetDescription("[b]Nuke\n\nDeals massive soak damage in a circular area after 10 seconds.")
 
 end

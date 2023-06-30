@@ -3739,6 +3739,7 @@ void SetObjChannelling(GameObject* g, Ability* a, float time, float x, float y, 
     g->target_heading_y = heading_y;
 
     currGameObjRunning = g;
+    Ability* before = currAbilityRunning;
     currAbilityRunning = g->channelledAbility;
     if (currAbilityRunning)
     {
@@ -3754,6 +3755,8 @@ void SetObjChannelling(GameObject* g, Ability* a, float time, float x, float y, 
 
         lua_pcall(luaState, 8, 0, 0);
     }
+    currAbilityRunning = before;
+
 
 }
 void UpdateChannellingdObj(GameObject* g, float dt)

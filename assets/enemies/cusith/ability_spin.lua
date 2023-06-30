@@ -11,6 +11,7 @@ function setup()
     SetAbilityRange(256)
     SetCooldown(60);
     AbilitySetPortrait("assets/enemies/cusith/ability_spin.png");
+    SetAbilityName("Spin\n")
     SetDescription("[b]Spin\n\nSpins around, whipping targets with its tail, causing a bleed effect.")
 
 end

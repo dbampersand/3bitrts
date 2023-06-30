@@ -12,6 +12,7 @@ function setup()
     SetAbilityHint(HINT_CONE,radius,false,length);
     SetCooldown(4); 
     AbilitySetPortrait("assets/enemies/cusith/ability_bite.png");
+    SetAbilityName("Bite")
     SetDescription("[b]Bite\n\nDeals damage in a cone.")
 
 end

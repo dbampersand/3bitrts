@@ -74,6 +74,9 @@ function setup()
 
     SetAutoWin(false);
 
+
+
+
 end
 
 
@@ -81,10 +84,10 @@ end
 
 
 function update(dt)
-    SetAbilityCooldownTimer(warrior,0,60);
-    SetAbilityCooldownTimer(warrior,1,60);
-    SetAbilityCooldownTimer(warrior,2,60);
-    SetAbilityCooldownTimer(warrior,3,60);
+    SetAbilityCooldownTimer(warrior,0,999);
+    SetAbilityCooldownTimer(warrior,1,999);
+    SetAbilityCooldownTimer(warrior,2,999);
+    SetAbilityCooldownTimer(warrior,3,999);
 
 
 
@@ -208,7 +211,7 @@ function update(dt)
             ctrlGroupRecalled = true
             ClearMessages();
 
-            f1 = {};
+            local f1 = {};
             f1["trigger"] = TRIGGER_TIMER;
             f1["type"] = EFFECT_HURT;
             --f1["numTriggers"] = 5
@@ -226,7 +229,8 @@ function update(dt)
     if (GetCurrentMessage() == attackString3) then
         dotTimer = dotTimer + dt;
         if (GetNumEffects(warrior) == 0 and dotTimer > 2) then
-            Win();
+            SetGamestateToMainMenu();
+            --Win();
         end
     end
 end

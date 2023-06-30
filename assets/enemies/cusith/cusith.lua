@@ -6,7 +6,8 @@ local bite = 0
 local callPack = 0
 local spin = 0
 local focus = 0
-local fangs
+local fangs = 0
+local crush = 0
 
 local howlTimer = 0
 local howlCD = 30
@@ -27,6 +28,7 @@ function setup()
     spin = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_spin.lua",3);
     focus = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_focus.lua",4);
     fangs = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_fangs.lua",5);
+    crush = AddAbility(GetObjRef(),"assets/enemies/cusith/ability_crush.lua",6);
 
     SetAttackSounds({
         "assets/audio/attacks/melee_bite/bite_1.wav",
@@ -36,6 +38,7 @@ function setup()
         "assets/audio/attacks/melee_bite/bite_5.wav"
     });
 
+    ObjIsStunnable(GetObjRef(),false);
 
 end 
 function untoggle()
@@ -44,6 +47,7 @@ end
 function update(dt)
 
     if (IsInCombat()) then
+        CastAbility(crush,1,{{target = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,999)[1]}})
         howlTimer = howlTimer + dt
 
         if (howlTimer > howlCD) then

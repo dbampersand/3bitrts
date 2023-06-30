@@ -116,6 +116,13 @@ void LoadEncounter(char* dirPath, lua_State* l)
 
                             lua_rawgeti(l,LUA_REGISTRYINDEX,funcIndex);
                             lua_pcall(l,0,0,0);
+                            if (CheckFuncExists("win",&e->lua_buffer))
+                            {
+                                lua_getglobal(l, "win");
+                                funcIndex = luaL_ref(l, LUA_REGISTRYINDEX);
+                                e->luafunc_win = funcIndex;
+
+                            }      
 
                             if (CheckFuncExists("update",&e->lua_buffer))
                             {

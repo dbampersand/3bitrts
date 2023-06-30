@@ -1,6 +1,7 @@
 function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     AbilitySetPortrait("assets/enemies/cusith/ability_call_pack.png");
+    SetAbilityName("Call Pack")
     SetDescription("[b]Call Pack\nSummons adds");
     SetCooldown(40)
 

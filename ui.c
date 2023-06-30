@@ -259,7 +259,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     DrawSprite(s,x,y,0,0,0,*c,false,false,false);
 
 
-    int abilityY = 204;
+    int abilityY = 198;
     
     int abilitySize = 30;
     int paragraphStartX = 8;
@@ -291,7 +291,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     int totalW = 126; 
     if (prefabDrawing->numAbilities >= 5)
     {
-        abilityY = 170;
+        abilityY = 165;
         
         for (int i = 0; i < 2; i++)
         {
@@ -373,9 +373,28 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     UpdateButton(purchaseUI->returnButton.x,purchaseUI->returnButton.y,purchaseUI->returnButton.w,purchaseUI->returnButton.h,&purchaseUI->returnButton,mouseState,mouseStateLastFrame);
     DrawUIElement(&purchaseUI->returnButton,purchaseUI->returnButton.x,purchaseUI->returnButton.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY,false);
 
+    if (!prefabDrawing->purchased)
+    {
+        int y = purchaseUI->purchaseButton.y-10;
+        ALLEGRO_COLOR c = FRIENDLY;
+        if (players[0].gold < prefabDrawing->cost)
+            c = GROUND;
+        char* cost = calloc(NumDigits(prefabDrawing->cost)+1,sizeof(char));
+        sprintf(cost,"%i",prefabDrawing->cost);
+        int x = purchaseUI->purchaseButton.x+purchaseUI->purchaseButton.w/2.0f;
+        x -= (_SCREEN_SIZE*(purchaseUI->transitionTimer));
+
+        al_draw_text(ui.font,c,x,y,ALLEGRO_ALIGN_CENTER,cost);
+        x -= al_get_text_width(ui.font,cost)/2.0f;
+        x -= 7;
+        y += 2;
+        DrawSprite(&sprites[ui.gold_element_sprite_index],x,y,0,0,0,c,false,false,false);
+
+        free(cost);
+
+    }
     UpdateButton(purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,purchaseUI->purchaseButton.w,purchaseUI->purchaseButton.h,&purchaseUI->purchaseButton,mouseState,mouseStateLastFrame);
     DrawUIElement(&purchaseUI->purchaseButton,purchaseUI->purchaseButton.x,purchaseUI->purchaseButton.y,&mouseState,ui.menuButton.bgColor,COLOR_FRIENDLY,false);
-
 
     if ((GetButtonIsClicked(&purchaseUI->back) || IsBindDownThisFrame(keyStateThisFrame,keyStateLastFrame,currSettings.keymap.key_PanLeft)) && purchaseUI->currentIndex != 0)
     {
@@ -1036,7 +1055,7 @@ bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c, MouseState* mo
         c = al_map_rgba(c.r*percent*255,c.g*percent*255,c.b*percent*255,c.a*255);
 
         if (e->spriteIndex_Portrait > 0)
-            DrawSprite(&sprites[e->spriteIndex_Portrait],x,y,0.5f,0.5f,0,FRIENDLY,false,false,false);
+            DrawSprite(&sprites[e->spriteIndex_Portrait],x,y,0.5f,0.5f,0,c,false,false,false);
         else
             al_draw_filled_rectangle(r.x,r.y,r.x+r.w,r.y+r.h,c);
         if (e->canStack)
@@ -1250,10 +1269,6 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
 
 
     }
-    DrawSprite(s,1,UI_START_Y+1,0.5f,0.5f,0,baseColor,false,false,false);
-    if (selected)
-        DrawSprite(health,1,UI_START_Y+1,0.5f,0.5f,0,baseColor,false,false,false);
-
     if (!s) return;
 
     if (selected)
@@ -1343,6 +1358,11 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
     {
         DrawUIChatbox();
     }
+        DrawSprite(s,1,UI_START_Y+1,0.5f,0.5f,0,baseColor,false,false,false);
+    if (selected)
+        DrawSprite(health,1,UI_START_Y+1,0.5f,0.5f,0,baseColor,false,false,false);
+
+
 
 }
 void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
@@ -1880,10 +1900,14 @@ void ChangeButtonText(Button* b, char* newstr)
     b->description = calloc(strlen(newstr)+1,sizeof(char));
     strcpy(b->description,newstr);
 }
-void AddText(Panel* p, int x, int y, char* name, char* description, ALLEGRO_COLOR* colour)
+void AddText(Panel* p, int x, int y, char* name, char* description, ALLEGRO_COLOR* colour, ALLEGRO_FONT* font)
 {
     UIElement u = {0};
     UI_Text* t = calloc(1,sizeof(UI_Text));
+
+    t->font = font;
+    if (!font)
+        t->font = ui.font;
 
     t->str = calloc(strlen(description)+1,sizeof(char));
     strcpy(t->str,description);
@@ -2415,7 +2439,7 @@ void InitMainMenuPanel()
 }
 void InitPausePanel()
 {
-    ui.pauseMenuPanel = CreatePanel(48,48,160,160,15,true);
+    ui.pauseMenuPanel = CreatePanel(48,48,160,114,15,true);
     AddButton(&ui.pauseMenuPanel,"Return","Return",33,17,96,16,true);
     AddButton(&ui.pauseMenuPanel,"Options","Options",33,49,96,16,true);
     AddButton(&ui.pauseMenuPanel,"Exit","Exit Game",33,81,96,16,true);
@@ -2439,9 +2463,13 @@ void WindowTypeCallback(Pulldown* pulldown, int selectedIndex)
 }
 void InitVideoOptionsPanel()
 {
-    ui.videoOptionsPanel = CreatePanel(48,48,180,160,15,true);
-    AddText(&ui.videoOptionsPanel,33,41,"Tag_RenderScale","RenderScale", NULL);
-    AddText(&ui.videoOptionsPanel,132,43,"RenderScale","2x", NULL);
+
+    ui.videoOptionsPanel = CreatePanel(48,48,180,OPTIONS_PANEL_HEIGHT,15,true);
+
+    AddText(&ui.videoOptionsPanel,33,10,"Video_Options", "Video Options",NULL, ui.boldFont);
+
+    AddText(&ui.videoOptionsPanel,33,41,"Tag_RenderScale","RenderScale", NULL,NULL);
+    AddText(&ui.videoOptionsPanel,132,43,"RenderScale","2x", NULL,NULL);
     
     char* renderScale = calloc(NumDigits(_RENDERSIZE)+2,sizeof(char));
     sprintf(renderScale,"%ix",_RENDERSIZE);
@@ -2450,21 +2478,21 @@ void InitVideoOptionsPanel()
     
     AddButton(&ui.videoOptionsPanel,"RenderScale+","+",132,29,11,11,true);
     AddButton(&ui.videoOptionsPanel,"RenderScale-","-",132,53,11,11,true);
-    AddText(&ui.videoOptionsPanel,33,73,"Tag_Particles","Particles", NULL);
+    AddText(&ui.videoOptionsPanel,33,73,"Tag_Particles","Particles", NULL,NULL);
     AddCheckbox(&ui.videoOptionsPanel,131,72,13,13,"EnableParticles",&currSettings.particlesEnabled);
-    AddText(&ui.videoOptionsPanel,33,105,"Display\nHealth Bar","Display\nHealth Bar", NULL);
+    AddText(&ui.videoOptionsPanel,33,105,"Display\nHealth Bar","Display\nHealth Bar", NULL,NULL);
     AddPulldownMenu(&ui.videoOptionsPanel,97,108,48,13,"HealthBarDisplay",0,NULL,3,"Always","Selected","Never");
     
-    AddText(&ui.videoOptionsPanel,33,132,"Display\nLight Effect","Display\nLight Effect", NULL);
+    AddText(&ui.videoOptionsPanel,33,132,"Display\nLight Effect","Display\nLight Effect", NULL,NULL);
     AddCheckbox(&ui.videoOptionsPanel,132,132,13,13,"EnableLightEffect",&currSettings.lightEffectEnabled);
 
-    AddText(&ui.videoOptionsPanel,33,156,"Display Timer","Display Timer", NULL);
+    AddText(&ui.videoOptionsPanel,33,156,"Display Timer","Display Timer", NULL,NULL);
     AddCheckbox(&ui.videoOptionsPanel,132,156,11,11,"DisplayTimerButton",&currSettings.displayTimer);
 
-    AddText(&ui.videoOptionsPanel,33,180,"Label_TargetFPS","Target FPS", NULL);
+    AddText(&ui.videoOptionsPanel,33,180,"Label_TargetFPS","Target FPS", NULL,NULL);
     AddPulldownMenu(&ui.videoOptionsPanel,97,180,48,13,"Target FPS",currSettings.targetFPS,NULL,5,"30","60","90","144","240");
 
-    AddText(&ui.videoOptionsPanel,33,204,"Label_ScreenShakeFactor","Screen Shake", NULL);
+    AddText(&ui.videoOptionsPanel,33,204,"Label_ScreenShakeFactor","Screen Shake", NULL,NULL);
     AddSlider(&ui.videoOptionsPanel,120,204,45,10,"ScreenShake",currSettings.screenShakeFactor,&currSettings.screenShakeFactor);
     
     int windowTypeSelectedIndex = 0;
@@ -2475,7 +2503,7 @@ void InitVideoOptionsPanel()
     if (currSettings.displayWindowStyle == ALLEGRO_FULLSCREEN_WINDOW)
         windowTypeSelectedIndex = 2;
 
-    AddText(&ui.videoOptionsPanel,33,228,"Label_WindowType","Window Type", NULL);
+    AddText(&ui.videoOptionsPanel,33,228,"Label_WindowType","Window Type", NULL,NULL);
     AddPulldownMenu(&ui.videoOptionsPanel,33,240,120,10,"WindowType",windowTypeSelectedIndex,WindowTypeCallback,3,"Windowed","Fullscreen", "Windowed Fullscreen");
 
 
@@ -2492,17 +2520,21 @@ void InitVideoOptionsPanel()
 }
 void InitAudioOptionsPanel()
 {
-    ui.audioOptionsPanel = CreatePanel(48,48,180,160,15,true);
-    AddText(&ui.audioOptionsPanel,33,41,"Tag_MasterVolume","Master Volume", NULL);
+    ui.audioOptionsPanel = CreatePanel(48,48,180,OPTIONS_PANEL_HEIGHT,15,true);
+
+    AddText(&ui.audioOptionsPanel,33,10,"Audio_Options", "Audio Options",NULL, ui.boldFont);
+
+
+    AddText(&ui.audioOptionsPanel,33,41,"Tag_MasterVolume","Master Volume", NULL,NULL);
     AddSlider(&ui.audioOptionsPanel,34,52,110,10,"MasterVolume",currSettings.masterVolume,&currSettings.masterVolume);
  
-    AddText(&ui.audioOptionsPanel,33,90,"Tag_SFXVolume","SFX Volume", NULL);
+    AddText(&ui.audioOptionsPanel,33,90,"Tag_SFXVolume","SFX Volume", NULL,NULL);
     AddSlider(&ui.audioOptionsPanel,34,100,110,10,"SfxVolume",currSettings.sfxVolume,&currSettings.sfxVolume);
 
-    AddText(&ui.audioOptionsPanel,33,131,"Tag_MusicVolume","Music Volume", NULL);
+    AddText(&ui.audioOptionsPanel,33,131,"Tag_MusicVolume","Music Volume", NULL,NULL);
     AddSlider(&ui.audioOptionsPanel,34,141,110,10,"MusicVolume",currSettings.musicVolume,&currSettings.musicVolume);
 
-    AddText(&ui.audioOptionsPanel,33,172,"Tag_AmbientVolume","Ambience Volume", NULL);
+    AddText(&ui.audioOptionsPanel,33,172,"Tag_AmbientVolume","Ambience Volume", NULL,NULL);
     AddSlider(&ui.audioOptionsPanel,34,182,110,10,"AmbienceVolume",currSettings.ambienceVolume,&currSettings.ambienceVolume);
 
 
@@ -2513,11 +2545,14 @@ void InitAudioOptionsPanel()
 }
 void InitAccessibilityOptionsPanel()
 {
-    ui.accessibilityOptionsPanel = CreatePanel(48,48,180,160,15,true);
+    ui.accessibilityOptionsPanel = CreatePanel(48,48,180,OPTIONS_PANEL_HEIGHT,15,true);
+
+    AddText(&ui.accessibilityOptionsPanel,33,10,"Accessibility_Options", "Accessibility Options",NULL, ui.boldFont);
+
     //AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 132,29,96,16,true);
     //AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",132,29,96,16,true);
 
-    AddText(&ui.accessibilityOptionsPanel,33,41,"Tag_Slowdown","Percent slowdown", NULL);
+    AddText(&ui.accessibilityOptionsPanel,33,41,"Tag_Slowdown","Percent slowdown", NULL,NULL);
     AddSlider(&ui.accessibilityOptionsPanel,34,52,110,10,"Slider_Slowdown",currSettings.slowdownPercent,&currSettings.slowdownPercent);
 
 
@@ -2532,58 +2567,58 @@ void InitAccessibilityOptionsPanel()
     //AddPulldownMenu(&ui.accessibilityOptionsPanel,34,colorPickerY-25,48,10,"Colour Preset",0,2,"Default","Custom");
     AddButton(&ui.accessibilityOptionsPanel,"Reset","Reset",34,colorPickerY-25,30,10,true);
 
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Background","Background", &WHITE);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Background","Background", &WHITE,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"BG",34,colorPickerY,40,20, &BG);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Friendly","Friendly", &FRIENDLY);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Friendly","Friendly", &FRIENDLY,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"FRIENDLY",34,colorPickerY,40,20, &FRIENDLY);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Enemy","Enemy", &ENEMY);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Enemy","Enemy", &ENEMY,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"ENEMY",34,colorPickerY,40,20, &ENEMY);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Ground","Ground", &GROUND);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Ground","Ground", &GROUND,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"GROUND",34,colorPickerY,40,20, &GROUND);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Ground Dark","Ground Dark", &GROUND_DARK);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Ground Dark","Ground Dark", &GROUND_DARK,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"GROUND_DARK",34,colorPickerY,40,20, &GROUND_DARK);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Edge Highlight","Edge Highlight", &EDGE_HIGHLIGHT);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Edge Highlight","Edge Highlight", &EDGE_HIGHLIGHT,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"EDGE_HIGHLIGHT",34,colorPickerY,40,20, &EDGE_HIGHLIGHT);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Background Decor","Background Decor", &BG_DECOR);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Background Decor","Background Decor", &BG_DECOR,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"BG_DECOR",34,colorPickerY,40,20, &BG_DECOR);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Textured Ground","Textured Ground", &TEXTURED_GROUND);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Textured Ground","Textured Ground", &TEXTURED_GROUND,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"TEXTURED_GROUND",34,colorPickerY,40,20, &TEXTURED_GROUND);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Poison","Poison",&POISON);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Poison","Poison",&POISON,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"POISON",34,colorPickerY,40,20, &POISON);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Heal","Heal",&HEAL);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Heal","Heal",&HEAL,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"HEAL",34,colorPickerY,40,20, &HEAL);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Damage","Damage",&DAMAGE);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Damage","Damage",&DAMAGE,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"DAMAGE",34,colorPickerY,40,20, &DAMAGE);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Speed","Speed",&SPEED);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Speed","Speed",&SPEED,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"SPEED",34,colorPickerY,40,20, &SPEED);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Shield","Shield",&SHIELD);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Shield","Shield",&SHIELD,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"SHIELD",34,colorPickerY,40,20, &SHIELD);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Friendly Poison","Friendly Poison",&FRIENDLY_POISON);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Friendly Poison","Friendly Poison",&FRIENDLY_POISON,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"FRIENDLY_POISON",34,colorPickerY,40,20, &FRIENDLY_POISON);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Friendly Heal","Friendly Heal",&FRIENDLY_HEAL);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Friendly Heal","Friendly Heal",&FRIENDLY_HEAL,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"FRIENDLY_HEAL",34,colorPickerY,40,20, &FRIENDLY_HEAL);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Friendly Damage","Friendly Damage",&FRIENDLY_DAMAGE);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Friendly Damage","Friendly Damage",&FRIENDLY_DAMAGE,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"FRIENDLY_DAMAGE",34,colorPickerY,40,20, &FRIENDLY_DAMAGE);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Friendly Speed","Friendly Speed",&FRIENDLY_SPEED);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Friendly Speed","Friendly Speed",&FRIENDLY_SPEED,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"FRIENDLY_SPEED",34,colorPickerY,40,20, &FRIENDLY_SPEED);
     colorPickerY+=colorPickerH+colorPickerPadding;
-    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Friendly Shield","Friendly Shield",&FRIENDLY_SHIELD);
+    AddText(&ui.accessibilityOptionsPanel,34,colorPickerY-12,"Friendly Shield","Friendly Shield",&FRIENDLY_SHIELD,NULL);
     AddColorPicker(&ui.accessibilityOptionsPanel,"FRIENDLY_SHIELD",34,colorPickerY,40,20, &FRIENDLY_SHIELD);
     colorPickerY+=colorPickerH+colorPickerPadding;
 
@@ -2633,7 +2668,10 @@ void InitGameUI()
 }
 void InitControlsPanel()
 {
-    ui.controlsPanel = CreatePanel(48,48,180,160,15,true);
+    ui.controlsPanel = CreatePanel(48,48,180,OPTIONS_PANEL_HEIGHT,15,true);
+
+    AddText(&ui.controlsPanel,33,10,"Controls_Options", "Controls Options",NULL, ui.boldFont);
+
 
     int xText = 16;
 
@@ -2644,116 +2682,118 @@ void InitControlsPanel()
     
     int xButtons = 160-w-padding*4;
 
+    AddButton(&ui.controlsPanel,"Reset","Reset",xButtons,y+=h+padding,30,10,true);
+
     
     AddKeyInput(&ui.controlsPanel,"Q","Q",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Q.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Q2","Q2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_Q.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"First Ability","First Ability",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"First Ability","First Ability",NULL,NULL);
 
 
     AddKeyInput(&ui.controlsPanel,"W","W",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_W.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"W2","W2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_W.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Second Ability","Second Ability",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Second Ability","Second Ability",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"E","E",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_E.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"E2","E2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_E.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Third Ability","Third Ability",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Third Ability","Third Ability",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"R","R",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_R.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"R2","R2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_R.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Fourth Ability","Fourth Ability",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Fourth Ability","Fourth Ability",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"F","F",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_F.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"F2","F2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_F.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Fifth Ability","Fifth Ability",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Fifth Ability","Fifth Ability",NULL,NULL);
 
 
     AddKeyInput(&ui.controlsPanel,"AMove","AMove",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_AMove.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"AMove2","AMove2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_AMove.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Attack Move","Attack Move",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Attack Move","Attack Move",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Add Selection","Add Selection",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Shift.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Add Selection2","Add Selection2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_Shift.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Add Selection","Add Selection",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Add Selection","Add Selection",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Shift Selected","Shift Selected",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Tab.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Shift Selected2","Shift Selected2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_Tab.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Shift Selected","Shift Selected",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Shift Selected","Shift Selected",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Set Group","Set Group",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Ctrl.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Set Group2","Set Group2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_Ctrl.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Set Group","Set Group",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Set Group","Set Group",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Show Map","Show Map",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ShowMap.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Show Map2","Show Map2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_ShowMap.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Show Map","Show Map",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Show Map","Show Map",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Pause","Pause",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Pause.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Pause2","Pause2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_Pause.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Pause","Pause",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Pause","Pause",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Cancel Cast","Cancel Cast",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Cancel.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Cancel Cast","Cancel Cast",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_Cancel.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Cancel Cast","Cancel Cast",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Cancel Cast","Cancel Cast",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Pan Left","Pan Left",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_PanLeft.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Pan Left2","Pan Left2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_PanLeft.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Pan Left","Pan Left",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Pan Left","Pan Left",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Pan Right","Pan Right",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_PanRight.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Pan Right2","Pan Right2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_PanRight.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Pan Right","Pan Right",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Pan Right","Pan Right",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Pan Up","Pan Up",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_PanUp.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Pan Up2","Pan Up2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_PanUp.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Pan Up","Pan Up",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Pan Up","Pan Up",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Pan Down","Pan Down",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_PanDown.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Pan Down2","Pan Down2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_PanDown.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Pan Down","Pan Down",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Pan Down","Pan Down",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Control Group 1","Control Group 1",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[0].keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Control Group 1_2","Control Group 1_2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_ctrlgroups[0].secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 1","Control Group 1",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 1","Control Group 1",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Control Group 2","Control Group 2",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[1].keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Control Group 2_2","Control Group 2_2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_ctrlgroups[1].secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 2","Control Group 2",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 2","Control Group 2",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Control Group 3","Control Group 3",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[2].keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Control Group 3_2","Control Group 3_2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_ctrlgroups[2].secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 3","Control Group 3",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 3","Control Group 3",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Control Group 4","Control Group 4",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[3].keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Control Group 4_2","Control Group 4_2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_ctrlgroups[3].secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 4","Control Group 4",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 4","Control Group 4",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Control Group 5","Control Group 5",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[4].keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Control Group 5_2","Control Group 5_2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_ctrlgroups[4].secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 5","Control Group 5",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 5","Control Group 5",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Control Group 6","Control Group 6",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[5].keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Control Group 6_2","Control Group 6_2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_ctrlgroups[5].secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 6","Control Group 6",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 6","Control Group 6",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Control Group 7","Control Group 7",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[6].keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Control Group 7_2","Control Group 7_2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_ctrlgroups[6].secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 7","Control Group 7",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 7","Control Group 7",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Control Group 8","Control Group 8",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[7].keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Control Group 8_2","Control Group 8_2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_ctrlgroups[7].secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 8","Control Group 8",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 8","Control Group 8",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Control Group 9","Control Group 9",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[8].keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Control Group 9_2","Control Group 9_2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_ctrlgroups[8].secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 9","Control Group 9",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 9","Control Group 9",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Control Group 0","Control Group 0",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_ctrlgroups[9].keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Control Group 0_2","Control Group 0_2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_ctrlgroups[9].secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 0","Control Group 0",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Control Group 0","Control Group 0",NULL,NULL);
 
     AddKeyInput(&ui.controlsPanel,"Center","Center",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Center.keyMappedTo);
     AddKeyInput(&ui.controlsPanel,"Center2","Center2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_Center.secondKeyMappedTo);
-    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Center","Center",NULL);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Center","Center",NULL,NULL);
 
 
     InitButton(&ui.controlsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
@@ -3395,6 +3435,19 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_
             SetColors(PRESET_DEFAULT);
         }
     }
+        if (ui.currentPanel == &ui.controlsPanel)
+    {
+        if (GetButton(&ui.controlsPanel,"Reset"))
+        {
+            currSettings.keymap = defaultSettings.keymap;
+            
+            for (int i = 0; i < ui.controlsPanel.numElements; i++)
+            {
+                UpdateBind(&ui.controlsPanel.elements[i]);
+            }
+        }
+    }
+
 
 }
 void SetUIElementFont(UIElement* u, ALLEGRO_FONT* f)
@@ -3565,7 +3618,10 @@ void UIDrawText(UIElement* u, int x, int y)
 {
    UI_Text* t = u->data;
     ALLEGRO_COLOR* c = t->colour ? t->colour : &FRIENDLY;
-   Text te = (Text){.f = ui.font,ui.boldFont,.x=x,.y=y,.color=*c,.lineHeight=al_get_font_line_height(ui.font)};
+    ALLEGRO_FONT* font = t->font;
+    if (!font)
+        font = ui.font;
+   Text te = (Text){.f = font,ui.boldFont,.x=x,.y=y,.color=*c,.lineHeight=al_get_font_line_height(ui.font)};
 
    al_do_multiline_text(ui.font,256,t->str,cb,&te);
 

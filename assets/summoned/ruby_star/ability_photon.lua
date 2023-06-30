@@ -6,7 +6,7 @@ function setup()
     SetCooldown(8);
     AbilitySetCastType(ABILITY_POINT);
 
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/summoned/ruby_star/ability_photon.png");
     SetDescription("[b]Photon\n\nFires a damaging projectile.");
     SetAbilityName("Photon"); 
 

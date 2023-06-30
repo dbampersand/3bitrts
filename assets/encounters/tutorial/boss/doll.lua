@@ -1,4 +1,4 @@
-local maxHP = 500  
+local maxHP = 250  
 
 function setup()
     SetSprite("assets/encounters/tutorial/boss/doll.png");

@@ -30,6 +30,7 @@ function setup()
     SetAbilityHint(HINT_CONE,radius,false,length);
     SetCooldown(4); 
     AbilitySetPortrait("assets/enemies/cusith/ability_bite.png");
+    SetAbilityName("Fangs")
     SetDescription("[b]Fangs\n\nCreates a line of spikes, hitting anything along its axis.")
 
 end

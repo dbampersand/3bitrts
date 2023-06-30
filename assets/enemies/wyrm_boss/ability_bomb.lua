@@ -5,6 +5,8 @@ function setup()
     SetAbilityRange(256)
     SetCooldown(30);
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_bomb.png");
+    
+    SetAbilityName("Bomb");
     SetDescription("[b]Bomb\n\nDeals damage over time after " .. delay .. " seconds")
 
 end

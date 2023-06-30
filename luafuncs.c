@@ -1456,6 +1456,12 @@ int L_SetAbilityCooldownTimer(lua_State* l)
 
     if (a->cdTimer > a->cooldown)
         a->cdTimer = a->cooldown;
+    if (cd != 0)
+    {
+        a->stacks--;
+        if (a->stacks < 0)
+            a->stacks = 0;
+    }
     return 0;
 }
 int L_ReduceCooldown(lua_State* l)
@@ -2076,6 +2082,8 @@ int L_CreateAOE(lua_State* l)
     }
 
     Attack* ref = CreateAoE(x,y, (char*)effectPortrait, radius, tickrate, duration, shouldCallback,  properties,  color,  dither,  len, effects, targ, currGameObjRunning);
+    ref->cameFrom = currAbilityRunning;
+    
     if (isSoak && ref)
     {
         ref->properties |= ATTACK_SOAK;
@@ -2298,11 +2306,11 @@ int L_Teleport(lua_State* l)
     {
         GameObject* obj = &objects[index];
         ScatterEffect(obj);
-        for (int i = 0; i < RandRange(3,30); i++)
-            AddParticleWithRandomProperties(obj->position.worldX+RandRange(0,GetWidth(obj)),obj->position.worldY+RandRange(0,GetHeight(obj)),GameObjToColor(obj),1,3,6,180,2*-M_PI,2*M_PI);
+        for (int i = 0; i < RandRange(20,60); i++)
+            AddParticleWithRandomProperties(obj->position.worldX+RandRange(0,GetWidth(obj)),obj->position.worldY+RandRange(0,GetHeight(obj)),GameObjToColor(obj),1,3,6,12,2*-M_PI,2*M_PI);
         Teleport(obj,lua_tonumber(l,2),lua_tonumber(l,3),true);
-        for (int i = 0; i < RandRange(3,30); i++)
-            AddParticleWithRandomProperties(obj->position.worldX+RandRange(0,GetWidth(obj)),obj->position.worldY+RandRange(0,GetHeight(obj)),GameObjToColor(obj),1,3,6,180,2*-M_PI,2*M_PI);
+        for (int i = 0; i < RandRange(20,60); i++)
+            AddParticleWithRandomProperties(obj->position.worldX+RandRange(0,GetWidth(obj)),obj->position.worldY+RandRange(0,GetHeight(obj)),GameObjToColor(obj),1,3,30,40  ,2*-M_PI,2*M_PI);
 
     }
     return 0;
@@ -3587,6 +3595,11 @@ int L_SetItemGoldCost(lua_State* l)
     return 0;
 
 }
+int L_SetGamestateToMainMenu(lua_State* l)
+{
+    SetGameStateToInMenu();
+}
+
 int L_CleaveEffect(lua_State* l)
 {
     int primary = lua_tonumber(l,1);
@@ -3824,6 +3837,7 @@ int L_CastAbility(lua_State* l)
     if (index < 0 || index >= MAX_ABILITIES)
     {
         lua_pushboolean(l,false);
+        ConsolePrintf("L_CastAbility: Ability index out of range: %i\n");
         return 1;
     }
 
@@ -5876,4 +5890,7 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetCooldownRate);
     lua_setglobal(luaState, "SetCooldownRate");
+
+    lua_pushcfunction(luaState, L_SetGamestateToMainMenu);
+    lua_setglobal(luaState, "SetGamestateToMainMenu");
 }

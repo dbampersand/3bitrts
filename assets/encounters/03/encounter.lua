@@ -21,3 +21,6 @@ end
 function mapend()
     return true;
 end
+function win()
+
+end

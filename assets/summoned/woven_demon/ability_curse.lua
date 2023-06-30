@@ -7,7 +7,7 @@ function setup()
     SetCooldown(12);
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
 
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/summoned/woven_demon/ability_curse.png");
     SetDescription("[b]Curse\n\nCurses the target, reducing their armour.");
     SetAbilityName("Curse"); 
 

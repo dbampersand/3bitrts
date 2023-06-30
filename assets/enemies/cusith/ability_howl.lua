@@ -1,6 +1,7 @@
 function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     AbilitySetPortrait("assets/enemies/cusith/ability_howl.png");
+    SetAbilityName("Howl")
     SetDescription("[b]Howl");
     SetCooldown(5)
 

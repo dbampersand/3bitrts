@@ -4,6 +4,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_summon_adds.png");
     SetDescription("[b]Rage");
+    SetAbilityName("Rage");
     SetCooldown(1)
 
 end

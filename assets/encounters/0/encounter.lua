@@ -20,3 +20,7 @@
     SetEncounterLoadScreen("assets/encounters/0/loadscreen.png")
     StartsUnlocked(true);   
 end
+
+function win()
+    UnlockEncounter("assets/encounters/01");
+end

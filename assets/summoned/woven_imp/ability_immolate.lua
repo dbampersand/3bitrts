@@ -7,7 +7,7 @@ function setup()
     SetCooldown(32);
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
 
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/summoned/woven_imp/ability_immolate.png");
     SetDescription("[b]Immolate\n\nGives the target a shield and increases their attack speed.");
     SetAbilityName("Immolate"); 
 

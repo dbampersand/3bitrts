@@ -9,7 +9,7 @@ function setup()
     SetAbilityHint(HINT_CIRCLE,radius);
 
     AbilitySetCastType(ABILITY_POINT);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/summoned/ruby_star/ability_sear.png");
     SetDescription("[b]Sear\n\nPlaces a fiery area on the ground, damaging all units.");
     SetAbilityName("Sear"); 
 

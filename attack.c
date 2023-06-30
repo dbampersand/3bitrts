@@ -827,7 +827,7 @@ void UpdateAttack(Attack* a, float dt)
             AddParticleWithRandomProperties(a->x,a->y,a->color,0.2f,4,60,90,minAngle,maxAngle);
 
     }
- if (a->cameFrom)
+    if (a->cameFrom)   
     {
         currAbilityRunning = a->cameFrom;
         currGameObjRunning = a->ownedBy;

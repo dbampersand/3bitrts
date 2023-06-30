@@ -688,6 +688,9 @@ void WinGame()
         SetEncounterProfited(currEncounterRunning,players[0].gold);
     }
     SetGameStateToEndscreen();
+
+    lua_rawgeti(luaState,LUA_REGISTRYINDEX,currEncounterRunning->luafunc_win);
+    lua_pcall(luaState,0,0,0);
 }
 void LoseGame()
 {

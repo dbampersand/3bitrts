@@ -10,7 +10,7 @@ function setup()
     SetCooldown(4);
     AbilitySetCastType(ABILITY_POINT);
 
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/summoned/obsidian_demon/ability_lightning_orb.png");
     SetDescription("[b]Lightning Orb\n\nShoots a ball that moves, dealing damage to all in its path.");
     SetAbilityName("Lightning Orb"); 
 

@@ -4,7 +4,7 @@ function setup()
     SetAbilityRange(256) 
     SetCooldown(20);
     AbilitySetCastType(ABILITY_INSTANT);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/summoned/fairy/ability_blossom.png");
     SetDescription("[b]Blossom\n\nThrows blossoms, healing units when it touches them.");
     SetAbilityName("Blossom"); 
 

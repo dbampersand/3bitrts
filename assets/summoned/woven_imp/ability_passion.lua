@@ -7,7 +7,7 @@ function setup()
     SetCooldown(32);
 
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/summoned/woven_imp/ability_passion.png");
     SetDescription("[b]Passion\n\nThe target's abilities cool down " .. quicken * 100 .. "% quicker for " .. duration .. " seconds");
     SetAbilityName("Passion"); 
 

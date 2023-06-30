@@ -14,7 +14,7 @@ function setup()
     SetCooldown(1);
 
     AbilitySetCastType(ABILITY_POINT);
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/summoned/woven_demon/ability_hellfire.png");
     SetDescription("[b]Hellfire\n\nDeals damage in a moving area.");
     SetAbilityName("Hellfire"); 
 

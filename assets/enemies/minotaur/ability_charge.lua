@@ -44,12 +44,8 @@ function ontimeout(x,y,obj,dt,target)
     atk = -1
 end
 
-
 function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
-    if (atk >= 0 and attackRef == atk) then
-        x2 = GetX(parent);
-        y2 = GetY(parent);
-        MoveAttack(atk,x2,y2);
-    end
-
+    x2 = GetX(parent);
+    y2 = GetY(parent);
+    MoveAttack(attackRef,x2,y2);
 end

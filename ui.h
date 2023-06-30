@@ -17,6 +17,8 @@
 #define DIALOGUE_H 40
 #define DIALOGUE_Y 10
 
+#define OPTIONS_PANEL_HEIGHT 146
+
 #define NUMSPRITESTATESTOALLOC 16
 
 #define UI_PADDING 5
@@ -94,6 +96,7 @@ typedef struct UI_Text
 {
     char* str;
     ALLEGRO_COLOR* colour;
+    ALLEGRO_FONT* font;
 }UI_Text;
 typedef struct Pulldown
 {
@@ -381,7 +384,7 @@ void ChangeButtonText(Button* b, char* newstr);
 bool cb(int line_num, const char *line, int size, void *extra);
 void SetOptions();
 void SetUITextStr(UI_Text* t, char* str);
-void AddText(Panel* p, int x, int y, char* name, char* description, ALLEGRO_COLOR* colour);
+void AddText(Panel* p, int x, int y, char* name, char* description, ALLEGRO_COLOR* colour, ALLEGRO_FONT* font);
 UIElement* AddTextInput(Panel* p, int x, int y, int w, int h,char* name, char* description, int maxChars, bool onlyAllowNumbers);
 UI_Text* GetUIText(Panel* p, char* name);
 void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame);

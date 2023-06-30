@@ -29,7 +29,7 @@ function setup()
 
     SetObjPurchaseScreenSprite("assets/friendly/lancer/lancer_full.png")
     SetObjName("Lancer");
-    SetObjDescription(".")
+    SetObjDescription("From a young age, the Lancer was trained in the disciplined arts of combat. Once a royal knight, the Lancer was sent into exile upon refusing orders to burn a village. Now a nomad, his stateless continued existence is financed by adventuring where the guild system has not monopolised.")
 
     SetObjCost(500);
 

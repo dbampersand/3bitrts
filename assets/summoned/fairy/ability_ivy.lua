@@ -10,7 +10,7 @@ function setup()
     SetCooldown(4);
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
 
-    AbilitySetPortrait("assets/enemies/kobold_miner/ability_throw_bomb.png");
+    AbilitySetPortrait("assets/summoned/fairy/ability_ivy.png");
     SetDescription("[b]Ivy\n\nSlows and damages an enemy.");
     SetAbilityName("Ivy"); 
 

@@ -196,7 +196,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
     UpdateChatbox(dt);
 
 
-    if (KeyDown(keyState,ALLEGRO_KEY_LCTRL) && KeyPressedThisFrame(ALLEGRO_KEY_M,keyState,keyStateLastFrame))
+    if (KeyDown(keyState,ALLEGRO_KEY_LCTRL) && KeyPressedThisFrame(ALLEGRO_KEY_I,keyState,keyStateLastFrame))
     {
         if (gameState != GAMESTATE_IN_EDITOR)
             SetGameStateToInEditor(); 
@@ -649,11 +649,11 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     if (KeyDown(keyState,ALLEGRO_KEY_F7))
     {
-        AddGold(1000);
+        //AddGold(1000);
     }
     if (KeyDown(keyState,ALLEGRO_KEY_F8))
     {
-        AddCompletionPercent(100);
+        //AddCompletionPercent(100);
     }
     #ifdef DEBUG
         al_put_blended_pixel(DEBUG_P1.x,DEBUG_P1.y,al_map_rgb(0,255,0));

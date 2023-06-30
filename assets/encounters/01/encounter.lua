@@ -18,5 +18,9 @@ function setup()
     EncounterSetNumUnitsToSelect(3);
 
     SetEncounterLoadScreen("assets/encounters/01/loadscreen.png")
-    StartsUnlocked(true);
+    StartsUnlocked(false);
 end 
+
+function win()
+    UnlockEncounter("assets/encounters/02");
+end
