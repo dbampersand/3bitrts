@@ -2,7 +2,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_summon_adds.png");
     SetAbilityName("Summon");
-    SetDescription("[b]Summon\nSummons adds");
+    SetDescription("[b]Summon\n\nSummons minion snakes.");
     SetCooldown(30)
 
 end

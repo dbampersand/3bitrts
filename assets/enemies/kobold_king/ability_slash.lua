@@ -6,7 +6,7 @@ function setup()
     SetAbilityRange(100)
     SetCooldown(15);
     AbilitySetPortrait("assets/enemies/kobold_king/ability_slash.png");
-    SetDescription("[b]Slash\n\nAfter channelling, hits in a cone.")
+    SetDescription("[b]Slash\n\nSwings a sword, hitting all units in a cone.")
     SetAbilityHint(HINT_CONE,coneSize);
 
     SetAbilityName("Slash"); 

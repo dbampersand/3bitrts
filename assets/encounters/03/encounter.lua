@@ -1,6 +1,6 @@
 function setup()
     SetEncounterSprite("assets/enemies/cusith/cusith.png");
-    SetEncounterDescription("Cu-Sith, the black dog.")
+    SetEncounterDescription("Cu-Sith, the black dog. Its terrifying bark can overcome even the stoutest of adventurers and send them running.")
     SetEncounterName("Cu-Sith");
 
     AddEncounterAbility("assets/enemies/cusith/ability_howl.lua",0,0);
@@ -8,6 +8,9 @@ function setup()
     AddEncounterAbility("assets/enemies/cusith/ability_spin.lua",2,0);
     AddEncounterAbility("assets/enemies/cusith/ability_bite.lua",3,0);
     AddEncounterAbility("assets/enemies/cusith/ability_call_pack.lua",4,0);
+    AddEncounterAbility("assets/enemies/cusith/ability_crush.lua",5,0);
+    AddEncounterAbility("assets/enemies/cusith/ability_fangs.lua",6,0);
+
 
 
 

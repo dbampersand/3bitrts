@@ -2502,9 +2502,11 @@ void InitVideoOptionsPanel()
         windowTypeSelectedIndex = 1;
     if (currSettings.displayWindowStyle == ALLEGRO_FULLSCREEN_WINDOW)
         windowTypeSelectedIndex = 2;
-
-    AddText(&ui.videoOptionsPanel,33,228,"Label_WindowType","Window Type", NULL,NULL);
-    AddPulldownMenu(&ui.videoOptionsPanel,33,240,120,10,"WindowType",windowTypeSelectedIndex,WindowTypeCallback,3,"Windowed","Fullscreen", "Windowed Fullscreen");
+    //TODO: re-add this 
+    //right now it's causing crashes
+    //possibly because of reloading fonts - should be storing a ALLEGRO_FONT** instead of an ALLEGRO_FONT* inside of UI
+   // AddText(&ui.videoOptionsPanel,33,228,"Label_WindowType","Window Type", NULL,NULL);
+   // AddPulldownMenu(&ui.videoOptionsPanel,33,240,120,10,"WindowType",windowTypeSelectedIndex,WindowTypeCallback,3,"Windowed","Fullscreen", "Windowed Fullscreen");
 
 
     InitButton(&ui.videoOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));

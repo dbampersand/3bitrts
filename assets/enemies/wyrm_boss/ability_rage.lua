@@ -3,7 +3,7 @@ local casts = 0
 function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_summon_adds.png");
-    SetDescription("[b]Rage");
+    SetDescription("[b]Rage\n\nRoars in anguish, causing dozens of scales to fly out in a circular pattern.");
     SetAbilityName("Rage");
     SetCooldown(1)
 

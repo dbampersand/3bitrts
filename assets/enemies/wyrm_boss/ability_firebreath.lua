@@ -6,7 +6,7 @@ function setup()
     SetCooldown(20); 
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_firebreath.png");
     SetAbilityName("Firebreath");
-    SetDescription("[b]Firebreath\n\nDeals damage in a cone.")
+    SetDescription("[b]Firebreath\n\nA tremendous breath of fire, damaging units in a cone.")
 
 end
 local cone = -1

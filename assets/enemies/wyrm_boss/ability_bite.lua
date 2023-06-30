@@ -3,7 +3,7 @@ function setup()
     SetCooldown(10);
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_bite.png");
     SetAbilityName("Bite");
-    SetDescription("[b]Bite\n\nDeals damage over time to the currently attacked target.")
+    SetDescription("[b]Bite\n\nInjects a toxin, dealing damage over time to the target.")
     SetAbilityHint(HINT_LINE);
     
 end

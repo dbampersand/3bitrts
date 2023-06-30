@@ -11,7 +11,7 @@ function setup()
     SetObjectPush(true);
     ObjIsStunnable(GetObjRef(),false);
     --SetObjIsBoss(GetObjRef(),true)
-    --SetObjectPushable(GetObjRef(),false);
+    SetObjectPushable(GetObjRef(),false);
 
 end 
 
@@ -55,9 +55,9 @@ function update(dt)
     end
     dpsStr = string.format("DPS: %.0f",dps);
     
-    local strX = GetX(GetObjRef()) + GetWidth(GetObjRef())/2 + 5;
+    local strX = GetX(GetObjRef()) - GetWidth(GetObjRef())/2 - 5;
     local strY = GetY(GetObjRef());
-    ShowString(dpsStr,strX,strY,ALIGN_LEFT);
+    ShowString(dpsStr,strX,strY,ALIGN_RIGHT);
 
     ClearCommandQueue(GetObjRef());
 end

@@ -11,6 +11,7 @@ function setup()
     SetObjectPush(true);
     ObjIsStunnable(GetObjRef(),false);
 
+    SetObjectPushable(GetObjRef(),false);
 end
 
 local timer = 4

@@ -1,7 +1,7 @@
 function setup()
     SetEncounterSprite("assets/enemies/wyrm_boss/wyrm.png");
-    SetEncounterDescription("The wyrm.")
-    SetEncounterName("Wyrm");
+    SetEncounterDescription("The Beithir. Beware its deadly poison: cure it in bodies of water.")
+    SetEncounterName("Beithir");
 
     AddEncounterAbility("assets/enemies/wyrm_boss/ability_bite.lua",0,0);
     AddEncounterAbility("assets/enemies/wyrm_boss/ability_firebreath.lua",1,0);

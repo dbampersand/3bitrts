@@ -31,7 +31,7 @@ function setup()
     SetCooldown(4); 
     AbilitySetPortrait("assets/enemies/cusith/ability_bite.png");
     SetAbilityName("Fangs")
-    SetDescription("[b]Fangs\n\nCreates a line of spikes, hitting anything along its axis.")
+    SetDescription("[b]Fangs\n\nCreates a line of fangs, hitting anything along its axis.")
 
 end
 function casted(x,y,obj,headingx,headingy)

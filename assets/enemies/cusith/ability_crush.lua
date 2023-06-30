@@ -35,6 +35,9 @@ function casted(x,y,obj,headingx,headingy)
     CreateAOE(GetX(obj)+RandRange(0,maxLooseAim),GetY(obj)+RandRange(0,maxLooseAim),"", 10, smallAoEDuration, smallAoEDuration, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, -1, {f2})
     CreateAOE(GetX(obj)+RandRange(0,maxLooseAim),GetY(obj)+RandRange(0,maxLooseAim),"", 10, smallAoEDuration, smallAoEDuration, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, -1, {f2})
     
+    PlaySound("assets/enemies/cusith/audio/crush.wav",1)
+
+
     return true; 
 end
 
