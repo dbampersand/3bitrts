@@ -225,9 +225,9 @@ typedef struct UI
     int augmentIconIndex;
 
     
-    ALLEGRO_FONT* font;
-    ALLEGRO_FONT* boldFont;
-    ALLEGRO_FONT* tinyFont;
+    ALLEGRO_FONT** font;
+    ALLEGRO_FONT** boldFont;
+    ALLEGRO_FONT** tinyFont;
 
     bool escMenuEnabled;
     #define UI_START_Y (_SCREEN_SIZE-39)
