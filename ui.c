@@ -101,9 +101,9 @@ void DisableButton(UIElement* u)
 }
 ALLEGRO_FONT* GetElementFont(UIElement* u)
 {
-    ALLEGRO_FONT* f = u->font;
-    if (!f)
-        f = ui.font;
+    if (!u->font)
+        return ui.font;
+    ALLEGRO_FONT* f = *u->font;
     return f;
 }
 void DrawItems(GameObject* selected)
@@ -1713,7 +1713,7 @@ void AddKeyInput(Panel* p, char* name, char* description, int x, int y, int w, i
 
     UIElement u = {0};
     u.data = (void*)t;
-    u.font = ui.tinyFont;
+    u.font = &ui.tinyFont;
     u.w = w;    
     u.h = h;
     u.y = y;
@@ -1749,7 +1749,7 @@ UIElement* AddTextInput(Panel* p, int x, int y, int w, int h,char* name, char* d
     
     UIElement u = {0};
     u.data = (void*)t;
-    u.font = ui.tinyFont;
+    u.font = &ui.tinyFont;
     u.w = w;    
     u.h = h;
     u.y = y;
@@ -1900,14 +1900,14 @@ void ChangeButtonText(Button* b, char* newstr)
     b->description = calloc(strlen(newstr)+1,sizeof(char));
     strcpy(b->description,newstr);
 }
-void AddText(Panel* p, int x, int y, char* name, char* description, ALLEGRO_COLOR* colour, ALLEGRO_FONT* font)
+void AddText(Panel* p, int x, int y, char* name, char* description, ALLEGRO_COLOR* colour, ALLEGRO_FONT** font)
 {
     UIElement u = {0};
     UI_Text* t = calloc(1,sizeof(UI_Text));
 
     t->font = font;
     if (!font)
-        t->font = ui.font;
+        t->font = &ui.font;
 
     t->str = calloc(strlen(description)+1,sizeof(char));
     strcpy(t->str,description);
@@ -2466,7 +2466,7 @@ void InitVideoOptionsPanel()
 
     ui.videoOptionsPanel = CreatePanel(48,48,180,OPTIONS_PANEL_HEIGHT,15,true);
 
-    AddText(&ui.videoOptionsPanel,33,10,"Video_Options", "Video Options",NULL, ui.boldFont);
+    AddText(&ui.videoOptionsPanel,33,10,"Video_Options", "Video Options",NULL, &ui.boldFont);
 
     AddText(&ui.videoOptionsPanel,33,41,"Tag_RenderScale","RenderScale", NULL,NULL);
     AddText(&ui.videoOptionsPanel,132,43,"RenderScale","2x", NULL,NULL);
@@ -2505,8 +2505,8 @@ void InitVideoOptionsPanel()
     //TODO: re-add this 
     //right now it's causing crashes
     //possibly because of reloading fonts - should be storing a ALLEGRO_FONT** instead of an ALLEGRO_FONT* inside of UI
-   // AddText(&ui.videoOptionsPanel,33,228,"Label_WindowType","Window Type", NULL,NULL);
-   // AddPulldownMenu(&ui.videoOptionsPanel,33,240,120,10,"WindowType",windowTypeSelectedIndex,WindowTypeCallback,3,"Windowed","Fullscreen", "Windowed Fullscreen");
+    AddText(&ui.videoOptionsPanel,33,228,"Label_WindowType","Window Type", NULL,NULL);
+    AddPulldownMenu(&ui.videoOptionsPanel,33,240,120,10,"WindowType",windowTypeSelectedIndex,WindowTypeCallback,3,"Windowed","Fullscreen", "Windowed Fullscreen");
 
 
     InitButton(&ui.videoOptionsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
@@ -2524,7 +2524,7 @@ void InitAudioOptionsPanel()
 {
     ui.audioOptionsPanel = CreatePanel(48,48,180,OPTIONS_PANEL_HEIGHT,15,true);
 
-    AddText(&ui.audioOptionsPanel,33,10,"Audio_Options", "Audio Options",NULL, ui.boldFont);
+    AddText(&ui.audioOptionsPanel,33,10,"Audio_Options", "Audio Options",NULL, &ui.boldFont);
 
 
     AddText(&ui.audioOptionsPanel,33,41,"Tag_MasterVolume","Master Volume", NULL,NULL);
@@ -2549,7 +2549,7 @@ void InitAccessibilityOptionsPanel()
 {
     ui.accessibilityOptionsPanel = CreatePanel(48,48,180,OPTIONS_PANEL_HEIGHT,15,true);
 
-    AddText(&ui.accessibilityOptionsPanel,33,10,"Accessibility_Options", "Accessibility Options",NULL, ui.boldFont);
+    AddText(&ui.accessibilityOptionsPanel,33,10,"Accessibility_Options", "Accessibility Options",NULL, &ui.boldFont);
 
     //AddButton(&ui.audioOptionsPanel,"MasterVolume", "MasterVolume", 132,29,96,16,true);
     //AddButton(&ui.audioOptionsPanel,"Music Volume","Music Volume",132,29,96,16,true);
@@ -2672,7 +2672,7 @@ void InitControlsPanel()
 {
     ui.controlsPanel = CreatePanel(48,48,180,OPTIONS_PANEL_HEIGHT,15,true);
 
-    AddText(&ui.controlsPanel,33,10,"Controls_Options", "Controls Options",NULL, ui.boldFont);
+    AddText(&ui.controlsPanel,33,10,"Controls_Options", "Controls Options",NULL, &ui.boldFont);
 
 
     int xText = 16;
@@ -3452,7 +3452,7 @@ void UpdateUI(ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, ALLEGRO_
 
 
 }
-void SetUIElementFont(UIElement* u, ALLEGRO_FONT* f)
+void SetUIElementFont(UIElement* u, ALLEGRO_FONT** f)
 {
     u->font = f;
 }
@@ -3620,7 +3620,7 @@ void UIDrawText(UIElement* u, int x, int y)
 {
    UI_Text* t = u->data;
     ALLEGRO_COLOR* c = t->colour ? t->colour : &FRIENDLY;
-    ALLEGRO_FONT* font = t->font;
+    ALLEGRO_FONT* font = *t->font;
     if (!font)
         font = ui.font;
    Text te = (Text){.f = font,ui.boldFont,.x=x,.y=y,.color=*c,.lineHeight=al_get_font_line_height(ui.font)};

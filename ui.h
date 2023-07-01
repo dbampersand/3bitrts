@@ -96,7 +96,7 @@ typedef struct UI_Text
 {
     char* str;
     ALLEGRO_COLOR* colour;
-    ALLEGRO_FONT* font;
+    ALLEGRO_FONT** font;
 }UI_Text;
 typedef struct Pulldown
 {
@@ -148,7 +148,7 @@ typedef struct UIElement
     Color bgColor;
 
     bool isHighlighted;
-    ALLEGRO_FONT* font;
+    ALLEGRO_FONT** font;
 
 } UIElement;
 
@@ -225,9 +225,9 @@ typedef struct UI
     int augmentIconIndex;
 
     
-    ALLEGRO_FONT** font;
-    ALLEGRO_FONT** boldFont;
-    ALLEGRO_FONT** tinyFont;
+    ALLEGRO_FONT* font;
+    ALLEGRO_FONT* boldFont;
+    ALLEGRO_FONT* tinyFont;
 
     bool escMenuEnabled;
     #define UI_START_Y (_SCREEN_SIZE-39)
@@ -384,7 +384,7 @@ void ChangeButtonText(Button* b, char* newstr);
 bool cb(int line_num, const char *line, int size, void *extra);
 void SetOptions();
 void SetUITextStr(UI_Text* t, char* str);
-void AddText(Panel* p, int x, int y, char* name, char* description, ALLEGRO_COLOR* colour, ALLEGRO_FONT* font);
+void AddText(Panel* p, int x, int y, char* name, char* description, ALLEGRO_COLOR* colour, ALLEGRO_FONT** font);
 UIElement* AddTextInput(Panel* p, int x, int y, int w, int h,char* name, char* description, int maxChars, bool onlyAllowNumbers);
 UI_Text* GetUIText(Panel* p, char* name);
 void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame);
@@ -408,7 +408,7 @@ void SetTextInputStr(UIElement* u, char* str);
 void ClearTextInputStr(UIElement* u);
 
 UIElement* AddSlider(Panel* p, int x, int y, int w, int h, char* name, float filled, float* v);
-void SetUIElementFont(UIElement* u, ALLEGRO_FONT* f);
+void SetUIElementFont(UIElement* u, ALLEGRO_FONT** f);
 
 void DrawUIHighlight(UIElement* u, float x, float y);
 

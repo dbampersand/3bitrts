@@ -1980,7 +1980,7 @@ void PopulateUnitSelector(Panel* p)
         int h = 16;
         UIElement* u = AddButton(p,"UnitSelector",prefabs[i]->name,x,y,w,h,true);
         ChangeButtonImage(u,prefabs[i]->spriteIndex);
-        SetUIElementFont(u,ui.tinyFont);
+        SetUIElementFont(u,&ui.tinyFont);
         y += h;
     }
 }
