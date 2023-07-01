@@ -2794,7 +2794,6 @@ int L_GetOppositeFriendliness(lua_State* l)
 int L_GetAllObjsByFriendliness(lua_State* l)
 {
     int friendliness = lua_tonumber(l,1);
-    
     lua_newtable(l);
     int index = 0;
     for (int i = 0; i < numActiveObjects; i++)

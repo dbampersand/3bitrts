@@ -1,7 +1,7 @@
 function setup()
     SetEncounterSprite("assets/enemies/cusith/cusith.png");
-    SetEncounterDescription("Cu-Sith, the black dog. Its terrifying bark can overcome even the stoutest of adventurers and send them running.")
-    SetEncounterName("Cu-Sith");
+    SetEncounterDescription("A huge seas serpent.")
+    SetEncounterName("Stoor Worm");
 
     AddEncounterAbility("assets/enemies/cusith/ability_howl.lua",0,0);
     AddEncounterAbility("assets/enemies/cusith/ability_focus.lua",1,0);
@@ -14,10 +14,10 @@ function setup()
 
 
 
-    SetEncounterMapPath("assets/encounters/03/map_1.lua");
+    SetEncounterMapPath("assets/encounters/04/map_final.lua");
     SetEncounterDifficulty(DIFFICULTY_MEDIUM);
     EncounterSetNumUnitsToSelect(4);
-    SetEncounterLoadScreen("assets/encounters/03/loadscreen.png")
+    SetEncounterLoadScreen("assets/encounters/04/loadscreen.png")
     
 end
 
@@ -25,5 +25,5 @@ function mapend()
     return true;
 end
 function win()
-    UnlockEncounter("assets/encounters/04");
+
 end

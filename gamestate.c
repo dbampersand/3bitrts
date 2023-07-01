@@ -152,7 +152,7 @@ void SpawnAllFriendlies()
 void FinishTransition()
 {
     ClearChatbox();
-    RemoveAllAttacks(1);
+    RemoveAllAttacks();
     ChangeUIPanel(NULL);
     if (transitioningTo == GAMESTATE_PURCHASING_UNITS)
     {
@@ -282,7 +282,7 @@ void FinishTransition()
     if (transitioningTo == GAMESTATE_LOAD_ENCOUNTER)
     {
 
-        RemoveAllAttacks(1);
+        RemoveAllAttacks();
         gameState = GAMESTATE_LOAD_ENCOUNTER;
         transitioningTo = GAMESTATE_LOAD_ENCOUNTER;
         combatStarted = false;
@@ -302,7 +302,7 @@ void FinishTransition()
         gameState = GAMESTATE_CHOOSING_UNITS;
         transitioningTo = GAMESTATE_CHOOSING_UNITS;
         RemoveAllGameObjects();
-        RemoveAllAttacks(1);
+        RemoveAllAttacks();
         SetMap(LoadMap("assets/ui/map_unitselect.lua"));
 
         //SetMap(&maps[0]);
@@ -366,7 +366,7 @@ void FinishTransition()
     }
     if (transitioningTo == GAMESTATE_CHANGE_MAP)
     {
-        RemoveAllAttacks(1);
+        RemoveAllAttacks();
 
         combatStarted = false;      
 
@@ -382,7 +382,7 @@ void FinishTransition()
                 KillObj(&objects[i],false,false);
             }
         }
-        RemoveAllAttacks(1);
+        RemoveAllAttacks();
 
         AddGold(goldBefore - players[0].gold);
 

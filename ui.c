@@ -1387,6 +1387,7 @@ void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame
         if (selectedEncounterIndex < 0)
             selectedEncounterIndex = 0;
     }
+
     if (e->encounter_ButtonRight.enabled && IsBindDownThisFrame(keyStateThisFrame,keyStateLastFrame,currSettings.keymap.key_PanRight))
     {
         //selectedEncounterIndex++;
@@ -1398,6 +1399,7 @@ void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame
         if (selectedEncounterIndex >= numEncounters)
             selectedEncounterIndex = numEncounters-1;
     }
+
     if (e->unlocked && IsBindDownThisFrame(keyStateThisFrame,keyStateLastFrame,currSettings.keymap.key_Center))
     {
         SetGameStateToChoosingParty();
@@ -1406,6 +1408,14 @@ void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame
 void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, int index, int offsetX, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
     Encounter* e = encounters[index];
+    
+    bool shouldHighlight = false;
+    for (int i = selectedEncounterIndex+1; i < numEncounters; i++)
+    {
+        if (encounters[i]->bestChest == 0 && encounters[i]->unlocked)
+            shouldHighlight = true;
+    }
+    e->encounter_ButtonRight.isHighlighted = shouldHighlight;
 
     ALLEGRO_COLOR disabled = GROUND_DARK;
 
