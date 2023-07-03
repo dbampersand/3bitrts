@@ -29,7 +29,7 @@ function casted(x,y,obj,headingx,headingy)
         if (math.floor(math.fmod(i,2)) == 0) then
             y = GetUIHeight();
         end
-        local aoe = CreateAOE(xPos,y,"",radius,tickrate,9999,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_VERTICAL_HALF,false,-1,{f1});
+        local aoe = CreateAOE(xPos,y,"",radius,tickrate,9999,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_VERTICAL_HALF,false,-1,0,0,0,{f1});
         SetAttackVelocity(aoe,speed);
 
         if (math.floor(math.fmod(i,2)) == 0) then

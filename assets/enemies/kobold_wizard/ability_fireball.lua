@@ -34,7 +34,7 @@ local function makeAOE(x,y)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 20;
     
-    CreateAOE(x,y,"", 50, 1, 6, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
+    CreateAOE(x,y,"", 50, 1, 6, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1,0,0,0, {f1})
 end
 function onhit(x,y,objhit)
     

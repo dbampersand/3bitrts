@@ -22,7 +22,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = dps * tickRate;
 
     local radius = GetWidth(g) / 2
-    aoe = CreateAOE(GetX(obj),GetY(obj),"", radius, tickRate, duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_HALF, false, obj, {f1})
+    aoe = CreateAOE(GetX(obj),GetY(obj),"", radius, tickRate, duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_HALF, false, obj,0,0,0, {f1})
 
     f2 = {}
     f2["trigger"] = TRIGGER_CONST

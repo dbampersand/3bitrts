@@ -25,7 +25,7 @@ function casted(x,y,obj,headingx,headingy)
     f2["value"] = dps * tickrate;  
 
 
-    CreateAOE(x,y,"", 30, tickrate, time, false, ATTACK_HITS_ENEMIES, COLOR_FRIENDLY_DAMAGE, DITHER_DAMAGE_HALF, false, obj, {f1,f2})
+    CreateAOE(x,y,"", 30, tickrate, time, false, ATTACK_HITS_ENEMIES, COLOR_FRIENDLY_DAMAGE, DITHER_DAMAGE_HALF, false, obj,0,0,0, {f1,f2})
 
     return true;
 end

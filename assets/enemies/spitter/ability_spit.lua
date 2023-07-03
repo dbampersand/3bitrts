@@ -52,7 +52,7 @@ function onhit(x,y,objhit)
     f1["canStack"] = true
     f1["maxStacks"] = 20
 
-    aoe = CreateAOE(x,y,"", 15, .75, 10,false,ATTACK_HITS_ENEMIES,COLOR_POISON,DITHER_DAMAGE_QUARTER,false, -1, {f1})
+    aoe = CreateAOE(x,y,"", 15, .75, 10,false,ATTACK_HITS_ENEMIES,COLOR_POISON,DITHER_DAMAGE_QUARTER,false, -1,0,0,0, {f1})
     PushObj(x,y,objhit,100,0.1)
 
    -- PlaySound("assets/enemies/spitter/audio/spit_hit.wav",0.25);

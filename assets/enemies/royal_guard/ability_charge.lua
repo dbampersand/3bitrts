@@ -20,7 +20,7 @@ function casted(x,y,obj,headingx,headingy)
     Teleport(GetObjRef(),GetX(obj),GetY(obj));
     SetObjChannelling(GetObjRef(),1.25);
 
-    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",1.25,1.25,20,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,{f1});
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",1.25,1.25,20,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,0,0,0,{f1});
     return true; 
 end
 

@@ -16,7 +16,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 25;  
 
-    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 60, 0.25, 0.25,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_NONE,false, -1, {f1})
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 60, 0.25, 0.25,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_NONE,false, -1, 0,0,0,{f1})
     
     --pool of fire spawn
     local f2 = {};
@@ -26,7 +26,7 @@ function casted(x,y,obj,headingx,headingy)
 
     local randTarget = {}
     randTarget["target"] = GetRandomUnit(TYPE_ENEMY,TYPE_ANY,999)[1];
-    CreateAOE(GetX(randTarget.target),GetY(randTarget.target),"", 20, 0.25, 12,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_QUARTER,false, -1, {f2})
+    CreateAOE(GetX(randTarget.target),GetY(randTarget.target),"", 20, 0.25, 12,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_QUARTER,false, -1,0,0,0, {f2})
 
     return true;
 end

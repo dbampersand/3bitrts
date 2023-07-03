@@ -20,7 +20,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 20;
 
     
-    aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 30, 1, 10, false, ATTACK_HITS_ENEMIES,COLOR_DEFAULT,DITHER_STAR_HALF,false, -1, {f1})
+    aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 30, 1, 10, false, ATTACK_HITS_ENEMIES,COLOR_DEFAULT,DITHER_STAR_HALF,false, -1,0,0,0, {f1})
 
     local dirX = x - GetX(GetObjRef());
     local dirY = y - GetY(GetObjRef());

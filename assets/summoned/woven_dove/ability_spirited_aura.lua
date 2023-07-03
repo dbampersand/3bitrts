@@ -21,7 +21,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_CURE;
     f1["value"] = numEffects;
 
-    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 0.1, 0.1, false, ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_HEAL_HALF,false, -1, {f1})
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 0.1, 0.1, false, ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_HEAL_HALF,false, -1,0,0,0, {f1})
     KillObj(GetObjRef())
     return true; 
 end

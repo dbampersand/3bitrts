@@ -19,9 +19,9 @@ function update(dt)
         timer = 0
         local aoe = -1;
         if (math.fmod(numAoesMade, 2) == 0) then
-            aoe = CreateAOE(63.5,63.5,"",20,0.25,10,false,ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_VERTICAL_HALF,false,-1,{f1});
+            aoe = CreateAOE(63.5,63.5,"",20,0.25,10,false,ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_VERTICAL_HALF,false,-1,0,0,0,{f1});
         else
-            aoe = CreateAOE(223.5,159.5,"",20,0.25,10,false,ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_VERTICAL_HALF,false,-1,{f1});
+            aoe = CreateAOE(223.5,159.5,"",20,0.25,10,false,ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_VERTICAL_HALF,false,-1,0,0,0,{f1});
         end
         numAoesMade = numAoesMade + 1;
         SetAttackCircle(aoe,true);

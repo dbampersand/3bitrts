@@ -11,6 +11,8 @@ replays/*
 *.out
 *.cfg
 *.save
+*.log
+*.xml
 game.dSYM/Contents
 game
 game.dSYM

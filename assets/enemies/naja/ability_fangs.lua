@@ -34,8 +34,8 @@ function casted(x,y,obj,headingx,headingy)
     local point2 = RotatePoint(point.x,point.y, GetX(GetObjRef()), GetY(GetObjRef()), angleFrom)
 
 
-    local aoe1 = CreateAOE(point1.x,point1.y,"",radius,1/ticksPerSecond,9,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,{f1});
-    local aoe2 = CreateAOE(point2.x,point2.y,"",radius,1/ticksPerSecond,9,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,{f1});
+    local aoe1 = CreateAOE(point1.x,point1.y,"",radius,1/ticksPerSecond,9,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,0,0,0,{f1});
+    local aoe2 = CreateAOE(point2.x,point2.y,"",radius,1/ticksPerSecond,9,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,0,0,0,{f1});
 
     local dir = {};
     dir.x = GetX(obj) - point1.x;

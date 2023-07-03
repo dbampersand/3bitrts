@@ -32,7 +32,7 @@ function casted(x,y,obj,headingx,headingy)
     f2["duration"] = dotTime
     f2["name"] = "Tail Whip";
 
-    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 0.1, length, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, GetObjRef(), {f1,f2})
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 0.1, length, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, GetObjRef(),0,0,0, {f1,f2})
 
     return true; 
 end

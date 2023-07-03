@@ -17,7 +17,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = damage;
 
-    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",radius,duration,duration,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_EIGTH,false,-1,{f1});
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",radius,duration,duration,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_EIGTH,false,-1,0,0,0,{f1});
     SetDecoration(GetObjRef(),true);
     SetLifetime(GetObjRef(),duration)
 

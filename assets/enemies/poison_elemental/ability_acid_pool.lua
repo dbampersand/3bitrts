@@ -33,7 +33,7 @@ function casted(x,y,obj,headingx,headingy)
 
     local numPools = Clamp(#targets,0,2)
     for i = 1, numPools do
-        CreateAOE(GetX(targets[i]),GetY(targets[i]),"", radius, tickrate, duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_QUARTER, false, obj, {f1})
+        CreateAOE(GetX(targets[i]),GetY(targets[i]),"", radius, tickrate, duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_QUARTER, false, obj, 0,0,0,{f1})
     end
 
 

@@ -60,7 +60,7 @@ function update(dt)
         f1["value"] = 5;
 
     
-        --heal = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_DEFAULT,DITHER_EIGTH,false, -1, {f1})
+        --heal = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_DEFAULT,DITHER_EIGTH,false, -1,0,0,0, {f1})
     end
     if (heal > -1) then
         --MoveAttack(heal,GetX(GetObjRef()),GetY(GetObjRef()));

@@ -60,7 +60,7 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
             f1["type"] = EFFECT_HURT;
             f1["value"] = 75;
         
-            local aoe = CreateAOE(startX + xMove,startY + yMove,"",radius,timeBeforeDamage,timeBeforeDamage,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,{f1});
+            local aoe = CreateAOE(startX + xMove,startY + yMove,"",radius,timeBeforeDamage,timeBeforeDamage,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,0,0,0,{f1});
         
             segmentsMade = segmentsMade + 1;
             PlaySound("assets/enemies/prowler/audio/spines.wav",1);

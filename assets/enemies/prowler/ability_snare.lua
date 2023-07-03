@@ -38,7 +38,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["overwrites"] = true;
     f1["name"] = "Snare";
 
-    CreateAOE(x,y,"", 60, 0.1, 12, false, ATTACK_HITS_ENEMIES, COLOR_SPEED, DITHER_HORIZONTAL_QUARTER, false, obj, {f1})
+    CreateAOE(x,y,"", 60, 0.1, 12, false, ATTACK_HITS_ENEMIES, COLOR_SPEED, DITHER_HORIZONTAL_QUARTER, false, obj, 0,0,0,{f1})
     return true; 
 end
 
@@ -58,7 +58,7 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
             f1["type"] = EFFECT_HURT;
             f1["value"] = 75;
         
-            local aoe = CreateAOE(startX + xMove,startY + yMove,"",radius,timeBeforeDamage,timeBeforeDamage,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,{f1});
+            local aoe = CreateAOE(startX + xMove,startY + yMove,"",radius,timeBeforeDamage,timeBeforeDamage,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,0,0,0,{f1});
         
             segmentsMade = segmentsMade + 1;
             PlaySound("assets/enemies/prowler/audio/spines.wav",1);

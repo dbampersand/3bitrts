@@ -20,7 +20,7 @@ local function makeAOE(x,y)
     f1["value"] = 60;
 
     local time = RandRange(0,0.35)
-    After(CreateAOE,time,true,x,y,"", 25, 1, 5, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
+    After(CreateAOE,time,true,x,y,"", 25, 1, 5, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1,0,0,0, {f1})
     After(PlaySound,time,true,"assets/enemies/nix/audio/lava_field.wav",0.25)
 end
 

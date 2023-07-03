@@ -59,7 +59,7 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
             local randX = RandRange(0,GetMapWidth());
             local randY = RandRange(0,GetMapHeight());
 
-            local aoe = CreateAOE(randX,randY,"",radius,1/ticksPerSecond,9,false,ATTACK_HITS_ENEMIES,COLOR_SPEED,DITHER_DAMAGE_HALF,false,-1,{f1,f2});
+            local aoe = CreateAOE(randX,randY,"",radius,1/ticksPerSecond,9,false,ATTACK_HITS_ENEMIES,COLOR_SPEED,DITHER_DAMAGE_HALF,false,-1,0,0,0,{f1,f2});
         end
     end
 end

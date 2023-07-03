@@ -18,7 +18,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["portrait"] = "assets/enemies/wyrm_boss/ability_fire_effect_portrait"
     PlaySound("assets/enemies/wyrm_boss/audio/fire.wav",1)
 
-    CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HALF,false,-1, {f1})
+    CreateAOE(GetX(obj),GetY(obj),"", 30, 1, 10, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HALF,false,-1, 0,0,0,{f1})
     return true; 
 end
 

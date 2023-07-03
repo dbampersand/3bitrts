@@ -28,7 +28,7 @@ function casted(x,y,obj,headingx,headingy)
     f2["stacks"] = false
 
 
-    local atk = CreateAOE(GetX(obj),GetY(obj),"", radius, tickRate, duration, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1,f2})
+    local atk = CreateAOE(GetX(obj),GetY(obj),"", radius, tickRate, duration, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1,0,0,0, {f1,f2})
     
     local dir = GetHeadingVector(GetX(GetObjRef()), GetY(GetObjRef()),GetX(obj),GetY(obj))
     SetAttackMoveAngle(atk,dir.headingx,dir.headingy)

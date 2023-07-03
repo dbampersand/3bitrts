@@ -25,7 +25,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["name"] = "Song of Damage"
 
 
-    aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 1, 1, false, ATTACK_HITS_ENEMIES,COLOR_FRIENDLY_DAMAGE,DITHER_DAMAGE_QUARTER, false,-1,{f1})
+    aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 1, 1, false, ATTACK_HITS_ENEMIES,COLOR_FRIENDLY_DAMAGE,DITHER_DAMAGE_QUARTER, false,-1,0,0,0,{f1})
     SetAttackCircle(aoe,true);
  
     return true;

@@ -23,7 +23,7 @@ function casted(x,y,obj,headingx,headingy)
     ShakeScreen(1.5,0.1)    
 
     Teleport(GetObjRef(),x,y);
-    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",radius,0.1,0.1,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_VERTICAL_HALF,false,-1,{f1,f2});
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",radius,0.1,0.1,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_VERTICAL_HALF,false,-1,0,0,0,{f1,f2});
 
     return true;
 end

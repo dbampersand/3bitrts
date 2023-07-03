@@ -26,7 +26,7 @@ function casted(x,y,obj,headingx,headingy)
 
     SetObjChannelling(GetObjRef(),10);
 
-    atk = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 50, 0.1, 1, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, GetObjRef(), {f1})
+    atk = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 50, 0.1, 1, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, GetObjRef(),0,0,0, {f1})
     ApplyEffect(GetObjRef(),{speed});
     
     local x = (GetX(obj) - GetX(GetObjRef())) * 256;

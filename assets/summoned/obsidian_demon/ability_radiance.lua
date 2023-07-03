@@ -27,7 +27,7 @@ function casted(x,y,obj,headingx,headingy)
     f2["type"] = EFFECT_THREAT;
     f2["value"] = 9999;  
 
-    aoe = CreateAOE(x,y,"", 50, ticksPerSec, 20, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1,f2})
+    aoe = CreateAOE(x,y,"", 50, ticksPerSec, 20, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1,0,0,0, {f1,f2})
     return true; 
 end
 

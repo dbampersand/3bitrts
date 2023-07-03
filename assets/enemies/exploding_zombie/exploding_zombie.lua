@@ -26,7 +26,7 @@ function setup()
         "assets/audio/attacks/melee_bite/bite_5.wav"
     });
     SetObjectPush(true)
-    indicator = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", GetHintRadius(GetObjRef(),explode), 9999, 9999, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, -1, {})
+    indicator = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", GetHintRadius(GetObjRef(),explode), 9999, 9999, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, -1,0,0,0, {})
 
 
 end

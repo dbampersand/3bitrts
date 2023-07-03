@@ -35,7 +35,7 @@ function setup()
     f1["canStack"] = true
     f1["name"] = "Fetid Stench"
 
-    aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 60, 1, 9999,false,ATTACK_HITS_ENEMIES,COLOR_POISON,DITHER_DAMAGE_QUARTER,false, -1, {f1})
+    aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 60, 1, 9999,false,ATTACK_HITS_ENEMIES,COLOR_POISON,DITHER_DAMAGE_QUARTER,false, -1,0,0,0, {f1})
 end
 
 function update(dt)

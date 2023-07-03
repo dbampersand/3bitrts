@@ -31,7 +31,7 @@ function casted(x,y,obj,headingx,headingy)
 
 
 
-    local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",radius, 1 / ticksPerSec,duration,false,ATTACK_HITS_ENEMIES,COLOR_SPEED,DITHER_DAMAGE_EIGTH,false,-1,{f1,f2});
+    local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",radius, 1 / ticksPerSec,duration,false,ATTACK_HITS_ENEMIES,COLOR_SPEED,DITHER_DAMAGE_EIGTH,false,-1,0,0,0,{f1,f2});
    
     local dir = {};
     dir.x = GetX(obj) - GetX(GetObjRef());

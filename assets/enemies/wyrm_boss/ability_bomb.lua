@@ -15,7 +15,7 @@ local atk = -1
 local attackActive = false;
 
 function casted(x,y,obj,headingx,headingy)
-    atk = CreateAOE(GetX(obj),GetY(obj),"", radius, delay, delay, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, obj, {})
+    atk = CreateAOE(GetX(obj),GetY(obj),"", radius, delay, delay, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, obj,0,0,0, {})
     
     return true; 
 end
@@ -35,7 +35,7 @@ function ontimeout(x,y,obj,dt,target)
         f1["value"] = 1.5;  
         f1["duration"] = 10;
         f1["portrait"] = "assets/enemies/wyrm_boss/ability_bite_effect_portrait.png"
-        CreateAOE(x, y, "", radius, 1, 15, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_VERTICAL_QUARTER, false, target, {f1})
+        CreateAOE(x, y, "", radius, 1, 15, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_VERTICAL_QUARTER, false, target, 0,0,0,{f1})
        
 
         atk = -1;

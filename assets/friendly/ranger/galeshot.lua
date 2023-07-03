@@ -19,7 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 20;
 
 
-    local aoe = CreateAOE(x,y,"", radius, 1, 6, false, ATTACK_HITS_ENEMIES,COLOR_FRIENDLY_DAMAGE,DITHER_DAMAGE_QUARTER, false, -1, {f1})
+    local aoe = CreateAOE(x,y,"", radius, 1, 6, false, ATTACK_HITS_ENEMIES,COLOR_FRIENDLY_DAMAGE,DITHER_DAMAGE_QUARTER, false, -1,0,0,0, {f1})
 
    return true;
 end

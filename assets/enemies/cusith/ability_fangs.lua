@@ -63,7 +63,7 @@ function casted(x,y,obj,headingx,headingy)
         local point1 = RotatePoint(point.x,point.y, GetX(GetObjRef()), GetY(GetObjRef()), -startRadius + (startRadius / i))
 
 
-        --local aoe1 = CreateAOE(point1.x,point1.y,"",radius,timeBeforeDamage,timeBeforeDamage,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,{f1});
+        --local aoe1 = CreateAOE(point1.x,point1.y,"",radius,timeBeforeDamage,timeBeforeDamage,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,0,0,0,{f1});
 
         local dir = {};
         dir.x = GetX(obj) - point1.x;
@@ -95,7 +95,7 @@ function abilitytick(x, y, durationLeft, parent, target, dt, attackRef)
                     f1["type"] = EFFECT_HURT;
                     f1["value"] = damage;
                 
-                    local aoe = CreateAOE(attacks[i].x + xMove,attacks[i].y + yMove,"",radius,timeBeforeDamage,timeBeforeDamage,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,{f1});
+                    local aoe = CreateAOE(attacks[i].x + xMove,attacks[i].y + yMove,"",radius,timeBeforeDamage,timeBeforeDamage,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_HALF,false,-1,0,0,0,{f1});
                     PlaySound("assets/enemies/prowler/audio/spines.wav",1);
 
                 end

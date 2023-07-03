@@ -24,7 +24,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["name"] = "Ostinato"
     f1["overwrites"] = true;
 
-    aoe = CreateAOE(GetX(obj),GetY(obj),"", radius, 0.1, 0.1, false, ATTACK_HITS_FRIENDLIES,COLOR_SPEED,DITHER_STAR_HALF, false, -1, {f1})
+    aoe = CreateAOE(GetX(obj),GetY(obj),"", radius, 0.1, 0.1, false, ATTACK_HITS_FRIENDLIES,COLOR_SPEED,DITHER_STAR_HALF, false, -1,0,0,0, {f1})
     SetAttackCircle(aoe,true);
    
     return true;

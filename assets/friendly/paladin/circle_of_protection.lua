@@ -20,7 +20,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = sps * tickrate;  
     f1["duration"] = 2;  
     
-    local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",40,tickrate,duration,false,ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_SHIELD,DITHER_VERTICAL_HALF,false,-1,{f1});
+    local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",40,tickrate,duration,false,ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_SHIELD,DITHER_VERTICAL_HALF,false,-1,0,0,0,{f1});
 
 
     PlaySound("assets/friendly/paladin/audio/circle_of_protection.wav",1);

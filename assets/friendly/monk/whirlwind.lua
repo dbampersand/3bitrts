@@ -20,7 +20,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 80;  
 
-    local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 0.25, 0.25, false, ATTACK_HITS_ENEMIES, COLOR_FRIENDLY_DAMAGE, DITHER_NONE,false, -1, {f1});
+    local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 0.25, 0.25, false, ATTACK_HITS_ENEMIES, COLOR_FRIENDLY_DAMAGE, DITHER_NONE,false, -1,0,0,0, {f1});
 
     AddStack(GetObjRef(),2,-1);
     AddStack(GetObjRef(),4,-1);

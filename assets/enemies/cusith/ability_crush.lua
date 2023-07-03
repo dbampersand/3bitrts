@@ -30,10 +30,10 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = 40;
 
 
-    CreateAOE(GetX(obj),GetY(obj),"", 25, bigAoEDuration, bigAoEDuration, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
-    CreateAOE(GetX(obj)+RandRange(0,maxLooseAim),GetY(obj)+RandRange(0,maxLooseAim),"", 10, smallAoEDuration, smallAoEDuration, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, -1, {f2})
-    CreateAOE(GetX(obj)+RandRange(0,maxLooseAim),GetY(obj)+RandRange(0,maxLooseAim),"", 10, smallAoEDuration, smallAoEDuration, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, -1, {f2})
-    CreateAOE(GetX(obj)+RandRange(0,maxLooseAim),GetY(obj)+RandRange(0,maxLooseAim),"", 10, smallAoEDuration, smallAoEDuration, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, -1, {f2})
+    CreateAOE(GetX(obj),GetY(obj),"", 25, bigAoEDuration, bigAoEDuration, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1,0,0,0, {f1})
+    CreateAOE(GetX(obj)+RandRange(0,maxLooseAim),GetY(obj)+RandRange(0,maxLooseAim),"", 10, smallAoEDuration, smallAoEDuration, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, -1,0,0,0, {f2})
+    CreateAOE(GetX(obj)+RandRange(0,maxLooseAim),GetY(obj)+RandRange(0,maxLooseAim),"", 10, smallAoEDuration, smallAoEDuration, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, -1,0,0,0, {f2})
+    CreateAOE(GetX(obj)+RandRange(0,maxLooseAim),GetY(obj)+RandRange(0,maxLooseAim),"", 10, smallAoEDuration, smallAoEDuration, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, -1,0,0,0, {f2})
     
     PlaySound("assets/enemies/cusith/audio/crush.wav",1)
 

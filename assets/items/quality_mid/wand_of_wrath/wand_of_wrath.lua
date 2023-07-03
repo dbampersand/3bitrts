@@ -44,7 +44,7 @@ function onattack(item,obj,target,dt,value)
         f1["value"] = dps * tickRate;  
 
         dir = GetHeadingVector(GetX(obj),GetY(obj),GetX(target),GetY(target))
-        aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, tickRate, 999, false, ATTACK_HITS_ENEMIES, COLOR_FRIENDLY_DAMAGE, DITHER_DAMAGE_HALF, false, obj, {f1})
+        aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, tickRate, 999, false, ATTACK_HITS_ENEMIES, COLOR_FRIENDLY_DAMAGE, DITHER_DAMAGE_HALF, false, obj,0,0,0, {f1})
 
         SetAttackMoveAngle(aoe,dir.headingx,dir.headingy)
         SetAttackVelocity(aoe,0)

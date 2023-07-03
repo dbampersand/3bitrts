@@ -34,7 +34,7 @@ function casted(x,y,obj,headingx,headingy)
         
         local duration = RandRange(aoeMinDuration,aoeMaxDuration)
         local radius = RandRange(aoeRadius-1,aoeRadius+1)
-        After(CreateAOE,RandRange(0.1,0.5),true,RandRange(0,GetMapWidth()),RandRange(0,GetMapHeight()),"",radius,tickrate,duration,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_EIGTH,false,-1,{f1});
+        After(CreateAOE,RandRange(0.1,0.5),true,RandRange(0,GetMapWidth()),RandRange(0,GetMapHeight()),"",radius,tickrate,duration,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_EIGTH,false,-1,0,0,0,{f1});
         end
     return true; 
 end

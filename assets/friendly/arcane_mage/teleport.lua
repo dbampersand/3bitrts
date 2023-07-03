@@ -18,7 +18,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["duration"] = 6
 
     Teleport(GetObjRef(),x,y);
-    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 30, 0.25, 0.25, false, ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_DAMAGE,DITHER_EIGTH,false, -1, {f1})
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 30, 0.25, 0.25, false, ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_DAMAGE,DITHER_EIGTH,false, -1,0,0,0, {f1})
     ShakeScreen(1.5,0.1)    
 
 

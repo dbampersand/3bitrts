@@ -31,7 +31,7 @@ function update(dt)
         f1["overwrites"] = true;
         f1["name"] = "Stoneskin"
 
-        aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef(y)),"",60,0.1,10,false,ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_SHIELD,DITHER_QUARTER,false,-1,{f1});
+        aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef(y)),"",60,0.1,10,false,ATTACK_HITS_FRIENDLIES,COLOR_FRIENDLY_SHIELD,DITHER_QUARTER,false,-1,0,0,0,{f1});
 
     end
     SetAttackLifetime(aoe,10);

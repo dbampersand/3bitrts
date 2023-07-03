@@ -19,7 +19,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["overwrites"] = true;
     f1["name"] = "Tar Trap";
 
-    CreateAOE(x,y,"", 45, 0.1, 12, false, ATTACK_HITS_ENEMIES, COLOR_SPEED, DITHER_HORIZONTAL_QUARTER, false, obj, {f1})
+    CreateAOE(x,y,"", 45, 0.1, 12, false, ATTACK_HITS_ENEMIES, COLOR_SPEED, DITHER_HORIZONTAL_QUARTER, false, obj,0,0,0, {f1})
     PlaySound("assets/enemies/kobold_crossbow/audio/tar_trap.wav",0.5)
 
     return true; 

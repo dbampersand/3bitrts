@@ -20,7 +20,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["duration"] = tickRate
     f1["stacks"] = false
 
-    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",40,tickRate,duration,false,ATTACK_HITS_ENEMIES,COLOR_SPEED,DITHER_SPEED_QUARTER,false,-1,{f1});
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",40,tickRate,duration,false,ATTACK_HITS_ENEMIES,COLOR_SPEED,DITHER_SPEED_QUARTER,false,-1,0,0,0,{f1});
 
     PlaySound("assets/enemies/skeleton_minion_melee/audio/toll.wav",0.5);
     return true; 

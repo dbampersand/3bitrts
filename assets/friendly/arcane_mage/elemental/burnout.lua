@@ -14,7 +14,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = GetHP(GetObjRef());
 
     
-    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 50, 1, 1, false, ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_STAR_EIGTH,false, -1, {f1})
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 50, 1, 1, false, ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_STAR_EIGTH,false, -1,0,0,0, {f1})
     KillObj(GetObjRef())
     return true;
 end

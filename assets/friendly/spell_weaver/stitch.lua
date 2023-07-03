@@ -54,6 +54,6 @@ function effecttick(effectType,value,obj,x,y,name)
         f1["type"] = EFFECT_HURT;
         f1["value"] = 200
 
-        CreateAOE(GetX(obj),GetY(obj),"", 60, 0.1, 0.1, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj, {f1})
+        CreateAOE(GetX(obj),GetY(obj),"", 60, 0.1, 0.1, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj,0,0,0, {f1})
     end
 end

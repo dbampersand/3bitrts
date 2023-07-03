@@ -61,7 +61,7 @@ function update(dt)
         f3["name"] = "AttackSpeed"
         f3["overwrites"] = true
     
-        aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_SPEED,DITHER_HALF,true, -1, {f1,f2,f3})
+        aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", 30, 1, 10, false, ATTACK_HITS_FRIENDLIES,COLOR_SPEED,DITHER_HALF,true, -1,0,0,0, {f1,f2,f3})
     
     end
     if (aoe > -1) then

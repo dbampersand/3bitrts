@@ -16,7 +16,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 140;
 
-    CreateAOE(x,y,"", 25, 0, 0, false, Bor(ATTACK_HITS_ENEMIES,ATTACK_HITS_FRIENDLIES), COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj, {f1,f2})
+    CreateAOE(x,y,"", 25, 0, 0, false, Bor(ATTACK_HITS_ENEMIES,ATTACK_HITS_FRIENDLIES), COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj,0,0,0, {f1,f2})
     PlaySound("assets/enemies/cannon/audio/cannon_fire.wav",0.5)
 
     return true; 

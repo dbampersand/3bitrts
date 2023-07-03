@@ -55,6 +55,64 @@ float* cosTable = NULL; // = &__cosTable[360];
 
 int numChannellingInfosDrawn = 0;
 
+//TODO: this can be made faster, even the naive bruteforce can run significantly faster
+//but probably doesn't matter
+Point GetClosestPointObjToObj(GameObject* g, GameObject* g2)
+{
+    float x; float y;
+    GetCentre(g,&x,&y);
+
+    int w = GetWidth(g2);
+    int h = GetHeight(g2);
+    float mSize = _MAX(GetWidth(g),GetHeight(g));
+    int numPointsPerSegment = mSize / 8;
+
+    numPointsPerSegment = _MAX(numPointsPerSegment,4);
+
+    Point closestPoint = (Point){0,0};
+    float closestDist = FLT_MAX;
+    for (int i = 0; i < numPointsPerSegment; i++)
+    {
+        float right = g2->position.worldX + GetWidth(g2);
+        float left = g2->position.worldX;
+
+        float bottom = g2->position.worldY + GetHeight(g2);
+        float top = g2->position.worldY;
+
+
+        float moveY = (h/(float)numPointsPerSegment)*i;
+        float moveX = (w/(float)numPointsPerSegment)*i;
+        
+        float leftD = dist(x,y,left,top+moveY);
+        float rightD = dist(x,y,right,top+moveY);
+
+        float topD = dist(x,y,left+moveX,top);
+        float bottomD = dist(x,y,left+moveX,bottom);
+
+        if (leftD < closestDist)
+        {
+            closestDist = leftD;
+            closestPoint = (Point){left,top+moveY};
+        }
+        if (rightD < closestDist)
+        {
+            closestDist = rightD;
+            closestPoint = (Point){right,top+moveY};
+        }
+        if (topD < closestDist)
+        {
+            closestDist = topD;
+            closestPoint = (Point){left+moveX,top};
+        }
+        if (bottomD < closestDist)
+        {
+            closestDist = bottomD;
+            closestPoint = (Point){left+moveX,bottom};
+        }
+    }
+    return closestPoint;
+}
+
 bool IsInvertedSprite(GameObject* g)
 {
     bool isReversed = IsSelected(g);
@@ -454,8 +512,9 @@ void UpdateObject(GameObject* g, float dt)
         {
             int wTarg = al_get_bitmap_width(sprites[currGameObjRunning->targObj->spriteIndex].sprite);
             int hTarg = al_get_bitmap_height(sprites[currGameObjRunning->targObj->spriteIndex].sprite);
-
-            SetTargetPosition(currGameObjRunning, currGameObjRunning->targObj->position.worldX + wTarg / 2, currGameObjRunning->targObj->position.worldY + hTarg / 2);
+            
+            Point closest = GetClosestPointObjToObj(currGameObjRunning,currGameObjRunning->targObj);
+            SetTargetPosition(currGameObjRunning, closest.x,closest.y);
 
             Rect r2 = (Rect){currGameObjRunning->targObj->position.worldX, currGameObjRunning->targObj->position.worldY, wTarg, hTarg};
 #define DISTDELTA 0.001f

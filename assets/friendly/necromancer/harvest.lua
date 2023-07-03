@@ -24,7 +24,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = damage;  
 
 
-    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 0.2, 0.2, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_HALF, false, 0, {f1})
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius, 0.2, 0.2, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_HALF, false, 0, 0,0,0,{f1})
     After(ShakeScreen,0.2,true,2,0.1)    
     
     return true; 

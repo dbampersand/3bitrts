@@ -181,6 +181,12 @@ void SetDisplayWindowed(int windowMode)
     al_destroy_font(ui.tinyFont);
 
     InitFonts();
+    
+    LoadCursorSprite(&ui,&ui.cursorDefaultIndex,"assets/ui/cursor.png");
+    LoadCursorSprite(&ui,&ui.cursorCastingIndex,"assets/ui/cursor_cast.png");
+    LoadCursorSprite(&ui,&ui.cursorAttackIndex,"assets/ui/cursor_attack.png");
+    LoadCursorSprite(&ui,&ui.cursorFriendlyIndex,"assets/ui/cursor_friendly.png");
+
 
 }
 void InitVideo()

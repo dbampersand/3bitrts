@@ -29,7 +29,7 @@ function onhit(x,y,objhit)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 15;  
 
-    CreateAOE(x,y,"", 30, 1, 999, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_HALF,false,-1, {f1})
+    CreateAOE(x,y,"", 30, 1, 999, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_HALF,false,-1,0,0,0, {f1})
     PlaySound("assets/enemies/wadjet/audio/fire_hit.wav",0.5);
 
 end

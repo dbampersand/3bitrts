@@ -29,7 +29,7 @@ function casted(x,y,obj,headingx,headingy)
     point.y = GetY(obj)
     point = RotatePoint(point.x,point.y,GetX(GetObjRef()),GetY(GetObjRef()),-angle/2);
     for i = 0, numAoEs do
-        local atk = CreateAOE(point.x,point.y,"", radius,  1/ticksPerSec,duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj, {f1})
+        local atk = CreateAOE(point.x,point.y,"", radius,  1/ticksPerSec,duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj, 0,0,0,{f1})
         point = RotatePoint(point.x,point.y,GetX(GetObjRef()),GetY(GetObjRef()),angle/numAoEs);
         SetAttackInactive(atk,(i+1)/2)
 

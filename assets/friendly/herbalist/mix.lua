@@ -29,7 +29,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["duration"] = duration;
     f1["name"] = "Mix"
 
-    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",radius,0.1,0.1,false,ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_HEAL_HALF,false,-1,{f1});
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",radius,0.1,0.1,false,ATTACK_HITS_FRIENDLIES,COLOR_HEAL,DITHER_HEAL_HALF,false,-1,0,0,0,{f1});
     After(ShakeScreen,0.1,true,2,0.1)    
 
     return true; 

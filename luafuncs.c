@@ -2056,19 +2056,22 @@ int L_CreateAOE(lua_State* l)
     const int dither = lua_tonumber(l,10);
     const bool isSoak = lua_toboolean(l,11);
     const int target = lua_tonumber(l,12);
+    float initialAngleX = lua_tonumber(l,13);
+    float initialAngleY = lua_tonumber(l,14);
+    float initialSpeed = lua_tonumber(l,15);
 
     //30fps is minimum
     tickrate = _MAX(1/30.0f,tickrate);
     duration = _MAX(1/30.0f,duration);
 
 
-    size_t len =  lua_rawlen(l,13);
+    size_t len =  lua_rawlen(l,16);
     Effect effects[len];    
     memset(effects,0,sizeof(Effect)*len);
         for (int i = 1; i < len+1; i++)
     {
         Effect e;
-        e = GetEffectFromTable(l, 13, i, currGameObjRunning);
+        e = GetEffectFromTable(l, 16, i, currGameObjRunning);
         e.from = currGameObjRunning;
         e.abilityFrom = currAbilityRunning;
         lua_remove(l,-1);
@@ -2083,6 +2086,10 @@ int L_CreateAOE(lua_State* l)
 
     Attack* ref = CreateAoE(x,y, (char*)effectPortrait, radius, tickrate, duration, shouldCallback,  properties,  color,  dither,  len, effects, targ, currGameObjRunning);
     ref->cameFrom = currAbilityRunning;
+    ref->targx = initialAngleX;
+    ref->targy = initialAngleY;
+    ref->speed = initialSpeed;
+
     
     if (isSoak && ref)
     {

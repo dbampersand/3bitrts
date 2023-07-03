@@ -33,7 +33,7 @@ function casted(x,y,obj,headingx,headingy)
 
         local size = 40 - i * 10
         
-        atk = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", size, tickrate, 6, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
+        atk = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", size, tickrate, 6, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, 0,0,0,{f1})
         SetAttackMoveAngle(atk,xHeading,yHeading);
         SetAttackVelocity(atk,(i+1)*10);
     end

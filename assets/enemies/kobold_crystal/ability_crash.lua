@@ -24,7 +24,7 @@ function casted(x,y,obj,headingx,headingy)
     f2["type"] = EFFECT_STUN;
     f2["value"] = 2;
 
-    CreateAOE(GetX(obj),GetY(obj),"", 30, 0, 0, false, Bor(ATTACK_HITS_ENEMIES,ATTACK_HITS_FRIENDLIES), COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj, {f1,f2})
+    CreateAOE(GetX(obj),GetY(obj),"", 30, 0, 0, false, Bor(ATTACK_HITS_ENEMIES,ATTACK_HITS_FRIENDLIES), COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, obj,0,0,0,{f1,f2})
     PlaySound("assets/enemies/kobold_crystal/audio/crash.wav",0.5)
 
     return true; 

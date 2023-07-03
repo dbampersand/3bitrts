@@ -21,7 +21,7 @@ function onattack(item,obj,target,dt,value)
     f1["type"] = EFFECT_HURT;
     f1["value"] = damage;  
 
-    CreateAOE(GetX(target),GetY(target),"", 30, 0.1,0.1, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, -1, {f1})
+    CreateAOE(GetX(target),GetY(target),"", 30, 0.1,0.1, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_NONE, false, -1,0,0,0, {f1})
 
 end
 

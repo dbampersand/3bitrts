@@ -16,7 +16,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 400;
 
-    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",999,1,1,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_EIGTH,false,-1,{f1});
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",999,1,1,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_EIGTH,false,-1,0,0,0,{f1});
     KillObj(GetObjRef());
 
     After(PlaySound,1,true,"assets/enemies/explosive_bot/audio/explode.wav",3,GetX(GetObjRef()),GetY(GetObjRef()));

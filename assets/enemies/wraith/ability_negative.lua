@@ -27,7 +27,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = dps * tickrate;  
 
-     CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius,  tickrate,duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_QUARTER, false, obj, {f1})
+     CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", radius,  tickrate,duration, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_QUARTER, false, obj,0,0,0, {f1})
 
 
     PlaySound("assets/enemies/wraith/audio/negative.wav",0.75);

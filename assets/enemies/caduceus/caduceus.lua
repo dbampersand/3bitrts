@@ -50,5 +50,5 @@ function kill()
     f1["type"] = EFFECT_CURE;
     f1["value"] = 3;
 
-    local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",120,1,999,false,ATTACK_HITS_ENEMIES,COLOR_HEAL,DITHER_HEAL_EIGTH,false,-1,{f1});
+    local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",120,1,999,false,ATTACK_HITS_ENEMIES,COLOR_HEAL,DITHER_HEAL_EIGTH,false,-1,0,0,0,{f1});
 end

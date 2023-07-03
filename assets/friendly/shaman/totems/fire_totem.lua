@@ -29,7 +29,7 @@ function update(dt)
         f1["type"] = EFFECT_HURT;
         f1["value"] = 8;
 
-        aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef(y)),"",60,0.5,10,false,ATTACK_HITS_ENEMIES,COLOR_FRIENDLY_DAMAGE,DITHER_EIGTH,false,-1,{f1});
+        aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef(y)),"",60,0.5,10,false,ATTACK_HITS_ENEMIES,COLOR_FRIENDLY_DAMAGE,DITHER_EIGTH,false,-1,0,0,0,{f1});
 
     end
     SetAttackLifetime(aoe,10);

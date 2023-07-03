@@ -1,7 +1,15 @@
 local maxHP = 7000
 
 local breatheOut = -1
+local wave = -1
 
+local STATE_DEFAULT = 0
+local STATE_WAVE = 0
+
+local stateTimer = 0 
+
+
+local state = STATE_DEFAULT
 
 function setup()
     SetSprite("assets/enemies/stoor_worm/stoor_worm.png");
@@ -16,7 +24,8 @@ function setup()
     SetObjIsBoss(GetObjRef(),true);
 
     breatheOut = AddAbility(GetObjRef(),"assets/enemies/stoor_worm/ability_breathe_out.lua",0)
-    
+    wave = AddAbility(GetObjRef(),"assets/enemies/stoor_worm/ability_wave.lua",1)
+
     SetAttackSounds({
         "assets/audio/attacks/attack_spit/spit_1.wav",
         "assets/audio/attacks/attack_spit/spit_2.wav",
@@ -32,7 +41,11 @@ end
 
 function update(dt)
     if (IsInCombat()) then
-        CastAbility(breatheOut,1,{})
+        if (state == STATE_DEFAULT) then
+            CastAbility(wave,1,{})
+            
+        end
+
     end
 end
 

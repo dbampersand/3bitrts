@@ -33,14 +33,14 @@ function casted(x,y,obj,headingx,headingy)
 
     if (math.fmod(casts,2) == 0) then
         for i = 0,GetMapHeight()/radius+1 do
-            local atk = CreateAOE(1,i*radius,"",radius,0.25,9999,false,Bor(ATTACK_HITS_FRIENDLIES, ATTACK_HITS_ENEMIES),COLOR_HEAL,DITHER_HEAL_HALF,false,-1,{f1});
+            local atk = CreateAOE(1,i*radius,"",radius,0.25,9999,false,Bor(ATTACK_HITS_FRIENDLIES, ATTACK_HITS_ENEMIES),COLOR_HEAL,DITHER_HEAL_HALF,false,-1,0,0,0,{f1});
             SetAttackMoveAngle(atk,1,0)
             SetAttackVelocity(atk,2)  
         end
         direction = 1
     else
         for i = 0,GetMapHeight()/radius+1 do
-            local atk = CreateAOE(GetMapWidth()-1,i*radius,"",radius,0.25,9999,false,Bor(ATTACK_HITS_FRIENDLIES, ATTACK_HITS_ENEMIES),COLOR_HEAL,DITHER_HEAL_HALF,false,-1,{f1});
+            local atk = CreateAOE(GetMapWidth()-1,i*radius,"",radius,0.25,9999,false,Bor(ATTACK_HITS_FRIENDLIES, ATTACK_HITS_ENEMIES),COLOR_HEAL,DITHER_HEAL_HALF,false,-1,0,0,0,{f1});
             SetAttackMoveAngle(atk,1,0)
             SetAttackVelocity(atk,-2)
         end

@@ -1,5 +1,6 @@
 local explode = 0
 local lifetime = 12
+local timerLast = lifetime
 function setup()
     SetSprite("assets/enemies/explosive_bot/explosive_bot.png");
 

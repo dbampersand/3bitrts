@@ -48,7 +48,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = dps * ticksPerSec;
 
-    local aoe = CreateAOE(point.x,point.y,"", radius, ticksPerSec, 20, false, ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_EIGTH,false, -1, {f1})
+    local aoe = CreateAOE(point.x,point.y,"", radius, ticksPerSec, 20, false, ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_EIGTH,false, -1,0,0,0, {f1})
 
     SetAttackMoveAngle(aoe,x-point.x,y-point.y)
     SetAttackVelocity(aoe,80)

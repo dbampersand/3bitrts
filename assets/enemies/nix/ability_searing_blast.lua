@@ -21,7 +21,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = 80 / tickrate;
 
-    aoe = CreateAOE(x,y,"", 25, 1, tickrate, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, {f1})
+    aoe = CreateAOE(x,y,"", 25, 1, tickrate, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1,0,0,0, {f1})
     direction.x = GetX(obj) - GetX(GetObjRef()) 
     direction.y = GetY(obj) - GetY(GetObjRef()) 
     direction = Normalize(direction.x,direction.y);

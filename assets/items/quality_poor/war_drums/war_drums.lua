@@ -20,7 +20,7 @@ function onmapchange(obj)
     f1["name"] = "War Drums"
     f1["duration"] = 10
 
-    aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, tickRate, 999, false, ATTACK_HITS_FRIENDLIES, COLOR_SPEED, DITHER_SPEED_EIGTH, false, obj, {f1})
+    aoe = CreateAOE(GetX(obj),GetY(obj),"", 30, tickRate, 999, false, ATTACK_HITS_FRIENDLIES, COLOR_SPEED, DITHER_SPEED_EIGTH, false, obj,0,0,0, {f1})
 end
 
 function attached(obj)

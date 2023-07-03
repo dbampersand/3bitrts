@@ -26,7 +26,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = dps * triggerTime;  
 
-    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", aoeSize, triggerTime, chargeTime, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, -1, {f1})
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"", aoeSize, triggerTime, chargeTime, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER, false, -1,0,0,0,{f1})
 
 
     local speed = {};

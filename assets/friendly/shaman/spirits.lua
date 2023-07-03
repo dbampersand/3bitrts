@@ -26,7 +26,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["value"] = damage;
 
     
-    local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",radius,0,0,true,Bor(ATTACK_HITS_FRIENDLIES, ATTACK_HITS_ENEMIES),COLOR_DAMAGE,DITHER_HEAL_HALF,false,-1,{f1});
+    local aoe = CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",radius,0,0,true,Bor(ATTACK_HITS_FRIENDLIES, ATTACK_HITS_ENEMIES),COLOR_DAMAGE,DITHER_HEAL_HALF,false,-1,0,0,0,{f1});
     SetAttackInactive(aoe,seconds)
 
     local dist = DistXY(GetX(GetObjRef()),GetY(GetObjRef()),x,y)
