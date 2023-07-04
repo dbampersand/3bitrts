@@ -9,6 +9,7 @@ function setup()
 
     
 
+    CreateObject("assets/enemies/kelpie/kelpie.lua",218.00,135.00,TYPE_ENEMY,0.00)
 end
 
 function update()

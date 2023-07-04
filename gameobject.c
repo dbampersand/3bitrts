@@ -517,7 +517,7 @@ void UpdateObject(GameObject* g, float dt)
             SetTargetPosition(currGameObjRunning, closest.x,closest.y);
 
             Rect r2 = (Rect){currGameObjRunning->targObj->position.worldX, currGameObjRunning->targObj->position.worldY, wTarg, hTarg};
-#define DISTDELTA 0.001f
+            #define DISTDELTA 0.001f
             Rect unioned = UnionRectR(r, r2);
 
             if (RectDist(currGameObjRunning, currGameObjRunning->targObj) < GetAttackRange(g))

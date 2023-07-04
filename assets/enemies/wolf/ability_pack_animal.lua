@@ -20,7 +20,7 @@ function casted(x,y,obj,headingx,headingy)
 
 
     ApplyEffect(GetObjRef(), {f1});
-    PlaySound("assets/enemies/wolf/audio/call_pack.wav",0.35);
+    PlaySound("assets/enemies/wolf/audio/pack_animal.wav",0.35);
     return true; 
 end
 

@@ -442,3 +442,4 @@ void ScatterEffect_Sprite(Sprite* s, int xPos, int yPos, Color c);
 void ScatterEffect(GameObject* g);
 
 bool GameObjectIndexInRange(int index);
+Point GetClosestPointObjToObj(GameObject* g, GameObject* g2);

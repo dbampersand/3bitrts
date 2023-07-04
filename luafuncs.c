@@ -127,7 +127,7 @@ int L_After(lua_State* l)
 int L_UpdateTimerArgument(lua_State* l)
 {
     size_t pointer = lua_tonumber(l,1);
-        Timer* t = (Timer*)pointer;
+    Timer* t = (Timer*)pointer;
 
     int argument = lua_tonumber(l,2);
     float valueF;
@@ -2646,6 +2646,11 @@ int L_GetUnitCurrentCommand(lua_State* l)
 }
 int L_AbilitySetCastType(lua_State* l)
 {
+    if (!currAbilityRunning)
+    {
+        printf("L_AbilitySetCastType: no ability running.");
+        return 0;   
+    }
     currAbilityRunning->castType = lua_tonumber(l,1);
     return 0;   
 }
@@ -2659,6 +2664,23 @@ int L_SetSprite(lua_State* l)
             currGameObjRunning->channelingSpriteIndex = currGameObjRunning->spriteIndex;
     }
     return 0;
+}
+int L_ClearChanneledAbility(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (!GameObjectIndexInRange(index))
+    {
+        printf("L_ClearChanneledAbility: index out of range: %i\n",index);
+        return 0;
+    }
+    GameObject* g = &objects[index];
+    g->properties &= ~OBJ_IS_CHANNELLING;
+    g->channellingTime = 0;
+    g->channellingTotal = 0;
+    g->channelled_target = NULL;
+    g->channelledAbility = NULL;
+    return 0;
+
 }
 int L_SetLightColour(lua_State* l)
 {
@@ -3604,6 +3626,7 @@ int L_SetItemGoldCost(lua_State* l)
 int L_SetGamestateToMainMenu(lua_State* l)
 {
     SetGameStateToInMenu();
+    return 0;
 }
 
 int L_CleaveEffect(lua_State* l)
@@ -5899,4 +5922,8 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_SetGamestateToMainMenu);
     lua_setglobal(luaState, "SetGamestateToMainMenu");
+
+    lua_pushcfunction(luaState, L_ClearChanneledAbility);
+    lua_setglobal(luaState, "ClearChanneledAbility");
+
 }

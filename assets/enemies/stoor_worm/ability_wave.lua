@@ -23,6 +23,7 @@ end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/enemies/wyrm_boss/audio/summon_add.wav",1)
     local aoeRadius = GetMapWidth()/3
+    aoeRadius = aoeRadius - (10)
     local numAoEs = GetMapHeight()/aoeRadius
 
     local x =  GetMapWidth()/3
@@ -33,7 +34,7 @@ function casted(x,y,obj,headingx,headingy)
     local f1 = {}
     f1["trigger"] = TRIGGER_INSTANT;
     f1["type"] = EFFECT_HURT;
-    f1["value"] = damage;
+    f1["value"] = dps * tickrate;
 
     for i = 1, numAoEs do
         After(CreateAOE,1+i,true,x,0,"",aoeRadius,tickrate,cooldown,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_EIGTH,false,-1,0,1,20,{f1})

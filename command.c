@@ -349,7 +349,10 @@ void DoCommands(GameObject* g)
         else
         {
             if (c->target)
-                SetTargetPosition(g,c->target->position.worldX,c->target->position.worldY);
+            {
+                Point targ = GetClosestPointObjToObj(currGameObjRunning,c->target);
+                SetTargetPosition(g,targ.x,targ.y);
+            }
             else
                 SetTargetPosition(g,c->x,c->y);
         }

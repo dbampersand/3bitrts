@@ -44,7 +44,7 @@ function casted(x,y,obj,headingx,headingy)
     local numTargs =  math.min(#targets, numAttacks)
     for i = 1, numTargs do
         local targ = targets[samples[i]]
-        atk = CreateAOE(GetX(targ),GetY(targ),"", 50, ticksPerSec, 12, true, ATTACK_HITS_ENEMIES, COLOR_SPEED, DITHER_NONE, false, -1, 0,0,0, {f1,f2})
+        atk = CreateAOE(GetX(targ),GetY(targ),"", 50, 1/ticksPerSec, 12, true, ATTACK_HITS_ENEMIES, COLOR_SPEED, DITHER_NONE, false, -1, 0,0,0, {f1,f2})
         
     end
 
