@@ -1,13 +1,14 @@
 local tickrate = 0.5
 local duration = 12
-local dps = 10
-local projectileDamage = 10
+local dps = 30
 
 local radius = 35
 
 local moveTime = 1
 
 local target = -1
+
+local accel = 10
 
 
 function setup()
@@ -33,7 +34,7 @@ function casted(x,y,obj,headingx,headingy)
     local dir = GetHeadingVector(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj))
 
     After(EnableAI,moveTime,false,GetObjRef(),true)
-    After(CreateAOE,moveTime,false,GetX(GetObjRef()),GetY(GetObjRef()),"",radius,tickrate,999,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_QUARTER,false,-1,dir.headingx,dir.headingy,10,{f1})
+    After(CreateAOE,moveTime,false,GetX(GetObjRef()),GetY(GetObjRef()),"",radius,tickrate,999,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_QUARTER,false,-1,dir.headingx,dir.headingy,30,{f1})
     PlaySound("assets/enemies/wolf/audio/call_pack.wav",0.35);
     return true; 
 end
@@ -41,7 +42,8 @@ end
 function onhit(x,y,objhit)
 end
 
-function abilitytick(x, y, durationLeft)
+function abilitytick(x, y, durationLeft,parent,target,dt,attackRef)
+    AddAttackVelocity(attackRef,dt*accel)
 end
 
 function applyattack(atk,x,y)
@@ -57,7 +59,7 @@ function timerbeforetick(t,func)
         --angle
         UpdateTimerArgument(t,13,dir.headingx)
         UpdateTimerArgument(t,14,dir.headingy)
-
+        
 
     end
 end

@@ -1111,6 +1111,22 @@ int L_SetAttackMoveAngle(lua_State* l)
 
     return 0;
 }
+int L_GetAttackMoveAngle(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_ATTACKS)
+        return 0;
+    Attack* a = &attacks[index];
+    lua_pushnumber(l,1);
+    lua_newtable(l);
+    
+    lua_pushnumber(l,a->targx);
+    lua_setfield(l,-2,"x");
+    lua_pushnumber(l,a->targy);
+    lua_setfield(l,-2,"y");
+    return 1;
+
+}
 int L_SetAttackVelocity(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -1133,7 +1149,15 @@ int L_GetAttackVelocity(lua_State* l)
 
     return 1;
 }
-
+int L_AddAttackVelocity(lua_State* l)
+{
+    int atk = lua_tonumber(l,1);
+    if (atk < 0 || atk >= MAX_ATTACKS)
+    return 0;
+    Attack* a = &attacks[atk];
+    a->speed += lua_tonumber(l,2);
+    return 0;
+}
 int L_AddAttackSprite(lua_State* l)
 {
     const char* path = lua_tostring(l,1);
@@ -4719,6 +4743,18 @@ int L_HintLength(lua_State* l)
     lua_pushnumber(l,a->hintLength);
     return 1;
 }
+int L_DegToRad(lua_State* l)
+{
+    float f = lua_tonumber(l,1);
+    lua_pushnumber(l,DegToRad(f));
+    return 1;
+}   
+int L_RadToDeg(lua_State* l)
+{
+    float f = lua_tonumber(l,1);
+    lua_pushnumber(l,RadToDeg(f));
+    return 1;
+}   
 int L_DegToHeadingVector(lua_State* l)
 {
     float angle = lua_tonumber(l,1);
@@ -5925,5 +5961,16 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_ClearChanneledAbility);
     lua_setglobal(luaState, "ClearChanneledAbility");
+
+    lua_pushcfunction(luaState, L_AddAttackVelocity);
+    lua_setglobal(luaState, "AddAttackVelocity");
+    lua_pushcfunction(luaState, L_GetAttackMoveAngle);
+    lua_setglobal(luaState, "GetAttackMoveAngle");
+
+    lua_pushcfunction(luaState, L_DegToRad);
+    lua_setglobal(luaState, "DegToRad");
+    lua_pushcfunction(luaState, L_RadToDeg);
+    lua_setglobal(luaState, "RadToDeg");
+
 
 }
