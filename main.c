@@ -308,7 +308,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
 
     if (GameStateIsDrawingMap(gameState))
-        DrawAttacks(dt, ATTACK_PROJECTILE_TARGETED | ATTACK_PROJECTILE_TARGETED | ATTACK_PROJECTILE_ANGLE | ATTACK_MELEE);
+        DrawAttacks(dt, ATTACK_PROJECTILE_TARGETED | ATTACK_PROJECTILE_TARGETED | ATTACK_PROJECTILE_ANGLE | ATTACK_MELEE | ATTACK_PROJECTILE_POINT);
 
     //Draw health bars on top of all objects
     if (GameStateIsDrawingMap(gameState))

@@ -1,14 +1,8 @@
 local tickrate = 0.5
 local duration = 12
-local dps = 30
+local dps = 10
 
-local radius = 35
-
-local moveTime = 1
-
-local target = -1
-
-local accel = 10
+local radius = 10
 
 local numAoEs = 4
 local aoes = {}
@@ -16,7 +10,7 @@ local aoeTurn = 0.05
 
 local distanceFrom = 30
 
-local rotSpeed = 4
+local rotSpeed = 48
 
 function setup()
 
@@ -25,7 +19,7 @@ function setup()
     SetAbilityHint(HINT_NONE,80);
     SetCooldown(16); 
     AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
-    SetDescription("[b]Sea Foam\n\nCreates a series of waves that move in patterns.")
+    SetDescription("[b]Sea Foam\n\nCreates a series of waves that move in a circular motion.")
 end
 function casted(x,y,obj,headingx,headingy)
 
@@ -67,9 +61,8 @@ function abilitytick(x, y, durationLeft,parent,target,dt,attackRef)
     local rotation = idx * (360/numAoEs)
     local pBefore = RotatePoint(GetX(GetObjRef()),GetY(GetObjRef())-distanceFrom,GetX(GetObjRef()),GetY(GetObjRef()),rotation)
 
-    local newRotation = (time/duration) * 360 * dt * rotSpeed
+    local newRotation = (1-(time/duration)) * 360 * dt * rotSpeed
 
-    
     local point = RotatePoint(pBefore.x,pBefore.y,GetX(GetObjRef()), GetY(GetObjRef()),newRotation)
     SetAttackPosition(attackRef,point.x,point.y)
 end

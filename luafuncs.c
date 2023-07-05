@@ -2330,6 +2330,16 @@ int L_SetObjPosition(lua_State* l)
     }
     return 1;
 }
+int L_Lerp(lua_State* l)
+{
+    float f = lua_tonumber(l,1);
+    float to = lua_tonumber(l,2);
+    float maxMove = lua_tonumber(l,3);
+
+    f = Towards(f,to,maxMove);
+    lua_pushnumber(l,f);
+    return 1;
+}
 int L_Teleport(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -5972,5 +5982,7 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_RadToDeg);
     lua_setglobal(luaState, "RadToDeg");
 
+    lua_pushcfunction(luaState, L_Lerp);
+    lua_setglobal(luaState, "Lerp");
 
 }

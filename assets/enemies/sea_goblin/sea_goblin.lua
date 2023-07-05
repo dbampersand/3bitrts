@@ -3,10 +3,10 @@ local sea_foam = -1
 function setup()
     SetSprite("assets/enemies/sea_goblin/sea_goblin.png");
 
-    SetDamage(40);
+    SetDamage(15);
     SetMaxHP(500,true)
-    SetSpeed(120)
-    SetRange(5);
+    SetSpeed(70)
+    SetRange(32);
 
     sea_foam = AddAbility(GetObjRef(),"assets/enemies/sea_goblin/ability_sea_foam.lua",0);
 
