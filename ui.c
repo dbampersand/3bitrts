@@ -246,7 +246,18 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     }
     al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
     GameObject* prefabDrawing = purchaseUI->prefabs[purchaseUI->currentIndex];
-    ALLEGRO_COLOR* c = prefabDrawing->purchased ? &FRIENDLY : &GROUND;
+    ALLEGRO_COLOR c = FRIENDLY;
+    if (!prefabDrawing->purchased)
+    {
+        c = GROUND;
+        unsigned char r; unsigned char g; unsigned char b;
+        al_unmap_rgb(c,&r,&g,&b);
+        r = clamp(r+60,0,255);
+        g = clamp(g+60,0,255);
+        b = clamp(b+60,0,255);
+
+        c = al_map_rgb(r,g,b);
+    }
 
     Sprite* s = &sprites[prefabDrawing->spriteIndex_PurchaseScreenSprite];
 
@@ -256,7 +267,8 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     x = (_SCREEN_SIZE-GetWidthSprite(s))-(GetWidthSprite(s)*(-timer));
 
     int y = 0;
-    DrawSprite(s,x,y,0,0,0,*c,false,false,false);
+    y += (sinf(_FRAMES/30.0f)+1)*5;
+    DrawSprite(s,x,y,0,0,0,c,false,false,false);
 
 
     int abilityY = 198;
@@ -280,7 +292,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
             //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false,false,false);
             Rect r = (Rect){xPos,yPos,30,30};
             
-            if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, c,false,true) && !mousedOver)
+            if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, &c,false,true) && !mousedOver)
             {
                 mousedOver = &prefabDrawing->abilities[i];
             } 
@@ -306,7 +318,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
             //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false,false,false);
             Rect r = (Rect){xPos,yPos,30,30};
 
-            if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, c,false,true) && !mousedOver)
+            if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, &c,false,true) && !mousedOver)
             {
                 mousedOver = &prefabDrawing->abilities[i];
             } 
@@ -322,7 +334,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
             //al_draw_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
             //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false,false,false);
             Rect r = (Rect){xPos,yPos,30,30};
-            if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, c,false,true) && !mousedOver)
+            if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, &c,false,true) && !mousedOver)
             {
                 mousedOver = &prefabDrawing->abilities[i];
             } 
@@ -345,12 +357,12 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
 
     //Draw unit square small portrait
     int spriteX = paragraphX;
-    DrawSprite(&sprites[prefabDrawing->spriteIndex],spriteX,titleY,0,0,0,*c,false,false,false);
+    DrawSprite(&sprites[prefabDrawing->spriteIndex],spriteX,titleY,0,0,0,c,false,false,false);
 
-    al_draw_text(ui.font,*c,paragraphX + GetWidth(prefabDrawing)+2,titleY+GetHeight(prefabDrawing)/2, ALLEGRO_ALIGN_LEFT,prefabDrawing->name ? prefabDrawing->name : "");
+    al_draw_text(ui.font,c,paragraphX + GetWidth(prefabDrawing)+2,titleY+GetHeight(prefabDrawing)/2, ALLEGRO_ALIGN_LEFT,prefabDrawing->name ? prefabDrawing->name : "");
 
     al_set_clipping_rectangle(paragraphX,paragraphY,paragraphWMax,clippingHeight);
-    al_draw_multiline_text(ui.tinyFont,*c,paragraphX,paragraphY,paragraphWMax,8,ALLEGRO_ALIGN_LEFT,description ? description : "");
+    al_draw_multiline_text(ui.tinyFont,c,paragraphX,paragraphY,paragraphWMax,8,ALLEGRO_ALIGN_LEFT,description ? description : "");
     al_reset_clipping_rectangle();
   
     if (purchaseUI->currentIndex == 0)
@@ -721,9 +733,9 @@ void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame)
         DrawUIElement(&ui.choosingUnits_GO,ui.choosingUnits_GO.x,ui.choosingUnits_GO.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY,false);
         DrawUIElement(&ui.choosingUnits_Hire,ui.choosingUnits_Hire.x,ui.choosingUnits_Hire.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY,false);
 
-
-        char* number = calloc(log10(INT_MAX)*2+2,sizeof(char));
-        sprintf(number,"%i/%i",numUnitsSelected,e->numUnitsToSelect);
+        char* format = "Select %i/%i units";
+        char* number = calloc(snprintf(NULL,0,format,numUnitsSelected,e->numUnitsToSelect)+1,sizeof(char));
+        sprintf(number,format,numUnitsSelected,e->numUnitsToSelect);
 
         al_draw_text(ui.font,FRIENDLY,ToScreenSpace_X(ui.choosingUnits_GO.x+ui.choosingUnits_GO.w/2),ToScreenSpace_Y(180),ALLEGRO_ALIGN_CENTER,number);
 
@@ -1110,6 +1122,8 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
         col = (ObjectHasManaToCast(selected,a) && !AbilityIsOnCooldown(a) && percent >= 1.0f) ? c : &GROUND;
     else
         col = (ObjectHasManaToCast(selected,a) && !AbilityIsOnCooldown(a) && percent >= 1.0f) ? &FRIENDLY : &GROUND;
+    if (gameState == GAMESTATE_PURCHASING_UNITS)
+        col = c;
     DrawSpriteRegion(s,0,0,w,h,r.x,r.y,*col,keydown);
 
     //Draw stacks counter
@@ -1131,7 +1145,7 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
 
         //draw countdown animation
     }
-    if (a->stacks != a->maxStacks)
+    if (a->stacks != a->maxStacks && gameState != GAMESTATE_PURCHASING_UNITS)
     {
         float percent = 1-(a->cdTimer / a->cooldown);
         al_draw_line(r.x,r.y + (r.h*percent),r.x+r.w,r.y+(r.h*percent),BG,1);

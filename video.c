@@ -181,7 +181,7 @@ void SetDisplayWindowed(int windowMode)
     al_destroy_font(ui.tinyFont);
 
     InitFonts();
-    
+
     LoadCursorSprite(&ui,&ui.cursorDefaultIndex,"assets/ui/cursor.png");
     LoadCursorSprite(&ui,&ui.cursorCastingIndex,"assets/ui/cursor_cast.png");
     LoadCursorSprite(&ui,&ui.cursorAttackIndex,"assets/ui/cursor_attack.png");
@@ -452,6 +452,7 @@ bool isInsideSector(int x, int y, int cx, int cy, float startX, float startY, fl
      }
 
 }
+//TODO: fix for bottom segment
 void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO_COLOR col, float length)
 {
    al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
@@ -464,6 +465,7 @@ void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO
     
     if (sign == -1)
     {
+        //al_put_pixel(1,1,DAMAGE);
         float temp = start;
         end -= radius * (float)M_PI/180.0f - (length*(float)M_PI/180.0f)+1;
         float rad = (360-radius) * (float)M_PI/180.0f;
@@ -471,6 +473,13 @@ void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO
     }
 
     float theta = start;
+
+    if (theta > end)
+    {
+        //float temp = end;
+        //end = theta;
+       // theta = temp;
+    }
 
     if (theta <= end)
     {
@@ -481,6 +490,7 @@ void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO
             al_put_pixel(xn, yn, col);
             theta += inc;
         }
+        //al_put_pixel(0,0,ENEMY);
     }
     else if (theta >= end)
     {
@@ -491,6 +501,8 @@ void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO
             al_put_pixel(xn, yn, col);
             theta += inc * -1;
         }
+        //al_put_pixel(0,0,DAMAGE);
+
 
     }
     al_unlock_bitmap(al_get_target_bitmap());

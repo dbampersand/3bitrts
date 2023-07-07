@@ -507,9 +507,9 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                 DrawUIHighlight(&ui.nextLevelButton,ToWorldSpace_X(ui.nextLevelButton.x),ToWorldSpace_Y(ui.nextLevelButton.y));
             }
 
-            Rect r = (Rect){ui.nextLevelButton.x+1,ui.nextLevelButton.y+1,ui.nextLevelButton.w-3,ui.nextLevelButton.h-3};
+            Rect r = (Rect){ui.nextLevelButton.x+1,ui.nextLevelButton.y+2,ui.nextLevelButton.w-3,ui.nextLevelButton.h-3};
             #ifdef  __APPLE__
-                r.y += 1;
+                //r.y += 1;
             #endif
             UpdateButton(ui.nextLevelButton.x,ui.nextLevelButton.y,ui.nextLevelButton.w,ui.nextLevelButton.h,&ui.nextLevelButton,*mouseState,*mouseStateLastFrame);
 
@@ -524,7 +524,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                 nrmPercentComplete = 0;
             
                 
-            al_draw_filled_rectangle(r.x,r.y,r.x + (r.w * nrmPercentComplete),r.y+r.h,FRIENDLY);
+            al_draw_filled_rectangle(r.x,ceil(r.y),r.x + (r.w * nrmPercentComplete),(int)ceil(r.y+r.h),FRIENDLY);
             
             DrawUIElement(&ui.nextLevelButton,ui.nextLevelButton.x,ui.nextLevelButton.y,mouseState,ui.nextLevelButton.bgColor,COLOR_FRIENDLY,false);
 

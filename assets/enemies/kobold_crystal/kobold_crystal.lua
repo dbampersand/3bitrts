@@ -9,6 +9,7 @@ function setup()
     SetSpeed(0)
     SetRange(32);
     SetInvincible(GetObjRef(),true)
+    SetDecoration(GetObjRef(),true) 
     RemoveFromCount(GetObjRef(),true);
 
     crash = AddAbility(GetObjRef(),"assets/enemies/kobold_crystal/ability_crash.lua",0);

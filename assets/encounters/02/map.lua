@@ -12,7 +12,7 @@ local fifthWave= false
 local sixthWave = false
 local seventhWave = false
 
-local debug = true;
+local debug = false;
 
 function setup()
     SetMapSprite("assets/encounters/02/map.png")

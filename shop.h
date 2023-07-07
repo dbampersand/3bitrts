@@ -62,7 +62,7 @@ typedef struct Shop
 
 extern Shop shop;
 extern int rerollCost;
-
+extern int randomItemCost;
 void DrawShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame);
 void LoadShop();
 void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame);

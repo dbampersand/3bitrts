@@ -178,7 +178,7 @@ void UpdatePush(GameObject* g, float dt)
         moveTo.x = g->pushDir.x * amtToMove;
         moveTo.y = g->pushDir.y * amtToMove;
 
-        MoveObjStepped(g, moveTo.x, moveTo.y, GetWidth(g),GetHeight(g),true);
+        MoveObjStepped(g, moveTo.x, moveTo.y, GetWidth(g),GetHeight(g),ObjectCanPush(g));
     }
     else
     {
@@ -1496,8 +1496,9 @@ void KillObj(GameObject* g, bool trigger, bool spawnParticles)
 
     for (int i = 0; i < MAX_EFFECTS; i++)
     {
-        CallEffectTick(&g->effects[i],g,&copy);
-        RemoveEffect(&g->effects[i], NULL, true);
+        //CallEffectTick(&g->effects[i],g,&copy);
+        if (RemoveEffect(&g->effects[i], NULL, true))
+            i--;
     }
     for (int i = 0; i < INVENTORY_SLOTS; i++)
     {

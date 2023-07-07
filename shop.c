@@ -17,7 +17,7 @@
 #include "sound.h"
 Shop shop = {0};
 int rerollCost = 5;
-
+int randomItemCost = 60;
 
 void LoadShop()
 {
@@ -83,19 +83,19 @@ void RefreshShop()
 
 
     shop.items[0].position.x = 70;
-    shop.items[0].position.y = 41;   
+    shop.items[0].position.y = 30;   
     shop.items[0].desiredPosition = shop.items[0].position;
     shop.items[0].enabled = true;
 
 
     shop.items[1].position.x = 115;
-    shop.items[1].position.y = 41;    
+    shop.items[1].position.y = 30;    
     shop.items[1].desiredPosition = shop.items[1].position;
     shop.items[1].enabled = true;
 
 
     shop.items[2].position.x = 92;
-    shop.items[2].position.y = 86;   
+    shop.items[2].position.y = 75;   
     shop.items[2].desiredPosition = shop.items[2].position;
     shop.items[2].enabled = true;
     shop.shopState = SHOP_STATE_NORMAL;
@@ -465,45 +465,46 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
         y += 24+4;
 
     }
+    if (currEncounterRunning->hardLoss)
+    {
+        for (int i = 0; i < currEncounterRunning->numUnitsToSelect; i++)
+        {   
+            GameObject* g = &deadFriendlyObjects[i];
+            if (IsActive(g))
+            {
+                int ghostIndex = LoadSprite("assets/ui/shop/ghost.png",true);
+                Sprite* ghost = &sprites[ghostIndex];
 
-    for (int i = 0; i < currEncounterRunning->numUnitsToSelect; i++)
-    {   
-        GameObject* g = &deadFriendlyObjects[i];
-        if (IsActive(g))
-        {
-            int ghostIndex = LoadSprite("assets/ui/shop/ghost.png",true);
-            Sprite* ghost = &sprites[ghostIndex];
+                Rect r = (Rect){x-1,y-1,(x + (x-_SCREEN_SIZE)-5),_MAX(GetHeightSprite(ghost),GetHeight(g)+1)};
+                
+                if (players[0].gold >= g->ressurectionCost)
+                    al_draw_rectangle(r.x, r.y, r.x + r.w, r.y + r.h + 1, FRIENDLY,1);
 
-            Rect r = (Rect){x-1,y-1,(x + (x-_SCREEN_SIZE)-5),_MAX(GetHeightSprite(ghost),GetHeight(g)+1)};
+                DrawSprite(&sprites[g->spriteIndex],x,y,0,0,0,FRIENDLY,true,false,false);
+                DrawSprite(ghost,x+GetWidthSprite(&sprites[g->spriteIndex])+10,y,0,0,0,FRIENDLY,false,false,false);
+
+                char textBuffer[NumDigits(INT_MAX)+3];
+                memset(textBuffer,0,sizeof(char)*NumDigits(INT_MAX)+3);
+                sprintf(textBuffer,"%i",g->ressurectionCost);
+                
             
-            if (players[0].gold >= g->ressurectionCost)
-                al_draw_rectangle(r.x, r.y, r.x + r.w, r.y + r.h + 1, FRIENDLY,1);
+                int textX = x+GetWidthSprite(&sprites[g->spriteIndex])+35;
+                int textY = y+_MAX(GetHeightSprite(ghost),GetHeight(g))/2 - al_get_font_line_height(ui.font)/2;
+                DrawSprite(&sprites[ui.gold_element_sprite_index],textX,textY,0,0,0,FRIENDLY,false,false,false);
 
-            DrawSprite(&sprites[g->spriteIndex],x,y,0,0,0,FRIENDLY,true,false,false);
-            DrawSprite(ghost,x+GetWidthSprite(&sprites[g->spriteIndex])+10,y,0,0,0,FRIENDLY,false,false,false);
+                al_draw_text(ui.font,FRIENDLY,textX+GetWidthSprite(&sprites[ui.gold_element_sprite_index])+1,textY,ALLEGRO_ALIGN_LEFT,textBuffer);
+                y += GetHeight(g)+1;
 
-            char textBuffer[NumDigits(INT_MAX)+3];
-            memset(textBuffer,0,sizeof(char)*NumDigits(INT_MAX)+3);
-            sprintf(textBuffer,"%i",g->ressurectionCost);
-            
-        
-            int textX = x+GetWidthSprite(&sprites[g->spriteIndex])+35;
-            int textY = y+_MAX(GetHeightSprite(ghost),GetHeight(g))/2 - al_get_font_line_height(ui.font)/2;
-            DrawSprite(&sprites[ui.gold_element_sprite_index],textX,textY,0,0,0,FRIENDLY,false,false,false);
-
-            al_draw_text(ui.font,FRIENDLY,textX+GetWidthSprite(&sprites[ui.gold_element_sprite_index])+1,textY,ALLEGRO_ALIGN_LEFT,textBuffer);
-            y += GetHeight(g)+1;
-
-            y += 24 + 4;
-   
-            if (players[0].gold >= g->ressurectionCost)
-                 if ((mouseStateLastFrame.mouse.buttons) & 1 && !(mouseState.mouse.buttons & 1) && PointInRect(mouseState.screenX,mouseState.screenY,r))
-                {
-                    RessurectGameObject(g);
-                }
+                y += 24 + 4;
+    
+                if (players[0].gold >= g->ressurectionCost)
+                    if ((mouseStateLastFrame.mouse.buttons) & 1 && !(mouseState.mouse.buttons & 1) && PointInRect(mouseState.screenX,mouseState.screenY,r))
+                    {
+                        RessurectGameObject(g);
+                    }
+            }
         }
     }
-
     if (!(mouseState.mouse.buttons & 1))
     {
         if (shop.heldItem)
@@ -526,6 +527,66 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
 
     }
 
+}
+void DrawRandomItemButton(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
+{
+    int* indicesCanPick = calloc(numActiveObjects, sizeof(int));
+    int numIndices = 0;
+    for (int i = 0; i < numActiveObjects; i++)
+    {
+        GameObject* g = activeObjects[i];
+        if (!IsOwnedByPlayer(g) || !g->playerChoosable || g->objectIsSummoned)
+            continue;
+
+        bool hasFreeSlot = false;
+        for (int j = 0; j < INVENTORY_SLOTS; j++)
+        {
+            if (!g->inventory[j].enabled)
+                hasFreeSlot = true;
+        }
+        if (hasFreeSlot)
+        {
+            indicesCanPick[numIndices] = i;
+            numIndices++;
+        }
+    }
+    int x = 98; int y = 124;
+
+    int randomItemIndex = LoadSprite("assets/ui/augments/random_item.png",true);
+    Sprite* s = &sprites[randomItemIndex];
+    Rect r = (Rect){x,y,GetWidthSprite(s),GetHeightSprite(s)};
+
+    bool moused = PointInRect(mouseState.screenX,mouseState.screenY,r);
+
+    ALLEGRO_COLOR colour = players[0].gold >= randomItemCost ? FRIENDLY : GROUND;
+    if (numIndices == 0) 
+        colour = GROUND;
+    DrawSprite(s,x,y,0,0,0,colour,moused,false,false);
+    
+    char* str = calloc(NumDigits(randomItemCost)+1,sizeof(char));
+    sprintf(str,"%i",randomItemCost);
+
+    al_draw_text(ui.font,colour,x+GetWidthSprite(s)/2.0f,y-10,ALLEGRO_ALIGN_CENTER,str);
+
+    if (moused && players[0].gold >= randomItemCost && numIndices > 0)
+    {
+        if ((mouseStateLastFrame.mouse.buttons & 1)  && !(mouseState.mouse.buttons & 1))
+        {
+            PlaySoundStr("assets/audio/reroll.wav",1,0,false);
+            AddGold(-randomItemCost);
+            shop.shopState = SHOP_STATE_REROLLING;
+
+            int objPickedIndex = RandRange(0,numIndices-1);
+            objPickedIndex = indicesCanPick[objPickedIndex];
+            GameObject* g = activeObjects[objPickedIndex];
+
+            int itemPickedIndex = RandRange(0,numItems-1);
+            Item* i = &items[itemPickedIndex];
+
+            AttachItem(g,i);
+        }
+    }
+    free(str);
 }
 void DrawReroll(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 {
@@ -572,6 +633,7 @@ void DrawShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
     DrawShopItems(dt,mouseState);
 
     DrawReroll(dt,mouseState,mouseStateLastFrame);
+    DrawRandomItemButton(dt,mouseState,mouseStateLastFrame);
 
     DrawGoldCount(BG,ENEMY,9,9);
 

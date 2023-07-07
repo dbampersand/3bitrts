@@ -1474,6 +1474,13 @@ int L_SetAbilityCooldownTimer(lua_State* l)
     int abilityObjIndex = lua_tonumber(l,2);
     int cd = lua_tonumber(l,3);
 
+    if (!GameObjectIndexInRange(gameObjIndex) || abilityObjIndex < 0 || abilityObjIndex >= MAX_ABILITIES)
+    {
+        ConsolePrintf("L_SetAbilityCooldownTimer: index out of range: %i, %i\n",gameObjIndex,abilityObjIndex);
+        return 0;
+    }
+
+
     GameObject* g = &objects[gameObjIndex];
     Ability* a = &g->abilities[abilityObjIndex];
     a->cdTimer = cd;
@@ -1515,6 +1522,12 @@ int L_GetAbilityCooldownTimer(lua_State* l)
     int gameObjIndex = lua_tonumber(l,1);
     int abilityObjIndex = lua_tonumber(l,2);
 
+    if (!GameObjectIndexInRange(gameObjIndex) || abilityObjIndex < 0 || abilityObjIndex >= MAX_ABILITIES)
+    {
+        ConsolePrintf("L_GetAbilityCooldownTimer: index out of range: %i, %i\n",gameObjIndex,abilityObjIndex);
+        return 0;
+    }
+
     GameObject* g = &objects[gameObjIndex];
     Ability* a = &g->abilities[abilityObjIndex];
     
@@ -1542,6 +1555,13 @@ int L_GetAbilityCooldown(lua_State* l)
 {
     int gameObjIndex = lua_tonumber(l,1);
     int abilityObjIndex = lua_tonumber(l,2);
+
+    if (!GameObjectIndexInRange(gameObjIndex) || abilityObjIndex < 0 || abilityObjIndex >= MAX_ABILITIES)
+    {
+        ConsolePrintf("L_GetAbilityCooldown: index out of range: %i, %i\n",gameObjIndex,abilityObjIndex);
+        return 0;
+    }
+
 
     GameObject* g = &objects[gameObjIndex];
     Ability* a = &g->abilities[abilityObjIndex];

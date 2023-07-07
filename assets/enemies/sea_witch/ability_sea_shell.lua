@@ -4,7 +4,7 @@ local dps = 30
 
 local radius = 35
 
-local aoes = {}
+local numCones = 8
 
 local changeDirectionTime = 1
 
@@ -13,9 +13,9 @@ function setup()
     SetAbilityRange(256)
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_LINE,80);
-    SetCooldown(4); 
+    SetCooldown(12); 
     AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
-    SetDescription("[b]Waterspout\n\nCreates a moving spout of water.")
+    SetDescription("[b]Sea Shell\n\nCreates several damaging cones.")
 end
 function casted(x,y,obj,headingx,headingy)
     local f1 = {}
@@ -23,24 +23,7 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = dps * tickrate;
 
-    local index = 0
-    if (#aoes == 0) then
-        index = 1
-    else
-        index = #aoes
-    end
-
     local atk = {}
-    atk.aoe = CreateAOE(GetX(obj),GetY(obj),"", radius, tickrate, duration, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_EIGTH, false, -1, 0,-1,30, {f1})
-    
-    atk.towards = {}
-    atk.towards.x = RandRange(-1,1)
-
-    atk.towards.y = RandRange(-1,1)
-
-    atk.timer = 0
-    SetAttackInactive(atk.aoe,1)
-    table.insert(aoes,atk)
 
 
     return true; 

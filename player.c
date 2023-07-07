@@ -10,6 +10,7 @@
 #include "allegro5/allegro_ttf.h"
 #include <math.h>
 #include "easings.h"
+#include "encounter.h"
 float cameraSpeed = 260;
 Player* players  = NULL;
 
@@ -294,6 +295,17 @@ void DrawGoldCount(ALLEGRO_COLOR colorPositive, ALLEGRO_COLOR colorNegative, int
 
     ALLEGRO_COLOR c = floorf(players[0].gold) >= 0 ? colorPositive : colorNegative;
     al_draw_text(ui.tinyFont,c,x+GetWidthSprite(&sprites[ui.gold_element_sprite_index])+2,y,ALLEGRO_ALIGN_LEFT,players[0].goldText);
+
+    if (gameState == GAMESTATE_INGAME)
+    {
+        int w = al_get_text_width(ui.tinyFont,players[0].goldText);
+        int xPos = x + GetWidthSprite(&sprites[ui.gold_element_sprite_index]) + 2 +  w/2;
+        char* format = "(-%.2f/s)";
+        char* lossRate = calloc(snprintf(NULL,0,format,goldLossRate)+1,sizeof(char));
+        sprintf(lossRate,format,goldLossRate);
+        al_draw_text(ui.tinyFont,c,xPos,y+10,ALLEGRO_ALIGN_CENTER,lossRate);
+        free(lossRate);
+    }
 }
 void ClearGold()
 {

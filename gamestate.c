@@ -88,6 +88,7 @@ void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Enco
     if (deadFriendlyObjects)
         free(deadFriendlyObjects);
     deadFriendlyObjects = calloc(e->numUnitsToSelect,sizeof(GameObject));
+    numDeadFriendlyObjectsHeld = e->numUnitsToSelect;
     for (int i = 0; i < numObjectsToAdd; i++)
     {
         toSpawn[i] = list[i];
@@ -304,6 +305,9 @@ void FinishTransition()
         RemoveAllGameObjects();
         RemoveAllAttacks();
         SetMap(LoadMap("assets/ui/map_unitselect.lua"));
+
+        free(currEncounterRunning->musicPath);
+        currEncounterRunning->musicPath = NULL;
 
         //SetMap(&maps[0]);
         players[0].cameraPos.x = 0;
@@ -1145,6 +1149,11 @@ void AddDeadGameObject(GameObject* g)
 {
     if (gameState == GAMESTATE_INGAME)
     {
+        if (numDeadFriendlyObjects >= numDeadFriendlyObjectsHeld)
+        {
+            deadFriendlyObjects = realloc(deadFriendlyObjects,(numDeadFriendlyObjectsHeld+1)*sizeof(GameObject));
+            numDeadFriendlyObjectsHeld++; 
+        }
         deadFriendlyObjects[numDeadFriendlyObjects] = *g;
         deadFriendlyObjects[numDeadFriendlyObjects].properties |= OBJ_ACTIVE;   
         numDeadFriendlyObjects++;

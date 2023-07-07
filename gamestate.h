@@ -69,6 +69,7 @@ extern bool transitionAudioPlayed;
 extern GameObject** toSpawn;
 extern GameObject* deadFriendlyObjects;
 int numDeadFriendlyObjects;
+int numDeadFriendlyObjectsHeld;
 
 extern Encounter* encounterGoingTo;
 extern char* pathToNextMap;
