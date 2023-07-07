@@ -92,7 +92,7 @@ void SetLoadscreen(char* path, char* mask, float transitionInTime, float moveTim
 
 void DrawLoadscreen()
 {
-    al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+    DrawFilledRectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
     DrawLoadScreenSprites(ORDER_BEFORESPRITE);
 
     DrawSprite(&sprites[loadScreen.maskSpriteIndex],loadScreen.x,loadScreen.y,0.5f,0.5f,0,BG,false,false,false);
@@ -103,15 +103,15 @@ void DrawLoadscreen()
         unsigned char r,g,b;
         al_unmap_rgb(BG,&r,&g,&b);
         ALLEGRO_COLOR c = al_premul_rgba(r,g,b,255- 255*loadScreen.timer/loadScreen.transitionTimers[loadScreen.state]);//al_map_rgba_f(BG.r/255.0f,BG.g/255.0f,BG.b/255.0f,1-loadScreen.timer/loadScreen.transitionTimers[loadScreen.state]);
-        al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,c);
+        DrawFilledRectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,c);
     }
     DrawLoadScreenSprites(ORDER_AFTERSPRITE);
     if (loadScreen.state >= LOADSCREEN_TEXT_TRANSITION_IN)
     {
         int x = loadScreen.textBoxX-LOADSCREEN_TEXTBOXW/2.0f;
         int y = loadScreen.textBoxY-LOADSCREEN_TEXTBOXH/2.0f;
-        al_draw_filled_rectangle(x+2,y+2,x+LOADSCREEN_TEXTBOXW-4,y+LOADSCREEN_TEXTBOXH-4,BG);
-        al_draw_rectangle(x+2,y+2,x+LOADSCREEN_TEXTBOXW-4,y+LOADSCREEN_TEXTBOXH-4,FRIENDLY,1);
+        DrawFilledRectangle(x+2,y+2,x+LOADSCREEN_TEXTBOXW-4,y+LOADSCREEN_TEXTBOXH-4,BG);
+        DrawRectangle(x+2,y+2,x+LOADSCREEN_TEXTBOXW-4,y+LOADSCREEN_TEXTBOXH-4,FRIENDLY,1);
 
         al_draw_text(ui.boldFont,FRIENDLY,x+LOADSCREEN_TEXTBOXW/2.0f,y+LOADSCREEN_TEXTBOXH/4.0f,ALLEGRO_ALIGN_CENTRE,loadScreen.header);
         al_draw_text(ui.font,FRIENDLY,x+LOADSCREEN_TEXTBOXW/2.0f,y+LOADSCREEN_TEXTBOXH/2.0f,ALLEGRO_ALIGN_CENTRE,loadScreen.description);

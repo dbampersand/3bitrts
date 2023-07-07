@@ -445,7 +445,7 @@ bool DrawAugmentPortrait(Augment* a, int x, int y, MouseState* mouseState, ALLEG
     bool mousedOver = PointInRect(mouseState->screenX,mouseState->screenY,r);
     DrawSprite(&sprites[a->portrait_sprite_index],x,y,0,0,0,col,mousedOver,false,false);
     if (!mousedOver)
-        al_draw_rectangle(x,y,x+w,y+h,col,1);
+        DrawRectangle(x,y,x+w,y+h,col,1);
     return mousedOver;
 
     

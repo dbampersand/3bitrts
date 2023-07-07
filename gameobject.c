@@ -233,8 +233,8 @@ void DrawChannellingInfo(GameObject* obj)
     if (a)
     {
         float percent = clamp(1 - (obj->channellingTime / obj->channellingTotal), 0, 1);
-        al_draw_rectangle(xStart, yStart, xStart + w, yStart + h, ENEMY, 1);
-        al_draw_filled_rectangle(xStart + 1, yStart + 2, xStart + ((w - 2) * percent), yStart + (h - 1), ENEMY);
+        DrawRectangle(xStart, yStart, xStart + w, yStart + h, ENEMY, 1);
+        DrawFilledRectangle(xStart + 1, yStart + 2, xStart + ((w - 2) * percent), yStart + (h - 1), ENEMY);
 
         char *name = a->name;
         if (!name)
@@ -2453,10 +2453,10 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
     r.y = g->position.screenY - padding + g->offset.y + (HEALTHBAR_HEIGHT * (1 - summPercent));
     // ToScreenSpace(&r.x,&r.y);
 
-    al_draw_filled_rectangle((int)r.x - 1, (int)r.y - 1, (int)r.x + r.w + 1, (int)r.y + r.h + 1, GROUND);
+    DrawFilledRectangle((int)r.x - 1, (int)r.y - 1, (int)r.x + r.w + 1, (int)r.y + r.h + 1, GROUND);
 
-    al_draw_rectangle((int)r.x - 1, (int)r.y - 1, (int)r.x + r.w + 1, (int)r.y + r.h + 1, BG, 1);
-    al_draw_rectangle((int)r.x, (int)r.y, (int)r.x + r.w, (int)r.y + r.h, col, 1);
+    DrawRectangle((int)r.x - 1, (int)r.y - 1, (int)r.x + r.w + 1, (int)r.y + r.h + 1, BG, 1);
+    DrawRectangle((int)r.x, (int)r.y, (int)r.x + r.w, (int)r.y + r.h, col, 1);
 
     float percent = (g->health) / (float)g->maxHP;
 
@@ -2467,7 +2467,7 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
     int numPixels = percent * r.w;
     int numPixelsShield = percentShield * r.w;
 
-    al_draw_filled_rectangle((int)r.x, (int)r.y, (int)(r.x + numPixels), (int)(r.y + r.h), col);
+    DrawFilledRectangle((int)r.x, (int)r.y, (int)(r.x + numPixels), (int)(r.y + r.h), col);
 
     // draw damage effect
     if (g->lastDamage > 0)
@@ -2475,10 +2475,10 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
         int numDamage = (g->lastDamage) / (float)g->maxHP;
         numDamage = _MAX(1, numDamage);
         if (r.x + numPixels + numDamage < r.x + r.w)
-            al_draw_filled_rectangle((int)r.x + numPixels, (int)r.y, (int)(r.x + numPixels + numDamage), (int)(r.y + r.h)-1, DAMAGE);
+            DrawFilledRectangle((int)r.x + numPixels, (int)r.y, (int)(r.x + numPixels + numDamage), (int)(r.y + r.h)-1, DAMAGE);
     }
 
-    al_draw_filled_rectangle((int)r.x, (int)r.y - 7, (int)(r.x + numPixelsShield), (int)((r.y - 7) + r.h - 1), col);
+    DrawFilledRectangle((int)r.x, (int)r.y - 7, (int)(r.x + numPixelsShield), (int)((r.y - 7) + r.h - 1), col);
 
     // Draw amount of HP which has a DoT effect on it if they're all summed
     float amtPoisoned = GetTotalDotted(g);
@@ -2487,7 +2487,7 @@ void DrawHealthBar(GameObject* g, ALLEGRO_COLOR col)
     percentPoisoned = clamp(percentPoisoned, 0, percent);
 
     if (percentPoisoned > 0)
-        al_draw_filled_rectangle((int)r.x, (int)r.y + 1, (int)r.x + (r.w * percentPoisoned), (int)r.y + r.h, POISON);
+        DrawFilledRectangle((int)r.x, (int)r.y + 1, (int)r.x + (r.w * percentPoisoned), (int)r.y + r.h, POISON);
 
     // Draw indicator for bad effects
     int x = g->position.screenX;
@@ -2729,7 +2729,7 @@ void DrawSummonEffect(GameObject* g)
         Rect r = (Rect){x - (w / 2), y - (h / 2), (w), (h)};
         DrawFilledRect_Dithered(r, c);
 
-        // al_draw_filled_rectangle(x - (w/2), y - (h/2), x+(w/2), y+(h/2), c);
+        // DrawFilledRectangle(x - (w/2), y - (h/2), x+(w/2), y+(h/2), c);
     }
 }
 bool IsSelectable(GameObject* g)

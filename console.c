@@ -123,7 +123,7 @@ void DrawConsole(MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGR
         console.scroll = clamp(console.scroll,0,CONSOLE_MAX_SCROLL);
 
 
-        al_draw_filled_rectangle(console.x,console.y,console.x + console.w, console.y + console.h, BG);
+        DrawFilledRectangle(console.x,console.y,console.x + console.w, console.y + console.h, BG);
         al_draw_line(console.x,console.y,console.x+console.w,console.y,FRIENDLY,1);
 
         al_do_multiline_ustr(ui.font,

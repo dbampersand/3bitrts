@@ -244,7 +244,7 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
     {
         InitPurchasingUnitsUI();
     }
-    al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+    DrawFilledRectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
     GameObject* prefabDrawing = purchaseUI->prefabs[purchaseUI->currentIndex];
     ALLEGRO_COLOR c = FRIENDLY;
     if (!prefabDrawing->purchased)
@@ -287,8 +287,8 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
             int xPos = (paragraphStartX + (i*abilitySize) + i*2) + _SCREEN_SIZE;
             xPos -= (_SCREEN_SIZE)*(purchaseUI->transitionTimer+1);
             int yPos = abilityY;
-            al_draw_filled_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,BG);
-            //al_draw_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
+            DrawFilledRectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,BG);
+            //DrawRectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
             //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false,false,false);
             Rect r = (Rect){xPos,yPos,30,30};
             
@@ -313,8 +313,8 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
             xPos -= (_SCREEN_SIZE)*(purchaseUI->transitionTimer+1);
             
             int yPos = abilityY;
-            al_draw_filled_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,BG);
-           // al_draw_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
+            DrawFilledRectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,BG);
+           // DrawRectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
             //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false,false,false);
             Rect r = (Rect){xPos,yPos,30,30};
 
@@ -330,8 +330,8 @@ void DrawPurchasingUnitsUI(float dt, MouseState mouseState, MouseState mouseStat
             xPos -= (_SCREEN_SIZE)*(purchaseUI->transitionTimer+1);
 
             int yPos = abilityY+34;
-            al_draw_filled_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,BG);
-            //al_draw_rectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
+            DrawFilledRectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,BG);
+            //DrawRectangle(xPos,yPos,xPos+abilitySize,yPos+abilitySize,FRIENDLY,1);
             //DrawSprite(&sprites[prefabDrawing->abilities[i].spriteIndex_Portrait],xPos,yPos,0,0,0,FRIENDLY,false,false,false);
             Rect r = (Rect){xPos,yPos,30,30};
             if (DrawAbilityPortraits(prefabDrawing,NULL,i,r,PointInRect(mouseState.screenX,mouseState.screenY,r),mouseState, &c,false,true) && !mousedOver)
@@ -762,14 +762,14 @@ void DrawMouseSelectBox(MouseState mouseState)
     r.y = _MIN(endy,starty);
     r.w = _MAX(endx,startx) - _MIN(endx,startx);
     r.h = _MAX(endy,starty) - _MIN(endy,starty);
-    al_draw_filled_rectangle(r.x, r.y, r.x+r.w, r.y+r.h, al_premul_rgba(255, 255, 255,128));
+    DrawFilledRectangle(r.x, r.y, r.x+r.w, r.y+r.h, al_premul_rgba(255, 255, 255,128));
    
 }
 
 void DrawReplayUI(Replay* r, MouseState* mouseState, MouseState* mouseStateLastFrame)
 {
-    al_draw_filled_rectangle(3,2,252,16,BG);
-    al_draw_rectangle(3,2,252,16,BG,1);
+    DrawFilledRectangle(3,2,252,16,BG);
+    DrawRectangle(3,2,252,16,BG,1);
     
     float percent = r->framePlayPosition / (float)r->numFrames;
     int w = REP_UI_PLAY_SCRUBBER_SIZE * percent;
@@ -788,8 +788,8 @@ void DrawReplayUI(Replay* r, MouseState* mouseState, MouseState* mouseStateLastF
         }
     }
 
-    al_draw_rectangle(19,5,222,13,FRIENDLY,1);
-    al_draw_filled_rectangle(position.x,position.y,position.x+position.w,position.h,FRIENDLY);
+    DrawRectangle(19,5,222,13,FRIENDLY,1);
+    DrawFilledRectangle(position.x,position.y,position.x+position.w,position.h,FRIENDLY);
 
     DrawButton(&replayPlayButton,replayPlayButton.x,replayPlayButton.y,*mouseState,true,BG,true,FRIENDLY,false);
     UpdateButton(replayPlayButton.x,replayPlayButton.y,replayPlayButton.w,replayPlayButton.h,&replayPlayButton,*mouseState,*mouseStateLastFrame);
@@ -970,7 +970,7 @@ void DrawHealthUIElement(GameObject* selected, ALLEGRO_COLOR color)
 
     int startY = startHPY + (hpH - (hpH*percentHP));
     int endY = (startHPY + hpH);
-    al_draw_filled_rectangle(startHPX, startY, startHPX+hpW,endY, color);
+    DrawFilledRectangle(startHPX, startY, startHPX+hpW,endY, color);
 }
 
 void DrawManaUIElement(GameObject* selected, ALLEGRO_COLOR color)
@@ -985,7 +985,7 @@ void DrawManaUIElement(GameObject* selected, ALLEGRO_COLOR color)
 
     int startY = startManaY + (manaH - (manaH*percentMana));
     int endY = (startManaY + manaH);
-    al_draw_filled_rectangle(startManaX, startY, startManaX+manaW,endY, color);
+    DrawFilledRectangle(startManaX, startY, startManaX+manaW,endY, color);
 
 
 }
@@ -1031,7 +1031,7 @@ bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, MouseState
 
     Rect r = (Rect){x,y,w,h};
     if (w > 0 && h > 0)
-        al_draw_rectangle(x,y,x+w,y+h,color,1);
+        DrawRectangle(x,y,x+w,y+h,color,1);
     bool shouldInvert = false;
 
     if (mouse && PointInRect(mouse->screenX,mouse->screenY,r))
@@ -1069,7 +1069,7 @@ bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c, MouseState* mo
         if (e->spriteIndex_Portrait > 0)
             DrawSprite(&sprites[e->spriteIndex_Portrait],x,y,0.5f,0.5f,0,c,false,false,false);
         else
-            al_draw_filled_rectangle(r.x,r.y,r.x+r.w,r.y+r.h,c);
+            DrawFilledRectangle(r.x,r.y,r.x+r.w,r.y+r.h,c);
         if (e->canStack)
         {
             if (e->stacks > 1)
@@ -1077,7 +1077,7 @@ bool DrawEffectPortrait(int x, int y, Effect* e, ALLEGRO_COLOR c, MouseState* mo
                 size_t buffsize = snprintf(NULL, 0, "%i", e->stacks);
                 char* stacks = calloc(buffsize+1,sizeof(char));
                 sprintf(stacks,"%i",e->stacks);
-                al_draw_filled_rectangle(x,y,x+al_get_text_width(ui.tinyFont,stacks),y+al_get_font_line_height(ui.tinyFont),BG);
+                DrawFilledRectangle(x,y,x+al_get_text_width(ui.tinyFont,stacks),y+al_get_font_line_height(ui.tinyFont),BG);
                 al_draw_text(ui.tinyFont,DAMAGE,x+1,y+1,ALLEGRO_ALIGN_LEFT,stacks);
                 free(stacks);
             }
@@ -1133,8 +1133,8 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
         int xStackCounter = r.x+r.w-sizeStackCounter;
         int yStackCounter = r.y+r.h-sizeStackCounter;
 
-        al_draw_filled_rectangle(xStackCounter,yStackCounter,xStackCounter+sizeStackCounter,yStackCounter+sizeStackCounter,BG);
-        al_draw_rectangle(xStackCounter,yStackCounter,xStackCounter+sizeStackCounter,yStackCounter+sizeStackCounter,*c,1);
+        DrawFilledRectangle(xStackCounter,yStackCounter,xStackCounter+sizeStackCounter,yStackCounter+sizeStackCounter,BG);
+        DrawRectangle(xStackCounter,yStackCounter,xStackCounter+sizeStackCounter,yStackCounter+sizeStackCounter,*c,1);
 
         const int maxchars = ceilf(log10(pow(2,sizeof(a->stacks)*8)))+2;
         if (!stackDrawBuffer)
@@ -1172,8 +1172,8 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
         int keyW = al_get_text_width(ui.tinyFont,key)+4;
         int keyH = al_get_font_line_height(ui.tinyFont)+4;
 
-        al_draw_filled_rectangle(r.x,r.y,r.x+keyW,r.y+keyH,BG);
-        al_draw_rectangle(r.x,r.y,r.x+keyW,r.y+keyH,*c,1);
+        DrawFilledRectangle(r.x,r.y,r.x+keyW,r.y+keyH,BG);
+        DrawRectangle(r.x,r.y,r.x+keyW,r.y+keyH,*c,1);
 
         al_draw_text(ui.tinyFont, *c, r.x+keyW/2,r.y+keyH/2-1, ALLEGRO_ALIGN_CENTRE, key);
 
@@ -1250,7 +1250,7 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
     ALLEGRO_COLOR baseColor = (IsOwnedByPlayer(selected) || !selected) ? FRIENDLY : ENEMY;
 
 
-    al_draw_filled_rectangle(0, UI_START_Y, _SCREEN_SIZE, _SCREEN_SIZE, BG);
+    DrawFilledRectangle(0, UI_START_Y, _SCREEN_SIZE, _SCREEN_SIZE, BG);
 
     Effect* mousedOver = NULL; 
     DrawEffectPortraits(selected, &mousedOver, mouseState);
@@ -1991,8 +1991,8 @@ void DrawSlider(UIElement* u, int x, int y, MouseState* mouseState, bool isActiv
         b = FRIENDLY.b;
     }
     ALLEGRO_COLOR c = al_map_rgb_f(r,g,b);
-    al_draw_filled_rectangle(x,y,x+w,y+u->h,c);
-    al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
+    DrawFilledRectangle(x,y,x+w,y+u->h,c);
+    DrawRectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
 }
 void UpdateCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive, MouseState mouseState, MouseState mouseStateLastFrame)
 {
@@ -2033,15 +2033,15 @@ void DrawCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive,MouseSt
     Rect checkbox = (Rect){x,y,w,h};
     if (*c->activated && isActive)
     {
-        al_draw_filled_rectangle(x,y,x+w,y+h,FRIENDLY);
-        al_draw_rectangle(x,y,x+w,y+h,BG,1);
+        DrawFilledRectangle(x,y,x+w,y+h,FRIENDLY);
+        DrawRectangle(x,y,x+w,y+h,BG,1);
     }
     else
     {
-        al_draw_filled_rectangle(x,y,x+w,y+h,bgColor);
+        DrawFilledRectangle(x,y,x+w,y+h,bgColor);
         if (isActive)
         {
-            al_draw_rectangle(x,y,x+w,y+h,FRIENDLY,1);
+            DrawRectangle(x,y,x+w,y+h,FRIENDLY,1);
         }
         else
         {
@@ -2051,7 +2051,7 @@ void DrawCheckbox(Checkbox* c, int x, int y, int w, int h, bool isActive,MouseSt
     if (PointInRect(mouseState.screenX,mouseState.screenY,checkbox))
     {
         Color col = *c->activated ? COLOR_BG : COLOR_FRIENDLY;
-        al_draw_rectangle(x+2,y+2,x+w-2,y+h-2,GetColor(col,0),1);
+        DrawRectangle(x+2,y+2,x+w-2,y+h-2,GetColor(col,0),1);
     }
 }
 UIElement* AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool* activated)
@@ -2200,13 +2200,13 @@ void DrawPullDownMenu(Pulldown* p, int x, int y, int w, int h, bool isActive, Mo
         al_reset_clipping_rectangle();
         for (int i = 0; i < p->numElements; i++)
         {
-            al_draw_filled_rectangle(x,y2,x+w,y2+h,bgColor);
-            al_draw_rectangle(x,y2,x+w,y2+h,FRIENDLY,1);
+            DrawFilledRectangle(x,y2,x+w,y2+h,bgColor);
+            DrawRectangle(x,y2,x+w,y2+h,FRIENDLY,1);
             al_draw_text(ui.font,FRIENDLY,x+w/2,y2+h/2 - al_get_font_line_height(ui.font)/2.0,ALLEGRO_ALIGN_CENTRE,p->elements[i]);
             Rect r2 = (Rect){x,y2,w,h};
             if (PointInRect(mouseState->screenX,mouseState->screenY,r2))
             {
-                al_draw_rectangle(x+2,y2+2,x+w-2,y2+h-2,FRIENDLY,1);
+                DrawRectangle(x+2,y2+2,x+w-2,y2+h-2,FRIENDLY,1);
             }
             y2 += h;
 
@@ -2215,12 +2215,12 @@ void DrawPullDownMenu(Pulldown* p, int x, int y, int w, int h, bool isActive, Mo
     }
     if (!p->clicked)
     {
-        al_draw_filled_rectangle(x,y,x+w,y+h,bgColor);
-        al_draw_rectangle(x,y,x+w,y+h,FRIENDLY,1);
+        DrawFilledRectangle(x,y,x+w,y+h,bgColor);
+        DrawRectangle(x,y,x+w,y+h,FRIENDLY,1);
         al_draw_text(ui.font,FRIENDLY,x+w/2,y+h/2 - al_get_font_line_height(ui.font)/2.0,ALLEGRO_ALIGN_CENTRE,p->elements[p->selectedIndex]);
         if (PointInRect(mouseState->screenX,mouseState->screenY,r) && isActive)
         {
-            al_draw_rectangle(x+2,y+2,x+w-2,y+h-2,FRIENDLY,1);
+            DrawRectangle(x+2,y+2,x+w-2,y+h-2,FRIENDLY,1);
         }
 
     }
@@ -2229,11 +2229,11 @@ void DrawPullDownMenu(Pulldown* p, int x, int y, int w, int h, bool isActive, Mo
 void DrawScrollbar(Panel* p)
 {
     int w = SCROLLBARW;
-    al_draw_rectangle(p->x+p->w-w,p->y,p->x+p->w,p->x+p->w,FRIENDLY,1);
+    DrawRectangle(p->x+p->w-w,p->y,p->x+p->w,p->x+p->w,FRIENDLY,1);
 
 
     float yPos = p->y + p->scrollPercent * p->h;
-    al_draw_filled_rectangle(p->x+p->w-w, yPos, p->x+p->w, yPos+14, FRIENDLY);
+    DrawFilledRectangle(p->x+p->w-w, yPos, p->x+p->w, yPos+14, FRIENDLY);
 
 }
 void UpdateScrollbar(Panel* p, MouseState* mouseState,MouseState* mouseStateLastFrame)
@@ -3604,18 +3604,18 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
 
     if (b->clicked && isActive)
     {
-        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,foregroundColor);
-        al_draw_rectangle(x,y,x+u->w,y+u->h,bgColor,1);
+        DrawFilledRectangle(x,y,x+u->w,y+u->h,foregroundColor);
+        DrawRectangle(x,y,x+u->w,y+u->h,bgColor,1);
         al_draw_text(font,BG,textX,textY,align,b->description);
     }
     else 
     {
         if (b->drawLine)
         {
-            al_draw_filled_rectangle(x,y,x+u->w,y+u->h,bgColor);
+            DrawFilledRectangle(x,y,x+u->w,y+u->h,bgColor);
             if (isActive)
             {
-                al_draw_rectangle(x, y, x + button.w, y + button.h, foregroundColor,1);
+                DrawRectangle(x, y, x + button.w, y + button.h, foregroundColor,1);
             }
             else
             {
@@ -3626,7 +3626,7 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
     }
     if (PointInRect(mouseState.screenX,mouseState.screenY,button) && isActive && !b->clicked)
     {
-        al_draw_rectangle(x+2,y+2,x+u->w-2,y+u->h-2,foregroundColor,1);
+        DrawRectangle(x+2,y+2,x+u->w-2,y+u->h-2,foregroundColor,1);
     }
     if (b->spriteIndex)
     {
@@ -3664,16 +3664,16 @@ void DrawKeyInput(UIElement* u, int x, int y, MouseState mouseState, bool isActi
 
     if (k->clicked && isActive)
     {
-        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,FRIENDLY);
-        al_draw_rectangle(x,y,x+u->w,y+u->h,BG,1);
+        DrawFilledRectangle(x,y,x+u->w,y+u->h,FRIENDLY);
+        DrawRectangle(x,y,x+u->w,y+u->h,BG,1);
         al_draw_text(font,BG,x+u->w/2, y + u->h /2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,k->text);
      }
     else
     {
-        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,bgColor);
+        DrawFilledRectangle(x,y,x+u->w,y+u->h,bgColor);
         if (isActive)
         {
-            al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
+            DrawRectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
         }
         else
         {   
@@ -3684,7 +3684,7 @@ void DrawKeyInput(UIElement* u, int x, int y, MouseState mouseState, bool isActi
     }
     if (PointInRect(mouseState.screenX,mouseState.screenY,button) && isActive && !k->clicked)
     {
-        al_draw_rectangle(x+2,y+2,x+u->w-2,y+u->h-2,FRIENDLY,1);
+        DrawRectangle(x+2,y+2,x+u->w-2,y+u->h-2,FRIENDLY,1);
     }
 
 }
@@ -3702,16 +3702,16 @@ void DrawTextInput(UIElement* u, int x, int y, MouseState mouseState, bool isAct
 
     if (t->clicked && isActive)
     {
-        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,FRIENDLY);
-        al_draw_rectangle(x,y,x+u->w,y+u->h,BG,1);
+        DrawFilledRectangle(x,y,x+u->w,y+u->h,FRIENDLY);
+        DrawRectangle(x,y,x+u->w,y+u->h,BG,1);
         al_draw_text(font,BG,x+u->w/2, y + u->h /2 - al_get_font_ascent(font)/2.0,ALLEGRO_ALIGN_CENTRE,t->text);
      }
     else
     {
-        al_draw_filled_rectangle(x,y,x+u->w,y+u->h,bgColor);
+        DrawFilledRectangle(x,y,x+u->w,y+u->h,bgColor);
         if (isActive)
         {
-            al_draw_rectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
+            DrawRectangle(x,y,x+u->w,y+u->h,FRIENDLY,1);
         }
         else
         {   
@@ -3722,7 +3722,7 @@ void DrawTextInput(UIElement* u, int x, int y, MouseState mouseState, bool isAct
     }
     if (PointInRect(mouseState.screenX,mouseState.screenY,button) && isActive && !t->clicked)
     {
-        al_draw_rectangle(x+2,y+2,x+u->w-2,y+u->h-2,FRIENDLY,1);
+        DrawRectangle(x+2,y+2,x+u->w-2,y+u->h-2,FRIENDLY,1);
     }
 
 }
@@ -3856,7 +3856,7 @@ void DrawPanelTabs(Panel* p, MouseState* mouseState)
             int w; int h; 
             h = al_get_bitmap_height(sprites[b->spriteIndex].sprite);
             w = al_get_bitmap_width(sprites[b->spriteIndex].sprite);
-            al_draw_rectangle(x,y,x+w,y+h,FRIENDLY,1);
+            DrawRectangle(x,y,x+w,y+h,FRIENDLY,1);
             DrawButton(&tab->tabButton,x,y,*mouseState,true,BG,true,FRIENDLY,false);
             //DrawSprite(&sprites[b->spriteIndex],p->x,y,FRIENDLY,false);
             y += h;
@@ -3881,8 +3881,8 @@ void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent)
     al_set_clipping_rectangle(p->x-1,p->y-1,p->w+1,p->h*panelShownPercent+2);
     if (p->showBorder)
     {
-        al_draw_filled_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,BG);
-        al_draw_rectangle(p->x,p->y,p->x+p->w,p->y+p->h,FRIENDLY,1);
+        DrawFilledRectangle(p->x,p->y,p->x+p->w,p->y+p->h,BG);
+        DrawRectangle(p->x,p->y,p->x+p->w,p->y+p->h,FRIENDLY,1);
     }
 
 
@@ -3901,7 +3901,7 @@ void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent)
     {
         int x = p->x+p->padding;
         int y = p->y*25*i+p->padding;
-        al_draw_rectangle(x,y,x+25,y+25,FRIENDLY,1);
+        DrawRectangle(x,y,x+25,y+25,FRIENDLY,1);
     }
     for (int i = 0; i < p->numElements; i++)
     {
@@ -4119,7 +4119,7 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, ALLEGRO
     
     Rect r = (Rect){x,y,wTextbox+padding,t->h+padding};
     r.h = r.h > minH ? r.h : minH;
-    al_draw_filled_rectangle(r.x-padding,r.y-padding,x+r.w,y+r.h,BG);
+    DrawFilledRectangle(r.x-padding,r.y-padding,x+r.w,y+r.h,BG);
     
     r.x-=padding;
     r.y-=padding;
@@ -4129,8 +4129,8 @@ void DrawDescriptionBox(char* description, int padding, ALLEGRO_FONT* f, ALLEGRO
         DrawOutlinedRect_Dithered(r,color);
     else
     {
-       // al_draw_rectangle(r.x+1,r.y+1,r.w+padding,r.h+padding,color,1);
-        al_draw_rectangle(r.x+1,r.y,r.x+r.w+1,r.y+r.h,color,1);
+       // DrawRectangle(r.x+1,r.y+1,r.w+padding,r.h+padding,color,1);
+        DrawRectangle(r.x+1,r.y,r.x+r.w+1,r.y+r.h,color,1);
     
     }
     void* extra = malloc(sizeof(Text));
@@ -4250,7 +4250,7 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, floa
 {
     char* buffer = calloc(1,sizeof(char));
 
-    al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+    DrawFilledRectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
 
     al_draw_text(ui.font,FRIENDLY,20,18,0,gameStats.gameWon == true ? "Victory" : "Defeat");
     al_draw_line(20,30,56,30,FRIENDLY,1);

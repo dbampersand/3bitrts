@@ -868,7 +868,7 @@ void DrawTransition_Chains(float dt)
 {
 
     float h = (_SCREEN_SIZE+10) * (easeInOutBack(transitionTimer)) - 1;
-    al_draw_filled_rectangle(0,0,_SCREEN_SIZE,h,BG);
+    DrawFilledRectangle(0,0,_SCREEN_SIZE,h,BG);
 
     al_draw_line(0,h,_SCREEN_SIZE,h,FRIENDLY,1);
     
@@ -966,8 +966,8 @@ void DrawTransition_Stairs(float dt)
         float y = floor(((_SCREEN_SIZE/(double)numStairs)*(i+1)) * p);
         float y2 = floor(((_SCREEN_SIZE/(double)numStairs)*(numStairs-(i))) * p);
 
-        al_draw_filled_rectangle(x,0,x+widthSingle,y2,BG);
-        al_draw_filled_rectangle(x,_SCREEN_SIZE,x+widthSingle,_SCREEN_SIZE-y,FRIENDLY);
+        DrawFilledRectangle(x,0,x+widthSingle,y2,BG);
+        DrawFilledRectangle(x,_SCREEN_SIZE,x+widthSingle,_SCREEN_SIZE-y,FRIENDLY);
         
     }
 
@@ -1004,7 +1004,7 @@ void DrawTransition_Mountains(float dt)
 
 
         al_draw_filled_triangle(x1,y1,x2,y2,x3,y3,FRIENDLY);
-        al_draw_filled_rectangle(x1,y1,x3,_SCREEN_SIZE,FRIENDLY);
+        DrawFilledRectangle(x1,y1,x3,_SCREEN_SIZE,FRIENDLY);
 
     }
 }
@@ -1046,8 +1046,8 @@ void DrawTransition_Chevrons(float dt)
 void DrawTransition_Door(float dt)
 {
     float w = (_SCREEN_SIZE/2.0f) * (easeOutCubic(transitionTimer));
-    al_draw_filled_rectangle(0,0,w,_SCREEN_SIZE,BG);
-    al_draw_filled_rectangle(_SCREEN_SIZE,0,_SCREEN_SIZE-w,_SCREEN_SIZE,BG);
+    DrawFilledRectangle(0,0,w,_SCREEN_SIZE,BG);
+    DrawFilledRectangle(_SCREEN_SIZE,0,_SCREEN_SIZE-w,_SCREEN_SIZE,BG);
 
     float hingeX = w - _SCREEN_SIZE/2;
     float hingeY = 30;

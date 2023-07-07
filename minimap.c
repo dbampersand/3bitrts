@@ -23,9 +23,9 @@ void DrawMinimap(MouseState mouseState)
     float scale = w > h ? screenSize / (float)w :screenSize / (float)h; 
     float x = (_SCREEN_SIZE - (w*scale))/2;
     float y = (screenSize - (h*scale))/2;
-    al_draw_filled_rectangle(x,y,x+w*scale,y+h*scale,BG);
+    DrawFilledRectangle(x,y,x+w*scale,y+h*scale,BG);
     al_draw_tinted_scaled_bitmap(s->sprite,GROUND,0,0,w,h,x,y,w*scale,h*scale,0);
-    al_draw_rectangle(x,y,x+w*scale,y+h*scale,FRIENDLY,1);
+    DrawRectangle(x,y,x+w*scale,y+h*scale,FRIENDLY,1);
 
     for (int i = 0; i < numActiveObjects; i++)
     {
@@ -40,7 +40,7 @@ void DrawMinimap(MouseState mouseState)
 
         ALLEGRO_COLOR c = GetColor(COLOR_DEFAULT,GetPlayerOwnedBy(g));
         
-        al_draw_rectangle(gX,gY, gX+gW, gY+gH,c,1);
+        DrawRectangle(gX,gY, gX+gW, gY+gH,c,1);
     }
 
     float xScreen = players[0].cameraPos.x;
@@ -49,7 +49,7 @@ void DrawMinimap(MouseState mouseState)
     float pY = y + yScreen * scale;
 
 
-    al_draw_rectangle(pX,pY,pX+_SCREEN_SIZE*scale,pY+_SCREEN_SIZE*scale,FRIENDLY,1);
+    DrawRectangle(pX,pY,pX+_SCREEN_SIZE*scale,pY+_SCREEN_SIZE*scale,FRIENDLY,1);
 
     Rect r = (Rect){x,y,w,h};
     if (mouseState.mouse.buttons & 1)

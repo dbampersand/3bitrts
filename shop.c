@@ -446,8 +446,8 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
                 DrawOutlinedRect_Dithered(r,FRIENDLY);
             }
             else
-                al_draw_rectangle(r.x, r.y, r.x + r.w, r.y + r.h,FRIENDLY,1);
-                //al_draw_rectangle(x-1,y-1,x + 1 + slotX-x,y+25,FRIENDLY,1);
+                DrawRectangle(r.x, r.y, r.x + r.w, r.y + r.h,FRIENDLY,1);
+                //DrawRectangle(x-1,y-1,x + 1 + slotX-x,y+25,FRIENDLY,1);
             
             if (!(mouseState.mouse.buttons & 1) && PointInRect(mouseState.screenX,mouseState.screenY,r))
             {
@@ -478,7 +478,7 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
                 Rect r = (Rect){x-1,y-1,(x + (x-_SCREEN_SIZE)-5),_MAX(GetHeightSprite(ghost),GetHeight(g)+1)};
                 
                 if (players[0].gold >= g->ressurectionCost)
-                    al_draw_rectangle(r.x, r.y, r.x + r.w, r.y + r.h + 1, FRIENDLY,1);
+                    DrawRectangle(r.x, r.y, r.x + r.w, r.y + r.h + 1, FRIENDLY,1);
 
                 DrawSprite(&sprites[g->spriteIndex],x,y,0,0,0,FRIENDLY,true,false,false);
                 DrawSprite(ghost,x+GetWidthSprite(&sprites[g->spriteIndex])+10,y,0,0,0,FRIENDLY,false,false,false);
@@ -623,7 +623,7 @@ void DrawShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
     int shopkeeperOffsetX = 18;
     int shopkeeperOffsetY = 44;
 
-    al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+    DrawFilledRectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
 
     DrawSprite(&sprites[shop.spriteIndex_stall],startX,startY,0,0,0,FRIENDLY,false,false,false);
     DrawAnimation(shop.currAnimation,startX + shopkeeperOffsetX,startY + shopkeeperOffsetY,COLOR_FRIENDLY,false);

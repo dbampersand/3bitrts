@@ -12,6 +12,7 @@
 #include "encounter.h"
 #include "allegro5/allegro_primitives.h"
 #include "console.h"
+#include "video.h"
 
 Editor editor = {0};
 bool FileExists(char* path)
@@ -1811,7 +1812,7 @@ void DrawMapHandles(MouseState mouseState)
 
     Rect r = (Rect){-1 + edgeOffsetX,-1+edgeOffsetY,GetMapWidth()+2+edgeOffsetW, GetMapHeight()+2+edgeOffsetH};
     ToScreenSpace(&r.x,&r.y);
-    al_draw_rectangle(r.x,r.y,r.x+r.w,r.y+r.h,al_map_rgb(255,0,0),1);
+    DrawRectangle(r.x,r.y,r.x+r.w,r.y+r.h,al_map_rgb(255,0,0),1);
 
 }
 EDITOR_HANDLE CheckMapHandleClicked(MouseState mouse)

@@ -83,7 +83,7 @@ void DisplayCollision()
                 if (currMap->collision[idx] == COLLISION_WORLD_AND_OBJECT)
                     c = al_map_rgba(0,255,0,128);
 
-                al_draw_filled_rectangle(ToScreenSpace_X(x),ToScreenSpace_Y(y),ToScreenSpace_X(x+_GRAIN),ToScreenSpace_Y(y+_GRAIN),c);
+                DrawFilledRectangle(ToScreenSpace_X(x),ToScreenSpace_Y(y),ToScreenSpace_X(x+_GRAIN),ToScreenSpace_Y(y+_GRAIN),c);
                 
             }
         }

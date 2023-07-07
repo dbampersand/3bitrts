@@ -856,7 +856,7 @@ static void* VoxelRenderLines(ALLEGRO_THREAD *thr, void* v)
 
 
             _T_PIXELS[x][y] = c;
-            //al_draw_filled_rectangle(x,y,x+PIXEL_SIZE,y+PIXEL_SIZE,c);
+            //DrawFilledRectangle(x,y,x+PIXEL_SIZE,y+PIXEL_SIZE,c);
 
         }
     }
@@ -936,7 +936,7 @@ void VoxelRender()
             if (v.c == 0)   
                 c = BG;
 
-            al_draw_filled_rectangle(x,y,x+PIXEL_SIZE,y+PIXEL_SIZE,c);
+            DrawFilledRectangle(x,y,x+PIXEL_SIZE,y+PIXEL_SIZE,c);
 
             //al_draw_pixel(0,0,al_map_rgb(rand()%255,rand()%255,rand()%255));
         }

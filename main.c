@@ -369,7 +369,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                     if (GetPlayerOwnedBy(g) == 0)
                         DrawRoundedRect(selectRect, c,false);
                     else
-                        al_draw_rectangle((int)selectRect.x,(int)selectRect.y,(int)(selectRect.x + selectRect.w), (int)(selectRect.y + selectRect.h),c,1);
+                        DrawRectangle((int)selectRect.x,(int)selectRect.y,(int)(selectRect.x + selectRect.w), (int)(selectRect.y + selectRect.h),c,1);
                 }
 
             }
@@ -395,7 +395,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     if (gameState == GAMESTATE_MAIN_MENU)
     {
-        al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+        DrawFilledRectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
 
         if (ui.currentPanel != &ui.mainMenuPanel)
         {
@@ -507,7 +507,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                 DrawUIHighlight(&ui.nextLevelButton,ToWorldSpace_X(ui.nextLevelButton.x),ToWorldSpace_Y(ui.nextLevelButton.y));
             }
 
-            Rect r = (Rect){ui.nextLevelButton.x+1,ui.nextLevelButton.y+2,ui.nextLevelButton.w-3,ui.nextLevelButton.h-3};
+            Rect r = (Rect){ui.nextLevelButton.x+1,ui.nextLevelButton.y+2,ui.nextLevelButton.w-3,ui.nextLevelButton.h-4};
             #ifdef  __APPLE__
                 //r.y += 1;
             #endif
@@ -524,7 +524,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                 nrmPercentComplete = 0;
             
                 
-            al_draw_filled_rectangle(r.x,ceil(r.y),r.x + (r.w * nrmPercentComplete),(int)ceil(r.y+r.h),FRIENDLY);
+            DrawFilledRectangle(r.x,floor(r.y),r.x + (r.w * nrmPercentComplete),(int)ceil(r.y+r.h),FRIENDLY);
             
             DrawUIElement(&ui.nextLevelButton,ui.nextLevelButton.x,ui.nextLevelButton.y,mouseState,ui.nextLevelButton.bgColor,COLOR_FRIENDLY,false);
 
@@ -573,7 +573,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
     if (gameState == GAMESTATE_CHOOSING_ENCOUNTER)
     {
-        al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+        DrawFilledRectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
 
         DrawAllLevelSelects(mouseState,mouseStateLastFrame, keyState, keyStateLastFrame);
         encounterMoveTimer += dt;
@@ -650,9 +650,12 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     if (KeyDown(keyState,ALLEGRO_KEY_F7))
     {
         //AddGold(1000);
+        AddCompletionPercent(-100);
     }
     if (KeyDown(keyState,ALLEGRO_KEY_F8))
     {
+        AddCompletionPercent(100);
+
         //AddCompletionPercent(100);
     }
     #ifdef DEBUG
@@ -670,7 +673,7 @@ int SortPointers(const void* a, const void* b)
 
 void DrawMainMenu()
 {
-    al_draw_filled_rectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
+    DrawFilledRectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);
 }
 int main(int argc, char* args[])
 {

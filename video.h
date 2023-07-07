@@ -153,3 +153,5 @@ float GetScreenshake();
 void UpdateScreenshake(float dt);
 void DrawFilledRectWorld(Rect r, ALLEGRO_COLOR col);
 void SetDisplayWindowed(int windowMode);
+void DrawRectangle(float x, float y, float x2, float y2,ALLEGRO_COLOR color, float thickness);
+void DrawFilledRectangle(float x, float y, float x2, float y2,ALLEGRO_COLOR color);

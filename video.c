@@ -237,6 +237,15 @@ void InitVideo()
 
 
 }
+void DrawRectangle(float x, float y, float x2, float y2,ALLEGRO_COLOR color, float thickness)
+{
+    al_draw_rectangle(floor(x),floor(y),ceil(x2),ceil(y2),color,thickness);
+}
+void DrawFilledRectangle(float x, float y, float x2, float y2,ALLEGRO_COLOR color)
+{
+    al_draw_filled_rectangle(floor(x),floor(y),ceil(x2),ceil(y2),color);
+}
+
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)
 {
     int x = (r.x); 
@@ -247,14 +256,14 @@ void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)
     //so here's a TODO: fix this... eventually
     #ifdef __APPLE__
         y2--; // ?
-        al_draw_rectangle(x,y,x2,y2,color,0);
+        DrawRectangle(x,y,x2,y2,color,0);
         if (filled)
-            al_draw_filled_rectangle(x,y,x2,y2,color);
+            DrawFilledRectangle(x,y,x2,y2,color);
 
         return;
     #endif
     if (filled)
-        al_draw_filled_rectangle(x+1,y+1,x2-1,y2-1,color);
+        DrawFilledRectangle(x+1,y+1,x2-1,y2-1,color);
     //horizontals
     al_draw_line(x, y, x2-1, y, color,1);
     al_draw_line(x, y2, x2-1, y2, color,1);
@@ -298,7 +307,8 @@ void DrawFilledRect_Dithered(Rect r, ALLEGRO_COLOR color)
 void DrawOutlinedRect_Dithered(Rect r, ALLEGRO_COLOR color)
 {
     
-    r.x--;
+    r.x = floor(r.x-1);
+    r.y = floor(r.y-1);
 
     if (r.y < 0)
     {
@@ -316,17 +326,17 @@ void DrawOutlinedRect_Dithered(Rect r, ALLEGRO_COLOR color)
 
 
     al_lock_bitmap_region(al_get_target_bitmap(),r.x,r.y,r.w+1,r.h+1,ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
-    r.x = (int)r.x;
+    /*r.x = (int)r.x;
     r.y = (int)r.y;    
     r.w = (int)r.w;    
     r.h = (int)r.h;    
-
+    */
 
     //if ((int)r.x % 2 == 0)
       //  r.x--;
        
 
-    for (int y = r.y; y < r.y+r.h; y++)
+    for (int y = floor(r.y); y < ceil(r.y+r.h); y++)
     {
         if (y%2==0)
         {
@@ -335,7 +345,7 @@ void DrawOutlinedRect_Dithered(Rect r, ALLEGRO_COLOR color)
         }
 
     }
-    for (int x = r.x; x < r.x+r.w; x++)
+    for (int x = floor(r.x); x < ceil(r.x+r.w); x++)
     {
         if (x%2==1)
         {
@@ -958,5 +968,5 @@ float GetScreenshake()
 void DrawFilledRectWorld(Rect r, ALLEGRO_COLOR col)
 {
     ToScreenSpace(&r.x,&r.y);
-    al_draw_filled_rectangle(r.x,r.y,r.x+r.w,r.y+r.h,col);
+    DrawFilledRectangle(r.x,r.y,r.x+r.w,r.y+r.h,col);
 }
