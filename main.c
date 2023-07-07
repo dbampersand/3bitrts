@@ -507,7 +507,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
                 DrawUIHighlight(&ui.nextLevelButton,ToWorldSpace_X(ui.nextLevelButton.x),ToWorldSpace_Y(ui.nextLevelButton.y));
             }
 
-            Rect r = (Rect){ui.nextLevelButton.x+1,ui.nextLevelButton.y+2,ui.nextLevelButton.w-3,ui.nextLevelButton.h-4};
+            Rect r = (Rect){ui.nextLevelButton.x+1,ui.nextLevelButton.y+1,ui.nextLevelButton.w-3,ui.nextLevelButton.h-3};
             #ifdef  __APPLE__
                 //r.y += 1;
             #endif

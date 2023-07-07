@@ -351,6 +351,7 @@ void DrawOutlinedRect_Dithered(Rect r, ALLEGRO_COLOR color)
         {
             al_put_pixel(x,r.y,color);
             al_put_pixel(x,r.y+r.h,color);
+
         }
 
     }
