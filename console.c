@@ -119,7 +119,7 @@ void DrawConsole(MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGR
         if (KeyPressedThisFrame(ALLEGRO_KEY_DOWN,keyState,keyStateLastFrame))
             console.scroll -= 10;
 
-        console.scroll += mouseState->mouse.w * CONSOLE_SCROLL_SENSITIVITY;
+        console.scroll += mouseState->mouse.z * CONSOLE_SCROLL_SENSITIVITY;
         console.scroll = clamp(console.scroll,0,CONSOLE_MAX_SCROLL);
 
 

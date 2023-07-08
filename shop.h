@@ -57,6 +57,9 @@ typedef struct Shop
 
     Item* removeClickedItem;
 
+    float scrollBarPos;
+    bool scrollbarClicked;
+
 } Shop;
 
 
