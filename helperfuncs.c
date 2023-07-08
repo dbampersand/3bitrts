@@ -138,9 +138,12 @@ MouseState GetMouseClamped()
     
 }
 
-char* readFile(const char* filename) {
+char* readFile(const char* filename, size_t* fileSize) {
     ALLEGRO_FILE* rw = al_fopen(filename, "rb");
     if (rw == NULL) return NULL;
+
+    if (fileSize)
+        *fileSize = al_fsize(rw);
 
     int64_t res_size = al_fsize(rw);
     char* res = (char*)malloc(res_size + 1);

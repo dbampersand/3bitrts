@@ -266,7 +266,7 @@ void LoadAbility(const char* path, lua_State* l, Ability* a)
     if (!a->luabuffer.buffer)
     {
         memset(a,0,sizeof(Ability));
-        char* file = readFile(path);
+        char* file = readFile(path, NULL);
         if (!file)
         {
             ConsolePrintf("Ability: could not load path: %s\n",path ? path : "null");

@@ -261,7 +261,7 @@ void loadLuaGameMap(lua_State* l, const char* filename, Map* m)
 {
     char* cpy = calloc(strlen(filename)+1,sizeof(char));
     strcpy(cpy,filename);
-    m->lua_buffer.buffer = readFile(filename);
+    m->lua_buffer.buffer = readFile(filename, NULL);
     
 
 

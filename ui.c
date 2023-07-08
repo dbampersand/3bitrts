@@ -30,6 +30,8 @@
 #include "particle.h"
 #include "easings.h"
 #include "shop.h"
+#include "gamesave.h"
+#include "editor.h"
 
 Widget* Widgets_States[NUMGAMESTATES] = {0};
 int numSprites_States[NUMGAMESTATES] = {0};
@@ -821,6 +823,18 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mou
     UpdateUI(keyState,mouseState,keyStateLastFrame,mouseStateLastFrame,dt);
     if (ui.currentPanel == &ui.mainMenuPanel)
     {
+        if (!FileExists("continue.sav"))
+        {
+            UIElement* u = GetUIElement(&ui.mainMenuPanel,"Continue");
+            u->enabled = false;
+            u->ignoreDraw = true;
+        }
+        else
+        {
+            UIElement* u = GetUIElement(&ui.mainMenuPanel,"Continue");
+            u->enabled = true;
+            u->ignoreDraw = false;
+        }   
         bool buttonIsMousedOver = 
             //ButtonIsMousedOver(GetUIElement(&ui.mainMenuPanel,"Load Replay"))
             //||
@@ -832,20 +846,22 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mou
             ||
             ButtonIsMousedOver(GetUIElement(&ui.mainMenuPanel,"Exit"));
 
+        bool continueHeld = ButtonIsHeld(GetUIElement(&ui.mainMenuPanel,"Continue"));
         bool returnHeld = ButtonIsHeld(GetUIElement(&ui.mainMenuPanel,"Return"));
         bool tutorialHeld = ButtonIsHeld(GetUIElement(&ui.mainMenuPanel,"Tutorial"));
         bool optionsHeld = ButtonIsHeld(GetUIElement(&ui.mainMenuPanel,"Options"));
         bool exitHeld = ButtonIsHeld(GetUIElement(&ui.mainMenuPanel,"Exit"));
 
+        bool continueClicked = GetButton(&ui.mainMenuPanel,"Continue");
         bool returnClicked = GetButton(&ui.mainMenuPanel,"Return");
         bool tutorialClicked = GetButton(&ui.mainMenuPanel,"Tutorial");
         bool optionsClicked = GetButton(&ui.mainMenuPanel,"Options");
         bool exitClicked = GetButton(&ui.mainMenuPanel,"Exit");
 
         bool buttonIsHeld = 
-            returnHeld || tutorialHeld || optionsHeld || exitHeld;
+            returnHeld || tutorialHeld || optionsHeld || exitHeld | continueHeld;
         bool buttonIsClicked = 
-            returnClicked || tutorialClicked || optionsClicked || exitClicked;
+            returnClicked || tutorialClicked || optionsClicked || exitClicked | continueClicked;
 
             
         if (buttonIsHeld || buttonIsClicked || GameStateIsTransition(&gameState))
@@ -865,6 +881,13 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mou
             ChangeUIPanel(&ui.loadReplayPanel);       
             ClearPanelElements(&ui.loadReplayPanel);
             GenerateFileListButtons("replays/",&ui.loadReplayPanel);
+        }
+        if (continueClicked)
+        {
+            bool err = false;
+            LoadGameSave("continue.sav", &err);
+            if (!err)
+                RunGameSave(continuePoint);
         }
         if (returnClicked)
         {
@@ -892,10 +915,23 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mou
     }
     if (ui.currentPanel == &ui.pauseMenuPanel)
     {
+
         if (GetButton(&ui.pauseMenuPanel,"Return"))
         {
             ChangeUIPanel(NULL);
         }
+        if (GetButton(&ui.pauseMenuPanel,"Retry"))
+        {
+            float timeBefore = gameStats.timeTaken;
+            bool err = false;
+            LoadGameSave("continue.sav", &err);
+            if (continuePoint)
+                continuePoint->time = gameStats.timeTaken;
+            if (!err)
+                RunGameSave(continuePoint);
+
+        }
+
         if (GetButton(&ui.pauseMenuPanel,"Options"))
         {
             ChangeUIPanel(&ui.videoOptionsPanel);
@@ -2452,6 +2488,7 @@ void InitMainMenuPanel()
     int y = 0;
     int yMove = 16 + padding;
     ui.mainMenuPanel = CreatePanel(29,70,160,144,15,false);
+    AddButton(&ui.mainMenuPanel,"Continue","Continue",0,(y+=yMove),96,16,false);
     AddButton(&ui.mainMenuPanel,"Return","Start Game",0,(y+=yMove),96,16,false);
     AddButton(&ui.mainMenuPanel,"Tutorial","Tutorial",0,(y+=yMove),96,16,false);
     #ifdef _REPLAY
@@ -2464,10 +2501,14 @@ void InitMainMenuPanel()
 void InitPausePanel()
 {
     ui.pauseMenuPanel = CreatePanel(48,48,160,114,15,true);
-    AddButton(&ui.pauseMenuPanel,"Return","Return",33,17,96,16,true);
-    AddButton(&ui.pauseMenuPanel,"Options","Options",33,49,96,16,true);
-    AddButton(&ui.pauseMenuPanel,"Exit","Exit Game",33,81,96,16,true);
-}
+    int move = 32;
+    int yMove = -move/2;
+    AddButton(&ui.pauseMenuPanel,"Return","Return",33,yMove+=move,96,16,true);
+    AddButton(&ui.pauseMenuPanel,"Retry","Retry",33,yMove+=move,96,16,true);
+    AddButton(&ui.pauseMenuPanel,"Options","Options",33,yMove+=move,96,16,true);
+    AddButton(&ui.pauseMenuPanel,"Exit","Exit Game",33,yMove+=move,96,16,true);
+    ui.pauseMenuPanel.h = yMove+move/2.0f+16;
+}   
 void WindowTypeCallback(Pulldown* pulldown, int selectedIndex)
 {
     if (selectedIndex == 0)
@@ -3730,6 +3771,8 @@ void DrawTextInput(UIElement* u, int x, int y, MouseState mouseState, bool isAct
 }
 void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, Color bgColor, Color foregroundColor, bool fromPanel)
 {
+    if (u->ignoreDraw)
+        return;
     ALLEGRO_COLOR col = GetColor(bgColor,0);
     ALLEGRO_COLOR colForeground = GetColor(foregroundColor,0);
     if (u->isHighlighted)
@@ -4387,7 +4430,7 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, floa
             //players[0].bankedGold += players[0].gold;
         }
 
-        SetGameStateToChoosingEncounter();
+        SetGameStateToInMenu();
         //transitioningTo = GAMESTATE_CHOOSING_ENCOUNTER;
         RemoveReplay(&replay);
         if (players[0].gold >= 0)

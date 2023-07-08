@@ -1,6 +1,6 @@
 #pragma once
 #include <stdint.h>
-
+#include <stdbool.h>    
 typedef struct GameObject GameObject;
 
 typedef struct GameSave
@@ -19,6 +19,6 @@ GameSave* continuePoint;
 
 GameSave SaveGameState(char* mapPath, char* encounterPath, float gold, float time, int numObjectsToSave, GameObject** objects);
 void GameSaveToDisk(char* path, GameSave* s);
-GameSave LoadGameSave(char* path);
+GameSave LoadGameSave(char* path, bool* error);
 void DestroyGameSave(GameSave* ga);
 void RunGameSave(GameSave* s);

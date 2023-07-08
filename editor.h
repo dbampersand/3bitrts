@@ -123,3 +123,4 @@ char* GetPositionOfArgument(char* str, char* functionToFind, int argumentToGet);
 EditorLine* AddEditorLine(EditorLine** lines, int* numLines, char* str, bool end);
 void SpawnPointRectIsMoved(MouseState mouseState, MouseState mouseStateLastFrame);
 void UpdateSpawnPointStr();
+bool FileExists(char* path);

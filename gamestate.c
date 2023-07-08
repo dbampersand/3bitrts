@@ -12,8 +12,8 @@
 #include "helperfuncs.h"
 #include "math.h"
 #include "ui.h"
-#include "loadscreen.h"
-#include "attack.h"
+    #include "loadscreen.h"
+    #include "attack.h"
 #include "replay.h"
 #include "shop.h"
 #include "console.h"
@@ -458,6 +458,11 @@ void FinishTransition()
                 }
             }
         }
+        int xPos = currMap->spawnPoint.x + (continuePoint->numObjects*16)/2;
+        int yPos = currMap->spawnPoint.y;
+
+        FocusCameraOnPos(xPos,yPos);
+
         //SpawnAllFriendlies();
         DestroyGameSave(continuePoint);
     }
@@ -803,6 +808,11 @@ void WinGame()
 
     lua_rawgeti(luaState,LUA_REGISTRYINDEX,currEncounterRunning->luafunc_win);
     lua_pcall(luaState,0,0,0);
+
+    if (FileExists("continue.sav"))
+    {
+        al_remove_filename("continue.sav");    
+    }
 }
 void LoseGame()
 {

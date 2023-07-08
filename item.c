@@ -203,7 +203,7 @@ Item* LoadItem(const char* path, lua_State* l)
 
     currItemRunning = i;
     
-    i->luaBuffer.buffer = readFile(path);
+    i->luaBuffer.buffer = readFile(path, NULL);
 
     char* cpy;
     cpy = calloc(strlen(path)+1,sizeof(char));

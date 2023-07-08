@@ -564,7 +564,7 @@ void LoadLuaFile(const char* filename, GameObject* g)
     
     if (!g->lua_buffer.buffer)
     {
-        g->lua_buffer.buffer = readFile(filename);
+        g->lua_buffer.buffer = readFile(filename,NULL);
      }
 }
 int L_SetObjectCompletionPercent(lua_State* l)

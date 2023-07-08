@@ -636,8 +636,10 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         DisplayCollision();
     if (KeyDown(keyState,ALLEGRO_KEY_O) && !KeyDown(keyStateLastFrame,ALLEGRO_KEY_O) && !console.active)
     {
-        LoadGameSave("continue.sav");
-        RunGameSave(continuePoint);
+        //bool err = false;
+        //LoadGameSave("continue.sav", &err);
+        //if (!err)
+        //    RunGameSave(continuePoint);
     }
     //GameObjDebugDraw();
     if (KeyDown(keyState,ALLEGRO_KEY_V))
@@ -648,11 +650,11 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     if (KeyDown(keyState,ALLEGRO_KEY_F7))
     {
         //AddGold(1000);
-        AddCompletionPercent(-100);
+        //AddCompletionPercent(-100);
     }
     if (KeyDown(keyState,ALLEGRO_KEY_F8))
     {
-        AddCompletionPercent(100);
+        //AddCompletionPercent(100);
 
         //AddCompletionPercent(100);
     }

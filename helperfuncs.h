@@ -26,7 +26,7 @@ bool IsNear(float f, float f2, float epsilon);
 int GetIndex(int h, int x, int y);
 Point IndexToPoint(int h, int index);
 MouseState GetMouseClamped();
-char* readFile(const char* filename);
+char* readFile(const char* filename,size_t* fileSize);
 bool MoveTo(float* x, float* y, float toX, float toY, float speed, float delta);
 void MoveAngle(float* x, float* y, float dx, float dy, float speed, float delta);   
 bool CircleInRect(float cx, float cy, float rad, Rect r);

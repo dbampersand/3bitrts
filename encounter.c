@@ -91,7 +91,7 @@ void LoadEncounter(char* dirPath, lua_State* l)
                         char* concatted = calloc(strlen(dirPath)+strlen(dir->d_name)+1,sizeof(char)); 
                         strcpy(concatted,dirPath);
                         strcat(concatted,dir->d_name);
-                        e->lua_buffer.buffer = readFile(concatted);
+                        e->lua_buffer.buffer = readFile(concatted, NULL);
                         free(concatted);
                     }
 

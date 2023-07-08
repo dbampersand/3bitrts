@@ -6,13 +6,14 @@
 #include "helperfuncs.h"
 #include "encounter.h"
 #include "map.h"
+#include "editor.h"
 GameSave SaveGameState(char* mapPath, char* encounterPath, float gold, float time, int numObjectsToSave, GameObject** objects)
 {
     GameSave g = {0};
 
     if (!mapPath || !encounterPath)
         return g;
-        
+
     g.mapPath = calloc(strlen(mapPath)+1,sizeof(char));
     g.encounterPath = calloc(strlen(encounterPath)+1,sizeof(char));
 
@@ -139,90 +140,207 @@ void RunGameSave(GameSave* s)
     continuePoint = s;
     SetGameStateToContinueSave();
 }
-
-GameSave LoadGameSave(char* path)
+bool CheckGameSaveHeader(char* path)
 {
+    size_t fileSize;
+    char* buff = readFile(path, &fileSize);
+    if (!buff)
+        return false;
+    char* position = buff;
+    int32_t numCharsHeader = 0;
+    //header
+    memcpy(&numCharsHeader,position,sizeof(int32_t));
+    char* header = calloc(numCharsHeader+1,sizeof(char));
+    position += sizeof(int32_t);
+    if (strlen(position) < numCharsHeader)
+        return false;
+    memcpy(header,position,numCharsHeader*sizeof(char));
+    bool ret =  (strcmp(header,GAME_VERSION) == 0);
+    free(buff);
+    free(header);
+    return ret;
+
+}   
+bool HasEnoughBytes(char* buffer, char* position, size_t numBytes, size_t requiredBytes)
+{
+    size_t pos = position - buffer;
+    int v = (numBytes - pos) - requiredBytes;
+    return (v >= 0);
+}
+bool GetAndAdvancePosition(void* into, char** position,char* buffer, size_t bufferSize, size_t size)
+{
+    if (!HasEnoughBytes(buffer,*position, bufferSize,size))
+        return false;
+    memcpy(into,*position, size);
+    *position += size;
+    return true;
+}
+void DestroyGameSave_Obj(GameObject* g)
+{
+    if (g)
+    {
+        if (g->path)
+        {
+            free(g->path);
+        }
+        for (int i = 0; i < INVENTORY_SLOTS; i++)
+        {
+            if (g->inventory[i].path)
+                free(g->inventory[i].path);
+        }
+    }
+}
+GameSave LoadGameSave(char* path, bool* error)
+{
+    *error = false;
+    char* buffer; 
+
+    char* header = NULL;
+    char* mapPath = NULL;
+    char* encounterPath = NULL;
+    GameObject* objs = NULL;
+    int32_t numObjs = 0;
+    if (!CheckGameSaveHeader(path))
+    {
+        GameSaveError:
+        if (header)
+            free(header);
+        if (mapPath)
+            free(mapPath);
+        if (encounterPath)
+            free(encounterPath);
+        if (objs)
+        {
+            for (int i = 0; i < numObjs; i++)
+            {
+                DestroyGameSave_Obj(&objs[i]);
+            }
+            free(objs);
+        }
+            if (error)
+                *error = true;
+            return (GameSave){0}; 
+    }
+
     //ALLEGRO_FILE* file = al_fopen(path,"rb");
-    char* buff = readFile(path);
+    size_t fileSize;
+    char* buff = readFile(path, &fileSize);
     GameSave g = (GameSave){0};
     if (buff)
     {
         char* position = buff;
         int32_t numCharsHeader = 0;
         //header
-        memcpy(&numCharsHeader,position,sizeof(int32_t));
-        char* header = calloc(numCharsHeader+1,sizeof(char));
-        position += sizeof(int32_t);
-        memcpy(header,position,numCharsHeader*sizeof(char));
-
-        position += numCharsHeader * sizeof(char);
-
-        if (strcmp(header,GAME_VERSION) != 0)
-        {
-            free(buff);
-            ConsolePrintf("LoadGameSave: wrong version. Could not load");
-            return (GameSave){0};
+        //memcpy(&numCharsHeader,position,sizeof(int32_t));
+       // position += sizeof(int32_t);
+        if (!GetAndAdvancePosition(&numCharsHeader,&position,buff,fileSize,sizeof(int32_t)))
+            goto GameSaveError;
+        header = calloc(numCharsHeader+1,sizeof(char));
+        if (!GetAndAdvancePosition(header,&position,buff,fileSize,sizeof(char)*numCharsHeader))
+        {   
+            goto GameSaveError;
         }
+        free(header);
+        header = NULL;
         //map path
         int32_t numCharsMapPath = 0;
-        memcpy(&numCharsMapPath,position,sizeof(int32_t));
-        position += sizeof(numCharsMapPath);
-        char* mapPath = calloc(numCharsMapPath+1,sizeof(char));
-        memcpy(mapPath,position,sizeof(char)*numCharsMapPath);
-        position += sizeof(char) * numCharsMapPath;
+        if (!GetAndAdvancePosition(&numCharsMapPath,&position,buff,fileSize,sizeof(int32_t)))
+        {
+            goto GameSaveError;
+        }
+        mapPath = calloc(numCharsMapPath+1,sizeof(char));
+        if (!GetAndAdvancePosition(mapPath,&position,buff,fileSize,sizeof(char)*numCharsMapPath))
+        {
+            goto GameSaveError;
+        }
 
         //encounter path
         int32_t numCharsEncounterPath = 0;
-        memcpy(&numCharsEncounterPath,position,sizeof(int32_t));
-        position += sizeof(numCharsEncounterPath);
-        char* encounterPath = calloc(numCharsEncounterPath+1,sizeof(char));
-        memcpy(encounterPath,position,sizeof(char)*numCharsEncounterPath);
-        position += sizeof(char) * numCharsEncounterPath;
+        if (!GetAndAdvancePosition(&numCharsEncounterPath,&position,buff,fileSize,sizeof(int32_t)))
+        {
+            goto GameSaveError;
+        }
+        encounterPath = calloc(numCharsEncounterPath+1,sizeof(char));
+        if (!GetAndAdvancePosition(encounterPath,&position,buff,fileSize,sizeof(char) * numCharsEncounterPath))
+        {
+            goto GameSaveError;
+        }
 
         float gold = 0;
-        memcpy(&gold,position,sizeof(gold));
-        position += sizeof(gold);
+        if (!GetAndAdvancePosition(&gold,&position,buff,fileSize,sizeof(float)))
+        {
+            goto GameSaveError;
+        }   
 
         float time = 0;
-        memcpy(&time,position,sizeof(time));
-        position += sizeof(time);
-        
-        int32_t numObjs = 0;
-        memcpy(&numObjs,position,sizeof(numObjs));
-        position += sizeof(numObjs);
+        if (!GetAndAdvancePosition(&time,&position,buff,fileSize,sizeof(float)))
+        {
+            goto GameSaveError;
+        }
 
-        GameObject* objs = calloc(numObjs,sizeof(GameObject));
+        numObjs = 0;
+        if (!GetAndAdvancePosition(&numObjs,&position,buff,fileSize,sizeof(float)))
+        {
+            goto GameSaveError;
+        }
+
+        objs = calloc(numObjs,sizeof(GameObject));
         for (int i = 0; i < numObjs; i++)
         {
             int32_t pathNumChars = 0;
-            memcpy(&pathNumChars,position,sizeof(int32_t));
-            position += sizeof(pathNumChars);
+            if (!GetAndAdvancePosition(&pathNumChars,&position,buff,fileSize,sizeof(int32_t)))
+            {
+                goto GameSaveError;
+
+            }
 
             objs[i].path = calloc(pathNumChars+1,sizeof(char));
-            memcpy(objs[i].path,position,pathNumChars*sizeof(char));
-            position += pathNumChars * sizeof(char);
+            if (!GetAndAdvancePosition(objs[i].path,&position,buff,fileSize,sizeof(char) * pathNumChars))
+            {
+                goto GameSaveError;
+            }
+            if (!FileExists(objs[i].path))
+                goto GameSaveError;
 
-            memcpy(&objs[i].health,position,sizeof(float));
-            position += sizeof(float);
-            memcpy(&objs[i].mana,position,sizeof(float));
-            position += sizeof(float);
-            memcpy(&objs[i].position.worldX,position,sizeof(float));
-            position += sizeof(float);
-            memcpy(&objs[i].position.worldY,position,sizeof(float));
-            position += sizeof(float);  
+            if (!GetAndAdvancePosition(&objs[i].health,&position,buff,fileSize,sizeof(float)))
+            {
+                goto GameSaveError;
+            }
+            if (!GetAndAdvancePosition(&objs[i].mana,&position,buff,fileSize,sizeof(float)))
+            {
+                goto GameSaveError;
+            }
+            if (!GetAndAdvancePosition(&objs[i].position.worldX,&position,buff,fileSize,sizeof(float)))
+            {
+                goto GameSaveError;
+            }
+            if (!GetAndAdvancePosition(&objs[i].position.worldY,&position,buff,fileSize,sizeof(float)))
+            {
+                goto GameSaveError;
+            }
 
             for (int j = 0; j < INVENTORY_SLOTS; j++)
             {
                 int32_t inventoryPathNumChars = 0;
-                memcpy(&inventoryPathNumChars,position,sizeof(int32_t));
-                position += sizeof(inventoryPathNumChars);
+                
+                if (!GetAndAdvancePosition(&inventoryPathNumChars,&position,buff,fileSize,sizeof(int32_t)))
+                {
+                    goto GameSaveError;
+                }
+
 
                 if (inventoryPathNumChars > 0)
                 {
                     objs[i].inventory[j].path = calloc(inventoryPathNumChars+1,sizeof(char));
-                    memcpy(objs[i].inventory[j].path,position,sizeof(char) *inventoryPathNumChars);
-                    position += sizeof(char) *inventoryPathNumChars;
+                    if (!GetAndAdvancePosition(objs[i].inventory[j].path,&position,buff,fileSize,sizeof(char) * inventoryPathNumChars))
+                    {
+                        goto GameSaveError;
+                    }
+                    if (!FileExists(objs[i].inventory[j].path))
+                        goto GameSaveError;
+
                 }
+
             }
         }
         g.mapPath = mapPath;

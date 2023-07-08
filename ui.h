@@ -149,6 +149,7 @@ typedef struct UIElement
 
     bool isHighlighted;
     ALLEGRO_FONT** font;
+    bool ignoreDraw;
 
 } UIElement;
 
