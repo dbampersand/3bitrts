@@ -3,6 +3,7 @@ replays/*
 *.dSYM
 *.vscode
 .vscode/*
+*.sav
 *.json
 *.gcda
 *.gcno

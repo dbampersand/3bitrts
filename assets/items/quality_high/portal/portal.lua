@@ -38,10 +38,12 @@ end
 
 function ondamaged(item,sourceObj,damagedObj,value)
 end
-function onmapchange(obj)
+function onmapchange(obj, item)
     if (hasMadeUnit == false) then
         local summoned = RandRangeI (1,#summonable)
         local summ = CreateObject(summonable[summoned],GetX(GetObjRef()),GetY(GetObjRef()),TYPE_FRIENDLY,1);
         hasMadeUnit = true
+        SetObjSummoned(summ,false)
+        RemoveItem(obj,item)
     end
 end

@@ -1022,6 +1022,10 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
 {
     if (!prefab)
         return NULL;
+    if (!prefab->isPrefab && prefab->path)
+    {
+        prefab = LoadPrefab(prefab->path);
+    }
     GameObject* before = currGameObjRunning;
     GameObject* found = NULL;
 
@@ -1039,13 +1043,12 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
     *found = *prefab;
     currGameObjRunning = found;
 
+
     
-
-
-
-
     // memset(found->abilities,0,sizeof(Ability)*4);
     memset(currGameObjRunning, 0, sizeof(GameObject));
+
+    currGameObjRunning->isPrefab = false;
 
     currGameObjRunning->position.worldX = x;
     currGameObjRunning->position.worldY = y;
@@ -1641,13 +1644,14 @@ GameObject* GetPrefabFromHashtable(HashTable* ht, const char* path)
 }
 GameObject* LoadPrefab(const char* path)
 {
-    _LOADING_PREFAB = true;
     GameObject* pref = GetPrefabFromHashtable(&prefabsIndicesHashTable,path);
     if (pref)
     {
         return pref;
     }
+    _LOADING_PREFAB = true;
     GameObject* g = calloc(1, sizeof(GameObject));
+    g->isPrefab = true;
 
     if (!loadLuaGameObj(luaState, path, g))
     {
@@ -1663,7 +1667,7 @@ GameObject* LoadPrefab(const char* path)
     numPrefabs++;
     _LOADING_PREFAB = false;
 
-    int prefabData = numPrefabs -1;
+    int prefabData = numPrefabs - 1;
     AddToHashTable(&prefabsIndicesHashTable,path,&prefabData,sizeof(prefabData));
 
     return prefabs[numPrefabs - 1];
@@ -1734,7 +1738,7 @@ void LoadPrefabs(const char* dirPath)
         }
         closedir(d);
     }
-    qsort(prefabs, numPrefabs, sizeof(GameObject* ), SortPrefabs);
+    //qsort(prefabs, numPrefabs, sizeof(GameObject* ), SortPrefabs);
 }
 bool IsSelected(GameObject* g)
 {

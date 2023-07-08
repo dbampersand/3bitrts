@@ -99,3 +99,4 @@ void RemoveItem(Item* i, GameObject* g);
 Item* GetRandomItem(ItemLevel i);
 int NumAttachedItems(GameObject* g);
 bool ItemIsPurchasable(Item* i);
+Item* GetItemFromPath(char* path);

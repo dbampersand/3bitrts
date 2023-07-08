@@ -3479,6 +3479,8 @@ void SetUIElementFont(UIElement* u, ALLEGRO_FONT** f)
 }
 void DrawButtonText(UIElement* u,int x, int y, ALLEGRO_COLOR col)
 {
+    if (!u)
+        return;
     Button* b = (Button*)u->data;
     int align = b->drawLine ? ALLEGRO_ALIGN_CENTRE : ALLEGRO_ALIGN_LEFT;
     float textX; float textY;
@@ -4402,6 +4404,14 @@ void DrawEndScreen(MouseState* mouseState, MouseState* mouseStateLastFrame, floa
             {
                 OpenChest(i);
             }
+        }
+        if (toSpawn)
+            free(toSpawn);
+        toSpawn = calloc(currEncounterRunning->numUnitsToSelect,sizeof(GameObject*));
+        numUnitsToSpawn = currEncounterRunning->numUnitsToSelect;
+        for (int i = 0; i < currEncounterRunning->numUnitsToSelect; i++)
+        {
+            toSpawn[i] = initialSelection[i];
         }
 
         transitioningTo = GAMESTATE_INGAME;

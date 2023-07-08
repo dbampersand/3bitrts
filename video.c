@@ -243,7 +243,7 @@ void DrawRectangle(float x, float y, float x2, float y2,ALLEGRO_COLOR color, flo
 }
 void DrawFilledRectangle(float x, float y, float x2, float y2,ALLEGRO_COLOR color)
 {
-    al_draw_filled_rectangle(floor(x),floor(y),ceil(x2),ceil(y2),color);
+    al_draw_filled_rectangle((x),(y),(x2),(y2),color);
 }
 
 void DrawRoundedRect(Rect r, ALLEGRO_COLOR color, bool filled)

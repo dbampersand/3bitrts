@@ -42,6 +42,7 @@
 #include "editor.h"
 #include "timer.h"
 #include "hashtable.h"
+#include "gamesave.h"
 
 #ifdef __WIN32__
 #include <windows.h>
@@ -132,6 +133,7 @@ void Update(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mouseState, 
 {   
     if (!(mouseState->mouse.buttons & 1))
         _PANEL_CLICKED_THIS_FRAME = false;
+    LoadPrefab("assets/friendly/ranger/ranger.lua");
     UpdateAmbience(dt);
     numChannellingInfosDrawn =  0;
     if (gameState == GAMESTATE_IN_SHOP)
@@ -632,14 +634,10 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
     if (KeyDown(keyState,ALLEGRO_KEY_MINUS))
         DisplayCollision();
-    if (KeyDown(keyState,ALLEGRO_KEY_O) && !KeyDown(keyStateLastFrame,ALLEGRO_KEY_O))
+    if (KeyDown(keyState,ALLEGRO_KEY_O) && !KeyDown(keyStateLastFrame,ALLEGRO_KEY_O) && !console.active)
     {
-        //GameObject* g = AddGameobject(LoadPrefab("assets/enemies/prowler/prowler.lua"),mouseState->worldX,mouseState->worldY,SOURCE_SPAWNED_FROM_MAP);
-        //SetOwnedBy(g, 1);
-       
-        //KillObj(g,true);
-        //AddGold(10);
-        //AddCompletionPercent(10);
+        LoadGameSave("continue.sav");
+        RunGameSave(continuePoint);
     }
     //GameObjDebugDraw();
     if (KeyDown(keyState,ALLEGRO_KEY_V))

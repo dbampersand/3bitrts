@@ -4,6 +4,8 @@
 
 #define _DEBUG false
 
+#define GAME_VERSION "1.0.2"
+
 typedef enum GameState {
     GAMESTATE_LOAD_SCREEN = 1,
     GAMESTATE_MAIN_MENU = 2,
@@ -21,9 +23,10 @@ typedef enum GameState {
     GAMESTATE_IN_EDITOR = 14,
     GAMESTATE_IN_3D = 15,
     GAMESTATE_SOFT_LOSS = 16,
+    GAMESTATE_CONTINUE_SAVE = 17,
 
 
-    NUMGAMESTATES = 17
+    NUMGAMESTATES = 18
 } GameState;
 
 typedef enum TRANSITION
@@ -66,8 +69,10 @@ extern GameState transitioningTo;
 extern float transitionTimer;
 extern bool transitionAudioPlayed;
 
+int numUnitsToSpawn;
 extern GameObject** toSpawn;
 extern GameObject* deadFriendlyObjects;
+extern GameObject** initialSelection;
 int numDeadFriendlyObjects;
 int numDeadFriendlyObjectsHeld;
 
@@ -100,6 +105,7 @@ void SetGameStateToInShop();
 void SetGameStateToPurchasingUnits();
 void SetGameStateToInEditor();
 void SetGameStateToSoftLoss();
+void SetGameStateToContinueSave();
 
 
 void Quit();

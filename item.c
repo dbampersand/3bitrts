@@ -175,7 +175,8 @@ void ItemOnMapChange(Item* i, GameObject* g)
         currGameObjRunning = g;
         lua_rawgeti(luaState, LUA_REGISTRYINDEX, i->luafunc_onmapchange);
         lua_pushinteger(luaState,(int)(g - objects));    
-        lua_pcall(luaState,1,0,0);
+        lua_pushinteger(luaState,(int)(i - g->inventory));    
+        lua_pcall(luaState,2,0,0);
     }
 }
 
@@ -357,6 +358,17 @@ void LoadItemFolder(char* path)
 
         }
 
+}
+Item* GetItemFromPath(char* path)
+{
+    for (int i = 0; i < numItems; i++)
+    {
+        if (items[i].path && strcmp(path,items[i].path)==0)
+        {
+            return &items[i];
+        }
+    }
+    return NULL;
 }
 Item CopyItem(Item* i, lua_State* l)
 {

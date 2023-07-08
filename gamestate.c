@@ -20,6 +20,7 @@
 #include "particle.h"
 #include "editor.h"
 #include "easings.h"
+#include "gamesave.h"
 
 #ifndef M_PI
     #define M_PI 3.14159265358979323846
@@ -37,6 +38,7 @@ bool _COMING_FROM_EDITOR = false;
 
  GameObject** toSpawn = NULL;
  GameObject* deadFriendlyObjects;
+GameObject** initialSelection = NULL;
 
  Encounter* encounterGoingTo = NULL;
  char* pathToNextMap = NULL;
@@ -84,7 +86,11 @@ void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Enco
 
     if (toSpawn)
         free(toSpawn);
+    if (initialSelection)
+        free(initialSelection);
     toSpawn = calloc(e->numUnitsToSelect,sizeof(GameObject*));
+    initialSelection = calloc(e->numUnitsToSelect,sizeof(GameObject*));
+
     if (deadFriendlyObjects)
         free(deadFriendlyObjects);
     deadFriendlyObjects = calloc(e->numUnitsToSelect,sizeof(GameObject));
@@ -92,8 +98,10 @@ void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Enco
     for (int i = 0; i < numObjectsToAdd; i++)
     {
         toSpawn[i] = list[i];
+        initialSelection[i] = list[i];
     }
     encounterGoingTo = e;
+    numUnitsToSpawn = e->numUnitsToSelect;
 }
 void SetGameStateToInGame()
 {
@@ -118,6 +126,11 @@ void SetGameStateToChoosingEncounter()
     TransitionTo(GAMESTATE_CHOOSING_ENCOUNTER);
 
 }
+void SetGameStateToContinueSave()
+{
+    transitionDrawing = TRANSITION_DOOR;
+    TransitionTo(GAMESTATE_CONTINUE_SAVE);
+}
 void SetGameStateToEnterShop()
 {
     transitionDrawing = TRANSITION_STAIRS;
@@ -130,7 +143,7 @@ void SpawnAllFriendlies()
     Point camPos = (Point){0,0};
 
     if (toSpawn)
-        for (int i = 0; i < encounterGoingTo->numUnitsToSelect; i++)
+        for (int i = 0; i < numUnitsToSpawn; i++)
         {
             if (toSpawn[i] == NULL)
                 continue;
@@ -138,9 +151,17 @@ void SpawnAllFriendlies()
             GameObject* gNew = AddGameobject(g,xPos,yPos,SOURCE_SPAWNED_FROM_MAP,TYPE_FRIENDLY);   
             //for (int j = 0; j < INVENTORY_SLOTS; j++)
               //  ItemOnMapChange(&gNew->inventory[j],gNew);
+            //for (int j = 0; j < INVENTORY_SLOTS; j++)
+           // {
+             //   if (g->inventory[j].path)
+               // {
+                 //   Item* i = GetItemFromPath(g->inventory[j].path);
+                  //  AttachItem(gNew,i);
+               // } 
+            //}
             HoldCommand(gNew,false);
             xPos += GetWidth(g)+4;
-            if (i == encounterGoingTo->numUnitsToSelect/2)
+            if (i == numUnitsToSpawn/2)
             {
                 camPos.x = xPos;
                 camPos.y = yPos;
@@ -229,6 +250,24 @@ void FinishTransition()
         for (int i = 0; i < MAX_CHESTS; i++)
             ui.currChestAnimation[i] = ui.chestIdle;
         //free(toSpawn);
+
+        GameObject** objectsToSave = calloc(numActiveObjects,sizeof(GameObject*));
+        int numObjectsToSave = 0;
+        for (int i = 0; i < numActiveObjects; i++)
+        {
+            GameObject* g = activeObjects[i];
+            if (IsOwnedByPlayer(g))
+            {
+                objectsToSave[numObjectsToSave] = g;
+                numObjectsToSave++;
+            }
+        }
+
+        GameSave ga = SaveGameState(currMap->path,currEncounterRunning->path,players[0].gold,gameStats.timeTaken,numObjectsToSave,objectsToSave);
+        GameSaveToDisk("continue.sav",&ga);
+        DestroyGameSave(&ga);
+        free(objectsToSave);
+
 
     }
     if (transitioningTo == GAMESTATE_CHOOSING_ENCOUNTER)
@@ -368,6 +407,60 @@ void FinishTransition()
         RefreshShop();
 
     }
+    if (transitioningTo == GAMESTATE_CONTINUE_SAVE)
+    {
+        RemoveAllGameObjects();
+        RemoveAllAttacks();
+
+        Encounter* e;
+        for (int i = 0; i < numEncounters; i++)
+        {
+            if (strcmp(continuePoint->encounterPath,encounters[i]->path) == 0)
+            {
+                e = encounters[i];
+            }
+        }
+        if (!e)
+            return;
+
+        currEncounterRunning = e;
+            SetMap(LoadMap(continuePoint->mapPath));
+        players[0].gold = continuePoint->gold;
+        gameStats.timeTaken = continuePoint->time;
+
+
+        if (toSpawn)
+            free(toSpawn);
+        toSpawn = calloc(continuePoint->numObjects,sizeof(GameObject*));
+        if (deadFriendlyObjects)
+            free(deadFriendlyObjects);
+        deadFriendlyObjects = calloc(continuePoint->numObjects,sizeof(GameObject));
+        numDeadFriendlyObjects = 0;
+        numDeadFriendlyObjectsHeld = continuePoint->numObjects;
+        for (int i = 0; i < continuePoint->numObjects; i++)
+        {
+            toSpawn[i] = LoadPrefab(continuePoint->objects[i].path);
+        }
+        encounterGoingTo = e;
+        numUnitsToSpawn = continuePoint->numObjects;
+
+        gameState = GAMESTATE_INGAME;
+        transitioningTo = GAMESTATE_INGAME;
+
+        for (int i = 0; i < continuePoint->numObjects; i++)
+        {
+            GameObject* g = AddGameobject(toSpawn[i],continuePoint->objects[i].position.worldX,continuePoint->objects[i].position.worldY,SOURCE_SPAWNED_FROM_MAP,0);
+            for (int j = 0; j < INVENTORY_SLOTS; j++)
+            {
+                if (continuePoint->objects[i].inventory[j].path)
+                {
+                    AttachItem(g,GetItemFromPath(continuePoint->objects[i].inventory[j].path));
+                }
+            }
+        }
+        //SpawnAllFriendlies();
+        DestroyGameSave(continuePoint);
+    }
     if (transitioningTo == GAMESTATE_CHANGE_MAP)
     {
         RemoveAllAttacks();
@@ -447,6 +540,21 @@ void FinishTransition()
                 HoldCommand(activeObjects[i],false);
             }
         }
+        GameObject** objectsToSave = calloc(numActiveObjects,sizeof(GameObject*));
+        int numObjectsToSave = 0;
+        for (int i = 0; i < numActiveObjects; i++)
+        {
+            GameObject* g = activeObjects[i];
+            if (IsOwnedByPlayer(g))
+            {
+                objectsToSave[numObjectsToSave] = g;
+                numObjectsToSave++;
+            }
+        }
+        GameSave ga = SaveGameState(pathToNextMap,currEncounterRunning->path,players[0].gold,gameStats.timeTaken,numObjectsToSave,objectsToSave);
+        GameSaveToDisk("continue.sav",&ga);
+        DestroyGameSave(&ga);
+        free(objectsToSave);
         free(pathToNextMap);
         pathToNextMap = NULL;
         ClearSelection();
@@ -1152,7 +1260,8 @@ void AddDeadGameObject(GameObject* g)
         if (numDeadFriendlyObjects >= numDeadFriendlyObjectsHeld)
         {
             deadFriendlyObjects = realloc(deadFriendlyObjects,(numDeadFriendlyObjectsHeld+1)*sizeof(GameObject));
-            numDeadFriendlyObjectsHeld++; 
+            numDeadFriendlyObjects = numDeadFriendlyObjectsHeld;
+            numDeadFriendlyObjectsHeld = numDeadFriendlyObjectsHeld+1; 
         }
         deadFriendlyObjects[numDeadFriendlyObjects] = *g;
         deadFriendlyObjects[numDeadFriendlyObjects].properties |= OBJ_ACTIVE;   

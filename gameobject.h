@@ -76,6 +76,7 @@ typedef struct Player Player;
 
 typedef struct GameObject
 {    
+    bool isPrefab;
     struct GameObject* prefab;
     LuaBuffer lua_buffer;
 
