@@ -3,10 +3,12 @@ local duration = 12
 local dps = 30
 
 local radius = 35
+local coneSize = 70
 
 local numCones = 8
-
 local changeDirectionTime = 1
+
+local duration = 1
 
 function setup()
 
@@ -23,54 +25,27 @@ function casted(x,y,obj,headingx,headingy)
     f1["type"] = EFFECT_HURT;
     f1["value"] = dps * tickrate;
 
-    local atk = {}
+    local heading = GetHeadingVector(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj));
+    local startAngle = math.atan2(heading.headingx,heading.headingy)
+    for i = 1, numCones do
+        local angle = DegToRad(180 / numCones * (i))   
 
+        angle = angle - startAngle;
+        local xTo = math.cos(angle)*10000
+        local yTo = math.sin(angle)*10000
 
+        cone = CreateCone(GetX(GetObjRef()),GetY(GetObjRef()),GetX(GetObjRef())+xTo,GetY(GetObjRef())+yTo,"", radius, duration, duration, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER,coneSize, {f1})
+
+    end
     return true; 
 end
 
 function onhit(x,y,objhit)
 end
 function ontimeout(x,y,parent,dt,target,attack)
-    local index = -1
-    for i = 1,#aoes do
-        if (aoes[i].aoe == attack) then
-            index = i
-        end
-    end
-    if (index >= 0) then
-        table.remove(aoes,index)
-    end
 end
 function abilitytick(x, y, durationLeft,parent,target,dt,attackRef)
-
-    local index = -1
-    for i = 1,#aoes do
-        if (aoes[i].aoe == attackRef) then
-            index = i
-        end
-    end
-    if (index == -1) then
-        do return end;
-    end
-
-    aoes[index].timer = aoes[index].timer + dt
-
-    if (aoes[index].timer >= changeDirectionTime) then
-        aoes[index].towards.x = RandRange(-1,1)
-        aoes[index].towards.y = RandRange(-1,1)
-        aoes[index].timer = 0
-    end
-    
-    local xTarg = aoes[index].towards.x;
-    local yTarg = aoes[index].towards.y;
-
-    local targNew = GetAttackMoveAngle(attackRef)
-    targNew.x = Lerp(targNew.x,xTarg,dt)
-    targNew.y = Lerp(targNew.y,yTarg,dt)
-
-    SetAttackMoveAngle(attackRef,targNew.x,targNew.y)
-
+    SetAttackPosition(attackRef,GetX(GetObjRef()),GetY(GetObjRef()))
 end
 
 function applyattack(atk,x,y)

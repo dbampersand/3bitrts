@@ -9,7 +9,7 @@ function setup()
     SetAbilityRange(40)
     SetDescription("Circle of Protection\n\nGenerates a defensive circle, providing a shield around you.")
     SetCooldown(duration)
-    SetManaCost(65)
+    SetManaCost(50)
 end
 function casted(x,y,obj,headingx,headingy)
 

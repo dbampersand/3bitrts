@@ -3,10 +3,9 @@ local invincibleDuration = 3
 function setup()
     AbilitySetPortrait("assets/friendly/paladin/icon_lay_on_hands.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
-    SetCooldown(5);
 
     SetDescription("Lay on Hands\n\nFully heals the target and makes them invincible for " .. invincibleDuration .. " seconds.")
-    SetCooldown(60)
+    SetCooldown(50)
     SetManaCost(100);
     SetAbilityRange(15);
 

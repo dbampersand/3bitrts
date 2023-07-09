@@ -17,7 +17,7 @@ function casted(x,y,obj,headingx,headingy)
 
     ApplyEffect(obj,{f1})   
 
-    ReduceCooldown(GetObjRef(),0,3);
+    ReduceCooldown(GetObjRef(),2,3);
 
     
 

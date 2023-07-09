@@ -33,7 +33,7 @@ function update(dt)
         SetAbilityCooldownTimer(GetObjRef(),thrash,GetAbilityCooldown(GetObjRef(),thrash))
     end
     if (IsInCombat()) then
-        --CastAbility(dark_shot,1,{{target = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,GetAbilityRange(GetObjRef(),dark_shot))[1]}})
+        CastAbility(dark_shot,1,{{target = GetRandomUnit(TYPE_ENEMY,TYPE_ALL,GetAbilityRange(GetObjRef(),dark_shot))[1]}})
         CastAbility(thrash,1,{})
     end
 end

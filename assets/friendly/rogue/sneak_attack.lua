@@ -3,7 +3,7 @@ function setup()
     AbilitySetPortrait("assets/friendly/rogue/icon_shiv.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityRange(50)
-    SetDescription("Stab\n\nStabs the target and reduces the cooldown of Deceptive Strike by 2 seconds.")
+    SetDescription("Sneak Attack\n\nStabs the target and reduces the cooldown of Deceptive Strike by 2 seconds.")
     SetCooldown(8)
 end
 function casted(x,y,obj,headingx,headingy)

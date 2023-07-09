@@ -1,6 +1,6 @@
  function setup()
     SetEncounterSprite("assets/enemies/kobold_king/kobold_king.png");
-    SetEncounterDescription("A faction of goblins defend the entrance to the mountain.")
+    SetEncounterDescription("A faction of kobolds defend the entrance to the mountain.")
     SetEncounterName("Kobold King");
 
     AddEncounterAbility("assets/enemies/kobold_king/ability_throw_bot.lua",0,0);

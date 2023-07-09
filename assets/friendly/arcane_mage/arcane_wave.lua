@@ -1,18 +1,18 @@
 local radius = 40
 local length = 110
 
-local manaReturn = 5
+local manaReturn = 2
 local numProjectiles = 8
 
 local damage = 30
 function setup()
-    AbilitySetPortrait("assets/friendly/ranger/icon_cripple.png");
+    AbilitySetPortrait("assets/friendly/arcane_mage/icon_arcane_wave.png");
     AbilitySetCastType(ABILITY_POINT);
     SetAbilityRange(length)
     SetAbilityHint(HINT_CONE,radius,false,length)
     SetDescription("Arcane Wave\n\nCasts a wave of arcane missiles, returning mana for each that hit.")
     SetCooldown(12);
-    SetManaCost(20)
+    SetManaCost(40)
 end
 function casted(x,y,obj,headingx,headingy)
     PlaySound("assets/friendly/arcane_mage/audio/arcane_wave.wav",1)

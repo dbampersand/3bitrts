@@ -658,6 +658,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
         //AddCompletionPercent(100);
     }
+
     #ifdef DEBUG
         al_put_blended_pixel(DEBUG_P1.x,DEBUG_P1.y,al_map_rgb(0,255,0));
         al_put_blended_pixel(DEBUG_P2.x,DEBUG_P2.y,al_map_rgb(255,0,0));

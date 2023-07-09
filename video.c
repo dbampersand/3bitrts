@@ -478,9 +478,9 @@ void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO
     {
         //al_put_pixel(1,1,DAMAGE);
         float temp = start;
-        end -= radius * (float)M_PI/180.0f - (length*(float)M_PI/180.0f)+1;
+        end -= radius * (float)M_PI/180.0f - (length*(float)M_PI/180.0f);
         float rad = (360-radius) * (float)M_PI/180.0f;
-        start -= rad + (length*(float)M_PI/180.0f)-1;
+        start -= rad + (length*(float)M_PI/180.0f);
     }
 
     float theta = start;
@@ -665,6 +665,8 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
     {
         int tempX = startX;
         int tempY = startY;
+
+        
 
         // startX = endX;
             //startY = endY;

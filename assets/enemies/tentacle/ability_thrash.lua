@@ -9,13 +9,19 @@ function setup()
     SetAbilityRange(256)
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_LINE,80);
-    SetCooldown(30); 
+    SetCooldown(12); 
     AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
     SetDescription("[b]Thrash\n\nFlails about, spawning projectiles.")
 end
 function casted(x,y,obj,headingx,headingy)
+    local f1 = {}
+    f1["trigger"] = TRIGGER_INSTANT;
+    f1["type"] = EFFECT_HURT;
+    f1["value"] = damage;
+
     for i = 1, numToMake do
         local angle = DegToRad(360 / numToMake * (i))   
+
         local xTo = math.cos(angle)*100
         local yTo = math.sin(angle)*100
         After(CreateConeProjectiles,i/numToMake,false,GetX(GetObjRef()),GetY(GetObjRef()),GetX(GetObjRef())+xTo,GetY(GetObjRef())+yTo,"",ATTACK_PROJECTILE_ANGLE,80,15,false,ATTACK_HITS_ENEMIES,projectilesToMake,COLOR_DAMAGE,360/numToMake,{f1});

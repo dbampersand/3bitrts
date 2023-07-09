@@ -5,7 +5,7 @@ function setup()
     
 
     SetAbilityRange(60)
-    SetCooldown(10);
+    SetCooldown(8);
     SetDescription("Shield Slam\n\nBashes the target with your shield, stunning and dealing damage. Generates mana and threatens enemies nearby.")
 end
 
@@ -28,7 +28,7 @@ function casted(x,y,obj,headingx,headingy)
     local f3 = {}
     f3["trigger"] = TRIGGER_INSTANT;
     f3["type"] = EFFECT_ADD_MANA;
-    f3["value"] = 10;  
+    f3["value"] = 20;  
 
     ApplyEffect(obj,{f1,f2});
     ApplyEffect(GetObjRef(),{f3});

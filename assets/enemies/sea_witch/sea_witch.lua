@@ -1,20 +1,20 @@
-local dark_tide = -1
-local summon_tentacle = -1
+local sea_shell = -1
+local spawn_tentacle = -1
 
 local timer = 0
 local castAfter = 2
 
 
 function setup()
-    SetSprite("assets/enemies/kelpie_miniboss/kelpie_miniboss.png");
+    SetSprite("assets/enemies/sea_witch/sea_witch.png");
 
     SetDamage(40);
-    SetMaxHP(1200,true)
+    SetMaxHP(2400,true)
     SetSpeed(120)
     SetRange(5);
 
-    dark_tide = AddAbility(GetObjRef(),"assets/enemies/sea_witch/ability_dark_tide.lua",0);
-    summon_tentacle = AddAbility(GetObjRef(),"assets/enemies/sea_witch/ability_summon_tentacle.lua",1);
+    sea_shell = AddAbility(GetObjRef(),"assets/enemies/sea_witch/ability_sea_shell.lua",0);
+    ability_spawn_tentacle = AddAbility(GetObjRef(),"assets/enemies/sea_witch/ability_spawn_tentacle.lua",1);
 
 
     SetAttackSounds({
@@ -29,6 +29,9 @@ end
 
 function update(dt)
     if (IsInCombat()) then
+        CastAbility(sea_shell,1,{{target = GetAttackTarget(GetObjRef())}})
+        CastAbility(ability_spawn_tentacle,1,{})
+        
         if (ObjIsChannelling(GetObjRef()) == false) then
             timer = timer + dt
         end

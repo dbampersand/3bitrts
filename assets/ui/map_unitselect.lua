@@ -9,7 +9,7 @@ function setup()
 
     
 
-    CreateObject("assets/enemies/tentacle/tentacle.lua",230.00,144.00,TYPE_ENEMY,0.00)
+    CreateObject("assets/enemies/sea_witch/sea_witch.lua",231.00,139.00,TYPE_ENEMY,0.00)
 end
 
 function update()
