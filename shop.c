@@ -354,37 +354,52 @@ void DrawShopItems(float dt, MouseState mouseState)
 }
 void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
 {
-    int x = shop.startX * 2 + GetWidthSprite(&sprites[shop.spriteIndex_stall]);
-    int y = shop.startY;
+    int xStart = shop.startX * 2 + GetWidthSprite(&sprites[shop.spriteIndex_stall]);
+    int yStart = shop.startY;
 
-    bool clickedThisFrame = (mouseState.mouse.buttons & 1) && !(mouseStateLastFrame.mouse.buttons & 1);
-    bool clickedOnAnInventorySlot = false;
+    int x = xStart;
+    int y = yStart;
 
-    Item* mousedOver = NULL;
-
+    int numObjs = 0;
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g = activeObjects[i];
 
         if (!IsOwnedByPlayer(g) || !g->playerChoosable || g->objectIsSummoned)
             continue;
+        numObjs++;
+    }
+    y -= shop.scrollBarPos * (numObjs*_SHOP_ITEM_RADIUS*2);
 
+    bool clickedThisFrame = (mouseState.mouse.buttons & 1) && !(mouseStateLastFrame.mouse.buttons & 1);
+    bool clickedOnAnInventorySlot = false;
+
+    Item* mousedOver = NULL;
+
+    bool shouldDrawScrollbar = false;
+    float clipYEnd = shop.continueButton.y - yStart - 1;
+    al_set_clipping_rectangle(0,yStart,999,clipYEnd);
+    for (int i = 0; i < numActiveObjects; i++)
+    {
+        GameObject* g = activeObjects[i];
+
+        if (!IsOwnedByPlayer(g) || !g->playerChoosable || g->objectIsSummoned)
+            continue;
         DrawSprite(&sprites[g->spriteIndex],x,y,0,0,0,FRIENDLY,false,false,false);
         y += GetHeight(g)+1;
         
         float slotX = x;
         float slotY = y;
 
-
         for (int i = 0; i < INVENTORY_SLOTS; i++)
         {
-            Rect r = (Rect){slotX,slotY,24,24};
+            Rect r = (Rect){slotX,slotY,24,_SHOP_ITEM_RADIUS*2};
             bool invert = false;
 
             ALLEGRO_COLOR background = BG;
             ALLEGRO_COLOR foreground = FRIENDLY;
 
-            if (g->inventory[i].enabled)
+            if (g->inventory[i].enabled && r.y+r.h/2 <= clipYEnd) 
             {
                 if (clickedThisFrame && PointInRect(mouseState.screenX,mouseState.screenY,r))
                 {
@@ -409,7 +424,7 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
             if (PointInRect(mouseState.screenX,mouseState.screenY,r) && g->inventory[i].enabled && !shop.heldItem && !shop.removeClickedItem) 
             {
                 invert = !invert;
-                    mousedOver = &g->inventory[i];
+                mousedOver = &g->inventory[i];
             }
 
             if (shop.removeClickedItem == &g->inventory[i])
@@ -526,6 +541,54 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
         al_reset_clipping_rectangle();
 
     }
+    if (numObjs > 6)
+        shouldDrawScrollbar = true;
+    if (!shouldDrawScrollbar)
+    {
+        shop.scrollbarClicked = false;
+        shop.scrollBarPos = 0;
+    }
+    if (shouldDrawScrollbar)
+    {
+    
+        Rect scrollbar = (Rect){xStart-6,yStart,4,shop.continueButton.y-yStart-1};
+        float scrollBarSelectH = clamp((scrollbar.h+scrollbar.y) / (float)y,0,1);
+        DrawRectangle(scrollbar.x,scrollbar.y,scrollbar.x+scrollbar.w,scrollbar.y+scrollbar.h,FRIENDLY,1);
+
+        float yPos = scrollbar.y + shop.scrollBarPos * scrollbar.h;
+        DrawFilledRectangle(scrollbar.x, yPos, scrollbar.x+scrollbar.w, yPos+14, FRIENDLY);
+
+        if ((mouseState.mouse.buttons & 1) && !(mouseStateLastFrame.mouse.buttons & 1) && PointInRect(mouseState.screenX,mouseState.screenY,scrollbar))
+        {
+            shop.scrollbarClicked = true;
+
+        }
+        if (!(mouseState.mouse.buttons & 1))
+            shop.scrollbarClicked = false;
+
+        if (shop.scrollbarClicked)
+        {
+            float v = 1-((scrollbar.y+scrollbar.h) - mouseState.screenY) / (float)scrollbar.h;
+            if (v>1)
+                v = 1;
+            if (v<0)
+                v = 0;
+
+            shop.scrollBarPos = v;
+        }
+        //mouseState = GetMouseClamped();
+        //shop.scrollBarPos += mouseState.mouse.z;
+        //shop.scrollBarPos = clamp(shop.scrollBarPos,0,1);
+        if (mouseState.mouse.z != mouseStateLastFrame.mouse.z)
+        {
+            float v = mouseState.mouse.z - mouseStateLastFrame.mouse.z;
+            shop.scrollBarPos -= v/6.0f;
+            shop.scrollBarPos = clamp(shop.scrollBarPos,0,1);
+
+        }
+    }
+
+    al_reset_clipping_rectangle();
 
 }
 void DrawRandomItemButton(float dt, MouseState mouseState, MouseState mouseStateLastFrame)

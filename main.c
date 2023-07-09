@@ -654,8 +654,9 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     if (KeyDown(keyState,ALLEGRO_KEY_F8))
     {
-        //AddCompletionPercent(100);
-
+        AddGold(9999);
+        AddCompletionPercent(100);
+        SetGameStateToInShop();
         //AddCompletionPercent(100);
     }
 
