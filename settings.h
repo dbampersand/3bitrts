@@ -31,6 +31,7 @@ typedef struct Keymap
     Key key_Pause;
     Key key_Cancel;
     Key key_HoldPosition;
+    Key key_Stop;
 
     Key key_PanLeft;
     Key key_PanRight;
@@ -68,11 +69,16 @@ typedef struct Settings
     Keymap keymap;
     //
 
+    //displays some tutorial popups on the players' first load of the game
+    bool hasDoneTutorial;   
+
+
 } Settings;
 
 extern Settings currSettings;
 extern Settings defaultSettings;
 extern char* settingFilePath;
+
 
 
 typedef struct UIElement UIElement;

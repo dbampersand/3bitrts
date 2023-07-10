@@ -1973,6 +1973,19 @@ int L_RotateAttackArea(lua_State* l)
     a->shape.angle += angle;
     return 0;
 }
+int L_HasDoneTutorial(lua_State* l)
+{
+    lua_pushboolean(l,currSettings.hasDoneTutorial);
+    return 1;
+}
+int L_DoneTutorial(lua_State* l)
+{
+    bool b = lua_toboolean(l,1);
+    currSettings.hasDoneTutorial = b;
+    WriteSettingsFile("config.cfg");
+    return 0;
+}
+
 int L_CreateAttackArea(lua_State* l)
 {
     int lenArea = lua_rawlen(l,1);
@@ -2213,6 +2226,8 @@ int L_GetShield(lua_State* l)
 }
 int L_PushMessage(lua_State* l)
 {
+    if (gameState == GAMESTATE_IN_EDITOR || transitioningTo == GAMESTATE_IN_EDITOR)
+        return 0;
     gameState = GAMESTATE_IN_CHATBOX;
     transitioningTo = GAMESTATE_IN_CHATBOX;
     const char* msg = lua_tostring(l,1);
@@ -2772,7 +2787,19 @@ int L_SetLightIntensity(lua_State* l)
     g->lightSize = intensity;
     return 0;
 }
-
+int L_SetMapName(lua_State* l)
+{
+    if (currMap)
+    {
+        if (currMap->name)
+        {
+            free(currMap->name);
+        }
+        currMap->name = calloc(strlen(lua_tostring(l,1))+1,sizeof(char));
+        strcpy(currMap->name,lua_tostring(l,1));
+    }   
+    return 0;
+}
 
 int L_SetMapSprite(lua_State* l)
 {
@@ -3109,6 +3136,15 @@ int L_SetStunTimer(lua_State* l)
     objects[index].stunTimer = lua_tonumber(l,2);
     return 0; 
     
+}
+int L_GetNumBadEffects(lua_State* l)
+{
+    int index = lua_tonumber(l,1);
+    if (index < 0 || index >= MAX_OBJS)
+        return 0;
+    lua_pushnumber(l,GetNumberOfBadEffects(&objects[index]));
+    return 1;
+
 }
 int L_GetNumEffects(lua_State* l)
 {
@@ -6005,4 +6041,18 @@ void SetLuaFuncs()
     lua_pushcfunction(luaState, L_Lerp);
     lua_setglobal(luaState, "Lerp");
 
+    lua_pushcfunction(luaState, L_HasDoneTutorial);
+    lua_setglobal(luaState, "HasDoneTutorial");
+
+    lua_pushcfunction(luaState, L_DoneTutorial);
+    lua_setglobal(luaState, "DoneTutorial");
+
+    lua_pushcfunction(luaState, L_SetMapName);
+    lua_setglobal(luaState, "SetMapName");
+
+    lua_pushcfunction(luaState, L_GetNumBadEffects);
+    lua_setglobal(luaState, "GetNumBadEffects");
+
 }
+
+

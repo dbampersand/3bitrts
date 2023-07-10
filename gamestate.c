@@ -47,6 +47,23 @@ GameState gameState = {0};
 
 TRANSITION transitionDrawing;
 
+void Retry()
+{
+    float timeBefore = gameStats.timeTaken;
+    float goldBefore = players[0].gold;
+
+    bool err = false;
+    LoadGameSave("continue.sav", &err);
+    if (continuePoint && gameState == GAMESTATE_INGAME)
+    {
+        continuePoint->time = gameStats.timeTaken;
+        continuePoint->gold = goldBefore;
+
+    }
+    if (!err)
+        RunGameSave(continuePoint);
+
+}
 
 bool TransitionTo(GameState state)
 {
@@ -845,7 +862,7 @@ void CheckIfGameIsLost()
                 LoseGame();
             else
             {
-                SetGameStateToSoftLoss();
+                Retry();
             }
         }
     }

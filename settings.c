@@ -187,10 +187,14 @@ void SetDefaultSettings(Settings* setting)
 
 
     setting->keymap.key_HoldPosition = (Key){"Hold Position",ALLEGRO_KEY_H};
+    setting->keymap.key_Stop = (Key){"Stop",ALLEGRO_KEY_S};
 
-    setting->keymap.key_Console = (Key){"Activate Console",ALLEGRO_KEY_OPENBRACE};
+
+    setting->keymap.key_Console = (Key){"Activate Console",-1};
 
     setting->displayWindowStyle = ALLEGRO_FULLSCREEN_WINDOW;
+
+    setting->hasDoneTutorial = false;
 }
 
 void EndSettings()
@@ -271,6 +275,10 @@ void WriteSettingsFile(char* path)
         "key_ctrlgroup9_Alt %i;\n"
         "key_ctrlgroup0 %i;\n"
         "key_ctrlgroup0_Alt %i;\n"
+        "key_HoldPosition %i;\n"
+        "key_HoldPosition_Alt %i;\n"
+        "key_Stop %i;\n"
+        "key_Stop_Alt %i;\n"
         "BG, %i, %i, %i;\n"
         "FRIENDLY, %i, %i, %i;\n"
         "ENEMY, %i, %i, %i;\n"
@@ -291,8 +299,8 @@ void WriteSettingsFile(char* path)
         "FRIENDLY_SPEED, %i, %i, %i;\n"
         "FRIENDLY_SHIELD, %i, %i, %i;\n"
         "displayWindowStyle: %i;\n"
+        "hasDoneTutorial: %i;\n",
 
-        ,
         *   currSettings.renderScale,
         currSettings.particlesEnabled == true ? 1 : 0,
         currSettings.lightEffectEnabled == true ? 1 : 0,
@@ -379,6 +387,11 @@ void WriteSettingsFile(char* path)
         currSettings.keymap.key_ctrlgroups[9].secondKeyMappedTo,
         currSettings.keymap.key_ctrlgroups[0].keyMappedTo,
         currSettings.keymap.key_ctrlgroups[0].secondKeyMappedTo,
+        currSettings.keymap.key_HoldPosition.keyMappedTo,
+        currSettings.keymap.key_HoldPosition.secondKeyMappedTo,
+        currSettings.keymap.key_Stop.keyMappedTo,
+        currSettings.keymap.key_Stop.secondKeyMappedTo,
+
 
         (int)(BG.r * 255), (int)(BG.g * 255), (int)(BG.b * 255),
         (int)(FRIENDLY.r * 255), (int)(FRIENDLY.g * 255), (int)(FRIENDLY.b * 255),
@@ -399,8 +412,8 @@ void WriteSettingsFile(char* path)
         (int)(FRIENDLY_DAMAGE.r * 255), (int)(FRIENDLY_DAMAGE.g * 255), (int)(FRIENDLY_DAMAGE.b * 255),
         (int)(FRIENDLY_SPEED.r * 255), (int)(FRIENDLY_SPEED.g * 255), (int)(FRIENDLY_SPEED.b * 255),
         (int)(FRIENDLY_SHIELD.r * 255), (int)(FRIENDLY_SHIELD.g * 255), (int)(FRIENDLY_SHIELD.b * 255),
-        currSettings.displayWindowStyle
-
+        currSettings.displayWindowStyle,
+        currSettings.hasDoneTutorial ? 1 : 0
         );
 
         ALLEGRO_FILE* file = al_fopen(path,"w+");
@@ -722,6 +735,21 @@ void SetMovementKeys(char* str)
     int key_PanDown_Alt  = (int)FindToken(str,"key_PanDown_Alt");
     if (key_PanDown_Alt >= 0)
         currSettings.keymap.key_PanDown.secondKeyMappedTo = key_PanDown_Alt;
+
+
+    int key_HoldPosition  = (int)FindToken(str,"key_HoldPosition");
+    if (key_HoldPosition >= 0)
+        currSettings.keymap.key_PanDown.keyMappedTo = key_HoldPosition;
+    int key_HoldPosition_Alt  = (int)FindToken(str,"key_HoldPosition_Alt");
+    if (key_HoldPosition >= 0)
+        currSettings.keymap.key_PanDown.secondKeyMappedTo = key_HoldPosition_Alt;
+
+    int key_Stop  = (int)FindToken(str,"key_Stop");
+    if (key_Stop >= 0)
+        currSettings.keymap.key_Stop.keyMappedTo = key_Stop;
+    int key_Stop_Alt  = (int)FindToken(str,"key_Stop_Alt");
+    if (key_HoldPosition >= 0)
+        currSettings.keymap.key_Stop.secondKeyMappedTo = key_Stop_Alt;
 
 
 }
@@ -1144,6 +1172,12 @@ bool LoadSettingsFile(char* path)
             {
                 currSettings.displayWindowStyle = (int)windowStyle;
             }
+            float hasDoneTutorial  = FindToken(str,"hasDoneTutorial");
+            if (hasDoneTutorial >= 0)
+            {
+                currSettings.hasDoneTutorial = (int)hasDoneTutorial;
+            }
+
 
             SetColoursSetting(str);
 

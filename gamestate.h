@@ -92,6 +92,8 @@ extern bool _COMING_FROM_EDITOR;
 
 bool TransitionTo(GameState state);
 
+void Retry();
+
 void StartCombat();
 void InitGameState();
 void SetGameStateToChoosingParty();

@@ -537,8 +537,17 @@ void UpdateChatbox(float dt)
 void EndChatbox()
 {
     ClearChatbox();
-    gameState = GAMESTATE_INGAME;
-    transitioningTo = GAMESTATE_INGAME;
+    if (currMap && strcmp(currMap->name,"unitselect") == 0)
+    {
+        gameState = GAMESTATE_CHOOSING_UNITS;
+        transitioningTo = GAMESTATE_CHOOSING_UNITS;
+
+    } 
+    else
+    {
+        gameState = GAMESTATE_INGAME;
+        transitioningTo = GAMESTATE_INGAME; 
+    }
 }
 void ClearChatbox()
 {
@@ -924,13 +933,7 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mou
         }
         if (GetButton(&ui.pauseMenuPanel,"Retry"))
         {
-            float timeBefore = gameStats.timeTaken;
-            bool err = false;
-            LoadGameSave("continue.sav", &err);
-            if (continuePoint)
-                continuePoint->time = gameStats.timeTaken;
-            if (!err)
-                RunGameSave(continuePoint);
+            Retry();
 
         }
 
@@ -995,23 +998,39 @@ void ChangeUIPanel(Panel* to)
         ui.animatePanel = UI_ANIMATE_IN;
     }
 }
-void DrawHealthUIElement(GameObject* selected, ALLEGRO_COLOR color)
+void DrawHealthUIElement(GameObject* selected, ALLEGRO_COLOR color,MouseState mouseState)
 {
     float percentHP = selected->health / selected->maxHP;
     int startHPY = UI_START_Y+1+ 6;
     int startHPX = 4;
     int hpW = 9;
     int hpH = 26;
-
     if (!selected->usesMana)
         hpW = 24;
 
     int startY = startHPY + (hpH - (hpH*percentHP));
     int endY = (startHPY + hpH);
     DrawFilledRectangle(startHPX, startY, startHPX+hpW,endY, color);
+    
+    Rect r = (Rect){startHPX,startHPY,hpW,hpH};
+
+    if (PointInRect(mouseState.screenX,mouseState.screenY,r))
+    {
+        char* format = "%.0f / %.0f";
+        char* text = calloc(snprintf(NULL,0,format,selected->health,selected->maxHP)+1,sizeof(char));
+        sprintf(text,format,selected->health,selected->maxHP);
+
+        int w = al_get_text_width(ui.font,text);
+        int h = GetDescriptionBoxH(text,w,ui.font,UI_PADDING);
+        int x = r.x;
+        int y = 221 - h - 3;
+
+        DrawDescriptionBox(text, 5, ui.font,ui.boldFont, x,y,w,0,GetColor(GameObjToColor(selected),GetPlayerOwnedBy(selected)),true);
+        free(text);
+    }
 }
 
-void DrawManaUIElement(GameObject* selected, ALLEGRO_COLOR color)
+void DrawManaUIElement(GameObject* selected, ALLEGRO_COLOR color, MouseState mouseState)
 {
     if (!selected->usesMana) 
         return;
@@ -1024,6 +1043,23 @@ void DrawManaUIElement(GameObject* selected, ALLEGRO_COLOR color)
     int startY = startManaY + (manaH - (manaH*percentMana));
     int endY = (startManaY + manaH);
     DrawFilledRectangle(startManaX, startY, startManaX+manaW,endY, color);
+
+    Rect r = (Rect){startManaX,startManaY,manaW,manaH};
+
+    if (PointInRect(mouseState.screenX,mouseState.screenY,r))
+    {
+        char* format = "%.0f / %.0f";
+        char* text = calloc(snprintf(NULL,0,format,selected->mana,selected->maxMana)+1,sizeof(char));
+        sprintf(text,format,selected->mana,selected->maxMana);
+
+        int w = al_get_text_width(ui.font,text);
+        int h = GetDescriptionBoxH(text,w,ui.font,UI_PADDING);
+        int x = r.x;
+        int y = 221 - h - 3;
+
+        DrawDescriptionBox(text, 5, ui.font,ui.boldFont, x,y,w,0,GetColor(GameObjToColor(selected),GetPlayerOwnedBy(selected)),true);
+        free(text);
+    }
 
 
 }
@@ -1325,8 +1361,8 @@ void DrawUI(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLa
 
     if (selected)
     {
-        DrawHealthUIElement(selected,baseColor);
-        DrawManaUIElement(selected,baseColor);
+        DrawHealthUIElement(selected,baseColor,*mouseState);
+        DrawManaUIElement(selected,baseColor,*mouseState);
         Ability* heldAbility = players[0].abilityHeld;
         
         DrawItems(selected);
@@ -2861,6 +2897,18 @@ void InitControlsPanel()
     AddKeyInput(&ui.controlsPanel,"Center2","Center2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_Center.secondKeyMappedTo);
     AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Center","Center",NULL,NULL);
 
+
+    AddKeyInput(&ui.controlsPanel,"Hold","Hold",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_HoldPosition.keyMappedTo);
+    AddKeyInput(&ui.controlsPanel,"Hold2","Hold2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_HoldPosition.secondKeyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Hold Position","Hold Position",NULL,NULL);
+
+    AddKeyInput(&ui.controlsPanel,"Stop","Stop",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Stop.keyMappedTo);
+    AddKeyInput(&ui.controlsPanel,"Stop2","Stop2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_Stop.secondKeyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Stop","Stop",NULL,NULL);
+
+    AddKeyInput(&ui.controlsPanel,"Console","Console",xButtons,y+=h+padding,w,h,1,&currSettings.keymap.key_Console.keyMappedTo);
+    AddKeyInput(&ui.controlsPanel,"Console2","Console2",xButtons+w+padding,y,w,h,1,&currSettings.keymap.key_Console.secondKeyMappedTo);
+    AddText(&ui.controlsPanel,xText,y+h/2-al_get_font_line_height(ui.font)/2,"Console","Console",NULL,NULL);
 
     InitButton(&ui.controlsPanel.backButton, "Back", "", 0,0, 14, 14,LoadSprite("assets/ui/back_tab_icon.png",true));
     InitButton(&ui.controlsPanel.tabButton, "Tab", "", 0,0, 14, 33,LoadSprite("assets/ui/controls_tab_icon.png",true));

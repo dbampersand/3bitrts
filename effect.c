@@ -262,6 +262,7 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     return false;
 
 }
+
 int CureNamedEffect(GameObject* g, const char* name, int numStacksToRemove)
 {
     int numStacksRemoved = 0;
@@ -279,6 +280,10 @@ int CureNamedEffect(GameObject* g, const char* name, int numStacksToRemove)
     }
     return numStacksRemoved;
 }
+bool EffectIsBad(Effect* e, GameObject* g)
+{
+    return (!e->from || e->playerOwnedBy != GetPlayerOwnedBy_IncludeDecor(g) || e->playerOwnedBy == TYPE_DECORATION);
+}
 void CureEffect(GameObject* g, Effect* e, int numEffects, bool removeAllStacks)
 {
     if (!g || !e) 
@@ -290,7 +295,7 @@ void CureEffect(GameObject* g, Effect* e, int numEffects, bool removeAllStacks)
         if (e == e2)
             continue;
 
-        if (!e2->from || e2->playerOwnedBy != GetPlayerOwnedBy_IncludeDecor(g) || e2->playerOwnedBy == TYPE_DECORATION)
+        if (EffectIsBad(e2,g))
         {
             if (!e2->enabled)
                 continue;

@@ -347,7 +347,6 @@ void loadLuaGameMap(lua_State* l, const char* filename, Map* m)
         {
             m->name = realloc(m->name,(strlen(two)+1)*sizeof(char));
             strcpy(m->name,two);
-
         }
 
      }

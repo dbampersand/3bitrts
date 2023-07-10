@@ -256,7 +256,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     UpdateGoldAnimationTimer(dt);
 
 
-    if (gameState == GAMESTATE_CHOOSING_UNITS)
+    if (currMap && strcmp(currMap->name,"unitselect")==0)
     {
         DrawUnitChoiceUI(mouseState, mouseStateLastFrame);
     }
@@ -413,7 +413,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     DrawAnimationEffects();
 
     GameObject* mousedOver = GetMousedOver(mouseState);
-    if (gameState == GAMESTATE_CHOOSING_UNITS) 
+    if (gameState == GAMESTATE_CHOOSING_UNITS || (currMap && strcmp(currMap->name,"unitselect")==0)) 
     {
 
         int numUnitsSelected = 0;//GetNumObjectsInRect(&selectedUnitsR,true);
@@ -478,7 +478,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         UpdateButton(ui.menuButton.x,ui.menuButton.y,ui.menuButton.w,ui.menuButton.h,&ui.menuButton,*mouseState,*mouseStateLastFrame);
         DrawUIElement(&ui.menuButton,ui.menuButton.x,ui.menuButton.y,mouseState,ui.menuButton.bgColor, COLOR_FRIENDLY,false);
         
-        if (gameState == GAMESTATE_INGAME)
+        if (gameState == GAMESTATE_INGAME || gameState == GAMESTATE_IN_CHATBOX)
         {
             char percentCompletionStr[NumDigits(INT_MAX)+3];
             if (currMap->automaticWinCheck || currMap->percentComplete >= 100)
@@ -767,7 +767,7 @@ int main(int argc, char* args[])
         if (gameState == GAMESTATE_IN_CHATBOX)
         {
             mouseState = GetMouseClamped();
-            
+
             if (event.type == ALLEGRO_EVENT_KEY_DOWN || (mouseState.mouse.buttons & 1 && !(mouseStateLastFrame.mouse.buttons & 1)))
             {
                 if (chatboxes)
@@ -926,7 +926,7 @@ int main(int argc, char* args[])
     
             totalRenderTime += time;
 
-            ConsolePrintf("Total time: %f\n",time);
+            //ConsolePrintf("Total time: %f\n",time);
             fflush(stdout);
             if (_IS_FOCUSED_WINDOW)
             {

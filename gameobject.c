@@ -902,6 +902,15 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                 HoldCommand(players[0].selection[i], IsBindDown(keyState, currSettings.keymap.key_Shift));
         }
     }
+    if (IsBindReleasedThisFrame(keyState, keyStateLastFrame, currSettings.keymap.key_Stop))
+    {
+        for (int i = 0; i < players[0].numUnitsSelected; i++)
+        {
+            if (IsOwnedByPlayer(players[0].selection[i]))
+                StopCommand(players[0].selection[i], IsBindDown(keyState, currSettings.keymap.key_Shift));
+        }
+    }
+
     if (!PlayerHasEnemyUnitSelected() && (!(mouseState->mouse.buttons & 2) && (mouseLastFrame->mouse.buttons & 2)))
     {
         if (!MouseInsideUI(mouseState))
@@ -2999,7 +3008,8 @@ void DrawGameObj(GameObject* g, bool forceInverse)
         if (_FRAMES_HAS_MOVED_ONE)
             DrawEnrageEffect(g);
     }
-    DrawEffectVisuals(g);
+    //removing for now - doesn't seem necessary and slightly confusing in hindsight
+    //DrawEffectVisuals(g);
     if (g->stunTimer > 0)
         DrawStunEffect(g);
 
@@ -4044,7 +4054,18 @@ void AddArmor(GameObject* g, float armor)
 {
     g->armor += armor;
 }
-
+int GetNumberOfBadEffects(GameObject* g)
+{
+    if (!g)
+        return 0;
+    int numEffects = 0;
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        if (g->effects[i].enabled && EffectIsBad(&g->effects[i],g))
+            numEffects++;
+    }
+    return numEffects;
+}
 int GetNumberOfActiveEffects(GameObject* g)
 {
     if (!g)

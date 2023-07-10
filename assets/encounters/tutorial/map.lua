@@ -216,10 +216,11 @@ function update(dt)
             f1["type"] = EFFECT_HURT;
             --f1["numTriggers"] = 5
             f1["value"] = 10;
-            f1["duration"] = 1;
+            f1["duration"] = 0.25;
             f1["triggersPerSecond"] = 1
+            f1["overwrites"] =true
         
-            CreateAOE(GetX(warrior),GetY(warrior),"", 30, 1, 999999, false, ATTACK_HITS_FRIENDLIES, COLOR_DAMAGE, DITHER_HALF,false,-1,0,0,0, {f1})
+            CreateAOE(GetX(warrior),GetY(warrior),"", 30, 0.25, 999999, false, ATTACK_HITS_FRIENDLIES, COLOR_DAMAGE, DITHER_HALF,false,-1,0,0,0, {f1})
             PushMessage(attackString2,textbox.x,textbox.y,textbox.w,textbox.h,false);
             PushMessage(attackString3,textbox.x,textbox.y,textbox.w,textbox.h,true);
             
@@ -228,7 +229,7 @@ function update(dt)
     end
     if (GetCurrentMessage() == attackString3) then
         dotTimer = dotTimer + dt;
-        if (GetNumEffects(warrior) == 0 and dotTimer > 2) then
+        if (GetNumBadEffects(warrior) == 0 and dotTimer > 2) then
             SetGamestateToMainMenu();
             --Win();
         end

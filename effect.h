@@ -100,6 +100,7 @@ void CureEffect(GameObject* g, Effect* e, int numEffects, bool removeAllStacks);
 void CureAll(GameObject* g);
 bool RemoveEffect(Effect* e, GameObject* from,bool removeAllStacks);
 bool EffectIsEnabled(Effect* e);
+bool EffectIsBad(Effect* e, GameObject* g);
 
 void DrawEffectVisuals(GameObject* g);
 void UpdateEffectVisuals(GameObject* g, float dt);
