@@ -442,8 +442,8 @@ void UpdateObject(GameObject* g, float dt)
     }
 
     // things that should only run when not stunned:
-    currGameObjRunning->offset.x = Towards(currGameObjRunning->offset.x, 0, dt * 2);
-    currGameObjRunning->offset.y = Towards(currGameObjRunning->offset.y, 0, dt * 2);
+    currGameObjRunning->offset.x = Towards(currGameObjRunning->offset.x, 0, dt * 9);
+    currGameObjRunning->offset.y = Towards(currGameObjRunning->offset.y, 0, dt * 9);
 
     g->summonTime += dt;
     if (g->summonTime < g->summonMax)
@@ -571,8 +571,9 @@ void UpdateObject(GameObject* g, float dt)
                     GameObject* g2 = g->targObj;
                     float angle = (atan2f(g2->position.worldY - g->position.worldY, g2->position.worldX - g->position.worldX));
 
-                    currGameObjRunning->offset.x = cosf(angle);
-                    currGameObjRunning->offset.y = sinf(angle);
+                    float maxDist = fabsf(GetDist(g,g2));
+                    currGameObjRunning->offset.x = cosf(angle)*_MIN(maxDist,6);
+                    currGameObjRunning->offset.y = sinf(angle)*_MIN(maxDist,6);
                 }
             }
         }
@@ -832,7 +833,7 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                     continue;
                 Sprite* sp = &sprites[obj->spriteIndex];
                 int j = al_get_bitmap_width(sp->sprite);
-                Rect rObj = (Rect){obj->position.worldX, obj->position.worldY, al_get_bitmap_width(sp->sprite), al_get_bitmap_height(sp->sprite)};
+                Rect rObj = (Rect){obj->position.worldX+obj->offset.x, obj->position.worldY+obj->offset.y, al_get_bitmap_width(sp->sprite), al_get_bitmap_height(sp->sprite)};
                 if (CheckIntersect(rObj, r))
                 {
                     if (!IsBindDown(keyState, currSettings.keymap.key_Shift))

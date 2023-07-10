@@ -541,6 +541,11 @@ void FinishTransition()
                     camPos.y = yPos;    
                 }
                 index++;
+
+                float healPercent = 0.25;
+                float hpToHeal = activeObjects[i]->maxHP * healPercent;
+
+                Heal(activeObjects[i],hpToHeal);
             }
             for (int j = 0; j < INVENTORY_SLOTS; j++)
             {
