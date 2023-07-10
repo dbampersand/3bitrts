@@ -823,7 +823,7 @@ void UpdateAttack(Attack* a, float dt)
 
         minAngle = movingAngle - DegToRad(90);
         maxAngle = movingAngle + DegToRad(90);
-        if (abs(a->speed > 0))
+        if (abs(a->speed > 0) && _FRAMES_HAS_MOVED_ONE)
             AddParticleWithRandomProperties(a->x,a->y,a->color,0.2f,4,60,90,minAngle,maxAngle);
 
     }

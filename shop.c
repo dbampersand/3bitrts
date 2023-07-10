@@ -121,8 +121,8 @@ void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
                 float cx = si->position.x + w/2.0f;
                 float cy = si->position.y + h/2.0f;
 
-
-                RandParticleAroundEdgeOfCircle(cx,cy,r, 2.0f,0.2f,COLOR_FRIENDLY);
+                if (_FRAMES_HAS_MOVED_ONE)
+                    RandParticleAroundEdgeOfCircle(cx,cy,r, 2.0f,0.2f,COLOR_FRIENDLY);
             }
         }
         if (shop.rerollAnimationTimer <= 0)
@@ -195,7 +195,7 @@ void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
     {
         ShopItem* si = &shop.items[i];
 
-        si->desiredPosition.y += sinf((shop.timer)*6)/16.0f;
+        si->desiredPosition.y += sinf((shop.timer)*4)/16.0f;
 
         if (si == shop.heldItem)
             continue;

@@ -111,12 +111,13 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
     float value = v * e->stacks;
 
     if (!remove)
-        for (int i = 0; i < ceil(value/4.0f); i++)
-        {
-            float x; float y;
-            GetCentre(target,&x,&y);
-            AddParticleWithRandomProperties(x,y,EffectColors[e->effectType],0.1f,2.5f,60,90,-M_PI,M_PI);
-        }
+        if (_FRAMES_HAS_MOVED_ONE)
+            for (int i = 0; i < ceil(value/4.0f); i++)
+            {
+                float x; float y;
+                GetCentre(target,&x,&y);
+                AddParticleWithRandomProperties(x,y,EffectColors[e->effectType],0.1f,2.5f,60,90,-M_PI,M_PI);
+            }
 
         
     if (!IsOwnedByPlayer(from) && e->effectType == EFFECT_HURT)

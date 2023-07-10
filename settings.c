@@ -986,16 +986,27 @@ bool LoadSaveFile(char* path)
                             char* levelStats = &token[positionEnd];
                             if (strlen(levelStats) > 1)
                             {
-                                int unlockLevel = 0;
-                                int bestChest = 0;
-                                int bestProfit = 0;
-                                int totalProfit = 0;
+                                //volatile here to specifically not apply optimisations
+                                //-O3 is breaking this - in a line of "6,5,1000746,1010018",
+                                //it skips over the 6 for the unlocklevel
+                                volatile int unlockLevel = 0;
+                                volatile int bestChest = 0;
+                                volatile int bestProfit = 0;
+                                volatile int totalProfit = 0;
                                 char comma = ',';
-                                char* save;
-                                unlockLevel = atoi(strtok_r(levelStats,&comma,&save));
-                                bestChest = atoi(strtok_r(NULL,&comma,&save));
-                                bestProfit = atoi(strtok_r(NULL,&comma,&save));
-                                totalProfit = atoi(strtok_r(NULL,&comma,&save));
+                                char* save = NULL;
+
+                                char* str = strtok_r(levelStats,&comma,&save);
+                                bestChest = atoi(str);
+
+                                str = strtok_r(NULL,&comma,&save);
+                                unlockLevel = atoi(str);
+
+                                str = strtok_r(NULL,&comma,&save);
+                                bestProfit = atoi(str);
+
+                                str = strtok_r(NULL,&comma,&save);
+                                totalProfit = atoi(str);
 
 
                                 token[positionEnd] = '\0';

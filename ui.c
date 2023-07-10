@@ -150,6 +150,8 @@ void DrawItems(GameObject* selected)
 }
 void DrawUIHighlight(UIElement* u, float x, float y)
 {
+    if (!_FRAMES_HAS_MOVED_ONE)
+        return;
     int total = u->w*2 + u->h*2;
     int amtThrough = (int)(_FRAMES) % total;
 

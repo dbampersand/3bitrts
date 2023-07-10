@@ -455,7 +455,7 @@ void UpdateObject(GameObject* g, float dt)
         GetCentre(g, &cx, &cy);
         float r = _MAX(GetWidth(g), GetHeight(g)) * fxtimer;
         ALLEGRO_COLOR c = IsOwnedByPlayer(g) == true ? FRIENDLY : ENEMY;
-        if ((int)((_FRAMES) + (g - objects)) % 2 == 0)
+        if ((int)((_FRAMES) + (g - objects)) % 2 == 0 && _FRAMES_HAS_MOVED_ONE)
             RandParticleAroundEdgeOfCircle(cx, cy, r, g->summonMax + 1, 0.4, ALColorToCol(c));
 
         UpdatePush(g, dt);
@@ -797,6 +797,8 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
     if (mouseState->mouse.buttons & 2)
         players[0].amoveSelected = false;
 
+    GameObject* clickedOn = NULL;
+
     if (!(mouseState->mouse.buttons & 1))
     {
         if (players[0].selecting)
@@ -820,9 +822,9 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                 if (CheckIntersect(rObj, r))
                 {
                     numUnitClickedOn++;
+                    clickedOn = obj;
                 }
             }
-
             for (int i = 0; i < numActiveObjects; i++)
             {
                 GameObject* obj = activeObjects[i];
@@ -841,19 +843,6 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                                 SetSelected(activeObjects[j], false);
                                 ClearSelection();
                                 players[0].numUnitsSelected = 0;
-                            }
-                            if (gameState == GAMESTATE_CHOOSING_UNITS && (!obj->purchased && obj->playerChoosable))
-                            {
-                                SetGameStateToPurchasingUnits();
-                                for (int j = 0; j < ui.purchasingUnitUI.numPrefabs; j++)
-                                {
-                                    if (strcmp(ui.purchasingUnitUI.prefabs[j]->name, obj->name) == 0)
-                                    {
-                                        ui.purchasingUnitUI.currentIndex = j;
-                                        ui.purchasingUnitUI.indexTransitioningTo = j;
-                                        break;
-                                    }
-                                }
                             }
 
                             hasSelected = true;
@@ -889,6 +878,20 @@ void CheckSelected(MouseState* mouseState, MouseState* mouseLastFrame, ALLEGRO_K
                 }
             }
         }
+        if (gameState == GAMESTATE_CHOOSING_UNITS && clickedOn && (!clickedOn->purchased && clickedOn->playerChoosable))
+        {
+            SetGameStateToPurchasingUnits();
+            for (int j = 0; j < ui.purchasingUnitUI.numPrefabs; j++)
+            {
+                if (strcmp(ui.purchasingUnitUI.prefabs[j]->name, clickedOn->name) == 0)
+                {
+                    ui.purchasingUnitUI.currentIndex = j;
+                    ui.purchasingUnitUI.indexTransitioningTo = j;
+                    break;
+                }
+            }
+        }
+
         players[0].selecting = false;
     }
     if (IsBindReleasedThisFrame(keyState, keyStateLastFrame, currSettings.keymap.key_HoldPosition))
@@ -1748,6 +1751,11 @@ void SetSelected(GameObject* g, bool select)
 {
     if (select && players[0].numUnitsSelected >= MAXUNITSSELECTED)
         return;
+    if (gameState == GAMESTATE_CHOOSING_UNITS && (!g->purchased && g->playerChoosable))
+    {
+        return;
+    }
+
     if (select && IsSelectable(g))
     {
         g->properties |= OBJ_SELECTED;
@@ -2407,7 +2415,8 @@ void Move(GameObject* g, float delta)
     UpdateObjPosition(g, g->position.worldX, g->position.worldY);
     SetMapCollisionRect(g->position.worldX, g->position.worldY, w, h, true);
 
-    AddParticleWithRandomProperties(g->position.worldX + GetWidth(g) / 2.0f, g->position.worldY + GetHeight(g) / 2.0f, GameObjToColor(g), 1.25, 1.5, 3, 12, -M_PI, M_PI);
+    if (_FRAMES_HAS_MOVED_ONE)
+        AddParticleWithRandomProperties(g->position.worldX + GetWidth(g) / 2.0f, g->position.worldY + GetHeight(g) / 2.0f, GameObjToColor(g), 1.25, 1.5, 3, 12, -M_PI, M_PI);
 }
 bool ObjectCanPush(GameObject* g)
 {
@@ -2987,7 +2996,8 @@ void DrawGameObj(GameObject* g, bool forceInverse)
     }
     if (g->enraged)
     {
-        DrawEnrageEffect(g);
+        if (_FRAMES_HAS_MOVED_ONE)
+            DrawEnrageEffect(g);
     }
     DrawEffectVisuals(g);
     if (g->stunTimer > 0)

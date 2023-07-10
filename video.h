@@ -19,6 +19,8 @@ typedef struct MouseState
 } MouseState;
 
 extern double _FRAMES;
+extern bool _FRAMES_HAS_MOVED_ONE;
+
 bool _IS_FOCUSED_WINDOW;
 
 //refers to an index in Target FPS pulldown in videoOptionsPanel

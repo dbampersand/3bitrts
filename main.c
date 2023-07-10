@@ -654,9 +654,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
     }
     if (KeyDown(keyState,ALLEGRO_KEY_F8))
     {
-        AddGold(9999);
-        AddCompletionPercent(100);
-        SetGameStateToInShop();
         //AddCompletionPercent(100);
     }
 
@@ -814,9 +811,9 @@ int main(int argc, char* args[])
         if (event.type == ALLEGRO_EVENT_DISPLAY_SWITCH_IN)
         {
             _IS_FOCUSED_WINDOW = true;
-
+            #ifndef __APPLE__
             al_set_mouse_xy(display,0,0);
-
+            #endif
 
         }
         #ifdef __WIN32__
@@ -918,10 +915,18 @@ int main(int argc, char* args[])
 
             mouseStateLastFrame = mouseState;
             keyStateLastFrame = keyState;
-             _FRAMES += (60 / (float)_TARGET_FPS) * (1-currSettings.slowdownPercent);
+            int framesBefore = floor(_FRAMES);
+            _FRAMES += (60 / (float)_TARGET_FPS) * (1-currSettings.slowdownPercent);
+            //we've moved by '1 frame' at 60fps
+            if ((int)floor(_FRAMES) != framesBefore)
+                _FRAMES_HAS_MOVED_ONE = true;
+            else
+                _FRAMES_HAS_MOVED_ONE = false;
+
+    
             totalRenderTime += time;
 
-            //ConsolePrintf("Total time: %f\n",time);
+            ConsolePrintf("Total time: %f\n",time);
             fflush(stdout);
             if (_IS_FOCUSED_WINDOW)
             {

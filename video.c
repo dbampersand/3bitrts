@@ -22,6 +22,7 @@
 
 #include "allegro5/allegro_font.h"
 
+
 Point DEBUG_P1 = {0};
 Point DEBUG_P2 = {0};
 Point DEBUG_P3 = {0};
@@ -37,6 +38,7 @@ ALLEGRO_BITMAP* background_screen = NULL;
 ALLEGRO_DISPLAY* display = NULL;
 
 double _FRAMES = 1;
+bool _FRAMES_HAS_MOVED_ONE = false;
 
  TextDisplay textDisplays[NUM_TEXT_DISPLAYS] = {0};
  int numStringsToDraw = 0;
@@ -200,8 +202,12 @@ void InitVideo()
     {}
     else
         currSettings.displayWindowStyle = ALLEGRO_FULLSCREEN_WINDOW;
-        al_set_new_display_flags(currSettings.displayWindowStyle);
+    al_set_new_display_flags(currSettings.displayWindowStyle);
+
+    //al_set_new_display_option(ALLEGRO_VSYNC,2,ALLEGRO_SUGGEST);
+
     display = al_create_display(monitor.x2,monitor.y2);
+
     al_set_window_title(display,GAME_NAME);
     GAME_DISPLAY_ICON = al_load_bitmap("assets/ui/display_icon.png");
     if (GAME_DISPLAY_ICON)
