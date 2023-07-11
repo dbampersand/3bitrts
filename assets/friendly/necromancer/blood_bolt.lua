@@ -7,6 +7,8 @@ local damage = 500
 function setup()
     AbilitySetPortrait("assets/friendly/necromancer/icon_blood_bolt.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_HURT)
+
     SetAbilityRange(80)
 
     SetCooldown(99999999)

@@ -442,8 +442,10 @@ void UpdateObject(GameObject* g, float dt)
     }
 
     // things that should only run when not stunned:
-    currGameObjRunning->offset.x = Towards(currGameObjRunning->offset.x, 0, dt * 9);
-    currGameObjRunning->offset.y = Towards(currGameObjRunning->offset.y, 0, dt * 9);
+    float moveAmount = dt * 9;
+    if (currGameObjRunning->queue[0].commandType != COMMAND_ATTACK)
+        moveAmount = dt * 20;
+    currGameObjRunning->offset = Towards_Angled(currGameObjRunning->offset,(Point){0,0},moveAmount);
 
     g->summonTime += dt;
     if (g->summonTime < g->summonMax)
@@ -572,8 +574,11 @@ void UpdateObject(GameObject* g, float dt)
                     float angle = (atan2f(g2->position.worldY - g->position.worldY, g2->position.worldX - g->position.worldX));
 
                     float maxDist = fabsf(GetDist(g,g2));
-                    currGameObjRunning->offset.x = cosf(angle)*_MIN(maxDist,6);
-                    currGameObjRunning->offset.y = sinf(angle)*_MIN(maxDist,6);
+                    if (currGameObjRunning->baseDamage > 0)
+                    {
+                        currGameObjRunning->offset.x = cosf(angle)*_MIN(maxDist,6);
+                        currGameObjRunning->offset.y = sinf(angle)*_MIN(maxDist,6);
+                    }
                 }
             }
         }
@@ -1098,6 +1103,7 @@ GameObject* AddGameobject(GameObject* prefab, float x, float y, GAMEOBJ_SOURCE s
     currGameObjRunning->mana = currGameObjRunning->maxMana;
 
     currGameObjRunning->manaRegen = 1;
+
 
     currGameObjRunning->aggroRadius = 40;
 
@@ -3126,6 +3132,7 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
     float cyf;
     GetCentre(g, &cxf, &cyf);
 
+
     int cx = (cxf);
     int cy = (cyf);
 
@@ -3893,6 +3900,8 @@ void DrawChannelHint(GameObject* g, float dt, MouseState mouseState)
             float x2;
             float y2;
             ALLEGRO_COLOR col = GetPlayerOwnedBy(g) == 0 ? FRIENDLY : ENEMY;
+            if (a && a->hintColorSet)
+                col = GetColor(a->hintColor,GetPlayerOwnedBy(g));
             if (g->channelled_target)
             {
                 GetCentre(g->channelled_target, &x2, &y2);
@@ -3966,7 +3975,7 @@ void DrawChannelHint(GameObject* g, float dt, MouseState mouseState)
                 if (a->hintLength == 0)
                     length = a->range;
                 
-                DrawCone(ToScreenSpace_X(x), ToScreenSpace_Y(y), RadToDeg(angle), a->hintRadius, length, ENEMY);
+                DrawCone(ToScreenSpace_X(x), ToScreenSpace_Y(y), RadToDeg(angle), a->hintRadius, length, col);
             }
         }
     }

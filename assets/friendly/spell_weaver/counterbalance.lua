@@ -11,6 +11,8 @@ local maxStacks = 5
 function setup()
     AbilitySetPortrait("assets/friendly/spell_weaver/icon_counterbalance.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_HURT)
+
     SetAbilityRange(80)
     SetCooldown(10) 
     SetDescription("Counterbalance\n\nDeals damage proportional to the number of consecutive casts on the same target.")

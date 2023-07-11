@@ -12,6 +12,7 @@ function setup()
     AbilitySetCastType(Bor(ABILITY_POINT,ABILITY_TARGET_ENEMY)); 
     AbilitySetPortrait("assets/friendly/lancer/icon_lance.png");
     SetAbilityHint(HINT_CONE,radius,false,coneSize)
+    AbilitySetHintColor(EFFECT_HURT)
 
     SetAbilityRange(coneSize)
     SetCooldown(10);

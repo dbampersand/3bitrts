@@ -4,7 +4,7 @@ function setup()
     AbilitySetPortrait("assets/friendly/ranger/icon_galeshot.png");
     AbilitySetCastType(ABILITY_POINT);
     SetAbilityHint(HINT_CIRCLE,radius);
-
+    AbilitySetHintColor(EFFECT_HURT)
     SetDescription("Galeshot\n\nDeals damage in an area.")
     SetCooldown(40);
     SetAbilityRange(50);

@@ -18,7 +18,7 @@ function onmapchange(obj)
 
     local radius = GetWidth(g) / 2
 
-    aoe = CreateAOE(GetX(obj),GetY(obj),"", radius, tickRate, 999, false, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_DAMAGE_HALF, false, obj,0,0,0, {f1})
+    aoe = CreateAOE(GetX(obj),GetY(obj),"", radius, tickRate, 999, false, ATTACK_HITS_ENEMIES, COLOR_FRIENDLY_DAMAGE, DITHER_DAMAGE_HALF, false, obj,0,0,0, {f1})
 
 end
 

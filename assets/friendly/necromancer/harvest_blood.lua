@@ -7,6 +7,7 @@ local damage = 100
 function setup()
     AbilitySetPortrait("assets/friendly/necromancer/icon_harvest_blood.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
+    AbilitySetHintColor(EFFECT_HURT)
     SetAbilityRange(80)
     SetCooldown(10) 
     SetDescription("Harvest Blood\n\nDeals damage to a friendly unit, and generates a stack of Blood Bolt.")

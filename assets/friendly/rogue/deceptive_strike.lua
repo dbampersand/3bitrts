@@ -2,6 +2,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/rogue/icon_deceptive_strike.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_HURT)
     SetAbilityRange(50)
     SetDescription("Deceptive Strike\n\nDeals damage and reduces the cooldown of Backstab by 2 seconds.")
     SetCooldown(8)

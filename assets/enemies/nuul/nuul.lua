@@ -10,7 +10,7 @@ function setup()
     SetSprite("assets/enemies/nuul/nuul.png");
 
     SetDamage(50);
-    SetMaxHP(6000,true)
+    SetMaxHP(4000,true)
     SetSpeed(0)
     SetRange(128);   
 

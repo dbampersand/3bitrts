@@ -55,9 +55,13 @@ void DrawHeldAbility(MouseState* mouseState)
 
     float radiusX = players[0].abilityHeld->range + (GetWidth(g)/2.0f);
     float radiusY = players[0].abilityHeld->range + (GetHeight(g)/2.0f);
+    
+    ALLEGRO_COLOR col = FRIENDLY;
+    if (players[0].abilityHeld && players[0].abilityHeld->hintColorSet)
+        col = GetColor(players[0].abilityHeld->hintColor,GetPlayerOwnedBy(g));
 
     if (players[0].abilityHeld->targetingHint != HINT_CONE)
-        al_draw_ellipse(cx,cy,radiusX,radiusY,FRIENDLY,0);
+        al_draw_ellipse(cx,cy,radiusX,radiusY,col,0);
 //    al_draw_circle((cx),(cy),radius,FRIENDLY,0);
     
     /*if (players[0].abilityHeld->targetingHint == HINT_LINE)
@@ -78,7 +82,12 @@ void DrawHeldAbility(MouseState* mouseState)
     GameObject* heldSelected = players[0].selection[players[0].indexSelectedUnit];
     float cxHeld; float cyHeld; 
     GetCentre(heldSelected,&cxHeld,&cyHeld);
-    al_draw_line(mouseState->screenX+2,(mouseState->screenY+2),ToScreenSpace_X(cxHeld),ToScreenSpace_Y(cyHeld),FRIENDLY,1);
+
+    GameObject* mousedOver = GetMousedOver(mouseState);
+    ALLEGRO_COLOR lineColor = FRIENDLY;
+    if (AbilityShouldBeCastOnTarget(players[0].abilityHeld) &&  AbilityCanBeCast(players[0].abilityHeld,heldSelected,mousedOver,mouseState->worldX,mouseState->worldY))
+        lineColor = col;
+    al_draw_line(mouseState->screenX+2,(mouseState->screenY+2),ToScreenSpace_X(cxHeld),ToScreenSpace_Y(cyHeld),lineColor,1);
 
 }
 void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState mouseState,MouseState mouseStateLastFrame)

@@ -1173,6 +1173,7 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
 
     if (!IsOwnedByPlayer(selected))
         keydown = false;
+
     Sprite* s = &sprites[selected->abilities[index].spriteIndex_Portrait];
     //DrawSprite(s,startX,startY,FRIENDLY,keydown);
     Ability* a = &selected->abilities[index];
@@ -1222,9 +1223,11 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
     if (a->stacks != a->maxStacks && gameState != GAMESTATE_PURCHASING_UNITS)
     {
         float percent = 1-(a->cdTimer / a->cooldown);
-        al_draw_line(r.x,r.y + (r.h*percent),r.x+r.w,r.y+(r.h*percent),BG,1);
-        al_draw_line(r.x,r.y + 1 + (r.h*percent),r.x+r.w,r.y + 1 +(r.h*percent),*c,1);
-
+        if (percent > 0.01f)
+        {
+            al_draw_line(r.x,r.y + (r.h*percent),r.x+r.w,r.y+(r.h*percent),BG,1);
+            al_draw_line(r.x,r.y + 1 + (r.h*percent),r.x+r.w,r.y + 1 +(r.h*percent),*c,1);
+        }
     }
 
     //Draw key to press for the ability
@@ -1240,7 +1243,23 @@ bool DrawAbilityPortraits(GameObject* selected, Ability* heldAbility, int index,
     if (index == 4)
         key = al_keycode_to_name(currSettings.keymap.key_F.keyMappedTo);
 
+    if (selected->abilities[index].hintColorSet)
+    {
+        Rect rHint = (Rect){r.x+1,r.y+1,r.w-1,r.h-1};
+        //dither full rect
+        DrawOutlinedRect_Dithered(rHint,GetColor(selected->abilities[index].hintColor,GetPlayerOwnedBy(selected)));
 
+        //horiz
+        //al_draw_line(r.x+1,r.y,r.x+r.w,r.y,GetColor(selected->abilities[index].hintColor,GetPlayerOwnedBy(selected)),1);
+        //al_draw_line(r.x+1,r.y+r.h-1,r.x+r.w,r.y+r.h-1,GetColor(selected->abilities[index].hintColor,GetPlayerOwnedBy(selected)),1);
+
+        //vertical
+        //al_draw_line(r.x+1,r.y,r.x,r.y+r.h-1,GetColor(selected->abilities[index].hintColor,GetPlayerOwnedBy(selected)),1);
+        //al_draw_line(r.x+r.w,r.y,r.x+r.w,r.y+r.h-1,GetColor(selected->abilities[index].hintColor,GetPlayerOwnedBy(selected)),1);
+
+        //full rect
+        //al_draw_rectangle(r.x+1,r.y,r.x+r.w,r.y+r.h-1,GetColor(selected->abilities[index].hintColor,GetPlayerOwnedBy(selected)),1);
+    }
     if (key && drawKey && IsOwnedByPlayer(selected))
     {
         int keyW = al_get_text_width(ui.tinyFont,key)+4;

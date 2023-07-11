@@ -7,6 +7,8 @@ local damage = 80
 function setup()
     AbilitySetPortrait("assets/friendly/bard/icon_aoe_shield.png");
     AbilitySetCastType(ABILITY_POINT);
+    AbilitySetHintColor(EFFECT_HURT)
+
     SetAbilityRange(80)
     SetCooldown(10)
     SetDescription("Bolt\n\nFires a damaging projectile.")

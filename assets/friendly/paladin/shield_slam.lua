@@ -2,6 +2,7 @@
 function setup()
     AbilitySetCastType(ABILITY_TARGET_ENEMY); 
     AbilitySetPortrait("assets/friendly/paladin/icon_shield_slam.png");
+    AbilitySetHintColor(EFFECT_HURT)
     
 
     SetAbilityRange(60)

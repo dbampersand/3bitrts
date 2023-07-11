@@ -194,6 +194,9 @@ void FindEnemiesToAttack(GameObject* g)
     GameObject* closestObj = NULL;
     float closestDistance = FLT_MAX;
     bool allowAmovingDecor = (GetPlayerOwnedBy(g) == 0);
+    float aggroRadius = g->aggroRadius;
+    if (GetPlayerOwnedBy(g) == 0)
+        aggroRadius = g->range;
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g2 = activeObjects[i];  
@@ -202,7 +205,7 @@ void FindEnemiesToAttack(GameObject* g)
             if (GetPlayerOwnedBy(g) != GetPlayerOwnedBy(g2) && !ObjIsInvincible(g2))
             {
                 float gDist = GetDist(g,g2);
-                if (gDist <= g->aggroRadius)
+                if (gDist <= aggroRadius)
                 {
                     if (gDist <= closestDistance)
                     {

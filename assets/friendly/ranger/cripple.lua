@@ -6,6 +6,7 @@ function setup()
     AbilitySetPortrait("assets/friendly/ranger/icon_cripple.png");
     AbilitySetCastType(ABILITY_POINT);
     SetAbilityRange(length)
+    AbilitySetHintColor(EFFECT_SPEED)
     SetAbilityHint(HINT_CONE,radius,false,length)
     SetDescription("Cripple\n\nPushes targets away and slows them.")
     SetCooldown(10);

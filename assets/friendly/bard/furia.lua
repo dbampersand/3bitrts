@@ -8,6 +8,7 @@ local radius = 100
 function setup()
     AbilitySetPortrait("assets/friendly/bard/icon_furia.png");
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_ATTACKDAMAGE)
     SetAbilityRange(100)
     SetCooldown(50)
     SetDescription("Furia\n\nIncreases the attack damage of all nearby friendly units")

@@ -4,6 +4,7 @@ local duration = 5
 function setup()
     AbilitySetPortrait("assets/friendly/herbalist/icon_elixir_of_life.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
+    AbilitySetHintColor(EFFECT_HEAL)
     SetAbilityRange(60)
     SetDescription("Elixir of Life\n\nA large heal over time effect.")
     SetManaCost(8)

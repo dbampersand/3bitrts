@@ -4,6 +4,7 @@ local duration = 8
 function setup()
     AbilitySetPortrait("assets/friendly/shaman/icon_healing_rain.png");
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_HEAL)
     SetAbilityRange(60)
     SetDescription("Healing Rain\n\nHeal over time in a very large area. Cannot move while casting.")
     SetCooldown(30);

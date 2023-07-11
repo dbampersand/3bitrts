@@ -5,6 +5,7 @@ local maxHeal = 250
 function setup()
     AbilitySetPortrait("assets/friendly/shaman/icon_healing_stream.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
+    AbilitySetHintColor(EFFECT_HEAL)
     SetAbilityRange(60)
     SetDescription("Healing Stream\n\nA heal that bounces between friendly targets.")
     SetManaCost(45)

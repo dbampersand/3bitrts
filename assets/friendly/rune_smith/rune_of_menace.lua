@@ -3,6 +3,8 @@ local duration = 3
 function setup()
     AbilitySetPortrait("assets/friendly/rune_smith/icon_rune_of_menace.png");
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_THREAT)
+
     SetCooldown(5);
 
     SetDescription("Rune of Menace\n\nCreates an area of threat around you.")

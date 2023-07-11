@@ -5,6 +5,7 @@ local time = 6
 function setup()
     AbilitySetPortrait("assets/friendly/rogue/icon_bomb.png");
     AbilitySetCastType(ABILITY_POINT);
+    AbilitySetHintColor(EFFECT_MISS_CHANCE)
     SetAbilityRange(60)
     SetDescription("Flash Bomb\n\nDeals damage and blinds enemy targets in the area, causing them to miss "..missChance .. "% of their attacks.")
     SetCooldown(14)

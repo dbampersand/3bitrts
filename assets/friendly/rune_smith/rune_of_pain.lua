@@ -1,6 +1,8 @@
 function setup()
     AbilitySetPortrait("assets/friendly/rune_smith/icon_rune_of_pain.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_HURT)
+
     SetDescription("Rune of Pain\n\nDamages you and your target. Applies a large amount of threat.")
     SetCooldown(8);
 end

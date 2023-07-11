@@ -2,6 +2,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/arcane_mage/mana_sword/icon_throw_sword.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_HURT)
     SetDescription("Throw Sword\n\nThrows the mana sword at a target, dealing damage and returning your previous abilities.");
     SetCooldown(8);
     SetAbilityRange(50);    

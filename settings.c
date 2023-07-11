@@ -739,10 +739,10 @@ void SetMovementKeys(char* str)
 
     int key_HoldPosition  = (int)FindToken(str,"key_HoldPosition");
     if (key_HoldPosition >= 0)
-        currSettings.keymap.key_PanDown.keyMappedTo = key_HoldPosition;
+        currSettings.keymap.key_HoldPosition.keyMappedTo = key_HoldPosition;
     int key_HoldPosition_Alt  = (int)FindToken(str,"key_HoldPosition_Alt");
     if (key_HoldPosition >= 0)
-        currSettings.keymap.key_PanDown.secondKeyMappedTo = key_HoldPosition_Alt;
+        currSettings.keymap.key_HoldPosition.secondKeyMappedTo = key_HoldPosition_Alt;
 
     int key_Stop  = (int)FindToken(str,"key_Stop");
     if (key_Stop >= 0)

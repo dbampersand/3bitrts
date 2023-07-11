@@ -12,6 +12,7 @@ local attackSpeed = -0.1
 function setup()
     AbilitySetPortrait("assets/friendly/spell_weaver/icon_stitch.png");
     AbilitySetCastType(ABILITY_TARGET_ALL);
+    AbilitySetHintColor(EFFECT_ATTACKSPEED)
     SetAbilityRange(50)
     SetCooldown(8)
     SetDescription("Stitch\n\nAdds a stack of Weave and increases target units' attack speed")

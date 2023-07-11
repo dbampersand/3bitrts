@@ -1,6 +1,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/warrior/icon_shield.png");
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_SHIELD)
     SetDescription("Shield\n\nGives 50 shield")
     SetCooldown(15);
 end

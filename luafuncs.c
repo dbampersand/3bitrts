@@ -4077,6 +4077,16 @@ int L_RandRangeI(lua_State* l)
     lua_pushinteger(l,RandRangeI(min,max));
     return 1;
 }
+int L_AbilitySetHintColor(lua_State* l)
+{
+    if (currGameObjRunning && currAbilityRunning)
+    {
+        int col = lua_tointeger(l,1);
+        currAbilityRunning->hintColor = EffectColors[col];
+        currAbilityRunning->hintColorSet = true;
+    }
+    return 0;
+}
 int L_SetAbilityHint(lua_State* l)
 {
     if (!currAbilityRunning)
@@ -6052,6 +6062,10 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_GetNumBadEffects);
     lua_setglobal(luaState, "GetNumBadEffects");
+
+    lua_pushcfunction(luaState, L_AbilitySetHintColor);
+    lua_setglobal(luaState, "AbilitySetHintColor");
+
 
 }
 

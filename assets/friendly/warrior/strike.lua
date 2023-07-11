@@ -5,6 +5,8 @@ local duration = 2;
 function setup()
     AbilitySetPortrait("assets/friendly/warrior/strike.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_HURT)
+
     SetAbilityRange(40)
     SetDescription("Strike\n\nStrikes the target, dealing damage and adding high amounts of threat. Deals more damage when Shield is on cooldown.")
     SetCooldown(6)

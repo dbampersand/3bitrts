@@ -2,6 +2,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/monk/icon_fury.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_HURT)
     SetDescription("Fury\n\nA devastating single target attack. Uses all stacks of chi to deal proportional damage.")
     SetCooldown(99999999);
     SetCooldownTimer(99999999);

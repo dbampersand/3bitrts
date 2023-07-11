@@ -3,6 +3,7 @@ local duration = 3
 function setup()
     AbilitySetPortrait("assets/friendly/rune_smith/icon_rune_of_shield.png");
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_INVULN)
     SetCooldown(5);
 
     SetDescription("Rune of Shield\n\nMakes you invulnerable for " .. duration .. " seconds.")

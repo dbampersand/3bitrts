@@ -5,10 +5,11 @@ local tickRate = 0.2
 function setup()
     AbilitySetPortrait("assets/friendly/priest/icon_smite.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_HURT)
     SetAbilityRange(60)
     SetDescription("Smite\n\nHits the target for minor damage. Regenerates mana.")
     SetCooldown(10);
-    SetManaCost(10)
+    SetManaCost(5)
     SetAbilityMaxStacks(3);
 end
 function casted(x,y,obj,headingx,headingy)

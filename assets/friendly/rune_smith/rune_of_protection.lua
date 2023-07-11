@@ -6,6 +6,7 @@ local duration = 15;
 function setup()
     AbilitySetPortrait("assets/friendly/rune_smith/icon_rune_of_protection.png");
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_SHIELD)
     SetAbilityRange(40)
     SetDescription("Rune of Protection\n\nShields you from damage, applying a large amount of armor.")
     SetCooldown(duration)

@@ -2,6 +2,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/monk/icon_lotus.png");
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_HEAL)
     SetDescription("Lotus\n\nCauses a lotus to bloom, healing yourself. Uses a chi charge.")
     SetCooldown(0);
     SetAbilityRange(50);

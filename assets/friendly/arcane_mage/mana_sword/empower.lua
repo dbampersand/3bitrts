@@ -3,6 +3,7 @@ function setup()
     AbilitySetPortrait("assets/friendly/arcane_mage/mana_sword/icon_empower.png");
     AbilitySetCastType(ABILITY_INSTANT);
     SetDescription("Empower\n\nAdds attack damage.");
+    AbilitySetHintColor(EFFECT_ATTACKDAMAGE)
     SetCooldown(4);
     SetAbilityRange(50);    
 end

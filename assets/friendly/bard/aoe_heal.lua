@@ -3,6 +3,7 @@ local aoe = -1;
 
 function setup()
     AbilitySetCastType(ABILITY_TOGGLE);
+    AbilitySetHintColor(EFFECT_HEAL)
 
     SetAbilityRange(20)
     SetCooldown(10);

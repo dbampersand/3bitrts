@@ -2,6 +2,7 @@ function setup()
     AbilitySetPortrait("assets/friendly/chromamancer/icon_iridesce.png");
     AbilitySetCastType(ABILITY_TARGET_ALL);
     SetDescription("Iridesce\n\nShields target and heals over time. When used on enemies, causes a damage over time effect.")
+    AbilitySetHintColor(EFFECT_SHIELD)
     SetCooldown(0.5);
     SetManaCost(20)
 

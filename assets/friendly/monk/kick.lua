@@ -2,6 +2,8 @@
 function setup()
     AbilitySetPortrait("assets/friendly/monk/icon_kick.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_STUN)
+
     SetAbilityRange(50)
     SetDescription("Kick\n\nStuns the target. Generates a chi.")
     SetCooldown(20);

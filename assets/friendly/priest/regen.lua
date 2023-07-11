@@ -2,6 +2,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/priest/icon_regen.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
+    AbilitySetHintColor(EFFECT_HEAL)
     SetAbilityRange(120)
     SetDescription("Regen\n\nA heal over time effect.")
     SetManaCost(15)

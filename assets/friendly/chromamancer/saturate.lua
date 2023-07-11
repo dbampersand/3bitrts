@@ -5,6 +5,7 @@ local duration = 2;
 function setup()
     AbilitySetPortrait("assets/friendly/chromamancer/icon_saturate.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
+    AbilitySetHintColor(EFFECT_SHIELD)
     SetAbilityRange(40)
     SetDescription("Saturate\n\nHeals a target fully and applies a shield to you and your target for the amount healed.")
     SetCooldown(40);

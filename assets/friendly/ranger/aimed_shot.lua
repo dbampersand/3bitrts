@@ -2,6 +2,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/ranger/aimed_shot.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_HURT)
     SetDescription("Aimed Shot\n\nA heavy shot. Generates a stack of Flurry.")
     SetCooldown(8);
     SetAbilityRange(50);

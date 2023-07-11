@@ -2,6 +2,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/rogue/icon_backstab.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_HURT)
     SetAbilityRange(10)
     SetDescription("Backstab\n\nHits the target for major damage and causes a slow effect.")
     SetCooldown(15);

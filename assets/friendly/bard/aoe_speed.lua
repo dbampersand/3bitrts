@@ -5,6 +5,7 @@ local aoe = -1;
 function setup()
     AbilitySetPortrait("assets/friendly/bard/icon_aoe_speed.png");
     AbilitySetCastType(ABILITY_TOGGLE);
+    AbilitySetHintColor(EFFECT_SPEED)
     SetAbilityRange(duration * speed)
     SetCooldown(10)
     SetDescription("Song of Speed\n\nProvides speed in a radius.")

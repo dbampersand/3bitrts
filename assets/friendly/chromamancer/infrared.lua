@@ -11,6 +11,7 @@ function setup()
     AbilitySetPortrait("assets/friendly/chromamancer/icon_infrared.png");
     SetDescription("Infrared\n\nProjects a cone of healing infrared light.")
     SetAbilityRange(length)
+    AbilitySetHintColor(EFFECT_HEAL)
     SetAbilityHint(HINT_CONE,radius,false,length)
     SetCooldown(40);
 

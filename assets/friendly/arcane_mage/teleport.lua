@@ -2,6 +2,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/arcane_mage/icon_teleport.png");
     AbilitySetCastType(ABILITY_POINT);
+    AbilitySetHintColor(EFFECT_ATTACKSPEED)
     SetAbilityRange(50)
     SetDescription("Teleport\n\nMove to target position, increasing your and allies' attack speed.")
     SetCooldown(15);

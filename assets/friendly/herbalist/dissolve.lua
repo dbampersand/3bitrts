@@ -6,6 +6,8 @@ function setup()
     SetDescription("Dissolve\n\nReduces the target's armour and deals damage over time.")
 
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_ARMOR)
+
 
     SetCooldown(20);
     SetManaCost(10)

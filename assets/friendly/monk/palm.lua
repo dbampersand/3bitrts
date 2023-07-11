@@ -2,6 +2,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/monk/icon_palm.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_HURT)
     SetDescription("Palm\n\nA heavy hit which cleaves to nearby units. Generates a chi.")
     SetCooldown(6);
     SetAbilityRange(50);    

@@ -4,6 +4,7 @@ local ticker = -1
 function setup()
     AbilitySetPortrait("assets/friendly/arcane_mage/icon_mana_sword.png");
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_ADD_MANA)
     SetDescription("Mana Sword\n\nSummon a magic sword, changing all of your abilities and changing your range to melee.")
     SetCooldown(0);
     SetAbilityRange(50);

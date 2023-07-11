@@ -6,6 +6,8 @@ local lifestealPercent = 0.4
 local damage = 150
 function setup()
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_LIFESTEAL)
+
 
     SetAbilityRange(20)
     SetCooldown(30)

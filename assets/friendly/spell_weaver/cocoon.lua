@@ -8,6 +8,8 @@ local damage = 10000
 function setup()
     AbilitySetPortrait("assets/friendly/spell_weaver/icon_cocoon.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
+    AbilitySetHintColor(EFFECT_HEAL)
+
     SetAbilityRange(80)
 
     SetCooldown(99999999)

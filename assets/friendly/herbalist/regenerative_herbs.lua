@@ -5,6 +5,7 @@ local maxStacks = 3
 function setup()
     AbilitySetPortrait("assets/friendly/herbalist/icon_regenerative_herbs.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
+    AbilitySetHintColor(EFFECT_HEAL)
     SetAbilityRange(60)
     SetDescription("Regenerative Herbs\n\nHeal over time effect. Stacks up to " .. maxStacks .. " times.");
     SetCooldown(4);

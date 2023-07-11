@@ -5,6 +5,8 @@ function setup()
     SetDescription("Circle of Healing\n\nLarge area heal.")
 
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_HEAL)
+
 
     SetAbilityRange(20)
     SetCooldown(4);

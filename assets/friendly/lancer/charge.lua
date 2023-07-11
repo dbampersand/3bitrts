@@ -14,6 +14,7 @@ function setup()
     AbilitySetCastType(Bor(ABILITY_POINT,ABILITY_TARGET_ENEMY)); 
     AbilitySetPortrait("assets/friendly/lancer/icon_charge.png");
     SetAbilityHint(HINT_CONE,radius,false,coneSize)
+    AbilitySetHintColor(EFFECT_SPEED)
 
     SetAbilityRange(coneSize)
     SetCooldown(30);

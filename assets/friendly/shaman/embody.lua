@@ -7,6 +7,7 @@ local dps = 25
 function setup()
     AbilitySetPortrait("assets/friendly/shaman/icon_embody.png");
     SetDescription("Embody\n\nPoisons the target and increases their attack speed and reduces their cooldowns.")
+    AbilitySetHintColor(EFFECT_HURT)
 
     AbilitySetCastType(ABILITY_TARGET_ALL);
 

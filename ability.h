@@ -3,6 +3,7 @@
 #include "stdbool.h"
 #include "sound.h"
 #include "luafuncs.h"
+#include "colors.h"
 #include "hashtable.h"
 
 typedef struct GameObject GameObject;
@@ -65,6 +66,8 @@ typedef struct Ability
     char* description;
 
     HINT targetingHint;
+    Color hintColor;
+    bool hintColorSet; 
     float hintRadius;
     bool hintSoak;
     float hintLength;

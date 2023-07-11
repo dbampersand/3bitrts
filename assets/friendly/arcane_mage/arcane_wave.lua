@@ -8,6 +8,7 @@ local damage = 30
 function setup()
     AbilitySetPortrait("assets/friendly/arcane_mage/icon_arcane_wave.png");
     AbilitySetCastType(ABILITY_POINT);
+    AbilitySetHintColor(EFFECT_HURT)
     SetAbilityRange(length)
     SetAbilityHint(HINT_CONE,radius,false,length)
     SetDescription("Arcane Wave\n\nCasts a wave of arcane missiles, returning mana for each that hit.")

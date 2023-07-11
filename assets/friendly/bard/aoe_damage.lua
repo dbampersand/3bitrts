@@ -8,6 +8,7 @@ local radius = 30
 function setup()
     AbilitySetPortrait("assets/friendly/bard/icon_aoe_damage.png");
     AbilitySetCastType(ABILITY_TOGGLE);
+    AbilitySetHintColor(EFFECT_HURT)
     SetAbilityRange(duration * speed)
     SetCooldown(10)
     SetDescription("Claidrich\n\nDoes damage in a radius.")

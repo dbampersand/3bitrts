@@ -4,6 +4,7 @@ local duration = 10
 function setup()
     AbilitySetCastType(ABILITY_INSTANT); 
     AbilitySetPortrait("assets/friendly/rune_smith/icon_rune_of_lifesteal.png");
+    AbilitySetHintColor(EFFECT_LIFESTEAL)
     
 
     SetAbilityRange(60)

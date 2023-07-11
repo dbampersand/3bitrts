@@ -3,6 +3,7 @@ local armor = -3;
 function setup()
     AbilitySetPortrait("assets/friendly/lancer/icon_shield_breaker.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_ARMOR)
     SetAbilityRange(50)
     SetDescription("Shield Breaker\n\nLowers an enemies' armour.")
 

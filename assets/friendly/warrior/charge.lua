@@ -5,6 +5,7 @@ function setup()
     AbilitySetCastType(Bor(ABILITY_POINT,ABILITY_TARGET_ENEMY)); 
     AbilitySetPortrait("assets/friendly/warrior/icon_charge.png");
     SetAbilityHint(HINT_LINE,1);
+    AbilitySetHintColor(EFFECT_HURT)
 
     SetAbilityRange(60)
     SetCooldown(20);

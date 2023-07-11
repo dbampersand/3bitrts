@@ -2,6 +2,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/priest/icon_greaterheal.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
+    AbilitySetHintColor(EFFECT_HEAL)
     SetAbilityRange(120)
     SetDescription("Greater Heal\n\nA large, but inefficient heal.")
     SetManaCost(55)

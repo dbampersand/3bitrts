@@ -6,6 +6,7 @@ local sps = 50
 function setup()
     AbilitySetPortrait("assets/friendly/paladin/icon_circle_of_protection.png");
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_SHIELD)
     SetAbilityRange(40)
     SetDescription("Circle of Protection\n\nGenerates a defensive circle, providing a shield around you.")
     SetCooldown(duration)

@@ -2,6 +2,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/arcane_mage/mana_sword/icon_slash.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_ADD_MANA)
     SetDescription("Slash\n\nSwings the sword, dealing damage. Generates mana.");
     SetCooldown(4);
     SetAbilityRange(50);   

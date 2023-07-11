@@ -4,6 +4,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetDescription("Flurry\n\nIncreases attack speed and damage.")
     SetAbilityHint(HINT_NONE)
+    AbilitySetHintColor(EFFECT_ATTACKSPEED)
     SetCooldown(99999999);
     SetCooldownTimer(99999999);
     SetAbilityMaxStacks(5);

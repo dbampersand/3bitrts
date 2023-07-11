@@ -3,6 +3,7 @@ local radius = 60;
 function setup()
     AbilitySetPortrait("assets/friendly/monk/icon_whirlwind.png");
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_HURT)
     SetAbilityRange(50)
     SetDescription("Whirlwind\n\nUses a chi to deal area damage to all nearby enemies.")
 

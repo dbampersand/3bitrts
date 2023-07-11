@@ -2,6 +2,7 @@ function setup()
     AbilitySetPortrait("assets/friendly/paladin/icon_holy_word.png");
     AbilitySetCastType(ABILITY_INSTANT);
     SetDescription("Holy Word\n\nGenerates a shield.")
+    AbilitySetHintColor(EFFECT_SHIELD)
     SetCooldown(0.5);
     SetManaCost(25)
 end

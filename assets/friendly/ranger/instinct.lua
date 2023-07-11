@@ -3,6 +3,7 @@ local radius = 40
 function setup()
     AbilitySetPortrait("assets/friendly/ranger/icon_instinct.png");
     AbilitySetCastType(ABILITY_POINT);
+    AbilitySetHintColor(EFFECT_ATTACKDAMAGE)
     SetAbilityHint(HINT_CIRCLE,radius);
     SetAbilityRange(50)
     SetDescription("Instinct\n\nIncreases autoattack damage for units around the target position.")

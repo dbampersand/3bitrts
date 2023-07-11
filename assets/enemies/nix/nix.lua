@@ -7,9 +7,10 @@ function setup()
     SetSprite("assets/enemies/nix/nix.png");
 
     SetDamage(12);
-    SetMaxHP(3000,true)
+    SetMaxHP(2500,true)
     SetSpeed(120)
     SetRange(32);
+    SetObjectPushable(GetObjRef(),true)
 
     melt = AddAbility(GetObjRef(),"assets/enemies/nix/ability_melt.lua",0);
     lavaField = AddAbility(GetObjRef(),"assets/enemies/nix/ability_lava_field.lua",1);

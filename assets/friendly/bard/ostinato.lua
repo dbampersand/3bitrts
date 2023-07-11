@@ -8,6 +8,7 @@ local radius = 100
 function setup()
     AbilitySetPortrait("assets/friendly/bard/icon_ostinato.png");
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_ATTACKSPEED)
     SetAbilityRange(100)
     SetCooldown(30)
     SetDescription("Ostinato\n\nIncrease the attack speed of all nearby friendly units.")

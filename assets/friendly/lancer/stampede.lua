@@ -8,6 +8,7 @@ local potency = 0.2
 function setup()
     AbilitySetPortrait("assets/friendly/lancer/icon_stampede.png");
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_ABILITY_POTENCY)
     SetDescription("Stampede\n\nAllows the user to push objects, while dealing damage around them. Increases ability potency by " .. potency*100 .. "%.")
     SetCooldown(25);
 

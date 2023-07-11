@@ -19,7 +19,7 @@ function onmapchange(obj)
     f1["duration"] = tickRate
     f1["overwrites"] = true
 
-    aoe = CreateAOE(GetX(obj),GetY(obj),"", 45, tickRate, 999, false, ATTACK_HITS_FRIENDLIES, COLOR_SPEED, DITHER_SPEED_EIGTH, false, obj,0,0,0, {f1})
+    aoe = CreateAOE(GetX(obj),GetY(obj),"", 45, tickRate, 999, false, ATTACK_HITS_FRIENDLIES, COLOR_FRIENDLY_SPEED, DITHER_SPEED_EIGTH, false, obj,0,0,0, {f1})
 end
 
 function attached(obj)

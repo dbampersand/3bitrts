@@ -2,6 +2,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/priest/icon_shield.png");
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
+    AbilitySetHintColor(EFFECT_SHIELD)
     SetAbilityRange(60)
     SetDescription("Shield\n\nShields the target from damage.")
     SetManaCost(30)

@@ -10,6 +10,7 @@ local ticksPerSec = 2
 function setup()
     AbilitySetPortrait("assets/friendly/necromancer/icon_seance.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_HURT)
     SetAbilityRange(50)
     SetCooldown(12)
     SetDescription("Seance\n\nShow the target a vision of their own death, stunning and dealing damage over time. If the target dies under this effect, they release a violent scream, damaging nearby enemy units.")

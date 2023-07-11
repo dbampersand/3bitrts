@@ -2,6 +2,7 @@
 function setup()
     AbilitySetPortrait("assets/friendly/arcane_mage/icon_bolt.png");
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_HURT)
     SetDescription("Bolt\n\nDeals damage and reduces cooldown of Mana Sword.");
     SetCooldown(6);
     SetAbilityRange(80);    

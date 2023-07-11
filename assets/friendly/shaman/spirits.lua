@@ -6,6 +6,7 @@ local radius = 25
 function setup()
     AbilitySetPortrait("assets/friendly/shaman/icon_spirits.png");
     SetDescription("Spirits\n\nSummons a deadly spirit, exploding after " ..seconds.." damage to **all** units.")
+    AbilitySetHintColor(EFFECT_HURT)
 
     AbilitySetCastType(ABILITY_POINT);
     SetAbilityHint(HINT_CIRCLE,radius)

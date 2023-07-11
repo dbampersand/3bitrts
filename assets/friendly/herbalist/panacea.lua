@@ -4,6 +4,7 @@ function setup()
     SetDescription("Panacea\n\nCures a bad effect from target and provides a shield. Generates mana when it cures an effect.")
 
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
+    AbilitySetHintColor(EFFECT_CURE)
 
     SetCooldown(15);
     SetManaCost(10);

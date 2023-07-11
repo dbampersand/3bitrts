@@ -11,6 +11,8 @@ function setup()
     SetDescription("Mix\n\nHeals all friendly targets over time, stacking up to 3 times.")
 
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_HEAL)
+
 
     SetCooldown(2);
     SetManaCost(30);
