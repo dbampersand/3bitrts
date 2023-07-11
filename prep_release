@@ -1,0 +1,25 @@
+rm *.c 
+rm *.h
+rm *.res
+rm *.rc
+find . -type f -name '*.aseprite' -delete
+find . -type f -name '*.ase' -delete
+find . -type f -name '*.ftm' -delete
+find . -type f -name '*.DS_STORE' -delete
+rm -rf .git
+rm -rf .vscode 
+rm -rf build
+rm -rf include
+rm -rf lib
+rm -rf lua-5.4.3
+rm *.save
+rm *.sav
+rm *.cfg
+rm CMakeLists.txt
+rm .gitignore
+rm make_windows
+rm make_linux
+rm make_osx
+mv game.exe MonSaothair.exe
+rm assets/room.vox
+rm assets/room.png

@@ -46,6 +46,33 @@ void InitAbilities()
     ability_UI_click_up_sound = LoadSound("assets/audio/ability_up.wav");
     
 }
+bool AbilityCanBeCastOnFriendliness(Ability* a, GameObject* source, GameObject* target)
+{
+    if (!target)
+        return false;
+    bool canCast = false;
+    if (a->castType & ABILITY_TARGET_FRIENDLY)
+    {
+        if (GetPlayerOwnedBy(source) == GetPlayerOwnedBy(target))
+        {
+            canCast = true;
+        }
+    }
+    if (a->castType & ABILITY_TARGET_ENEMY)
+    {
+        if (GetPlayerOwnedBy(source) != GetPlayerOwnedBy(target))
+        {
+            canCast = true;
+        }
+    }
+    if (a->castType & ABILITY_TARGET_ALL)
+    {
+        canCast = true;
+    }
+    return canCast;
+
+}
+
 void DrawHeldAbility(MouseState* mouseState)
 {
     float cx; float cy;
@@ -144,7 +171,6 @@ void CastAbilityOnMouse(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState
                     break;
                 }
             }
-            
         float midX=0; float midY=0;
         GetOffsetCenter(currGameObjRunning,&midX,&midY);
     
@@ -155,6 +181,13 @@ void CastAbilityOnMouse(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState
             ActivateDebounce();
             if (!ObjIsInvincible(target))
             {
+                if (GetDist(target,currGameObjRunning) <= currAbilityRunning->range)
+                {
+                    if (!AbilityCanBeCastOnFriendliness(currAbilityRunning,currGameObjRunning,target))
+                    {
+                        PlaySoundStr("assets/audio/cant_interact.wav",1,0,false);
+                    }
+                }
                 CastCommand(currGameObjRunning,target,currAbilityRunning,mouseState->worldX-MOUSECURSORSIZE,mouseState->worldY-MOUSECURSORSIZE,IsBindDown(keyState,currSettings.keymap.key_Shift));
             }
             else

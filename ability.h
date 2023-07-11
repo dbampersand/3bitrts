@@ -111,6 +111,7 @@ void ToggleAbility(Ability* a, GameObject* ownedBy, bool toggled);
 bool AbilityCanBeCast(Ability* a, GameObject* g, GameObject* target, float x, float y);
 bool AbilityIsCastImmediately(Ability* a);
 bool AbilityShouldBeCastOnTarget(Ability* a);
+bool AbilityCanBeCastOnFriendliness(Ability* a, GameObject* source, GameObject* target);
 int GetAbilityIndexClicked(ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
 void CastAbilityOnMouse(MouseState* mouseState, ALLEGRO_KEYBOARD_STATE* keyState);
 void UpdateAbilityInteractions(ALLEGRO_KEYBOARD_STATE* keyState,ALLEGRO_KEYBOARD_STATE* keyStateLastFrame, MouseState mouseState,MouseState mouseStateLastFrame);
