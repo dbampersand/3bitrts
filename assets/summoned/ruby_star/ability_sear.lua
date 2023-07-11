@@ -7,6 +7,7 @@ function setup()
     SetAbilityRange(256) 
     SetCooldown(20);
     SetAbilityHint(HINT_CIRCLE,radius);
+    AbilitySetHintColor(EFFECT_HURT)
 
     AbilitySetCastType(ABILITY_POINT);
     AbilitySetPortrait("assets/summoned/ruby_star/ability_sear.png");

@@ -1011,7 +1011,8 @@ void DrawHealthUIElement(GameObject* selected, ALLEGRO_COLOR color,MouseState mo
     int startY = startHPY + (hpH - (hpH*percentHP));
     int endY = (startHPY + hpH);
     DrawFilledRectangle(startHPX, startY, startHPX+hpW,endY, color);
-    
+    if (IsOwnedByPlayer(selected))
+        DrawOutlinedRect_Dithered((Rect){startHPX,startHPY,hpW,hpH},DAMAGE);
     Rect r = (Rect){startHPX,startHPY,hpW,hpH};
 
     if (PointInRect(mouseState.screenX,mouseState.screenY,r))
@@ -1043,6 +1044,8 @@ void DrawManaUIElement(GameObject* selected, ALLEGRO_COLOR color, MouseState mou
     int startY = startManaY + (manaH - (manaH*percentMana));
     int endY = (startManaY + manaH);
     DrawFilledRectangle(startManaX, startY, startManaX+manaW,endY, color);
+    if (IsOwnedByPlayer(selected))
+        DrawOutlinedRect_Dithered((Rect){startManaX,startManaY,manaW,manaH},GetColor(EffectColors[EFFECT_ADD_MANA],0));
 
     Rect r = (Rect){startManaX,startManaY,manaW,manaH};
 

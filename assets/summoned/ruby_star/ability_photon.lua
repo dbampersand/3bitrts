@@ -5,6 +5,7 @@ function setup()
     SetAbilityRange(64) 
     SetCooldown(8);
     AbilitySetCastType(ABILITY_POINT);
+    AbilitySetHintColor(EFFECT_HURT)
 
     AbilitySetPortrait("assets/summoned/ruby_star/ability_photon.png");
     SetDescription("[b]Photon\n\nFires a damaging projectile.");

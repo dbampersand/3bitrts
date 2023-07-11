@@ -14,6 +14,7 @@ function setup()
     SetCooldown(1);
 
     AbilitySetCastType(ABILITY_POINT);
+    AbilitySetHintColor(EFFECT_HURT)
     AbilitySetPortrait("assets/summoned/woven_demon/ability_hellfire.png");
     SetDescription("[b]Hellfire\n\nDeals damage in a moving area.");
     SetAbilityName("Hellfire"); 

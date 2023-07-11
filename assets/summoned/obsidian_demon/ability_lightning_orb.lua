@@ -9,6 +9,7 @@ function setup()
     SetAbilityRange(64) 
     SetCooldown(4);
     AbilitySetCastType(ABILITY_POINT);
+    AbilitySetHintColor(EFFECT_HURT)
 
     AbilitySetPortrait("assets/summoned/obsidian_demon/ability_lightning_orb.png");
     SetDescription("[b]Lightning Orb\n\nShoots a ball that moves, dealing damage to all in its path.");

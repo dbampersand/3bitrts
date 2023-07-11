@@ -7,6 +7,8 @@ function setup()
     SetCooldown(32);
 
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
+    AbilitySetHintColor(EFFECT_ABILITY_POTENCY)
+
     AbilitySetPortrait("assets/summoned/woven_imp/ability_passion.png");
     SetDescription("[b]Passion\n\nThe target's abilities cool down " .. quicken * 100 .. "% quicker for " .. duration .. " seconds");
     SetAbilityName("Passion"); 

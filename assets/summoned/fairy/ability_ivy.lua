@@ -9,6 +9,8 @@ function setup()
     SetAbilityRange(64) 
     SetCooldown(4);
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_HURT)
+
 
     AbilitySetPortrait("assets/summoned/fairy/ability_ivy.png");
     SetDescription("[b]Ivy\n\nSlows and damages an enemy.");

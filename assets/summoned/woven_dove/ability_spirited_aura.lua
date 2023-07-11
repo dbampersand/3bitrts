@@ -7,6 +7,8 @@ function setup()
     SetCooldown(32);
 
     AbilitySetCastType(ABILITY_INSTANT);
+    AbilitySetHintColor(EFFECT_CURE)
+
     AbilitySetPortrait("assets/summoned/woven_dove/ability_spirited_aura.png");
     SetDescription("[b]Spirited Aura\n\nCures bad effects in an area. Kills the user.");
     SetAbilityName("Spirited Aura"); 

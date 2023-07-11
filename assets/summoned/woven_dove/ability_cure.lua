@@ -8,6 +8,8 @@ function setup()
     SetAbilityRange(64) 
     SetCooldown(2);
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
+    AbilitySetHintColor(EFFECT_HEAL)
+
 
     AbilitySetPortrait("assets/summoned/woven_dove/ability_cure.png");
     SetDescription("[b]Cure\n\nHeals the target over time, stacking "..maxStacks .. " times.");

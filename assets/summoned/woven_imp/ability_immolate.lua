@@ -6,6 +6,7 @@ function setup()
     SetAbilityRange(64) 
     SetCooldown(32);
     AbilitySetCastType(ABILITY_TARGET_FRIENDLY);
+    AbilitySetHintColor(EFFECT_SHIELD)
 
     AbilitySetPortrait("assets/summoned/woven_imp/ability_immolate.png");
     SetDescription("[b]Immolate\n\nGives the target a shield and increases their attack speed.");

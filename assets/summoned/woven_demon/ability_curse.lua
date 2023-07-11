@@ -6,6 +6,7 @@ function setup()
     SetAbilityRange(64) 
     SetCooldown(12);
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
+    AbilitySetHintColor(EFFECT_ARMOR)
 
     AbilitySetPortrait("assets/summoned/woven_demon/ability_curse.png");
     SetDescription("[b]Curse\n\nCurses the target, reducing their armour.");

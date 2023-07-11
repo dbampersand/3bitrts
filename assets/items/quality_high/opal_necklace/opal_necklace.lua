@@ -2,11 +2,11 @@ local lifetime = 10
 local atkChance = 0.5
 local cooldown = 0
 function setup(obj)
-    SetItemName(obj,"Obsidian Core")
+    SetItemName(obj,"Opal Necklace")
     SetItemDescription(obj,"When attacking, sometimes summons a healing fairy for "..lifetime .. " seconds.")
     SetItemGoldCost(obj,180)
     SetItemTier(obj,2)
-    SetItemIcon(obj, "assets/items/quality_high/obsidian_core/obsidian_core.png");
+    SetItemIcon(obj, "assets/items/quality_high/opal_necklace/opal_necklace.png");
 
 end
 
