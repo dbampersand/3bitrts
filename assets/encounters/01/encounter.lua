@@ -1,6 +1,6 @@
 function setup()
     SetEncounterSprite("assets/enemies/wyrm_boss/wyrm.png");
-    SetEncounterDescription("The Beithir. Beware its deadly poison: cure it in bodies of water.")
+    SetEncounterDescription("The Beithir. Beware its deadly poison: cure yourself in bodies of water before you succumb.")
     SetEncounterName("Beithir");
 
     AddEncounterAbility("assets/enemies/wyrm_boss/ability_bite.lua",0,0);
@@ -18,6 +18,8 @@ function setup()
     EncounterSetNumUnitsToSelect(3);
 
     SetEncounterLoadScreen("assets/encounters/01/loadscreen.png")
+    SetEncounterSelectScreenSprite("assets/encounters/01/levelselectsprite.png");
+
     StartsUnlocked(false);
 end 
 

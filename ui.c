@@ -50,6 +50,10 @@ float debounceTime = 0.15;
 bool _PANEL_CLICKED_THIS_FRAME = false;
 bool _TEXTINPUT_HIGHLIGHTED = false;
 
+#define AUGMENT_NUMBER_FMT "Augment %i"
+#define DAMAGE_NUMBER_FMT "+%i%% Damage"
+#define HP_NUMBER_FMT "+%i%% HP"
+#define GOLD_NUMBER_FMT "+%i%% Gold"
 
 void DrawChestCompletionHint(int x, int y)
 {
@@ -158,7 +162,7 @@ void DrawUIHighlight(UIElement* u, float x, float y)
     int numParticlesToAdd = 2;
 
     float lifetimeMin = 0.1f;
-    float lifetimeMax = 2.0f;
+    float lifetimeMax = 1.0f;
 
     float speedMin = 6;
     float speedMax = 54;
@@ -1529,34 +1533,45 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 
     ALLEGRO_COLOR disabled = GROUND_DARK;
 
-    char* augmentStr = calloc(NumDigits(e->augment)+1,sizeof(char));
-    sprintf(augmentStr,"%i",e->augment);
+    char* augFmt = "Augment %i";
+    int numCharsAug = snprintf(NULL,0,augFmt,e->augment);
 
-    al_draw_text(ui.font,e->unlocked ? FRIENDLY : disabled,16+offsetX,18,0,"Augment");
-    al_draw_text(ui.font,e->unlocked ? FRIENDLY : disabled,84+offsetX,18,0,augmentStr);
+    char* augmentStr = calloc(numCharsAug+1,sizeof(char));
+    sprintf(augmentStr,augFmt,e->augment);
+
+    al_draw_text(ui.font,e->unlocked ? FRIENDLY : disabled,14+offsetX,187,0,augmentStr);
 
     int amtDamagePercent = GetAugmentDamageBonus(100,e->augment);
     char* dmgString = calloc(1 + NumDigits(amtDamagePercent) + 1 +strlen("Damage ") + 1,sizeof(char));
     sprintf(dmgString,"+%i%% Damage",amtDamagePercent);
-    al_draw_text(ui.tinyFont,e->unlocked ? FRIENDLY : disabled,16+offsetX,40,0,dmgString);
+    al_draw_text(ui.tinyFont,e->unlocked ? FRIENDLY : disabled,100+offsetX,187,0,dmgString);
+    free(dmgString);
 
 
     int amtHealthPercent = GetAugmentHealthBonus(100,e->augment);
     char* healthString = calloc(1 + NumDigits(amtHealthPercent) + 1 +strlen("HP ") + 1,sizeof(char));
     sprintf(healthString,"+%i%% HP",amtHealthPercent);
-    al_draw_text(ui.tinyFont,e->unlocked ? FRIENDLY : disabled,92+offsetX,40,0,healthString);
+    al_draw_text(ui.tinyFont,e->unlocked ? FRIENDLY : disabled,100+offsetX,203,0,healthString);
+    free(healthString);
 
     int amtAbilityPercent = GetAugmentAbilityDamage(100,e->augment);
     char* abilityDmg = calloc(1 + NumDigits(amtAbilityPercent) + 1 +strlen("Ability Damage ") + 1,sizeof(char));
     sprintf(abilityDmg,"+%i%% Ability Damage",amtAbilityPercent);
-    al_draw_text(ui.tinyFont,e->unlocked ? FRIENDLY : disabled,138+offsetX,40,0,abilityDmg);
-    
-    #ifdef _AUGMENTS_ENABLED
-    int row = 50;
-    int column = 16;
+    al_draw_text(ui.tinyFont,e->unlocked ? FRIENDLY : disabled,169+offsetX,187,0,abilityDmg);
+    free(abilityDmg);
 
-    UpdateButton(column+offsetX,row,e->encounter_RerollAugments.w,e->encounter_RerollAugments.h,&e->encounter_RerollAugments,*mouseState,*mouseStateLastFrame);
-    DrawUIElement(&e->encounter_RerollAugments,column+offsetX,row,mouseState,e->encounter_RerollAugments.bgColor,e->unlocked ? COLOR_FRIENDLY : ALColorToCol(disabled),false);
+    int amtGoldPercent = GetAugmentGoldBonus(100,e->augment);
+    char* goldBonus = calloc(snprintf(NULL,0,GOLD_NUMBER_FMT,amtGoldPercent)+1,sizeof(char));
+    sprintf(goldBonus,GOLD_NUMBER_FMT,amtGoldPercent);
+    al_draw_text(ui.tinyFont,e->unlocked ? FRIENDLY : disabled,169+offsetX,203,0,goldBonus);
+    free(goldBonus);
+
+    #ifdef _AUGMENTS_ENABLED
+    int row = 157;
+    int column = 95;
+
+    //UpdateButton(column+offsetX,row,e->encounter_RerollAugments.w,e->encounter_RerollAugments.h,&e->encounter_RerollAugments,*mouseState,*mouseStateLastFrame);
+    //DrawUIElement(&e->encounter_RerollAugments,column+offsetX,row,mouseState,e->encounter_RerollAugments.bgColor,e->unlocked ? COLOR_FRIENDLY : ALColorToCol(disabled),false);
     column += 32;
 
     char* augmentDescriptionToDraw = NULL;
@@ -1601,17 +1616,15 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     #endif
 
 
-    free(dmgString);
-    free(healthString);
 
 
-    int augmentX = 96;
+    float augmentX = 14;
     if (e->augment <= 0)
         e->augment = 0; 
     e->difficultyUnlocked = _MIN(e->difficultyUnlocked,MAX_DIFFICULTY_LEVELS);
     for (int i = 0; i < e->difficultyUnlocked; i++)
     {
-        Rect drawRect = (Rect){augmentX+offsetX,20,GetWidthSprite(&sprites[ui.augmentIconIndex]),GetHeightSprite(&sprites[ui.augmentIconIndex])};
+        Rect drawRect = (Rect){augmentX+offsetX,203 ,GetWidthSprite(&sprites[ui.augmentIconIndex]),GetHeightSprite(&sprites[ui.augmentIconIndex])};
         ALLEGRO_COLOR c = i <= e->augment ? FRIENDLY : GROUND;
         if (PointInRect(mouseState->screenX,mouseState->screenY,drawRect) && !PointInRect(mouseStateLastFrame->screenX,mouseStateLastFrame->screenY,drawRect))
         {
@@ -1621,13 +1634,13 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
             c = ENEMY;
         
         DrawSprite(&sprites[ui.augmentIconIndex],drawRect.x,drawRect.y,0.5f,0.5f,0,c,false,false,false);
-        augmentX += drawRect.w+3;
+        augmentX += drawRect.w+2;
 
         if (mouseStateLastFrame->mouse.buttons & 1 && !(mouseState->mouse.buttons & 1))
         {
             Rect selectRect = drawRect;
-            selectRect.x -= 3;
-            selectRect.y -= 3;
+            selectRect.x -= 2;
+            selectRect.y -= 2;
             selectRect.w += 5;
             selectRect.h += 5;
 
@@ -1642,8 +1655,8 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
             }
         }
     }
-    e->encounter_PurchaseAugment.x = augmentX + 3 + offsetX;
-    e->encounter_PurchaseAugment.y = 22 - (e->encounter_PurchaseAugment.h/2);
+    e->encounter_PurchaseAugment.x = 14 + offsetX;
+    e->encounter_PurchaseAugment.y =  215;
     int purchaseCost = GetAugmentCost(e, e->difficultyUnlocked);
     if (e->bestChest >= e->difficultyUnlocked && e->difficultyUnlocked < MAX_DIFFICULTY_LEVELS)
     {
@@ -1682,11 +1695,20 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
 
     free(augmentStr);
     #ifdef _AUGMENTS_ENABLED
-    al_draw_line(10+offsetX,73,246,73,e->unlocked ? FRIENDLY : disabled,1);
+    //al_draw_line(10+offsetX,73,246,73,e->unlocked ? FRIENDLY : disabled,1);
     #else
-    al_draw_line(10+offsetX,64,246,64,e->unlocked ? FRIENDLY : disabled,1);
+    //al_draw_line(10+offsetX,64,246,64,e->unlocked ? FRIENDLY : disabled,1);
     #endif
-    al_draw_text(ui.font,e->unlocked ? FRIENDLY : disabled,16+offsetX,81,0,e->name ? e->name : "");
+
+    ALLEGRO_COLOR col = e->unlocked ? FRIENDLY : disabled;
+
+    al_draw_text(ui.font,col,(_SCREEN_SIZE/2.0f)+offsetX,10,ALLEGRO_ALIGN_CENTRE,e->name ? e->name : "");
+
+    Text te = (Text){.f = ui.font,ui.boldFont,.x=10+offsetX,.y=25,.color=col,.lineHeight=al_get_font_line_height(ui.font)};
+    al_do_multiline_text(ui.font,246,e->description,cb,&te);
+
+    //al_draw_text(ui.font,col,(_SCREEN_SIZE/2.0f)+offsetX,25,ALLEGRO_ALIGN_CENTRE,e->description ? e->description : "");
+    /*
     DrawSprite(&sprites[e->spriteIndex],17+offsetX,102,0.5f,0.5f,0,e->unlocked ? ENEMY : disabled,false,false,false);
 
     Ability* mousedOver = NULL;
@@ -1733,12 +1755,13 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     }
     ui.panelShownPercent=1.0f;
     //DrawPanel(&ui.encounter_scroll,mouseState);
+*/
+    DrawSprite(&sprites[e->selectScreenSprite],offsetX,56,0,0,0,FRIENDLY,false,false,false);
 
 
-
-    UpdateButton(16+offsetX,224,e->encounter_ButtonLeft.w,e->encounter_ButtonLeft.h,&e->encounter_ButtonLeft,*mouseState,*mouseStateLastFrame);
-    UpdateButton(80+offsetX,224,e->encounter_ButtonConfirm.w,e->encounter_ButtonConfirm.h,&e->encounter_ButtonConfirm,*mouseState,*mouseStateLastFrame);
-    UpdateButton(192+offsetX,224,e->encounter_ButtonRight.w,e->encounter_ButtonRight.h,&e->encounter_ButtonRight,*mouseState,*mouseStateLastFrame);
+    UpdateButton(16+offsetX,238,e->encounter_ButtonLeft.w,e->encounter_ButtonLeft.h,&e->encounter_ButtonLeft,*mouseState,*mouseStateLastFrame);
+    UpdateButton(80+offsetX,238,e->encounter_ButtonConfirm.w,e->encounter_ButtonConfirm.h,&e->encounter_ButtonConfirm,*mouseState,*mouseStateLastFrame);
+    UpdateButton(192+offsetX,238,e->encounter_ButtonRight.w,e->encounter_ButtonRight.h,&e->encounter_ButtonRight,*mouseState,*mouseStateLastFrame);
 
     if (index > 0 && (index > 0 && (!encounters[index-1]->encounterShouldBeSkipped)))
     {
@@ -1757,9 +1780,9 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
         e->encounter_ButtonRight.enabled = false;
     }
 
-    DrawUIElement(&e->encounter_ButtonLeft,14+offsetX,226,mouseState,e->encounter_ButtonLeft.bgColor,COLOR_FRIENDLY,false);
-    DrawUIElement(&e->encounter_ButtonConfirm,80+offsetX,226,mouseState,e->encounter_ButtonConfirm.bgColor,COLOR_FRIENDLY,false);
-    DrawUIElement(&e->encounter_ButtonRight,194+offsetX,226,mouseState,e->encounter_ButtonRight.bgColor,COLOR_FRIENDLY,false);
+    DrawUIElement(&e->encounter_ButtonLeft,14+offsetX,238,mouseState,e->encounter_ButtonLeft.bgColor,COLOR_FRIENDLY,false);
+    DrawUIElement(&e->encounter_ButtonConfirm,80+offsetX,238,mouseState,e->encounter_ButtonConfirm.bgColor,COLOR_FRIENDLY,false);
+    DrawUIElement(&e->encounter_ButtonRight,194+offsetX,238,mouseState,e->encounter_ButtonRight.bgColor,COLOR_FRIENDLY,false);
 
 
     if (GetButtonIsClicked(&e->encounter_ButtonLeft))
@@ -4314,9 +4337,6 @@ void SetOptions()
     }
 }
 
-#define AUGMENT_NUMBER_FMT "Augment %i"
-#define DAMAGE_NUMBER_FMT "+%i%% Damage"
-#define HP_NUMBER_FMT "+%i%% HP"
 
 Rect GetChestRect(int index)
 {

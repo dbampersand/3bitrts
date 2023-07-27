@@ -18,6 +18,7 @@
     EncounterSetNumUnitsToSelect(3);
 
     SetEncounterLoadScreen("assets/encounters/0/loadscreen.png")
+    SetEncounterSelectScreenSprite("assets/encounters/0/levelselectsprite.png");
     StartsUnlocked(true);   
 end
 

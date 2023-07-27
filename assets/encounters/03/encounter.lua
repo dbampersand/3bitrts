@@ -18,6 +18,7 @@ function setup()
     SetEncounterDifficulty(DIFFICULTY_MEDIUM);
     EncounterSetNumUnitsToSelect(4);
     SetEncounterLoadScreen("assets/encounters/03/loadscreen.png")
+    SetEncounterSelectScreenSprite("assets/encounters/03/levelselectsprite.png");
     
 end
 

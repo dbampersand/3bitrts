@@ -76,6 +76,8 @@ typedef struct Encounter
 
     float baseReward;
     int bestChest;
+
+    int selectScreenSprite;
 } Encounter;
 
 #define NUM_ENCOUNTER_FUNCTIONS 3

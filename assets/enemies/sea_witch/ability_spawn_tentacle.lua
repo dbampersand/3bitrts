@@ -16,7 +16,13 @@ function casted(x,y,obj,headingx,headingy)
         point.x = GetX(GetObjRef())+RandRange(-distFromMax,distFromMax)
         point.y = GetY(GetObjRef())+RandRange(-distFromMax,distFromMax)
 
-        SetAggroGroup(CreateObject("assets/enemies/tentacle/tentacle.lua",point.x,point.y,TYPE_FRIENDLY,2.5),parentAggroGroup);
+        if (i==1) then 
+            SetAggroGroup(CreateObject("assets/enemies/tentacle_healer/tentacle_healer.lua",point.x,point.y,TYPE_FRIENDLY,2.5),parentAggroGroup);
+        else
+            SetAggroGroup(CreateObject("assets/enemies/tentacle/tentacle.lua",point.x,point.y,TYPE_FRIENDLY,2.5),parentAggroGroup);
+        end
+
+
     end
     return true; 
 end

@@ -13,6 +13,7 @@ function setup()
     SetRange(40);
     SetAttackSpeed(GetObjRef(),2)
     SetMaxHP(400,true)
+    
 
     SetAttackSounds(
         {

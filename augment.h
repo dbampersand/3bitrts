@@ -54,6 +54,7 @@ typedef struct MouseState MouseState;
 float GetAugmentDamageBonus(int damage,int augmentLevel);
 float GetAugmentHealthBonus(int health, int augmentLevel);
 float GetAugmentAbilityDamage(int damage, int augmentLevel);
+float GetAugmentGoldBonus(int gold, int augmentLevel);
 float GetAugmentMultiplier(int augmentLevel);
 
 

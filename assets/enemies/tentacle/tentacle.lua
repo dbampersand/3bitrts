@@ -1,4 +1,4 @@
-local charge = -1
+local dark_shot = -1
 local waterspout = -1
 
 local timer = 0

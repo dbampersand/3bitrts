@@ -2832,6 +2832,12 @@ int L_SetEncounterLoadScreen(lua_State* l)
     currEncounterRunning->loadScreen_spriteIndex = LoadSprite(lua_tostring(l,1),false);
     return 0;
 }
+int L_SetEncounterSelectScreenSprite(lua_State* l)
+{
+    currEncounterRunning->selectScreenSprite = LoadSprite(lua_tostring(l,1),false);
+    return 0;
+}
+
 int L_KillObj(lua_State* l)
 {
     int index = lua_tonumber(l,1);
@@ -6065,6 +6071,9 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_AbilitySetHintColor);
     lua_setglobal(luaState, "AbilitySetHintColor");
+
+    lua_pushcfunction(luaState, L_SetEncounterSelectScreenSprite);
+    lua_setglobal(luaState, "SetEncounterSelectScreenSprite");
 
 
 }

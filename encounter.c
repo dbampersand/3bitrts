@@ -158,7 +158,7 @@ void LoadEncounter(char* dirPath, lua_State* l)
     InitButton(&e->encounter_ButtonConfirm,"Select Party","Select Party",0,224,96,16,0);
     InitButton(&e->encounter_ButtonRight,">",">",0,224,48,16,0);
     InitButton(&e->encounter_RerollAugments,"","",220,50,20,20,LoadSprite("assets/ui/augments/reroll.png",true));
-    InitButton(&e->encounter_PurchaseAugment,"","",220,50,60,10,0);
+    InitButton(&e->encounter_PurchaseAugment,"","",128-30,207,60,10,0);
 
     e->augment = 0;
     #ifdef _AUGMENTS_ENABLED

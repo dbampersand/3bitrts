@@ -14,6 +14,7 @@
 #include "allegro5/allegro_primitives.h"
 #include "allegro5/allegro.h"
 #include "rect.h"
+#include <math.h>
 
 float GetAugmentDamageBonus(int damage, int augmentLevel)
 {
@@ -23,6 +24,11 @@ float GetAugmentHealthBonus(int health, int augmentLevel)
 {
     return health*(augmentLevel/20.0f);
 }
+float GetAugmentGoldBonus(int gold, int augmentLevel)
+{
+    return gold * floorf(0.5*augmentLevel);
+}
+
 float GetAugmentAbilityDamage(int damage, int augmentLevel)
 {
     return damage * (augmentLevel/8.0f);
