@@ -45,7 +45,14 @@ GameObject** initialSelection = NULL;
 
 GameState gameState = {0};
 
+int numUnitsToSpawn;
+
+
 TRANSITION transitionDrawing;
+
+int numDeadFriendlyObjects;
+int numDeadFriendlyObjectsHeld;
+
 
 void Retry()
 {
@@ -91,6 +98,7 @@ void InitGameState()
     pathToNextMap = NULL;
 
 }
+
 void SetGameStateToLoadingEncounter(GameObject** list, int numObjectsToAdd, Encounter* e)
 {
     transitionDrawing = TRANSITION_CHAINS;
@@ -482,6 +490,11 @@ void FinishTransition()
 
         //SpawnAllFriendlies();
         DestroyGameSave(continuePoint);
+    }
+    if (transitioningTo == GAMESTATE_CHOOSING_ARTIFACTS)
+    {
+        gameState = GAMESTATE_CHOOSING_ARTIFACTS;
+        transitioningTo = GAMESTATE_CHOOSING_ARTIFACTS;
     }
     if (transitioningTo == GAMESTATE_CHANGE_MAP)
     {

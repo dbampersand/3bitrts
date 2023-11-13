@@ -1,20 +1,20 @@
 
 
 function setup()
-    SetMapSprite("assets/encounters/03/map_1.png")
+    SetMapSprite("assets/encounters/04/map_1.png")
         --CreateObject("assets/encounters/02/boss.lua",32,32,TYPE_ENEMY);
 
-    SetSpawnPoint(108,646);
-    SetAggroGroup(CreateObject("assets/enemies/skeleton_basher/skeleton_basher.lua",85.00,500.00,TYPE_ENEMY,0.00),1)
-    SetAggroGroup(CreateObject("assets/enemies/skeleton_basher/skeleton_basher.lua",141.00,487.00,TYPE_ENEMY,0.00),1)
-    SetAggroGroup(CreateObject("assets/enemies/exploding_zombie/exploding_zombie.lua",146.00,371.00,TYPE_ENEMY,0.00),2)
-    SetAggroGroup(CreateObject("assets/enemies/exploding_zombie/exploding_zombie.lua",103.00,213.00,TYPE_ENEMY,0.00),3)
-    SetAggroGroup(CreateObject("assets/enemies/exploding_zombie/exploding_zombie.lua",160.00,216.00,TYPE_ENEMY,0.00),3)
-    SetAggroGroup(CreateObject("assets/enemies/skeleton_basher/skeleton_basher.lua",184.00,104.00,TYPE_ENEMY,0.00),4)
-    SetAggroGroup(CreateObject("assets/enemies/skeleton_basher/skeleton_basher.lua",132.00,104.00,TYPE_ENEMY,0.00),4)
-    SetAggroGroup(CreateObject("assets/enemies/exploding_zombie/exploding_zombie.lua",164.00,70.00,TYPE_ENEMY,0.00),4)
-    SetAggroGroup(CreateObject("assets/enemies/kobold_crusher/kobold_crusher.lua",124.00,258.00,TYPE_ENEMY,0.00),3)
+    SetSpawnPoint(104,418);
 
+    CreateObject("assets/enemies/ghost/ghost.lua",152.00,313.00,TYPE_ENEMY,0.00)
+    SetAggroGroup(CreateObject("assets/enemies/tentacle/tentacle.lua",175.00,164.00,TYPE_ENEMY,0.00),1)
+    SetAggroGroup(CreateObject("assets/enemies/tentacle/tentacle.lua",361.00,195.00,TYPE_ENEMY,0.00),3)
+    SetAggroGroup(CreateObject("assets/enemies/tentacle/tentacle.lua",387.00,157.00,TYPE_ENEMY,0.00),3)
+    SetAggroGroup(CreateObject("assets/enemies/ghost/ghost.lua",207.00,171.00,TYPE_ENEMY,0.00),1)
+    SetAggroGroup(CreateObject("assets/enemies/web_spinner/web_spinner.lua",399.00,328.00,TYPE_ENEMY,0.00),4)
+    SetAggroGroup(CreateObject("assets/enemies/tentacle/tentacle.lua",448.00,382.00,TYPE_ENEMY,0.00),4)
+    SetAggroGroup(CreateObject("assets/enemies/tentacle/tentacle.lua",376.00,395.00,TYPE_ENEMY,0.00),4)
+    SetAggroGroup(CreateObject("assets/enemies/tentacle/tentacle.lua",486.00,321.00,TYPE_ENEMY,0.00),4)
 end
 
 function update(dt)

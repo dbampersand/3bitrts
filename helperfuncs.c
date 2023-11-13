@@ -88,11 +88,13 @@ bool MoveTo(float* x, float* y, float toX, float toY, float speed, float delta)
 }
 MouseState GetMouseClamped()
 {
+    #ifdef WINDOW_FOCUS_LOGIC
     if (!_IS_FOCUSED_WINDOW || _UI_IGNORE_INPUT)
     {
         MouseState m = {0};
         return m;
     }
+    #endif
 
     ALLEGRO_MOUSE_STATE mouse;
     al_get_mouse_state(&mouse);
@@ -207,7 +209,7 @@ float magnitude(float* x, float* y)
 }
 float RandRange(float min, float max)
 {
-   return ((max - min) * ((float)rand() / RAND_MAX)) + min;
+   return ((max - min) * ((float)rand() / (float)RAND_MAX)) + min;
 }    
 int RandRangeI(int min, int max)
 {

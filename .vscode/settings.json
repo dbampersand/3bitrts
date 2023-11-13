@@ -39,6 +39,7 @@
         "lualib.h": "c",
         "encounter.h": "c",
         "damagenumber.h": "c",
-        "shop.h": "c"
+        "shop.h": "c",
+        "gamesave.h": "c"
     }
 }

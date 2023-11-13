@@ -90,7 +90,7 @@ extern int numAbilitiesAllocated;
 extern SoundIndex ability_UI_click_sound;
 extern SoundIndex ability_UI_click_up_sound;   
 
-HashTable abilityPrefabIndexesHashTable;
+extern HashTable abilityPrefabIndexesHashTable;
 
 
 typedef struct lua_State lua_State;

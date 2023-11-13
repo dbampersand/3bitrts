@@ -66,8 +66,8 @@ typedef struct Chunk
     float distToNearest;
 }Chunk;
 
-Voxel world[VOXEL_WORLD_SIZE][VOXEL_WORLD_SIZE][VOXEL_WORLD_SIZE];
-Chunk chunks[(int)NUM_CHUNKS][(int)NUM_CHUNKS][(int)NUM_CHUNKS];
+extern Voxel world[VOXEL_WORLD_SIZE][VOXEL_WORLD_SIZE][VOXEL_WORLD_SIZE];
+extern Chunk chunks[(int)NUM_CHUNKS][(int)NUM_CHUNKS][(int)NUM_CHUNKS];
 
 void Init3d();
 void VoxelRender();

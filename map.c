@@ -558,7 +558,7 @@ void ChangeMap(const char* path)
         if (currEncounterRunning->goingToShop)
             SetGameStateToInShop();
         else
-            SetGameStateToChangingMap(path);
+            SetGameStateToChangingMap();
     }
     if (pathToNextMap)
         free(pathToNextMap);

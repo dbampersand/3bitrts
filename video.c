@@ -37,6 +37,16 @@ ALLEGRO_BITMAP* SCREEN = NULL;
 ALLEGRO_BITMAP* background_screen = NULL;
 ALLEGRO_DISPLAY* display = NULL;
 
+ALLEGRO_BITMAP* GAME_DISPLAY_ICON;
+
+ScreenShake screenShakes[NUMSCREENSHAKES];
+
+int screenShakeTop;
+
+bool _IS_FOCUSED_WINDOW;
+
+ALLEGRO_TIMER* _FPS_TIMER;
+
 double _FRAMES = 1;
 bool _FRAMES_HAS_MOVED_ONE = false;
 

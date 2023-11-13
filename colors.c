@@ -143,7 +143,7 @@ void SetColors(ColorPreset preset)
 }
 void InitColors()
 {
-    BG = al_map_rgba(24,5,44,255);
+    BG = al_map_rgba(24,5,80,255);
     GROUND = al_map_rgba(74,64,220,255);
 
     ENEMY = al_map_rgba(95,247,247,255);

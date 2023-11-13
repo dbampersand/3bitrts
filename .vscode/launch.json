@@ -5,19 +5,11 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "debug",
-        "type": "cppdbg",
+        "type": "gdb",
         "request": "launch",
+        "name": "GDB",
         "program": "${fileDirname}/game",
-        "args": [],
-        "stopAtEntry": false,
-        "cwd": "${workspaceFolder}",
-        "environment": [],
-        "externalConsole": false,
-        "MIMode": "gdb",
-        "logging": {
-          "engineLogging": true,
-       }  
-      }
+        "stopOnEntry": true
+      },
     ]
   }

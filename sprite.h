@@ -22,7 +22,7 @@ extern int32_t numSprites;
 extern int maxSprites; //will dynamically change 
 extern Sprite* sprites;
 
-HashTable spritesHashTable;
+extern HashTable spritesHashTable;
 
 unsigned int LoadSprite(const char* path, bool needsInverted);
 void DrawSprite(Sprite* sprite, int x, int y, float originX, float originY, float angle, ALLEGRO_COLOR tint, bool invert, bool flipX, bool flipY);

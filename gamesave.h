@@ -15,7 +15,7 @@ typedef struct GameSave
 }GameSave;
 
 
-GameSave* continuePoint;
+extern GameSave* continuePoint;
 
 GameSave SaveGameState(char* mapPath, char* encounterPath, float gold, float time, int numObjectsToSave, GameObject** objects);
 void GameSaveToDisk(char* path, GameSave* s);

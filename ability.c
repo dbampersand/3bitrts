@@ -30,6 +30,9 @@ int numAbilitiesAllocated = 0;
 SoundIndex ability_UI_click_sound = {0};
 SoundIndex ability_UI_click_up_sound ={0};   
 
+HashTable abilityPrefabIndexesHashTable;
+
+
 
 void SetAbilityOnCooldown(Ability* a)
 {

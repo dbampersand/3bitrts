@@ -14,6 +14,7 @@ unsigned int _RENDERSIZE = 0;
 int numSprites = 0; 
 int maxSprites = 0; 
 Sprite* sprites = NULL;
+HashTable spritesHashTable;
 
 int GetWidthSprite(Sprite* s)
 {

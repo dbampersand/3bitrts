@@ -5,10 +5,13 @@
 #include "allegro5/allegro.h"
 #include "colors.h"
 #include "pointspace.h"
+#include "sprite.h"
 
 #ifndef M_PI
     #define M_PI 3.14159265358979323846f
 #endif
+
+typedef struct ALLEGRO_BITMAP ALLEGRO_BITMAP;
 
 
 typedef struct MouseState
@@ -21,7 +24,7 @@ typedef struct MouseState
 extern double _FRAMES;
 extern bool _FRAMES_HAS_MOVED_ONE;
 
-bool _IS_FOCUSED_WINDOW;
+extern bool _IS_FOCUSED_WINDOW;
 
 //refers to an index in Target FPS pulldown in videoOptionsPanel
 typedef enum Option_FPS
@@ -40,7 +43,7 @@ extern ALLEGRO_BITMAP* SCREEN;
 extern ALLEGRO_BITMAP* background_screen;
 extern ALLEGRO_DISPLAY* display;
 
-ALLEGRO_TIMER* _FPS_TIMER;
+extern ALLEGRO_TIMER* _FPS_TIMER;
 
 
 #define NUM_TEXT_DISPLAYS 30
@@ -106,7 +109,7 @@ extern float _DT;
 typedef struct GameObject GameObject;
 
 
-ALLEGRO_BITMAP* GAME_DISPLAY_ICON;
+extern ALLEGRO_BITMAP* GAME_DISPLAY_ICON;
 
 typedef struct ScreenShake
 {
@@ -117,8 +120,8 @@ typedef struct ScreenShake
 
 } ScreenShake;
 #define NUMSCREENSHAKES 30
-int screenShakeTop;
-ScreenShake screenShakes[NUMSCREENSHAKES];
+extern int screenShakeTop;
+extern ScreenShake screenShakes[NUMSCREENSHAKES];
 
 void DrawBufferedStrings();
 

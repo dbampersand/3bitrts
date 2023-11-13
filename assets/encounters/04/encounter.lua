@@ -1,6 +1,6 @@
 function setup()
     SetEncounterSprite("assets/enemies/cusith/cusith.png");
-    SetEncounterDescription("A huge sea serpent. It's eyes glow with a terrifying flame, ")
+    SetEncounterDescription("A huge sea serpent. It's eyes glow with a terrifying flame, with a ")
     SetEncounterName("Stoor Worm");
 
     AddEncounterAbility("assets/enemies/cusith/ability_howl.lua",0,0);
@@ -14,7 +14,7 @@ function setup()
 
 
 
-    SetEncounterMapPath("assets/encounters/04/map_final.lua");
+    SetEncounterMapPath("assets/encounters/04/map_1.lua");
     SetEncounterDifficulty(DIFFICULTY_MEDIUM);
     EncounterSetNumUnitsToSelect(4);
     SetEncounterLoadScreen("assets/encounters/04/loadscreen.png")

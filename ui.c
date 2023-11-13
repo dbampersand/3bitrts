@@ -55,6 +55,9 @@ bool _TEXTINPUT_HIGHLIGHTED = false;
 #define HP_NUMBER_FMT "+%i%% HP"
 #define GOLD_NUMBER_FMT "+%i%% Gold"
 
+bool _UI_IGNORE_INPUT;
+
+
 void DrawChestCompletionHint(int x, int y)
 {
     float minutes = gameStats.timeTaken/60.0f;
@@ -503,7 +506,7 @@ void DrawTimer(bool enabled)
         size_t buffsiz = snprintf(NULL, 0, "%i:%i",minutes,seconds);
         char* buff = calloc(buffsiz+1,sizeof(char));
         sprintf(buff,"%i:%i",minutes,seconds);
-        al_draw_text(ui.font,FRIENDLY,233,20,ALLEGRO_ALIGN_CENTER,buff);
+        al_draw_text(ui.font,FRIENDLY,233,24,ALLEGRO_ALIGN_CENTER,buff);
         free(buff);
     }
 
@@ -637,6 +640,7 @@ void GetAbilityClickedInsideUI(MouseState mouseState, MouseState mouseStateLastF
 }
 void DrawMouse(MouseState* mouseState, GameObject* mousedOver)
 {
+    
     if (!_IS_FOCUSED_WINDOW)
         return;
     MouseState mouse = *mouseState;
@@ -749,6 +753,7 @@ void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame)
         DrawUIElement(&ui.choosingUnits_Back,ui.choosingUnits_Back.x,ui.choosingUnits_Back.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY,false);
         DrawUIElement(&ui.choosingUnits_GO,ui.choosingUnits_GO.x,ui.choosingUnits_GO.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY,false);
         DrawUIElement(&ui.choosingUnits_Hire,ui.choosingUnits_Hire.x,ui.choosingUnits_Hire.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY,false);
+        DrawUIElement(&ui.choosingUnits_Artifacts,ui.choosingUnits_Artifacts.x,ui.choosingUnits_Artifacts.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY,false);
 
         char* format = "Select %i/%i units";
         char* number = calloc(snprintf(NULL,0,format,numUnitsSelected,e->numUnitsToSelect)+1,sizeof(char));
@@ -2782,7 +2787,8 @@ void InitChoosingUnitButtons()
 {
     InitButton(&ui.choosingUnits_Back,"Back","Back",45,194,48,16,0);
     InitButton(&ui.choosingUnits_GO,"Adventure","Adventure",109,194,96,16,0);
-    InitButton(&ui.choosingUnits_Hire,"Hire","Hire",168,4,40,11,0);
+    InitButton(&ui.choosingUnits_Hire,"","",166,4,44,16,LoadSprite("assets/ui/button_hire.png",true));
+    InitButton(&ui.choosingUnits_Artifacts,"","",120,4,44,16,LoadSprite("assets/ui/button_artifact.png",true));
 
     
 }
@@ -2803,7 +2809,7 @@ void InitEndScreen()
 }
 void InitGameUI()
 {
-    InitButton(&ui.menuButton,"Menu","Menu",213,4,40,11,0);
+    InitButton(&ui.menuButton,"Menu","Menu",213,4,40,16,0);
 
     int w = 80;
     InitButton(&ui.nextLevelButton,"Descend","Descend",_SCREEN_SIZE/2-w/2,10,w,12,0);
@@ -3361,9 +3367,10 @@ void UpdateTextInput(int rX, int rY, int w, int h, UIElement* u, MouseState mous
 }
 void UpdateButton(int rX, int rY, int w, int h, UIElement* u, MouseState mouseState, MouseState mouseStateLastFrame)
 {
-    if (_UI_IGNORE_INPUT)
-        return;
-
+    #ifdef WINDOW_FOCUS_LOGIC
+        if (_UI_IGNORE_INPUT)
+            return;
+    #endif
     //ToScreenSpaceI(&mouseState.x,&mouseState.y);
     //ToScreenSpaceI(&mouseStateLastFrame.x,&mouseStateLastFrame.y);
     if (_PANEL_CLICKED_THIS_FRAME)
@@ -3415,8 +3422,10 @@ bool UpdateElement(Panel* p, UIElement* u, MouseState* mouseState, MouseState* m
 {
     if (!u->enabled)
         return false;
+    #ifdef WINDOW_FOCUS_LOGIC
     if (_UI_IGNORE_INPUT)
         return false;
+    #endif
     int x; int y; 
     int w; int h;
     GetUILocation(p,u,&x,&y, &w,&h,true);
@@ -3470,13 +3479,14 @@ void UpdatePanel(Panel* p, MouseState* mouseState, MouseState* mouseStateLastFra
                     break;
                 }
             }
-        }
-        Rect r = (Rect){p->x,p->y,p->w,p->h};
+            Rect r = (Rect){p->x,p->y,p->w,p->h};
 
-        if ((mouseState->mouse.buttons & 1) && !(mouseStateLastFrame->mouse.buttons & 1) && PointInRect(mouseState->screenX,mouseState->screenY,r))
-            _PANEL_CLICKED_THIS_FRAME = true;
-        else
-            _PANEL_CLICKED_THIS_FRAME = false;
+            if ((mouseState->mouse.buttons & 1) && !(mouseStateLastFrame->mouse.buttons & 1) && PointInRect(mouseState->screenX,mouseState->screenY,r))
+                _PANEL_CLICKED_THIS_FRAME = true;
+            else
+                _PANEL_CLICKED_THIS_FRAME = false;
+
+        }
 
     }
     UpdateScrollbar(p,mouseState,mouseStateLastFrame);
@@ -3768,7 +3778,15 @@ void DrawButton(UIElement* u, int x, int y, MouseState mouseState, bool isActive
     }
     if (b->spriteIndex)
     {
-        DrawSprite(&sprites[b->spriteIndex],x,y,0.5f,0.5f,0,foregroundColor,false,false,false);
+        if (!b->clicked) 
+        {
+            DrawSprite(&sprites[b->spriteIndex],x,y,0.5f,0.5f,0,foregroundColor,false,false,false);
+        }
+        if (b->clicked)
+        {
+            DrawSprite(&sprites[b->spriteIndex],x,y,0.5f,0.5f,0,bgColor,false,false,false);
+
+        }
     }
     if (fromPanel)
         al_reset_clipping_rectangle();

@@ -7,7 +7,6 @@ local cd = 0.25
 local looseness = 6
 
 function setup()
-
     SetAbilityRange(256)
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_NONE,80);

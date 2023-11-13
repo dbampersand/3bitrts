@@ -42,6 +42,10 @@ ALLEGRO_COLOR _T_PIXELS[_SCREEN_SIZE][_SCREEN_SIZE];
 volatile bool threadsFinished[NUM_THREADS];
 VOXEL_ARGS threadData[NUM_THREADS];
 
+Voxel world[VOXEL_WORLD_SIZE][VOXEL_WORLD_SIZE][VOXEL_WORLD_SIZE];
+Chunk chunks[(int)NUM_CHUNKS][(int)NUM_CHUNKS][(int)NUM_CHUNKS];
+
+
 //Point3 rightV = (Point3){0, 1, 0};
 //Point3 frontV = (Point3){1, 0, 0};
 #define upV (Point3){0, 0, 1}

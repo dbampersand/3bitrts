@@ -24,9 +24,9 @@ typedef struct Timer
 
 } Timer;
 
-Timer** timers;
-int numTimers;
-int timerMax;
+extern Timer** timers;
+extern int numTimers;
+extern int timerMax;
 
 
 Timer* AddTimer(Timer t);

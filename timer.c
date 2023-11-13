@@ -5,6 +5,10 @@
 #include "gameobject.h"
 #include "stdbool.h"
 
+Timer** timers;
+int numTimers;
+int timerMax;
+
 Timer* AddTimer(Timer t)
 {
     if (!timers)

@@ -38,7 +38,6 @@
 #include "vectorshape.h"
 #include "easings.h"
 #include "3d.h"
-
 #include "editor.h"
 #include "timer.h"
 #include "hashtable.h"
@@ -218,6 +217,7 @@ float aefesfsd = 0;
 
 void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
+    
     if (_IS_FOCUSED_WINDOW)
     {
         al_hide_mouse_cursor(display);
@@ -572,7 +572,6 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
 
     }
-
     if (gameState == GAMESTATE_CHOOSING_ENCOUNTER)
     {
         DrawFilledRectangle(0,0,_SCREEN_SIZE,_SCREEN_SIZE,BG);

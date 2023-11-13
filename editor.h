@@ -111,7 +111,7 @@ void DrawEditorUI(float dt, MouseState mouseState, MouseState mouseStateLastFram
 void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
 void EditorSetMap(char* path);
 void InitEditorUI();
-void InitFileSelector();
+void InitFileSelector(Panel* p, Panel* fileNamingUI);
 void PopulateUnitSelector(Panel* p);
 void UpdatePosition(GameObject* g, float x, float y);
 EDITOR_HANDLE CheckMapHandleClicked(MouseState mouse);

@@ -34,6 +34,19 @@ ALLEGRO_MIXER* musicMixer2 = NULL;
 ALLEGRO_VOICE* ambientVoice = NULL;
 ALLEGRO_MIXER* ambientMixer = NULL;
 
+Reverb reverbs[MAX_REVERBS];
+int _REVERB_TOP; 
+float _REVERB_DISTANCE;
+
+float musicGain1; 
+float musicGain2;
+
+ALLEGRO_AUDIO_STREAM* ambienceStream;
+char* ambientPath;
+
+HashTable soundIndexHashes;
+
+
 
 char* musicPath = NULL;
 

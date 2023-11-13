@@ -22,10 +22,10 @@ typedef struct Reverb
 } Reverb;
 
 #define MAX_REVERBS (RESERVED_SAMPLES / 2)
-Reverb reverbs[MAX_REVERBS];
-int _REVERB_TOP; 
+extern Reverb reverbs[MAX_REVERBS];
+extern int _REVERB_TOP; 
 
-float _REVERB_DISTANCE;
+extern float _REVERB_DISTANCE;
 
 typedef enum MusicState {
     MUSICSTATE_PLAYING,
@@ -42,10 +42,10 @@ extern int* numSelectionSounds;
 extern int numAmbientSounds;
 extern int numAmbientSoundsAlloced;
 
-ALLEGRO_AUDIO_STREAM* ambienceStream;
-char* ambientPath;
+extern ALLEGRO_AUDIO_STREAM* ambienceStream;
+extern char* ambientPath;
 
-HashTable soundIndexHashes;
+extern HashTable soundIndexHashes;
 
 
 void InitSound();
@@ -72,8 +72,8 @@ extern ALLEGRO_AUDIO_STREAM* musicFadingTo;
 extern float musicVolMixer1;
 extern float musicVolMixer2;
 
-float musicGain1; 
-float musicGain2;
+extern float musicGain1; 
+extern float musicGain2;
 
 extern ALLEGRO_VOICE* musicVoice1;
 extern ALLEGRO_VOICE* musicVoice2;

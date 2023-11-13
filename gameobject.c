@@ -55,6 +55,21 @@ float* cosTable = NULL; // = &__cosTable[360];
 
 int numChannellingInfosDrawn = 0;
 
+int* footstepSFXIndices;
+int numFootsteps;
+int lastFootstepPlayed;
+
+HashTable prefabsIndicesHashTable;
+
+float _LIGHT_X_ANGLES[MAX_LIGHT_SIZE*2][MAX_LIGHT_SIZE*2];
+float _LIGHT_Y_ANGLES[MAX_LIGHT_SIZE*2][MAX_LIGHT_SIZE*2];
+
+float* lightXAngles;
+float* lightYAngles;
+
+
+
+
 //TODO: this can be made faster, even the naive bruteforce can run significantly faster
 //but probably doesn't matter
 Point GetClosestPointObjToObj(GameObject* g, GameObject* g2)

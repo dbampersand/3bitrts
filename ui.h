@@ -259,6 +259,8 @@ typedef struct UI
     UIElement choosingUnits_Back;
     UIElement choosingUnits_GO;
     UIElement choosingUnits_Hire;
+    UIElement choosingUnits_Artifacts;
+
 
     int uiClickedSound_Index;
     int uiClickedUpSound_Index;
@@ -316,7 +318,7 @@ extern char* stackDrawBuffer;
 
 extern bool _PANEL_CLICKED_THIS_FRAME;
 extern bool _TEXTINPUT_HIGHLIGHTED;
-bool _UI_IGNORE_INPUT;
+extern bool _UI_IGNORE_INPUT;
 
 typedef struct MouseState MouseState;
 typedef struct Ability Ability;
@@ -371,9 +373,11 @@ void DrawUIElement(UIElement* u, int x, int y, MouseState* mouseState, Color bgC
 void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent);
 void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, int index, int offsetX, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
 void DrawAllLevelSelects(MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyStateThisFrame, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame);
+
 void ChangeUIPanel(Panel* to);
 bool DrawAbility(Ability* ability, int x, int y, ALLEGRO_COLOR color, MouseState* mouse,MouseState* mouseStateLastFrame);
 UIElement* InitButton(UIElement* u, char* name, char* description, int x, int y, int w, int h, int sprite);
+Slider* InitSlider(int x, int y, int w, int h, float filled, float* v, float* r, float* g, float* b);
 UIElement* AddButton(Panel* p, char* name, char* description, int x, int y, int w, int h, bool shouldDrawLine);
 UIElement* AddPulldownMenu(Panel* panel, int x, int y, int w, int h, char* name, int startIndex, void* callback, int numElements, ...);
 UIElement* AddCheckbox(Panel* p, int x, int y, int w, int h, char* name, bool* activated);

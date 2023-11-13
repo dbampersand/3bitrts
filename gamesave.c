@@ -7,6 +7,9 @@
 #include "encounter.h"
 #include "map.h"
 #include "editor.h"
+
+GameSave* continuePoint;
+
 GameSave SaveGameState(char* mapPath, char* encounterPath, float gold, float time, int numObjectsToSave, GameObject** objects)
 {
     GameSave g = {0};
