@@ -2365,6 +2365,18 @@ int L_SetObjPosition(lua_State* l)
     }
     return 1;
 }
+int L_Cerp(lua_State* l)
+{
+    float f = Normalise(lua_tonumber(l,1),0,2*M_PI);
+    float to = Normalise(lua_tonumber(l,2),0,2*M_PI);
+    float maxMove = lua_tonumber(l,3);
+
+
+    float result = TowardsCircular(f,to,maxMove);
+    lua_pushnumber(l,result);
+    return 1;
+
+}
 int L_Lerp(lua_State* l)
 {
     float f = lua_tonumber(l,1);
@@ -6056,6 +6068,10 @@ void SetLuaFuncs()
 
     lua_pushcfunction(luaState, L_Lerp);
     lua_setglobal(luaState, "Lerp");
+
+    lua_pushcfunction(luaState, L_Cerp);
+    lua_setglobal(luaState, "Cerp");
+
 
     lua_pushcfunction(luaState, L_HasDoneTutorial);
     lua_setglobal(luaState, "HasDoneTutorial");

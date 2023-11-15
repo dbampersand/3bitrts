@@ -1205,7 +1205,6 @@ void UpdateEditor(float dt,MouseState mouseState, MouseState mouseStateLastFrame
         }
         else
         {
-            printf("_PANEL_CLICKED_THIS_FRAME: %s",_PANEL_CLICKED_THIS_FRAME == true ? "true" : "false");
             editor.highlightedObject = NULL;
             editor.heldHandle = CheckMapHandleClicked(mouseState);
             if (editor.heldHandle != HANDLE_NONE)

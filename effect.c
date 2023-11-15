@@ -112,7 +112,7 @@ bool ProcessEffect(Effect* e, GameObject* from, GameObject* target, bool remove)
 
     if (!remove)
         if (_FRAMES_HAS_MOVED_ONE)
-            for (int i = 0; i < ceil(value/4.0f); i++)
+            for (int i = 0; i < ceil(value/6.0f); i++)
             {
                 float x; float y;
                 GetCentre(target,&x,&y);

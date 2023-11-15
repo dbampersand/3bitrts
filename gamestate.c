@@ -967,7 +967,7 @@ void UpdateTransition(float dt)
                 transitionAudioPlayed = true;
                 AddScreenshake(3.5f,0.1f);
 
-                float numParticlesToSpawn = 40;
+                float numParticlesToSpawn = 25;
                 for (int i = 0; i < numParticlesToSpawn; i++)
                 {
                     int randX = (_SCREEN_SIZE/2) + RandRange(-3,3);

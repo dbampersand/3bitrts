@@ -479,61 +479,11 @@ bool isInsideSector(int x, int y, int cx, int cy, float startX, float startY, fl
      }
 
 }
-//TODO: fix for bottom segment
-void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO_COLOR col, float length)
+void CircleSegment(int xc, int yc, float radius, float start, float end, ALLEGRO_COLOR col, float length, float angle)
 {
-   al_lock_bitmap(al_get_target_bitmap(),ALLEGRO_PIXEL_FORMAT_ANY,ALLEGRO_LOCK_READWRITE);
-    start = Normalise(start,0, (float)M_PI*2);
-    end = Normalise(end, 0, (float)M_PI*2);
-
-    int sign = start < end ? 1 : -1;
-
-    float inc = 1 /  radius;
-    
-    if (sign == -1)
-    {
-        //al_put_pixel(1,1,DAMAGE);
-        float temp = start;
-        end -= radius * (float)M_PI/180.0f - (length*(float)M_PI/180.0f);
-        float rad = (360-radius) * (float)M_PI/180.0f;
-        start -= rad + (length*(float)M_PI/180.0f);
-    }
-
-    float theta = start;
-
-    if (theta > end)
-    {
-        //float temp = end;
-        //end = theta;
-       // theta = temp;
-    }
-
-    if (theta <= end)
-    {
-        while (theta <= end) {
-            float xn; float yn;
-            xn = xc + radius * (sinf(theta));
-            yn = yc + radius * (cosf(theta));
-            al_put_pixel(xn, yn, col);
-            theta += inc;
-        }
-        //al_put_pixel(0,0,ENEMY);
-    }
-    else if (theta >= end)
-    {
-        while (theta >= end) {
-            float xn; float yn;
-            xn = xc + radius * (sinf(theta));
-            yn = yc + radius * (cosf(theta));
-            al_put_pixel(xn, yn, col);
-            theta += inc * -1;
-        }
-        //al_put_pixel(0,0,DAMAGE);
-
-
-    }
-    al_unlock_bitmap(al_get_target_bitmap());
-
+    start += DegToRad(180);
+    al_draw_arc(xc,yc,radius,start,angle,col,1);
+    return;
 }
 
 
@@ -622,7 +572,7 @@ void GetConeVertices(int cx, int cy, int* x1, int* y1, int* x2, int* y2, float a
 }
 void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR color)
 {
-
+    float angle_start = angle;
     angle -= 45;
     int x2 = x + length; int y2 = y + length;
     int x3 = x + length; int y3 = y + length;
@@ -660,8 +610,8 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
 
     float angle2 = atan2(y-y2,x-x2);
     float angle3 = atan2(y-y3,x-x3);
-    angle2 -= (angle+(90*(float)M_PI/180.0f)) * 2;
-    angle3 -= (angle+(90*(float)M_PI/180.0f)) * 2;
+    //angle2 -= (angle+(90*(float)M_PI/180.0f)) * 2;
+    //angle3 -= (angle+(90*(float)M_PI/180.0f)) * 2;
 
     if (angle2 > angle3)
     {
@@ -698,7 +648,7 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
 
     float l = length;//sqrt(distX*distX+distY*distY);
    // if (isInsideSector(m.worldX,m.worldY,x,y,x2,y2,x3,y3,l,radius,angle+DegToRad(45)))
-        CircleSegment(x,y,l,angle2,angle3,color,length); 
+        CircleSegment(x,y,l,angle2,angle3,color,length,radius); 
     //else
    //     CircleSegment(x,y,l,angle2,angle3,color,length);
 

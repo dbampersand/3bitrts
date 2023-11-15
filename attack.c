@@ -171,7 +171,7 @@ void RemoveAttack(int attackindex)
     }
     if (!AttackIsAOE(a))
     {
-        for (int i = 0; i < RandRangeI(4,20); i++)
+        for (int i = 0; i < RandRangeI(4,15); i++)
             AddParticleWithRandomProperties(a->x+a->radius/2.0f,a->y+a->radius/2.0f,a->color,0.25,4,50,120,-M_PI*2,M_PI*2);
     }
 

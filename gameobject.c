@@ -3322,7 +3322,7 @@ void AttackTarget(GameObject* g, float dt)
             float cx;
             float cy;
             GetCentre(g->targObj, &cx, &cy);
-            for (int i = 0; i < RandRangeI(damage, damage * 25); i++)
+            for (int i = 0; i < RandRangeI(damage, damage * 15); i++)
                 AddParticleWithRandomProperties(cx, cy, COLOR_DAMAGE, 1, 1.3f, 6, 48, -2 * M_PI, 2 * M_PI);
         }
 

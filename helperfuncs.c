@@ -384,6 +384,16 @@ int NumDigits(int i)
         i = INT_MAX;
     return (int)ceilf(log10(i)) + 1 + negative;
 }
+//represents angles
+float TowardsCircular(float f, float to, float maxDist)
+{
+    float rot = atan2(cosf(f) * sinf(to) - cosf(to) * sinf(f), cosf(f) * cosf(to) + sinf(to) * sinf(f));
+    if (rot >= 0)
+      return f + _MIN(maxDist, rot);
+    else
+      return f + _MAX(-maxDist, rot);
+}
+
 float Towards(float f, float to, float maxDist)
 {
     if (f < to)

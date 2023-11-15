@@ -899,7 +899,6 @@ int main(int argc, char* args[])
             if (gameState == GAMESTATE_EXIT)
                 break;
             Render(dt, &mouseState, &mouseStateLastFrame, &keyState, &keyStateLastFrame);
-
             if (gameState == GAMESTATE_INGAME)
                 RecordReplay(SCREEN);
             DrawConsole(&mouseState,&mouseStateLastFrame,&keyState, &keyStateLastFrame);

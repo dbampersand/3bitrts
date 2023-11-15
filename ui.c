@@ -640,9 +640,10 @@ void GetAbilityClickedInsideUI(MouseState mouseState, MouseState mouseStateLastF
 }
 void DrawMouse(MouseState* mouseState, GameObject* mousedOver)
 {
-    
+    #ifdef WINDOW_FOCUS_LOGIC
     if (!_IS_FOCUSED_WINDOW)
         return;
+    #endif
     MouseState mouse = *mouseState;
     //ToScreenSpaceI(&mouse.x,&mouse.y);
     if (!GameIsIngame())

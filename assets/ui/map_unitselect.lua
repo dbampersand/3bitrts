@@ -22,6 +22,7 @@ function setup()
         PushMessage("Left click and drag a box around the white unit.",5,140,241,0,true)
     end
 
+    CreateObject("assets/enemies/staar/staar.lua",222.00,130.00,TYPE_ENEMY,0.00)
 end
 
 function update()
