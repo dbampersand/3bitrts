@@ -1,6 +1,6 @@
 local tickrate = 0.5
 local duration = 12
-local dps = 10
+local dps = 20
 
 local radius = 10
 

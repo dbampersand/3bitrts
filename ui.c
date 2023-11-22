@@ -754,7 +754,7 @@ void DrawUnitChoiceUI(MouseState* mouseState, MouseState* mouseStateLastFrame)
         DrawUIElement(&ui.choosingUnits_Back,ui.choosingUnits_Back.x,ui.choosingUnits_Back.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY,false);
         DrawUIElement(&ui.choosingUnits_GO,ui.choosingUnits_GO.x,ui.choosingUnits_GO.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY,false);
         DrawUIElement(&ui.choosingUnits_Hire,ui.choosingUnits_Hire.x,ui.choosingUnits_Hire.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY,false);
-        DrawUIElement(&ui.choosingUnits_Artifacts,ui.choosingUnits_Artifacts.x,ui.choosingUnits_Artifacts.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY,false);
+        //DrawUIElement(&ui.choosingUnits_Artifacts,ui.choosingUnits_Artifacts.x,ui.choosingUnits_Artifacts.y,mouseState,ui.choosingUnits_Back.bgColor,COLOR_FRIENDLY,false);
 
         char* format = "Select %i/%i units";
         char* number = calloc(snprintf(NULL,0,format,numUnitsSelected,e->numUnitsToSelect)+1,sizeof(char));
@@ -2789,7 +2789,7 @@ void InitChoosingUnitButtons()
     InitButton(&ui.choosingUnits_Back,"Back","Back",45,194,48,16,0);
     InitButton(&ui.choosingUnits_GO,"Adventure","Adventure",109,194,96,16,0);
     InitButton(&ui.choosingUnits_Hire,"","",166,4,44,16,LoadSprite("assets/ui/button_hire.png",true));
-    InitButton(&ui.choosingUnits_Artifacts,"","",120,4,44,16,LoadSprite("assets/ui/button_artifact.png",true));
+    //InitButton(&ui.choosingUnits_Artifacts,"","",120,4,44,16,LoadSprite("assets/ui/button_artifact.png",true));
 
     
 }

@@ -630,7 +630,7 @@ void DrawCone(int x, int y, float angle, float radius, int length, ALLEGRO_COLOR
     if (startY > endY)
     {
         int tempX = startX;
-        int tempY = startY;
+        int tempY = startY; 
 
         
 

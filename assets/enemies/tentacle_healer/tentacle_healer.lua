@@ -9,7 +9,7 @@ function setup()
     SetSprite("assets/enemies/tentacle_healer/tentacle.png");
 
     SetDamage(10);
-    SetMaxHP(1200,true)
+    SetMaxHP(850,true)
     SetSpeed(0)
     SetRange(30);
 

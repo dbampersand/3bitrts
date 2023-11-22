@@ -1,7 +1,7 @@
 
 
 local tickrate = 2
-local dps = 120
+local dps = 80
 
 local cooldown = 10
 

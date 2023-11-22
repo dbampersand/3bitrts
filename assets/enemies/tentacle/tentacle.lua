@@ -9,7 +9,7 @@ function setup()
     SetSprite("assets/enemies/tentacle/tentacle.png");
 
     SetDamage(10);
-    SetMaxHP(1200,true)
+    SetMaxHP(1000,true)
     SetSpeed(0)
     SetRange(30);
 

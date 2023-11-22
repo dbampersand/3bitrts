@@ -11,7 +11,7 @@ function setup()
 end
 function casted(x,y,obj,headingx,headingy)
     local parentAggroGroup = GetAggroGroup(GetObjRef());
-    for i = 1, 3 do
+    for i = 1, 2 do
         local point = {}
         point.x = GetX(GetObjRef())+RandRange(-distFromMax,distFromMax)
         point.y = GetY(GetObjRef())+RandRange(-distFromMax,distFromMax)

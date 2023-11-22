@@ -4,7 +4,7 @@ function setup()
     SetSprite("assets/enemies/sea_goblin/sea_goblin.png");
 
     SetDamage(15);
-    SetMaxHP(500,true)
+    SetMaxHP(950,true)
     SetSpeed(70)
     SetRange(32);
 

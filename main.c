@@ -217,7 +217,7 @@ float aefesfsd = 0;
 
 void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, ALLEGRO_KEYBOARD_STATE* keyState, ALLEGRO_KEYBOARD_STATE* keyStateLastFrame)
 {
-    
+    #ifdef WINDOW_FOCUS_LOGIC
     if (_IS_FOCUSED_WINDOW)
     {
         al_hide_mouse_cursor(display);
@@ -228,6 +228,10 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
         al_show_mouse_cursor(display);
         al_ungrab_mouse();
     }
+    #else
+        al_hide_mouse_cursor(display);
+        al_grab_mouse(display);
+    #endif
     al_set_target_bitmap(SCREEN);
 
 

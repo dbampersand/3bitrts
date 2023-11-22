@@ -1,0 +1,37 @@
+function setup()
+
+    SetSpawnPoint(130,718)
+    SetMapSprite("assets/encounters/04/map_5.png")
+    SetAggroGroup(CreateObject("assets/enemies/apprentice_lich/apprentice_lich.lua",166.00,579.00,TYPE_ENEMY,0.00),1)
+    SetAggroGroup(CreateObject("assets/enemies/kelpie/kelpie.lua",131.00,607.00,TYPE_ENEMY,0.00),1)
+    SetAggroGroup(CreateObject("assets/enemies/kelpie/kelpie.lua",190.00,613.00,TYPE_ENEMY,0.00),1)
+    SetAggroGroup(CreateObject("assets/enemies/selkie/selkie.lua",341.00,425.00,TYPE_ENEMY,0.00),2)
+    SetAggroGroup(CreateObject("assets/enemies/selkie/selkie.lua",317.00,415.00,TYPE_ENEMY,0.00),2)
+    SetAggroGroup(CreateObject("assets/enemies/selkie/selkie.lua",300.00,395.00,TYPE_ENEMY,0.00),2)
+    SetAggroGroup(CreateObject("assets/enemies/selkie/selkie.lua",330.00,406.00,TYPE_ENEMY,0.00),2)
+    SetAggroGroup(CreateObject("assets/enemies/selkie/selkie.lua",283.00,420.00,TYPE_ENEMY,0.00),2)
+    SetAggroGroup(CreateObject("assets/enemies/sea_goblin/sea_goblin.lua",156.00,292.00,TYPE_ENEMY,0.00),3)
+    SetAggroGroup(CreateObject("assets/enemies/sea_goblin/sea_goblin.lua",124.00,284.00,TYPE_ENEMY,0.00),3)
+    SetAggroGroup(CreateObject("assets/enemies/ghost/ghost.lua",325.00,326.00,TYPE_ENEMY,0.00),2)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_crusher/kobold_crusher.lua",330.00,205.00,TYPE_ENEMY,0.00),5)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_crusher/kobold_crusher.lua",282.00,202.00,TYPE_ENEMY,0.00),5)
+    SetAggroGroup(CreateObject("assets/enemies/sea_goblin/sea_goblin.lua",69.00,422.00,TYPE_ENEMY,0.00),4)
+    SetAggroGroup(CreateObject("assets/enemies/naja/naja.lua",44.00,394.00,TYPE_ENEMY,0.00),4)
+    CreateObject("assets/enemies/web_spinner/web_spinner.lua",199.00,495.00,TYPE_ENEMY,0.00)
+    SetAggroGroup(CreateObject("assets/enemies/kobold_saboteur/kobold_saboteur.lua",380.00,172.00,TYPE_ENEMY,0.00),5)
+    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",536.00,200.00,TYPE_ENEMY,0.00),6)
+    SetAggroGroup(CreateObject("assets/enemies/viper/viper.lua",499.00,165.00,TYPE_ENEMY,0.00),6)
+    SetAggroGroup(CreateObject("assets/enemies/tentacle/tentacle.lua",556.00,136.00,TYPE_ENEMY,0.00),6)
+    SetAggroGroup(CreateObject("assets/enemies/tentacle/tentacle.lua",568.00,156.00,TYPE_ENEMY,0.00),6)
+    SetAggroGroup(CreateObject("assets/enemies/berzerker/berzerker.lua",532.00,147.00,TYPE_ENEMY,0.00),6)
+    SetAggroGroup(CreateObject("assets/enemies/firebreather/firebreather.lua",456.00,320.00,TYPE_ENEMY,0.00),7)
+    SetAggroGroup(CreateObject("assets/enemies/tentacle/tentacle.lua",448.00,289.00,TYPE_ENEMY,0.00),7)
+    SetAggroGroup(CreateObject("assets/enemies/tentacle_healer/tentacle_healer.lua",493.00,320.00,TYPE_ENEMY,0.00),7)
+end
+function update()
+
+end
+function mapend()
+
+   ChangeMap("assets/encounters/04/map_6.lua")
+end

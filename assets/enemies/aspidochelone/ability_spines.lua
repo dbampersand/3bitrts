@@ -7,7 +7,7 @@ function setup()
     SetAbilityRange(256)
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_LINE,80);
-    SetCooldown(8); 
+    SetCooldown(12); 
     AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
     SetDescription("[b]Spines\n\nSeveral spines are shot towards targets.")
 end

@@ -3,7 +3,7 @@ local numAoEs = 20
 local numCasts = 0
 
 local tickrate = 0.5
-local dps = 40
+local dps = 30
 local accel = 14
 
 local wave1Sign = 1

@@ -1,6 +1,7 @@
 #include "shop.h"
 #include "animation.h"
 #include "colors.h"
+#include "rect.h"
 #include "sprite.h"
 #include "helperfuncs.h"
 #include "player.h"
@@ -541,6 +542,15 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
         al_reset_clipping_rectangle();
 
     }
+    else if (PointInRect(mouseState.screenX,mouseState.screenY,GetRerollRect()))
+    {
+        al_draw_multiline_text(ui.font, players[0].gold >= rerollCost ? FRIENDLY : GROUND, 18, 168, 126, 10, ALLEGRO_ALIGN_LEFT, "Randomise selection of items.");
+    }
+    else if (PointInRect(mouseState.screenX,mouseState.screenY,GetRandomItemButton()))
+    {
+        al_draw_multiline_text(ui.font, players[0].gold >= rerollCost ? FRIENDLY : GROUND, 18, 168, 126, 10, ALLEGRO_ALIGN_LEFT, "Buy a completely random item.");
+    }
+
     if (numObjs > 6)
         shouldDrawScrollbar = true;
     if (!shouldDrawScrollbar)
@@ -591,6 +601,13 @@ void DrawShopObjects(MouseState mouseState, MouseState mouseStateLastFrame)
     al_reset_clipping_rectangle();
 
 }
+Rect GetRandomItemButton()
+{
+    int x = 98; int y = 124;
+    int randomItemIndex = LoadSprite("assets/ui/augments/random_item.png",true);
+    Sprite* s = &sprites[randomItemIndex];
+    return (Rect){x,y,GetWidthSprite(s),GetHeightSprite(s)};
+}
 void DrawRandomItemButton(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
 {
     int* indicesCanPick = calloc(numActiveObjects, sizeof(int));
@@ -613,11 +630,11 @@ void DrawRandomItemButton(float dt, MouseState mouseState, MouseState mouseState
             numIndices++;
         }
     }
-    int x = 98; int y = 124;
 
     int randomItemIndex = LoadSprite("assets/ui/augments/random_item.png",true);
     Sprite* s = &sprites[randomItemIndex];
-    Rect r = (Rect){x,y,GetWidthSprite(s),GetHeightSprite(s)};
+    Rect r = GetRandomItemButton();
+    int x = r.x; int y = r.y;
 
     bool moused = PointInRect(mouseState.screenX,mouseState.screenY,r);
 
@@ -651,13 +668,21 @@ void DrawRandomItemButton(float dt, MouseState mouseState, MouseState mouseState
     }
     free(str);
 }
-void DrawReroll(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
+Rect GetRerollRect()
 {
     int x = 122; int y = 124;
+    int rerollIndex = LoadSprite("assets/ui/augments/reroll.png",true);
+    Sprite* s = &sprites[rerollIndex];
+    return (Rect){x,y,GetWidthSprite(s),GetHeightSprite(s)};
+    
+}
+void DrawReroll(float dt, MouseState mouseState, MouseState mouseStateLastFrame)
+{
 
     int rerollIndex = LoadSprite("assets/ui/augments/reroll.png",true);
     Sprite* s = &sprites[rerollIndex];
-    Rect r = (Rect){x,y,GetWidthSprite(s),GetHeightSprite(s)};
+    Rect r = GetRerollRect();
+    int x = r.x; int y = r.y;
 
     bool moused = PointInRect(mouseState.screenX,mouseState.screenY,r);
     DrawSprite(s,x,y,0,0,0,players[0].gold >= rerollCost ? FRIENDLY : GROUND,moused,false,false);

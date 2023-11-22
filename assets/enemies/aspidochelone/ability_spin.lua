@@ -1,4 +1,4 @@
-local damage = 100
+local damage = 75
 local damageProjectile = 20
 local radius = 80
 local aoe = -1
@@ -7,7 +7,7 @@ function setup()
     SetAbilityRange(256)
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_LINE,80);
-    SetCooldown(8); 
+    SetCooldown(12); 
     AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
     SetDescription("[b]Spin\n\nDeals damage and sheds spikes in an area around the user.")
 end

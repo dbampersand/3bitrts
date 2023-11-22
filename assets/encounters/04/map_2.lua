@@ -17,4 +17,5 @@ function update()
 end
 function mapend()
 
+   ChangeMap("assets/encounters/04/map_3.lua")
 end

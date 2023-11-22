@@ -9,7 +9,7 @@ function setup()
     SetSprite("assets/enemies/kelpie_miniboss/kelpie_miniboss.png");
 
     SetDamage(40);
-    SetMaxHP(1200,true)
+    SetMaxHP(2500,true)
     SetSpeed(120)
     SetRange(5);
 

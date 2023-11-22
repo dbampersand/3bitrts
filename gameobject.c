@@ -2624,14 +2624,16 @@ void DrawMapHighlights()
     if (!currMap->spriteIndex)
         return;
 
-    ALLEGRO_BITMAP* screen = al_get_target_bitmap();
+    ALLEGRO_BITMAP* screen = SCREEN;//al_get_target_bitmap();
     //al_lock_bitmap_region(sprites[currMap->spriteIndex].sprite, players[0].cameraPos.x, players[0].cameraPos.y, _SCREEN_SIZE, _SCREEN_SIZE, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
-    al_lock_bitmap(screen, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READWRITE);
+//    al_set_target_bitmap(screen);
 
     clock_t begin = clock();
 
+    al_lock_bitmap(screen, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READWRITE);
 
-    al_set_target_bitmap(screen);
+    clock_t end = clock();
+    double time = (double)(end - begin) / CLOCKS_PER_SEC;
 
     for (int i = 0; i < numActiveObjects; i++)
     {
@@ -2642,10 +2644,7 @@ void DrawMapHighlights()
                 DrawMapHighlight(g, g->lightSize, screen);
             }
     }
-    clock_t end = clock();
-    double time = (double)(end - begin) / CLOCKS_PER_SEC;
     
-   // ConsolePrintf("DrawMapHighlights time: %f\n",time);
 
 
     //al_unlock_bitmap(sprites[currMap->spriteIndex].sprite);
@@ -3163,10 +3162,10 @@ void DrawMapHighlight(GameObject* g, int lightSize, ALLEGRO_BITMAP* screen)
     int mapRange = mapW * mapH -1;
     Rect objRect = GetObjRect(g);
 
+    Point angles[4];
     while (x < 0)
     {
 
-        Point angles[4];
         GetLightAngle(&angles[0].x,&angles[0].y,-x,y);
         GetLightAngle(&angles[1].x,&angles[1].y,-x,-y);
         GetLightAngle(&angles[2].x,&angles[2].y,x,-y);
@@ -3417,8 +3416,8 @@ void DrawStunEffect(GameObject* g)
     {
         for (int y = 0; y < GetHeight(g) + 1; y++)
         {
-            int x2 = x + g->position.screenX;
-            int y2 = y + g->position.screenY;
+            int x2 = x + g->position.screenX + g->offset.x;
+            int y2 = y + g->position.screenY + g->offset.y;
 
             if (x % 2 == 0 && y % 2 != 0)
             {

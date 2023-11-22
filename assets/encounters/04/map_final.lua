@@ -10,7 +10,7 @@ function setup()
     SetEncounterMusic("assets/audio/music/boss/cusith/cusith.wav");
     SetMapGoldMultiplier(20)
 
-    CreateObject("assets/enemies/stoor_worm/stoor_worm.lua",0,0,TYPE_ENEMY,0.00)
+    CreateObject("assets/enemies/stoor_worm/stoor_worm.lua",128.00,31.00,TYPE_ENEMY,0.00)
 end
 
 function update(dt)

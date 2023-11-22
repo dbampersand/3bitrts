@@ -1,8 +1,8 @@
 local tickrate = 0.5
 local duration = 4
-local dps = 15
+local dps = 10
 
-local damage = 40
+local damage = 20
 
 local radius = 15
 local lengthMax = 80

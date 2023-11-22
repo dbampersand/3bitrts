@@ -71,3 +71,5 @@ void LoadShop();
 void UpdateShop(float dt, MouseState mouseState, MouseState mouseStateLastFrame);
 void SwitchShopkeepAnimation(Animation* to);
 void RefreshShop();
+Rect GetRerollRect();
+Rect GetRandomItemButton();
