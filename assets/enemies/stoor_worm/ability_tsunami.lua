@@ -2,7 +2,7 @@
 local numAoEs = 10
 
 local tickrate = 0.5
-local dps = 40
+local dps = 20
 
 local cooldown = 30
 

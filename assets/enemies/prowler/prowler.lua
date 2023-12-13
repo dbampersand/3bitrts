@@ -8,11 +8,11 @@ function setup()
     SetSprite("assets/enemies/prowler/prowler.png");
     SetChannelingSprite("assets/enemies/prowler/prowler_channelling.png");
 
-    SetDamage(0);
-    SetMaxHP(4000,true)
+    SetDamage(25);
+    SetMaxHP(3500,true)
     SetSpeed(0)
     SetRange(0);
-
+    SetObjectPushable(GetObjRef(),false)
     spines = AddAbility(GetObjRef(),"assets/enemies/prowler/ability_spines.lua",0);
     snare = AddAbility(GetObjRef(),"assets/enemies/prowler/ability_snare.lua",1);
 

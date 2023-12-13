@@ -7,7 +7,7 @@ function setup()
     SetSprite("assets/enemies/wraith/wraith.png");
 
     SetDamage(30);
-    SetMaxHP(1500,true)
+    SetMaxHP(1400,true)
     SetSpeed(120)
     SetRange(48);
 

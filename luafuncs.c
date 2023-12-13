@@ -427,6 +427,8 @@ int L_GetRandomUnit(lua_State* l)
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g = activeObjects[i];
+        if ((g->health <= 0))
+            continue;
         if (ObjIsDecoration(g) && friend != TYPE_DECORATION)
             continue;
         if (GetDist(g,currGameObjRunning) < range)

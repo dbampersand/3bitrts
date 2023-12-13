@@ -13,6 +13,8 @@ function setup()
     SetSpeed(0)
     SetRange(30);
 
+    SetObjectPushable(GetObjRef(),false)
+
     dark_shot = AddAbility(GetObjRef(),"assets/enemies/tentacle/ability_dark_shot.lua",0);
     thrash = AddAbility(GetObjRef(),"assets/enemies/tentacle/ability_thrash.lua",1);
 

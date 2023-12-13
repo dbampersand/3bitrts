@@ -3633,13 +3633,13 @@ void DrawButtonText(UIElement* u,int x, int y, ALLEGRO_COLOR col)
     float textX; float textY;
     if (align == ALLEGRO_ALIGN_CENTRE)
     {
-        textX = x + u->w/2;
-        textY = y + u->h/2 - al_get_font_line_height(ui.font)/2.0;
+        textX = x + u->w/2.0;
+        textY = y + u->h/2.0 - al_get_font_line_height(ui.font)/2.0;
     }
     if (align == ALLEGRO_ALIGN_LEFT)
     {
         textX = x+3;
-        textY = y + u->h/2 - al_get_font_line_height(ui.font)/2.0;
+        textY = y + u->h/2.0 - al_get_font_line_height(ui.font)/2.0;
     }
     ALLEGRO_FONT* font = GetElementFont(u);
     
@@ -4064,7 +4064,7 @@ void DrawPanel(Panel* p, MouseState* mouseState, float panelShownPercent)
     }
     for (int i = 0; i < p->numElements; i++)
     {
-        al_set_clipping_rectangle(p->x-1,p->y,p->w,p->h*panelShownPercent-1);
+        al_set_clipping_rectangle(p->x-1,p->y+2,p->w,p->h*panelShownPercent-2);
 
         UIElement* u = ((UIElement*)&p->elements[i]);
         int x; int y; int w; int h;

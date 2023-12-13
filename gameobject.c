@@ -591,8 +591,8 @@ void UpdateObject(GameObject* g, float dt)
                     float maxDist = fabsf(GetDist(g,g2));
                     if (currGameObjRunning->baseDamage > 0)
                     {
-                        currGameObjRunning->offset.x = cosf(angle)*_MIN(maxDist,6);
-                        currGameObjRunning->offset.y = sinf(angle)*_MIN(maxDist,6);
+                        currGameObjRunning->offset.x = cosf(angle)*_MIN(maxDist,4);
+                        currGameObjRunning->offset.y = sinf(angle)*_MIN(maxDist,4);
                     }
                 }
             }

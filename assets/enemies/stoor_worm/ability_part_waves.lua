@@ -7,7 +7,7 @@ local partPointEnd = 8
 
 local cooldown = 8
 local tickrate = 0.5
-local dps = 40
+local dps = 25
 local radius = 40
 
 local accel = 8
@@ -15,7 +15,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     AbilitySetPortrait("assets/enemies/wyrm_boss/ability_summon_adds.png");
     SetAbilityName("Part Waves");
-    SetDescription("[b]Part Waves\n\nParts the waves, creating an attack taht emmanates from the centre.");
+    SetDescription("[b]Part Waves\n\nParts the waves, creating an attack that emanates from the centre.");
     SetCooldown(cooldown)
 
 end

@@ -1,6 +1,6 @@
 local duration = 0.1
 
-local dps = 20
+local dps = 12
 local ticksPerSec = 2
 
 local angle = 70

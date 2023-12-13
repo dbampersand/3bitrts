@@ -8,8 +8,8 @@ local castAfter = 1.25
 function setup()
     SetSprite("assets/enemies/staar/staar.png");
 
-    SetDamage(120);
-    SetMaxHP(5500,true)
+    SetDamage(80);
+    SetMaxHP(4500,true)
     SetSpeed(120)
     SetRange(80);
 

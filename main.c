@@ -251,7 +251,7 @@ void Render(float dt, MouseState* mouseState, MouseState* mouseStateLastFrame, A
 
     DrawSpriteDecorations(AFTER_WORLD);
     if (GameStateIsDrawingMap(gameState))
-    DrawMapHighlights();
+        DrawMapHighlights();
 
 
     DrawCommandQueue(players[0].selection[players[0].indexSelectedUnit]);

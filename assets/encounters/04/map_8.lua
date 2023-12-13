@@ -16,9 +16,8 @@ function setup()
     SetAggroGroup(CreateObject("assets/enemies/exploding_zombie/exploding_zombie.lua",309.00,513.00,TYPE_ENEMY,0.00),5)
     SetAggroGroup(CreateObject("assets/enemies/exploding_zombie/exploding_zombie.lua",286.00,550.00,TYPE_ENEMY,0.00),5)
     SetAggroGroup(CreateObject("assets/enemies/prowler/prowler.lua",243.00,358.00,TYPE_ENEMY,0.00),6)
-    SetAggroGroup(CreateObject("assets/enemies/kelpie_miniboss/kelpie_miniboss.lua",191.00,180.00,TYPE_ENEMY,0.00),7)
-    SetAggroGroup(CreateObject("assets/enemies/spitter/spitter.lua",212.00,99.00,TYPE_ENEMY,0.00),7)
-    SetAggroGroup(CreateObject("assets/enemies/apprentice_lich/apprentice_lich.lua",158.00,115.00,TYPE_ENEMY,0.00),7)
+    SetAggroGroup(CreateObject("assets/enemies/kelpie_miniboss/kelpie_miniboss.lua",188.00,153.00,TYPE_ENEMY,0.00),7)
+    SetAggroGroup(CreateObject("assets/enemies/apprentice_lich/apprentice_lich.lua",156.00,99.00,TYPE_ENEMY,0.00),7)
 end
 function update()
 

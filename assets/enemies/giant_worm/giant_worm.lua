@@ -50,4 +50,10 @@ end
 function kill()
     RemoveAttack(aoe)
     aoe = -1
+    local f1 = {};
+    f1["trigger"] = TRIGGER_INSTANT;
+    f1["type"] = EFFECT_CURE;
+    f1["value"] = 999;
+    CreateAOE(GetX(GetObjRef()),GetY(GetObjRef()),"",99999,0,0,false,ATTACK_HITS_ENEMIES,COLOR_HEAL,DITHER_HEAL_HALF,false,-1,0,0,0,{f1});
+
 end

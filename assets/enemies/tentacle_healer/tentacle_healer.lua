@@ -12,6 +12,8 @@ function setup()
     SetMaxHP(850,true)
     SetSpeed(0)
     SetRange(30);
+    
+    SetObjectPushable(GetObjRef(),false)
 
     splash = AddAbility(GetObjRef(),"assets/enemies/tentacle_healer/ability_splash.lua",0);
 
