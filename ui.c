@@ -863,10 +863,12 @@ void UpdateInterface(float dt, ALLEGRO_KEYBOARD_STATE* keyState, MouseState* mou
             ||
             ButtonIsMousedOver(GetUIElement(&ui.mainMenuPanel,"Tutorial"))
             ||
+            ButtonIsMousedOver(GetUIElement(&ui.mainMenuPanel,"Continue"))
+            ||
             ButtonIsMousedOver(GetUIElement(&ui.mainMenuPanel,"Options"))
             ||
             ButtonIsMousedOver(GetUIElement(&ui.mainMenuPanel,"Exit"));
-
+            
         bool continueHeld = ButtonIsHeld(GetUIElement(&ui.mainMenuPanel,"Continue"));
         bool returnHeld = ButtonIsHeld(GetUIElement(&ui.mainMenuPanel,"Return"));
         bool tutorialHeld = ButtonIsHeld(GetUIElement(&ui.mainMenuPanel,"Tutorial"));
@@ -1762,7 +1764,7 @@ void DrawLevelSelect(MouseState* mouseState, MouseState* mouseStateLastFrame, in
     ui.panelShownPercent=1.0f;
     //DrawPanel(&ui.encounter_scroll,mouseState);
 */
-    DrawSprite(&sprites[e->selectScreenSprite],offsetX,56,0,0,0,FRIENDLY,false,false,false);
+    DrawSprite(&sprites[e->selectScreenSprite],offsetX,56,0,0,0,e->unlocked ? FRIENDLY : disabled,false,false,false);
 
 
     UpdateButton(16+offsetX,238,e->encounter_ButtonLeft.w,e->encounter_ButtonLeft.h,&e->encounter_ButtonLeft,*mouseState,*mouseStateLastFrame);
