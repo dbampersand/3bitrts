@@ -14,6 +14,9 @@ replays/*
 *.save
 *.log
 *.xml
+CMakeFiles
+.vscode
+CMake*
 game.dSYM/Contents
 game
 game.dSYM

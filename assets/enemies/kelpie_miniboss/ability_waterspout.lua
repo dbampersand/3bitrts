@@ -14,7 +14,7 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(4); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/kelpie_miniboss/ability_waterspout.png");
     SetDescription("[b]Waterspout\n\nCreates a moving spout of water.")
 end
 function casted(x,y,obj,headingx,headingy)
@@ -41,6 +41,9 @@ function casted(x,y,obj,headingx,headingy)
     atk.timer = 0
     SetAttackInactive(atk.aoe,1)
     table.insert(aoes,atk)
+
+    PlaySound("assets/enemies/kelpie_miniboss/audio/ability_waterspout.wav",1);
+
 
 
     return true; 

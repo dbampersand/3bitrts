@@ -9,7 +9,7 @@ local cooldown = 30
 local radius = 15
 function setup()
     AbilitySetCastType(ABILITY_INSTANT);
-    AbilitySetPortrait("assets/enemies/wyrm_boss/ability_summon_adds.png");
+    AbilitySetPortrait("assets/enemies/stoor_worm/ability_tsunami.png");
     SetAbilityName("Tsunami");
     SetDescription("[b]Tsunami\n\nCreates a powerful wave of attacks.");
     SetCooldown(cooldown)
@@ -17,7 +17,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/enemies/wyrm_boss/audio/summon_add.wav",1)
+    PlaySound("assets/enemies/stoor_worm/audio/ability_tsunami.wav",1)
 
     local f1 = {}
     f1["trigger"] = TRIGGER_INSTANT;

@@ -6,7 +6,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(20); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/wolf/ability_pack_animal.png");
     SetDescription("[b]Pack Animal\n\nIncreases damage based on how many friendly units are nearby.")
 end
 function casted(x,y,obj,headingx,headingy)

@@ -10,7 +10,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(12); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/tentacle/ability_thrash.png");
     SetDescription("[b]Thrash\n\nFlails about, spawning projectiles.")
 end
 function casted(x,y,obj,headingx,headingy)
@@ -26,10 +26,13 @@ function casted(x,y,obj,headingx,headingy)
         local yTo = math.sin(angle)*100
         After(CreateConeProjectiles,i/numToMake,false,GetX(GetObjRef()),GetY(GetObjRef()),GetX(GetObjRef())+xTo,GetY(GetObjRef())+yTo,"",ATTACK_PROJECTILE_ANGLE,80,15,false,ATTACK_HITS_ENEMIES,projectilesToMake,COLOR_DAMAGE,360/numToMake,{f1});
     end
+    PlaySound("assets/enemies/tentacle/audio/ability_thrash.wav",0.5)
+
     return true; 
 end
 
 function onhit(x,y,objhit)
+    PlaySound("assets/enemies/tentacle/audio/ability_dark_shot_hit.wav",0.5)
 end
 
 function abilitytick(x, y, durationLeft,parent,target,dt,attackRef)

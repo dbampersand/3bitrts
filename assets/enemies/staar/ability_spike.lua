@@ -20,7 +20,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(2); 
-    AbilitySetPortrait("assets/enemies/staar/ability_whip.png");
+    AbilitySetPortrait("assets/enemies/staar/ability_spike.png");
     SetDescription("[b]Spike\n\nLaunches exploding projectiles at ranged units.")
 end
 function casted(x,y,obj,headingx,headingy)
@@ -58,7 +58,7 @@ function abilitytick(x, y, durationLeft,parent,target,dt,attackRef)
             
                 CreateAOE(x,y,"",radius,0.1,0.1,false,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_NONE,false,-1,0,0,0,{f1});
                 atks[i].timer = tickrate
-                Print("x: " .. x .. " y: " .. y)
+                PlaySound("assets/enemies/staar/audio/ability_spike.wav",0.5)
             end
         end
     end

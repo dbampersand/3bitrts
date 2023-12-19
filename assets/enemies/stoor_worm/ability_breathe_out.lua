@@ -10,7 +10,7 @@ local aoeMaxDuration = 12
 
 function setup()
     AbilitySetCastType(ABILITY_INSTANT);
-    AbilitySetPortrait("assets/enemies/wyrm_boss/ability_summon_adds.png");
+    AbilitySetPortrait("assets/enemies/stoor_worm/ability_breathe_out.png");
     SetAbilityName("Breathe Out");
     SetDescription("[b]Breathe Out\n\nPushes all enemy units away and summons a field of damaging spores.");
     SetCooldown(12)
@@ -18,7 +18,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/enemies/wyrm_boss/audio/summon_add.wav",1)
+    PlaySound("assets/enemies/stoor_worm/audio/ability_breathe_out.wav",1)
     local enemies = GetAllObjsByFriendliness(GetOppositeFriendliness(GetObjRef()))
     for i = 1,#enemies do
         local fromX = GetX(GetObjRef())

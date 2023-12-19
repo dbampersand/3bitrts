@@ -8,7 +8,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(12); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/aspidochelone/ability_spin.png");
     SetDescription("[b]Spin\n\nDeals damage and sheds spikes in an area around the user.")
 end
 function casted(x,y,obj,headingx,headingy)
@@ -28,6 +28,8 @@ function casted(x,y,obj,headingx,headingy)
     f2["value"] = damageProjectile;
 
     After(CreateCircularProjectiles,3,false,GetX(GetObjRef()),GetY(GetObjRef()),"",ATTACK_PROJECTILE_ANGLE,50,999,false,ATTACK_HITS_ENEMIES,16,COLOR_DAMAGE,0,{f2})
+    After(PlaySound,3,false,"assets/enemies/aspidochelone/audio/ability_spin.wav",1.0,true)
+    
     return true; 
 end
 

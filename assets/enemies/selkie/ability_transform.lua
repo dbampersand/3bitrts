@@ -4,7 +4,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(9999); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/selkie/ability_transform.png");
     SetDescription("[b]Transform\n\nTransforms into a seal, increasing attack damage and speed.")
 end
 function casted(x,y,obj,headingx,headingy)

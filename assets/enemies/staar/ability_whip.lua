@@ -35,9 +35,12 @@ function casted(x,y,obj,headingx,headingy)
         cones[i].angle = angle;
         cones[i].length = length;
         cones[i].changeDir = RandRange(0.1,0.75)
-        cones[i].speed = RandRange(1,4)
+        cones[i].speed = RandRange(1,4) 
+
 
     end
+    PlaySound("assets/enemies/staar/audio/ability_whip.wav",0.5)
+
     return true; 
 end
 
@@ -57,6 +60,8 @@ function abilitytick(x, y, durationLeft,parent,target,dt,attackRef)
             cones[i].angle = Cerp(cones[i].angle,cones[i].toAngle,cones[i].speed*dt);
             SetAttackPosition(cones[i].atk,GetX(GetObjRef()),GetY(GetObjRef()))
             SetAttackTargetPosition(attackRef,GetX(GetObjRef()) + math.cos(cones[i].angle) * cones[i].length, GetY(GetObjRef()) + math.sin(cones[i].angle) * cones[i].length)
+            PlaySound("assets/enemies/staar/audio/ability_whip_turn.wav",0.125)
+            
         end
     end
 end

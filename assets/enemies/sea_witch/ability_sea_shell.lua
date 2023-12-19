@@ -16,7 +16,7 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(12); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/sea_witch/ability_sea_shell.png");
     SetDescription("[b]Sea Shell\n\nCreates several damaging cones.")
 end
 function casted(x,y,obj,headingx,headingy)
@@ -37,6 +37,8 @@ function casted(x,y,obj,headingx,headingy)
         cone = CreateCone(GetX(GetObjRef()),GetY(GetObjRef()),GetX(GetObjRef())+xTo,GetY(GetObjRef())+yTo,"", radius, duration, duration, true, ATTACK_HITS_ENEMIES, COLOR_DAMAGE, DITHER_HORIZONTAL_QUARTER,coneSize, {f1})
 
     end
+    PlaySound("assets/enemies/sea_witch/audio/ability_sea_shell.wav",0.5);
+
     return true; 
 end
 

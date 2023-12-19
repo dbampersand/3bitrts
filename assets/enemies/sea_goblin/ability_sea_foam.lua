@@ -18,7 +18,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_NONE,80);
     SetCooldown(16); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/sea_goblin/ability_sea_foam.png");
     SetDescription("[b]Sea Foam\n\nCreates a series of waves that move in a circular motion.")
 end
 function casted(x,y,obj,headingx,headingy)
@@ -41,7 +41,7 @@ function casted(x,y,obj,headingx,headingy)
 
     end
 
-    -- PlaySound("assets/enemies/wolf/audio/call_pack.wav",0.35);
+    PlaySound("assets/enemies/sea_goblin/audio/ability_seafoam.wav",1);
     return true; 
 end
 

@@ -13,7 +13,7 @@ local radius = 40
 local accel = 8
 function setup()
     AbilitySetCastType(ABILITY_INSTANT);
-    AbilitySetPortrait("assets/enemies/wyrm_boss/ability_summon_adds.png");
+    AbilitySetPortrait("assets/enemies/stoor_worm/ability_part_waves.png");
     SetAbilityName("Part Waves");
     SetDescription("[b]Part Waves\n\nParts the waves, creating an attack that emanates from the centre.");
     SetCooldown(cooldown)
@@ -21,7 +21,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/enemies/wyrm_boss/audio/summon_add.wav",1)
+    PlaySound("assets/enemies/stoor_worm/audio/ability_part_waves.wav",1)
     radius = GetMapHeight()/numAoEs;
 
     local f1 = {}

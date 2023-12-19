@@ -17,7 +17,7 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(12); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/kelpie_miniboss/ability_charge.png");
     SetDescription("[b]Charge\n\nDashes at an enemy, creating a damaging wave.")
 end
 function casted(x,y,obj,headingx,headingy)
@@ -35,7 +35,7 @@ function casted(x,y,obj,headingx,headingy)
 
     After(EnableAI,moveTime,false,GetObjRef(),true)
     After(CreateAOE,moveTime,false,GetX(GetObjRef()),GetY(GetObjRef()),"",radius,tickrate,999,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,DITHER_DAMAGE_QUARTER,false,-1,dir.headingx,dir.headingy,30,{f1})
-    PlaySound("assets/enemies/wolf/audio/call_pack.wav",0.35);
+    PlaySound("assets/enemies/kelpie_miniboss/audio/ability_charge.wav",1);
     return true; 
 end
 

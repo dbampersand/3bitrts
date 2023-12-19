@@ -8,7 +8,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(12); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/aspidochelone/ability_spines.png");
     SetDescription("[b]Spines\n\nSeveral spines are shot towards targets.")
 end
 function casted(x,y,obj,headingx,headingy)
@@ -23,6 +23,8 @@ function casted(x,y,obj,headingx,headingy)
         CreateConeProjectiles(GetX(GetObjRef()),GetY(GetObjRef()),GetX(enemies[i]),GetY(enemies[i]),"",ATTACK_PROJECTILE_ANGLE,80,15,true,ATTACK_HITS_ENEMIES,6,COLOR_DAMAGE,radius,{f1});
 
     end
+    PlaySound("assets/enemies/aspidochelone/audio/ability_spines.wav",1.0,true)
+
     return true; 
 end
 

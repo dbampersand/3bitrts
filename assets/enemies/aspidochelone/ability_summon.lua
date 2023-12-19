@@ -3,7 +3,7 @@ local angle = 30
 function setup()
     SetAbilityRange(999)
     SetCooldown(25); 
-    AbilitySetPortrait("assets/enemies/caduceus/ability_summon.png");
+    AbilitySetPortrait("assets/enemies/aspidochelone/ability_summon.png");
     SetDescription("[b]Summon\n\nSummons protectors.")
     AbilitySetCastType(ABILITY_INSTANT);
 

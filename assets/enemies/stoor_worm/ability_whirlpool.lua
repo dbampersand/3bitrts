@@ -10,7 +10,7 @@ local radius = 15
 local duration = 12
 function setup()
     AbilitySetCastType(ABILITY_INSTANT);
-    AbilitySetPortrait("assets/enemies/wyrm_boss/ability_summon_adds.png");
+    AbilitySetPortrait("assets/enemies/stoor_worm/ability_whirlpool.png");
     SetAbilityName("Whirlpool");
     SetDescription("[b]Whirlpool\n\nCreates a damaging area that spits out projectiles.");
     SetCooldown(cooldown)
@@ -18,7 +18,7 @@ function setup()
 end
 
 function casted(x,y,obj,headingx,headingy)
-    PlaySound("assets/enemies/wyrm_boss/audio/summon_add.wav",1)
+    PlaySound("assets/enemies/stoor_worm/audio/ability_whirlpool.wav",1)
 
     local f1 = {}
     f1["trigger"] = TRIGGER_INSTANT;

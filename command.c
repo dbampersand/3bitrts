@@ -195,8 +195,8 @@ void FindEnemiesToAttack(GameObject* g)
     float closestDistance = FLT_MAX;
     bool allowAmovingDecor = (GetPlayerOwnedBy(g) == 0);
     float aggroRadius = g->aggroRadius;
-    if (GetPlayerOwnedBy(g) == 0)
-        aggroRadius = g->range;
+    //if (GetPlayerOwnedBy(g) == 0)
+       // aggroRadius = g->range;
     for (int i = 0; i < numActiveObjects; i++)
     {
         GameObject* g2 = activeObjects[i];  
@@ -229,6 +229,7 @@ bool IsIdle(GameObject* g)
 void DoCommands(GameObject* g)
 {
     if (!g) return;
+
     Command* c = &g->queue[0];
     if (c->commandType == COMMAND_HOLD)
     {

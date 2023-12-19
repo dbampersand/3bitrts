@@ -50,6 +50,8 @@ end
 
 function update(dt)
     if (IsInCombat()) then
+        PlayMusic("assets/audio/music/boss/stoor_worm/stoor_worm.wav",8.624);
+
         if (state == STATE_DEFAULT) then
             stateTimer = stateTimer + dt
             if (stateTimer > waveStateCooldown) then

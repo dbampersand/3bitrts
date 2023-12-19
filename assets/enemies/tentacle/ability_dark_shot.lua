@@ -11,7 +11,7 @@ function setup()
     AbilitySetCastType(ABILITY_TARGET_ENEMY);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(6); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/tentacle/ability_dark_shot.png");
     SetDescription("[b]Dark Shot\n\nFires a damaging shot that reduces the targets' armour.")
 end
 function casted(x,y,obj,headingx,headingy)
@@ -27,11 +27,14 @@ function casted(x,y,obj,headingx,headingy)
     f2["duration"] = duration
 
     CreateProjectile(GetX(GetObjRef()),GetY(GetObjRef()),GetX(obj),GetY(obj),"",ATTACK_PROJECTILE_ANGLE,speed,9999,true,ATTACK_HITS_ENEMIES,COLOR_DAMAGE,2,{f1,f2})
+    PlaySound("assets/enemies/tentacle/audio/ability_dark_shot.wav",0.5)
 
     return true; 
 end
 
 function onhit(x,y,objhit)
+    PlaySound("assets/enemies/tentacle/audio/ability_dark_shot_hit.wav",0.5)
+
 end
 function ontimeout(x,y,parent,dt,target,attack)
 end

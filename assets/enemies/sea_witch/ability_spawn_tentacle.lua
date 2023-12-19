@@ -6,7 +6,7 @@ function setup()
     AbilitySetCastType(ABILITY_INSTANT);
     SetAbilityHint(HINT_LINE,80);
     SetCooldown(16); 
-    AbilitySetPortrait("assets/enemies/viper/ability_bite.png");
+    AbilitySetPortrait("assets/enemies/sea_witch/ability_spawn_tentacle.png");
     SetDescription("[b]Spawn Tentacle\n\nCreates multiple tentacles around the caster.")
 end
 function casted(x,y,obj,headingx,headingy)
@@ -21,6 +21,7 @@ function casted(x,y,obj,headingx,headingy)
         else
             SetAggroGroup(CreateObject("assets/enemies/tentacle/tentacle.lua",point.x,point.y,TYPE_FRIENDLY,2.5),parentAggroGroup);
         end
+        PlaySound("assets/enemies/sea_witch/audio/ability_summon_tentacle.wav",0.5);
 
 
     end
