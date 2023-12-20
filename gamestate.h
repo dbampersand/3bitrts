@@ -123,6 +123,7 @@ bool GameStateIsDrawingMap(GameState gameState);
 bool GameIsPaused();
 bool GameIsIngame();
 
+void SpawnTutorialSelects();
 void SpawnPartySelects();
 
 

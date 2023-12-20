@@ -1,5 +1,5 @@
 local hasSelected = false
-
+local firstMessagesShown = false
 function setup()
     SetMapSprite("assets/ui/map_unitselect.png")
     SetMapName("unitselect")
@@ -13,18 +13,20 @@ function setup()
     
 
 
-    if (HasDoneTutorial() == false) then
-        PushMessage("Welcome to the testing ground.",5,10,241,0,false)
-        PushMessage("Here, you can test units out before you venture forth.",5,10,241,0,false)
-        PushMessage("This is a training dummy. You can test damaging abilities on it!",GetX(trainingdummy)+GetWidth(trainingdummy),5,256-GetX(trainingdummy)-GetWidth(trainingdummy)-10,0,false)
-        PushMessage("This is a healing dummy. You can test healing abilities on it!",5,10,GetX(healingdummy)-GetWidth(healingdummy)-10,0,false)
-        PushMessage("To continue, you need to select three units.",5,10,241,0,false)
-        PushMessage("Left click and drag a box around the white unit.",5,140,241,0,true)
-    end
 
 end
 
 function update()
+    if (HasDoneTutorial() == false and firstMessagesShown == false) then
+        firstMessagesShown = true
+        PushMessage("Welcome to the testing ground.",10,10,236,50,false)
+        PushMessage("Here, you can test units out before you venture forth.",10,10,236,50,false)
+        PushMessage("This is a training dummy. You can test damaging abilities on it!",88+32+10,10,116,50,false)
+        PushMessage("This is a healing dummy. You can test healing abilities on it!",10,10,168-30,50,false)
+        PushMessage("To continue, you need to select three units.",10,10,236,50,false)
+        PushMessage("Left click and drag a box around three white units.",10,140,236,50,true)
+    end
+
     if (HasDoneTutorial() == false and hasSelected == false and GetNumberOfUnitsSelected() == 3) then
         hasSelected = true
         ClearMessages();

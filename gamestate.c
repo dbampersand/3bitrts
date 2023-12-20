@@ -377,8 +377,10 @@ void FinishTransition()
         players[0].cameraPos.x = 0;
         players[0].cameraPos.y = 0;
         combatStarted = false;
-        SpawnPartySelects();
-
+        if (currSettings.hasDoneTutorial)
+            SpawnPartySelects();
+        else
+            SpawnTutorialSelects();
         for (int i = 0; i < numActiveObjects; i++)
         {
             for (int j = 0; j < INVENTORY_SLOTS; j++)
@@ -631,6 +633,26 @@ void SetGameStateToSoftLoss()
 {
     transitionDrawing = TRANSITION_CHAINS;
     TransitionTo(GAMESTATE_SOFT_LOSS);
+
+}
+void SpawnTutorialSelects()
+{
+    int x = 128 - 32;
+    int y = 96;
+    for (int i = 0; i < numPrefabs; i++)
+    {
+        GameObject* g = prefabs[i];
+        if (g->purchased && g->playerChoosable)
+        {
+            int w = GetWidth(g);
+            int h = GetHeight(g);
+            x += w;
+            GameObject* gNew = AddGameobject(g,x,y,SOURCE_SPAWNED_FROM_MAP,TYPE_FRIENDLY);
+            HoldCommand(gNew,false);
+
+        }
+    }
+
 
 }
 void SpawnPartySelects()
